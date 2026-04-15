@@ -166,7 +166,7 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
                 <ActionMenu
                   actionsList={[
                     {
-                      disabled: Boolean(dashboardError) || !dashboard,
+                      disabled: Boolean(dashboardError) || !dashboard || !dashboard.url,
                       onClick: () => window.open(dashboard?.url, '_blank'),
                       title: 'Kubernetes Dashboard',
                     },
@@ -183,7 +183,7 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
                 cluster.tier === 'enterprise' ? undefined : (
                   <StyledActionButton
                     disabled={
-                      Boolean(dashboardError) || !dashboard || isClusterReadOnly
+                      Boolean(dashboardError) || !dashboard || !dashboard.url || isClusterReadOnly
                     }
                     endIcon={<ExternalLinkIcon sx={{ height: '14px' }} />}
                     onClick={() => window.open(dashboard?.url, '_blank')}
