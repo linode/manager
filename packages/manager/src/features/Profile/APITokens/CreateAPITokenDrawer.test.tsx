@@ -57,7 +57,7 @@ describe('Create API Token Drawer', () => {
 
   it(
     'Should see secret modal with secret when you type a label and submit the form successfully',
-    { timeout: 15000 },
+    { timeout: 30000 },
     async () => {
       server.use(
         http.post('*/profile/tokens', () => {

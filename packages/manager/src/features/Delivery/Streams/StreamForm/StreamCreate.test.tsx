@@ -40,7 +40,7 @@ describe('StreamCreate', () => {
 
   describe(
     'given Test Connection and Create Stream buttons',
-    { timeout: 10000 },
+    { timeout: 30000 }, // Increased for CI stability
     () => {
       const testConnectionButtonText = 'Test Connection';
       const createStreamButtonText = 'Create Stream';

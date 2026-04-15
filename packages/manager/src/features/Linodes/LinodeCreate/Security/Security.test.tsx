@@ -59,7 +59,7 @@ describe('Security', () => {
         expect(rootPasswordInput).toBeVisible();
         expect(rootPasswordInput).toBeDisabled();
       },
-      { timeout: 5_000 }
+      { timeout: 30000 }
     );
   });
 

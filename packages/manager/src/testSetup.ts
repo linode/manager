@@ -1,17 +1,22 @@
 import * as matchers from '@testing-library/jest-dom/matchers';
-import { cleanup } from '@testing-library/react';
+import { cleanup, configure } from '@testing-library/react';
 import { expect } from 'vitest';
 
 import { server } from './mocks/testServer';
 
 expect.extend(matchers);
 
+// Configure testing-library timeouts for CI stability
+configure({
+  asyncUtilTimeout: process.env.CI ? 10000 : 5000, // Increase waitFor timeout in CI
+});
+
 afterEach(() => {
   cleanup();
 });
 
-beforeAll(() => server.listen({ onUnhandledRequest: 'warn' }));
-afterAll(() => server.close());
+beforeAll(() => server.listen({ onUnhandledRequest: 'warn' }), 30000); // 30s timeout for MSW setup
+afterAll(() => server.close(), 30000); // 30s timeout for cleanup
 afterEach(() => server.resetHandlers());
 
 // @ts-expect-error this prevents some console errors

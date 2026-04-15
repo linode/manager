@@ -27,25 +27,4 @@ export default defineConfig({
     allowedHosts: ['cloud.lindev.local'],
     port: 3000,
   },
-  test: {
-    include: ['**/*.test.{js,jsx,ts,tsx}'],
-    testTimeout: 20000,
-    coverage: {
-      exclude: [
-        'src/**/*.constants.{js,jsx,ts,tsx}',
-        'src/**/*.stories.{js,jsx,ts,tsx}',
-        'src/**/index.{js,jsx,ts,tsx}',
-        'src/**/*.styles.{js,jsx,ts,tsx}',
-      ],
-      include: [
-        'src/components/**/*.{js,jsx,ts,tsx}',
-        'src/hooks/*{js,jsx,ts,tsx}',
-        'src/utilities/**/*.{js,jsx,ts,tsx}',
-        'src/**/*.utils.{js,jsx,ts,tsx}',
-      ],
-    },
-    environment: 'jsdom',
-    globals: true,
-    setupFiles: './src/testSetup.ts',
-  },
 });
