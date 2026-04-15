@@ -32,11 +32,10 @@ export const useQuotaUsageQueries = (
   enabled = true,
 ): UseQueryResult<QuotaUsage, APIError[]>[] =>
   useQueries({
-    queries: quotaIds.map(
-      (quotaId) =>
-        quotaQueries
-          .serviceQuotas(serviceType, apiCollection)
-          ._ctx.usage(quotaId),
-      enabled,
-    ),
+    queries: quotaIds.map((quotaId) => ({
+      ...quotaQueries
+        .serviceQuotas(serviceType, apiCollection)
+        ._ctx.usage(quotaId),
+      enabled: enabled && quotaIds.length > 0,
+    })),
   });
