@@ -5,6 +5,7 @@ import type { StackScriptPayload } from '@linode/api-v4/lib/stackscripts/types';
 import type { SupportTicketFormFields } from 'src/features/Support/SupportTickets/SupportTicketDialog';
 
 const localStorageCache: Record<string, any> = {};
+const sessionStorageCache: Record<string, any> = {};
 
 export const getStorage = (key: string, fallback?: any) => {
   if (localStorageCache[key]) {
@@ -46,6 +47,25 @@ export const setStorage = (key: string, value: string) => {
 export const clearStorage = (key: string) => {
   delete localStorageCache[key];
   window.localStorage.removeItem(key);
+};
+
+export const getSessionStorage = (key: string): string | undefined => {
+  if (key in sessionStorageCache) {
+    return sessionStorageCache[key];
+  }
+  const item = window.sessionStorage.getItem(key);
+  sessionStorageCache[key] = item ?? undefined;
+  return item ?? undefined;
+};
+
+export const setSessionStorage = (key: string, value: string) => {
+  sessionStorageCache[key] = value;
+  window.sessionStorage.setItem(key, value);
+};
+
+export const clearSessionStorage = (key: string) => {
+  delete sessionStorageCache[key];
+  window.sessionStorage.removeItem(key);
 };
 
 const PAGE_SIZE = 'PAGE_SIZE';
@@ -150,9 +170,9 @@ export interface Storage {
 export const storage: Storage = {
   authentication: {
     codeVerifier: {
-      get: () => getStorage(CODE_VERIFIER),
-      set: (v) => setStorage(CODE_VERIFIER, v),
-      clear: () => clearStorage(CODE_VERIFIER),
+      get: () => getSessionStorage(CODE_VERIFIER),
+      set: (v) => setSessionStorage(CODE_VERIFIER, v),
+      clear: () => clearSessionStorage(CODE_VERIFIER),
     },
     expire: {
       get: () => getStorage(EXPIRE),
@@ -160,9 +180,9 @@ export const storage: Storage = {
       clear: () => clearStorage(EXPIRE),
     },
     nonce: {
-      get: () => getStorage(NONCE),
-      set: (v) => setStorage(NONCE, v),
-      clear: () => clearStorage(NONCE),
+      get: () => getSessionStorage(NONCE),
+      set: (v) => setSessionStorage(NONCE, v),
+      clear: () => clearSessionStorage(NONCE),
     },
     scopes: {
       get: () => getStorage(SCOPES),
