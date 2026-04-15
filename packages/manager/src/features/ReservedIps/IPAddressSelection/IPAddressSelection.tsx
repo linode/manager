@@ -21,14 +21,14 @@ import type { IPAddress } from '@linode/api-v4';
 
 type IPAddressMode = 'auto' | 'reserved';
 
-interface ReservedIPOption {
-  address: string;
-  ip: IPAddress;
-  label: string;
-  region: string;
-}
+// Thin wrapper to make IPAddress compatible with Autocomplete's label requirement
+type IPAddressOption = IPAddress & { label: string };
 
 export interface IPAddressSelectionProps {
+  /**
+   * Controlled value for IP mode - drives the radio selection
+   */
+  mode?: IPAddressMode;
   /**
    * Callback fired when the IP mode changes (auto vs reserved)
    */
@@ -46,10 +46,6 @@ export interface IPAddressSelectionProps {
    * Used to restore selection when component remounts
    */
   selectedIP?: IPAddress | null;
-  /**
-   * Initial value for IP mode
-   */
-  value?: IPAddressMode;
 }
 
 /**
@@ -60,11 +56,11 @@ export interface IPAddressSelectionProps {
  * that supports reserved IPs.
  */
 export const IPAddressSelection = ({
+  mode = 'auto',
   onIPModeChange,
   onReservedIPSelect,
   regionId,
   selectedIP = null,
-  value = 'auto',
 }: IPAddressSelectionProps) => {
   const [isReserveIPDrawerOpen, setIsReserveIPDrawerOpen] =
     React.useState(false);
@@ -73,9 +69,9 @@ export const IPAddressSelection = ({
     data: reservedIPs,
     isLoading,
     refetch,
-  } = useReservedIPsQuery({}, {}, value === 'reserved' && Boolean(regionId));
+  } = useReservedIPsQuery({}, {}, mode === 'reserved' && Boolean(regionId));
 
-  const unassignedReservedIPs = React.useMemo<ReservedIPOption[]>(() => {
+  const unassignedReservedIPs = React.useMemo<IPAddressOption[]>(() => {
     if (!reservedIPs?.data) {
       return [];
     }
@@ -84,30 +80,11 @@ export const IPAddressSelection = ({
       .filter(
         (ip: IPAddress) => ip.assigned_entity === null && ip.region === regionId
       )
-      .map((ip: IPAddress) => ({
-        address: ip.address,
-        ip,
-        label: ip.address,
-        region: ip.region,
-      }));
+      .map((ip: IPAddress) => ({ ...ip, label: ip.address }));
   }, [reservedIPs, regionId]);
 
-  // Derive the Autocomplete option from the controlled selectedIP prop
-  // so the selection is restored when the component remounts.
-  const selectedOption = React.useMemo<null | ReservedIPOption>(() => {
-    if (!selectedIP) {
-      return null;
-    }
-    return {
-      address: selectedIP.address,
-      ip: selectedIP,
-      label: selectedIP.address,
-      region: selectedIP.region,
-    };
-  }, [selectedIP]);
-
-  const handleModeChange = (mode: IPAddressMode) => {
-    onIPModeChange?.(mode);
+  const handleModeChange = (newMode: IPAddressMode) => {
+    onIPModeChange?.(newMode);
   };
 
   return (
@@ -120,7 +97,7 @@ export const IPAddressSelection = ({
         onChange={(_: ChangeEvent, value: IPAddressMode) =>
           handleModeChange(value)
         }
-        value={value}
+        value={mode}
       >
         <FormControlLabel
           control={<Radio />}
@@ -159,38 +136,40 @@ export const IPAddressSelection = ({
           value="reserved"
         />
       </RadioGroup>
-      {value === 'reserved' && (
-        <Box ml={3} mt={1}>
+      {mode === 'reserved' && (
+        <Box ml={3}>
           <Autocomplete
             disabled={!regionId}
+            getOptionLabel={(option: IPAddressOption) => option.address}
             helperText={
               !regionId
                 ? 'Select a region to see available reserved IPs.'
                 : undefined
             }
             isOptionEqualToValue={(
-              option: ReservedIPOption,
-              value: ReservedIPOption
+              option: IPAddressOption,
+              value: IPAddressOption
             ) => option.address === value.address}
             label="Reserved IP Address"
             loading={isLoading}
             noOptionsText={
-              regionId
-                ? 'There are no available reserved IPs in the selected region.'
-                : 'Select a region first.'
+              'There are no available reserved IPs in the selected region.'
             }
             onChange={(
               _: React.SyntheticEvent,
-              selectedOption: null | ReservedIPOption
+              selectedOption: IPAddressOption | null
             ) => {
-              onReservedIPSelect?.(selectedOption?.ip ?? null);
+              onReservedIPSelect?.(selectedOption);
             }}
             options={unassignedReservedIPs}
             placeholder="Select"
+            sx={{ width: 300 }}
             textFieldProps={{
               hideLabel: true,
             }}
-            value={selectedOption}
+            value={
+              selectedIP ? { ...selectedIP, label: selectedIP.address } : null
+            }
           />
           <Box mt={1}>
             <StyledLinkButtonBox>

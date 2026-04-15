@@ -82,9 +82,9 @@ describe('IPAddressSelection', () => {
 
       const { getAllByRole, rerender } = renderWithTheme(
         <IPAddressSelection
+          mode={currentValue}
           onIPModeChange={handleIPModeChange}
           onReservedIPSelect={onReservedIPSelect}
-          value={currentValue}
         />
       );
 
@@ -94,9 +94,9 @@ describe('IPAddressSelection', () => {
       // Re-render with updated value
       rerender(
         <IPAddressSelection
+          mode={currentValue}
           onIPModeChange={handleIPModeChange}
           onReservedIPSelect={onReservedIPSelect}
-          value={currentValue}
         />
       );
 
@@ -107,7 +107,7 @@ describe('IPAddressSelection', () => {
   describe('Reserved IP Dropdown', () => {
     it('should show helper text when no region is selected', async () => {
       const { getByLabelText, getByText } = renderWithTheme(
-        <IPAddressSelection value="reserved" />
+        <IPAddressSelection mode="reserved" />
       );
 
       const dropdown = getByLabelText('Reserved IP Address');
@@ -148,7 +148,7 @@ describe('IPAddressSelection', () => {
       );
 
       const { getByLabelText, getByText, queryByText } = renderWithTheme(
-        <IPAddressSelection regionId="us-east" value="reserved" />
+        <IPAddressSelection mode="reserved" regionId="us-east" />
       );
 
       const dropdown = getByLabelText('Reserved IP Address');
@@ -183,7 +183,7 @@ describe('IPAddressSelection', () => {
       );
 
       const { getByLabelText, getByText, queryByText } = renderWithTheme(
-        <IPAddressSelection regionId="us-east" value="reserved" />
+        <IPAddressSelection mode="reserved" regionId="us-east" />
       );
 
       const dropdown = getByLabelText('Reserved IP Address');
@@ -202,7 +202,7 @@ describe('IPAddressSelection', () => {
       );
 
       const { getByLabelText, getByText } = renderWithTheme(
-        <IPAddressSelection regionId="us-east" value="reserved" />
+        <IPAddressSelection mode="reserved" regionId="us-east" />
       );
 
       const dropdown = getByLabelText('Reserved IP Address');
@@ -229,9 +229,9 @@ describe('IPAddressSelection', () => {
 
       const { getByLabelText, getByText } = renderWithTheme(
         <IPAddressSelection
+          mode="reserved"
           onReservedIPSelect={onReservedIPSelect}
           regionId="us-east"
-          value="reserved"
         />
       );
 
@@ -241,14 +241,17 @@ describe('IPAddressSelection', () => {
       const ipOption = getByText('192.0.2.1');
       await userEvent.click(ipOption);
 
-      expect(onReservedIPSelect).toHaveBeenCalledWith(reservedIP);
+      expect(onReservedIPSelect).toHaveBeenCalledWith({
+        ...reservedIP,
+        label: '192.0.2.1',
+      });
     });
   });
 
   describe('Reserve IP Button', () => {
     it('should show Reserve IP button when in reserved mode', async () => {
       const { getAllByRole, getByText } = renderWithTheme(
-        <IPAddressSelection regionId="us-east" value="reserved" />
+        <IPAddressSelection mode="reserved" regionId="us-east" />
       );
 
       const reservedRadio = getAllByRole('radio', { name: /Reserved/i })[0];
@@ -264,7 +267,7 @@ describe('IPAddressSelection', () => {
 
     it('should open Reserve IP drawer when button is clicked', async () => {
       const { getByText, getByRole } = renderWithTheme(
-        <IPAddressSelection regionId="us-east" value="reserved" />
+        <IPAddressSelection mode="reserved" regionId="us-east" />
       );
 
       const reserveButton = getByText('Reserve IP');
@@ -286,7 +289,7 @@ describe('IPAddressSelection', () => {
       );
 
       const { getByLabelText } = renderWithTheme(
-        <IPAddressSelection regionId="us-east" value="reserved" />
+        <IPAddressSelection mode="reserved" regionId="us-east" />
       );
 
       const dropdown = getByLabelText('Reserved IP Address');
@@ -300,7 +303,7 @@ describe('IPAddressSelection', () => {
   describe('Accessibility', () => {
     it('should have proper ARIA labels', () => {
       const { getByRole } = renderWithTheme(
-        <IPAddressSelection value="reserved" />
+        <IPAddressSelection mode="reserved" />
       );
 
       const radioGroup = getByRole('radiogroup', { name: 'IP Address' });
