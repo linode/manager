@@ -124,7 +124,7 @@ const mockS3Endpoints = [
   }),
   objectStorageEndpointsFactory.build({
     endpoint_type: 'E0',
-    region: 'us-wast',
+    region: 'us-west',
     s3_endpoint: 'us-west-1.linodeobjects.com',
   }),
   objectStorageEndpointsFactory.build({

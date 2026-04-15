@@ -103,9 +103,7 @@ export const useQuotasWithUsageQuery = ({
             usage: quotaUsageQuery?.data?.usage ?? null,
             isFetchingUsage: quotaUsageQuery?.isFetching ?? false,
             fetchingUsageFailed: quotaUsageQuery?.isError ?? false,
-            usageFetchErrorMessage: quotaUsageQuery?.error
-              ? quotaUsageQuery?.error[0].reason
-              : null,
+            usageFetchErrorMessage: quotaUsageQuery?.error?.[0].reason ?? null,
           };
         }) ?? [],
     [quotas, scopeDefinition, usageQueryByQuotaId, usageQueriesFingerprint]
@@ -113,7 +111,7 @@ export const useQuotasWithUsageQuery = ({
 
   return {
     data: quotasWithUsage,
-    error: quotasError ? quotasError[0].reason : null,
+    error: quotasError?.[0].reason ?? null,
     isFetching: isFetchingQuotas,
     isError: isQuotasFetchError,
   };
