@@ -25,7 +25,7 @@ export interface HAControlPlaneProps {
 export const HACopy = () => (
   <Typography>
     Recommended for production workloads, a high availability (HA) control plane
-    is replicated on multiple master nodes to 99.99% uptime.
+    is replicated on multiple master nodes to 99.9% uptime.
     <br />
     <Link to="https://techdocs.akamai.com/cloud-computing/docs/high-availability-ha-control-plane-on-lke">
       Learn more about the HA control plane
