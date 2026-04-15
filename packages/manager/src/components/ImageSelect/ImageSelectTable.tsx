@@ -75,11 +75,8 @@ interface Props {
     | typeof IMAGE_SELECT_TABLE_LINODE_CREATE_PENDO_IDS
     | typeof IMAGE_SELECT_TABLE_LINODE_REBUILD_PENDO_IDS
     | typeof IMAGE_SELECT_TABLE_SHARE_GROUP_CREATE_PENDO_IDS;
-    | typeof IMAGE_SELECT_TABLE_LINODE_REBUILD_PENDO_IDS
-    | typeof IMAGE_SELECT_TABLE_SHARE_GROUP_CREATE_PENDO_IDS;
   queryParamsPrefix?: string;
   /**
-   * The IDs of the currently selected images, when using multi-select mode with checkboxes.
    * The IDs of the currently selected images, when using multi-select mode with checkboxes.
    */
   selectedImageIds: string[];
