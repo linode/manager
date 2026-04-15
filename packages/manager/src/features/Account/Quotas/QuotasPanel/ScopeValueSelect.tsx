@@ -14,8 +14,6 @@ import type {
   QuotaScope,
   ScopeValueSelectorProps,
 } from 'src/features/Account/Quotas/quotaServices';
-import {useState} from "react";
-import {Region} from "@linode/api-v4";
 
 type EndpointSelectOption = SelectOption<string>;
 
