@@ -1,4 +1,4 @@
-import { Chip, NewFeatureChip, styled } from '@linode/ui';
+import { NewFeatureChip } from '@linode/ui';
 import { Outlet, useLocation, useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
@@ -20,8 +20,7 @@ import { IAM_DOCS_LINK, ROLES_LEARN_MORE_LINK } from './Shared/constants';
 export const IdentityAccessLanding = React.memo(() => {
   const flags = useFlags();
   const { isIAMEnabled } = useIsIAMEnabled();
-  const showLimitedAvailabilityBadges =
-    flags.iamLimitedAvailabilityBadges && isIAMEnabled;
+  const showNewBadge = flags.iamNewBadge && isIAMEnabled;
   const location = useLocation();
   const navigate = useNavigate();
   const { isParentUserType } = useDelegationRole();
@@ -62,12 +61,7 @@ export const IdentityAccessLanding = React.memo(() => {
         {...landingHeaderProps}
         breadcrumbProps={{
           labelOptions: {
-            suffixComponent: showLimitedAvailabilityBadges ? (
-              <>
-                <NewFeatureChip />
-                <StyledLimitedAvailabilityChip label="Limited availability" />
-              </>
-            ) : null,
+            suffixComponent: showNewBadge ? <NewFeatureChip /> : null,
           },
           removeCrumbX: 1,
         }}
@@ -84,20 +78,3 @@ export const IdentityAccessLanding = React.memo(() => {
     </>
   );
 });
-
-const StyledLimitedAvailabilityChip = styled(Chip, {
-  label: 'StyledLimitedAvailabilityChip',
-  shouldForwardProp: (prop) => prop !== 'color',
-})(({ theme }) => ({
-  '& .MuiChip-label': {
-    padding: 0,
-  },
-  background: theme.tokens.component.Badge.Informative.Subtle.Background,
-  color: theme.tokens.component.Badge.Informative.Subtle.Text,
-  font: theme.font.bold,
-  fontSize: '12px',
-  lineHeight: '12px',
-  height: 16,
-  letterSpacing: '.22px',
-  padding: theme.spacingFunction(4),
-}));

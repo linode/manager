@@ -1,10 +1,13 @@
 {
-  "name": "linode-manager",
+  "name": "@linode/cloud-manager",
   "author": "Linode",
   "description": "The Linode Manager website",
   "version": "1.161.0",
-  "private": true,
+  "private": false,
   "type": "module",
+  "files": [
+    "build"
+  ],
   "bugs": {
     "url": "https://github.com/Linode/manager/issues"
   },
@@ -47,7 +50,7 @@
     "@xterm/xterm": "^5.5.0",
     "akamai-cds-react-components": "0.1.0",
     "algoliasearch": "^4.14.3",
-    "axios": "~1.13.5",
+    "axios": "~1.15.0",
     "braintree-web": "^3.92.2",
     "chart.js": "~2.9.4",
     "copy-to-clipboard": "^3.0.8",

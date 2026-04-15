@@ -17,6 +17,12 @@ import { IMAGE_SELECT_TABLE_SHARE_GROUP_CREATE_PENDO_IDS } from 'src/components/
 import { ImageSelectTable } from 'src/components/ImageSelect/ImageSelectTable';
 
 import { CREATE_SHARE_GROUP_PENDO_IDS } from '../../constants';
+import { Controller, useController, useForm } from 'react-hook-form';
+
+import { IMAGE_SELECT_TABLE_SHARE_GROUP_CREATE_PENDO_IDS } from 'src/components/ImageSelect/constants';
+import { ImageSelectTable } from 'src/components/ImageSelect/ImageSelectTable';
+
+import { CREATE_SHARE_GROUP_PENDO_IDS } from '../../constants';
 
 import type {
   CreateSharegroupPayload,
@@ -153,6 +159,7 @@ export const ShareGroupsCreate = () => {
                 required
                 {...field}
                 data-pendo-id={CREATE_SHARE_GROUP_PENDO_IDS.label}
+                data-pendo-id={CREATE_SHARE_GROUP_PENDO_IDS.label}
                 errorText={fieldState.error?.message}
                 onChange={(e) =>
                   field.onChange(
@@ -269,6 +276,12 @@ export const ShareGroupsCreate = () => {
         </Stack>
       </Paper>
       <Box display="flex" flexWrap="wrap" justifyContent="flex-end" mt={2}>
+        <Button
+          buttonType="primary"
+          data-pendo-id={CREATE_SHARE_GROUP_PENDO_IDS.createButton}
+          loading={isSubmitting}
+          type="submit"
+        >
         <Button
           buttonType="primary"
           data-pendo-id={CREATE_SHARE_GROUP_PENDO_IDS.createButton}

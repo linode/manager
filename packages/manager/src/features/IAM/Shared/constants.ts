@@ -75,7 +75,6 @@ export const ERROR_STATE_TEXT =
 
 // Delegation error messages
 export const NO_ITEMS_TO_DISPLAY_TEXT = 'No items to display.';
-export const NO_DELEGATED_USERS_TEXT = 'No users added.';
 
 // Links
 export const IAM_DOCS_LINK =

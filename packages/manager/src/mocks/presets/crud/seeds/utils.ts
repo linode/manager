@@ -42,6 +42,9 @@ export const removeSeeds = async (seederId: MockSeeder['id']) => {
     case 'placement-groups:crud':
       await mswDB.deleteAll('placementGroups', mockState, 'seedState');
       break;
+    case 'reserved-ips:crud':
+      await mswDB.deleteAll('reservedIPs', mockState, 'seedState');
+      break;
     case 'support-tickets:crud':
       await mswDB.deleteAll('supportTickets', mockState, 'seedState');
       break;

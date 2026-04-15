@@ -30,6 +30,9 @@ export type PlanWithAvailability =
 
 export interface PlanSelectionAvailabilityTypes {
   planBelongsToDisabledClass: boolean;
+  // @TODO remove dbaas resize class type restriction sometime post-release when we support resizing across different plans
+  planDBaaSResizeFromPremiumNotSupported?: boolean;
+  planDBaaSResizeToPremiumNotSupported?: boolean;
   planHasLimitedAvailability: boolean;
   planIsDisabled512Gb: boolean;
   planIsSmallerThanUsage?: boolean;
