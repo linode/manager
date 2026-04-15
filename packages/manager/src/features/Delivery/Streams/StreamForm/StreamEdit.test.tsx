@@ -1,3 +1,4 @@
+import { streamStatus } from '@linode/api-v4';
 import {
   screen,
   waitFor,
@@ -11,6 +12,7 @@ import {
   akamaiObjectStorageDestinationFactory,
   streamFactory,
 } from 'src/factories';
+import { MASKED_VALUE } from 'src/features/Delivery/Destinations/constants';
 import { StreamEdit } from 'src/features/Delivery/Streams/StreamForm/StreamEdit';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
@@ -75,19 +77,17 @@ describe('StreamEdit', () => {
     // Bucket:
     expect(screen.getByText('destinations-bucket-name')).toBeVisible();
     // Access Key ID:
-    expect(screen.getByTestId('access-key-id')).toHaveTextContent(
-      '*****************'
-    );
+    expect(screen.getByTestId('access-key-id')).toHaveTextContent(MASKED_VALUE);
     // Secret Access Key:
     expect(screen.getByTestId('secret-access-key')).toHaveTextContent(
-      '*****************'
+      MASKED_VALUE
     );
     // Log Path:
     expect(screen.getByText('file')).toBeVisible();
   });
 
   describe(
-    'given Test Connection and Edit Stream buttons',
+    'given Test Connection and Save Changes buttons',
     { timeout: 10000 },
     () => {
       const testConnectionButtonText = 'Test Connection';
@@ -103,7 +103,9 @@ describe('StreamEdit', () => {
         await userEvent.click(createNewTestDestination);
 
         // Switch to manual bucket entry mode
-        const manualRadio = screen.getByLabelText('Enter Bucket manually');
+        const manualRadio = screen.getByLabelText(
+          'Enter Bucket details manually'
+        );
         await userEvent.click(manualRadio);
 
         const endpointInput = screen.getByLabelText('Endpoint');
@@ -129,7 +131,7 @@ describe('StreamEdit', () => {
           const createDestinationSpy = vi.fn();
           const verifyDestinationSpy = vi.fn();
 
-          it("should enable Edit Stream button and perform proper calls when it's clicked", async () => {
+          it("should enable Save Changes button and perform proper calls when it's clicked", async () => {
             server.use(
               http.get('*/monitor/streams/destinations', () => {
                 return HttpResponse.json(makeResourcePage(mockDestinations));
@@ -189,7 +191,7 @@ describe('StreamEdit', () => {
           const editStreamSpy = vi.fn();
           const createDestinationSpy = vi.fn();
 
-          it("should enable Edit Stream button and perform proper calls when it's clicked", async () => {
+          it("should enable Save Changes button and perform proper calls when it's clicked", async () => {
             server.use(
               http.get('*/monitor/streams/destinations', () => {
                 return HttpResponse.json(makeResourcePage(mockDestinations));
@@ -224,7 +226,7 @@ describe('StreamEdit', () => {
               name: saveStreamButtonText,
             });
 
-            // Edit stream button should not be disabled with existing destination selected
+            // Save Changes button should not be disabled with existing destination selected
             expect(editStreamButton).toBeEnabled();
 
             // Test connection should be disabled when using existing destination
@@ -240,54 +242,70 @@ describe('StreamEdit', () => {
             });
           });
 
-          describe('and stream has status: provisioning', () => {
-            it('should have disabled Edit Stream button and show info tooltip', async () => {
-              server.use(
-                http.get('*/monitor/streams/destinations', () => {
-                  return HttpResponse.json(makeResourcePage(mockDestinations));
-                }),
-                http.get(`*/monitor/streams/${streamId}`, () => {
-                  return HttpResponse.json({
-                    ...mockStream,
-                    status: 'provisioning',
-                  });
-                })
-              );
+          const blockingStatuses = [
+            streamStatus.Deactivating,
+            streamStatus.Failed,
+            streamStatus.Provisioning,
+          ];
 
-              renderWithThemeAndHookFormContext({
-                component: <StreamEdit />,
+          describe.each(blockingStatuses)(
+            'and stream has status: %status',
+            (status) => {
+              it('should have disabled Save Changes button and show info tooltip', async () => {
+                server.use(
+                  http.get('*/monitor/streams/destinations', () => {
+                    return HttpResponse.json(
+                      makeResourcePage(mockDestinations)
+                    );
+                  }),
+                  http.get(`*/monitor/streams/${streamId}`, () => {
+                    return HttpResponse.json({
+                      ...mockStream,
+                      status,
+                    });
+                  })
+                );
+
+                renderWithThemeAndHookFormContext({
+                  component: <StreamEdit />,
+                });
+                const loadingElement = screen.queryByTestId(loadingTestId);
+                await waitForElementToBeRemoved(loadingElement);
+
+                const editStreamButton = screen.getByRole('button', {
+                  name: saveStreamButtonText,
+                });
+
+                // Save Changes button should be disabled
+                expect(editStreamButton).toBeDisabled();
+
+                // Edit stream
+                await userEvent.hover(editStreamButton);
+                await screen.findByRole('tooltip');
+
+                screen.getByText((content) =>
+                  content.includes(
+                    `You cannot save changes while the stream status is ${status}`
+                  )
+                );
+
+                const disabledButtonTooltip = screen.getByText((content) =>
+                  content.includes(
+                    `You cannot save changes while the stream status is ${status}`
+                  )
+                );
+
+                expect(disabledButtonTooltip).toBeInTheDocument();
               });
-              const loadingElement = screen.queryByTestId(loadingTestId);
-              await waitForElementToBeRemoved(loadingElement);
-
-              const editStreamButton = screen.getByRole('button', {
-                name: saveStreamButtonText,
-              });
-
-              // Edit stream button should be disabled
-              expect(editStreamButton).toBeDisabled();
-
-              // Edit stream
-              await userEvent.hover(editStreamButton);
-
-              await waitFor(() => {
-                expect(screen.getByRole('tooltip')).toBeInTheDocument();
-              });
-
-              const disabledButtonTooltip = screen.getByText(
-                'You cannot save changes while the stream is provisioning.'
-              );
-
-              expect(disabledButtonTooltip).toBeInTheDocument();
-            });
-          });
+            }
+          );
         });
       });
 
       describe('when form properly filled out and Test Connection button clicked and connection verified negatively', () => {
         const verifyDestinationSpy = vi.fn();
 
-        it('should not enable Edit Stream button', async () => {
+        it('should not enable Save Changes button', async () => {
           server.use(
             http.get('*/monitor/streams/destinations', () => {
               return HttpResponse.json(makeResourcePage(mockDestinations));

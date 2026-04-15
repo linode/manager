@@ -240,7 +240,9 @@ describe('StreamFormDelivery', () => {
           expect(endpointInput).toBeDisabled();
 
           // Switch to manual mode
-          const manualRadio = screen.getByLabelText('Enter Bucket manually');
+          const manualRadio = screen.getByLabelText(
+            'Enter Bucket details manually'
+          );
           await userEvent.click(manualRadio);
 
           // Now Endpoint should be enabled
@@ -256,7 +258,9 @@ describe('StreamFormDelivery', () => {
           );
 
           // Switch to manual mode
-          const manualRadio = screen.getByLabelText('Enter Bucket manually');
+          const manualRadio = screen.getByLabelText(
+            'Enter Bucket details manually'
+          );
           await userEvent.click(manualRadio);
 
           // Type the test value inside the input
@@ -332,13 +336,15 @@ describe('StreamFormDelivery', () => {
           expect(endpointInput).toBeDisabled();
         });
 
-        it('should enable the Endpoint field when "Enter Bucket manually" is selected', async () => {
+        it('should enable the Endpoint field when "Enter Bucket details manually" is selected', async () => {
           await renderComponentAndAddNewDestinationName(
             destinationType.AkamaiObjectStorage,
             flags
           );
 
-          const manualRadio = screen.getByLabelText('Enter Bucket manually');
+          const manualRadio = screen.getByLabelText(
+            'Enter Bucket details manually'
+          );
           await userEvent.click(manualRadio);
 
           const endpointInput = screen.getByLabelText('Endpoint');
@@ -352,7 +358,9 @@ describe('StreamFormDelivery', () => {
           );
 
           // Switch to manual mode and fill in values
-          const manualRadio = screen.getByLabelText('Enter Bucket manually');
+          const manualRadio = screen.getByLabelText(
+            'Enter Bucket details manually'
+          );
           await userEvent.click(manualRadio);
 
           const bucketInput = screen.getByLabelText('Bucket');
@@ -537,8 +545,9 @@ describe('StreamFormDelivery', () => {
             flags
           );
 
-          const authenticationAutocomplete =
-            screen.getByLabelText('Authentication');
+          const authenticationAutocomplete = screen.getByLabelText(
+            'Authentication Type'
+          );
 
           expect(authenticationAutocomplete).toHaveValue('None');
 
@@ -560,8 +569,9 @@ describe('StreamFormDelivery', () => {
             );
 
             // Select the "Basic" Authentication option
-            const authenticationAutocomplete =
-              screen.getByLabelText('Authentication');
+            const authenticationAutocomplete = screen.getByLabelText(
+              'Authentication Type'
+            );
             await userEvent.click(authenticationAutocomplete);
             const basicAuthentication = await screen.findByText('Basic');
             await userEvent.click(basicAuthentication);
@@ -582,8 +592,9 @@ describe('StreamFormDelivery', () => {
             );
 
             // Select the "Basic" Authentication option
-            const authenticationAutocomplete =
-              screen.getByLabelText('Authentication');
+            const authenticationAutocomplete = screen.getByLabelText(
+              'Authentication Type'
+            );
             await userEvent.click(authenticationAutocomplete);
             const basicAuthentication = await screen.findByText('Basic');
             await userEvent.click(basicAuthentication);
@@ -611,7 +622,7 @@ describe('StreamFormDelivery', () => {
           expect(endpointUrlInput.getAttribute('value')).toEqual('Test');
         });
 
-        describe('Client Certificate fields', () => {
+        describe('Client Certificate Authentication fields', () => {
           it('should render TLS Hostname input and allow to type text', async () => {
             await renderComponentAndAddNewDestinationName(
               destinationType.CustomHttps,
@@ -649,13 +660,13 @@ describe('StreamFormDelivery', () => {
             expect(clientCertificateInput).toHaveValue('test');
           });
 
-          it('should render Client Key input and allow to type text', async () => {
+          it('should render Client Private Key input and allow to type text', async () => {
             await renderComponentAndAddNewDestinationName(
               destinationType.CustomHttps,
               flags
             );
 
-            const clientKeyInput = screen.getByLabelText('Client Key');
+            const clientKeyInput = screen.getByLabelText('Client Private Key');
             await userEvent.type(clientKeyInput, 'test');
 
             expect(clientKeyInput).toHaveValue('test');

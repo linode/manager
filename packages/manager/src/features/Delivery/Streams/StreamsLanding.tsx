@@ -10,6 +10,7 @@ import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFoot
 import { Table } from 'src/components/Table';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableSortCell } from 'src/components/TableSortCell';
+import { getStreamPayloadDetails } from 'src/features/Delivery/deliveryUtils';
 import { DeliveryTabHeader } from 'src/features/Delivery/Shared/DeliveryTabHeader/DeliveryTabHeader';
 import { streamStatusOptions } from 'src/features/Delivery/Shared/types';
 import {
@@ -124,7 +125,7 @@ export const StreamsLanding = () => {
   }
 
   const handleEdit = ({ id }: Stream) => {
-    navigate({ to: `/logs/delivery/streams/${id}/edit` });
+    navigate({ to: `/logs/delivery/streams/${id}/summary` });
   };
 
   const openDeleteDialog = (stream: Stream) => {
@@ -142,11 +143,12 @@ export const StreamsLanding = () => {
     details,
     label,
     status,
+    type,
   }: Stream) => {
     updateStream({
       id,
       destinations: destinations.map(({ id: destinationId }) => destinationId),
-      details,
+      details: getStreamPayloadDetails(type, details),
       label,
       status:
         status === streamStatus.Active

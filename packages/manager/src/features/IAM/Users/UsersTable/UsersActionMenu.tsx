@@ -5,6 +5,11 @@ import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { useIsIAMDelegationEnabled } from 'src/features/IAM/hooks/useIsIAMEnabled';
 
 import { useDelegationRole } from '../../hooks/useDelegationRole';
+import {
+  IAM_CHILD_USERS_PENDO_IDS,
+  IAM_DELEGATE_USERS_PENDO_IDS,
+  IAM_PARENT_USERS_PENDO_IDS,
+} from '../../Shared/constants';
 
 import type { PickPermissions, UserType } from '@linode/api-v4';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
@@ -117,6 +122,13 @@ export const UsersActionMenu = (props: Props) => {
     <ActionMenu
       actionsList={actions}
       ariaLabel={`Action menu for user ${username}`}
+      pendoId={
+        userType === 'delegate'
+          ? IAM_DELEGATE_USERS_PENDO_IDS.delegateUsernameActionMenu
+          : userType === 'child'
+            ? IAM_CHILD_USERS_PENDO_IDS.childUsernameActionMenu
+            : IAM_PARENT_USERS_PENDO_IDS.parentUsernameActionMenu
+      }
     />
   );
 };

@@ -1,3 +1,55 @@
+// Pendo IDs for Parent Users flow
+export const IAM_PARENT_USERS_PENDO_IDS = {
+  parentUsernameLink: 'IAM Users-Parent Username',
+  parentUsernameActionMenu: 'IAM Users Parent Username-Action menu',
+  addUserButton: 'IAM Users Parent-Add A User',
+  addUserDrawerSubmit: 'IAM Users Parent Add A User-Add User',
+  updateDelegation: 'IAM Account Delegations-Update Delegation',
+  updateDelegationSave: 'IAM Update Delegation-Save Changes',
+};
+// Pendo IDs for Delegate Users flow
+export const IAM_DELEGATE_USERS_PENDO_IDS = {
+  addUserButton: 'IAM Users Delegate-Add A User',
+  addUserDrawerSubmit: 'IAM Users Delegate Add A User-Add User',
+  delegateUsernameActionMenu: 'IAM Users Delegate Username-Action menu',
+  delegateUsernameLink: 'IAM Users-Delegate Username',
+};
+// Pendo IDs for Child Users flow
+export const IAM_CHILD_USERS_PENDO_IDS = {
+  childUsernameLink: 'IAM Users-Child Username',
+  childUsernameActionMenu: 'IAM Users Child Username-Action menu',
+  addUserButton: 'IAM Users Child-Add A User',
+  addUserDrawerSubmit: 'IAM Users Child Add A User-Add User',
+};
+
+// Pendo IDs for Roles pages (Parent & Child)
+export const IAM_ROLES_PENDO_IDS = {
+  viewDefaultRoles: 'IAM Roles-View Default Roles',
+  delegateUsersActionMenu: 'IAM Roles Delegate Users-Action menu',
+  addNewDefaultRoles: 'IAM Roles for Delegate Users-Add New Default Roles',
+  addNewDefaultRolesDrawer:
+    'IAM Roles for Delegate Users Add New Default Roles-Add',
+  rolesChecked: 'IAM Roles-Roles checked',
+  rolesUnchecked: 'IAM Roles-Roles unchecked',
+  assignSelectedRoles: 'IAM Roles-Assign Selected Roles',
+  assignSelectedRolesToUserOpen:
+    'IAM Roles Assign Selected Role to a User-User:open',
+  assignSelectedRolesAsDelegate: 'IAM Roles-Assign Selected Roles as Delegate',
+  assignSelectedRolesAsChild: 'IAM Roles-Assign Selected Roles as Child',
+  assignSelectedRolesAsParent: 'IAM Roles-Assign Selected Roles as Parent',
+
+  assignSelectedRoleToUserDelegate:
+    'IAM Roles Assign Selected Role to a User-Delegate User',
+  assignSelectedRoleToUserParent:
+    'IAM Roles Assign Selected Role to a User-Parent User',
+  assignSelectedRoleToUserChild:
+    'IAM Roles Assign Selected Role to a User-Child User',
+  assignSelectedRoleToUserAssign:
+    'IAM Roles Assign Selected Role to a User-Assign',
+  assignRoleAsParent: 'IAM Roles-Assign Role as Parent',
+  assignRoleAsChild: 'IAM Roles-Assign Role as Child',
+  assignRoleAsDelegate: 'IAM Roles-Assign Role as Delegate',
+};
 // Various constants for the IAM package
 
 // Labels
@@ -23,7 +75,6 @@ export const ERROR_STATE_TEXT =
 
 // Delegation error messages
 export const NO_ITEMS_TO_DISPLAY_TEXT = 'No items to display.';
-export const NO_DELEGATED_USERS_TEXT = 'No users added.';
 
 // Links
 export const IAM_DOCS_LINK =

@@ -26,8 +26,7 @@ export const UserDetailsLanding = () => {
   const flags = useFlags();
   const theme = useTheme();
   const { isIAMEnabled } = useIsIAMEnabled();
-  const showLimitedAvailabilityBadges =
-    flags.iamLimitedAvailabilityBadges && isIAMEnabled;
+  const showNewBadge = flags.iamNewBadge && isIAMEnabled;
   const { username } = useParams({ from: '/iam/users/$username' });
   const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
   const { isParentUserType } = useDelegationRole();
@@ -68,7 +67,7 @@ export const UserDetailsLanding = () => {
               label: (
                 <>
                   {IAM_LABEL}
-                  {showLimitedAvailabilityBadges ? (
+                  {showNewBadge ? (
                     <NewFeatureChip
                       component="span"
                       sx={{ position: 'relative', top: -1 }}

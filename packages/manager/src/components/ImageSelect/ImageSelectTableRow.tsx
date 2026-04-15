@@ -18,6 +18,7 @@ import {
 import { formatDate } from 'src/utilities/formatDate';
 
 import { TABLE_CELL_BASE_STYLE } from './constants';
+import { getRegionListItem } from './utilities';
 
 import type {
   IMAGE_SELECT_TABLE_LINODE_CREATE_PENDO_IDS,
@@ -25,20 +26,31 @@ import type {
 } from './constants';
 import type { Image, ImageRegion, Region } from '@linode/api-v4';
 import type { Theme } from '@linode/ui';
+import type { IMAGE_SELECT_TABLE_SHARE_GROUP_CREATE_PENDO_IDS } from 'src/components/ImageSelect/constants';
 
 interface Props {
   image: Image;
-  onSelect: () => void;
+  onSelect?: () => void;
   pendoIDs:
     | typeof IMAGE_SELECT_TABLE_LINODE_CREATE_PENDO_IDS
-    | typeof IMAGE_SELECT_TABLE_LINODE_REBUILD_PENDO_IDS;
+    | typeof IMAGE_SELECT_TABLE_LINODE_REBUILD_PENDO_IDS
+    | typeof IMAGE_SELECT_TABLE_SHARE_GROUP_CREATE_PENDO_IDS;
   regions: Region[];
-  selected: boolean;
+  selectedImageIds: string[];
+  selectionMode: 'multi' | 'single';
   timezone?: string;
 }
 
 export const ImageSelectTableRow = (props: Props) => {
-  const { image, onSelect, pendoIDs, regions, selected, timezone } = props;
+  const {
+    image,
+    onSelect,
+    pendoIDs,
+    regions,
+    selectedImageIds,
+    timezone,
+    selectionMode,
+  } = props;
 
   const {
     capabilities,
@@ -46,7 +58,7 @@ export const ImageSelectTableRow = (props: Props) => {
     id,
     image_sharing,
     label,
-    regions: imageRegions,
+    regions: _imageRegions,
     size,
     status,
     type,
@@ -76,36 +88,41 @@ export const ImageSelectTableRow = (props: Props) => {
     return '—';
   };
 
-  const getRegionListItem = (imageRegion: ImageRegion) => {
-    const matchingRegion = regions.find((r) => r.id === imageRegion.region);
-
-    return matchingRegion
-      ? `${matchingRegion.label} (${imageRegion.region})`
-      : imageRegion.region;
-  };
+  const imageRegions = _imageRegions ?? []; // Failsafe for manual images whose `regions` property is null
 
   const FormattedRegionList = () => (
     <StyledFormattedRegionList>
       {imageRegions.map((region: ImageRegion, idx) => {
         return (
           <ListItem disablePadding key={`${region.region}-${idx}`}>
-            {getRegionListItem(region)}
+            {getRegionListItem(regions, region)}
           </ListItem>
         );
       })}
     </StyledFormattedRegionList>
   );
 
+  const selected = selectedImageIds.includes(id);
   return (
-    <TableRow key={id} rowborder>
+    <TableRow
+      key={id}
+      rowborder
+      select={onSelect}
+      selectable={selectionMode === 'multi'}
+      selected={selected}
+    >
       <TableCell style={{ ...TABLE_CELL_BASE_STYLE }}>
-        <FormControlLabel
-          checked={selected}
-          control={<Radio />}
-          label={label}
-          onChange={onSelect}
-          sx={{ gap: 2 }}
-        />
+        {selectionMode === 'single' ? (
+          <FormControlLabel
+            checked={selected}
+            control={<Radio />}
+            label={label}
+            onChange={onSelect}
+            sx={{ gap: 2 }}
+          />
+        ) : (
+          label
+        )}
         {type === 'manual' && capabilities.includes('cloud-init') && (
           <TooltipIcon
             data-pendo-id={pendoIDs.metadataSupportedIcon}
@@ -132,21 +149,25 @@ export const ImageSelectTableRow = (props: Props) => {
                 ? pluralize('Region', 'Regions', imageRegions.length)
                 : '—'
             }
-            tooltipText={<FormattedRegionList />}
+            tooltipText={
+              imageRegions?.length > 0 ? <FormattedRegionList /> : 'N/A'
+            }
           />
         </TableCell>
       </Hidden>
-      <Hidden smDown>
-        <TableCell
-          style={{
-            whiteSpace: 'nowrap',
-            paddingLeft: matchesLgDown ? '58px' : undefined,
-            ...TABLE_CELL_BASE_STYLE,
-          }}
-        >
-          {getShareGroupDisplay()}
-        </TableCell>
-      </Hidden>
+      {selectionMode === 'single' && (
+        <Hidden smDown>
+          <TableCell
+            style={{
+              whiteSpace: 'nowrap',
+              paddingLeft: matchesLgDown ? '58px' : undefined,
+              ...TABLE_CELL_BASE_STYLE,
+            }}
+          >
+            {getShareGroupDisplay()}
+          </TableCell>
+        </Hidden>
+      )}
       <Hidden lgDown>
         <TableCell style={{ whiteSpace: 'nowrap', ...TABLE_CELL_BASE_STYLE }}>
           {getSizeDisplay()}

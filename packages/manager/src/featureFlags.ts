@@ -95,6 +95,11 @@ interface AclpFlag {
    */
   bypassAccountCapabilities?: boolean;
   /**
+   * This property indicates whether to show the "Download CSV" icon in the alert details page or not
+   */
+  enableCSVDownload?: boolean;
+
+  /**
    * This property indicates whether the feature is enabled
    */
   enabled: boolean;
@@ -129,6 +134,10 @@ interface AclpLogsFlag extends BetaFeatureFlag {
    * This property indicates whether to show Custom HTTPS destination type
    */
   customHttpsEnabled?: boolean;
+  /**
+   * This property indicates whether to show the "Metrics" tab on Logs Stream details page or not
+   */
+  metricsEnabled?: boolean;
   /**
    * This property indicates whether the feature is new or not
    */
@@ -176,6 +185,7 @@ interface AclpAlerting {
   editDisabledStatuses?: AlertStatusType[];
   maxDimensionFiltersValues?: number;
   maxEmailChannelRecipients?: number;
+  new?: boolean;
   notificationChannels: boolean;
   recentActivity: boolean;
   systemChannelSupportedServices?: CloudPulseServiceType[]; // linode, dbaas, etc.
@@ -231,8 +241,10 @@ export interface Flags {
   databasePgBouncer: boolean;
   databasePremium: boolean;
   databaseResize: boolean;
+  databaseResizeGenerationalPlans: boolean;
   databaseRestrictPlanResize: boolean;
   databases: boolean;
+  databaseValkey: BetaFeatureFlag;
   databaseVpc: boolean;
   databaseVpcBeta: boolean;
   dbaasV2: BetaFeatureFlag;
@@ -245,7 +257,7 @@ export interface Flags {
   hostnameEndpoints: boolean;
   iam: BaseFeatureFlag;
   iamDelegation: BaseFeatureFlag;
-  iamLimitedAvailabilityBadges: boolean;
+  iamNewBadge: boolean;
   ipv6Sharing: boolean;
   kubernetesBlackwellPlans: boolean;
   limitsEvolution: LimitsEvolution;
@@ -268,6 +280,7 @@ export interface Flags {
   objectStorageGlobalQuotas: boolean;
   objMultiCluster: boolean;
   objSummaryPage: boolean;
+  passwordlessLinodes: boolean;
   placementGroupPolicyUpdate: boolean;
   privateImageSharing: boolean;
   productInformationBanners: ProductInformationBannerFlag[];
@@ -288,6 +301,7 @@ export interface Flags {
   udp: boolean;
   vmHostMaintenance: VMHostMaintenanceFlag;
   volumeSummaryPage: boolean;
+  vpcDbaasResources: boolean;
   vpcIpv6: boolean;
 }
 

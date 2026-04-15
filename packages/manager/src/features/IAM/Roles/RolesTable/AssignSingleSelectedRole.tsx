@@ -1,9 +1,10 @@
-import { Divider, useTheme } from '@mui/material';
+import { useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import { AssignedPermissionsPanel } from 'src/features/IAM/Shared/AssignedPermissionsPanel/AssignedPermissionsPanel';
+import { Divider } from 'src/features/IAM/Shared/Divider/Divider';
 
 import type { RoleView } from 'src/features/IAM/Shared/types';
 import type { AssignNewRoleFormValues } from 'src/features/IAM/Shared/utilities';
@@ -28,10 +29,8 @@ export const AssignSingleSelectedRole = ({
       <Box display="flex" flexDirection="column" sx={{ flex: '5 1 auto' }}>
         {index !== 0 && (
           <Divider
-            sx={{
-              marginBottom: theme.tokens.spacing.S6,
-              marginTop: theme.tokens.spacing.S12,
-            }}
+            spacingBottom={theme.tokens.spacing.S6}
+            spacingTop={theme.tokens.spacing.S12}
           />
         )}
 

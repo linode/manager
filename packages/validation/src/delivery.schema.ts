@@ -19,16 +19,16 @@ const maxLengthMessage = 'Length must be 255 characters or less.';
 const authenticationDetailsSchema = object({
   basic_authentication_user: string()
     .max(maxLength, maxLengthMessage)
-    .required('Username is required for Basic Authentication.'),
+    .required('Username is required for Basic authentication.'),
   basic_authentication_password: string()
     .max(maxLength, maxLengthMessage)
-    .required('Password is required for Basic Authentication.'),
+    .required('Password is required for Basic authentication.'),
 });
 
 const authenticationSchema = object({
   type: string()
     .oneOf(['basic', 'none'])
-    .required('Authentication is required.'),
+    .required('Authentication Type is required.'),
   details: mixed()
     .defined()
     .when('type', {
@@ -39,7 +39,7 @@ const authenticationSchema = object({
           .nullable()
           .test(
             'null-or-undefined',
-            'For none authentication details should be `null` or `undefined`.',
+            'Username and password must be empty when authentication type is None.',
             (value) => !value,
           ),
     }) as Schema<InferType<typeof authenticationDetailsSchema> | undefined>,
@@ -100,7 +100,7 @@ const clientCertificateDetailsSchema = object({
         this.createError({
           path: `${this.path}.client_private_key`,
           message:
-            'Client Key is required when other client certificate details are provided.',
+            'Client Private Key is required when other client certificate details are provided.',
         }),
       );
     }
@@ -120,29 +120,29 @@ const forbiddenCustomHeaderNames = [
 const customHeaderSchema = object({
   name: string()
     .max(maxLength, maxLengthMessage)
-    .required('Custom Header Name is required.')
+    .required('Custom Header name is required.')
     .test(
       'non-empty-name',
-      'Custom Header Name cannot be empty or whitespace only.',
+      'Custom Header name cannot be empty or whitespace only.',
       (value) => hasValue(value),
     )
     .test(
       'forbidden-custom-header-name',
-      'This header name is not allowed.',
+      'This Custom Header name cannot be used.',
       (value) =>
         !forbiddenCustomHeaderNames.includes(value.trim().toLowerCase()),
     ),
   value: string()
     .max(maxLength, maxLengthMessage)
-    .required('Custom Header Value is required.')
+    .required('Custom Header value is required.')
     .test(
       'non-empty-value',
-      'Custom Header Value cannot be empty or whitespace only.',
+      'Custom Header value cannot be empty or whitespace only.',
       (value) => hasValue(value),
     ),
 });
 
-const urlRgx = /^(https?:\/\/)?(www\.)?[a-zA-Z0-9-]+(\.[a-zA-Z]+)+(\/\S*)?$/;
+const urlRgx = /^(https?:\/\/)?([\w-]+(\.[\w-]+)+)(\/\S*)?$/;
 
 const customHTTPSDetailsSchema = object({
   authentication: authenticationSchema.required(),
@@ -157,7 +157,7 @@ const customHTTPSDetailsSchema = object({
     .optional()
     .test(
       'unique-header-names',
-      'Custom Header Names must be unique.',
+      'Custom Header names must be unique.',
       function (headers) {
         if (!headers || headers.length === 0) {
           return true;
@@ -176,7 +176,7 @@ const customHTTPSDetailsSchema = object({
             errors.push(
               this.createError({
                 path: `${this.path}[${index}].name`,
-                message: 'Custom Header Name must be unique.',
+                message: 'Custom Header name must be unique.',
               }),
             );
           } else {
@@ -206,7 +206,7 @@ const akamaiObjectStorageDetailsBaseSchema = object({
     .required('Endpoint is required.')
     .test(
       'host-must-match-with-bucket-name-if-provided',
-      'Bucket name provided as a part of the endpoint must be the same as the bucket.',
+      'Bucket name in the endpoint must match the name in the Bucket field.',
       (value, ctx) => {
         if (ctx.parent.bucket_name) {
           const groups = hostRgx.exec(value)?.groups;
@@ -231,7 +231,7 @@ const akamaiObjectStorageDetailsBaseSchema = object({
     .max(63, 'Bucket name must be between 3 and 63 characters.')
     .test(
       'bucket-name-same-in-host-if-provided',
-      'Bucket must match the bucket name used in the host prefix.',
+      'Bucket must match the bucket name in the Endpoint prefix.',
       (value, ctx) => {
         if (ctx.parent.host) {
           const groups = hostRgx.exec(ctx.parent.host)?.groups;
@@ -351,11 +351,9 @@ const streamSchemaBase = object({
     .min(3, 'Stream name must have at least 3 characters.')
     .max(maxLength, maxLengthMessage)
     .required('Stream name is required.'),
-  status: mixed<'active' | 'inactive' | 'provisioning'>().oneOf([
-    'active',
-    'inactive',
-    'provisioning',
-  ]),
+  status: mixed<
+    'active' | 'deactivating' | 'failed' | 'inactive' | 'provisioning'
+  >().oneOf(['active', 'deactivating', 'failed', 'inactive', 'provisioning']),
   type: string()
     .oneOf(['audit_logs', 'lke_audit_logs'])
     .required('Stream type is required.'),
@@ -372,8 +370,10 @@ export const createStreamSchema = streamSchemaBase;
 export const updateStreamSchema = streamSchemaBase
   .omit(['type'])
   .shape({
-    status: mixed<'active' | 'inactive' | 'provisioning'>()
-      .oneOf(['active', 'inactive', 'provisioning'])
+    status: mixed<
+      'active' | 'deactivating' | 'failed' | 'inactive' | 'provisioning'
+    >()
+      .oneOf(['active', 'deactivating', 'failed', 'inactive', 'provisioning'])
       .required(),
     details: lazy((value) => {
       if (

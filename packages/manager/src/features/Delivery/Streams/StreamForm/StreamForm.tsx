@@ -77,12 +77,23 @@ export const StreamForm = (props: StreamFormProps) => {
     control,
     name: 'stream.status',
   });
+
+  const isStreamStatusBlocking =
+    !!selectedStreamStatus &&
+    (
+      [
+        streamStatus.Provisioning,
+        streamStatus.Deactivating,
+        streamStatus.Failed,
+      ] as StreamStatus[]
+    ).includes(selectedStreamStatus);
+
   const submitButtonTooltip = useMemo(
     () =>
-      selectedStreamStatus === streamStatus.Provisioning
-        ? 'You cannot save changes while the stream is provisioning.'
+      isStreamStatusBlocking
+        ? `You cannot save changes while the stream status is ${selectedStreamStatus}`
         : undefined,
-    [selectedStreamStatus]
+    [isStreamStatusBlocking, selectedStreamStatus]
   );
 
   useEffect(() => {
@@ -119,15 +130,17 @@ export const StreamForm = (props: StreamFormProps) => {
         );
         form.setValue('stream.destinations', [id]);
       } catch (errors) {
+        let errorMessage = `There was an issue creating your destination`;
         for (const error of errors) {
           if (error.field) {
             form.setError(error.field, { message: error.reason });
           } else {
+            errorMessage = error.reason;
             form.setError('root', { message: error.reason });
           }
         }
 
-        enqueueSnackbar('There was an issue creating your destination', {
+        enqueueSnackbar(errorMessage, {
           variant: 'error',
         });
         return;
@@ -166,20 +179,19 @@ export const StreamForm = (props: StreamFormProps) => {
 
       navigate({ to: '/logs/delivery/streams' });
     } catch (errors) {
+      let errorMessage = `There was an issue ${mode === 'create' ? 'creating' : 'editing'} your stream`;
       for (const error of errors) {
         if (error.field) {
           form.setError(error.field, { message: error.reason });
         } else {
+          errorMessage = error.reason;
           form.setError('root', { message: error.reason });
         }
       }
 
-      enqueueSnackbar(
-        `There was an issue ${mode === 'create' ? 'creating' : 'editing'} your stream`,
-        {
-          variant: 'error',
-        }
-      );
+      enqueueSnackbar(errorMessage, {
+        variant: 'error',
+      });
     }
   };
 
@@ -211,8 +223,7 @@ export const StreamForm = (props: StreamFormProps) => {
         <Grid size={{ lg: 3, md: 12, sm: 12, xs: 12 }}>
           <FormSubmitBar
             blockSubmit={
-              selectedStreamStatus === streamStatus.Provisioning ||
-              !selectedDestinations?.length
+              isStreamStatusBlocking || !selectedDestinations?.length
             }
             connectionTested={destinationVerified}
             destinationType={destination?.type}

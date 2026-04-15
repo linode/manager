@@ -38,8 +38,8 @@ export const RESIZE_DISABLED_PREMIUM_PLAN_TAB_TEXT =
 export const RESIZE_DISABLED_DEDICATED_SHARED_PLAN_TABS_TEXT =
   'Resizing to a Shared CPU or a Dedicated CPU plan is not available for database clusters on a Premium CPU plan.';
 
-export const RESIZE_DISABLED_SHARED_PLAN_TAB_LEGACY_TEXT =
-  'Resizing a 2-node cluster is only allowed with Dedicated plans.';
+export const RESIZE_DISABLED_NON_G7_DEDICATED_SHARED_PLAN_TABS_TEXT =
+  'Resizing to a Shared CPU or a non-G7 Dedicated CPU plan is not available for database clusters on a Premium CPU plan.';
 
 export const BACKUPS_MAX_TIME_EXCEEDED_VALIDATON_TEXT =
   'Select a time from the past.';
@@ -66,7 +66,7 @@ export const CREDENTIALS_ERROR_TEXT =
   'There was an error retrieving cluster credentials. Please try again.';
 
 export const DISABLED_PASSWORD_BUTTON_TEXT =
-  'Your root password is unavailable when your Database Cluster is in a failed or suspended state.';
+  'Your root password is unavailable when your Database Cluster is in a suspended or resuming state.';
 
 export const CLUSTER_PROVISIONING_TEXT =
   'Your Database Cluster is currently provisioning.';
@@ -103,3 +103,9 @@ export const usernameOptions = [
 ]; // Currently the only options for the username field
 
 export const DEFAULT_PAGE_SIZES = [25, 50, 75, 100];
+export const DISABLE_CREDENTIAL_STATES = [
+  'provisioning',
+  'resuming',
+  'suspending',
+  'suspended',
+];

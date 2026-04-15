@@ -17,7 +17,6 @@ import { Factory } from '@linode/utilities';
 export const possibleStatuses: DatabaseStatus[] = [
   'active',
   'degraded',
-  'failed',
   'migrating',
   'migrated',
   'provisioning',
@@ -200,6 +199,8 @@ export const databaseInstanceFactory =
     label: Factory.each((i) => `example.com-database-${i}`),
     members: {
       '2.2.2.2': 'primary',
+      '2.2.2.3': 'failover',
+      '2.2.2.4': 'failover',
     },
     platform: 'rdbms-default',
     region: Factory.each((i) => possibleRegions[i % possibleRegions.length]),
@@ -269,6 +270,8 @@ export const databaseFactory = Factory.Sync.makeFactory<Database>({
   label: Factory.each((i) => `database-${i}`),
   members: {
     '2.2.2.2': 'primary',
+    '2.2.2.3': 'failover',
+    '2.2.2.4': 'failover',
   },
   oldest_restore_time: '2024-09-15T17:15:12',
   platform: 'rdbms-default',

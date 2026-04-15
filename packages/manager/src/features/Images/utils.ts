@@ -3,7 +3,7 @@ import { useRegionsQuery } from '@linode/queries';
 import { DISALLOWED_IMAGE_REGIONS } from 'src/constants';
 import { useFlags } from 'src/hooks/useFlags';
 
-import type { Event, Image, Linode } from '@linode/api-v4';
+import type { Event, Image, ImageRegion, Linode, Region } from '@linode/api-v4';
 
 export type ImageLibraryType =
   | 'owned-by-me'
@@ -21,6 +21,8 @@ export type ShareGroupsType =
 export interface ImageSubTab<T> {
   /** Whether this tab represents a beta feature */
   isBeta?: boolean;
+  /** Pendo ID for the tab, used for analytics tracking */
+  pendoId?: string;
   /** Display title for the tab */
   title: string;
   /** The type this tab represents */
@@ -115,4 +117,16 @@ export const getImageTypeToImageLibraryType = (
     default:
       return 'shared-with-me';
   }
+};
+
+export const getCountryAndLabelFromImageRegion = (
+  regions: Region[],
+  imageRegion: ImageRegion
+) => {
+  const matchingRegion = regions?.find((r) => r.id === imageRegion.region);
+
+  return {
+    country: matchingRegion?.country,
+    label: matchingRegion?.label,
+  };
 };

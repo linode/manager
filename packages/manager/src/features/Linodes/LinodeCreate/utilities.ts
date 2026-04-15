@@ -25,6 +25,7 @@ import { getDefaultUDFData } from './Tabs/StackScripts/UserDefinedFields/utiliti
 import type { LinodeCreateInterface } from './Networking/utilities';
 import type {
   AccountSettings,
+  APIError,
   CloudPulseAlertsPayload,
   CreateLinodeRequest,
   FirewallSettings,
@@ -54,9 +55,10 @@ export const EMPTY_ACLP_ALERTS: CloudPulseAlertsPayload = {
 };
 
 interface LinodeCreatePayloadOptions {
-  isAclpAlertsPreferenceBeta?: boolean;
-  isAclpIntegration?: boolean;
+  isAclpAlertsEnabled?: boolean;
+  isAclpAlertsMode?: boolean;
   isDualStackEnabled?: boolean;
+  isPasswordLessLinodesEnabled?: boolean;
   isShowingNewNetworkingUI: boolean;
 }
 
@@ -73,9 +75,10 @@ export const getLinodeCreatePayload = (
 ): CreateLinodeRequest => {
   const {
     isShowingNewNetworkingUI,
-    isAclpIntegration,
-    isAclpAlertsPreferenceBeta,
+    isAclpAlertsEnabled,
+    isAclpAlertsMode,
     isDualStackEnabled,
+    isPasswordLessLinodesEnabled,
   } = options;
 
   const values: CreateLinodeRequest = omitProps(formValues, [
@@ -85,7 +88,9 @@ export const getLinodeCreatePayload = (
     'linodeInterfaces',
   ]);
 
-  if (!isAclpIntegration || !isAclpAlertsPreferenceBeta) {
+  const isLegacyAlerts = !isAclpAlertsEnabled || !isAclpAlertsMode;
+
+  if (isLegacyAlerts) {
     values.alerts = undefined;
   }
 
@@ -126,7 +131,35 @@ export const getLinodeCreatePayload = (
     );
   }
 
+  if (isPasswordLessLinodesEnabled) {
+    if (!values.root_pass) {
+      values.root_pass = undefined;
+    }
+    if (values.authorized_keys?.length === 0) {
+      values.authorized_users = undefined;
+    }
+  }
+
   return values;
+};
+
+const missingAuthenticationMethodErrorReason =
+  'Must provide valid root_pass, authorized_keys, or authorized_users';
+const missingAuthenticationMethodMessage =
+  'Provide at least one authentication method. This can be a Root Password or an SSH Key, for added security.';
+
+/*
+ * Transforms the error message about invalid/missing authentication methods into a more user-friendly message.
+ */
+
+export const transformPasswordLessCreateErrors = (errors: APIError[]) => {
+  for (const error of errors) {
+    if (error.reason.includes(missingAuthenticationMethodErrorReason)) {
+      error.reason = missingAuthenticationMethodMessage;
+    }
+  }
+
+  return errors;
 };
 
 /**
@@ -245,12 +278,18 @@ export interface LinodeCreateFormContext {
    */
   isLinodeInterfacesEnabled: boolean;
   /**
+   * Is passwordLess Linode creation enabled?
+   * When true, root_pass is optional if authorized_users are provided.
+   * When false, root_pass is required.
+   */
+  isPasswordLessLinodesEnabled: boolean;
+  /**
    * Profile data is used in the Linode Create resolver because
    * restricted users are subject to different validation.
    */
   profile: Profile | undefined;
   /**
-   * Used for dispaying warnings to internal Akamai employees.
+   * Used for displaying warnings to internal Akamai employees.
    */
   secureVMNoticesEnabled: boolean;
 }

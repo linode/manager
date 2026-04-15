@@ -1,6 +1,6 @@
+import { getFeatureChip } from '@linode/shared';
 import {
   Autocomplete,
-  BetaChip,
   Box,
   Button,
   CircleProgress,
@@ -53,7 +53,13 @@ interface AlertReusableComponentProps {
   /**
    * Called when an alert is toggled on or off.
    * @param payload enabled alerts ids
-   * @param hasUnsavedChanges boolean to check if there are unsaved changes
+   * @param hasUnsavedChanges boolean to check if there are unsaved changes.
+   * - NOTE: Should not be used by service types in SERVICES_WITH_EXTERNAL_SAVE — this value
+   * is derived from the query cache and can be stale in the window between save success and
+   * the invalidated query resolving. Any toggle during that window would produce an incorrect
+   * result. Those service owners should compute this themselves from the incoming payload,
+   * and also invalidate the alerts query after save so toggle rows show the correct state
+   * if the user navigates away and comes back.
    */
   onToggleAlert?: (
     payload: CloudPulseAlertsPayload,
@@ -119,7 +125,7 @@ export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
     [alerts, regionId, searchText, selectedType]
   );
 
-  const { aclpServices } = useFlags();
+  const { aclpAlerting } = useFlags();
 
   const navigate = useNavigate();
 
@@ -139,7 +145,7 @@ export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
             <Box display="flex" justifyContent="space-between">
               <Box alignItems="center" display="flex" gap={0.5}>
                 <Typography variant="h2">Alerts</Typography>
-                {aclpServices?.[serviceType]?.alerts?.beta && <BetaChip />}
+                {aclpAlerting && getFeatureChip(aclpAlerting)}
               </Box>
               <Button
                 buttonType="outlined"

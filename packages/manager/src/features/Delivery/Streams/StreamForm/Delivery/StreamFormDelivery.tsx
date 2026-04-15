@@ -289,6 +289,8 @@ export const StreamFormDelivery = (props: StreamFormDeliveryProps) => {
               inputProps: {
                 'data-pendo-id': `Logs Delivery Streams ${capitalizedMode}-Destination Name`,
               },
+              labelTooltipText:
+                'Select an existing destination from the list or create a new one by entering a name and clicking Create.',
             }}
             value={field.value ? { label: field.value } : null}
           />
@@ -303,7 +305,7 @@ export const StreamFormDelivery = (props: StreamFormDeliveryProps) => {
               mode={mode}
             />
           )}
-          {selectedDestinations?.[0] && (
+          {findDestination(selectedDestinations?.[0])?.details && (
             <DestinationAkamaiObjectStorageDetailsSummary
               {...(findDestination(selectedDestinations[0])
                 ?.details as AkamaiObjectStorageDetails)}
@@ -321,7 +323,7 @@ export const StreamFormDelivery = (props: StreamFormDeliveryProps) => {
                 mode={mode}
               />
             )}
-            {selectedDestinations?.[0] && (
+            {findDestination(selectedDestinations?.[0])?.details && (
               <DestinationCustomHTTPSDetailsSummary
                 {...(findDestination(selectedDestinations[0])
                   ?.details as CustomHTTPSDetails)}
@@ -335,8 +337,15 @@ export const StreamFormDelivery = (props: StreamFormDeliveryProps) => {
   return (
     <Paper>
       <Typography variant="h2">Delivery</Typography>
-      <Typography sx={{ mt: theme.spacingFunction(12) }}>
-        Set the destination for log delivery.
+      <Typography
+        sx={{
+          mt: theme.spacingFunction(12),
+          maxWidth: 440,
+          whiteSpace: 'preserve-spaces',
+        }}
+      >
+        Choose the destination where logs will be delivered. Select a
+        preconfigured destination or create a new one.
       </Typography>
       {isLoading && (
         <Box display="flex" justifyContent="center">
