@@ -20,6 +20,16 @@ pipeline {
         }
 
 
+        stage("Build dependencies") {
+            steps {
+                nodejs(configId: "npmrc-ro", nodeJSInstallationName: "v22") {
+                    sh "pnpm build:validation"
+                    sh "pnpm build:sdk"
+                }
+            }
+        }
+
+
         stage("Validate") {
             parallel {
                 stage("Lint") {
@@ -89,7 +99,6 @@ pipeline {
             steps {
                 nodejs(configId: "npmrc-ro", nodeJSInstallationName: "v22") {
                     sh "pnpm build"
-                    sh "pnpm release --env=develop"
                 }
             }
         }
@@ -122,7 +131,6 @@ pipeline {
             steps {
                 nodejs(configId: "npmrc-ro", nodeJSInstallationName: "v22") {
                     sh "pnpm build"
-                    sh "pnpm release --env=staging"
                 }
             }
         }
@@ -155,7 +163,6 @@ pipeline {
             steps {
                 nodejs(configId: "npmrc-ro", nodeJSInstallationName: "v22") {
                     sh "pnpm build"
-                    sh "pnpm release --env=master"
                 }
             }
         }
