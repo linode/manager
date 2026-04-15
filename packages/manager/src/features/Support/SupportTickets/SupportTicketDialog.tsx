@@ -242,6 +242,35 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     }
   }, [open]);
 
+  // Keep loading state active until chat window completes/closes.
+  React.useEffect(() => {
+    const handleLiveChatCompleted = () => {
+      setSubmitting(false);
+      resetDialog(true);
+      props.onClose();
+    };
+
+    const handleLiveChatFailed = () => {
+      setSubmitting(false);
+    };
+
+    window.addEventListener(
+      'manager:live-chat-completed',
+      handleLiveChatCompleted
+    );
+    window.addEventListener('manager:live-chat-failed', handleLiveChatFailed);
+    return () => {
+      window.removeEventListener(
+        'manager:live-chat-completed',
+        handleLiveChatCompleted
+      );
+      window.removeEventListener(
+        'manager:live-chat-failed',
+        handleLiveChatFailed
+      );
+    };
+  }, [props]);
+
   /**
    * Store 'general' support ticket data in local storage if it exists.
    * Specific fields from other ticket types (e.g. smtp) will not be saved since the general form will render via 'Open New Ticket'.
@@ -334,6 +363,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
           message:
             'Unable to start live chat because no chat token was returned.',
         });
+        setSubmitting(false);
         return;
       }
 
@@ -342,12 +372,16 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
       window.sessionStorage.setItem('LiveChatDescription', description);
       window.sessionStorage.setItem('EnableLiveChat', 'true');
 
+      // Clear cached title so it does not persist after starting live chat.
+      storage.supportTicket.set({
+        ...storage.supportTicket.get(),
+        summary: '',
+      });
+
       // Navigate first so listeners on /support can receive the event reliably.
       await navigate({ to: '/support' });
       window.dispatchEvent(new Event('manager:enable-live-chat'));
-
-      props.onClose();
-      window.setTimeout(() => resetDialog(true), 500);
+      // Button stays loading until chat window closes (will receive manager:live-chat-completed event)
     } catch (err: unknown) {
       const status = (err as { response?: { status?: number } })?.response
         ?.status;
@@ -358,7 +392,6 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
           message: 'Unable to start live chat. Please try again.',
         });
       }
-    } finally {
       setSubmitting(false);
     }
   };
