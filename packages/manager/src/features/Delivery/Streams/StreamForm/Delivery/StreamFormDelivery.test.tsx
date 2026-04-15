@@ -24,6 +24,8 @@ import type { Flags } from 'src/featureFlags';
 
 const loadingTestId = 'circle-progress';
 
+const user = userEvent.setup({ delay: null });
+
 const mockDestinations = [
   ...akamaiObjectStorageDestinationFactory.buildList(2),
   ...customHttpsDestinationFactory.buildList(2),
@@ -113,9 +115,9 @@ describe('StreamFormDelivery', () => {
         screen.getByLabelText('Destination Type');
 
       expect(destinationTypeAutocomplete).toBeEnabled();
-      await userEvent.click(destinationTypeAutocomplete);
+      await user.click(destinationTypeAutocomplete);
       const customHttpsOption = await screen.findByText('Custom HTTPS');
-      await userEvent.click(customHttpsOption);
+      await user.click(customHttpsOption);
       expect(destinationTypeAutocomplete).toHaveValue('Custom HTTPS');
     }
 
@@ -123,17 +125,17 @@ describe('StreamFormDelivery', () => {
       screen.getByLabelText('Destination Name');
 
     // Open the dropdown
-    await userEvent.click(destinationNameAutocomplete);
+    await user.click(destinationNameAutocomplete);
 
     // Type in a new destination name
-    await userEvent.type(destinationNameAutocomplete, 'New test destination');
+    await user.type(destinationNameAutocomplete, 'New test destination');
 
     // Select the "Create New test destination" option
     const createNewTestDestination = await screen.findByText(
       'New test destination',
       { exact: false }
     );
-    await userEvent.click(createNewTestDestination);
+    await user.click(createNewTestDestination);
   };
 
   describe('when customHttpsEnabled feature flag is set to false', () => {
@@ -200,13 +202,13 @@ describe('StreamFormDelivery', () => {
           screen.getByLabelText('Destination Name');
 
         // Open the dropdown
-        await userEvent.click(destinationNameAutocomplete);
+        await user.click(destinationNameAutocomplete);
 
         // Select the "Destination 1" option
         const firstDestination = await screen.findByText(
           'Akamai Object Storage Destination 1'
         );
-        await userEvent.click(firstDestination);
+        await user.click(firstDestination);
 
         expect(destinationNameAutocomplete).toHaveValue(
           'Akamai Object Storage Destination 1'
@@ -223,7 +225,7 @@ describe('StreamFormDelivery', () => {
           screen.getByLabelText('Destination Name');
 
         // Move focus away from the dropdown
-        await userEvent.tab();
+        await user.tab();
 
         expect(destinationNameAutocomplete).toHaveValue('New test destination');
       });
@@ -243,11 +245,11 @@ describe('StreamFormDelivery', () => {
           const manualRadio = screen.getByLabelText(
             'Enter Bucket details manually'
           );
-          await userEvent.click(manualRadio);
+          await user.click(manualRadio);
 
           // Now Endpoint should be enabled
           expect(endpointInput).toBeEnabled();
-          await userEvent.type(endpointInput, 'Test');
+          await user.type(endpointInput, 'Test');
           expect(endpointInput.getAttribute('value')).toEqual('Test');
         });
 
@@ -261,11 +263,11 @@ describe('StreamFormDelivery', () => {
           const manualRadio = screen.getByLabelText(
             'Enter Bucket details manually'
           );
-          await userEvent.click(manualRadio);
+          await user.click(manualRadio);
 
           // Type the test value inside the input
           const bucketInput = screen.getByLabelText('Bucket');
-          await userEvent.type(bucketInput, 'test');
+          await user.type(bucketInput, 'test');
 
           expect(bucketInput.getAttribute('value')).toEqual('test');
         });
@@ -278,7 +280,7 @@ describe('StreamFormDelivery', () => {
 
           // Type the test value inside the input
           const accessKeyIDInput = screen.getByLabelText('Access Key ID');
-          await userEvent.type(accessKeyIDInput, 'Test');
+          await user.type(accessKeyIDInput, 'Test');
 
           expect(accessKeyIDInput.getAttribute('value')).toEqual('Test');
         });
@@ -292,7 +294,7 @@ describe('StreamFormDelivery', () => {
           // Type the test value inside the input
           const secretAccessKeyInput =
             screen.getByLabelText('Secret Access Key');
-          await userEvent.type(secretAccessKeyInput, 'Test');
+          await user.type(secretAccessKeyInput, 'Test');
 
           expect(secretAccessKeyInput.getAttribute('value')).toEqual('Test');
         });
@@ -307,7 +309,7 @@ describe('StreamFormDelivery', () => {
           const logPathPrefixInput = screen.getByLabelText(
             'Log Path Prefix (optional)'
           );
-          await userEvent.type(logPathPrefixInput, 'Test');
+          await user.type(logPathPrefixInput, 'Test');
 
           expect(logPathPrefixInput.getAttribute('value')).toEqual('Test');
         });
@@ -345,7 +347,7 @@ describe('StreamFormDelivery', () => {
           const manualRadio = screen.getByLabelText(
             'Enter Bucket details manually'
           );
-          await userEvent.click(manualRadio);
+          await user.click(manualRadio);
 
           const endpointInput = screen.getByLabelText('Endpoint');
           expect(endpointInput).toBeEnabled();
@@ -361,21 +363,21 @@ describe('StreamFormDelivery', () => {
           const manualRadio = screen.getByLabelText(
             'Enter Bucket details manually'
           );
-          await userEvent.click(manualRadio);
+          await user.click(manualRadio);
 
           const bucketInput = screen.getByLabelText('Bucket');
-          await userEvent.type(bucketInput, 'my-manual-bucket');
+          await user.type(bucketInput, 'my-manual-bucket');
           expect(bucketInput).toHaveValue('my-manual-bucket');
 
           const endpointInput = screen.getByLabelText('Endpoint');
-          await userEvent.type(endpointInput, 'my-endpoint.com');
+          await user.type(endpointInput, 'my-endpoint.com');
           expect(endpointInput).toHaveValue('my-endpoint.com');
 
           // Switch back to bucket_from_account
           const bucketFromAccountRadio = screen.getByLabelText(
             'Select Bucket associated with the account'
           );
-          await userEvent.click(bucketFromAccountRadio);
+          await user.click(bucketFromAccountRadio);
 
           // Both fields should be cleared
           const bucketAutocomplete = screen.getByLabelText('Bucket');
@@ -391,10 +393,10 @@ describe('StreamFormDelivery', () => {
 
           // Open the Bucket Autocomplete and select a bucket with only hostname
           const bucketAutocomplete = screen.getByLabelText('Bucket');
-          await userEvent.click(bucketAutocomplete);
+          await user.click(bucketAutocomplete);
 
           const bucketOption = await screen.findByText('bucket-with-hostname');
-          await userEvent.click(bucketOption);
+          await user.click(bucketOption);
 
           // Bucket should display the selected bucket label
           await waitFor(() => {
@@ -415,12 +417,12 @@ describe('StreamFormDelivery', () => {
 
           // Open the Bucket Autocomplete and select a bucket with s3_endpoint
           const bucketAutocomplete = screen.getByLabelText('Bucket');
-          await userEvent.click(bucketAutocomplete);
+          await user.click(bucketAutocomplete);
 
           const bucketOption = await screen.findByText(
             'bucket-with-s3-endpoint'
           );
-          await userEvent.click(bucketOption);
+          await user.click(bucketOption);
 
           // Bucket should display the selected bucket label
           await waitFor(() => {
@@ -474,9 +476,9 @@ describe('StreamFormDelivery', () => {
 
       expect(destinationTypeAutocomplete).toBeEnabled();
       expect(destinationTypeAutocomplete).toHaveValue('Akamai Object Storage');
-      await userEvent.click(destinationTypeAutocomplete);
+      await user.click(destinationTypeAutocomplete);
       const customHttpsOption = await screen.findByText('Custom HTTPS');
-      await userEvent.click(customHttpsOption);
+      await user.click(customHttpsOption);
       expect(destinationTypeAutocomplete).toHaveValue('Custom HTTPS');
     });
 
@@ -510,13 +512,13 @@ describe('StreamFormDelivery', () => {
           screen.getByLabelText('Destination Name');
 
         // Open the dropdown
-        await userEvent.click(destinationNameAutocomplete);
+        await user.click(destinationNameAutocomplete);
 
         // Select the "Custom HTTPS Destination 2" option
         const customHttpsDestination = await screen.findByText(
           'Custom HTTPS Destination 2'
         );
-        await userEvent.click(customHttpsDestination);
+        await user.click(customHttpsDestination);
 
         expect(destinationNameAutocomplete).toHaveValue(
           'Custom HTTPS Destination 2'
@@ -533,7 +535,7 @@ describe('StreamFormDelivery', () => {
           screen.getByLabelText('Destination Name');
 
         // Move focus away from the dropdown
-        await userEvent.tab();
+        await user.tab();
 
         expect(destinationNameAutocomplete).toHaveValue('New test destination');
       });
@@ -552,11 +554,11 @@ describe('StreamFormDelivery', () => {
           expect(authenticationAutocomplete).toHaveValue('None');
 
           // Open the dropdown
-          await userEvent.click(authenticationAutocomplete);
+          await user.click(authenticationAutocomplete);
 
           // Select the "Basic" option
           const basicAuthentication = await screen.findByText('Basic');
-          await userEvent.click(basicAuthentication);
+          await user.click(basicAuthentication);
 
           expect(authenticationAutocomplete).toHaveValue('Basic');
         });
@@ -572,15 +574,15 @@ describe('StreamFormDelivery', () => {
             const authenticationAutocomplete = screen.getByLabelText(
               'Authentication Type'
             );
-            await userEvent.click(authenticationAutocomplete);
+            await user.click(authenticationAutocomplete);
             const basicAuthentication = await screen.findByText('Basic');
-            await userEvent.click(basicAuthentication);
+            await user.click(basicAuthentication);
 
             expect(authenticationAutocomplete).toHaveValue('Basic');
 
             // Type the test value inside the input
             const usernameInput = screen.getByLabelText('Username');
-            await userEvent.type(usernameInput, 'Test');
+            await user.type(usernameInput, 'Test');
 
             expect(usernameInput.getAttribute('value')).toEqual('Test');
           });
@@ -595,15 +597,15 @@ describe('StreamFormDelivery', () => {
             const authenticationAutocomplete = screen.getByLabelText(
               'Authentication Type'
             );
-            await userEvent.click(authenticationAutocomplete);
+            await user.click(authenticationAutocomplete);
             const basicAuthentication = await screen.findByText('Basic');
-            await userEvent.click(basicAuthentication);
+            await user.click(basicAuthentication);
 
             expect(authenticationAutocomplete).toHaveValue('Basic');
 
             // Type the test value inside the input
             const passwordInput = screen.getByLabelText('Password');
-            await userEvent.type(passwordInput, 'Test');
+            await user.type(passwordInput, 'Test');
 
             expect(passwordInput.getAttribute('value')).toEqual('Test');
           });
@@ -617,7 +619,7 @@ describe('StreamFormDelivery', () => {
 
           // Type the test value inside the input
           const endpointUrlInput = screen.getByLabelText('Endpoint URL');
-          await userEvent.type(endpointUrlInput, 'Test');
+          await user.type(endpointUrlInput, 'Test');
 
           expect(endpointUrlInput.getAttribute('value')).toEqual('Test');
         });
@@ -630,7 +632,7 @@ describe('StreamFormDelivery', () => {
             );
 
             const tlsHostnameInput = screen.getByLabelText('TLS Hostname');
-            await userEvent.type(tlsHostnameInput, 'test');
+            await user.type(tlsHostnameInput, 'test');
 
             expect(tlsHostnameInput).toHaveValue('test');
           });
@@ -642,7 +644,7 @@ describe('StreamFormDelivery', () => {
             );
 
             const caCertificateInput = screen.getByLabelText('CA Certificate');
-            await userEvent.type(caCertificateInput, 'test');
+            await user.type(caCertificateInput, 'test');
 
             expect(caCertificateInput).toHaveValue('test');
           });
@@ -655,7 +657,7 @@ describe('StreamFormDelivery', () => {
 
             const clientCertificateInput =
               screen.getByLabelText('Client Certificate');
-            await userEvent.type(clientCertificateInput, 'test');
+            await user.type(clientCertificateInput, 'test');
 
             expect(clientCertificateInput).toHaveValue('test');
           });
@@ -667,7 +669,7 @@ describe('StreamFormDelivery', () => {
             );
 
             const clientKeyInput = screen.getByLabelText('Client Private Key');
-            await userEvent.type(clientKeyInput, 'test');
+            await user.type(clientKeyInput, 'test');
 
             expect(clientKeyInput).toHaveValue('test');
           });
@@ -684,9 +686,9 @@ describe('StreamFormDelivery', () => {
               screen.getByLabelText('Content Type');
             expect(contentTypeAutocomplete).toHaveValue('');
 
-            await userEvent.click(contentTypeAutocomplete);
+            await user.click(contentTypeAutocomplete);
             const jsonOption = await screen.findByText('application/json');
-            await userEvent.click(jsonOption);
+            await user.click(jsonOption);
 
             expect(contentTypeAutocomplete).toHaveValue('application/json');
           });
@@ -700,11 +702,11 @@ describe('StreamFormDelivery', () => {
             const contentTypeAutocomplete =
               screen.getByLabelText('Content Type');
 
-            await userEvent.click(contentTypeAutocomplete);
+            await user.click(contentTypeAutocomplete);
             const jsonUtf8Option = await screen.findByText(
               'application/json; charset=utf-8'
             );
-            await userEvent.click(jsonUtf8Option);
+            await user.click(jsonUtf8Option);
 
             expect(contentTypeAutocomplete).toHaveValue(
               'application/json; charset=utf-8'
@@ -723,7 +725,7 @@ describe('StreamFormDelivery', () => {
               const addCustomHeaderButton = screen.getByRole('button', {
                 name: addCustomHeaderButtonText,
               });
-              await userEvent.click(addCustomHeaderButton);
+              await user.click(addCustomHeaderButton);
 
               const headerNameInput = screen.getByLabelText('Name');
               expect(headerNameInput).toBeInTheDocument();
@@ -731,10 +733,10 @@ describe('StreamFormDelivery', () => {
               const headerValueInput = screen.getByLabelText('Value');
               expect(headerValueInput).toBeInTheDocument();
 
-              await userEvent.type(headerNameInput, 'X-Custom-Header');
+              await user.type(headerNameInput, 'X-Custom-Header');
               expect(headerNameInput).toHaveValue('X-Custom-Header');
 
-              await userEvent.type(headerValueInput, 'custom-value');
+              await user.type(headerValueInput, 'custom-value');
               expect(headerValueInput).toHaveValue('custom-value');
             });
 
@@ -747,13 +749,13 @@ describe('StreamFormDelivery', () => {
               const addCustomHeaderButton = screen.getByRole('button', {
                 name: addCustomHeaderButtonText,
               });
-              await userEvent.click(addCustomHeaderButton);
+              await user.click(addCustomHeaderButton);
 
               // Verify default title is shown initially
               screen.getByText('Custom Header 1');
 
               const headerNameInput = screen.getByLabelText('Name');
-              await userEvent.type(headerNameInput, 'Authorization');
+              await user.type(headerNameInput, 'Authorization');
 
               // Verify default title is replaced with the typed name
               expect(
@@ -771,13 +773,13 @@ describe('StreamFormDelivery', () => {
               const addCustomHeaderButton = screen.getByRole('button', {
                 name: addCustomHeaderButtonText,
               });
-              await userEvent.click(addCustomHeaderButton);
+              await user.click(addCustomHeaderButton);
 
               const headerNameInput = screen.getByLabelText('Name');
               expect(headerNameInput).toBeInTheDocument();
 
               const closeButton = screen.getByRole('button', { name: '' });
-              await userEvent.click(closeButton);
+              await user.click(closeButton);
 
               expect(screen.queryByLabelText('Name')).not.toBeInTheDocument();
             });
@@ -792,10 +794,10 @@ describe('StreamFormDelivery', () => {
                 name: addCustomHeaderButtonText,
               });
 
-              await userEvent.click(addCustomHeaderButton);
+              await user.click(addCustomHeaderButton);
               screen.getByText('Custom Header 1');
 
-              await userEvent.click(addCustomHeaderButton);
+              await user.click(addCustomHeaderButton);
               expect(screen.getByText('Custom Header 2')).toBeInTheDocument();
             });
           });

@@ -44,6 +44,8 @@ vi.mock('src/queries/object-storage/queries', async () => {
   };
 });
 
+const user = userEvent.setup({ delay: null });
+
 const testConnectionButtonText = 'Test Connection';
 const createDestinationButtonText = 'Create Destination';
 const addCustomHeaderButtonText = 'Add Custom Header';
@@ -97,7 +99,7 @@ describe('DestinationCreate', () => {
         renderDestinationCreate(flags);
 
         const destinationNameInput = screen.getByLabelText('Destination Name');
-        await userEvent.type(destinationNameInput, 'Test Destination');
+        await user.type(destinationNameInput, 'Test Destination');
 
         expect(destinationNameInput).toHaveValue('Test Destination');
       });
@@ -115,10 +117,10 @@ describe('DestinationCreate', () => {
         const manualRadio = screen.getByLabelText(
           'Enter Bucket details manually'
         );
-        await userEvent.click(manualRadio);
+        await user.click(manualRadio);
 
         const endpointInput = screen.getByLabelText('Endpoint');
-        await userEvent.type(endpointInput, 'test-host.com');
+        await user.type(endpointInput, 'test-host.com');
 
         expect(endpointInput).toHaveValue('test-host.com');
       });
@@ -129,10 +131,10 @@ describe('DestinationCreate', () => {
         const manualRadio = screen.getByLabelText(
           'Enter Bucket details manually'
         );
-        await userEvent.click(manualRadio);
+        await user.click(manualRadio);
 
         const bucketInput = screen.getByLabelText('Bucket');
-        await userEvent.type(bucketInput, 'test-bucket');
+        await user.type(bucketInput, 'test-bucket');
 
         expect(bucketInput).toHaveValue('test-bucket');
       });
@@ -141,7 +143,7 @@ describe('DestinationCreate', () => {
         renderDestinationCreate(flags);
 
         const accessKeyIdInput = screen.getByLabelText('Access Key ID');
-        await userEvent.type(accessKeyIdInput, 'test-access-key');
+        await user.type(accessKeyIdInput, 'test-access-key');
 
         expect(accessKeyIdInput).toHaveValue('test-access-key');
       });
@@ -150,7 +152,7 @@ describe('DestinationCreate', () => {
         renderDestinationCreate(flags);
 
         const secretAccessKeyInput = screen.getByLabelText('Secret Access Key');
-        await userEvent.type(secretAccessKeyInput, 'test-secret-key');
+        await user.type(secretAccessKeyInput, 'test-secret-key');
 
         expect(secretAccessKeyInput).toHaveValue('test-secret-key');
       });
@@ -161,7 +163,7 @@ describe('DestinationCreate', () => {
         const logPathPrefixInput = screen.getByLabelText(
           'Log Path Prefix (optional)'
         );
-        await userEvent.type(logPathPrefixInput, 'test-path');
+        await user.type(logPathPrefixInput, 'test-path');
 
         expect(logPathPrefixInput).toHaveValue('test-path');
       });
@@ -191,20 +193,20 @@ describe('DestinationCreate', () => {
           'Log Path Prefix (optional)'
         );
 
-        await userEvent.type(logPathPrefixInput, 'test');
+        await user.type(logPathPrefixInput, 'test');
         // sample path should be created based on *log path* value
         expect(samplePath!.textContent).toEqual(
           '/test/akamai_log-000166-1756015362-319597-login.gz'
         );
 
-        await userEvent.clear(logPathPrefixInput);
-        await userEvent.type(logPathPrefixInput, '/test');
+        await user.clear(logPathPrefixInput);
+        await user.type(logPathPrefixInput, '/test');
         expect(samplePath!.textContent).toEqual(
           '/test/akamai_log-000166-1756015362-319597-login.gz'
         );
 
-        await userEvent.clear(logPathPrefixInput);
-        await userEvent.type(logPathPrefixInput, '/');
+        await user.clear(logPathPrefixInput);
+        await user.type(logPathPrefixInput, '/');
         expect(samplePath!.textContent).toEqual(
           '/akamai_log-000166-1756015362-319597-login.gz'
         );
@@ -233,7 +235,7 @@ describe('DestinationCreate', () => {
           const manualRadio = screen.getByLabelText(
             'Enter Bucket details manually'
           );
-          await userEvent.click(manualRadio);
+          await user.click(manualRadio);
 
           const endpointInput = screen.getByLabelText('Endpoint');
           expect(endpointInput).toBeEnabled();
@@ -246,21 +248,21 @@ describe('DestinationCreate', () => {
           const manualRadio = screen.getByLabelText(
             'Enter Bucket details manually'
           );
-          await userEvent.click(manualRadio);
+          await user.click(manualRadio);
 
           const bucketInput = screen.getByLabelText('Bucket');
-          await userEvent.type(bucketInput, 'my-manual-bucket');
+          await user.type(bucketInput, 'my-manual-bucket');
           expect(bucketInput).toHaveValue('my-manual-bucket');
 
           const endpointInput = screen.getByLabelText('Endpoint');
-          await userEvent.type(endpointInput, 'my-endpoint.com');
+          await user.type(endpointInput, 'my-endpoint.com');
           expect(endpointInput).toHaveValue('my-endpoint.com');
 
           // Switch back to bucket_from_account
           const bucketFromAccountRadio = screen.getByLabelText(
             'Select Bucket associated with the account'
           );
-          await userEvent.click(bucketFromAccountRadio);
+          await user.click(bucketFromAccountRadio);
 
           // Both fields should be cleared
           const bucketAutocomplete = screen.getByLabelText('Bucket');
@@ -273,10 +275,10 @@ describe('DestinationCreate', () => {
 
           // Open the Bucket Autocomplete and select a bucket with only hostname
           const bucketAutocomplete = screen.getByLabelText('Bucket');
-          await userEvent.click(bucketAutocomplete);
+          await user.click(bucketAutocomplete);
 
           const bucketOption = await screen.findByText('bucket-with-hostname');
-          await userEvent.click(bucketOption);
+          await user.click(bucketOption);
 
           // Bucket should display the selected bucket label
           await waitFor(() => {
@@ -294,12 +296,12 @@ describe('DestinationCreate', () => {
 
           // Open the Bucket Autocomplete and select a bucket with s3_endpoint
           const bucketAutocomplete = screen.getByLabelText('Bucket');
-          await userEvent.click(bucketAutocomplete);
+          await user.click(bucketAutocomplete);
 
           const bucketOption = await screen.findByText(
             'bucket-with-s3-endpoint'
           );
-          await userEvent.click(bucketOption);
+          await user.click(bucketOption);
 
           // Bucket should display the selected bucket label
           await waitFor(() => {
@@ -317,27 +319,27 @@ describe('DestinationCreate', () => {
         const fillOutAkamaiObjectStorageForm = async () => {
           const destinationNameInput =
             screen.getByLabelText('Destination Name');
-          await userEvent.type(destinationNameInput, 'Test');
+          await user.type(destinationNameInput, 'Test');
 
           // Switch to manual bucket entry to allow typing
           const manualRadio = screen.getByLabelText(
             'Enter Bucket details manually'
           );
-          await userEvent.click(manualRadio);
+          await user.click(manualRadio);
 
           const endpointInput = screen.getByLabelText('Endpoint');
-          await userEvent.type(endpointInput, 'test');
+          await user.type(endpointInput, 'test');
           const bucketInput = screen.getByLabelText('Bucket');
-          await userEvent.type(bucketInput, 'test');
+          await user.type(bucketInput, 'test');
           const accessKeyIDInput = screen.getByLabelText('Access Key ID');
-          await userEvent.type(accessKeyIDInput, 'Test');
+          await user.type(accessKeyIDInput, 'Test');
           const secretAccessKeyInput =
             screen.getByLabelText('Secret Access Key');
-          await userEvent.type(secretAccessKeyInput, 'Test');
+          await user.type(secretAccessKeyInput, 'Test');
           const logPathPrefixInput = screen.getByLabelText(
             'Log Path Prefix (optional)'
           );
-          await userEvent.type(logPathPrefixInput, 'Test');
+          await user.type(logPathPrefixInput, 'Test');
         };
 
         describe('when form properly filled out and Test Connection button clicked and connection verified positively', () => {
@@ -370,14 +372,14 @@ describe('DestinationCreate', () => {
 
             await fillOutAkamaiObjectStorageForm();
             expect(createDestinationButton).toBeDisabled();
-            await userEvent.click(testConnectionButton);
+            await user.click(testConnectionButton);
             expect(verifyDestinationSpy).toHaveBeenCalled();
 
             await waitFor(() => {
               expect(createDestinationButton).toBeEnabled();
             });
 
-            await userEvent.click(createDestinationButton);
+            await user.click(createDestinationButton);
             expect(createDestinationSpy).toHaveBeenCalled();
           });
         });
@@ -407,7 +409,7 @@ describe('DestinationCreate', () => {
 
             await fillOutAkamaiObjectStorageForm();
             expect(createDestinationButton).toBeDisabled();
-            await userEvent.click(testConnectionButton);
+            await user.click(testConnectionButton);
             expect(verifyDestinationSpy).toHaveBeenCalled();
             expect(createDestinationButton).toBeDisabled();
           });
@@ -434,9 +436,9 @@ describe('DestinationCreate', () => {
       expect(destinationTypeAutocomplete).toBeEnabled();
       expect(destinationTypeAutocomplete).toHaveValue('Akamai Object Storage');
 
-      await userEvent.click(destinationTypeAutocomplete);
+      await user.click(destinationTypeAutocomplete);
       const customHttpsOption = await screen.findByText('Custom HTTPS');
-      await userEvent.click(customHttpsOption);
+      await user.click(customHttpsOption);
 
       expect(destinationTypeAutocomplete).toHaveValue('Custom HTTPS');
     });
@@ -447,16 +449,16 @@ describe('DestinationCreate', () => {
 
         const destinationTypeAutocomplete =
           screen.getByLabelText('Destination Type');
-        await userEvent.click(destinationTypeAutocomplete);
+        await user.click(destinationTypeAutocomplete);
         const customHttpsOption = await screen.findByText('Custom HTTPS');
-        await userEvent.click(customHttpsOption);
+        await user.click(customHttpsOption);
       };
 
       it('should render Destination Name input and allow to type text', async () => {
         await selectCustomHttpsDestinationType();
 
         const destinationNameInput = screen.getByLabelText('Destination Name');
-        await userEvent.type(destinationNameInput, 'Test Destination');
+        await user.type(destinationNameInput, 'Test Destination');
 
         expect(destinationNameInput).toHaveValue('Test Destination');
       });
@@ -470,9 +472,9 @@ describe('DestinationCreate', () => {
 
         expect(authenticationAutocomplete).toHaveValue('None');
 
-        await userEvent.click(authenticationAutocomplete);
+        await user.click(authenticationAutocomplete);
         const basicAuthentication = await screen.findByText('Basic');
-        await userEvent.click(basicAuthentication);
+        await user.click(basicAuthentication);
 
         expect(authenticationAutocomplete).toHaveValue('Basic');
       });
@@ -484,12 +486,12 @@ describe('DestinationCreate', () => {
           const authenticationAutocomplete = screen.getByLabelText(
             'Authentication Type'
           );
-          await userEvent.click(authenticationAutocomplete);
+          await user.click(authenticationAutocomplete);
           const basicAuthentication = await screen.findByText('Basic');
-          await userEvent.click(basicAuthentication);
+          await user.click(basicAuthentication);
 
           const usernameInput = screen.getByLabelText('Username');
-          await userEvent.type(usernameInput, 'test-user');
+          await user.type(usernameInput, 'test-user');
 
           expect(usernameInput).toHaveValue('test-user');
         });
@@ -500,12 +502,12 @@ describe('DestinationCreate', () => {
           const authenticationAutocomplete = screen.getByLabelText(
             'Authentication Type'
           );
-          await userEvent.click(authenticationAutocomplete);
+          await user.click(authenticationAutocomplete);
           const basicAuthentication = await screen.findByText('Basic');
-          await userEvent.click(basicAuthentication);
+          await user.click(basicAuthentication);
 
           const passwordInput = screen.getByLabelText('Password');
-          await userEvent.type(passwordInput, 'test-password');
+          await user.type(passwordInput, 'test-password');
 
           expect(passwordInput).toHaveValue('test-password');
         });
@@ -515,7 +517,7 @@ describe('DestinationCreate', () => {
         await selectCustomHttpsDestinationType();
 
         const endpointUrlInput = screen.getByLabelText('Endpoint URL');
-        await userEvent.type(endpointUrlInput, 'https://test-endpoint.com');
+        await user.type(endpointUrlInput, 'https://test-endpoint.com');
 
         expect(endpointUrlInput).toHaveValue('https://test-endpoint.com');
       });
@@ -525,7 +527,7 @@ describe('DestinationCreate', () => {
           await selectCustomHttpsDestinationType();
 
           const tlsHostnameInput = screen.getByLabelText('TLS Hostname');
-          await userEvent.type(tlsHostnameInput, 'test-tls-hostname');
+          await user.type(tlsHostnameInput, 'test-tls-hostname');
 
           expect(tlsHostnameInput).toHaveValue('test-tls-hostname');
         });
@@ -534,7 +536,7 @@ describe('DestinationCreate', () => {
           await selectCustomHttpsDestinationType();
 
           const caCertificateInput = screen.getByLabelText('CA Certificate');
-          await userEvent.type(caCertificateInput, 'test-ca-certificate');
+          await user.type(caCertificateInput, 'test-ca-certificate');
 
           expect(caCertificateInput).toHaveValue('test-ca-certificate');
         });
@@ -544,10 +546,7 @@ describe('DestinationCreate', () => {
 
           const clientCertificateInput =
             screen.getByLabelText('Client Certificate');
-          await userEvent.type(
-            clientCertificateInput,
-            'test-client-certificate'
-          );
+          await user.type(clientCertificateInput, 'test-client-certificate');
 
           expect(clientCertificateInput).toHaveValue('test-client-certificate');
         });
@@ -556,7 +555,7 @@ describe('DestinationCreate', () => {
           await selectCustomHttpsDestinationType();
 
           const clientKeyInput = screen.getByLabelText('Client Private Key');
-          await userEvent.type(clientKeyInput, 'test-client-key');
+          await user.type(clientKeyInput, 'test-client-key');
 
           expect(clientKeyInput).toHaveValue('test-client-key');
         });
@@ -569,9 +568,9 @@ describe('DestinationCreate', () => {
           const contentTypeAutocomplete = screen.getByLabelText('Content Type');
           expect(contentTypeAutocomplete).toHaveValue('');
 
-          await userEvent.click(contentTypeAutocomplete);
+          await user.click(contentTypeAutocomplete);
           const jsonOption = await screen.findByText('application/json');
-          await userEvent.click(jsonOption);
+          await user.click(jsonOption);
 
           expect(contentTypeAutocomplete).toHaveValue('application/json');
         });
@@ -581,11 +580,11 @@ describe('DestinationCreate', () => {
 
           const contentTypeAutocomplete = screen.getByLabelText('Content Type');
 
-          await userEvent.click(contentTypeAutocomplete);
+          await user.click(contentTypeAutocomplete);
           const jsonUtf8Option = await screen.findByText(
             'application/json; charset=utf-8'
           );
-          await userEvent.click(jsonUtf8Option);
+          await user.click(jsonUtf8Option);
 
           expect(contentTypeAutocomplete).toHaveValue(
             'application/json; charset=utf-8'
@@ -599,7 +598,7 @@ describe('DestinationCreate', () => {
             const addCustomHeaderButton = screen.getByRole('button', {
               name: addCustomHeaderButtonText,
             });
-            await userEvent.click(addCustomHeaderButton);
+            await user.click(addCustomHeaderButton);
 
             const headerNameInput = screen.getByLabelText('Name');
             expect(headerNameInput).toBeInTheDocument();
@@ -607,10 +606,10 @@ describe('DestinationCreate', () => {
             const headerValueInput = screen.getByLabelText('Value');
             expect(headerValueInput).toBeInTheDocument();
 
-            await userEvent.type(headerNameInput, 'X-Custom-Header');
+            await user.type(headerNameInput, 'X-Custom-Header');
             expect(headerNameInput).toHaveValue('X-Custom-Header');
 
-            await userEvent.type(headerValueInput, 'custom-value');
+            await user.type(headerValueInput, 'custom-value');
             expect(headerValueInput).toHaveValue('custom-value');
           });
 
@@ -620,12 +619,12 @@ describe('DestinationCreate', () => {
             const addCustomHeaderButton = screen.getByRole('button', {
               name: addCustomHeaderButtonText,
             });
-            await userEvent.click(addCustomHeaderButton);
+            await user.click(addCustomHeaderButton);
 
             screen.getByText('Custom Header 1');
 
             const headerNameInput = screen.getByLabelText('Name');
-            await userEvent.type(headerNameInput, 'Authorization');
+            await user.type(headerNameInput, 'Authorization');
 
             expect(
               screen.queryByText('Custom Header 1')
@@ -639,13 +638,13 @@ describe('DestinationCreate', () => {
             const addCustomHeaderButton = screen.getByRole('button', {
               name: addCustomHeaderButtonText,
             });
-            await userEvent.click(addCustomHeaderButton);
+            await user.click(addCustomHeaderButton);
 
             const headerNameInput = screen.getByLabelText('Name');
             expect(headerNameInput).toBeInTheDocument();
 
             const closeButton = screen.getByRole('button', { name: '' });
-            await userEvent.click(closeButton);
+            await user.click(closeButton);
 
             expect(screen.queryByLabelText('Name')).not.toBeInTheDocument();
           });
@@ -657,10 +656,10 @@ describe('DestinationCreate', () => {
               name: addCustomHeaderButtonText,
             });
 
-            await userEvent.click(addCustomHeaderButton);
+            await user.click(addCustomHeaderButton);
             screen.getByText('Custom Header 1');
 
-            await userEvent.click(addCustomHeaderButton);
+            await user.click(addCustomHeaderButton);
             expect(screen.getByText('Custom Header 2')).toBeInTheDocument();
           });
         });
@@ -670,14 +669,14 @@ describe('DestinationCreate', () => {
         const fillOutCustomHttpsForm = async () => {
           const destinationTypeAutocomplete =
             screen.getByLabelText('Destination Type');
-          await userEvent.click(destinationTypeAutocomplete);
+          await user.click(destinationTypeAutocomplete);
           const customHttpsOption = await screen.findByText('Custom HTTPS');
-          await userEvent.click(customHttpsOption);
+          await user.click(customHttpsOption);
           const destinationNameInput =
             screen.getByLabelText('Destination Name');
-          await userEvent.type(destinationNameInput, 'Test');
+          await user.type(destinationNameInput, 'Test');
           const endpointUrlInput = screen.getByLabelText('Endpoint URL');
-          await userEvent.type(endpointUrlInput, 'https://test-endpoint.com');
+          await user.type(endpointUrlInput, 'https://test-endpoint.com');
         };
 
         describe('when form properly filled out and Test Connection button clicked and connection verified positively', () => {
@@ -710,14 +709,14 @@ describe('DestinationCreate', () => {
 
             await fillOutCustomHttpsForm();
             expect(createDestinationButton).toBeDisabled();
-            await userEvent.click(testConnectionButton);
+            await user.click(testConnectionButton);
             expect(verifyDestinationSpy).toHaveBeenCalled();
 
             await waitFor(() => {
               expect(createDestinationButton).toBeEnabled();
             });
 
-            await userEvent.click(createDestinationButton);
+            await user.click(createDestinationButton);
             expect(createDestinationSpy).toHaveBeenCalled();
           });
         });
@@ -747,7 +746,7 @@ describe('DestinationCreate', () => {
 
             await fillOutCustomHttpsForm();
             expect(createDestinationButton).toBeDisabled();
-            await userEvent.click(testConnectionButton);
+            await user.click(testConnectionButton);
             expect(verifyDestinationSpy).toHaveBeenCalled();
             expect(createDestinationButton).toBeDisabled();
           });

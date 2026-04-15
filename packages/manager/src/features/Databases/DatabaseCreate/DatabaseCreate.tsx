@@ -18,7 +18,10 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorMessage } from 'src/components/ErrorMessage';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
-import { getIsLimitedAvailability } from 'src/features/components/PlansPanel/utils';
+import {
+  getIsLimitedAvailability,
+  useShouldDisablePremiumPlansTab,
+} from 'src/features/components/PlansPanel/utils';
 import { DatabaseClusterData } from 'src/features/Databases/DatabaseCreate/DatabaseClusterData';
 import {
   StyledBtnCtn,
@@ -252,11 +255,15 @@ export const DatabaseCreate = () => {
     }
   };
 
+  const shouldDisablePremiumPlansTab = useShouldDisablePremiumPlansTab({
+    types: dbtypes,
+  });
+
   if (regionsLoading || !regionsData || enginesLoading || typesLoading) {
     return <CircleProgress />;
   }
 
-  if (regionsError || typesError || enginesError) {
+  if (regionsError || enginesError || typesError) {
     return <ErrorState errorText="An unexpected error occurred." />;
   }
 
@@ -312,6 +319,9 @@ export const DatabaseCreate = () => {
                   <StyledPlansPanel
                     data-qa-select-plan
                     disabled={isRestricted}
+                    disabledTabs={
+                      shouldDisablePremiumPlansTab ? ['premium'] : undefined
+                    }
                     error={fieldState.error?.message}
                     flow="database"
                     handleTabChange={handleTabChange}
@@ -321,6 +331,11 @@ export const DatabaseCreate = () => {
                     regionsData={regionsData}
                     selectedId={field.value}
                     selectedRegionID={region}
+                    tabDisabledMessage={
+                      shouldDisablePremiumPlansTab
+                        ? 'Premium CPUs are now called G7 Dedicated plans.'
+                        : undefined
+                    }
                     types={displayTypes}
                   />
                 )}
