@@ -203,7 +203,7 @@ describe('Resizing existing clusters', () => {
                   });
                 const desiredPlanPrice = nodeType.engines[
                   configuration.dbType
-                ].find((dbClusterSizeObj: { quantity: number }) => {
+                ]?.find((dbClusterSizeObj: { quantity: number }) => {
                   return dbClusterSizeObj.quantity === database.cluster_size;
                 })?.price;
                 if (!desiredPlanPrice) {
