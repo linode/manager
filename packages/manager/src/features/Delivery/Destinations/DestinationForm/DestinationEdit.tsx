@@ -25,7 +25,7 @@ import type { DestinationFormType } from 'src/features/Delivery/Shared/types';
 export const DestinationEdit = () => {
   const navigate = useNavigate();
   const { destinationId } = useParams({
-    from: '/logs/delivery/destinations/$destinationId/edit',
+    from: '/logs/delivery/destinations/$destinationId/summary',
   });
   const { mutateAsync: updateDestination, isPending: isUpdatingDestination } =
     useUpdateDestinationMutation();
@@ -37,7 +37,7 @@ export const DestinationEdit = () => {
 
   const landingHeaderProps: LandingHeaderProps = {
     breadcrumbProps: {
-      pathname: '/logs/delivery/destinations/edit',
+      pathname: '/logs/delivery/destinations/summary',
       crumbOverrides: [
         {
           label: 'Delivery',
@@ -48,7 +48,7 @@ export const DestinationEdit = () => {
     },
     docsLink: 'https://techdocs.akamai.com/cloud-computing/docs/log-delivery',
     removeCrumbX: [1, 2],
-    title: `Edit Destination ${destinationId}`,
+    title: `Destination ${destinationId}`,
   };
 
   const form = useForm<DestinationFormType>({
@@ -112,30 +112,39 @@ export const DestinationEdit = () => {
       });
   };
 
+  if (isLoading) {
+    return (
+      <Box display="flex" justifyContent="center">
+        <CircleProgress size="md" />
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <ErrorState
+        compact
+        errorText={
+          getAPIErrorOrDefault(
+            error,
+            'There was an error retrieving destination. Please reload and try again.'
+          )[0].reason
+        }
+      />
+    );
+  }
+
   return (
     <>
-      <DocumentTitleSegment segment="Edit Destination" />
+      <DocumentTitleSegment segment="Destination" />
       <LandingHeader {...landingHeaderProps} />
-      {isLoading && (
-        <Box display="flex" justifyContent="center">
-          <CircleProgress size="md" />
-        </Box>
-      )}
-      {error && (
-        <ErrorState
-          compact
-          errorText="There was an error retrieving destination. Please reload and try again."
+      <FormProvider {...form}>
+        <DestinationForm
+          isSubmitting={isUpdatingDestination}
+          mode="edit"
+          onSubmit={onSubmit}
         />
-      )}
-      {!isLoading && !error && (
-        <FormProvider {...form}>
-          <DestinationForm
-            isSubmitting={isUpdatingDestination}
-            mode="edit"
-            onSubmit={onSubmit}
-          />
-        </FormProvider>
-      )}
+      </FormProvider>
     </>
   );
 };

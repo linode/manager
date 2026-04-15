@@ -21,6 +21,7 @@ import { ui } from 'support/ui';
 import { logsStreamForm } from 'support/ui/pages/logs-stream-form';
 import { randomLabel } from 'support/util/random';
 
+import { DEFAULT_ERROR_MESSAGE } from 'src/constants';
 import { kubernetesClusterFactory } from 'src/factories';
 
 describe('Edit Stream', () => {
@@ -45,9 +46,7 @@ describe('Edit Stream', () => {
       mockGetStream(mockAuditLogsStream);
 
       // Visit the Edit Stream page
-      cy.visitWithLogin(
-        `/logs/delivery/streams/${mockAuditLogsStream.id}/edit/`
-      );
+      cy.visitWithLogin(`/logs/delivery/streams/${mockAuditLogsStream.id}`);
 
       const updatedLabel = randomLabel();
 
@@ -114,7 +113,7 @@ describe('Edit Stream', () => {
       mockCreateDestination({}, 400);
       ui.button.findByTitle(saveChangesButtonText).should('be.enabled').click();
 
-      ui.toast.assertMessage(`There was an issue creating your destination`);
+      ui.toast.assertMessage(DEFAULT_ERROR_MESSAGE);
 
       // Submit the stream edit form - success
       mockCreateDestination(mockAkamaiObjectStorageDestination);
@@ -206,9 +205,7 @@ describe('Edit Stream', () => {
       mockGetClusters([cluster1, cluster2, cluster3, cluster4]);
 
       // Visit the Edit Stream page
-      cy.visitWithLogin(
-        `/logs/delivery/streams/${mockLKEAuditLogsStream.id}/edit/`
-      );
+      cy.visitWithLogin(`/logs/delivery/streams/${mockLKEAuditLogsStream.id}`);
 
       const updatedLabel = randomLabel();
 
@@ -309,7 +306,7 @@ describe('Edit Stream', () => {
 
       ui.button.findByTitle(saveChangesButtonText).click();
       cy.wait('@updateStreamFail');
-      ui.toast.assertMessage('There was an issue editing your stream');
+      ui.toast.assertMessage(DEFAULT_ERROR_MESSAGE);
 
       // Submit the stream edit form - success
       mockUpdateStream(

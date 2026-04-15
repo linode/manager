@@ -114,10 +114,12 @@ describe('DestinationEdit', () => {
       await waitForElementToBeRemoved(loadingElement);
     };
 
-    it('should default to "Enter Bucket manually" radio in edit mode', async () => {
+    it('should default to "Enter Bucket details manually" radio in edit mode', async () => {
       await renderEditWithMockDestination();
 
-      const manualRadio = screen.getByLabelText('Enter Bucket manually');
+      const manualRadio = screen.getByLabelText(
+        'Enter Bucket details manually'
+      );
       expect(manualRadio).toBeChecked();
     });
 
@@ -214,14 +216,14 @@ describe('DestinationEdit', () => {
     });
   });
 
-  describe('given Test Connection and Edit Destination buttons', () => {
+  describe('given Test Connection and Save Changes buttons', () => {
     const testConnectionButtonText = 'Test Connection';
     const saveDestinationButtonText = 'Save Changes';
     const editDestinationSpy = vi.fn();
     const verifyDestinationSpy = vi.fn();
 
     describe('when Test Connection button clicked and connection verified positively', () => {
-      it("should enable Edit Destination button and perform proper call when it's clicked", async () => {
+      it("should enable Save Changes button and perform proper call when it's clicked", async () => {
         server.use(
           http.get(`*/monitor/streams/destinations/${destinationId}`, () => {
             return HttpResponse.json(mockDestination);
@@ -267,7 +269,7 @@ describe('DestinationEdit', () => {
     });
 
     describe('when Test Connection button clicked and connection verified negatively', () => {
-      it('should not enable Edit Destination button', async () => {
+      it('should not enable Save Changes button', async () => {
         server.use(
           http.get(`*/monitor/streams/destinations/${destinationId}`, () => {
             return HttpResponse.json(mockDestination);

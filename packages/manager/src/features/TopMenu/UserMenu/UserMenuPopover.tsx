@@ -51,7 +51,7 @@ interface MenuLink {
 export const UserMenuPopover = (props: UserMenuPopoverProps) => {
   const { anchorEl, isDrawerOpen, onClose, onDrawerOpen } = props;
   const sessionContext = React.useContext(switchAccountSessionContext);
-  const { limitsEvolution, iamLimitedAvailabilityBadges } = useFlags();
+  const { limitsEvolution, iamNewBadge } = useFlags();
   const {
     isProxyOrDelegateUserType,
     isParentUserType,
@@ -142,7 +142,7 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
       {
         display: isIAMEnabled ? 'Identity & Access' : 'Users & Grants',
         to: isIAMEnabled ? '/iam' : '/users',
-        isNew: isIAMEnabled && iamLimitedAvailabilityBadges,
+        isNew: isIAMEnabled && iamNewBadge,
       },
       {
         display: 'Quotas',
@@ -166,7 +166,7 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
         to: '/account-settings',
       },
     ],
-    [isIAMEnabled, limitsEvolution, iamLimitedAvailabilityBadges]
+    [isIAMEnabled, limitsEvolution, iamNewBadge]
   );
 
   const renderLink = (link: MenuLink) => {

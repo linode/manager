@@ -43,7 +43,7 @@ describe('Edit Destination', () => {
   describe('given Akamai Object Storage type destination', () => {
     beforeEach(() => {
       cy.visitWithLogin(
-        `/logs/delivery/destinations/${mockAkamaiObjectStorageDestination.id}/edit`
+        `/logs/delivery/destinations/${mockAkamaiObjectStorageDestination.id}/summary`
       );
       mockGetDestination(mockAkamaiObjectStorageDestination);
     });
@@ -160,7 +160,9 @@ describe('Edit Destination', () => {
         ]);
 
         // Edit mode defaults to manual bucket entry
-        cy.findByLabelText('Enter Bucket manually').should('be.checked');
+        cy.findByLabelText('Enter Bucket details manually').should(
+          'be.checked'
+        );
 
         // Endpoint should be enabled in manual mode
         cy.findByLabelText('Endpoint').should('be.enabled');
@@ -199,7 +201,7 @@ describe('Edit Destination', () => {
   describe('given Custom HTTPS type destination', () => {
     beforeEach(() => {
       cy.visitWithLogin(
-        `/logs/delivery/destinations/${mockCustomHttpsDestination.id}/edit`
+        `/logs/delivery/destinations/${mockCustomHttpsDestination.id}/summary`
       );
       mockGetDestination(mockCustomHttpsDestination);
     });

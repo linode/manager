@@ -29,6 +29,7 @@ import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { PowerActionsDialog } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
 import { useIsNodebalancerVPCEnabled } from 'src/features/NodeBalancers/utils';
 import { SubnetActionMenu } from 'src/features/VPCs/VPCDetail/SubnetActionMenu';
+import { useFlags } from 'src/hooks/useFlags';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { useVPCDualStack } from 'src/hooks/useVPCDualStack';
@@ -37,6 +38,7 @@ import { SUBNET_ACTION_PATH } from '../constants';
 import { VPC_DETAILS_ROUTE } from '../constants';
 import { SubnetAssignLinodesDrawer } from './SubnetAssignLinodesDrawer';
 import { SubnetCreateDrawer } from './SubnetCreateDrawer';
+import { SubnetDatabasesTable } from './SubnetDatabasesTable';
 import { SubnetDeleteDialog } from './SubnetDeleteDialog';
 import { SubnetEditDrawer } from './SubnetEditDrawer';
 import { SubnetLinodeRow, SubnetLinodeTableRowHead } from './SubnetLinodeRow';
@@ -90,6 +92,7 @@ export const VPCSubnetsTable = (props: Props) => {
 
   const { isNodebalancerVPCEnabled } = useIsNodebalancerVPCEnabled();
   const { isDualStackEnabled } = useVPCDualStack();
+  const flags = useFlags();
 
   const { data: permissions } = usePermissions(
     'vpc',
@@ -333,7 +336,7 @@ export const VPCSubnetsTable = (props: Props) => {
           )}
           <Hidden smDown>
             <TableCell>
-              {`${isNodebalancerVPCEnabled ? subnet.linodes.length + uniqueNodebalancers.length : subnet.linodes.length}`}
+              {`${isNodebalancerVPCEnabled ? subnet.linodes.length + uniqueNodebalancers.length + (flags.vpcDbaasResources ? subnet.databases.length : 0) : subnet.linodes.length}`}
             </TableCell>
           </Hidden>
           <TableCell actionCell>
@@ -402,6 +405,9 @@ export const VPCSubnetsTable = (props: Props) => {
                 ))}
               </TableBody>
             </Table>
+          )}
+          {flags.vpcDbaasResources && subnet.databases?.length > 0 && (
+            <SubnetDatabasesTable subnetDatabasesData={subnet.databases} />
           )}
         </>
       );

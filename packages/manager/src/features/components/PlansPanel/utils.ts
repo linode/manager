@@ -1,6 +1,10 @@
 import { useAccount } from '@linode/queries';
 import { arrayToList, isFeatureEnabledV2 } from '@linode/utilities';
 
+import {
+  RESIZE_DISABLED_NON_G7_DEDICATED_SHARED_PLAN_TABS_TEXT,
+  RESIZE_DISABLED_PREMIUM_PLAN_TAB_TEXT,
+} from 'src/features/Databases/constants';
 import { useFlags } from 'src/hooks/useFlags';
 import { useIsGenerationalPlansEnabled } from 'src/utilities/linodes';
 
@@ -24,6 +28,7 @@ import type {
 import type {
   BaseType,
   Capabilities,
+  DatabaseType,
   LinodeType,
   LinodeTypeClass,
   Region,
@@ -321,9 +326,13 @@ export const replaceOrAppendPlaceholder512GbPlans = (
 
 interface ExtractPlansInformationProps {
   disabledClasses?: LinodeTypeClass[];
+  // @TODO remove dbaas resize class type restriction sometime post-release when we support resizing across different plans
+  disabledResizeFromPremiumPlans?: PlanSelectionType[];
+  disabledResizeToPremiumPlans?: PlanSelectionType[];
   disabledSmallerPlans?: PlanSelectionType[];
   disableLargestGbPlansFlag: Flags['disableLargestGbPlans'] | undefined;
   isAPLEnabled?: boolean;
+  isDatabaseResize?: boolean;
   isLegacyDatabase?: boolean;
   isResize?: boolean;
   plans: PlanSelectionType[];
@@ -333,7 +342,7 @@ interface ExtractPlansInformationProps {
 
 /**
  * Extracts plan information and determines if any plans are disabled.
- * Used for Linode and Kubernetes selection Plan tables and notices.
+ * Used for Linode, Kubernetes, and Databases selection Plan tables and notices.
  *
  * @param disableLargestGbPlansFlag The flag to disable the largest GB plans.
  * @param disabledClasses The disabled classes (aka linode types).
@@ -349,7 +358,11 @@ export const extractPlansInformation = ({
   disabledSmallerPlans,
   isAPLEnabled,
   isLegacyDatabase,
+  // @TODO remove dbaas resize class type restriction sometime post-release when we support resizing across different plans
+  disabledResizeFromPremiumPlans,
+  disabledResizeToPremiumPlans,
   isResize,
+  isDatabaseResize,
   plans,
   regionAvailabilities,
   selectedRegionId,
@@ -372,6 +385,22 @@ export const extractPlansInformation = ({
       // - Resizing existing linodes (from non-MTC regions) to this MTC plan is not supported.
       // - Resizing existing linodes (from MTC regions) to this MTC plan is not supported.
       const planResizeNotSupported = isCustomMTCPlan && isResize;
+
+      // @TODO remove dbaas resize class type restriction sometime post-release when we support resizing across different plans
+      const planDBaaSResizeFromPremiumNotSupported =
+        isDatabaseResize &&
+        Boolean(
+          disabledResizeFromPremiumPlans?.find(
+            (disabledPlan) => disabledPlan.id === plan.id
+          )
+        );
+      const planDBaaSResizeToPremiumNotSupported =
+        isDatabaseResize &&
+        Boolean(
+          disabledResizeToPremiumPlans?.find(
+            (disabledPlan) => disabledPlan.id === plan.id
+          )
+        );
 
       const planHasLimitedAvailability = getIsLimitedAvailability({
         plan,
@@ -403,6 +432,9 @@ export const extractPlansInformation = ({
         planIsSmallerThanUsage,
         planIsTooSmall,
         planIsTooSmallForAPL,
+        // @TODO remove dbaas resize class type restriction sometime post-release when we support resizing across different plans
+        planDBaaSResizeFromPremiumNotSupported,
+        planDBaaSResizeToPremiumNotSupported,
       };
     }
   );
@@ -444,6 +476,9 @@ export const getIsPlanDisabled = (plan: PlanWithAvailability) => {
     planIsSmallerThanUsage,
     planIsTooSmall,
     planIsTooSmallForAPL,
+    // @TODO remove dbaas resize class type restriction sometime post-release when we support resizing across different plans
+    planDBaaSResizeFromPremiumNotSupported,
+    planDBaaSResizeToPremiumNotSupported,
   } = plan;
 
   return (
@@ -453,7 +488,10 @@ export const getIsPlanDisabled = (plan: PlanWithAvailability) => {
     planResizeNotSupported ||
     planIsSmallerThanUsage ||
     planIsTooSmall ||
-    planIsTooSmallForAPL
+    planIsTooSmallForAPL ||
+    // @TODO remove dbaas resize class type restriction sometime post-release when we support resizing across different plans
+    planDBaaSResizeFromPremiumNotSupported ||
+    planDBaaSResizeToPremiumNotSupported
   );
 };
 
@@ -466,12 +504,18 @@ export const getDisabledPlanReasonCopy = ({
   planHasLimitedAvailability,
   planIsDisabled512Gb,
   planResizeNotSupported,
+  // @TODO remove dbaas resize class type restriction sometime post-release when we support resizing across different plans
+  planDBaaSResizeFromPremiumNotSupported,
+  planDBaaSResizeToPremiumNotSupported,
   planIsSmallerThanUsage,
   planIsTooSmall,
   planIsTooSmallForAPL,
   wholePanelIsDisabled,
 }: {
   planBelongsToDisabledClass: DisabledTooltipReasons['planBelongsToDisabledClass'];
+  // @TODO remove dbaas resize class type restriction sometime post-release when we support resizing across different plans
+  planDBaaSResizeFromPremiumNotSupported?: DisabledTooltipReasons['planDBaaSResizeFromPremiumNotSupported'];
+  planDBaaSResizeToPremiumNotSupported?: DisabledTooltipReasons['planDBaaSResizeToPremiumNotSupported'];
   planHasLimitedAvailability: DisabledTooltipReasons['planHasLimitedAvailability'];
   planIsDisabled512Gb: DisabledTooltipReasons['planIsDisabled512Gb'];
   planIsSmallerThanUsage?: DisabledTooltipReasons['planIsSmallerThanUsage'];
@@ -498,6 +542,15 @@ export const getDisabledPlanReasonCopy = ({
     return PLAN_IS_TOO_SMALL_FOR_APL_COPY;
   }
 
+  // @TODO remove dbaas resize class type restriction sometime post-release when we support resizing across different plans
+  if (planDBaaSResizeToPremiumNotSupported) {
+    return RESIZE_DISABLED_PREMIUM_PLAN_TAB_TEXT;
+  }
+
+  if (planDBaaSResizeFromPremiumNotSupported) {
+    return RESIZE_DISABLED_NON_G7_DEDICATED_SHARED_PLAN_TABS_TEXT;
+  }
+
   if (
     planHasLimitedAvailability ||
     planIsDisabled512Gb ||
@@ -512,7 +565,7 @@ export const getDisabledPlanReasonCopy = ({
 export const useShouldDisablePremiumPlansTab = ({
   types,
 }: {
-  types: LinodeType[] | PlanSelectionType[] | undefined;
+  types: DatabaseType[] | LinodeType[] | PlanSelectionType[] | undefined;
 }): boolean => {
   const { isGenerationalPlansEnabled, allowedPlans } =
     useIsGenerationalPlansEnabled(types, 'premium');

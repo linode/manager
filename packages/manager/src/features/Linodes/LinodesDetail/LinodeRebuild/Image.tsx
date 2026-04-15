@@ -48,10 +48,12 @@ export const Image = (props: Props) => {
                 : '/linodes') as LinkProps['to']
             }
             errorText={fieldState.error?.message}
+            filter={getImageSelectFilter(stackscript)}
             onSelect={(image) => field.onChange(image?.id ?? null)}
             pendoIDs={IMAGE_SELECT_TABLE_LINODE_REBUILD_PENDO_IDS}
             queryParamsPrefix="images"
-            selectedImageId={field.value}
+            selectedImageIds={field.value ? [field.value] : []}
+            selectionMode="single"
           />
         ) : (
           <ImageSelect

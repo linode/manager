@@ -3,7 +3,6 @@ import { Divider, Paper, Typography } from '@linode/ui';
 import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
-import { UserSSHKeyPanel } from 'src/components/AccessPanel/UserSSHKeyPanel';
 import {
   DISK_ENCRYPTION_DEFAULT_DISTRIBUTED_INSTANCES,
   DISK_ENCRYPTION_DISTRIBUTED_DESCRIPTION,
@@ -13,16 +12,12 @@ import {
 import { Encryption } from 'src/components/Encryption/Encryption';
 import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
 import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
-import { Skeleton } from 'src/components/Skeleton';
-import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
+import { useIsPasswordLessLinodesEnabled } from 'src/utilities/linodes';
+
+import { Password } from './Password';
+import { SSHKeys } from './SSHKeys';
 
 import type { CreateLinodeRequest } from '@linode/api-v4';
-
-const PasswordInput = React.lazy(() =>
-  import('src/components/PasswordInput/PasswordInput').then((module) => ({
-    default: module.PasswordInput,
-  }))
-);
 
 export const Security = () => {
   const { control } = useFormContext<CreateLinodeRequest>();
@@ -45,52 +40,26 @@ export const Security = () => {
     selectedRegion?.id ?? ''
   );
 
-  const { data: permissions } = usePermissions('account', ['create_linode']);
+  const { isPasswordLessLinodesEnabled } = useIsPasswordLessLinodesEnabled();
 
   return (
     <Paper>
       <Typography sx={{ mb: 2 }} variant="h2">
         Security
       </Typography>
-      <React.Suspense
-        fallback={
-          <Skeleton
-            sx={(theme) => ({ height: '89px', maxWidth: theme.inputMaxWidth })}
-          />
-        }
-      >
-        <Controller
-          control={control}
-          name="root_pass"
-          render={({ field, fieldState }) => (
-            <PasswordInput
-              autoComplete="off"
-              disabled={!permissions.create_linode}
-              errorText={fieldState.error?.message}
-              id="linode-password"
-              label="Root Password"
-              name="password"
-              noMarginTop
-              onBlur={field.onBlur}
-              onChange={field.onChange}
-              placeholder="Enter a password."
-              value={field.value ?? ''}
-            />
-          )}
-        />
-      </React.Suspense>
-      <Divider spacingBottom={20} spacingTop={24} />
-      <Controller
-        control={control}
-        name="authorized_users"
-        render={({ field }) => (
-          <UserSSHKeyPanel
-            authorizedUsers={field.value ?? []}
-            disabled={!permissions.create_linode}
-            setAuthorizedUsers={field.onChange}
-          />
-        )}
-      />
+      {!isPasswordLessLinodesEnabled ? (
+        <>
+          <Password />
+          <Divider spacingBottom={20} spacingTop={24} />
+          <SSHKeys />
+        </>
+      ) : (
+        <>
+          <SSHKeys />
+          <Divider spacingBottom={20} spacingTop={24} />
+          <Password />
+        </>
+      )}
       {isDiskEncryptionFeatureEnabled && (
         <>
           <Divider spacingBottom={20} spacingTop={24} />
