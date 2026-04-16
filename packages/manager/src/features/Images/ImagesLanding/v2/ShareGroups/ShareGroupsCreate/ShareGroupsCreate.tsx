@@ -25,6 +25,8 @@ import type {
 } from '@linode/api-v4';
 
 interface ShareGroupFormImage extends SharegroupImagePayload {
+  newDescription?: string;
+  newLabel?: string;
   useOriginalImageFields: boolean;
 }
 
@@ -56,11 +58,13 @@ export const ShareGroupsCreate = () => {
     try {
       const payload: CreateSharegroupPayload = {
         ...values,
-        images: values.images?.map(({ id, label, description }) => ({
-          id,
-          label,
-          description,
-        })),
+        images: values.images?.map(
+          ({ id, label, description, newLabel, newDescription }) => ({
+            id,
+            label: newLabel ?? label,
+            description: newDescription ?? description,
+          })
+        ),
       };
 
       await createShareGroup(payload);
@@ -102,11 +106,31 @@ export const ShareGroupsCreate = () => {
         if (img.id === id) {
           return {
             ...img,
+            newDescription: img.description,
+            newLabel: img.label,
             useOriginalImageFields: !img.useOriginalImageFields,
           };
         }
         return img;
       })
+    );
+  };
+
+  const onSelectedImageChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    id: string,
+    field: 'newDescription' | 'newLabel'
+  ) => {
+    const value = e.target.value === '' ? undefined : e.target.value;
+    imagesController.onChange(
+      selectedImages.map((img) =>
+        img.id === id
+          ? {
+              ...img,
+              [field]: value,
+            }
+          : img
+      )
     );
   };
 
@@ -218,41 +242,33 @@ export const ShareGroupsCreate = () => {
                 <Stack spacing={2}>
                   <Controller
                     control={control}
-                    name={`images.${index}.label`}
-                    render={({ field, fieldState }) => (
+                    name={`images.${index}`}
+                    render={() => (
                       <TextField
                         data-testid={`selected-image-${index}-label`}
-                        errorText={fieldState.error?.message}
                         label="Label"
-                        {...field}
                         noMarginTop
-                        onChange={(e) => {
-                          field.onChange(
-                            e.target.value === '' ? undefined : e.target.value
-                          );
-                        }}
-                        value={field.value ?? ''}
+                        onChange={(e) =>
+                          onSelectedImageChange(e, image.id, 'newLabel')
+                        }
+                        value={image.newLabel ?? ''}
                       />
                     )}
                   />
                   <Controller
                     control={control}
-                    name={`images.${index}.description`}
-                    render={({ field, fieldState }) => (
+                    name={`images.${index}`}
+                    render={() => (
                       <TextField
                         data-testid={`selected-image-${index}-description`}
-                        errorText={fieldState.error?.message}
                         label="Description"
                         multiline
-                        {...field}
                         noMarginTop
-                        onChange={(e) => {
-                          field.onChange(
-                            e.target.value === '' ? undefined : e.target.value
-                          );
-                        }}
+                        onChange={(e) =>
+                          onSelectedImageChange(e, image.id, 'newDescription')
+                        }
                         rows={1}
-                        value={field.value ?? ''}
+                        value={image.newDescription ?? ''}
                       />
                     )}
                   />
