@@ -25,12 +25,11 @@ import type {
 } from '@linode/api-v4';
 
 interface ShareGroupFormImage extends SharegroupImagePayload {
-  newDescription?: string;
-  newLabel?: string;
   useOriginalImageFields: boolean;
 }
 
-interface ShareGroupPayload extends Omit<CreateSharegroupPayload, 'images'> {
+interface ShareGroupFormPayload
+  extends Omit<CreateSharegroupPayload, 'images'> {
   images?: ShareGroupFormImage[];
 }
 
@@ -44,7 +43,7 @@ export const ShareGroupsCreate = () => {
     handleSubmit,
     setError,
     formState: { isSubmitting },
-  } = useForm<ShareGroupPayload>();
+  } = useForm<ShareGroupFormPayload>();
 
   const { field: imagesController, fieldState } = useController({
     control,
@@ -57,13 +56,11 @@ export const ShareGroupsCreate = () => {
     try {
       const payload: CreateSharegroupPayload = {
         ...values,
-        images: values.images?.map(
-          ({ id, label, description, newLabel, newDescription }) => ({
-            id,
-            label: newLabel ?? label,
-            description: newDescription ?? description,
-          })
-        ),
+        images: values.images?.map(({ id, label, description }) => ({
+          id,
+          label,
+          description,
+        })),
       };
 
       await createShareGroup(payload);
@@ -105,8 +102,6 @@ export const ShareGroupsCreate = () => {
         if (img.id === id) {
           return {
             ...img,
-            newDescription: img.description,
-            newLabel: img.label,
             useOriginalImageFields: !img.useOriginalImageFields,
           };
         }
@@ -115,21 +110,11 @@ export const ShareGroupsCreate = () => {
     );
   };
 
-  const onSelectedImageChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-    id: string,
-    field: 'newDescription' | 'newLabel'
-  ) => {
-    const value = e.target.value === '' ? undefined : e.target.value;
-    imagesController.onChange(
-      selectedImages.map((img) =>
-        img.id === id
-          ? {
-              ...img,
-              [field]: value,
-            }
-          : img
-      )
+  const shareGroupImagesFilter = (image: Image) => {
+    return (
+      image.status === 'available' &&
+      image.is_public === false &&
+      image.created_by !== null
     );
   };
 
@@ -192,6 +177,7 @@ export const ShareGroupsCreate = () => {
           <ImageSelectTable
             currentRoute="/images/share-groups/create"
             errorText={fieldState.error?.message}
+            filter={shareGroupImagesFilter}
             onSelect={handleImagesTableSelect}
             pendoIDs={IMAGE_SELECT_TABLE_SHARE_GROUP_CREATE_PENDO_IDS}
             selectedImageIds={
@@ -232,33 +218,41 @@ export const ShareGroupsCreate = () => {
                 <Stack spacing={2}>
                   <Controller
                     control={control}
-                    name={`images.${index}`}
-                    render={() => (
+                    name={`images.${index}.label`}
+                    render={({ field, fieldState }) => (
                       <TextField
                         data-testid={`selected-image-${index}-label`}
+                        errorText={fieldState.error?.message}
                         label="Label"
+                        {...field}
                         noMarginTop
-                        onChange={(e) =>
-                          onSelectedImageChange(e, image.id, 'newLabel')
-                        }
-                        value={image.newLabel ?? ''}
+                        onChange={(e) => {
+                          field.onChange(
+                            e.target.value === '' ? undefined : e.target.value
+                          );
+                        }}
+                        value={field.value ?? ''}
                       />
                     )}
                   />
                   <Controller
                     control={control}
-                    name={`images.${index}`}
-                    render={() => (
+                    name={`images.${index}.description`}
+                    render={({ field, fieldState }) => (
                       <TextField
                         data-testid={`selected-image-${index}-description`}
+                        errorText={fieldState.error?.message}
                         label="Description"
                         multiline
+                        {...field}
                         noMarginTop
-                        onChange={(e) =>
-                          onSelectedImageChange(e, image.id, 'newDescription')
-                        }
+                        onChange={(e) => {
+                          field.onChange(
+                            e.target.value === '' ? undefined : e.target.value
+                          );
+                        }}
                         rows={1}
-                        value={image.newDescription ?? ''}
+                        value={field.value ?? ''}
                       />
                     )}
                   />
