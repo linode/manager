@@ -15,6 +15,10 @@ import type {
 
 const mockUpdateAlerts = vi.fn();
 
+const mockQuery = vi.hoisted(() => ({
+  useAllEntitiesByAlertsQuery: vi.fn(),
+  useLinodeQuery: vi.fn(),
+}));
 vi.mock('src/queries/cloudpulse/useAlertsMutation', async () => {
   const actual = await vi.importActual(
     'src/queries/cloudpulse/useAlertsMutation'
@@ -25,37 +29,50 @@ vi.mock('src/queries/cloudpulse/useAlertsMutation', async () => {
   };
 });
 
+vi.mock('src/queries/cloudpulse/alerts', async () => {
+  const actual = await vi.importActual('src/queries/cloudpulse/alerts');
+  return {
+    ...actual,
+    useAllEntitiesByAlertsQuery: mockQuery.useAllEntitiesByAlertsQuery,
+  };
+});
+
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
+  return {
+    ...actual,
+    useLinodeQuery: mockQuery.useLinodeQuery,
+  };
+});
+
 const serviceType = 'linode';
 const entityId = '123';
 const entityName = 'test-instance';
 const alerts = [
   ...alertFactory.buildList(7, {
-    entity_ids: [entityId],
     service_type: serviceType,
     status: 'enabled',
   }),
   alertFactory.build({
     id: 9,
-    entity_ids: [],
     service_type: serviceType,
     type: 'user',
     scope: 'entity',
   }),
   alertFactory.build({
     id: 10,
-    entity_ids: [],
     service_type: serviceType,
     type: 'user',
     scope: 'account',
   }),
   alertFactory.build({
     id: 11,
-    entity_ids: [],
     service_type: serviceType,
     type: 'user',
     scope: 'region',
   }),
 ];
+
 const columns: TableColumnHeader[] = [
   { columnName: 'Alert Name', label: 'label' },
   { columnName: 'Metric Threshold', label: 'id' },
@@ -75,6 +92,36 @@ describe('Alert Listing Reusable Table for contextual view', () => {
   beforeEach(() => {
     mockUpdateAlerts.mockClear();
     mockUpdateAlerts.mockResolvedValue({});
+
+    mockQuery.useAllEntitiesByAlertsQuery.mockReturnValue({
+      alertEntityMap: new Map([
+        [1, ['123']],
+        [2, ['123']],
+        [3, ['123']],
+        [4, ['123']],
+        [5, ['123']],
+        [6, ['123']],
+        [7, ['123']],
+        [9, []],
+        [10, []],
+        [11, []],
+      ]),
+      isError: false,
+      isLoading: false,
+    });
+
+    mockQuery.useLinodeQuery.mockReturnValue({
+      data: {
+        id: 123,
+        label: 'test-instance',
+        alerts: {
+          system_alerts: [1, 2, 3, 4, 5, 6, 7],
+          user_alerts: [],
+        },
+      },
+      isLoading: false,
+      isError: false,
+    });
   });
 
   it('Should render alert table', async () => {

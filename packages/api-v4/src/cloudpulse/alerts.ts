@@ -22,6 +22,7 @@ import type {
   CreateNotificationChannelPayload,
   EditAlertDefinitionPayload,
   EditNotificationChannelPayload,
+  Entities,
   NotificationChannel,
   NotificationChannelAlerts,
 } from './types';
@@ -190,6 +191,21 @@ export const getAlertsByNotificationChannelId = (
   Request<ResourcePage<NotificationChannelAlerts>>(
     setURL(
       `${API_ROOT}/monitor/alert-channels/${encodeURIComponent(channelId)}/alerts`,
+    ),
+    setMethod('GET'),
+    setParams(params),
+    setXFilter(filters),
+  );
+
+export const getEntitiesByAlertId = (
+  serviceType: string,
+  alertId: string,
+  params?: Params,
+  filters?: Filter,
+) =>
+  Request<ResourcePage<Entities>>(
+    setURL(
+      `${API_ROOT}/monitor/services/${encodeURIComponent(serviceType)}/alert-definitions/${encodeURIComponent(alertId)}/entities`,
     ),
     setMethod('GET'),
     setParams(params),

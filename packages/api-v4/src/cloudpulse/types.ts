@@ -264,8 +264,11 @@ export interface Alert {
   created: string;
   created_by: string;
   description: string;
-  entity_ids: string[];
-  has_more_resources: boolean;
+  entities: {
+    count: number;
+    has_more_resources: boolean;
+    url: string;
+  };
   id: number;
   label: string;
   regions?: string[];
@@ -475,5 +478,12 @@ export interface NotificationChannelAlerts {
   label: string;
   service_type: CloudPulseServiceType;
   type: 'alerts-definitions';
+  url: string;
+}
+
+export interface Entities {
+  id: string;
+  label: string;
+  type: string;
   url: string;
 }
