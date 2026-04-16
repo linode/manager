@@ -1,5 +1,6 @@
 import { usePreferences } from '@linode/queries';
 import { Stack, VisibilityTooltip } from '@linode/ui';
+import { Badge } from 'akamai-cds-react-components/Badge';
 import React from 'react';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
@@ -18,12 +19,19 @@ interface AccessRowProps {
   heading?: string;
   isDisabled: boolean;
   isLinodeInterface?: boolean;
+  isReserved?: boolean;
   text: string;
 }
 
 export const AccessRow = (props: AccessRowProps) => {
-  const { heading, text, isDisabled, hasPublicInterface, isLinodeInterface } =
-    props;
+  const {
+    heading,
+    text,
+    isDisabled,
+    hasPublicInterface,
+    isLinodeInterface,
+    isReserved,
+  } = props;
 
   const { data: maskedPreferenceSetting } = usePreferences(
     (preferences) => preferences?.maskSensitiveData
@@ -65,6 +73,7 @@ export const AccessRow = (props: AccessRowProps) => {
               isVisible={!isTextMasked}
             />
           )}
+          {isReserved && <Badge>Reserved</Badge>}
         </Stack>
       </StyledTableCell>
     </StyledTableRow>

@@ -1,4 +1,4 @@
-import { usePreferences, useProfile } from '@linode/queries';
+import { useIPAddressQuery, usePreferences, useProfile } from '@linode/queries';
 import { Box, Stack, Typography } from '@linode/ui';
 import { pluralize } from '@linode/utilities';
 import { useMediaQuery } from '@mui/material';
@@ -132,6 +132,11 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
   const numIPAddresses = ipv4.length + (ipv6 ? 1 : 0);
 
   const firstAddress = ipv4[0];
+
+  const { data: firstIPAddress } = useIPAddressQuery(
+    firstAddress,
+    Boolean(firstAddress)
+  );
 
   // If IPv6 is enabled, always use it in the second address slot. Otherwise use
   // the second IPv4 address if it exists.
@@ -270,6 +275,7 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
                   maskedTextLength: 'ipv4',
                   text: firstAddress,
                   disabled: isUnreachablePublicIPv4,
+                  isReserved: firstIPAddress?.reserved,
                 },
                 {
                   isMasked: maskSensitiveDataPreference,

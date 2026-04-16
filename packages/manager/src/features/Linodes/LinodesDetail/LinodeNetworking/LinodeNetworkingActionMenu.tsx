@@ -27,6 +27,7 @@ interface Props {
   isOnlyPublicIP: boolean;
   onEdit?: (ip: IPAddress | IPRange) => void;
   onRemove?: (ip: IPAddress | IPRange) => void;
+  onReserve?: (ip: IPAddress) => void;
   readOnly: boolean;
 }
 
@@ -43,6 +44,7 @@ export const LinodeNetworkingActionMenu = (props: Props) => {
     disabledFromInterfaces,
     onEdit,
     onRemove,
+    onReserve,
     readOnly,
   } = props;
 
@@ -87,7 +89,25 @@ export const LinodeNetworkingActionMenu = (props: Props) => {
     }
   };
 
+  const isIPAddress = 'address' in ipAddress;
+  const isAlreadyReserved = isIPAddress && ipAddress.reserved;
+
   const actions = [
+    onReserve && isIPAddress && ipType === 'Public – IPv4'
+      ? {
+          disabled: readOnly || isAlreadyReserved,
+          id: 'reserve',
+          onClick: () => {
+            onReserve(ipAddress);
+          },
+          title: 'Reserve IP',
+          tooltip: isAlreadyReserved
+            ? 'This IP Address has already been reserved'
+            : readOnly
+              ? readOnlyTooltip
+              : undefined,
+        }
+      : null,
     onRemove &&
     ipAddress &&
     !is116Range &&

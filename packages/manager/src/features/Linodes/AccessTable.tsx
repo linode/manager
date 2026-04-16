@@ -18,6 +18,7 @@ interface AccessTableRow {
   disabled?: boolean;
   heading?: string;
   isMasked?: boolean;
+  isReserved?: boolean;
   maskedTextLength?: MaskableTextLength;
   text: null | string;
 }
@@ -65,6 +66,7 @@ export const AccessTable = React.memo((props: AccessTableProps) => {
                   heading={thisRow.heading}
                   isDisabled={Boolean(thisRow.disabled)}
                   isLinodeInterface={isLinodeInterface}
+                  isReserved={thisRow.isReserved}
                   key={thisRow.text}
                   text={thisRow.text}
                 />
