@@ -1,3 +1,12 @@
+import { Pagination } from '@akamai/cds-components/react';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeaderCell,
+  TableRow,
+} from '@akamai/cds-components/react/Table';
 import {
   Box,
   Button,
@@ -7,15 +16,6 @@ import {
   useTheme,
   ZeroStateSearchNarrowIcon,
 } from '@linode/ui';
-import { Pagination } from 'akamai-cds-react-components';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeaderCell,
-  TableRow,
-} from 'akamai-cds-react-components/Table';
 import React from 'react';
 
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
@@ -147,7 +147,7 @@ export const ShareGroupsTable = (props: ShareGroupsTableProps) => {
                     <TableHeaderCell
                       className={col.className}
                       key={idx}
-                      sort={() =>
+                      onSort={() =>
                         handleOrderChange(
                           col.sortableProps?.label ?? col.name,
                           order === 'asc' ? 'desc' : 'asc'

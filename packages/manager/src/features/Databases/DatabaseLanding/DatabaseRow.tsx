@@ -1,3 +1,4 @@
+import { TableCell, TableRow } from '@akamai/cds-components/react/Table';
 import {
   useDatabaseTypesQuery,
   useProfile,
@@ -5,7 +6,6 @@ import {
 } from '@linode/queries';
 import { Chip, Hidden } from '@linode/ui';
 import { formatStorageUnits } from '@linode/utilities';
-import { TableCell, TableRow } from 'akamai-cds-react-components/Table';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';

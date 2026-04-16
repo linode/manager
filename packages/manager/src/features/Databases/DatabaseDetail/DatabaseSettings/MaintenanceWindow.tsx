@@ -1,3 +1,4 @@
+import { Button, Select } from '@akamai/cds-components/react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useDatabaseMutation } from '@linode/queries';
 import {
@@ -15,7 +16,6 @@ import {
 } from '@linode/ui';
 import { updateMaintenanceSchema } from '@linode/validation';
 import { styled } from '@mui/material/styles';
-import { Button, Select } from 'akamai-cds-react-components';
 import { DateTime } from 'luxon';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
