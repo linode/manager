@@ -1,5 +1,5 @@
+import { TableCell } from '@akamai/cds-components/react/Table';
 import { styled } from '@mui/material/styles';
-import { TableCell } from 'akamai-cds-react-components/Table';
 
 export const StyledActionMenuWrapper = styled(TableCell, {
   label: 'StyledActionMenuWrapper',
