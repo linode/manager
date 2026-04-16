@@ -94,9 +94,6 @@ export const poolModeOptions = [
   { label: 'Session', value: 'session' },
   { label: 'Statement', value: 'statement' },
 ];
-export const databaseNamesOptions = [
-  { label: 'defaultdb', value: 'defaultdb' },
-]; // Currently the only option for the database name field, but more may be introduced later.
 export const usernameOptions = [
   { label: defaultUsername, value: defaultUsername },
   { label: 'akmadmin', value: 'akmadmin' },
