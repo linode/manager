@@ -3,6 +3,7 @@ import { useFlags } from 'src/hooks/useFlags';
 import { UNKNOWN_PRICE } from './constants';
 import {
   formatPriceForInterval,
+  getDecimalPlaces,
   getLabelForInterval,
   getPriceForInterval,
 } from './priceInterval';
@@ -13,27 +14,32 @@ import type { PriceObject } from '@linode/api-v4';
  * Returns pricing helpers bound to the active billing interval from the `computePricing` LD flag.
  *
  * @example
- * const { decimalPlaces, getPrice, priceLabel } = usePricingInterval();
+ * const { decimalPlaces, getPrice, priceLabel } = useComputePricing();
  * <Currency decimalPlaces={decimalPlaces} quantity={getPrice(type.addons.backups.price)} />
  * {`/${priceLabel}`}
  *
  * @example
  * <DisplayPrice decimalPlaces={decimalPlaces} interval={priceLabel} price={getPrice(price)} />
  */
-export const usePricingInterval = () => {
+export const useComputePricing = () => {
   const { computePricing } = useFlags();
-  const interval: keyof PriceObject = computePricing?.interval ?? 'monthly';
+  // Active billing mode from the `computePricing` LD flag.
+  const billing: keyof PriceObject = computePricing?.billing ?? 'monthly';
 
   return {
-    /** The active billing interval (eg., `'monthly'`, `'hourly'`, etc). */
-    interval,
+    /** Active billing mode from the LD flag (e.g. `'monthly'`, `'hourly'`). */
+    billing,
     /**
-     * Decimal places for the active interval (2 for monthly, 3 for hourly).
+     * Decimal places for the active billing interval (2 for monthly, 3 for hourly).
      * Pass this to `<Currency>` or `<DisplayPrice>` to get correct formatting.
      */
-    decimalPlaces: interval === 'hourly' ? 3 : 2,
+    decimalPlaces: getDecimalPlaces(billing),
+    /** Decimal places for monthly prices. Always 2. */
+    monthlyDecimalPlaces: getDecimalPlaces('monthly'),
+    /** Decimal places for hourly prices. Always 3. */
+    hourlyDecimalPlaces: getDecimalPlaces('hourly'),
     /**
-     * Returns the price value for the active interval from a PriceObject,
+     * Returns the price value for the active billing interval from a PriceObject,
      * or `UNKNOWN_PRICE` (`'--.--'`) if the price is unavailable.
      *
      * Use with `<Currency>` or `<DisplayPrice>` — avoid template literals
@@ -42,7 +48,7 @@ export const usePricingInterval = () => {
     getPrice: (
       priceObject: null | PriceObject | undefined
     ): '--.--' | number => {
-      const value = getPriceForInterval(priceObject, interval);
+      const value = getPriceForInterval(priceObject, billing);
       if (value === null || value === undefined) {
         return UNKNOWN_PRICE;
       }
@@ -54,10 +60,10 @@ export const usePricingInterval = () => {
      * or `<DisplayPrice>` can't be used (e.g. `subHeadings`, `aria-label`).
      */
     formatPrice: (priceObject: null | PriceObject | undefined): string => {
-      const value = getPriceForInterval(priceObject, interval);
-      return formatPriceForInterval(value, interval);
+      const value = getPriceForInterval(priceObject, billing);
+      return formatPriceForInterval(value, billing);
     },
-    /** Short label for the active interval (eg., `'hour'`, `'month'`, etc). */
-    priceLabel: getLabelForInterval(interval),
+    /** Short label for the active billing interval (eg., `'hour'`, `'month'`, etc). */
+    priceLabel: getLabelForInterval(billing),
   };
 };

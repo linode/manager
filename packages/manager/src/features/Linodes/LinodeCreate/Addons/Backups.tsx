@@ -18,7 +18,7 @@ import { DISK_ENCRYPTION_BACKUPS_CAVEAT_COPY } from 'src/components/Encryption/c
 import { Link } from 'src/components/Link';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { getLinodeBackupPrice } from 'src/utilities/pricing/backups';
-import { usePricingInterval } from 'src/utilities/pricing/usePricingInterval';
+import { useComputePricing } from 'src/utilities/pricing/useComputePricing';
 
 import { getBackupsEnabledValue } from './utilities';
 
@@ -37,7 +37,7 @@ export const Backups = () => {
   });
 
   const { data: permissions } = usePermissions('account', ['create_linode']);
-  const { decimalPlaces, getPrice, priceLabel } = usePricingInterval();
+  const { decimalPlaces, getPrice, priceLabel } = useComputePricing();
 
   const { data: type } = useTypeQuery(typeId, Boolean(typeId));
   const { data: regions } = useRegionsQuery();

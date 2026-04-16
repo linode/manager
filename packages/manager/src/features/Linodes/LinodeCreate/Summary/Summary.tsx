@@ -17,7 +17,7 @@ import { useIsAclpSupportedRegion } from 'src/features/CloudPulse/Utils/utils';
 import { useFlags } from 'src/hooks/useFlags';
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 import { getLinodeBackupPrice } from 'src/utilities/pricing/backups';
-import { usePricingInterval } from 'src/utilities/pricing/usePricingInterval';
+import { useComputePricing } from 'src/utilities/pricing/useComputePricing';
 
 import { getLinodePrice } from './utilities';
 
@@ -84,9 +84,9 @@ export const Summary = ({ isAclpAlertsMode }: SummaryProps) => {
   const {
     decimalPlaces,
     getPrice,
-    interval,
+    billing,
     priceLabel: backupsPriceLabel,
-  } = usePricingInterval();
+  } = useComputePricing();
 
   const isAclpAlertsSupportedRegionLinode = useIsAclpSupportedRegion({
     capability: 'Linodes',
@@ -99,7 +99,7 @@ export const Summary = ({ isAclpAlertsMode }: SummaryProps) => {
   const backupsPrice = getPrice(getLinodeBackupPrice(type, regionId));
 
   const price = getLinodePrice({
-    interval,
+    interval: billing,
     regionId,
     types,
     stackscriptData,
