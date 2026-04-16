@@ -17,7 +17,8 @@ import { Currency } from 'src/components/Currency';
 import { DISK_ENCRYPTION_BACKUPS_CAVEAT_COPY } from 'src/components/Encryption/constants';
 import { Link } from 'src/components/Link';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
-import { getMonthlyBackupsPrice } from 'src/utilities/pricing/backups';
+import { getLinodeBackupPrice } from 'src/utilities/pricing/backups';
+import { usePricingInterval } from 'src/utilities/pricing/usePricingInterval';
 
 import { getBackupsEnabledValue } from './utilities';
 
@@ -36,15 +37,13 @@ export const Backups = () => {
   });
 
   const { data: permissions } = usePermissions('account', ['create_linode']);
+  const { decimalPlaces, getPrice, priceLabel } = usePricingInterval();
 
   const { data: type } = useTypeQuery(typeId, Boolean(typeId));
   const { data: regions } = useRegionsQuery();
   const { data: accountSettings } = useAccountSettings();
 
-  const backupsMonthlyPrice = getMonthlyBackupsPrice({
-    region: regionId,
-    type,
-  });
+  const backupsPriceObj = getLinodeBackupPrice(type, regionId);
 
   const selectedRegion = useMemo(
     () => regions?.find((r) => r.id === regionId),
@@ -80,9 +79,13 @@ export const Backups = () => {
             <Typography component="span" variant="h3">
               Backups
             </Typography>
-            {backupsMonthlyPrice && (
+            {backupsPriceObj && (
               <Typography component="span">
-                <Currency quantity={backupsMonthlyPrice} /> per month
+                <Currency
+                  decimalPlaces={decimalPlaces}
+                  quantity={getPrice(backupsPriceObj)}
+                />{' '}
+                per {priceLabel}
               </Typography>
             )}
           </Stack>

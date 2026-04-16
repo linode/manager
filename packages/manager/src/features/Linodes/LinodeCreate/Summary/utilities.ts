@@ -1,9 +1,18 @@
-import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/dynamicPricing';
 import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
+import {
+  formatPriceForInterval,
+  getLabelForInterval,
+  getPriceForInterval,
+} from 'src/utilities/pricing/priceInterval';
 
-import type { LinodeType } from '@linode/api-v4';
+import type { LinodeType, PriceObject } from '@linode/api-v4';
 
 interface LinodePriceOptions {
+  /**
+   * The billing interval to display pricing for.
+   * Driven by the `computePricing` LD flag. Defaults to `'monthly'`.
+   */
+  interval?: keyof PriceObject;
   /**
    * The selected region for the Linode
    */
@@ -26,26 +35,27 @@ interface LinodePriceOptions {
 }
 
 export const getLinodePrice = (options: LinodePriceOptions) => {
-  const { stackscriptData, regionId, type, types } = options;
+  const {
+    interval = 'monthly',
+    stackscriptData,
+    regionId,
+    type,
+    types,
+  } = options;
 
   const price = getLinodeRegionPrice(type, regionId);
+  const priceValue = getPriceForInterval(price, interval);
 
   const clusterSize = stackscriptData?.['cluster_size'];
   const isCluster = clusterSize !== undefined;
 
-  if (
-    regionId === undefined ||
-    price === undefined ||
-    price.monthly === null ||
-    price.hourly === null
-  ) {
+  if (regionId === undefined || price === undefined || priceValue === null) {
     return undefined;
   }
 
   if (isCluster) {
     let totalClusterSize = Number(clusterSize);
-    let clusterTotalMonthlyPrice = price.monthly * Number(clusterSize);
-    let clusterTotalHourlyPrice = price.hourly * Number(clusterSize);
+    let clusterTotal = (priceValue ?? 0) * Number(clusterSize);
 
     const complexClusterData = getParsedMarketplaceClusterData(
       stackscriptData,
@@ -53,17 +63,21 @@ export const getLinodePrice = (options: LinodePriceOptions) => {
     );
 
     for (const clusterPool of complexClusterData) {
-      const price = getLinodeRegionPrice(clusterPool.type, regionId);
+      const poolPrice = getLinodeRegionPrice(clusterPool.type, regionId);
       const numberOfNodesInPool = parseInt(clusterPool.size ?? '0', 10);
-      clusterTotalMonthlyPrice += (price?.monthly ?? 0) * numberOfNodesInPool;
-      clusterTotalHourlyPrice += (price?.hourly ?? 0) * numberOfNodesInPool;
+      clusterTotal +=
+        (getPriceForInterval(poolPrice, interval) ?? 0) * numberOfNodesInPool;
       totalClusterSize += numberOfNodesInPool;
     }
 
-    return `${totalClusterSize} Nodes - $${renderMonthlyPriceToCorrectDecimalPlace(clusterTotalMonthlyPrice)}/month $${renderMonthlyPriceToCorrectDecimalPlace(clusterTotalHourlyPrice)}/hr`;
+    const clusterLabel = getLabelForInterval(interval);
+
+    return `${totalClusterSize} Nodes - $${formatPriceForInterval(clusterTotal, interval)}/${clusterLabel}`;
   }
 
-  return `$${renderMonthlyPriceToCorrectDecimalPlace(price.monthly)}/month`;
+  const label = getLabelForInterval(interval);
+
+  return `$${formatPriceForInterval(priceValue, interval)}/${label}`;
 };
 
 interface MarketplaceClusterData {
