@@ -5,10 +5,15 @@ import React from 'react';
 import { useFlags } from 'src/hooks/useFlags';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 
-import { CLUSTERS_TOOLTIP_TEXT, RESOURCE_FILTER_MAP } from '../Utils/constants';
+import {
+  CLUSTERS_TOOLTIP_TEXT,
+  RESOURCE_FILTER_MAP,
+  VIRTUALIZATION_CONFIG,
+} from '../Utils/constants';
 import { filterUsingDependentFilters } from '../Utils/FilterBuilder';
 import { deepEqual } from '../Utils/utils';
 import { CLOUD_PULSE_TEXT_FIELD_PROPS } from './styles';
+import { VirtualizedListbox } from './VirtualizedListBox';
 
 import type { CloudPulseMetricsFilter } from '../Dashboard/CloudPulseDashboardLanding';
 import type { QueryFunctionType } from '../Utils/models';
@@ -139,6 +144,25 @@ export const CloudPulseResourcesSelect = React.memo(
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [resources, region, xFilter, resourceType]);
 
+    // Wrapper component to connect VirtualizedListbox with MUI Autocomplete
+    const ListboxWrapper = React.useMemo(() => {
+      if (getResourcesList.length <= VIRTUALIZATION_CONFIG.THRESHOLD) {
+        return undefined;
+      }
+      return React.forwardRef<
+        HTMLDivElement,
+        React.HTMLAttributes<HTMLElement>
+      >((props, ref) => {
+        // Extract children and forward to VirtualizedListbox
+        const { children, ...otherProps } = props;
+        return (
+          <div ref={ref} {...otherProps}>
+            <VirtualizedListbox>{children}</VirtualizedListbox>
+          </div>
+        );
+      });
+    }, [getResourcesList.length]);
+
     return (
       <Autocomplete
         autoHighlight
@@ -209,6 +233,11 @@ export const CloudPulseResourcesSelect = React.memo(
               </>
             </ListItem>
           );
+        }}
+        slotProps={{
+          listbox: {
+            component: ListboxWrapper,
+          },
         }}
         textFieldProps={{
           ...CLOUD_PULSE_TEXT_FIELD_PROPS,
