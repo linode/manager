@@ -10,8 +10,6 @@ import { NotFound } from 'src/features/IAM/Shared/NotFound/NotFound';
 import { usePermissions } from '../../hooks/usePermissions';
 import { DeleteUserPanel } from './DeleteUserPanel';
 import { UserDetailsPanel } from './UserDetailsPanel';
-import { UserEmailPanel } from './UserEmailPanel';
-import { UsernamePanel } from './UsernamePanel';
 
 export const UserProfile = () => {
   const { username } = useParams({ from: '/iam/users/$username' });
@@ -60,16 +58,15 @@ export const UserProfile = () => {
         spacing={2}
         sx={(theme) => ({ marginTop: theme.tokens.spacing.S16 })}
       >
-        <UserDetailsPanel activeUser={user} assignedRoles={assignedRoles} />
-        {/* <UsernamePanel
+        <UserDetailsPanel
           activeUser={user}
-          canUpdateUser={permissions?.update_user}
+          assignedRoles={assignedRoles}
+          permissions={permissions}
         />
-        <UserEmailPanel activeUser={user} />
         <DeleteUserPanel
           activeUser={user}
           canDeleteUser={permissions?.delete_user}
-        /> */}
+        />
       </Stack>
     </>
   );

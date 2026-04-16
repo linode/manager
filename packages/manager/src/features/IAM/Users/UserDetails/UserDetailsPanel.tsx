@@ -8,6 +8,7 @@ import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TextTooltip } from 'src/components/TextTooltip';
 
+import { EditUserDetailsDrawer } from './EditUserDetailsDrawer';
 import { getTotalAssignedRoles } from './utils';
 
 import type { IamUserRoles, User } from '@linode/api-v4';
@@ -15,9 +16,21 @@ import type { IamUserRoles, User } from '@linode/api-v4';
 interface Props {
   activeUser: User;
   assignedRoles?: IamUserRoles;
+  permissions: {
+    delete_user: boolean;
+    list_user_permissions: boolean;
+    update_user: boolean;
+    view_user: boolean;
+  };
 }
 
-export const UserDetailsPanel = ({ assignedRoles, activeUser }: Props) => {
+export const UserDetailsPanel = ({
+  assignedRoles,
+  activeUser,
+  permissions,
+}: Props) => {
+  const [isEditDrawerOpen, setIsEditDrawerOpen] = React.useState(false);
+
   const assignRolesCount = assignedRoles
     ? getTotalAssignedRoles(assignedRoles)
     : 0;
@@ -144,7 +157,9 @@ export const UserDetailsPanel = ({ assignedRoles, activeUser }: Props) => {
           <Typography sx={{ flex: 1 }} variant="h2">
             User Details
           </Typography>
-          <Button>Edit Details</Button>
+          <Button onClick={() => setIsEditDrawerOpen(true)}>
+            Edit Details
+          </Button>
           <Button>Delete User</Button>
         </Box>
         <Divider
@@ -181,6 +196,12 @@ export const UserDetailsPanel = ({ assignedRoles, activeUser }: Props) => {
           </Grid>
         ))}
       </Grid>
+      <EditUserDetailsDrawer
+        activeUser={activeUser}
+        canUpdateUser={permissions?.update_user}
+        onClose={() => setIsEditDrawerOpen(false)}
+        open={isEditDrawerOpen}
+      />
     </Paper>
   );
 };
