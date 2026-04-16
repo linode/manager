@@ -24,6 +24,7 @@ export interface IPAddressRowHandlers {
   handleOpenEditRDNS: (ip: IPAddress) => void;
   handleOpenEditRDNSForRange: (range: IPRange) => void;
   handleOpenIPV6Details: (range: IPRange) => void;
+  handleOpenReserveIPDrawer?: (ip: IPAddress) => void;
   openRemoveIPDialog: (ip: IPAddress) => void;
   openRemoveIPRangeDialog: (range: IPRange) => void;
 }
@@ -45,6 +46,7 @@ export const LinodeIPAddressRow = (props: LinodeIPAddressRowProps) => {
     handleOpenEditRDNS,
     handleOpenEditRDNSForRange,
     handleOpenIPV6Details,
+    handleOpenReserveIPDrawer,
     isUnreachablePublicIPv6,
     isLinodeInterface,
     isUnreachablePublicIPv4,
@@ -118,6 +120,7 @@ export const LinodeIPAddressRow = (props: LinodeIPAddressRowProps) => {
             isOnlyPublicIP={isOnlyPublicIP}
             onEdit={handleOpenEditRDNS}
             onRemove={openRemoveIPDialog}
+            onReserve={handleOpenReserveIPDrawer}
             readOnly={readOnly}
           />
         ) : _range ? (

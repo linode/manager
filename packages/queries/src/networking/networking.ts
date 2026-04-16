@@ -86,6 +86,13 @@ export const useAllIPsQuery = (
   });
 };
 
+export const useIPAddressQuery = (address: string, enabled: boolean = true) => {
+  return useQuery<IPAddress, APIError[]>({
+    ...networkingQueries.ip(address),
+    enabled,
+  });
+};
+
 export const useAllIPv6RangesQuery = (
   params?: Params,
   filter?: Filter,
@@ -170,6 +177,19 @@ export const useUpdateIPMutation = (address: string) => {
         networkingQueries.ip(address).queryKey,
         ip,
       );
+      // Invalidate Linode queries
+      if (ip.linode_id) {
+        queryClient.invalidateQueries({
+          exact: true,
+          queryKey: linodeQueries.linode(ip.linode_id).queryKey,
+        });
+        queryClient.invalidateQueries({
+          queryKey: linodeQueries.linode(ip.linode_id)._ctx.ips.queryKey,
+        });
+        queryClient.invalidateQueries({
+          queryKey: linodeQueries.linodes.queryKey,
+        });
+      }
     },
   });
 };

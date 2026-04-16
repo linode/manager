@@ -24,6 +24,7 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
+import { ReserveIPDrawer } from 'src/features/ReservedIps/ReserveIPDrawer';
 import { useDetermineUnreachableIPs } from 'src/hooks/useDetermineUnreachableIPs';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
@@ -97,6 +98,10 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
 
   const [isViewRDNSDialogOpen, setIsViewRDNSDialogOpen] = React.useState(false);
   const [isAddDrawerOpen, setIsAddDrawerOpen] = React.useState(false);
+  const [isReserveIPDrawerOpen, setIsReserveIPDrawerOpen] =
+    React.useState(false);
+  const [selectedIPForReserve, setSelectedIPForReserve] =
+    React.useState<IPAddress | null>(null);
 
   const ipAddressesTableRef = React.useRef<HTMLTableElement>(null);
 
@@ -132,10 +137,16 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
     setIsViewRDNSDialogOpen(true);
   };
 
+  const handleOpenReserveIPDrawer = (ip: IPAddress) => {
+    setSelectedIPForReserve(ip);
+    setIsReserveIPDrawerOpen(true);
+  };
+
   const handlers: IPAddressRowHandlers = {
     handleOpenEditRDNS,
     handleOpenEditRDNSForRange,
     handleOpenIPV6Details,
+    handleOpenReserveIPDrawer,
     openRemoveIPDialog,
     openRemoveIPRangeDialog,
   };
@@ -267,10 +278,10 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
             >
               Type
             </TableSortCell>
-            <TableCell sx={{ width: '10%' }}>Default Gateway</TableCell>
+            <TableCell sx={{ width: '8%' }}>Default Gateway</TableCell>
             <TableCell sx={{ width: '10%' }}>Subnet Mask</TableCell>
             <TableCell sx={{ width: '20%' }}>Reverse DNS</TableCell>
-            <TableCell sx={{ width: '20%' }} />
+            <TableCell sx={{ width: '22%' }} />
           </TableRow>
         </TableHead>
         <TableBody>
@@ -323,6 +334,12 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
         open={isAddDrawerOpen}
         // TODO: change to allocate_linode_ip_address permission
         readOnly={!permissions.update_linode}
+      />
+      <ReserveIPDrawer
+        ipAddress={selectedIPForReserve ?? undefined}
+        mode="reserve"
+        onClose={() => setIsReserveIPDrawerOpen(false)}
+        open={isReserveIPDrawerOpen}
       />
       <IPTransfer
         linodeId={linodeID}
