@@ -120,11 +120,16 @@ export const PlanSelectionTable = (props: PlanSelectionTableProps) => {
           {tableCells.map(({ cellName, center, noWrap, testId }) => {
             const isPlanCell = cellName === 'Plan';
             const attributeValue = `${testId}-header`;
+            const isPriceColumn = testId === 'monthly' || testId === 'hourly';
+            // monthly is the default/fallback: show all price columns (legacy production behavior).
+            // Any other interval (e.g. hourly): show only the column that matches the active interval.
+            const hidePriceColumn =
+              isPriceColumn && interval !== 'monthly' && testId !== interval;
+
             if (
               (!shouldShowTransfer && testId === 'transfer') ||
               (!shouldShowNetwork && testId === 'network') ||
-              (testId === 'monthly' && interval !== 'monthly') || // hide Monthly if not active
-              (testId === 'hourly' && interval !== 'hourly') // hide Hourly if not active
+              hidePriceColumn
             ) {
               return null;
             }
