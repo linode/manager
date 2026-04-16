@@ -29,6 +29,7 @@ import { fetchCloudPulseMetrics } from './metrics';
 import {
   getAllAlertsByNotificationChannelId,
   getAllAlertsRequest,
+  getAllEntitiesByAlertId,
   getAllertsByServiceTypeRequest,
   getAllNotificationChannels,
 } from './requests';
@@ -83,6 +84,21 @@ export const queryFactory = createQueryKeys(key, {
         queryFn: getCloudPulseServiceTypes,
         queryKey: null,
       },
+    },
+    queryKey: null,
+  },
+  entities: {
+    contextQueries: {
+      all: (
+        serviceType: string,
+        alertId: string,
+        params?: Params,
+        filter?: Filter
+      ) => ({
+        queryFn: () =>
+          getAllEntitiesByAlertId(serviceType, alertId, params, filter),
+        queryKey: ['alerts', serviceType, alertId, params, filter],
+      }),
     },
     queryKey: null,
   },

@@ -13,7 +13,6 @@ import type { CloudPulseResources } from '../../shared/CloudPulseResourcesSelect
 const linodes = linodeFactory.buildList(4);
 // Mock Data
 const alertDetails = alertFactory.build({
-  entity_ids: ['1', '2', '3'],
   service_type: 'linode',
 });
 const regions = regionFactory.buildList(4).map((region, index) => ({
@@ -35,6 +34,7 @@ const navigate = vi.fn();
 
 // Mock Queries
 const queryMocks = vi.hoisted(() => ({
+  useAllEntitiesByAlertIdQuery: vi.fn(),
   useEditAlertDefinition: vi.fn(),
   useRegionsQuery: vi.fn(),
   useResourcesQuery: vi.fn(),
@@ -43,6 +43,7 @@ const queryMocks = vi.hoisted(() => ({
 
 vi.mock('src/queries/cloudpulse/alerts', () => ({
   ...vi.importActual('src/queries/cloudpulse/alerts'),
+  useAllEntitiesByAlertIdQuery: queryMocks.useAllEntitiesByAlertIdQuery,
   useEditAlertDefinition: queryMocks.useEditAlertDefinition,
 }));
 
@@ -72,6 +73,30 @@ beforeAll(() => {
 // Shared Setup
 beforeEach(() => {
   vi.clearAllMocks();
+  queryMocks.useAllEntitiesByAlertIdQuery.mockReturnValue({
+    data: [
+      {
+        id: '1',
+        label: 'Entity-1',
+        type: 'linode',
+        url: '/v4/linode/instances/1',
+      },
+      {
+        id: '2',
+        label: 'Entity-2',
+        type: 'linode',
+        url: '/v4/linode/instances/2',
+      },
+      {
+        id: '3',
+        label: 'Entity-3',
+        type: 'linode',
+        url: '/v4/linode/instances/3',
+      },
+    ],
+    isError: false,
+    isLoading: false,
+  });
   queryMocks.useResourcesQuery.mockReturnValue({
     data: cloudPulseResources,
     isError: false,

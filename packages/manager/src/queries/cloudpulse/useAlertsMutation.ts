@@ -8,7 +8,7 @@ import { useLinodeUpdateMutation } from '@linode/queries';
 
 import { queryFactory } from './queries';
 
-import type { Alert, LinodeAlerts } from '@linode/api-v4/lib/cloudpulse';
+import type { LinodeAlerts } from '@linode/api-v4/lib/cloudpulse';
 import type { QueryClient } from '@linode/queries';
 
 /**
@@ -67,40 +67,47 @@ export const useAlertsMutation = (
         Promise.reject(new Error('Error encountered'));
   }
 };
-
 /**
  * Invalidates the alerts cache
- * @param qc The query client
+ * @param queryClient The query client
  * @param serviceType The service type
  * @param entityId The entity id
  * @param payload The payload
+ * @param alertEntityMap Map of alertId to entity IDs — used to determine which
+ *   alerts were previously enabled for this entity so their caches can also be
+ *   invalidated when they are now disabled.
  */
 export const invalidateAclpAlerts = (
   queryClient: QueryClient,
   serviceType: string,
   entityId: string | undefined,
-  payload: CloudPulseAlertsPayload
+  payload: CloudPulseAlertsPayload,
+  alertEntityMap?: Map<number, string[]>
 ) => {
   if (!entityId) return;
 
-  const allAlerts = queryClient.getQueryData<Alert[]>(
-    queryFactory.alerts._ctx.alertsByServiceType(serviceType).queryKey
-  );
+  // Find alerts that were previously enabled for this entity using the
+  // caller-supplied alertEntityMap — avoids depending on the removed
+  // entity_ids field on the Alert type.
+  const oldEnabledAlertIds: number[] = [];
+  if (alertEntityMap) {
+    alertEntityMap.forEach((entityIds, alertId) => {
+      if (entityIds.includes(entityId)) {
+        oldEnabledAlertIds.push(alertId);
+      }
+    });
+  }
 
-  // Get alerts previously enabled for this entity
-  const oldEnabledAlertIds =
-    allAlerts
-      ?.filter((alert) => alert.entity_ids.includes(entityId))
-      .map((alert) => alert.id) || [];
-
-  // Combine enabled user and system alert IDs from payload
+  // Combine enabled user and system alert IDs from the new payload
   const newEnabledAlertIds = [
     ...(payload.user_alerts ?? []),
     ...(payload.system_alerts ?? []),
   ];
 
-  // Get unique list of all enabled alert IDs for cache invalidation
-  const alertIdsToInvalidate = [...oldEnabledAlertIds, ...newEnabledAlertIds];
+  // Deduplicated list of all alert IDs whose caches need invalidating
+  const alertIdsToInvalidate = Array.from(
+    new Set([...oldEnabledAlertIds, ...newEnabledAlertIds])
+  );
 
   queryClient.invalidateQueries({
     queryKey: queryFactory.alerts._ctx.all().queryKey,

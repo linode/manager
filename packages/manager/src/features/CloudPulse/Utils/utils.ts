@@ -39,6 +39,7 @@ import type {
   CloudPulseServiceType,
   Dashboard,
   Dimension,
+  Entities,
   Firewall,
   FirewallDeviceEntity,
   KubernetesCluster,
@@ -115,15 +116,26 @@ export const useIsACLPEnabled = (): {
   return { isACLPEnabled };
 };
 
+/** Stable empty map used as the default when no alertEntityMap is provided.
+ * Module-level so the reference never changes, preventing render loops. */
+const EMPTY_ALERT_ENTITY_MAP: Map<number, string[]> = new Map();
+
 /**
  * @param alerts List of alerts to be displayed
  * @param entityId Id of the selected entity
+ * @param alertEntityMap Map of alertId to entity IDs, fetched by the parent via useAllEntitiesByAlertsQuery
  * @returns enabledAlerts, setEnabledAlerts, hasUnsavedChanges, initialState, resetToInitialState
  */
 export const useContextualAlertsState = (
   alerts: Alert[],
-  entityId?: string
+  entityId?: string,
+  alertEntityMap?: Map<number, string[]>
 ) => {
+  const map = React.useMemo(
+    () => alertEntityMap ?? EMPTY_ALERT_ENTITY_MAP,
+    [alertEntityMap]
+  );
+
   const calculateInitialState = React.useCallback(
     (alerts: Alert[], entityId?: string): CloudPulseAlertsPayload => {
       const initialStates: CloudPulseAlertsPayload = {
@@ -131,22 +143,22 @@ export const useContextualAlertsState = (
         user_alerts: [],
       };
 
-      alerts.forEach((alert) => {
-        // include alerts for which entityId is present in the alert's entity_ids
-        const shouldInclude = entityId
-          ? alert.entity_ids.includes(entityId)
-          : false;
+      for (const alert of alerts) {
+        const entityIds = map.get(alert.id) ?? [];
+        const shouldInclude = entityId ? entityIds.includes(entityId) : false;
 
         if (shouldInclude) {
-          const payloadAlertType =
-            alert.type === 'system' ? 'system_alerts' : 'user_alerts';
-          initialStates[payloadAlertType]?.push(alert.id);
+          const key = alert.type === 'system' ? 'system_alerts' : 'user_alerts';
+          if (!initialStates[key]) {
+            initialStates[key] = [];
+          }
+          initialStates[key].push(alert.id);
         }
-      });
+      }
 
       return initialStates;
     },
-    []
+    [map]
   );
 
   const initialState = React.useMemo(
@@ -154,14 +166,35 @@ export const useContextualAlertsState = (
     [alerts, entityId, calculateInitialState]
   );
 
-  const [enabledAlerts, setEnabledAlerts] = React.useState(initialState);
+  /**
+   * Lazy initialize → avoids re-init on every render
+   */
+  const [enabledAlerts, setEnabledAlerts] =
+    React.useState<CloudPulseAlertsPayload>(() => initialState);
 
-  // Reset function to sync with latest initial state
-  const resetToInitialState = React.useCallback(() => {
-    setEnabledAlerts(initialState);
+  /**
+   * Controlled sync (NO infinite loop)
+   */
+  const prevInitialRef = React.useRef(initialState);
+
+  React.useEffect(() => {
+    const prev = prevInitialRef.current;
+
+    const hasChanged =
+      !arraysEqual(prev.system_alerts, initialState.system_alerts) ||
+      !arraysEqual(prev.user_alerts, initialState.user_alerts);
+
+    if (hasChanged) {
+      setEnabledAlerts(initialState);
+      prevInitialRef.current = initialState;
+    }
   }, [initialState]);
 
-  // Check if the enabled alerts have changed from the initial state
+  const resetToInitialState = React.useCallback(() => {
+    setEnabledAlerts(initialState);
+    prevInitialRef.current = initialState;
+  }, [initialState]);
+
   const hasUnsavedChanges = React.useMemo(() => {
     return (
       !arraysEqual(enabledAlerts.system_alerts, initialState.system_alerts) ||
@@ -177,7 +210,6 @@ export const useContextualAlertsState = (
     resetToInitialState,
   };
 };
-
 /**
  *
  * @param nonFormattedString input string that is to be formatted with first letter of each word capital
@@ -306,6 +338,46 @@ export const getAllDashboards = (
 };
 
 /**
+ * Aggregates entity query results for multiple alerts into a consolidated map.
+ * @param queryResults - Array of query results from useQueries for entity fetching
+ * @param alerts - Array of alert objects with id, scope, and service_type
+ * @returns Object containing alertEntityMap (Map of alert ID to entity IDs), isError, and isLoading flags
+ */
+export const getAllEntitiesByAlerts = (
+  queryResults: UseQueryResult<Entities[], APIError[]>[],
+  alerts: { id: number; scope: string; service_type: string }[]
+) => {
+  const alertEntityMap = new Map<number, string[]>();
+  let isError = false;
+  let isLoading = false;
+
+  queryResults.forEach((result, index) => {
+    const alert = alerts[index];
+    if (result.isLoading) {
+      isLoading = true;
+    }
+    if (result.isError) {
+      isError = true;
+      // On error: omit from map — alertEntityMap.get() will return undefined,
+      // falling back to [] in useContextualAlertsState so the alert is not pre-checked.
+      return;
+    }
+    if (result.data) {
+      alertEntityMap.set(
+        alert.id,
+        result.data.map((e) => e.id)
+      );
+    }
+  });
+
+  return {
+    alertEntityMap,
+    isError,
+    isLoading,
+  };
+};
+
+/**
  * @param port
  * @returns error message string
  * @description Validates a single port and returns the error message
@@ -341,7 +413,6 @@ export const arePortsValid = (ports: string): string | undefined => {
   if (ports.length > 100) {
     return PORTS_LIMIT_ERROR_MESSAGE;
   }
-
   if (ports.startsWith(',')) {
     return PORTS_LEADING_COMMA_ERROR_MESSAGE;
   }

@@ -16,6 +16,7 @@ import { EditAlertDefinition } from './EditAlertDefinition';
 const navigate = vi.fn();
 const queryMocks = vi.hoisted(() => ({
   useAllAlertNotificationChannelsQuery: vi.fn(),
+  useAllEntitiesByAlertIdQuery: vi.fn(),
   useEditAlertDefinition: vi.fn(),
   useNavigate: vi.fn(() => navigate),
 }));
@@ -24,6 +25,7 @@ vi.mock('src/queries/cloudpulse/alerts', () => ({
   ...vi.importActual('src/queries/cloudpulse/alerts'),
   useAllAlertNotificationChannelsQuery:
     queryMocks.useAllAlertNotificationChannelsQuery,
+  useAllEntitiesByAlertIdQuery: queryMocks.useAllEntitiesByAlertIdQuery,
   useEditAlertDefinition: queryMocks.useEditAlertDefinition,
 }));
 
@@ -45,6 +47,11 @@ beforeEach(() => {
   queryMocks.useAllAlertNotificationChannelsQuery.mockReturnValue(
     notificationChannelFactory.build()
   );
+  queryMocks.useAllEntitiesByAlertIdQuery.mockReturnValue({
+    data: [],
+    isError: false,
+    isLoading: false,
+  });
 });
 
 const alertDetails = alertFactory.build({
