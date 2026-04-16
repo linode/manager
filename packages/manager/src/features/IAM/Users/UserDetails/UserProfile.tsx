@@ -61,7 +61,7 @@ export const UserProfile = () => {
         sx={(theme) => ({ marginTop: theme.tokens.spacing.S16 })}
       >
         <UserDetailsPanel activeUser={user} assignedRoles={assignedRoles} />
-        <UsernamePanel
+        {/* <UsernamePanel
           activeUser={user}
           canUpdateUser={permissions?.update_user}
         />
@@ -69,7 +69,7 @@ export const UserProfile = () => {
         <DeleteUserPanel
           activeUser={user}
           canDeleteUser={permissions?.delete_user}
-        />
+        /> */}
       </Stack>
     </>
   );
