@@ -1,4 +1,5 @@
-import { Paper, Stack, Typography } from '@linode/ui';
+import { Box, Button, Paper, Stack, Typography } from '@linode/ui';
+import { Divider } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import React from 'react';
 
@@ -24,21 +25,40 @@ export const UserDetailsPanel = ({ assignedRoles, activeUser }: Props) => {
   const items = [
     {
       label: 'Username',
-      value: <MaskableText isToggleable text={activeUser.username} />,
+      value: (
+        <MaskableText
+          isToggleable
+          sxTypography={(theme) => ({ font: theme.font.bold })}
+          text={activeUser.username}
+        />
+      ),
     },
     {
       label: 'Email',
-      value: <MaskableText isToggleable text={activeUser.email} />,
+      value: (
+        <MaskableText
+          isToggleable
+          sxTypography={(theme) => ({ font: theme.font.bold })}
+          text={activeUser.email}
+        />
+      ),
     },
     {
-      label: 'Assigned Roles',
-      value: <Typography>{assignRolesCount}</Typography>,
+      label: 'Assigned roles',
+      value: (
+        <Typography sx={(theme) => ({ font: theme.font.bold })}>
+          {assignRolesCount}
+        </Typography>
+      ),
     },
     {
-      label: 'Last Login Status',
+      label: 'Last login status',
       value: (
         <Stack direction="row" spacing={1}>
-          <Typography textTransform="capitalize">
+          <Typography
+            sx={(theme) => ({ font: theme.font.bold })}
+            textTransform="capitalize"
+          >
             {activeUser.last_login?.status ?? 'N/A'}
           </Typography>
           {activeUser.last_login && (
@@ -57,23 +77,29 @@ export const UserDetailsPanel = ({ assignedRoles, activeUser }: Props) => {
     {
       label: 'Last login',
       value: activeUser.last_login ? (
-        <DateTimeDisplay value={activeUser.last_login.login_datetime} />
+        <DateTimeDisplay
+          sx={(theme) => ({ font: theme.font.bold })}
+          value={activeUser.last_login.login_datetime}
+        />
       ) : (
-        <Typography>N/A</Typography>
+        <Typography sx={(theme) => ({ font: theme.font.bold })}>N/A</Typography>
       ),
     },
     {
-      label: 'Password Created',
+      label: 'Password created',
       value: activeUser.password_created ? (
-        <DateTimeDisplay value={activeUser.password_created} />
+        <DateTimeDisplay
+          sx={(theme) => ({ font: theme.font.bold })}
+          value={activeUser.password_created}
+        />
       ) : (
-        <Typography>N/A</Typography>
+        <Typography sx={(theme) => ({ font: theme.font.bold })}>N/A</Typography>
       ),
     },
     {
       label: '2FA',
       value: (
-        <Typography>
+        <Typography sx={(theme) => ({ font: theme.font.bold })}>
           {activeUser.tfa_enabled ? 'Enabled' : 'Disabled'}
         </Typography>
       ),
@@ -83,27 +109,51 @@ export const UserDetailsPanel = ({ assignedRoles, activeUser }: Props) => {
       value: (
         <MaskableText
           isToggleable
+          sxTypography={(theme) => ({ font: theme.font.bold })}
           text={activeUser.verified_phone_number ?? 'None'}
         />
       ),
     },
     {
-      label: 'SSH Keys',
+      label: 'SSH keys',
       value:
         activeUser.ssh_keys.length > 0 ? (
           <TextTooltip
             displayText={String(activeUser.ssh_keys.length)}
             minWidth={1}
+            sxTypography={(theme) => ({ font: theme.font.bold })}
             tooltipText={activeUser.ssh_keys.join(', ')}
           />
         ) : (
-          <Typography>0</Typography>
+          <Typography sx={(theme) => ({ font: theme.font.bold })}>0</Typography>
         ),
     },
   ];
 
   return (
     <Paper>
+      <Box sx={(theme) => ({ py: theme.spacingFunction(8) })}>
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 1,
+            flexWrap: 'wrap',
+          }}
+        >
+          <Typography sx={{ flex: 1 }} variant="h2">
+            User Details
+          </Typography>
+          <Button>Edit Details</Button>
+          <Button>Delete User</Button>
+        </Box>
+        <Divider
+          sx={(theme) => ({
+            marginTop: theme.spacingFunction(24),
+            marginBottom: theme.spacingFunction(16),
+          })}
+        />
+      </Box>
       <Grid columns={{ md: 6, sm: 4, xs: 2 }} container spacing={2}>
         {items.map((item) => (
           <Grid
@@ -115,8 +165,8 @@ export const UserDetailsPanel = ({ assignedRoles, activeUser }: Props) => {
             }}
           >
             <Stack
-              direction="row"
-              spacing={1}
+              direction="column"
+              spacing={0.25}
               sx={{
                 '& > p:nth-of-type(2)': {
                   overflow: 'hidden',
@@ -125,13 +175,7 @@ export const UserDetailsPanel = ({ assignedRoles, activeUser }: Props) => {
                 },
               }}
             >
-              <Typography
-                sx={(theme) => ({
-                  font: theme.font.bold,
-                })}
-              >
-                {item.label}:
-              </Typography>
+              <Typography>{item.label}</Typography>
               {item.value}
             </Stack>
           </Grid>
