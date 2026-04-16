@@ -9,7 +9,10 @@ import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { LINODE_NETWORK_IN } from 'src/constants';
-import { PRICE_ERROR_TOOLTIP_TEXT } from 'src/utilities/pricing/constants';
+import {
+  PRICE_ERROR_TOOLTIP_TEXT,
+  UNKNOWN_PRICE,
+} from 'src/utilities/pricing/constants';
 import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
 import { usePricingInterval } from 'src/utilities/pricing/usePricingInterval';
 
@@ -66,7 +69,7 @@ export const PlanSelection = (props: PlanSelectionProps) => {
 
   const isSamePlan = plan.heading === currentPlanHeading;
 
-  const { decimalPlaces, formatPrice, getPrice, interval, priceLabel } =
+  const { decimalPlaces, formatPrice, interval, priceLabel } =
     usePricingInterval();
 
   const { data: linode } = useLinodeQuery(
@@ -196,11 +199,11 @@ export const PlanSelection = (props: PlanSelectionProps) => {
             >
               <Currency
                 decimalPlaces={decimalPlaces}
-                quantity={getPrice(price)}
+                quantity={price?.monthly ?? UNKNOWN_PRICE}
               />
             </TableCell>
           )}
-          {interval === 'hourly' && (
+          {(interval === 'monthly' || interval === 'hourly') && (
             <TableCell
               data-qa-hourly
               errorCell={typeof price?.hourly !== 'number'}
@@ -208,7 +211,7 @@ export const PlanSelection = (props: PlanSelectionProps) => {
             >
               <Currency
                 decimalPlaces={decimalPlaces}
-                quantity={getPrice(price)}
+                quantity={price?.hourly ?? UNKNOWN_PRICE}
               />
             </TableCell>
           )}
