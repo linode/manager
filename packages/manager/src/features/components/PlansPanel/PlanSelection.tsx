@@ -69,8 +69,13 @@ export const PlanSelection = (props: PlanSelectionProps) => {
 
   const isSamePlan = plan.heading === currentPlanHeading;
 
-  const { formatPrice, hourlyDecimalPlaces, monthlyDecimalPlaces, priceLabel } =
-    useComputePricing();
+  const {
+    billing,
+    formatPrice,
+    hourlyDecimalPlaces,
+    monthlyDecimalPlaces,
+    priceLabel,
+  } = useComputePricing();
 
   const { data: linode } = useLinodeQuery(
     linodeID ?? -1,
@@ -133,6 +138,21 @@ export const PlanSelection = (props: PlanSelectionProps) => {
 
   const networkOutGbps = plan.network_out && plan.network_out / 1000;
 
+  const renderMonthlyPriceCell = () => {
+    if (typeof price?.monthly === 'number') {
+      return (
+        <Currency
+          decimalPlaces={monthlyDecimalPlaces}
+          quantity={price.monthly}
+        />
+      );
+    }
+    if (billing === 'hourly') {
+      return 'N/A'; // Not applicable when monthly price is null in Hourly billing mode.
+    }
+    return null;
+  };
+
   return (
     <React.Fragment key={`tabbed-panel-${idx}`}>
       {/* Displays Table Row for larger screens */}
@@ -193,17 +213,16 @@ export const PlanSelection = (props: PlanSelectionProps) => {
           </TableCell>
           <TableCell
             data-qa-monthly
-            errorCell={typeof price?.monthly !== 'number'}
-            errorText={!price?.monthly ? PRICE_ERROR_TOOLTIP_TEXT : undefined}
+            errorCell={
+              billing === 'monthly' && typeof price?.monthly !== 'number'
+            }
+            errorText={
+              billing === 'monthly' && !price?.monthly
+                ? PRICE_ERROR_TOOLTIP_TEXT
+                : undefined
+            }
           >
-            {typeof price?.monthly === 'number' ? (
-              <Currency
-                decimalPlaces={monthlyDecimalPlaces}
-                quantity={price.monthly}
-              />
-            ) : (
-              'N/A' // Not Applicable when monthly price is null.
-            )}
+            {renderMonthlyPriceCell()}
           </TableCell>
           <TableCell
             data-qa-hourly
