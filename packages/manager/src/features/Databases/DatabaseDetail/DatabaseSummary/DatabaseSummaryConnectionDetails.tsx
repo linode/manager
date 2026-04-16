@@ -1,6 +1,6 @@
+import { Button } from '@akamai/cds-components/react';
 import { useDatabaseCredentialsQuery } from '@linode/queries';
 import { Box, CircleProgress, TooltipIcon, Typography } from '@linode/ui';
-import { Button } from 'akamai-cds-react-components';
 import { enqueueSnackbar } from 'notistack';
 import * as React from 'react';
 

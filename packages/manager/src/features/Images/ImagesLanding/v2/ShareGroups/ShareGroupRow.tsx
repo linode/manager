@@ -1,7 +1,7 @@
+import { TableCell, TableRow } from '@akamai/cds-components/react/Table';
 import { usePreferences, useProfile } from '@linode/queries';
 import { Hidden, LinkButton, Tooltip } from '@linode/ui';
 import { truncateEnd } from '@linode/utilities';
-import { TableCell, TableRow } from 'akamai-cds-react-components/Table';
 import React from 'react';
 
 import { getIsTableStripingEnabled } from 'src/features/Profile/Settings/TableStriping.utils';

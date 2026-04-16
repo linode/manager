@@ -1,11 +1,11 @@
-import { Box, CircleProgress, LinkButton, useTheme } from '@linode/ui';
-import { Pagination } from 'akamai-cds-react-components/Pagination';
+import { Pagination } from '@akamai/cds-components/react/Pagination';
 import {
   Table,
   TableBody,
   TableCell,
   TableRow,
-} from 'akamai-cds-react-components/Table';
+} from '@akamai/cds-components/react/Table';
+import { Box, CircleProgress, LinkButton, useTheme } from '@linode/ui';
 import React from 'react';
 
 import { MIN_PAGE_SIZE } from 'src/components/PaginationFooter/PaginationFooter.constants';
