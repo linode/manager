@@ -1,5 +1,5 @@
 import type { OCA } from './features/OneClickApps/types';
-import type { Region } from '@linode/api-v4';
+import type { PriceObject, Region } from '@linode/api-v4';
 import type {
   AlertStatusType,
   CloudPulseServiceType,
@@ -217,6 +217,12 @@ interface ResourceLockFlag {
   linodes: boolean;
 }
 
+interface ComputePricing {
+  banner: string;
+  // keyof PriceObject - ensures the LD interval value is always a valid API field name.
+  interval: keyof PriceObject;
+}
+
 export interface Flags {
   acceleratedPlans: AcceleratedPlansFlag;
   aclp: AclpFlag;
@@ -236,6 +242,7 @@ export interface Flags {
   blockStorageVolumeLimit: boolean;
   cloudManagerDesignUpdatesBanner: DesignUpdatesBannerFlag;
   cloudNat: CloudNatFlag;
+  computePricing: ComputePricing;
   databaseAdvancedConfig: boolean;
   databaseBeta: boolean;
   databasePgBouncer: boolean;

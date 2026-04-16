@@ -9,6 +9,7 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { useFlags } from 'src/hooks/useFlags';
 import { useIsGenerationalPlansEnabled } from 'src/utilities/linodes';
 import { PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE } from 'src/utilities/pricing/constants';
+import { usePricingInterval } from 'src/utilities/pricing/usePricingInterval';
 
 import { StyledTable, StyledTableCell } from './PlanContainer.styles';
 
@@ -63,6 +64,7 @@ export const PlanSelectionTable = (props: PlanSelectionTableProps) => {
     plans,
     planType
   );
+  const { interval } = usePricingInterval();
 
   // Determine spacing based on feature flag:
   // - If generationalPlans is enabled (pagination mode) -> spacingBottom={0}
@@ -120,7 +122,9 @@ export const PlanSelectionTable = (props: PlanSelectionTableProps) => {
             const attributeValue = `${testId}-header`;
             if (
               (!shouldShowTransfer && testId === 'transfer') ||
-              (!shouldShowNetwork && testId === 'network')
+              (!shouldShowNetwork && testId === 'network') ||
+              (testId === 'monthly' && interval !== 'monthly') || // hide Monthly if not active
+              (testId === 'hourly' && interval !== 'hourly') // hide Hourly if not active
             ) {
               return null;
             }
