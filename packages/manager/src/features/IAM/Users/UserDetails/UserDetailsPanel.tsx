@@ -157,10 +157,13 @@ export const UserDetailsPanel = ({
           <Typography sx={{ flex: 1 }} variant="h2">
             User Details
           </Typography>
-          <Button onClick={() => setIsEditDrawerOpen(true)}>
+          <Button
+            disabled={!permissions?.update_user}
+            onClick={() => setIsEditDrawerOpen(true)}
+          >
             Edit Details
           </Button>
-          <Button>Delete User</Button>
+          <Button disabled={!permissions?.delete_user}>Delete User</Button>
         </Box>
         <Divider
           sx={(theme) => ({

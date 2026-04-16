@@ -7,13 +7,24 @@ import { UserDetailsPanel } from './UserDetailsPanel';
 
 import type { IamUserRoles } from '@linode/api-v4';
 
+const mockPermissions = {
+  delete_user: true,
+  list_user_permissions: true,
+  update_user: true,
+  view_user: true,
+};
+
 describe('UserDetailsPanel', () => {
   it("renders the user's username and email", async () => {
     const user = accountUserFactory.build();
     const assignedRoles = { account_access: [], entity_access: [] };
 
     const { getByText } = renderWithTheme(
-      <UserDetailsPanel activeUser={user} assignedRoles={assignedRoles} />
+      <UserDetailsPanel
+        activeUser={user}
+        assignedRoles={assignedRoles}
+        permissions={mockPermissions}
+      />
     );
 
     expect(getByText(/Username/)).toBeVisible();
@@ -28,10 +39,14 @@ describe('UserDetailsPanel', () => {
     const assignedRoles = { account_access: [], entity_access: [] };
 
     const { getAllByText, getByText } = renderWithTheme(
-      <UserDetailsPanel activeUser={user} assignedRoles={assignedRoles} />
+      <UserDetailsPanel
+        activeUser={user}
+        assignedRoles={assignedRoles}
+        permissions={mockPermissions}
+      />
     );
 
-    expect(getByText(/Assigned Roles/)).toBeVisible();
+    expect(getByText(/Assigned roles/i)).toBeVisible();
     expect(getAllByText('0')[0]).toBeVisible();
   });
 
@@ -58,10 +73,14 @@ describe('UserDetailsPanel', () => {
     };
 
     const { getByText } = renderWithTheme(
-      <UserDetailsPanel activeUser={user} assignedRoles={assignedRoles} />
+      <UserDetailsPanel
+        activeUser={user}
+        assignedRoles={assignedRoles}
+        permissions={mockPermissions}
+      />
     );
 
-    expect(getByText(/Assigned Roles/)).toBeVisible();
+    expect(getByText(/Assigned roles/i)).toBeVisible();
     expect(getByText('7')).toBeVisible();
   });
 
@@ -79,10 +98,14 @@ describe('UserDetailsPanel', () => {
     };
 
     const { getByText } = renderWithTheme(
-      <UserDetailsPanel activeUser={user} assignedRoles={assignedRoles} />
+      <UserDetailsPanel
+        activeUser={user}
+        assignedRoles={assignedRoles}
+        permissions={mockPermissions}
+      />
     );
 
-    expect(getByText(/Assigned Roles/)).toBeVisible();
+    expect(getByText(/Assigned roles/i)).toBeVisible();
     expect(getByText('4')).toBeVisible();
   });
 
@@ -93,7 +116,11 @@ describe('UserDetailsPanel', () => {
     const assignedRoles = { account_access: [], entity_access: [] };
 
     const { getByText } = renderWithTheme(
-      <UserDetailsPanel activeUser={user} assignedRoles={assignedRoles} />
+      <UserDetailsPanel
+        activeUser={user}
+        assignedRoles={assignedRoles}
+        permissions={mockPermissions}
+      />
     );
 
     expect(getByText(/Verified number/)).toBeVisible();
@@ -105,7 +132,11 @@ describe('UserDetailsPanel', () => {
     const assignedRoles = { account_access: [], entity_access: [] };
 
     const { getByText } = renderWithTheme(
-      <UserDetailsPanel activeUser={user} assignedRoles={assignedRoles} />
+      <UserDetailsPanel
+        activeUser={user}
+        assignedRoles={assignedRoles}
+        permissions={mockPermissions}
+      />
     );
 
     expect(getByText(/2FA/)).toBeVisible();
