@@ -2,4 +2,4 @@
 "@linode/manager": Upcoming Features
 ---
 
-Add a delay loading indicator with message in `CloudPulse Metrics and Alerts` ([#66](https://github.com/linode/manager/pull/66))
+Add a delay loading indicator with message in `CloudPulse Metrics and Alerts` ([#66](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/66))
