@@ -16,7 +16,6 @@ import { Controller, useForm, useWatch } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
 import {
-  databaseNamesOptions,
   defaultUsername,
   poolModeOptions,
   usernameOptions,
@@ -60,9 +59,9 @@ export const DatabaseAddConnectionPoolDrawer = (props: Props) => {
     resolver: yupResolver(createDatabaseConnectionPoolSchema),
   });
 
-  const [mode, database, username] = useWatch({
+  const [mode, username] = useWatch({
     control,
-    name: ['mode', 'database', 'username'],
+    name: ['mode', 'username'],
   });
 
   const handleOnClose = () => {
@@ -129,21 +128,16 @@ export const DatabaseAddConnectionPoolDrawer = (props: Props) => {
             control={control}
             name="database"
             render={({ field, fieldState }) => (
-              <Autocomplete
-                autoHighlight
-                label="Database Name"
+              <TextField
                 {...field}
-                data-testid="database-name-select"
-                disableClearable={true}
                 errorText={fieldState.error?.message}
                 id="databaseName"
-                onChange={(e, option) => {
-                  field.onChange(option.value);
+                label="Database Name"
+                onChange={(e) => {
+                  field.onChange(e.target.value);
                 }}
-                options={databaseNamesOptions}
-                value={databaseNamesOptions.find(
-                  (option) => option.value === database
-                )}
+                onClear={() => field.onChange('')}
+                placeholder="defaultdb"
               />
             )}
           />
