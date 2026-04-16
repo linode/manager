@@ -219,8 +219,9 @@ interface ResourceLockFlag {
 
 interface ComputePricing {
   banner: string;
-  // keyof PriceObject - ensures the LD interval value is always a valid API field name.
-  interval: keyof PriceObject;
+  // keyof PriceObject - ensures the LD billing value is always a valid API field name.
+  // This represents active billing mode for the Compute product (e.g. 'monthly', 'hourly', etc.)
+  billing: keyof PriceObject;
 }
 
 export interface Flags {

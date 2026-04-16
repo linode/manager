@@ -119,7 +119,7 @@ describe('Linode Create Summary', () => {
       component: <Summary />,
       useFormOptions: { defaultValues: { region: 'us-east', type: type.id } },
       options: {
-        flags: { computePricing: { banner: '', interval: 'monthly' } },
+        flags: { computePricing: { banner: '', billing: 'monthly' } },
       },
     });
 
@@ -139,7 +139,7 @@ describe('Linode Create Summary', () => {
       component: <Summary />,
       useFormOptions: { defaultValues: { region: 'us-east', type: type.id } },
       options: {
-        flags: { computePricing: { banner: '', interval: 'hourly' } },
+        flags: { computePricing: { banner: '', billing: 'hourly' } },
       },
     });
 
@@ -164,7 +164,7 @@ describe('Linode Create Summary', () => {
       component: <Summary />,
       useFormOptions: { defaultValues: { region: regionId, type: type.id } },
       options: {
-        flags: { computePricing: { banner: '', interval: 'monthly' } },
+        flags: { computePricing: { banner: '', billing: 'monthly' } },
       },
     });
 
@@ -189,7 +189,7 @@ describe('Linode Create Summary', () => {
       component: <Summary />,
       useFormOptions: { defaultValues: { region: regionId, type: type.id } },
       options: {
-        flags: { computePricing: { banner: '', interval: 'hourly' } },
+        flags: { computePricing: { banner: '', billing: 'hourly' } },
       },
     });
 
@@ -219,7 +219,7 @@ describe('Linode Create Summary', () => {
         },
       },
       options: {
-        flags: { computePricing: { banner: '', interval: 'monthly' } },
+        flags: { computePricing: { banner: '', billing: 'monthly' } },
       },
     });
 
@@ -249,7 +249,7 @@ describe('Linode Create Summary', () => {
         },
       },
       options: {
-        flags: { computePricing: { banner: '', interval: 'hourly' } },
+        flags: { computePricing: { banner: '', billing: 'hourly' } },
       },
     });
 
@@ -284,7 +284,7 @@ describe('Linode Create Summary', () => {
         },
       },
       options: {
-        flags: { computePricing: { banner: '', interval: 'monthly' } },
+        flags: { computePricing: { banner: '', billing: 'monthly' } },
       },
     });
 
@@ -319,7 +319,7 @@ describe('Linode Create Summary', () => {
         },
       },
       options: {
-        flags: { computePricing: { banner: '', interval: 'hourly' } },
+        flags: { computePricing: { banner: '', billing: 'hourly' } },
       },
     });
 
@@ -382,7 +382,7 @@ describe('Linode Create Summary', () => {
           },
         },
         options: {
-          flags: { computePricing: { banner: '', interval: 'monthly' } },
+          flags: { computePricing: { banner: '', billing: 'monthly' } },
         },
       });
 
@@ -413,7 +413,7 @@ describe('Linode Create Summary', () => {
           },
         },
         options: {
-          flags: { computePricing: { banner: '', interval: 'hourly' } },
+          flags: { computePricing: { banner: '', billing: 'hourly' } },
         },
       });
 
@@ -463,7 +463,7 @@ describe('Linode Create Summary', () => {
           },
         },
         options: {
-          flags: { computePricing: { banner: '', interval: 'monthly' } },
+          flags: { computePricing: { banner: '', billing: 'monthly' } },
         },
       });
 
@@ -513,7 +513,7 @@ describe('Linode Create Summary', () => {
           },
         },
         options: {
-          flags: { computePricing: { banner: '', interval: 'hourly' } },
+          flags: { computePricing: { banner: '', billing: 'hourly' } },
         },
       });
 

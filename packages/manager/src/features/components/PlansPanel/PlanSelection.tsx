@@ -14,7 +14,7 @@ import {
   UNKNOWN_PRICE,
 } from 'src/utilities/pricing/constants';
 import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
-import { usePricingInterval } from 'src/utilities/pricing/usePricingInterval';
+import { useComputePricing } from 'src/utilities/pricing/useComputePricing';
 
 import { DisabledPlanSelectionTooltip } from './DisabledPlanSelectionTooltip';
 import { StyledChip, StyledRadioCell } from './PlanSelection.styles';
@@ -69,8 +69,8 @@ export const PlanSelection = (props: PlanSelectionProps) => {
 
   const isSamePlan = plan.heading === currentPlanHeading;
 
-  const { decimalPlaces, formatPrice, interval, priceLabel } =
-    usePricingInterval();
+  const { formatPrice, hourlyDecimalPlaces, monthlyDecimalPlaces, priceLabel } =
+    useComputePricing();
 
   const { data: linode } = useLinodeQuery(
     linodeID ?? -1,
@@ -191,30 +191,30 @@ export const PlanSelection = (props: PlanSelectionProps) => {
               />
             )}
           </TableCell>
-          {interval === 'monthly' && (
-            <TableCell
-              data-qa-monthly
-              errorCell={typeof price?.monthly !== 'number'}
-              errorText={!price?.monthly ? PRICE_ERROR_TOOLTIP_TEXT : undefined}
-            >
+          <TableCell
+            data-qa-monthly
+            errorCell={typeof price?.monthly !== 'number'}
+            errorText={!price?.monthly ? PRICE_ERROR_TOOLTIP_TEXT : undefined}
+          >
+            {typeof price?.monthly === 'number' ? (
               <Currency
-                decimalPlaces={decimalPlaces}
-                quantity={price?.monthly ?? UNKNOWN_PRICE}
+                decimalPlaces={monthlyDecimalPlaces}
+                quantity={price.monthly}
               />
-            </TableCell>
-          )}
-          {(interval === 'monthly' || interval === 'hourly') && (
-            <TableCell
-              data-qa-hourly
-              errorCell={typeof price?.hourly !== 'number'}
-              errorText={!price?.hourly ? PRICE_ERROR_TOOLTIP_TEXT : undefined}
-            >
-              <Currency
-                decimalPlaces={decimalPlaces}
-                quantity={price?.hourly ?? UNKNOWN_PRICE}
-              />
-            </TableCell>
-          )}
+            ) : (
+              'N/A' // Not Applicable when monthly price is null.
+            )}
+          </TableCell>
+          <TableCell
+            data-qa-hourly
+            errorCell={typeof price?.hourly !== 'number'}
+            errorText={!price?.hourly ? PRICE_ERROR_TOOLTIP_TEXT : undefined}
+          >
+            <Currency
+              decimalPlaces={hourlyDecimalPlaces}
+              quantity={price?.hourly ?? UNKNOWN_PRICE}
+            />
+          </TableCell>
           <TableCell center data-qa-ram noWrap>
             {convertMegabytesTo(plan.memory, true)}
           </TableCell>

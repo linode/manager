@@ -31,6 +31,15 @@ export const getLabelForInterval = (interval: keyof PriceObject): string =>
   interval.slice(0, -2);
 
 /**
+ * Returns the number of decimal places for a given billing interval.
+ * This is the single source of truth for price formatting precision.
+ * - `hourly` -> 3 decimal places (e.g. $0.015)
+ * - All others (e.g. `monthly`) -> 2 decimal places (e.g. $10.00)
+ */
+export const getDecimalPlaces = (interval: keyof PriceObject): number =>
+  interval === 'hourly' ? 3 : 2;
+
+/**
  * Formats a price for display at the correct decimal places for the given
  * interval. Returns `UNKNOWN_PRICE` if the value is null or undefined.
  * Always applies fixed decimal places: 2 for monthly, 3 for hourly.
@@ -42,5 +51,5 @@ export const formatPriceForInterval = (
   if (value === null || value === undefined) {
     return UNKNOWN_PRICE;
   }
-  return interval === 'hourly' ? value.toFixed(3) : value.toFixed(2);
+  return value.toFixed(getDecimalPlaces(interval));
 };

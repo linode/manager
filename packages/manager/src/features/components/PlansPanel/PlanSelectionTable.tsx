@@ -9,7 +9,6 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { useFlags } from 'src/hooks/useFlags';
 import { useIsGenerationalPlansEnabled } from 'src/utilities/linodes';
 import { PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE } from 'src/utilities/pricing/constants';
-import { usePricingInterval } from 'src/utilities/pricing/usePricingInterval';
 
 import { StyledTable, StyledTableCell } from './PlanContainer.styles';
 
@@ -64,7 +63,6 @@ export const PlanSelectionTable = (props: PlanSelectionTableProps) => {
     plans,
     planType
   );
-  const { interval } = usePricingInterval();
 
   // Determine spacing based on feature flag:
   // - If generationalPlans is enabled (pagination mode) -> spacingBottom={0}
@@ -120,16 +118,10 @@ export const PlanSelectionTable = (props: PlanSelectionTableProps) => {
           {tableCells.map(({ cellName, center, noWrap, testId }) => {
             const isPlanCell = cellName === 'Plan';
             const attributeValue = `${testId}-header`;
-            const isPriceColumn = testId === 'monthly' || testId === 'hourly';
-            // monthly is the default/fallback: show all price columns (legacy production behavior).
-            // Any other interval (e.g. hourly): show only the column that matches the active interval.
-            const hidePriceColumn =
-              isPriceColumn && interval !== 'monthly' && testId !== interval;
 
             if (
               (!shouldShowTransfer && testId === 'transfer') ||
-              (!shouldShowNetwork && testId === 'network') ||
-              hidePriceColumn
+              (!shouldShowNetwork && testId === 'network')
             ) {
               return null;
             }
