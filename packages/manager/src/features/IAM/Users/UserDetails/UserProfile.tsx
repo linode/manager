@@ -8,7 +8,6 @@ import { ErrorState } from 'src/features/IAM/Shared/ErrorState/ErrorState';
 import { NotFound } from 'src/features/IAM/Shared/NotFound/NotFound';
 
 import { usePermissions } from '../../hooks/usePermissions';
-import { DeleteUserPanel } from './DeleteUserPanel';
 import { UserDetailsPanel } from './UserDetailsPanel';
 
 export const UserProfile = () => {
@@ -62,10 +61,6 @@ export const UserProfile = () => {
           activeUser={user}
           assignedRoles={assignedRoles}
           permissions={permissions}
-        />
-        <DeleteUserPanel
-          activeUser={user}
-          canDeleteUser={permissions?.delete_user}
         />
       </Stack>
     </>

@@ -1,14 +1,18 @@
 import { Box, Button, Paper, Stack, Typography } from '@linode/ui';
 import { Divider } from '@mui/material';
 import Grid from '@mui/material/Grid';
+import { useNavigate } from '@tanstack/react-router';
 import React from 'react';
 
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TextTooltip } from 'src/components/TextTooltip';
+import { PARENT_USER } from 'src/features/Account/constants';
 
+import { useDelegationRole } from '../../hooks/useDelegationRole';
 import { EditUserDetailsDrawer } from './EditUserDetailsDrawer';
+import { UserDeleteConfirmation } from './UserDeleteConfirmation';
 import { getTotalAssignedRoles } from './utils';
 
 import type { IamUserRoles, User } from '@linode/api-v4';
@@ -30,6 +34,22 @@ export const UserDetailsPanel = ({
   permissions,
 }: Props) => {
   const [isEditDrawerOpen, setIsEditDrawerOpen] = React.useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
+
+  const navigate = useNavigate();
+  const { profileUserName } = useDelegationRole();
+
+  const isProxyOrDelegateUserType =
+    activeUser.user_type === 'proxy' || activeUser.user_type === 'delegate';
+
+  let deleteTooltipText: string | undefined;
+  if (!permissions?.delete_user) {
+    deleteTooltipText = 'You do not have permission to delete this user.';
+  } else if (profileUserName === activeUser.username) {
+    deleteTooltipText = `You can’t delete the currently active user.`;
+  } else if (isProxyOrDelegateUserType) {
+    deleteTooltipText = `You can’t delete a ${PARENT_USER}.`;
+  }
 
   const assignRolesCount = assignedRoles
     ? getTotalAssignedRoles(assignedRoles)
@@ -163,7 +183,17 @@ export const UserDetailsPanel = ({
           >
             Edit Details
           </Button>
-          <Button disabled={!permissions?.delete_user}>Delete User</Button>
+          <Button
+            disabled={
+              !permissions?.delete_user ||
+              profileUserName === activeUser.username ||
+              isProxyOrDelegateUserType
+            }
+            onClick={() => setIsDeleteDialogOpen(true)}
+            tooltipText={deleteTooltipText}
+          >
+            Delete User
+          </Button>
         </Box>
         <Divider
           sx={(theme) => ({
@@ -204,6 +234,12 @@ export const UserDetailsPanel = ({
         canUpdateUser={permissions?.update_user}
         onClose={() => setIsEditDrawerOpen(false)}
         open={isEditDrawerOpen}
+      />
+      <UserDeleteConfirmation
+        onClose={() => setIsDeleteDialogOpen(false)}
+        onSuccess={() => navigate({ to: '/iam/users' })}
+        open={isDeleteDialogOpen}
+        username={activeUser.username}
       />
     </Paper>
   );
