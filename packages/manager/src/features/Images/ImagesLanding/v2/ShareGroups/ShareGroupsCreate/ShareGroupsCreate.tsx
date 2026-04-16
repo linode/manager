@@ -242,7 +242,7 @@ export const ShareGroupsCreate = () => {
                 <Stack spacing={2}>
                   <Controller
                     control={control}
-                    name={`images.${index}`}
+                    name={`images.${index}.label`}
                     render={() => (
                       <TextField
                         data-testid={`selected-image-${index}-label`}
@@ -257,7 +257,7 @@ export const ShareGroupsCreate = () => {
                   />
                   <Controller
                     control={control}
-                    name={`images.${index}`}
+                    name={`images.${index}.description`}
                     render={() => (
                       <TextField
                         data-testid={`selected-image-${index}-description`}
