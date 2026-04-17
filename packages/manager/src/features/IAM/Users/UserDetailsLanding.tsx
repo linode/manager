@@ -1,8 +1,13 @@
-import { NewFeatureChip, useTheme } from '@linode/ui';
-import { Outlet, useLoaderData, useParams } from '@tanstack/react-router';
+import { Breadcrumb, BreadcrumbItem } from '@akamai/cds-components/react';
+import { NewFeatureChip } from '@linode/ui';
+import {
+  Outlet,
+  useLoaderData,
+  useNavigate,
+  useParams,
+} from '@tanstack/react-router';
 import React from 'react';
 
-import { LandingHeader } from 'src/components/LandingHeader';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
@@ -21,10 +26,12 @@ import {
   USER_ROLES_LINK,
 } from '../Shared/constants';
 import { DelegateUserChip } from '../Shared/DelegateUserChip';
+import { DocsLink } from '../Shared/DocsLink/DocsLink';
+import { LandingHeader } from '../Shared/LandingHeader/LandingHeader';
 
 export const UserDetailsLanding = () => {
   const flags = useFlags();
-  const theme = useTheme();
+  const navigate = useNavigate();
   const { isIAMEnabled } = useIsIAMEnabled();
   const showNewBadge = flags.iamNewBadge && isIAMEnabled;
   const { username } = useParams({ from: '/iam/users/$username' });
@@ -60,49 +67,32 @@ export const UserDetailsLanding = () => {
 
   return (
     <>
-      <LandingHeader
-        breadcrumbProps={{
-          crumbOverrides: [
-            {
-              label: (
-                <>
-                  {IAM_LABEL}
-                  {showNewBadge ? (
-                    <NewFeatureChip
-                      component="span"
-                      sx={{ position: 'relative', top: -1 }}
-                    />
-                  ) : null}
-                </>
-              ),
-              position: 1,
-            },
-          ],
-          labelOptions: {
-            noCap: true,
-            suffixComponent: isDelegateUserForChildAccount ? (
-              <DelegateUserChip hideBelowSm={true} />
-            ) : null,
-          },
-          pathname: location.pathname,
-          sx: {
+      <LandingHeader spacingBottom={4}>
+        <Breadcrumb
+          style={{
             flexWrap: 'nowrap',
-            [theme.breakpoints.down(380)]: {
-              flexWrap: 'wrap',
-            },
-            '& > div:nth-of-type(3) h1': {
-              display: '-webkit-box',
-              '-webkit-line-clamp': '1',
-              '-webkit-box-orient': 'vertical',
-              overflow: 'hidden',
-            },
-          },
-        }}
-        docsLink={docsLink}
-        removeCrumbX={4}
-        spacingBottom={4}
-        title={username}
-      />
+          }}
+        >
+          <BreadcrumbItem
+            onCdsBreadcrumbClick={() => navigate({ to: '/iam/users' })}
+          >
+            {IAM_LABEL}
+            {showNewBadge ? <NewFeatureChip /> : null}
+          </BreadcrumbItem>
+          <BreadcrumbItem
+            onCdsBreadcrumbClick={() => navigate({ to: '/iam/users' })}
+          >
+            Users
+          </BreadcrumbItem>
+          <BreadcrumbItem>
+            {username}
+            {isDelegateUserForChildAccount ? (
+              <DelegateUserChip hideBelowSm={true} />
+            ) : null}
+          </BreadcrumbItem>
+        </Breadcrumb>
+        <DocsLink href={docsLink} />
+      </LandingHeader>
       <Tabs index={tabIndex} onChange={handleTabChange}>
         <TanStackTabLinkList tabs={tabs} />
         <TabPanels>
