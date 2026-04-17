@@ -91,11 +91,9 @@ export const PlanSelection = (props: PlanSelectionProps) => {
   const getSubHeading = (price: PriceObject | undefined): string => {
     const monthlyLabel = getLabelForInterval('monthly');
     const hourlyLabel = getLabelForInterval('hourly');
-    const monthly = price?.monthly;
-    const hourly = price?.hourly;
-    const formattedHourly = `$${formatPriceForInterval(hourly, 'hourly')}/${hourlyLabel}`;
-    const formattedMonthly = `$${formatPriceForInterval(monthly, 'monthly')}/${monthlyLabel}`;
-    const hasMonthlyPrice = typeof monthly === 'number';
+    const formattedHourly = `$${formatPriceForInterval(price?.hourly, 'hourly')}/${hourlyLabel}`;
+    const formattedMonthly = `$${formatPriceForInterval(price?.monthly, 'monthly')}/${monthlyLabel}`;
+    const hasMonthlyPrice = typeof price?.monthly === 'number';
 
     if (billing === 'hourly') {
       // Do not show monthly price in hourly billing mode when it is null.
