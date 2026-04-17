@@ -123,7 +123,7 @@ describe('Linode Create Summary', () => {
       },
     });
 
-    await findByText('$5.00/month');
+    await findByText('$5/month');
   });
 
   it('should render an hourly price if a region and plan are selected with hourly interval', async () => {
@@ -168,7 +168,7 @@ describe('Linode Create Summary', () => {
       },
     });
 
-    await findByText('$7.00/month');
+    await findByText('$7/month');
   });
 
   it('should render a DC specific hourly price if the selected region has price overrides', async () => {
@@ -223,7 +223,7 @@ describe('Linode Create Summary', () => {
       },
     });
 
-    await findByText((_, el) => el?.textContent === '$2.00/month');
+    await findByText((_, el) => el?.textContent === '$2/month');
   });
 
   it('should render an hourly backups price if backups are enabled, a type is selected, and a region is selected', async () => {
@@ -386,7 +386,7 @@ describe('Linode Create Summary', () => {
         },
       });
 
-    await findByText(`5 Nodes - $10.00/month`);
+    await findByText(`5 Nodes - $10/month`);
   });
 
   it('should render correct hourly pricing for Marketplace app cluster deployments', async () => {
@@ -467,7 +467,7 @@ describe('Linode Create Summary', () => {
         },
       });
 
-    await findByText(`5 Nodes - $11.00/month`);
+    await findByText(`5 Nodes - $11/month`);
   });
 
   it('should render correct hourly pricing for Marketplace app cluster deployments with multiple plans involved', async () => {

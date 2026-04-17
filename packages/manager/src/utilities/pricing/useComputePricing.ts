@@ -3,7 +3,6 @@ import { useFlags } from 'src/hooks/useFlags';
 import { UNKNOWN_PRICE } from './constants';
 import {
   formatPriceForInterval,
-  getDecimalPlaces,
   getLabelForInterval,
   getPriceForInterval,
 } from './priceInterval';
@@ -27,17 +26,8 @@ export const useComputePricing = () => {
   const billing: keyof PriceObject = computePricing?.billing ?? 'monthly';
 
   return {
-    /** Active billing mode from the LD flag (e.g. `'monthly'`, `'hourly'`). */
+    /** Active billing mode from the LD flag (e.g. `'monthly'`, `'hourly'`, etc). */
     billing,
-    /**
-     * Decimal places for the active billing interval (2 for monthly, 3 for hourly).
-     * Pass this to `<Currency>` or `<DisplayPrice>` to get correct formatting.
-     */
-    decimalPlaces: getDecimalPlaces(billing),
-    /** Decimal places for monthly prices. Always 2. */
-    monthlyDecimalPlaces: getDecimalPlaces('monthly'),
-    /** Decimal places for hourly prices. Always 3. */
-    hourlyDecimalPlaces: getDecimalPlaces('hourly'),
     /**
      * Returns the price value for the active billing interval from a PriceObject,
      * or `UNKNOWN_PRICE` (`'--.--'`) if the price is unavailable.
@@ -47,7 +37,7 @@ export const useComputePricing = () => {
      */
     getPrice: (
       priceObject: null | PriceObject | undefined
-    ): '--.--' | number => {
+    ): number | typeof UNKNOWN_PRICE => {
       const value = getPriceForInterval(priceObject, billing);
       if (value === null || value === undefined) {
         return UNKNOWN_PRICE;
@@ -63,7 +53,7 @@ export const useComputePricing = () => {
       const value = getPriceForInterval(priceObject, billing);
       return formatPriceForInterval(value, billing);
     },
-    /** Short label for the active billing interval (eg., `'hour'`, `'month'`, etc). */
+    /** Short label for the active billing mode (eg., `'hour'`, `'month'`, etc). */
     priceLabel: getLabelForInterval(billing),
   };
 };
