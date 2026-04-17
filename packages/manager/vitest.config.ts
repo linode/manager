@@ -10,8 +10,8 @@ export default mergeConfig(
       testTimeout: 30000, // 30 seconds per test
       hookTimeout: 30000, // 30 seconds for hooks
       teardownTimeout: 30000, // 30 seconds for teardown
-      // Limit test concurrency in CI to prevent resource exhaustion
-      maxConcurrency: process.env.CI ? 5 : undefined,
+      // Keep per-file concurrency low when CI runs multiple Vitest shard processes
+      maxConcurrency: process.env.CI ? 2 : undefined,
       // Additional test-specific config
       include: ['**/*.test.{js,jsx,ts,tsx}'],
       environment: 'jsdom',
