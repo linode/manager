@@ -30,11 +30,15 @@ vi.mock('src/queries/object-storage/queries', () => {
 });
 
 describe('useGetLocationsForQuotaService', () => {
+  let queryClient: QueryClient;
+
   const wrapper = ({ children }: { children: React.ReactNode }) => {
-    const queryClient = new QueryClient({
+    queryClient = new QueryClient({
       defaultOptions: {
         queries: {
           retry: false,
+          gcTime: 0, // Prevent queries from being cached/hanging after test completes
+          staleTime: 0,
         },
       },
     });
@@ -43,6 +47,12 @@ describe('useGetLocationsForQuotaService', () => {
       <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
     );
   };
+
+  afterEach(() => {
+    // Clean up query client to prevent async operations after test teardown
+    queryClient?.clear();
+    vi.clearAllMocks();
+  });
 
   it('should handle object storage endpoints with null values', () => {
     const { result } = renderHook(
