@@ -1,9 +1,9 @@
+import { Breadcrumb, BreadcrumbItem } from '@akamai/cds-components/react';
 import { NewFeatureChip } from '@linode/ui';
 import { TabPanels } from '@reach/tabs';
 import { Outlet, useLocation, useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
-import { LandingHeader } from 'src/components/LandingHeader';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
@@ -12,6 +12,7 @@ import { useTabs } from 'src/hooks/useTabs';
 
 import { useIsIAMEnabled } from '../../hooks/useIsIAMEnabled';
 import { IAM_LABEL } from '../../Shared/constants';
+import { LandingHeader } from '../../Shared/LandingHeader/LandingHeader';
 
 export const DefaultsLanding = () => {
   const location = useLocation();
@@ -37,27 +38,20 @@ export const DefaultsLanding = () => {
 
   return (
     <>
-      <LandingHeader
-        breadcrumbProps={{
-          pathname: '/iam/roles/defaults',
-          crumbOverrides: [
-            {
-              label: (
-                <>
-                  {IAM_LABEL}
-                  {showNewBadge ? (
-                    <NewFeatureChip sx={{ position: 'relative', top: -1 }} />
-                  ) : null}
-                </>
-              ),
-              linkTo: '/iam',
-              position: 1,
-            },
-          ],
-        }}
-        spacingBottom={4}
-        title="Default Roles for Delegate Users"
-      />
+      <LandingHeader spacingBottom={4}>
+        <Breadcrumb>
+          <BreadcrumbItem onCdsBreadcrumbClick={() => navigate({ to: '/iam' })}>
+            {IAM_LABEL}
+            {showNewBadge ? <NewFeatureChip /> : null}
+          </BreadcrumbItem>
+          <BreadcrumbItem
+            onCdsBreadcrumbClick={() => navigate({ to: '/iam/roles' })}
+          >
+            Roles
+          </BreadcrumbItem>
+          <BreadcrumbItem>Default Roles for Delegate Users</BreadcrumbItem>
+        </Breadcrumb>
+      </LandingHeader>
       <Tabs index={tabIndex} onChange={handleTabChange}>
         <TanStackTabLinkList tabs={tabs} />
         <React.Suspense fallback={<SuspenseLoader />}>
