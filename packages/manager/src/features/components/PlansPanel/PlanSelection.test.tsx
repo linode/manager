@@ -265,7 +265,7 @@ describe('PlanSelection (card, mobile)', () => {
     expect(mockOnSelect).toHaveBeenCalled();
   });
 
-  it('shows the dynamic prices for a region with DC-specific pricing', () => {
+  it('shows the dynamic prices for a region with DC-specific pricing', async () => {
     const { container } = renderWithTheme(
       <PlanSelection {...defaultProps} selectedRegionId={'br-gru'} />
     );
@@ -276,9 +276,16 @@ describe('PlanSelection (card, mobile)', () => {
     expect(
       container.querySelector('[data-qa-select-card-heading]')
     ).toHaveTextContent(mockPlan.heading);
-    expect(
-      container.querySelector('[data-qa-select-card-subheading="subheading-1"]')
-    ).toHaveTextContent('$14.40/mo ($0.021/hr)');
+
+    // Wait for price mutation to complete before asserting
+    await waitFor(() => {
+      expect(
+        container.querySelector(
+          '[data-qa-select-card-subheading="subheading-1"]'
+        )
+      ).toHaveTextContent('$14.40/mo ($0.021/hr)');
+    });
+
     expect(
       container.querySelector('[data-qa-select-card-subheading="subheading-2"]')
     ).toHaveTextContent('1 CPU, 50 GB Storage, 2 GB RAM');
