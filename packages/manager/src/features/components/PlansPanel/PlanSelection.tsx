@@ -14,9 +14,9 @@ import {
   UNKNOWN_PRICE,
 } from 'src/utilities/pricing/constants';
 import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
-import { getDecimalPlaces } from 'src/utilities/pricing/priceInterval';
 import {
   formatPriceForInterval,
+  getDecimalPlaces,
   getLabelForInterval,
 } from 'src/utilities/pricing/priceInterval';
 import { useComputePricing } from 'src/utilities/pricing/useComputePricing';
@@ -91,13 +91,10 @@ export const PlanSelection = (props: PlanSelectionProps) => {
   const getSubHeading = (price: PriceObject | undefined): string => {
     const monthlyLabel = getLabelForInterval('monthly');
     const hourlyLabel = getLabelForInterval('hourly');
-
     const monthly = price?.monthly;
     const hourly = price?.hourly;
-
     const formattedHourly = `$${formatPriceForInterval(hourly, 'hourly')}/${hourlyLabel}`;
     const formattedMonthly = `$${formatPriceForInterval(monthly, 'monthly')}/${monthlyLabel}`;
-
     const hasMonthlyPrice = typeof monthly === 'number';
 
     if (billing === 'hourly') {
@@ -107,7 +104,6 @@ export const PlanSelection = (props: PlanSelectionProps) => {
       if (!hasMonthlyPrice) {
         return formattedHourly;
       }
-
       return `${formattedMonthly} (${formattedHourly})`;
     }
 
