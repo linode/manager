@@ -1,10 +1,11 @@
-import { Autocomplete, Box, Button, SelectedIcon } from '@linode/ui';
+import { Autocomplete, Button } from '@linode/ui';
 import Grid from '@mui/material/Grid';
 import { styled, useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
+import { renderOptionsWithPendo } from 'src/features/Delivery/deliveryUtils';
 
 import type { Theme } from '@mui/material/styles';
 import type { AutocompleteOption } from 'src/features/Delivery/Shared/types';
@@ -89,30 +90,12 @@ export const DeliveryTabHeader = ({
             <Autocomplete
               label={'Status'}
               noMarginTop
-              onChange={(_, option) => {
+              onChange={(_, option: AutocompleteOption | null) => {
                 onSelect(option?.value ?? '');
               }}
               options={selectList}
               placeholder="Select"
-              renderOption={(props, option, { selected }) => {
-                return (
-                  <li
-                    {...props}
-                    data-pendo-id={option.pendoId}
-                    data-qa-option
-                    key={props.key}
-                  >
-                    <Box
-                      sx={{
-                        flexGrow: 1,
-                      }}
-                    >
-                      {option.label}
-                    </Box>
-                    <SelectedIcon visible={selected} />
-                  </li>
-                );
-              }}
+              renderOption={renderOptionsWithPendo}
               textFieldProps={{
                 inputProps: {
                   'data-pendo-id': `Logs Delivery ${entity}s-Status`,
