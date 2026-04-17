@@ -62,8 +62,10 @@ describe('priceInterval utilities', () => {
     it('formats price with correct decimals', () => {
       expect(formatPriceForInterval(0.015, 'hourly')).toBe('0.015');
       expect(formatPriceForInterval(1.0191, 'hourly')).toBe('1.019');
+      expect(formatPriceForInterval(5.0, 'hourly')).toBe('5');
       expect(formatPriceForInterval(10.0, 'monthly')).toBe('10');
       expect(formatPriceForInterval(10.5, 'monthly')).toBe('10.50');
+      expect(formatPriceForInterval(10.555, 'monthly')).toBe('10.55');
     });
     it('returns UNKNOWN_PRICE for null/undefined', () => {
       expect(formatPriceForInterval(null, 'hourly')).toBe(UNKNOWN_PRICE);
