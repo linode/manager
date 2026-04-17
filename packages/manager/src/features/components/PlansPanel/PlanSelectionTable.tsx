@@ -118,7 +118,6 @@ export const PlanSelectionTable = (props: PlanSelectionTableProps) => {
           {tableCells.map(({ cellName, center, noWrap, testId }) => {
             const isPlanCell = cellName === 'Plan';
             const attributeValue = `${testId}-header`;
-
             if (
               (!shouldShowTransfer && testId === 'transfer') ||
               (!shouldShowNetwork && testId === 'network')
