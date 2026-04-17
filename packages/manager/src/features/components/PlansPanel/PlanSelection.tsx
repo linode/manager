@@ -14,6 +14,7 @@ import {
   UNKNOWN_PRICE,
 } from 'src/utilities/pricing/constants';
 import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
+import { getDecimalPlaces } from 'src/utilities/pricing/priceInterval';
 import { useComputePricing } from 'src/utilities/pricing/useComputePricing';
 
 import { DisabledPlanSelectionTooltip } from './DisabledPlanSelectionTooltip';
@@ -69,13 +70,7 @@ export const PlanSelection = (props: PlanSelectionProps) => {
 
   const isSamePlan = plan.heading === currentPlanHeading;
 
-  const {
-    billing,
-    formatPrice,
-    hourlyDecimalPlaces,
-    monthlyDecimalPlaces,
-    priceLabel,
-  } = useComputePricing();
+  const { billing, formatPrice, priceLabel } = useComputePricing();
 
   const { data: linode } = useLinodeQuery(
     linodeID ?? -1,
@@ -142,7 +137,7 @@ export const PlanSelection = (props: PlanSelectionProps) => {
     if (typeof price?.monthly === 'number') {
       return (
         <Currency
-          decimalPlaces={monthlyDecimalPlaces}
+          decimalPlaces={getDecimalPlaces(price.monthly, 'monthly')}
           quantity={price.monthly}
         />
       );
@@ -230,7 +225,7 @@ export const PlanSelection = (props: PlanSelectionProps) => {
             errorText={!price?.hourly ? PRICE_ERROR_TOOLTIP_TEXT : undefined}
           >
             <Currency
-              decimalPlaces={hourlyDecimalPlaces}
+              decimalPlaces={getDecimalPlaces(price?.hourly, 'hourly')}
               quantity={price?.hourly ?? UNKNOWN_PRICE}
             />
           </TableCell>

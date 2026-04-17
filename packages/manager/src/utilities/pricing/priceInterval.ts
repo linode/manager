@@ -31,13 +31,25 @@ export const getLabelForInterval = (interval: keyof PriceObject): string =>
   interval.slice(0, -2);
 
 /**
- * Returns the number of decimal places for a given billing interval.
- * This is the single source of truth for price formatting precision.
- * - `hourly` -> 3 decimal places (e.g. $0.015)
- * - All others (e.g. `monthly`) -> 2 decimal places (e.g. $10.00)
+ * Returns the number of decimal places for a price value, based on interval and value.
+ * - If value is integer, returns 0.
+ * - If interval is 'hourly', returns 3 (unless integer).
+ * - Otherwise, returns 2 (unless integer).
+ *
+ * @example
+ * getDecimalPlaces(10.00, 'monthly'); // returns 0 (eg., $10)
+ * getDecimalPlaces(10.5, 'monthly'); // returns 2 (eg., $10.50)
+ * getDecimalPlaces(0.0150, 'hourly'); // returns 3 (eg., $0.015)
  */
-export const getDecimalPlaces = (interval: keyof PriceObject): number =>
-  interval === 'hourly' ? 3 : 2;
+export const getDecimalPlaces = (
+  value: null | number | typeof UNKNOWN_PRICE | undefined,
+  interval: keyof PriceObject
+): number => {
+  if (typeof value !== 'number') {
+    return 0;
+  }
+  return Number.isInteger(value) ? 0 : interval === 'hourly' ? 3 : 2;
+};
 
 /**
  * Formats a price for display at the correct decimal places for the given
@@ -51,5 +63,5 @@ export const formatPriceForInterval = (
   if (value === null || value === undefined) {
     return UNKNOWN_PRICE;
   }
-  return value.toFixed(getDecimalPlaces(interval));
+  return value.toFixed(getDecimalPlaces(value, interval));
 };
