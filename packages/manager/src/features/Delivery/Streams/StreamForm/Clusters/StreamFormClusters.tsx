@@ -10,7 +10,6 @@ import {
   Paper,
   Typography,
 } from '@linode/ui';
-import { capitalize } from '@linode/utilities';
 import Grid from '@mui/material/Grid';
 import { styled, type Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -26,10 +25,17 @@ import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFoot
 import { MIN_PAGE_SIZE } from 'src/components/PaginationFooter/PaginationFooter.constants';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { Table } from 'src/components/Table';
+import {
+  getPendoPageId,
+  renderOptionsWithPendo,
+} from 'src/features/Delivery/deliveryUtils';
 import { StreamFormClusterTableContent } from 'src/features/Delivery/Streams/StreamForm/Clusters/StreamFormClustersTableContent';
 import { useAllKubernetesClustersQuery } from 'src/queries/kubernetes';
 
-import type { FormMode } from 'src/features/Delivery/Shared/types';
+import type {
+  AutocompleteBooleanOption,
+  FormMode,
+} from 'src/features/Delivery/Shared/types';
 import type { OrderByKeys } from 'src/features/Delivery/Streams/StreamForm/Clusters/StreamFormClustersTableContent';
 import type {
   ExtendedKubernetesCluster,
@@ -46,7 +52,7 @@ interface StreamFormClustersProps {
   mode: FormMode;
 }
 
-const logGenerationOptions = [
+const logGenerationOptions: AutocompleteBooleanOption[] = [
   { label: 'Enabled', value: true },
   { label: 'Disabled', value: false },
 ];
@@ -74,6 +80,13 @@ export const StreamFormClusters = (props: StreamFormClustersProps) => {
   const [regionFilter, setRegionFilter] = useState<string>('');
   const [logGenerationFilter, setLogGenerationFilter] = useState<boolean>();
 
+  const pendoPageId = getPendoPageId('stream', mode);
+  const pendoIdPrefix = `${pendoPageId} Clusters-`;
+  const loggingStatusOptionsWithPendo: AutocompleteBooleanOption[] =
+    logGenerationOptions.map((option) => ({
+      ...option,
+      pendoId: `${pendoPageId} Clusters Logging-${option.label}`,
+    }));
   const eligibleRegions = useMemo(
     () =>
       regions?.filter(({ capabilities }) =>
@@ -253,7 +266,7 @@ export const StreamFormClusters = (props: StreamFormClustersProps) => {
               render={({ field }) => (
                 <Checkbox
                   checked={field.value}
-                  data-pendo-id={`Logs Delivery Streams ${capitalize(mode)}-Clusters-Include All`}
+                  data-pendo-id={`${pendoIdPrefix}Include All`}
                   onChange={async (_, checked) => {
                     field.onChange(checked);
                     if (checked) {
@@ -298,7 +311,7 @@ export const StreamFormClusters = (props: StreamFormClustersProps) => {
               debounceTime={250}
               hideLabel
               inputProps={{
-                'data-pendo-id': `Logs Delivery Streams ${capitalize(mode)}-Clusters-Search`,
+                'data-pendo-id': `${pendoIdPrefix}Search`,
               }}
               label="Search"
               onSearch={(value) => setSearchText(value)}
@@ -323,11 +336,19 @@ export const StreamFormClusters = (props: StreamFormClustersProps) => {
               />
               <Autocomplete
                 label=""
-                onChange={(_, option) => setLogGenerationFilter(option?.value)}
-                options={logGenerationOptions}
+                onChange={(_, option: AutocompleteBooleanOption | null) =>
+                  setLogGenerationFilter(option?.value)
+                }
+                options={loggingStatusOptionsWithPendo}
                 placeholder="Logging Status"
+                renderOption={renderOptionsWithPendo}
                 sx={{
                   width: '160px !important',
+                }}
+                textFieldProps={{
+                  inputProps: {
+                    'data-pendo-id': `${pendoIdPrefix}Logging Status`,
+                  },
                 }}
               />
             </StyledSelectsWrapper>

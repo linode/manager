@@ -13,7 +13,6 @@ import {
   Stack,
   Typography,
 } from '@linode/ui';
-import { capitalize } from '@linode/utilities';
 import { createFilterOptions } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import React, { useEffect, useState } from 'react';
@@ -21,11 +20,17 @@ import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import {
   getDestinationTypeOption,
+  getPendoPageId,
+  mapAutocompleteOptionsWithPendo,
+  renderOptionsWithPendo,
   useIsACLPLogsEnabled,
 } from 'src/features/Delivery/deliveryUtils';
 import { DestinationAkamaiObjectStorageDetailsForm } from 'src/features/Delivery/Shared/DestinationAkamaiObjectStorageDetailsForm';
 import { DestinationCustomHttpsDetailsForm } from 'src/features/Delivery/Shared/DestinationCustomHttpsDetailsForm';
-import { destinationTypeOptions } from 'src/features/Delivery/Shared/types';
+import {
+  type AutocompleteOption,
+  destinationTypeOptions,
+} from 'src/features/Delivery/Shared/types';
 import { DestinationAkamaiObjectStorageDetailsSummary } from 'src/features/Delivery/Streams/StreamForm/Delivery/DestinationAkamaiObjectStorageDetailsSummary';
 import { DestinationCustomHTTPSDetailsSummary } from 'src/features/Delivery/Streams/StreamForm/Delivery/DestinationCustomHTTPSDetailsSummary';
 
@@ -90,8 +95,6 @@ export const StreamFormDelivery = (props: StreamFormDeliveryProps) => {
     useFormContext<StreamAndDestinationFormType>();
   const { data: destinations, isLoading, error } = useAllDestinationsQuery();
 
-  const capitalizedMode = capitalize(mode);
-
   const [creatingNewDestination, setCreatingNewDestination] =
     useState<boolean>(false);
 
@@ -116,6 +119,14 @@ export const StreamFormDelivery = (props: StreamFormDeliveryProps) => {
     control,
     name: 'stream.destinations',
   });
+
+  const pendoIdPrefix = `${getPendoPageId('stream', mode)}-`;
+  const pendoIds = {
+    [destinationType.CustomHttps]: `${pendoIdPrefix}Custom HTTPS`,
+    [destinationType.AkamaiObjectStorage]: `${pendoIdPrefix}Akamai Object Storage`,
+  };
+  const destinationTypeOptionsWithPendo: AutocompleteOption[] =
+    mapAutocompleteOptionsWithPendo(destinationTypeOptions, pendoIds);
 
   const destinationNameFilterOptions = createFilterOptions<DestinationName>({
     stringify: (destination) => destination.label,
@@ -177,10 +188,11 @@ export const StreamFormDelivery = (props: StreamFormDeliveryProps) => {
               resetDestinationForm(value as DestinationType);
               setCreatingNewDestination(false);
             }}
-            options={destinationTypeOptions}
+            options={destinationTypeOptionsWithPendo}
+            renderOption={renderOptionsWithPendo}
             textFieldProps={{
               inputProps: {
-                'data-pendo-id': `Logs Delivery Streams ${capitalizedMode}-Destination Type`,
+                'data-pendo-id': `${pendoIdPrefix}Destination Type`,
               },
             }}
             value={getDestinationTypeOption(field.value)}
@@ -205,7 +217,7 @@ export const StreamFormDelivery = (props: StreamFormDeliveryProps) => {
                   create: true,
                   label: inputValue,
                   type: selectedDestinationType,
-                  pendoId: `Logs Delivery Streams ${capitalizedMode}-Destination Name-New`,
+                  pendoId: `${pendoIdPrefix}Destination Name-New`,
                 });
               }
 
@@ -287,7 +299,7 @@ export const StreamFormDelivery = (props: StreamFormDeliveryProps) => {
             }}
             textFieldProps={{
               inputProps: {
-                'data-pendo-id': `Logs Delivery Streams ${capitalizedMode}-Destination Name`,
+                'data-pendo-id': `${pendoIdPrefix}Destination Name`,
               },
               labelTooltipText:
                 'Select an existing destination from the list or create a new one by entering a name and clicking Create.',

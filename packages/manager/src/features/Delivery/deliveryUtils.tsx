@@ -9,8 +9,9 @@ import {
   streamType,
 } from '@linode/api-v4';
 import { useAccount } from '@linode/queries';
-import { omitProps } from '@linode/ui';
-import { isFeatureEnabledV2 } from '@linode/utilities';
+import { Box, omitProps, SelectedIcon } from '@linode/ui';
+import { capitalize, isFeatureEnabledV2 } from '@linode/utilities';
+import React from 'react';
 
 import {
   authenticationTypeOptions,
@@ -24,7 +25,9 @@ import type {
   CustomHTTPSDetailsExtended,
   DestinationType,
 } from '@linode/api-v4';
+import type { AutocompleteRenderOptionState } from '@mui/material';
 import type {
+  AutocompleteBooleanOption,
   AutocompleteOption,
   DestinationDetailsForm,
   FormMode,
@@ -163,5 +166,47 @@ export const useIsLkeEAuditLogsTypeSelectionEnabled = (): boolean => {
   const { data: account } = useAccount();
   return !!account?.capabilities?.includes(
     'Akamai Cloud Pulse Logs LKE-E Audit'
+  );
+};
+
+export const getPendoPageId = (entity: string, mode: FormMode) =>
+  `Logs Delivery ${capitalize(entity)}s ${capitalize(mode === 'edit' ? 'summary' : mode)}`;
+
+export const getDestinationFormPendoId = (entity: string, mode: FormMode) =>
+  `${getPendoPageId(entity, mode)}${entity === 'destination' ? '' : ' New Destination'}`;
+
+export const mapAutocompleteOptionsWithPendo = (
+  options: AutocompleteOption[],
+  pendoIds: { [x: string]: any }
+) => {
+  return options.map((option) => ({
+    ...option,
+    pendoId: pendoIds[option.value],
+  }));
+};
+
+export const renderOptionsWithPendo = (
+  props: React.JSX.IntrinsicAttributes &
+    React.ClassAttributes<HTMLLIElement> &
+    React.LiHTMLAttributes<HTMLLIElement>,
+  option: AutocompleteBooleanOption | AutocompleteOption,
+  { selected }: AutocompleteRenderOptionState
+): React.JSX.Element => {
+  return (
+    <li
+      {...props}
+      data-pendo-id={option.pendoId}
+      data-qa-option
+      key={props.key}
+    >
+      <Box
+        sx={{
+          flexGrow: 1,
+        }}
+      >
+        {option.label}
+      </Box>
+      <SelectedIcon visible={selected} />
+    </li>
   );
 };

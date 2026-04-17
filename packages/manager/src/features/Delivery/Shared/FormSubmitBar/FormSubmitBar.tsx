@@ -4,7 +4,10 @@ import { Link } from '@mui/material';
 import * as React from 'react';
 import { useMemo } from 'react';
 
-import { getDestinationTypeOption } from 'src/features/Delivery/deliveryUtils';
+import {
+  getDestinationTypeOption,
+  getPendoPageId,
+} from 'src/features/Delivery/deliveryUtils';
 import { StyledHeader } from 'src/features/Delivery/Shared/FormSubmitBar/FormSubmitBar.styles';
 
 import type { DestinationType } from '@linode/api-v4';
@@ -48,9 +51,9 @@ export const FormSubmitBar = (props: StreamFormSubmitBarProps) => {
         : `${capitalize(mode)} ${capitalizedFormType}`,
     [mode, capitalizedFormType]
   );
-  const pagePendoId = useMemo(
-    () => `Logs Delivery ${capitalizedFormType}s ${capitalize(mode)}`,
-    [mode, capitalizedFormType]
+  const pendoIdPrefix = useMemo(
+    () => `${getPendoPageId(formType, mode)}-`,
+    [mode, formType]
   );
 
   return (
@@ -88,7 +91,7 @@ export const FormSubmitBar = (props: StreamFormSubmitBarProps) => {
         >
           <Button
             buttonType="outlined"
-            data-pendo-id={`${pagePendoId}-Test Connection`}
+            data-pendo-id={`${pendoIdPrefix}Test Connection`}
             disabled={disableTestConnection}
             loading={isTesting}
             onClick={onTestConnection}
@@ -103,7 +106,7 @@ export const FormSubmitBar = (props: StreamFormSubmitBarProps) => {
           </Button>
           <Button
             buttonType="primary"
-            data-pendo-id={`${pagePendoId}-${buttonLabel}`}
+            data-pendo-id={`${pendoIdPrefix}${buttonLabel}`}
             disabled={!enableSubmit}
             loading={isSubmitting}
             onClick={onSubmit}
