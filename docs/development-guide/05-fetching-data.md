@@ -350,4 +350,4 @@ export const MyComponent = () => {
 **Best practice:**
 
 - If a message is a sentence or a sentence fragment with a subject and a verb, add punctuation. Otherwise, leave punctuation off.
-- If a developer notices inconsistencies within files they are already working in, they can progressively fix them. In this case, be prepared to fix any Cypress test failures.
+- If a developer notices inconsistencies within files they are already working in, they can progressively fix them.

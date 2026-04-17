@@ -13,7 +13,6 @@
     "lint-staged": "^15.4.3",
     "eslint": "^9.24.0",
     "eslint-config-prettier": "^10.1.1",
-    "eslint-plugin-cypress": "^4.2.1",
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-perfectionist": "^4.10.1",
     "eslint-plugin-prettier": "~5.2.6",
@@ -54,13 +53,6 @@
     "test:shared": "pnpm run --filter @linode/shared test",
     "coverage": "pnpm run --filter @linode/cloud-manager coverage",
     "coverage:summary": "pnpm run --filter @linode/cloud-manager coverage:summary",
-    "cy:run": "pnpm run --filter @linode/cloud-manager cy:run",
-    "cy:e2e": "pnpm run --filter @linode/cloud-manager cy:e2e",
-    "cy:ci": "pnpm cy:e2e",
-    "cy:debug": "pnpm run --filter @linode/cloud-manager cy:debug",
-    "cy:component": "pnpm run --filter @linode/cloud-manager cy:component",
-    "cy:component:run": "pnpm run --filter @linode/cloud-manager cy:component:run",
-    "cy:rec-snap": "pnpm run --filter @linode/cloud-manager cy:rec-snap",
     "changeset": "pnpm run --filter @linode/scripts changeset",
     "generate-changelogs": "pnpm run --filter @linode/scripts generate-changelogs",
     "package-versions": "pnpm run --filter @linode/scripts package-versions",
@@ -87,11 +79,6 @@
     "packages": [
       "packages/*",
       "scripts"
-    ]
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "cypress"
     ]
   }
 }

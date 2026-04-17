@@ -6,7 +6,6 @@ import type { Metadata } from '../metadata/metadata';
 import { pluralize } from '../util/pluralize';
 import { secondsToTimeString } from '../util';
 import * as path from 'path';
-import { cypressRunCommand } from '../util/cypress';
 import { escapeHtmlString } from '../util/escape';
 
 /**
@@ -93,11 +92,6 @@ export const githubFormatter: Formatter = (
     return [
       heading,
       rerunTip,
-      '',
-      '```bash',
-      cypressRunCommand(failingTestFiles),
-      '```',
-      '',
     ].join('\n');
   })();
 

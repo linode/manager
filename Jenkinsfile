@@ -1,3 +1,0 @@
-library 'ui-builder'
-
-buildManager()

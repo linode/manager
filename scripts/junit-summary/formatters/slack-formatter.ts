@@ -6,7 +6,6 @@ import type { Metadata } from '../metadata/metadata';
 import { pluralize } from '../util/pluralize';
 import { secondsToTimeString } from '../util';
 import * as path from 'path';
-import { cypressRunCommand } from '../util/cypress';
 
 /**
  * The maximum number of failures that will be listed in the Slack notification.
@@ -31,9 +30,7 @@ export const slackFormatter: Formatter = (
   _junitData: TestSuites[]
 ) => {
   const indicator = runInfo.failing ? ':x-mark:' : ':check-mark:';
-  const headline = metadata.pipelineTitle
-    ? `*${metadata.pipelineTitle}*\n`
-    : '*Cypress test results*\n';
+  const headline = `*${metadata.pipelineTitle}*\n`;
 
   const prInfo = (metadata.changeId && metadata.changeUrl && metadata.changeTitle)
     ? `:pull-request: ${metadata.changeTitle} (<${metadata.changeUrl}|#${metadata.changeId}>)\n`
@@ -95,14 +92,9 @@ export const slackFormatter: Formatter = (
 
   // Display re-run command to help with troubleshooting.
   const rerunNote = (() => {
-    const failingTestFiles = results
-      .filter((result: TestResult) => result.failing)
-      .map((result: TestResult) => result.testFilename);
-
     const rerunTip = 'Use this command to re-run the failing tests:';
-    const cypressCommand = `${'```'}${cypressRunCommand(failingTestFiles)}${'```'}`;
 
-    return `${rerunTip}\n${cypressCommand}`;
+    return `${rerunTip}\n`;
   })();
 
   const extra = metadata.extra ? `${metadata.extra}\n` : null;
@@ -141,6 +133,6 @@ export const slackFormatter: Formatter = (
     extra,
 
     // Show run details footer.
-    `:cypress: ${footer}`,
+    `${footer}`,
   ].filter((item) => item !== null).join('\n');
 };
