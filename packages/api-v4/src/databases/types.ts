@@ -271,5 +271,5 @@ export interface ConnectionPool {
   label: string;
   mode: PoolMode;
   size: number;
-  username: null | string;
+  username: null | string; // null represents reuse inbound user
 }
