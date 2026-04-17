@@ -71,7 +71,6 @@ const databases: Database[] = databaseFactory.buildList(5).map((db, index) => ({
 }));
 
 const alertDetails = alertFactory.build({
-  entity_ids: databases.slice(0, 4).map((db) => db.id.toString()),
   rule_criteria: { rules: alertRulesFactory.buildList(2) },
   service_type: 'dbaas',
   severity: 1,
@@ -373,7 +372,6 @@ describe('Integration Tests for Alert Show Detail Page', () => {
       const alertDetails = alertFactory.build({
         id: 2,
         label: 'Alert-1',
-        entity_ids: databases.slice(0, 4).map((db) => db.id.toString()),
         rule_criteria: { rules: alertRulesFactory.buildList(2) },
         service_type: 'dbaas',
         severity: 1,
