@@ -1,12 +1,14 @@
 import {
-  Autocomplete,
-  CloseIcon,
-  IconButton,
-  Notice,
-  Paper,
-  Stack,
-  Typography,
-} from '@linode/ui';
+  Button,
+  Checkbox,
+  LoadingSpinner,
+  Table,
+  TableBody,
+  TableCell,
+  TableRow,
+  TextField,
+} from '@akamai/cds-components/react';
+import { Notice, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material';
 import React from 'react';
 
@@ -45,13 +47,14 @@ export const EntitiesSelect = ({
   type,
   value,
 }: Props) => {
-  const { data: entities, isLoading } = useAllAccountEntities({});
+  const {
+    data: entities,
+    error: fetchError,
+    isLoading,
+  } = useAllAccountEntities({});
   const theme = useTheme();
 
-  const [displayCount, setDisplayCount] = React.useState(INITIAL_DISPLAY_COUNT);
-  const [inputValue, setInputValue] = React.useState('');
-
-  const memoizedEntities = React.useMemo(() => {
+  const entityOptions = React.useMemo(() => {
     if (access !== 'entity_access' || !entities) {
       return [];
     }
@@ -60,29 +63,88 @@ export const EntitiesSelect = ({
     return typeEntities ? mapEntitiesToOptions(typeEntities) : [];
   }, [entities, access, type]);
 
-  const filteredEntities = React.useMemo(() => {
-    if (!inputValue) {
-      return memoizedEntities;
+  const [filterText, setFilterText] = React.useState('');
+  const [showSelectedOnly, setShowSelectedOnly] = React.useState(false);
+  const [displayCount, setDisplayCount] = React.useState(INITIAL_DISPLAY_COUNT);
+
+  const filteredRows = React.useMemo(() => {
+    const filtered = filterText
+      ? entityOptions.filter((opt) =>
+          opt.label.toLowerCase().includes(filterText.toLowerCase())
+        )
+      : entityOptions;
+    const withRank = filtered.map((opt, idx) => ({
+      rank: idx,
+      name: opt.label,
+      option: opt,
+    }));
+    if (showSelectedOnly) {
+      return withRank.filter((p) =>
+        value.some((v) => v.value === p.option.value)
+      );
     }
-
-    return memoizedEntities.filter((option) =>
-      option.label.toLowerCase().includes(inputValue.toLowerCase())
-    );
-  }, [memoizedEntities, inputValue]);
-
-  const visibleOptions = React.useMemo(() => {
-    const slice = filteredEntities.slice(0, displayCount);
-
-    const selectedNotVisible = value.filter(
-      (selected) => !slice.some((opt) => opt.value === selected.value)
-    );
-
-    return [...slice, ...selectedNotVisible];
-  }, [filteredEntities, displayCount, value]);
+    return withRank;
+  }, [entityOptions, filterText, showSelectedOnly, value]);
 
   React.useEffect(() => {
     setDisplayCount(INITIAL_DISPLAY_COUNT);
-  }, [filteredEntities]);
+  }, [filterText, showSelectedOnly]);
+
+  const visibleRows = React.useMemo(() => {
+    const slice = filteredRows.slice(0, displayCount);
+    // Always include selected items even if beyond the display slice
+    const selectedNotVisible = filteredRows.filter(
+      (p) =>
+        value.some((v) => v.value === p.option.value) &&
+        !slice.some((s) => s.rank === p.rank)
+    );
+    return [...slice, ...selectedNotVisible];
+  }, [filteredRows, displayCount, value]);
+
+  const selectionMap = React.useMemo(() => {
+    const map: Record<number, boolean> = {};
+    filteredRows.forEach((p) => {
+      if (value.some((v) => v.value === p.option.value)) {
+        map[p.rank] = true;
+      }
+    });
+    return map;
+  }, [filteredRows, value]);
+
+  const selectedCount = value.length;
+  const clearDisabled = !filteredRows.some((p) =>
+    value.some((v) => v.value === p.option.value)
+  );
+  const selectAllDisabled = filteredRows.every((p) =>
+    value.some((v) => v.value === p.option.value)
+  );
+
+  const handleClear = () => {
+    const visibleValues = new Set(filteredRows.map((p) => p.option.value));
+    onChange(value.filter((v) => !visibleValues.has(v.value)));
+  };
+
+  const handleSelectAll = () => {
+    const currentValues = new Set(value.map((v) => v.value));
+    const toAdd = filteredRows
+      .filter((p) => !currentValues.has(p.option.value))
+      .map((p) => p.option);
+    onChange([...value, ...toAdd]);
+  };
+
+  const toggleEntity = (rank: number, checked: boolean) => {
+    const p = filteredRows.find((item) => item.rank === rank);
+    if (!p) return;
+    if (checked) {
+      if (!value.some((v) => v.value === p.option.value)) {
+        onChange([...value, p.option]);
+      }
+    } else {
+      onChange(value.filter((v) => v.value !== p.option.value));
+    }
+  };
+
+  const isReadOnly = mode === 'change-role';
 
   if (access === 'account_access') {
     return (
@@ -108,93 +170,158 @@ export const EntitiesSelect = ({
 
   return (
     <>
-      <Autocomplete
-        disableClearable={true}
-        disabled={!memoizedEntities.length}
-        errorText={errorText}
-        getOptionLabel={(option) => option.label}
-        isOptionEqualToValue={(option, value) => option.value === value.value}
-        label="Entities"
-        loading={isLoading}
-        multiple
-        noMarginTop
-        onChange={(_, newValue, reason) => {
-          if (
-            reason === 'selectOption' &&
-            newValue.length === displayCount &&
-            filteredEntities.length > displayCount
-          ) {
-            onChange(filteredEntities);
-          } else {
-            onChange(newValue || []);
-          }
-        }}
-        onInputChange={(_, value) => {
-          setInputValue(value);
-        }}
-        options={visibleOptions}
-        readOnly={mode === 'change-role'}
-        renderTags={() => null}
-        slotProps={{
-          listbox: {
-            onScroll: (e) => {
-              const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
-              if (scrollHeight - scrollTop <= clientHeight * 1.5) {
-                setDisplayCount((prev) =>
-                  Math.min(prev + 200, filteredEntities.length)
-                );
-              }
-            },
-          },
-        }}
-        textFieldProps={{
-          placeholder: getPlaceholder(
-            type,
-            value.length,
-            filteredEntities.length
-          ),
-        }}
-        value={value || []}
-      />
-      {memoizedEntities.length > 0 && !isLoading && (
-        <>
-          <Typography sx={{ mb: 1, mt: 2 }}>
-            Selected entities ({value.length}):
-          </Typography>
-          <Paper
-            sx={(theme) => ({
-              backgroundColor: isLoading
-                ? theme.tokens.alias.Interaction.Background.Disabled
-                : theme.palette.background.paper,
-              maxHeight: 370,
-              overflowY: 'auto',
-              p: 2,
-              py: 1,
-            })}
-            variant="outlined"
-          >
-            <Stack spacing={1}>
-              {value.length === 0 && (
-                <Typography py={1} textAlign="center">
-                  No entities selected
-                </Typography>
-              )}
-              {value.map((entity) => (
-                <EntityRow
-                  disabled={mode === 'change-role'}
-                  key={entity.value}
-                  label={entity.label}
-                  onRemove={() =>
-                    onChange(value.filter((v) => v.value !== entity.value))
-                  }
-                />
-              ))}
-            </Stack>
-          </Paper>
-        </>
+      {errorText && (
+        <Notice spacingBottom={8} variant="error">
+          <Typography fontSize="inherit">{errorText}</Typography>
+        </Notice>
       )}
-      {!memoizedEntities.length && !isLoading && (
-        <Notice spacingBottom={0} spacingTop={8} variant="warning">
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: theme.tokens.spacing.S8,
+          width: '100%',
+        }}
+      >
+        <p
+          style={{
+            font: theme.tokens.alias.Typography.Label.Bold.S,
+            margin: 0,
+          }}
+        >
+          Entities
+        </p>
+        <TextField
+          disabled={isLoading || entityOptions.length === 0}
+          onChange={(e: CustomEvent<string>) =>
+            setFilterText(String(e.detail ?? ''))
+          }
+          placeholder={getPlaceholder(type, value.length, entityOptions.length)}
+          value={filterText}
+        />
+        {entityOptions.length > 0 && (
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              flexWrap: 'wrap',
+              gap: theme.tokens.spacing.S6,
+              minHeight: theme.tokens.spacing.S40,
+              padding: `${theme.tokens.spacing.S4} ${theme.tokens.spacing.S12}`,
+              border: `1px solid ${theme.tokens.component.Pagination.Border}`,
+              background: theme.tokens.component.Pagination.Background,
+              fontSize: theme.tokens.font.FontSize.Xs,
+              color: theme.tokens.component.Pagination.Text.Default,
+            }}
+          >
+            <span style={{ flex: 1 }}>
+              Items: {filteredRows.length} | Selected: {selectedCount}
+            </span>
+            <Checkbox
+              checked={showSelectedOnly}
+              onChange={(e: CustomEvent<boolean>) =>
+                setShowSelectedOnly(!!e.detail)
+              }
+            >
+              Show only selected
+            </Checkbox>
+            <div style={{ width: '100%', display: 'flex', gap: '6px' }}>
+              <Button
+                disabled={clearDisabled || isReadOnly}
+                onClick={handleClear}
+                type="button"
+                variant="link"
+              >
+                Clear
+              </Button>
+              <Button
+                disabled={selectAllDisabled || isReadOnly}
+                onClick={handleSelectAll}
+                type="button"
+                variant="link"
+              >
+                Select all
+              </Button>
+            </div>
+          </div>
+        )}
+        <div
+          onScroll={(e) => {
+            const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
+            if (scrollHeight - scrollTop <= clientHeight * 1.5) {
+              setDisplayCount((prev) =>
+                Math.min(prev + 200, filteredRows.length)
+              );
+            }
+          }}
+          style={{
+            maxHeight: '200px',
+            overflowY: 'auto',
+            overflowX: 'hidden',
+            width: '100%',
+            boxSizing: 'border-box',
+          }}
+        >
+          <Table>
+            <TableBody>
+              {visibleRows.map((p) => (
+                <TableRow
+                  hoverable
+                  key={p.rank}
+                  onClick={(e: React.MouseEvent) => {
+                    if (isReadOnly) return;
+                    const t = e.target as Element;
+                    if (t.closest?.('cds-menu') || t.closest?.('cds-checkbox'))
+                      return;
+                    toggleEntity(p.rank, !selectionMap[p.rank]);
+                  }}
+                  rowborder
+                  selected={!!selectionMap[p.rank]}
+                >
+                  <TableCell>
+                    <Checkbox
+                      checked={!!selectionMap[p.rank]}
+                      disabled={isReadOnly}
+                      onChange={(e: CustomEvent<boolean>) => {
+                        toggleEntity(p.rank, !!e.detail);
+                      }}
+                      onClick={(e: React.MouseEvent) => e.stopPropagation()}
+                    />
+                    <span style={{ flex: 1, lineHeight: '20px', minWidth: 0 }}>
+                      {p.name}
+                    </span>
+                  </TableCell>
+                </TableRow>
+              ))}
+              {isLoading && (
+                <TableRow>
+                  <TableCell style={{ justifyContent: 'center' }}>
+                    <LoadingSpinner />
+                  </TableCell>
+                </TableRow>
+              )}
+              {!isLoading && !fetchError && visibleRows.length === 0 && entityOptions.length > 0 && (
+                <TableRow>
+                  <TableCell style={{ justifyContent: 'center' }}>
+                    No entities found
+                  </TableCell>
+                </TableRow>
+              )}
+              {fetchError && (
+                <TableRow>
+                  <TableCell style={{ justifyContent: 'center' }}>
+                    {(fetchError as { reason?: string })?.reason ??
+                      'Failed to load entities'}
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </div>
+      </div>
+
+      {!entityOptions.length && !isLoading && (
+        <Notice spacingBottom={0} variant="warning">
           <Typography fontSize="inherit">
             <Link to={getCreateLinkForEntityType(type)}>
               Create {type === 'image' ? `an` : `a`}{' '}
@@ -205,28 +332,5 @@ export const EntitiesSelect = ({
         </Notice>
       )}
     </>
-  );
-};
-
-interface EntityRowProps {
-  disabled?: boolean;
-  label: string;
-  onRemove: () => void;
-}
-
-const EntityRow = ({ disabled, label, onRemove }: EntityRowProps) => {
-  return (
-    <Stack alignItems="center" direction="row" justifyContent="space-between">
-      <Typography>{label}</Typography>
-      {!disabled && (
-        <IconButton
-          aria-label={`Remove ${label}`}
-          onClick={onRemove}
-          sx={{ p: 0.75 }}
-        >
-          <CloseIcon />
-        </IconButton>
-      )}
-    </Stack>
   );
 };
