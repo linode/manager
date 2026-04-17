@@ -1,5 +1,5 @@
+import { TableCell } from '@akamai/cds-components/react/Table';
 import { styled } from '@linode/ui';
-import { TableCell } from 'akamai-cds-react-components/Table';
 import { makeStyles } from 'tss-react/mui';
 
 import type { Theme } from '@mui/material';

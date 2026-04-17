@@ -1,10 +1,4 @@
-import { Button, Hidden, Select, Typography } from '@linode/ui';
-import { capitalizeAllWords } from '@linode/utilities';
-import { useTheme } from '@mui/material';
-import Grid from '@mui/material/Grid';
-import Paper from '@mui/material/Paper';
-import { useLocation, useNavigate, useSearch } from '@tanstack/react-router';
-import { Pagination } from 'akamai-cds-react-components/Pagination';
+import { Pagination } from '@akamai/cds-components/react/Pagination';
 import {
   sortRows,
   Table,
@@ -14,7 +8,13 @@ import {
   TableHeaderCell,
   TableRow,
   TableRowExpanded,
-} from 'akamai-cds-react-components/Table';
+} from '@akamai/cds-components/react/Table';
+import { Button, Hidden, Select, Typography } from '@linode/ui';
+import { capitalizeAllWords } from '@linode/utilities';
+import { useTheme } from '@mui/material';
+import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
+import { useLocation, useNavigate, useSearch } from '@tanstack/react-router';
 import React, { useState } from 'react';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
@@ -37,8 +37,8 @@ import {
 } from '../../Shared/constants';
 
 import type { RoleView } from '../../Shared/types';
+import type { Order } from '@akamai/cds-components/react/Table';
 import type { SelectOption } from '@linode/ui';
-import type { Order } from 'akamai-cds-react-components/Table';
 
 const ALL_ROLES_OPTION: SelectOption = {
   label: 'All Roles',
@@ -247,7 +247,7 @@ export const RolesTable = ({ roles = [] }: Props) => {
               selected={areAllSelected}
             >
               <TableHeaderCell
-                sort={(event) => handleSort(event, 'name')}
+                onSort={(event) => handleSort(event, 'name')}
                 sortable
                 sorted={sort?.column === 'name' ? sort.order : undefined}
                 style={{
@@ -259,7 +259,7 @@ export const RolesTable = ({ roles = [] }: Props) => {
               </TableHeaderCell>
               <Hidden smDown>
                 <TableHeaderCell
-                  sort={(event) => handleSort(event, 'access')}
+                  onSort={(event) => handleSort(event, 'access')}
                   sortable
                   sorted={sort?.column === 'access' ? sort.order : undefined}
                   style={{
