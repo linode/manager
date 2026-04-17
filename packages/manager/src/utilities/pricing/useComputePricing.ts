@@ -13,8 +13,13 @@ import type { PriceObject } from '@linode/api-v4';
  * Returns pricing helpers bound to the active billing interval from the `computePricing` LD flag.
  *
  * @example
- * const { decimalPlaces, getPrice, priceLabel } = useComputePricing();
- * <Currency decimalPlaces={decimalPlaces} quantity={getPrice(type.addons.backups.price)} />
+ * import { getDecimalPlaces } from './priceInterval';
+ *
+ * const { getPrice, priceLabel, billing } = useComputePricing();
+ * const price = getPrice(type.addons.backups.price);
+ * const decimalPlaces = getDecimalPlaces(price, billing);
+ *
+ * <Currency decimalPlaces={decimalPlaces} quantity={price} />
  * {`/${priceLabel}`}
  *
  * @example

@@ -15,6 +15,10 @@ import {
 } from 'src/utilities/pricing/constants';
 import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
 import { getDecimalPlaces } from 'src/utilities/pricing/priceInterval';
+import {
+  formatPriceForInterval,
+  getLabelForInterval,
+} from 'src/utilities/pricing/priceInterval';
 import { useComputePricing } from 'src/utilities/pricing/useComputePricing';
 
 import { DisabledPlanSelectionTooltip } from './DisabledPlanSelectionTooltip';
@@ -70,7 +74,7 @@ export const PlanSelection = (props: PlanSelectionProps) => {
 
   const isSamePlan = plan.heading === currentPlanHeading;
 
-  const { billing, formatPrice, priceLabel } = useComputePricing();
+  const { billing } = useComputePricing();
 
   const { data: linode } = useLinodeQuery(
     linodeID ?? -1,
@@ -83,7 +87,38 @@ export const PlanSelection = (props: PlanSelectionProps) => {
   const price: PriceObject | undefined = !isDatabaseFlow
     ? getLinodeRegionPrice(plan, selectedRegionId)
     : plan.price;
-  plan.subHeadings[0] = `$${formatPrice(price)}/${priceLabel}`;
+
+  const getSubHeading = (price: PriceObject | undefined): string => {
+    const monthlyLabel = getLabelForInterval('monthly');
+    const hourlyLabel = getLabelForInterval('hourly');
+
+    const monthly = price?.monthly;
+    const hourly = price?.hourly;
+
+    const formattedHourly = `$${formatPriceForInterval(hourly, 'hourly')}/${hourlyLabel}`;
+    const formattedMonthly = `$${formatPriceForInterval(monthly, 'monthly')}/${monthlyLabel}`;
+
+    const hasMonthlyPrice = typeof monthly === 'number';
+
+    if (billing === 'hourly') {
+      // Do not show monthly price in hourly billing mode when it is null.
+      // Even though formatPriceForInterval returns UNKNOWN_PRICE for null values,
+      // we avoid displaying it because monthly pricing is not applicable here.
+      if (!hasMonthlyPrice) {
+        return formattedHourly;
+      }
+
+      return `${formattedMonthly} (${formattedHourly})`;
+    }
+
+    if (billing === 'monthly') {
+      return `${formattedMonthly} (${formattedHourly})`;
+    }
+
+    return '';
+  };
+
+  plan.subHeadings[0] = getSubHeading(price);
 
   const rowIsDisabled =
     (!isDatabaseFlow && isSamePlan) ||
