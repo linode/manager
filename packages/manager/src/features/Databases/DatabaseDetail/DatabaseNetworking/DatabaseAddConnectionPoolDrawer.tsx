@@ -3,7 +3,9 @@ import { useCreateDatabaseConnectionPoolMutation } from '@linode/queries';
 import {
   ActionsPanel,
   Autocomplete,
+  Checkbox,
   Drawer,
+  FormControlLabel,
   Notice,
   Stack,
   TextField,
@@ -15,11 +17,7 @@ import * as React from 'react';
 import { Controller, useForm, useWatch } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
-import {
-  defaultUsername,
-  poolModeOptions,
-  usernameOptions,
-} from 'src/features/Databases/constants';
+import { poolModeOptions } from 'src/features/Databases/constants';
 
 import { MANAGE_CONNECTION_POOLS_LEARN_MORE_LINK } from '../../constants';
 
@@ -53,15 +51,15 @@ export const DatabaseAddConnectionPoolDrawer = (props: Props) => {
       label: '',
       mode: 'transaction',
       size: 10,
-      username: defaultUsername,
+      username: null,
     },
     mode: 'onBlur',
     resolver: yupResolver(createDatabaseConnectionPoolSchema),
   });
 
-  const [mode, username] = useWatch({
+  const [mode] = useWatch({
     control,
-    name: ['mode', 'username'],
+    name: ['mode'],
   });
 
   const handleOnClose = () => {
@@ -73,8 +71,8 @@ export const DatabaseAddConnectionPoolDrawer = (props: Props) => {
   const onSubmit = async (values: ConnectionPool) => {
     const payload = {
       ...values,
-      username: values.username === defaultUsername ? null : values.username,
-    }; // Provide inbound user as null in the API
+      username: values.username,
+    };
 
     try {
       await createDatabaseConnectionPool(payload);
@@ -191,22 +189,34 @@ export const DatabaseAddConnectionPoolDrawer = (props: Props) => {
             control={control}
             name="username"
             render={({ field, fieldState }) => (
-              <Autocomplete
-                autoHighlight
-                label="Username"
-                {...field}
-                data-testid="username-select"
-                disableClearable={true}
-                errorText={fieldState.error?.message}
-                id="username"
-                onChange={(e, option) => {
-                  field.onChange(option.value);
-                }}
-                options={usernameOptions}
-                value={usernameOptions.find(
-                  (option) => option.value === username
-                )}
-              />
+              <>
+                <TextField
+                  {...field}
+                  disabled={field.value === null}
+                  errorText={fieldState.error?.message}
+                  id="username"
+                  label="Username"
+                  onChange={(e) => {
+                    field.onChange(e.target.value);
+                  }}
+                  onClear={() => field.onChange('')}
+                  placeholder="akmadmin"
+                  value={field.value === null ? '' : field.value}
+                />
+                <FormControlLabel
+                  checked={field.value === null}
+                  control={
+                    <Checkbox
+                      name="username"
+                      onChange={() =>
+                        field.onChange(field.value === null ? '' : null)
+                      }
+                    />
+                  }
+                  data-qa-checkbox="reuseInboundUser"
+                  label="Reuse inbound user"
+                />
+              </>
             )}
           />
         </Stack>
