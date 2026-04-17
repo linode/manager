@@ -1,27 +1,30 @@
 import {
+  Button,
+  Checkbox,
+  LoadingSpinner,
+  Table,
+  TableBody,
+  TableCell,
+  TableRow,
+  TextField,
+} from '@akamai/cds-components/react';
+import {
   useAccountUsersInfiniteQuery,
   useAllAccountUsersQuery,
   useUpdateChildAccountDelegatesQuery,
 } from '@linode/queries';
-import {
-  ActionsPanel,
-  Autocomplete,
-  CloseIcon,
-  IconButton,
-  Notice,
-  Paper,
-  Stack,
-  Typography,
-} from '@linode/ui';
+import { ActionsPanel, Notice, Typography } from '@linode/ui';
 import { useDebouncedValue } from '@linode/utilities';
 import { useTheme } from '@mui/material';
 import { enqueueSnackbar } from 'notistack';
 import * as React from 'react';
-import { Controller, FormProvider, useForm } from 'react-hook-form';
+import { FormProvider, useForm } from 'react-hook-form';
 
 import { usePermissions } from '../hooks/usePermissions';
-import { IAM_PARENT_USERS_PENDO_IDS } from '../Shared/constants';
-import { INTERNAL_ERROR_NO_CHANGES_SAVED } from '../Shared/constants';
+import {
+  IAM_PARENT_USERS_PENDO_IDS,
+  INTERNAL_ERROR_NO_CHANGES_SAVED,
+} from '../Shared/constants';
 import { getPlaceholder } from '../Shared/Entities/utils';
 
 import type {
@@ -51,9 +54,11 @@ export const UpdateDelegationForm = ({
   onClose,
 }: DelegationsFormProps) => {
   const theme = useTheme();
-  const [inputValue, setInputValue] = React.useState<string>('');
-  const [allUserSelected, setAllUserSelected] = React.useState<boolean>(false);
-  const debouncedInputValue = useDebouncedValue(inputValue);
+  const [filterText, setFilterText] = React.useState<string>('');
+  const [allUsersSelected, setAllUsersSelected] =
+    React.useState<boolean>(false);
+  const [showSelectedOnly, setShowSelectedOnly] = React.useState(false);
+  const debouncedFilterText = useDebouncedValue(filterText);
 
   const { data: permissions } = usePermissions('account', [
     'update_delegate_users',
@@ -61,11 +66,16 @@ export const UpdateDelegationForm = ({
 
   const apiFilter: Filter = {
     user_type: 'parent',
-    username: { '+contains': debouncedInputValue },
+    username: { '+contains': debouncedFilterText },
   };
 
-  const { data, error, fetchNextPage, hasNextPage, isFetching } =
-    useAccountUsersInfiniteQuery(apiFilter);
+  const {
+    data,
+    error: fetchError,
+    fetchNextPage,
+    hasNextPage,
+    isFetching,
+  } = useAccountUsersInfiniteQuery(apiFilter);
 
   const totalUserCount = data?.pages[0]?.results ?? 0;
 
@@ -73,11 +83,9 @@ export const UpdateDelegationForm = ({
     data: allUsers,
     isFetching: isFetchingAllUsers,
     refetch: refetchAllUsers,
-  } = useAllAccountUsersQuery(allUserSelected, {
+  } = useAllAccountUsersQuery(allUsersSelected, {
     user_type: 'parent',
   });
-
-  const isSelectAllFetching = allUserSelected && isFetchingAllUsers;
 
   const { mutateAsync: updateDelegates } =
     useUpdateChildAccountDelegatesQuery();
@@ -89,7 +97,6 @@ export const UpdateDelegationForm = ({
   });
 
   const {
-    control,
     formState: { errors, isSubmitting },
     handleSubmit,
     reset,
@@ -100,13 +107,13 @@ export const UpdateDelegationForm = ({
 
   const selectedUsers = watch('users');
 
-  const users =
-    allUserSelected && allUsers
+  const userOptions =
+    allUsersSelected && allUsers
       ? allUsers.map((user) => ({
           label: user.username,
           value: user.username,
         }))
-      : !inputValue &&
+      : !filterText &&
           totalUserCount > 0 &&
           selectedUsers.length >= totalUserCount
         ? selectedUsers
@@ -118,11 +125,7 @@ export const UpdateDelegationForm = ({
           }) ?? []);
 
   const isSearching =
-    inputValue.length > 0 && debouncedInputValue !== inputValue;
-
-  const isLoadingOptions = isFetching || isFetchingAllUsers;
-
-  const showNoOptionsText = !isLoadingOptions && !isSearching;
+    filterText.length > 0 && debouncedFilterText !== filterText;
 
   const onSubmit = async (values: UpdateDelegationsFormValues) => {
     const usersList = values.users.map((user) => user.value);
@@ -144,7 +147,7 @@ export const UpdateDelegationForm = ({
   };
 
   const onSelectAllClick = async () => {
-    setAllUserSelected(true);
+    setAllUsersSelected(true);
     const { data } = await refetchAllUsers();
     if (data) {
       setValue(
@@ -157,7 +160,73 @@ export const UpdateDelegationForm = ({
   const handleClose = () => {
     reset();
     onClose();
-    setAllUserSelected(false);
+    setAllUsersSelected(false);
+    setShowSelectedOnly(false);
+  };
+
+  const displayedUserRows = React.useMemo((): Array<{
+    name: string;
+    option: UserOption;
+    rank: number;
+  }> => {
+    const source = (
+      showSelectedOnly ? selectedUsers : userOptions
+    ) as UserOption[];
+    return source.map((u, idx) => ({ rank: idx, name: u.label, option: u }));
+  }, [userOptions, selectedUsers, showSelectedOnly]);
+
+  const showNoUsersText =
+    !isFetching &&
+    !isSearching &&
+    !fetchError &&
+    displayedUserRows.length === 0;
+
+  const selectedUserMap = React.useMemo(() => {
+    const map: Record<number, boolean> = {};
+    displayedUserRows.forEach((p) => {
+      if (selectedUsers.some((u) => u.value === p.option.value)) {
+        map[p.rank] = true;
+      }
+    });
+    return map;
+  }, [displayedUserRows, selectedUsers]);
+
+  const clearDisabled = !displayedUserRows.some((p) =>
+    selectedUsers.some((u) => u.value === p.option.value)
+  );
+
+  const clearDisplayedUsers = () => {
+    const visibleValues = new Set(displayedUserRows.map((p) => p.option.value));
+    setValue(
+      'users',
+      selectedUsers.filter((u) => !visibleValues.has(u.value))
+    );
+  };
+
+  const handleSelectAll = () => {
+    const allCurrentOptionsSelected =
+      totalUserCount > 0 && selectedUsers.length >= totalUserCount;
+    if (allCurrentOptionsSelected) {
+      setValue('users', []);
+      setAllUsersSelected(false);
+    } else {
+      onSelectAllClick();
+    }
+  };
+
+  const toggleUserSelection = (rank: number, checked: boolean) => {
+    const p = displayedUserRows.find((item) => item.rank === rank);
+    if (!p) return;
+    if (checked) {
+      if (!selectedUsers.some((u) => u.value === p.option.value)) {
+        setValue('users', [...selectedUsers, p.option]);
+      }
+    } else {
+      setValue(
+        'users',
+        selectedUsers.filter((u) => u.value !== p.option.value)
+      );
+    }
   };
 
   return (
@@ -185,113 +254,155 @@ export const UpdateDelegationForm = ({
             Update delegation for <strong>{delegation.company}:</strong>
           </Typography>
 
-          <Controller
-            control={control}
-            name="users"
-            render={({ field, fieldState }) => (
-              <Autocomplete
-                autoHighlight
-                clearOnBlur
-                data-testid="delegates-autocomplete"
-                disableClearable={true}
-                disabled={isFetchingAllUsers || isSubmitting}
-                errorText={fieldState.error?.message ?? error?.[0].reason}
-                isOptionEqualToValue={(option, value) =>
-                  option.value === value.value
-                }
-                label="Delegate Users"
-                loading={isFetching || isFetchingAllUsers}
-                multiple
-                noMarginTop
-                noOptionsText={showNoOptionsText ? 'No users found' : ' '}
-                onChange={(_, newValue) => {
-                  field.onChange(newValue || []);
-                }}
-                onInputChange={(_, value) => {
-                  setInputValue(value);
-                }}
-                onSelectAllClick={(_event) => {
-                  const allCurrentOptionsSelected =
-                    totalUserCount > 0 &&
-                    selectedUsers.length >= totalUserCount;
-                  if (allCurrentOptionsSelected) {
-                    setValue('users', []);
-                    setAllUserSelected(false);
-                  } else {
-                    onSelectAllClick();
-                  }
-                }}
-                options={users}
-                renderTags={() => null}
-                slotProps={{
-                  listbox: {
-                    onScroll: (event: React.SyntheticEvent) => {
-                      const listboxNode = event.currentTarget;
-                      if (
-                        listboxNode.scrollTop + listboxNode.clientHeight >=
-                          listboxNode.scrollHeight &&
-                        hasNextPage
-                      ) {
-                        fetchNextPage();
-                      }
-                    },
-                  },
-                }}
-                textFieldProps={{
-                  hideLabel: true,
-                  helperText: isSelectAllFetching
-                    ? 'Fetching all users...'
-                    : undefined,
-                  InputProps: isSelectAllFetching
-                    ? { startAdornment: null }
-                    : undefined,
-                  placeholder: getPlaceholder(
-                    'delegates',
-                    selectedUsers.length,
-                    totalUserCount
-                  ),
-                }}
-                value={field.value}
-              />
-            )}
-          />
-          <Typography sx={{ mb: 1, mt: 2 }}>
-            Users in the account delegation
-            {isFetchingAllUsers ? '' : ` (${selectedUsers.length})`}:
-          </Typography>
-          <Paper
-            sx={(theme) => ({
-              backgroundColor: isFetchingAllUsers
-                ? theme.tokens.alias.Interaction.Background.Disabled
-                : theme.palette.background.paper,
-              maxHeight: 370,
-              overflowY: 'auto',
-              p: 2,
-              py: 1,
-            })}
-            variant="outlined"
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: theme.tokens.spacing.S8,
+              width: '100%',
+            }}
           >
-            <Stack spacing={1}>
-              {selectedUsers.length === 0 && (
-                <Typography py={1} textAlign="center">
-                  No users selected
-                </Typography>
+            <TextField
+              disabled={isFetchingAllUsers || isSubmitting}
+              onChange={(e) => {
+                const target = e.target as HTMLInputElement | null;
+                setFilterText(target?.value ?? '');
+              }}
+              placeholder={getPlaceholder(
+                'delegates',
+                selectedUsers.length,
+                totalUserCount
               )}
-              {selectedUsers.map((user) => (
-                <DelegationUserRow
-                  isSubmitting={isSubmitting}
-                  key={user.value}
-                  onRemove={() =>
-                    setValue(
-                      'users',
-                      selectedUsers.filter((u) => u.value !== user.value)
-                    )
-                  }
-                  username={user.label}
-                />
-              ))}
-            </Stack>
-          </Paper>
+              value={filterText}
+            />
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                flexWrap: 'wrap',
+                gap: theme.tokens.spacing.S6,
+                minHeight: '40px',
+                padding: `${theme.tokens.spacing.S4} ${theme.tokens.spacing.S12}`,
+                border: `1px solid ${theme.tokens.component.Pagination.Border}`,
+                background: theme.tokens.component.Pagination.Background,
+                fontSize: theme.tokens.font.FontSize.Xs,
+                color: theme.tokens.component.Pagination.Text.Default,
+              }}
+            >
+              <span style={{ flex: 1 }}>
+                Items:{' '}
+                {showSelectedOnly ? displayedUserRows.length : totalUserCount} |
+                Selected: {selectedUsers.length}
+              </span>
+              <Checkbox
+                checked={showSelectedOnly}
+                onChange={(e) => setShowSelectedOnly(Boolean(e.detail))}
+              >
+                Show only selected
+              </Checkbox>
+              <div style={{ width: '100%', display: 'flex', gap: '6px' }}>
+                <Button
+                  disabled={clearDisabled || isSubmitting}
+                  onClick={clearDisplayedUsers}
+                  type="button"
+                  variant="link"
+                >
+                  Clear
+                </Button>
+                <Button
+                  disabled={isSubmitting}
+                  onClick={handleSelectAll}
+                  type="button"
+                  variant="link"
+                >
+                  {totalUserCount > 0 && selectedUsers.length >= totalUserCount
+                    ? 'Deselect all'
+                    : 'Select all'}
+                </Button>
+              </div>
+            </div>
+            <div
+              onScroll={(e) => {
+                if (showSelectedOnly) return;
+                const { scrollTop, scrollHeight, clientHeight } =
+                  e.currentTarget;
+                if (
+                  scrollHeight - scrollTop <= clientHeight * 1.5 &&
+                  hasNextPage &&
+                  !isFetching
+                ) {
+                  fetchNextPage();
+                }
+              }}
+              style={{
+                maxHeight: '200px',
+                overflowY: 'auto',
+                overflowX: 'hidden',
+                width: '100%',
+                boxSizing: 'border-box',
+              }}
+            >
+              <Table>
+                <TableBody>
+                  {displayedUserRows.map((p) => (
+                    <TableRow
+                      hoverable
+                      key={p.rank}
+                      onClick={(e: React.MouseEvent) => {
+                        if (isSubmitting) return;
+                        const t = e.target as Element;
+                        if (t.closest?.('cds-checkbox')) return;
+                        toggleUserSelection(p.rank, !selectedUserMap[p.rank]);
+                      }}
+                      rowborder
+                      selected={!!selectedUserMap[p.rank]}
+                    >
+                      <TableCell>
+                        <Checkbox
+                          checked={!!selectedUserMap[p.rank]}
+                          disabled={isSubmitting}
+                          onChange={(e) => {
+                            toggleUserSelection(p.rank, Boolean(e.detail));
+                          }}
+                          onClick={(e: React.MouseEvent) => e.stopPropagation()}
+                        />
+                        <span
+                          style={{
+                            flex: 1,
+                            lineHeight: '20px',
+                            minWidth: 0,
+                          }}
+                        >
+                          {p.name}
+                        </span>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                  {!showSelectedOnly && isFetching && (
+                    <TableRow>
+                      <TableCell style={{ justifyContent: 'center' }}>
+                        <LoadingSpinner />
+                      </TableCell>
+                    </TableRow>
+                  )}
+                  {showNoUsersText && (
+                    <TableRow>
+                      <TableCell style={{ justifyContent: 'center' }}>
+                        No users found
+                      </TableCell>
+                    </TableRow>
+                  )}
+                  {fetchError && (
+                    <TableRow>
+                      <TableCell style={{ justifyContent: 'center' }}>
+                        {fetchError[0]?.reason ?? 'Failed to load users'}
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </div>
+          </div>
 
           <ActionsPanel
             primaryButtonProps={{
@@ -314,31 +425,5 @@ export const UpdateDelegationForm = ({
         </form>
       </FormProvider>
     </>
-  );
-};
-
-interface DelegationUserRowProps {
-  isSubmitting: boolean;
-  onRemove: () => void;
-  username: string;
-}
-
-const DelegationUserRow = ({
-  onRemove,
-  username,
-  isSubmitting,
-}: DelegationUserRowProps) => {
-  return (
-    <Stack alignItems="center" direction="row" justifyContent="space-between">
-      <Typography>{username}</Typography>
-      <IconButton
-        aria-label={`Remove ${username}`}
-        disabled={isSubmitting}
-        onClick={onRemove}
-        sx={{ p: 0.75 }}
-      >
-        <CloseIcon />
-      </IconButton>
-    </Stack>
   );
 };
