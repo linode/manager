@@ -23,6 +23,7 @@ export const ComputePricingPlanBanner: React.FC = () => {
   const flags = useFlags();
   const hasBannerText = Boolean(flags.computePricing?.banner?.text);
 
+  // Fetch all Linodes only when LD flag banner text is present
   const { data: linodes } = useAllLinodesQuery({}, {}, hasBannerText);
 
   const hasTargetPlan = React.useMemo(
