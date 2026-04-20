@@ -11,6 +11,7 @@ import {
 } from './unitConversion';
 import {
   convertTimeDurationToStartAndEndTimeRange,
+  formatObjectStorageUrl,
   humanizeLargeData,
   seriesDataFormatter,
 } from './utils';
@@ -460,10 +461,15 @@ export const getDimensionName = (props: DimensionNameProperties): string => {
     if (key === 'entity_id') {
       const resourceName = mapResourceIdToName(value, resources);
       const index = groupBy.indexOf(key);
+      const formattedName =
+        serviceType === 'objectstorage'
+          ? formatObjectStorageUrl(resourceName)
+          : resourceName;
+
       if (index !== -1) {
-        labels[index] = resourceName;
+        labels[index] = formattedName;
       } else {
-        labels.push(resourceName);
+        labels.push(formattedName);
       }
       return;
     }
