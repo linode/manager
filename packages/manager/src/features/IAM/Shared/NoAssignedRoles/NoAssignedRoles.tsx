@@ -1,13 +1,17 @@
-import { Box, Button, Typography, useTheme } from '@linode/ui';
+import {
+  ZeroErrorActions,
+  ZeroErrorDescription,
+  ZeroErrorIcon,
+  ZeroErrorState,
+  ZeroErrorTitle,
+} from '@akamai/cds-components/react';
+import { Button } from '@linode/ui';
 import React from 'react';
-
-import EmptyState from 'src/assets/icons/empty-state-cloud.svg';
 
 import { useIsDefaultDelegationRolesForChildAccount } from '../../hooks/useDelegationRole';
 import { usePermissions } from '../../hooks/usePermissions';
 import { AssignNewRoleDrawer } from '../../Users/UserRoles/AssignNewRoleDrawer';
 import { IAM_ROLES_PENDO_IDS } from '../constants';
-
 interface Props {
   hasAssignNewRoleDrawer: boolean;
   text: string;
@@ -15,7 +19,6 @@ interface Props {
 
 export const NoAssignedRoles = (props: Props) => {
   const { text, hasAssignNewRoleDrawer } = props;
-  const theme = useTheme();
   const { data: permissions } = usePermissions('account', [
     'is_account_admin',
     'update_default_delegate_access',
@@ -31,52 +34,37 @@ export const NoAssignedRoles = (props: Props) => {
     React.useState<boolean>(false);
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        height: '100%',
-        paddingTop: theme.tokens.spacing.S24,
-      }}
-    >
-      <EmptyState />
-      <Typography variant="h2">This list is empty</Typography>
-      <Typography
-        sx={{
-          mt: 1,
-          width: '260px',
-          textAlign: 'center',
-          marginBottom: theme.tokens.spacing.S24,
-        }}
-      >
-        {text}
-      </Typography>
-      {hasAssignNewRoleDrawer && (
-        <Button
-          buttonType="primary"
-          data-pendo-id={
-            isDefaultDelegationRolesForChildAccount
-              ? IAM_ROLES_PENDO_IDS.addNewDefaultRoles
-              : undefined
-          }
-          disabled={!permissionToCheck}
-          onClick={() => setIsAssignNewRoleDrawerOpen(true)}
-          tooltipText={
-            !permissionToCheck
-              ? 'You do not have permission to assign roles.'
-              : undefined
-          }
-        >
-          {isDefaultDelegationRolesForChildAccount
-            ? 'Add New Default Roles'
-            : 'Assign New Roles'}
-        </Button>
-      )}
+    <ZeroErrorState>
+      <ZeroErrorIcon icon="doc-no-selection" />
+      <ZeroErrorTitle>This list is empty</ZeroErrorTitle>
+      <ZeroErrorDescription>{text}</ZeroErrorDescription>
+      <ZeroErrorActions>
+        {hasAssignNewRoleDrawer && (
+          <Button
+            buttonType="primary"
+            data-pendo-id={
+              isDefaultDelegationRolesForChildAccount
+                ? IAM_ROLES_PENDO_IDS.addNewDefaultRoles
+                : undefined
+            }
+            disabled={!permissionToCheck}
+            onClick={() => setIsAssignNewRoleDrawerOpen(true)}
+            tooltipText={
+              !permissionToCheck
+                ? 'You do not have permission to assign roles.'
+                : undefined
+            }
+          >
+            {isDefaultDelegationRolesForChildAccount
+              ? 'Add New Default Roles'
+              : 'Assign New Roles'}
+          </Button>
+        )}
+      </ZeroErrorActions>
       <AssignNewRoleDrawer
         onClose={() => setIsAssignNewRoleDrawerOpen(false)}
         open={isAssignNewRoleDrawerOpen}
       />
-    </Box>
+    </ZeroErrorState>
   );
 };
