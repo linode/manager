@@ -1,10 +1,10 @@
 /* eslint-disable react/jsx-no-useless-fragment */
+import { accountQueries, queryClientFactory } from '@linode/queries';
 import { renderHook, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import React from 'react';
+import React, { type ReactNode } from 'react';
 
 import { accountFactory } from 'src/factories';
-import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
 
 import {
@@ -417,17 +417,15 @@ describe('useIsFirewallRulesetsPrefixlistsEnabled', () => {
       capabilities: ['Cloud Firewall Rule Set'],
     });
 
-    server.use(
-      http.get('*/v4*/account', () => {
-        return HttpResponse.json(account);
-      })
-    );
+    const queryClient = queryClientFactory();
+    queryClient.setQueryData(accountQueries.account.queryKey, account);
+
+    const wrapper = ({ children }: { children: ReactNode }) =>
+      wrapWithTheme(children, { ...options, queryClient });
 
     const { result } = renderHook(
       () => useIsFirewallRulesetsPrefixlistsEnabled(),
-      {
-        wrapper: (ui) => wrapWithTheme(ui, options),
-      }
+      { wrapper }
     );
 
     await waitFor(() => {
@@ -453,17 +451,15 @@ describe('useIsFirewallRulesetsPrefixlistsEnabled', () => {
       capabilities: ['Cloud Firewall Rule Set'],
     });
 
-    server.use(
-      http.get('*/v4*/account', () => {
-        return HttpResponse.json(account);
-      })
-    );
+    const queryClient = queryClientFactory();
+    queryClient.setQueryData(accountQueries.account.queryKey, account);
+
+    const wrapper = ({ children }: { children: ReactNode }) =>
+      wrapWithTheme(children, { ...options, queryClient });
 
     const { result } = renderHook(
       () => useIsFirewallRulesetsPrefixlistsEnabled(),
-      {
-        wrapper: (ui) => wrapWithTheme(ui, options),
-      }
+      { wrapper }
     );
 
     await waitFor(() => {
@@ -489,17 +485,15 @@ describe('useIsFirewallRulesetsPrefixlistsEnabled', () => {
       capabilities: [],
     });
 
-    server.use(
-      http.get('*/v4*/account', () => {
-        return HttpResponse.json(account);
-      })
-    );
+    const queryClient = queryClientFactory();
+    queryClient.setQueryData(accountQueries.account.queryKey, account);
+
+    const wrapper = ({ children }: { children: ReactNode }) =>
+      wrapWithTheme(children, { ...options, queryClient });
 
     const { result } = renderHook(
       () => useIsFirewallRulesetsPrefixlistsEnabled(),
-      {
-        wrapper: (ui) => wrapWithTheme(ui, options),
-      }
+      { wrapper }
     );
 
     await waitFor(() => {

@@ -1,5 +1,7 @@
+import { accountQueries, queryClientFactory } from '@linode/queries';
 import { renderHook, waitFor } from '@testing-library/react';
 import { DateTime } from 'luxon';
+import type { ReactNode } from 'react';
 
 import {
   accountFactory,
@@ -33,16 +35,13 @@ import type {
 
 const setup = (capabilities: AccountCapability[], flags: any) => {
   const account = accountFactory.build({ capabilities });
+  const queryClient = queryClientFactory();
+  queryClient.setQueryData(accountQueries.account.queryKey, account);
 
-  server.use(
-    http.get('*/v4*/account', () => {
-      return HttpResponse.json(account);
-    })
-  );
+  const wrapper = ({ children }: { children: ReactNode }) =>
+    wrapWithTheme(children, { flags, queryClient });
 
-  return renderHook(() => useIsDatabasesEnabled(), {
-    wrapper: (ui) => wrapWithTheme(ui, { flags }),
-  });
+  return renderHook(() => useIsDatabasesEnabled(), { wrapper });
 };
 
 const queryMocks = vi.hoisted(() => ({
@@ -158,6 +157,8 @@ describe('useIsDatabasesEnabled', () => {
   });
 
   it('should return correctly for V2 restricted user existing beta', async () => {
+    queryMocks.useDatabaseTypesQuery.mockClear();
+
     server.use(
       http.get('*/v4*/account', () => {
         return HttpResponse.json({}, { status: 403 });
@@ -171,13 +172,17 @@ describe('useIsDatabasesEnabled', () => {
 
     const flags = { dbaasV2: { beta: true, enabled: true } };
 
-    const { result } = renderHook(() => useIsDatabasesEnabled(), {
-      wrapper: (ui) => wrapWithTheme(ui, { flags }),
-    });
+    const queryClient = queryClientFactory();
+
+    const wrapper = ({ children }: { children: ReactNode }) =>
+      wrapWithTheme(children, { flags, queryClient });
+
+    const { result } = renderHook(() => useIsDatabasesEnabled(), { wrapper });
 
     expect(queryMocks.useDatabaseTypesQuery).toHaveBeenNthCalledWith(
       1,
-      ...[{ platform: 'rdbms-default' }, true]
+      { platform: 'rdbms-default' },
+      true
     );
 
     await waitFor(() => {
@@ -193,6 +198,8 @@ describe('useIsDatabasesEnabled', () => {
   });
 
   it('should return correctly for V2 restricted user new beta', async () => {
+    queryMocks.useDatabaseTypesQuery.mockClear();
+
     server.use(
       http.get('*/v4*/account', () => {
         return HttpResponse.json({}, { status: 403 });
@@ -206,13 +213,17 @@ describe('useIsDatabasesEnabled', () => {
 
     const flags = { dbaasV2: { beta: true, enabled: true } };
 
-    const { result } = renderHook(() => useIsDatabasesEnabled(), {
-      wrapper: (ui) => wrapWithTheme(ui, { flags }),
-    });
+    const queryClient = queryClientFactory();
+
+    const wrapper = ({ children }: { children: ReactNode }) =>
+      wrapWithTheme(children, { flags, queryClient });
+
+    const { result } = renderHook(() => useIsDatabasesEnabled(), { wrapper });
 
     expect(queryMocks.useDatabaseTypesQuery).toHaveBeenNthCalledWith(
       1,
-      ...[{ platform: 'rdbms-default' }, true]
+      { platform: 'rdbms-default' },
+      true
     );
 
     await waitFor(() => {
@@ -228,6 +239,8 @@ describe('useIsDatabasesEnabled', () => {
   });
 
   it('should return correctly for V2 restricted user GA', async () => {
+    queryMocks.useDatabaseTypesQuery.mockClear();
+
     server.use(
       http.get('*/v4*/account', () => {
         return HttpResponse.json({}, { status: 403 });
@@ -241,13 +254,17 @@ describe('useIsDatabasesEnabled', () => {
 
     const flags = { dbaasV2: { beta: false, enabled: true } };
 
-    const { result } = renderHook(() => useIsDatabasesEnabled(), {
-      wrapper: (ui) => wrapWithTheme(ui, { flags }),
-    });
+    const queryClient = queryClientFactory();
+
+    const wrapper = ({ children }: { children: ReactNode }) =>
+      wrapWithTheme(children, { flags, queryClient });
+
+    const { result } = renderHook(() => useIsDatabasesEnabled(), { wrapper });
 
     expect(queryMocks.useDatabaseTypesQuery).toHaveBeenNthCalledWith(
       1,
-      ...[{ platform: 'rdbms-default' }, true]
+      { platform: 'rdbms-default' },
+      true
     );
 
     await waitFor(() => {

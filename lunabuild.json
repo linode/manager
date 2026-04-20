@@ -1,0 +1,5 @@
+{
+  "scm": "bitbucket",
+  "repo": "fee/cloud-manager",
+  "branch_discovery_strategy": "exclude_branches_filed_as_prs"
+}

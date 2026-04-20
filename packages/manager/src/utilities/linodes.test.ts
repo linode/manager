@@ -1,8 +1,9 @@
+import { accountQueries, queryClientFactory } from '@linode/queries';
 import { linodeFactory } from '@linode/utilities';
-import { renderHook, waitFor } from '@testing-library/react';
+import { renderHook } from '@testing-library/react';
+import type { ReactNode } from 'react';
 
 import { accountFactory, accountMaintenanceFactory } from 'src/factories';
-import { http, HttpResponse, server } from 'src/mocks/testServer';
 
 import {
   addMaintenanceToLinodes,
@@ -27,25 +28,23 @@ describe('addMaintenanceToLinodes', () => {
 });
 
 describe('useIsLinodeInterfacesEnabled', () => {
-  it('returns isLinodeInterfacesEnabled: true if the feature is enabled and account has the capability', async () => {
+  it('returns isLinodeInterfacesEnabled: true if the feature is enabled and account has the capability', () => {
     const options = { flags: { linodeInterfaces: { enabled: true } } };
     const account = accountFactory.build({
       capabilities: ['Linode Interfaces'],
     });
 
-    server.use(
-      http.get('*/v4*/account', () => {
-        return HttpResponse.json(account);
-      })
-    );
+    const queryClient = queryClientFactory();
+    queryClient.setQueryData(accountQueries.account.queryKey, account);
+
+    const wrapper = ({ children }: { children: ReactNode }) =>
+      wrapWithTheme(children, { ...options, queryClient });
 
     const { result } = renderHook(() => useIsLinodeInterfacesEnabled(), {
-      wrapper: (ui) => wrapWithTheme(ui, options),
+      wrapper,
     });
 
-    await waitFor(() => {
-      expect(result.current?.isLinodeInterfacesEnabled).toBe(true);
-    });
+    expect(result.current?.isLinodeInterfacesEnabled).toBe(true);
   });
 
   it('returns isLinodeInterfacesEnabled: false if the feature is NOT enabled', () => {

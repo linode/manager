@@ -1,7 +1,8 @@
+import { accountQueries, queryClientFactory } from '@linode/queries';
 import { renderHook, waitFor } from '@testing-library/react';
+import type { ReactNode } from 'react';
 
 import { accountFactory } from 'src/factories';
-import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 
 import { useIsNetworkLoadBalancerEnabled } from './utils';
@@ -13,14 +14,14 @@ describe('useIsNetworkLoadBalancerEnabled', () => {
       capabilities: ['Network LoadBalancer'],
     });
 
-    server.use(
-      http.get('*/v4*/account', () => {
-        return HttpResponse.json(account);
-      })
-    );
+    const queryClient = queryClientFactory();
+    queryClient.setQueryData(accountQueries.account.queryKey, account);
+
+    const wrapper = ({ children }: { children: ReactNode }) =>
+      wrapWithTheme(children, { ...options, queryClient });
 
     const { result } = renderHook(() => useIsNetworkLoadBalancerEnabled(), {
-      wrapper: (ui) => wrapWithTheme(ui, options),
+      wrapper,
     });
 
     await waitFor(() => {
@@ -30,9 +31,16 @@ describe('useIsNetworkLoadBalancerEnabled', () => {
 
   it('returns false if the feature is NOT enabled', async () => {
     const options = { flags: { networkLoadBalancer: false } };
+    const account = accountFactory.build({ capabilities: [] });
+
+    const queryClient = queryClientFactory();
+    queryClient.setQueryData(accountQueries.account.queryKey, account);
+
+    const wrapper = ({ children }: { children: ReactNode }) =>
+      wrapWithTheme(children, { ...options, queryClient });
 
     const { result } = renderHook(() => useIsNetworkLoadBalancerEnabled(), {
-      wrapper: (ui) => wrapWithTheme(ui, options),
+      wrapper,
     });
 
     await waitFor(() => {
