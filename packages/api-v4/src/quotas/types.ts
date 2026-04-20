@@ -133,3 +133,8 @@ export interface QuotaUsage {
  * The type must match the service part of the quota endpoint paths.
  */
 export type QuotaServiceType = 'linode' | 'lke' | 'object-storage';
+
+/**
+ * Represents the API collection name for quotas, e.g. quotas or global-quotas.
+ */
+export type QuotaCollection = 'global-quotas' | 'quotas';

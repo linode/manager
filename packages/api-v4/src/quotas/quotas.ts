@@ -1,7 +1,12 @@
 import { BETA_API_ROOT } from '../constants';
 import Request, { setMethod, setParams, setURL, setXFilter } from '../request';
 
-import type { Quota, QuotaServiceType, QuotaUsage } from './types';
+import type {
+  Quota,
+  QuotaCollection,
+  QuotaServiceType,
+  QuotaUsage,
+} from './types';
 import type { Filter, ResourcePage as Page, Params } from 'src/types';
 
 /**
@@ -11,15 +16,15 @@ import type { Filter, ResourcePage as Page, Params } from 'src/types';
  *
  * @param quotaService { QuotaServiceType } retrieve a quota within this service type.
  * @param id { number } the quota ID to look up.
- * @param apiCollection { string } quota collection name (quotas/global-quotas).
+ * @param quotaCollection { QuotaCollection } quota API collection name.
  */
 export const getQuota = (
   quotaService: QuotaServiceType,
-  apiCollection: string,
+  quotaCollection: QuotaCollection,
   id: number,
 ) =>
   Request<Quota>(
-    setURL(`${BETA_API_ROOT}/${quotaService}/${apiCollection}/${id}`),
+    setURL(`${BETA_API_ROOT}/${quotaService}/${quotaCollection}/${id}`),
     setMethod('GET'),
   );
 
@@ -31,18 +36,18 @@ export const getQuota = (
  * This request can be filtered on `quota_name`, `service_name` and `scope`.
  *
  * @param quotaService { QuotaServiceType } retrieve quotas within this service quotaService.
- * @param apiCollection { string } quota API collection name (e.g. quotas, global-quotas, etc.).
+ * @param quotaCollection { QuotaCollection } quota API collection name.
  * @param params { Params } query params to include in the request.
  * @param filter { Filter } filters to include in the request.
  */
 export const getQuotas = (
   quotaService: QuotaServiceType,
-  apiCollection: string,
+  quotaCollection: QuotaCollection,
   params: Params = {},
   filter: Filter = {},
 ) =>
   Request<Page<Quota>>(
-    setURL(`${BETA_API_ROOT}/${quotaService}/${apiCollection}`),
+    setURL(`${BETA_API_ROOT}/${quotaService}/${quotaCollection}`),
     setMethod('GET'),
     setXFilter(filter),
     setParams(params),
@@ -54,15 +59,15 @@ export const getQuotas = (
  * Returns the usage for a single quota within a particular service specified by `type`.
  *
  * @param quotaService { QuotaServiceType } retrieve a quota within this service type.
- * @param apiCollection { string } quota collection name (quotas/global-quotas).
+ * @param quotaCollection { QuotaCollection } quota API collection name.
  * @param id { string } the quota ID to look up.
  */
 export const getQuotaUsage = (
   quotaService: QuotaServiceType,
-  apiCollection: string,
+  quotaCollection: QuotaCollection,
   id: string,
 ) =>
   Request<QuotaUsage>(
-    setURL(`${BETA_API_ROOT}/${quotaService}/${apiCollection}/${id}/usage`),
+    setURL(`${BETA_API_ROOT}/${quotaService}/${quotaCollection}/${id}/usage`),
     setMethod('GET'),
   );

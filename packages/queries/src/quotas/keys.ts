@@ -3,26 +3,35 @@ import { createQueryKeys } from '@lukemorales/query-key-factory';
 
 import { getAllQuotas } from './requests';
 
-import type { Filter, Params, QuotaServiceType } from '@linode/api-v4';
+import type {
+  Filter,
+  Params,
+  QuotaCollection,
+  QuotaServiceType,
+} from '@linode/api-v4';
 
 export const quotaQueries = createQueryKeys('quotas', {
-  serviceQuotas: (serviceType: QuotaServiceType, apiCollection: string) => ({
+  serviceQuotas: (
+    serviceType: QuotaServiceType,
+    quotaCollection: QuotaCollection,
+  ) => ({
     contextQueries: {
       all: (params: Params = {}, filter: Filter = {}) => ({
-        queryFn: () => getAllQuotas(serviceType, apiCollection, params, filter),
-        queryKey: [params, filter, apiCollection],
+        queryFn: () =>
+          getAllQuotas(serviceType, quotaCollection, params, filter),
+        queryKey: [params, filter, quotaCollection],
       }),
       paginated: (params: Params = {}, filter: Filter = {}) => ({
-        queryFn: () => getQuotas(serviceType, apiCollection, params, filter),
-        queryKey: [params, filter, apiCollection],
+        queryFn: () => getQuotas(serviceType, quotaCollection, params, filter),
+        queryKey: [params, filter, quotaCollection],
       }),
       quota: (id: number) => ({
-        queryFn: () => getQuota(serviceType, apiCollection, id),
-        queryKey: [id, apiCollection],
+        queryFn: () => getQuota(serviceType, quotaCollection, id),
+        queryKey: [id, quotaCollection],
       }),
       usage: (id: string) => ({
-        queryFn: () => getQuotaUsage(serviceType, apiCollection, id),
-        queryKey: [id, apiCollection],
+        queryFn: () => getQuotaUsage(serviceType, quotaCollection, id),
+        queryKey: [id, quotaCollection],
       }),
     },
     queryKey: [serviceType],
