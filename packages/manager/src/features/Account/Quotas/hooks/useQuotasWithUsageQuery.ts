@@ -5,6 +5,7 @@ import type { APIError, Filter, QuotaUsage } from '@linode/api-v4';
 import type { UseQueryResult } from '@tanstack/react-query';
 import type {
   QuotaScope,
+  QuotaScopeDefinition,
   QuotaService,
 } from 'src/features/Account/Quotas/quotaServices';
 import type { QuotaWithUsage } from 'src/features/Account/Quotas/utils';
@@ -31,7 +32,9 @@ export const useQuotasWithUsageQuery = ({
 }: QuotasWithUsageQueryProps): QuotasWithUsageQueryResult => {
   // The provided scope should always be supported by the provided service, but just
   // for the sake of error handling, fallback to a default scope if it's not
-  const scopeDefinition = service.scopes[scope] ?? { apiCollection: 'quotas' };
+  const scopeDefinition: QuotaScopeDefinition = service.scopes[scope] ?? {
+    collection: 'quotas',
+  };
 
   const apiFilter: Filter = React.useMemo(() => {
     return (
@@ -47,7 +50,7 @@ export const useQuotasWithUsageQuery = ({
     isError: isQuotasFetchError,
   } = useAllQuotasQuery(
     service.type,
-    scopeDefinition.apiCollection,
+    scopeDefinition.collection,
     apiFilter,
     enabled
   );
@@ -63,7 +66,7 @@ export const useQuotasWithUsageQuery = ({
 
   const quotaUsageQueries = useQuotaUsageQueries(
     service.type,
-    scopeDefinition.apiCollection,
+    scopeDefinition.collection,
     quotaIdsHavingUsage,
     enabled
   );

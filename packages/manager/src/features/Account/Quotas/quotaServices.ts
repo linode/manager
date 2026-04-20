@@ -23,12 +23,6 @@ export interface ScopeValueSelectorProps {
  */
 export interface QuotaScopeDefinition {
   /**
-   * The name of the API collection that corresponds to this quota scope.
-   * In most cases this will be 'quotas'.
-   */
-  apiCollection: string;
-
-  /**
    * An optional function to provide filter for the API quota request for this scope.
    *
    * @param filterValue - The value to filter by, such as a region slug or Object Storage endpoint.
@@ -36,6 +30,12 @@ export interface QuotaScopeDefinition {
    * @returns An object containing the filter parameters to apply to the API request for this quota scope.
    */
   apiFilterFunction?: (filterValue: string) => Partial<Quota>;
+
+  /**
+   * The name of the quota API collection that corresponds to this quota scope.
+   * In most cases this will be 'quotas'.
+   */
+  collection: QuotaCollection;
 
   /**
    * An optional object specifying additional props to pass to the value selector component
@@ -88,7 +88,7 @@ export const linodeQuotaService: QuotaService = {
   label: 'Linodes',
   scopes: {
     region: {
-      apiCollection: 'quotas',
+      collection: 'quotas',
       scopeValueSelectorProps: {
         regionCapability: 'Linodes',
       },
@@ -103,7 +103,7 @@ export const lkeQuotaService: QuotaService = {
   label: 'Kubernetes',
   scopes: {
     region: {
-      apiCollection: 'quotas',
+      collection: 'quotas',
       scopeValueSelectorProps: {
         regionCapability: 'Kubernetes',
       },
@@ -121,11 +121,11 @@ export const objectStorageQuotaService = (
     scopes: {
       ...(objectStorageGlobalQuotasEnabled
         ? ({
-            global: { apiCollection: 'global-quotas' },
+            global: { collection: 'global-quotas' },
           } satisfies Partial<Record<QuotaScope, QuotaScopeDefinition>>)
         : {}),
       'obj-endpoint': {
-        apiCollection: 'quotas',
+        collection: 'quotas',
         apiFilterFunction: (endpoint: string) => ({ s3_endpoint: endpoint }),
         visibilityFilterFunction: (quota: Quota) =>
           [
