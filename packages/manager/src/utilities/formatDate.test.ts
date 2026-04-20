@@ -1,3 +1,4 @@
+import { shouldHumanize } from '@akamai/compute-ui-core/datetime';
 import { DateTime, Duration } from 'luxon';
 
 import {
@@ -5,7 +6,7 @@ import {
   ISO_DATETIME_NO_TZ_FORMAT,
 } from 'src/constants';
 
-import { formatDate, shouldHumanize } from './formatDate';
+import { formatDate } from './formatDate';
 
 vi.mock('@linode/utilities', async () => {
   const actual = await vi.importActual('@linode/utilities');
