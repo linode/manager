@@ -39,6 +39,7 @@ import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperT
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { FIREWALL_GET_STARTED_LINK } from 'src/constants';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
+import { useIsReserveIpEnabled } from 'src/features/ReservedIps/utils';
 import { useFlags } from 'src/hooks/useFlags';
 import { sendCreateNodeBalancerEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -56,6 +57,7 @@ import { reportAgreementSigningError } from 'src/utilities/reportAgreementSignin
 
 import { EUAgreementCheckbox } from '../Account/Agreements/EUAgreementCheckbox';
 import { usePermissions } from '../IAM/hooks/usePermissions';
+import { IPAddressSelection } from '../ReservedIps/IPAddressSelection/IPAddressSelection';
 import { NodeBalancerConfigPanel } from './NodeBalancerConfigPanel';
 import {
   createNewNodeBalancerConfig,
@@ -66,7 +68,12 @@ import {
 import { VPCPanel } from './VPCPanel';
 
 import type { NodeBalancerConfigFieldsWithStatus } from './types';
-import type { APIError, NodeBalancerVpcPayload, VPC } from '@linode/api-v4';
+import type {
+  APIError,
+  IPAddress,
+  NodeBalancerVpcPayload,
+  VPC,
+} from '@linode/api-v4';
 import type { Theme } from '@mui/material/styles';
 import type { TagOption } from 'src/components/TagsInput/TagsInput';
 
@@ -78,6 +85,7 @@ interface NodeBalancerConfigFieldsWithStatusAndErrors
 interface NodeBalancerFieldsState {
   configs: NodeBalancerConfigFieldsWithStatusAndErrors[];
   firewall_id?: number;
+  ipv4?: string;
   label?: string;
   region?: string;
   tags?: string[];
@@ -170,6 +178,10 @@ const NodeBalancerCreate = () => {
   React.useEffect(() => {
     setVPCErrors([]);
   }, [vpcSelected]);
+
+  const { isReserveIpEnabled } = useIsReserveIpEnabled();
+  const [ipMode, setIpMode] = React.useState<'auto' | 'reserved'>('auto');
+  const [selectedIP, setSelectedIP] = React.useState<IPAddress | null>(null);
 
   const addNodeBalancer = () => {
     if (!permissions.create_nodebalancer) {
@@ -352,6 +364,9 @@ const NodeBalancerCreate = () => {
             }
           : vpc
       );
+    }
+    if (isReserveIpEnabled && ipMode === 'reserved' && selectedIP?.address) {
+      nodeBalancerRequestData.ipv4 = selectedIP.address;
     }
     nodeBalancerRequestData.configs = transformConfigsForRequest(
       nodeBalancerRequestData.configs
@@ -726,6 +741,29 @@ const NodeBalancerCreate = () => {
             subnetsSelected={nodeBalancerFields.vpcs}
             vpcSelected={vpcSelected}
           />
+        )}
+        {isReserveIpEnabled && (
+          <Paper>
+            <IPAddressSelection
+              label={{ text: 'Frontend IP Address', fontSize: '18px' }}
+              mode={ipMode}
+              onIPModeChange={(mode) => setIpMode(mode)}
+              onReservedIPSelect={(ip) => setSelectedIP(ip)}
+              regionId={nodeBalancerFields.region ?? ''}
+              selectedIP={selectedIP}
+              tooltipText={{
+                auto: "A public IPv4 address automatically assigned to your NodeBalancer’s \
+                  frontend to serve as the entry point for incoming traffic. Use this for \
+                  standard web traffic that doesn't require a permanent, static IP. \
+                  This address is included at no additional cost but will be released if the NodeBalancer is deleted.",
+                reserved:
+                  "A static public IPv4 address assigned to your NodeBalancer’s \
+                  frontend to serve as a permanent gateway for incoming traffic. \
+                  Use this for services requiring a consistent IP for DNS records or security allowlisting. \
+                  Charges apply while the IP is reserved, even if it's not assigned to a NodeBalancer.",
+              }}
+            />
+          </Paper>
         )}
       </Stack>
       <Box marginBottom={2} marginTop={2}>

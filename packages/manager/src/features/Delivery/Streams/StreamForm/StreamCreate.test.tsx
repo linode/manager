@@ -116,7 +116,11 @@ describe('StreamCreate', () => {
 
             // Test connection
             await userEvent.click(testConnectionButton);
-            expect(verifyDestinationSpy).toHaveBeenCalled();
+
+            // Wait for async verification to complete
+            await waitFor(() => {
+              expect(verifyDestinationSpy).toHaveBeenCalled();
+            });
 
             await waitFor(() => {
               expect(createStreamButton).toBeEnabled();
@@ -125,7 +129,11 @@ describe('StreamCreate', () => {
             // Create stream
             await userEvent.click(createStreamButton);
 
-            expect(createDestinationSpy).toHaveBeenCalled();
+            // Wait for destination creation to complete
+            await waitFor(() => {
+              expect(createDestinationSpy).toHaveBeenCalled();
+            });
+
             await waitFor(() => {
               expect(createStreamSpy).toHaveBeenCalled();
             });

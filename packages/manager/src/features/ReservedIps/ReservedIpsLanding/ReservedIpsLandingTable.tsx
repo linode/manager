@@ -1,14 +1,14 @@
-import { useRegionsQuery } from '@linode/queries';
-import { Hidden } from '@linode/ui';
-import { useTheme } from '@mui/material/styles';
-import { Pagination } from 'akamai-cds-react-components/Pagination';
+import { Pagination } from '@akamai/cds-components/react/Pagination';
 import {
   Table,
   TableBody,
   TableHead,
   TableHeaderCell,
   TableRow,
-} from 'akamai-cds-react-components/Table';
+} from '@akamai/cds-components/react/Table';
+import { useRegionsQuery } from '@linode/queries';
+import { Hidden } from '@linode/ui';
+import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { MIN_PAGE_SIZE } from 'src/components/PaginationFooter/PaginationFooter.constants';
@@ -74,7 +74,7 @@ export const ReservedIpsLandingTable = ({
               headerborder
             >
               <TableHeaderCell
-                sort={() =>
+                onSort={() =>
                   handleOrderChange('address', order === 'asc' ? 'desc' : 'asc')
                 }
                 sortable
@@ -85,7 +85,7 @@ export const ReservedIpsLandingTable = ({
               <TableHeaderCell>Assigned Resource</TableHeaderCell>
               <Hidden smDown>
                 <TableHeaderCell
-                  sort={() =>
+                  onSort={() =>
                     handleOrderChange(
                       'region',
                       order === 'asc' ? 'desc' : 'asc'
