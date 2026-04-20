@@ -1,4 +1,8 @@
-import { useAccountSettings, useFirewallSettingsQuery } from '@linode/queries';
+import {
+  useAccountSettings,
+  useFirewallSettingsQuery,
+  useRegionQuery,
+} from '@linode/queries';
 import {
   Box,
   FormControl,
@@ -11,10 +15,11 @@ import {
 } from '@linode/ui';
 import { FormLabel } from '@mui/material';
 import React from 'react';
-import { useController, useFormContext } from 'react-hook-form';
+import { useController, useFormContext, useWatch } from 'react-hook-form';
 
 import { LinodeInterfaceFeatureStatusChip } from '../../LinodesDetail/LinodeNetworking/LinodeInterfaces/LinodeInterfaceFeatureChip';
 import { useGetLinodeCreateType } from '../Tabs/utils/useGetLinodeCreateType';
+import { LinodeInterfacesAvailabilityNotice } from './LinodeInterfacesAvailabilityNotice';
 import { getDefaultInterfacePayload } from './utilities';
 
 import type { LinodeCreateFormValues } from '../utilities';
@@ -30,7 +35,7 @@ const disabledReasonMap: Partial<
 };
 
 export const InterfaceGeneration = () => {
-  const { setValue } = useFormContext<LinodeCreateFormValues>();
+  const { control, setValue } = useFormContext<LinodeCreateFormValues>();
 
   const { field } = useController<
     LinodeCreateFormValues,
@@ -42,6 +47,13 @@ export const InterfaceGeneration = () => {
   const { data: accountSettings } = useAccountSettings();
 
   const { data: firewallSettings } = useFirewallSettingsQuery();
+
+  const regionId = useWatch({ control, name: 'region' });
+  const { data: selectedRegion } = useRegionQuery(regionId);
+
+  const linodeInterfacesUnavailableInRegion =
+    selectedRegion !== undefined &&
+    !selectedRegion.capabilities.includes('Linode Interfaces');
 
   const disabledReason =
     accountSettings &&
@@ -70,6 +82,9 @@ export const InterfaceGeneration = () => {
           />
         )}
       </Box>
+      {linodeInterfacesUnavailableInRegion && (
+        <LinodeInterfacesAvailabilityNotice />
+      )}
       <RadioGroup
         aria-labelledby="interface-generation"
         onChange={(e, value) => {
@@ -93,7 +108,7 @@ export const InterfaceGeneration = () => {
         <FormControlLabel
           control={<Radio />}
           data-qa-interfaces-option="linode"
-          disabled={disabled}
+          disabled={disabled || linodeInterfacesUnavailableInRegion}
           label={
             <Stack mt={1.25} spacing={0.5}>
               <Stack direction="row">

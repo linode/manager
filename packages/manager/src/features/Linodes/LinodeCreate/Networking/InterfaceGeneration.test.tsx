@@ -1,3 +1,4 @@
+import { regionFactory } from '@linode/utilities';
 import { waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
@@ -7,6 +8,8 @@ import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
 import { InterfaceGeneration } from './InterfaceGeneration';
+
+import type { Region } from '@linode/api-v4';
 
 const getAccountSettingsAPI = '*/v4*/account/settings';
 
@@ -158,6 +161,57 @@ describe('InterfaceGeneration', () => {
     // Verify legacy config is now selected
     expect(legacyConfigRadio).toBeChecked();
     expect(getByDisplayValue('linode')).not.toBeChecked();
+  });
+
+  describe('region capability', () => {
+    const setup = (region: Region) => {
+      server.use(
+        http.get(getAccountSettingsAPI, () =>
+          HttpResponse.json(
+            accountSettingsFactory.build({
+              interfaces_for_new_linodes:
+                'linode_default_but_legacy_config_allowed',
+            })
+          )
+        ),
+        http.get(`*/v4*/regions/${region.id}`, () => HttpResponse.json(region))
+      );
+      return renderWithThemeAndHookFormContext({
+        component: <InterfaceGeneration />,
+        useFormOptions: {
+          defaultValues: {
+            interface_generation: 'linode',
+            region: region.id,
+          },
+        },
+      });
+    };
+
+    it('disables the Linode Interfaces radio and shows the availability notice when the selected region lacks the Linode Interfaces capability', async () => {
+      const { findByText, getByDisplayValue } = setup(
+        regionFactory.build({ capabilities: ['Linodes'] })
+      );
+
+      await findByText(
+        /Linode Interfaces are not available in the selected region/i
+      );
+      expect(getByDisplayValue('linode')).toBeDisabled();
+      expect(getByDisplayValue('legacy_config')).toBeEnabled();
+    });
+
+    it('keeps the Linode Interfaces radio enabled when the selected region has the Linode Interfaces capability', async () => {
+      const { getByDisplayValue, queryByText } = setup(
+        regionFactory.build({ capabilities: ['Linode Interfaces'] })
+      );
+
+      await waitFor(() => expect(getByDisplayValue('linode')).toBeEnabled());
+      expect(getByDisplayValue('legacy_config')).toBeEnabled();
+      expect(
+        queryByText(
+          /Linode Interfaces are not available in the selected region/i
+        )
+      ).toBeNull();
+    });
   });
 
   it('displays correct labels for both interface types', () => {

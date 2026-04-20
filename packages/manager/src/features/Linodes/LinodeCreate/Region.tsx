@@ -1,4 +1,9 @@
-import { useImageQuery, useRegionsQuery, useTypeQuery } from '@linode/queries';
+import {
+  useAccountSettings,
+  useImageQuery,
+  useRegionsQuery,
+  useTypeQuery,
+} from '@linode/queries';
 import { useIsGeckoEnabled } from '@linode/shared';
 import { Box, Notice, Paper, Typography } from '@linode/ui';
 import { getIsLegacyInterfaceArray } from '@linode/utilities';
@@ -74,6 +79,8 @@ export const Region = React.memo(() => {
 
   const { data: regions } = useRegionsQuery();
 
+  const { data: accountSettings } = useAccountSettings();
+
   const { isGeckoLAEnabled } = useIsGeckoEnabled(
     flags.gecko2?.enabled,
     flags.gecko2?.la
@@ -134,6 +141,15 @@ export const Region = React.memo(() => {
     if (values.placement_group?.id) {
       // If a placement group is selected, clear it because they are region specific
       setValue('placement_group.id', 0);
+    }
+
+    if (
+      region &&
+      !region.capabilities.includes('Linode Interfaces') &&
+      values.interface_generation === 'linode' &&
+      accountSettings?.interfaces_for_new_linodes !== 'linode_only'
+    ) {
+      setValue('interface_generation', 'legacy_config');
     }
 
     // Because distributed regions do not support some features,
