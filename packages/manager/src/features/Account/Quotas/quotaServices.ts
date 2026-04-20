@@ -1,16 +1,24 @@
 import { type Capabilities } from '@linode/api-v4';
 
 import type {
+  LinodeQuota,
+  LkeQuota,
   ObjectStorageEndpointQuota,
   Quota,
   QuotaCollection,
   QuotaServiceType,
+  VolumesQuota,
 } from '@linode/api-v4';
 
 /**
  * Represents the different scopes that a quota can have.
  */
 export type QuotaScope = 'global' | 'obj-endpoint' | 'region';
+
+/**
+ * Type of the scope value
+ */
+export type ScopeValueType = null | string;
 
 export interface ScopeValueSelectorProps {
   /**
@@ -22,15 +30,15 @@ export interface ScopeValueSelectorProps {
 /**
  * Represents the definition of a quota scope, including how to retrieve and display quotas for that scope in the UI.
  */
-export interface QuotaScopeDefinition {
+export interface QuotaScopeDefinition<Q extends Quota = Quota> {
   /**
    * An optional function to provide filter for the API quota request for this scope.
    *
-   * @param filterValue - The value to filter by, such as a region slug or Object Storage endpoint.
+   * @param scopeValue - The value of the scope, such as a region slug or Object Storage endpoint.
    *
    * @returns An object containing the filter parameters to apply to the API request for this quota scope.
    */
-  apiFilterFunction?: (filterValue: string) => Partial<Quota>;
+  apiFilterFunction?: (scopeValue: ScopeValueType) => Partial<Q>;
 
   /**
    * The name of the quota API collection that corresponds to this quota scope.
@@ -51,7 +59,7 @@ export interface QuotaScopeDefinition {
    *
    * @returns The transformed quota data to be used in the UI for this scope.
    */
-  transformFunction?: (quota: Quota) => Quota;
+  transformFunction?: (quota: Q) => Q;
 
   /**
    * An optional function to determine whether a quota should be visible in the UI for this scope.
@@ -60,13 +68,13 @@ export interface QuotaScopeDefinition {
    *
    * @returns A boolean indicating whether the quota should be visible in the UI for this scope.
    */
-  visibilityFilterFunction?: (quota: Quota) => boolean;
+  visibilityFilterFunction?: (quota: Q) => boolean;
 }
 
 /**
  * Represents a service for which quotas are defined.
  */
-export interface QuotaService {
+export interface QuotaService<Q extends Quota = Quota> {
   /**
    * A user-friendly label for the service, e.g. "Linodes" or "Object Storage".
    */
@@ -75,7 +83,7 @@ export interface QuotaService {
   /**
    * Defines the different scopes available for this service, such as global, region, or Object Storage endpoint.
    */
-  scopes: Partial<Record<QuotaScope, QuotaScopeDefinition>>;
+  scopes: Partial<Record<QuotaScope, QuotaScopeDefinition<Q>>>;
 
   /**
    * The type of service for this quota, e.g. 'linode', 'lke' or 'object-storage'.
@@ -93,10 +101,14 @@ export const linodeQuotaService: QuotaService = {
       scopeValueSelectorProps: {
         regionCapability: 'Linodes',
       },
-      apiFilterFunction: (region: string) => ({ region_applied: region }),
+      apiFilterFunction: (
+        scopeValue: ScopeValueType
+      ): Partial<LinodeQuota> => ({
+        region_applied: scopeValue,
+      }),
     },
   },
-};
+} satisfies QuotaService<LinodeQuota>;
 
 // TODO: not used yet - add to useQuotaServices when production-ready
 export const lkeQuotaService: QuotaService = {
@@ -108,10 +120,12 @@ export const lkeQuotaService: QuotaService = {
       scopeValueSelectorProps: {
         regionCapability: 'Kubernetes',
       },
-      apiFilterFunction: (region: string) => ({ region_applied: region }),
+      apiFilterFunction: (scopeValue: ScopeValueType): Partial<LkeQuota> => ({
+        region_applied: scopeValue,
+      }),
     },
   },
-};
+} satisfies QuotaService<LkeQuota>;
 
 const DISPLAYED_OBJECT_STORAGE_ENDPOINT_QUOTA_TYPES: ObjectStorageEndpointQuota['quota_type'][] =
   [
@@ -131,21 +145,69 @@ export const objectStorageQuotaService = (
     label: 'Object Storage',
     scopes: {
       ...(objectStorageGlobalQuotasEnabled
-        ? ({
+        ? {
             global: { quotaCollection: 'global-quotas' },
-          } satisfies Partial<Record<QuotaScope, QuotaScopeDefinition>>)
+          }
         : {}),
       'obj-endpoint': {
         quotaCollection: 'quotas',
-        apiFilterFunction: (endpoint: string) => ({ s3_endpoint: endpoint }),
-        visibilityFilterFunction: (quota: Quota) =>
+        apiFilterFunction: (
+          scopeValue: ScopeValueType
+        ): Partial<ObjectStorageEndpointQuota> => ({
+          s3_endpoint: scopeValue!,
+        }),
+        visibilityFilterFunction: (quota: ObjectStorageEndpointQuota) =>
           DISPLAYED_OBJECT_STORAGE_ENDPOINT_QUOTA_TYPES.includes(
-            (quota as ObjectStorageEndpointQuota).quota_type
+            quota.quota_type
           ),
-        transformFunction: (quota: Quota) => ({
+        transformFunction: (
+          quota: ObjectStorageEndpointQuota
+        ): ObjectStorageEndpointQuota => ({
           ...quota,
           quota_name: quota.quota_name.replace(' (per endpoint)', ''),
         }),
-      },
+      } satisfies QuotaScopeDefinition<ObjectStorageEndpointQuota>,
     },
   }) satisfies QuotaService;
+
+const VOLUMES_QUOTA_NAMES = new Map<string, string>([
+  ['vol-attachments|region', 'Attachment Count'],
+  ['vol-capacity|global', 'Global Storage Capacity'],
+  ['vol-capacity|region', 'Regional Storage Capacity'],
+  ['vol-volumes|region', 'Volume Count'],
+]);
+
+const volumeQuotaTransformFunction = (quota: VolumesQuota): VolumesQuota => {
+  return {
+    ...quota,
+    quota_name:
+      VOLUMES_QUOTA_NAMES.get(`${quota.quota_type}|${quota.scope}`) ??
+      quota.quota_name,
+  };
+};
+
+export const volumesQuotaService: QuotaService = {
+  type: 'volumes',
+  label: 'Volumes',
+  scopes: {
+    global: {
+      quotaCollection: 'quotas',
+      apiFilterFunction: (_: ScopeValueType): Partial<VolumesQuota> => ({
+        scope: 'global',
+      }),
+      transformFunction: volumeQuotaTransformFunction,
+    },
+    region: {
+      quotaCollection: 'quotas',
+      scopeValueSelectorProps: {
+        regionCapability: 'Block Storage',
+      },
+      apiFilterFunction: (
+        scopeValue: ScopeValueType
+      ): Partial<VolumesQuota> => ({
+        region: scopeValue,
+      }),
+      transformFunction: volumeQuotaTransformFunction,
+    },
+  },
+} satisfies QuotaService<VolumesQuota>;

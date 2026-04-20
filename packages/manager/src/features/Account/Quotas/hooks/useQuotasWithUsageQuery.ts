@@ -7,13 +7,14 @@ import type {
   QuotaScope,
   QuotaScopeDefinition,
   QuotaService,
+  ScopeValueType,
 } from 'src/features/Account/Quotas/quotaServices';
 import type { QuotaWithUsage } from 'src/features/Account/Quotas/utils';
 
 interface QuotasWithUsageQueryProps {
   enabled: boolean;
   scope: QuotaScope;
-  scopeValue: null | string;
+  scopeValue: ScopeValueType;
   service: QuotaService;
 }
 
@@ -37,10 +38,7 @@ export const useQuotasWithUsageQuery = ({
   };
 
   const apiFilter: Filter = React.useMemo(() => {
-    return (
-      (scopeValue ? scopeDefinition?.apiFilterFunction?.(scopeValue) : null) ??
-      {}
-    );
+    return scopeDefinition?.apiFilterFunction?.(scopeValue) ?? {};
   }, [scopeDefinition, scopeValue]);
 
   const {
