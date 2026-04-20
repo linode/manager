@@ -9,6 +9,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import {
   ERROR_STATE_TEXT,
+  ERROR_STATE_TITLE,
   NO_ASSIGNED_ENTITIES_TEXT,
 } from '../../Shared/constants';
 import { UserEntities } from './UserEntities';
@@ -149,6 +150,7 @@ describe('UserEntities', () => {
     });
 
     renderWithTheme(<UserEntities />);
+    expect(screen.getByText(ERROR_STATE_TITLE)).toBeVisible();
     expect(screen.getByText(ERROR_STATE_TEXT)).toBeVisible();
   });
 
