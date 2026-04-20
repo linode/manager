@@ -1,11 +1,8 @@
+import { parseExpiryYear } from '@akamai/compute-ui-core/datetime';
 import { CreditCardSchema } from '@linode/validation';
 import { Settings } from 'luxon';
 
-import {
-  formatExpiry,
-  isCreditCardExpired,
-  parseExpiryYear,
-} from './creditCard';
+import { formatExpiry, isCreditCardExpired } from './creditCard';
 
 const currentYear = new Date().getFullYear();
 const currentYearFirstTwoDigits = String(currentYear).slice(0, 2);
