@@ -68,6 +68,19 @@ export const getLinodeInterfacePayload = (
     cleanedValues.vlan.ipam_address = null;
   }
 
+  if (cleanedValues.public) {
+    const hasReservedIP = cleanedValues.public.ipv4?.addresses?.[0]?.address;
+
+    if (!hasReservedIP) {
+      delete cleanedValues.public.ipv4;
+    }
+
+    const result = {
+      ...omitProps(cleanedValues, ['purpose']),
+    };
+    return result;
+  }
+
   return omitProps(cleanedValues, ['purpose']);
 };
 

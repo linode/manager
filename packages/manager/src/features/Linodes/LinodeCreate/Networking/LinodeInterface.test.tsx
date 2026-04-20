@@ -100,4 +100,30 @@ describe('LinodeInterface (Linode Interfaces)', () => {
 
     await findByDisplayValue(firewall.label);
   });
+
+  it('renders IP Address selection if "Public Internet" is selected for new Linode interface', async () => {
+    const { getByText } =
+      renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
+        component: <LinodeInterface index={0} />,
+        useFormOptions: { defaultValues: { interface_generation: 'linode' } },
+      });
+
+    await userEvent.click(getByText('Public Internet'));
+
+    expect(getByText('IP Address')).toBeVisible();
+  });
+
+  it('renders IP Address selection if "Public Internet" is selected for legacy Linode interface', async () => {
+    const { getByText } =
+      renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
+        component: <LinodeInterface index={0} />,
+        useFormOptions: {
+          defaultValues: { interface_generation: 'legacy_config' },
+        },
+      });
+
+    await userEvent.click(getByText('Public Internet'));
+
+    expect(getByText('IP Address')).toBeVisible();
+  });
 });
