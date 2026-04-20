@@ -20,18 +20,18 @@ const isTargetPlan = (linode: Linode) => {
 };
 
 export const ComputePricingPlanBanner: React.FC = () => {
-  const { data: linodes } = useAllLinodesQuery();
   const flags = useFlags();
+  const hasBannerText = Boolean(flags.computePricing?.banner?.text);
+
+  const { data: linodes } = useAllLinodesQuery({}, {}, hasBannerText);
 
   const hasTargetPlan = React.useMemo(
     () => Array.isArray(linodes) && linodes.some(isTargetPlan),
     [linodes]
   );
 
-  // Show banner only if the LD flag is enabled and a target plan exists
-  const showBanner = Boolean(
-    flags.computePricing?.banner?.text && hasTargetPlan
-  );
+  // Show banner only if the LD flag banner text is present and a target plan exists
+  const showBanner = hasBannerText && hasTargetPlan;
 
   if (!showBanner) return null;
 
