@@ -11,7 +11,7 @@ import {
 } from '@linode/ui';
 import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
-import { Controller, useController, useForm } from 'react-hook-form';
+import { Controller, useFieldArray, useForm } from 'react-hook-form';
 
 import { IMAGE_SELECT_TABLE_SHARE_GROUP_CREATE_PENDO_IDS } from 'src/components/ImageSelect/constants';
 import { ImageSelectTable } from 'src/components/ImageSelect/ImageSelectTable';
@@ -25,8 +25,7 @@ import type {
 } from '@linode/api-v4';
 
 interface ShareGroupFormImage extends SharegroupImagePayload {
-  newDescription?: string;
-  newLabel?: string;
+  imageId: string;
   useOriginalImageFields: boolean;
 }
 
@@ -47,23 +46,33 @@ export const ShareGroupsCreate = () => {
     formState: { isSubmitting },
   } = useForm<ShareGroupFormPayload>();
 
-  const { field: imagesController, fieldState } = useController({
+  const { append, fields, remove, update } = useFieldArray({
     control,
     name: 'images',
   });
 
-  const selectedImages = imagesController.value ?? [];
+  const [selectedImages, setSelectedImages] = React.useState<
+    ShareGroupFormImage[]
+  >([]);
 
   const onSubmit = handleSubmit(async (values) => {
     try {
       const payload: CreateSharegroupPayload = {
         ...values,
         images: values.images?.map(
-          ({ id, label, description, newLabel, newDescription }) => ({
-            id,
-            label: newLabel ?? label,
-            description: newDescription ?? description,
-          })
+          ({ imageId, label, description, useOriginalImageFields }, index) => {
+            return useOriginalImageFields
+              ? {
+                  id: selectedImages[index].imageId,
+                  label: selectedImages[index].label,
+                  description: selectedImages[index].description,
+                }
+              : {
+                  id: imageId,
+                  label,
+                  description,
+                };
+          }
         ),
       };
 
@@ -90,48 +99,27 @@ export const ShareGroupsCreate = () => {
       id,
       label,
       ...(description && { description }),
+      imageId: id,
       useOriginalImageFields: true,
     };
 
-    if (!selectedImages.some((img) => img.id === id)) {
-      imagesController.onChange([...selectedImages, imagePayload]);
+    const index = selectedImages.findIndex((img) => img.imageId === id);
+    if (index !== -1) {
+      setSelectedImages(selectedImages.filter((img) => img.imageId !== id));
+      remove(index);
     } else {
-      imagesController.onChange(selectedImages.filter((img) => img.id !== id));
+      setSelectedImages([...selectedImages, imagePayload]);
+      append({
+        ...imagePayload,
+      });
     }
   };
 
-  const toggleSelectedImageCheckbox = (id: string) => {
-    imagesController.onChange(
-      selectedImages.map((img) => {
-        if (img.id === id) {
-          return {
-            ...img,
-            newDescription: img.description,
-            newLabel: img.label,
-            useOriginalImageFields: !img.useOriginalImageFields,
-          };
-        }
-        return img;
-      })
-    );
-  };
-
-  const onSelectedImageChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-    id: string,
-    field: 'newDescription' | 'newLabel'
-  ) => {
-    const value = e.target.value === '' ? undefined : e.target.value;
-    imagesController.onChange(
-      selectedImages.map((img) =>
-        img.id === id
-          ? {
-              ...img,
-              [field]: value,
-            }
-          : img
-      )
-    );
+  const toggleSelectedImageCheckbox = (index: number = 0) => {
+    update(index, {
+      ...fields[index],
+      useOriginalImageFields: !fields[index].useOriginalImageFields,
+    });
   };
 
   const shareGroupImagesFilter = (image: Image) => {
@@ -163,12 +151,6 @@ export const ShareGroupsCreate = () => {
                 {...field}
                 data-pendo-id={CREATE_SHARE_GROUP_PENDO_IDS.label}
                 errorText={fieldState.error?.message}
-                onChange={(e) =>
-                  field.onChange(
-                    e.target.value === '' ? undefined : e.target.value
-                  )
-                }
-                value={field.value ?? ''}
               />
             )}
           />
@@ -184,13 +166,7 @@ export const ShareGroupsCreate = () => {
                 noMarginTop
                 {...field}
                 data-pendo-id={CREATE_SHARE_GROUP_PENDO_IDS.description}
-                onChange={(e) => {
-                  field.onChange(
-                    e.target.value === '' ? undefined : e.target.value
-                  );
-                }}
                 rows={1}
-                value={field.value ?? ''}
               />
             )}
           />
@@ -200,13 +176,10 @@ export const ShareGroupsCreate = () => {
           <Typography variant="h2">Images</Typography>
           <ImageSelectTable
             currentRoute="/images/share-groups/create"
-            errorText={fieldState.error?.message}
             filter={shareGroupImagesFilter}
             onSelect={handleImagesTableSelect}
             pendoIDs={IMAGE_SELECT_TABLE_SHARE_GROUP_CREATE_PENDO_IDS}
-            selectedImageIds={
-              imagesController.value?.map((img) => img.id) ?? []
-            }
+            selectedImageIds={selectedImages.map((img) => img.id) ?? []}
             selectionMode="multi"
           />
         </Stack>
@@ -215,7 +188,7 @@ export const ShareGroupsCreate = () => {
           <Typography variant="h2">
             Selected images ({selectedImages.length ?? 0})
           </Typography>
-          {selectedImages.map((image, index) => (
+          {fields.map((image, index) => (
             <Stack key={image.id} mb={4}>
               <Stack alignItems="baseline" direction="row" spacing={2}>
                 <Typography variant="body1">
@@ -230,7 +203,7 @@ export const ShareGroupsCreate = () => {
                   <Box>
                     <Checkbox
                       checked={image.useOriginalImageFields}
-                      onChange={() => toggleSelectedImageCheckbox(image.id)}
+                      onChange={() => toggleSelectedImageCheckbox(index)}
                       text="Use original label and description"
                       toolTipText="You can keep the original label and description or set new ones for the shared image. If the original image fields change later, the shared image won't update."
                     />
@@ -243,32 +216,28 @@ export const ShareGroupsCreate = () => {
                   <Controller
                     control={control}
                     name={`images.${index}.label`}
-                    render={() => (
+                    render={({ field, fieldState }) => (
                       <TextField
                         data-testid={`selected-image-${index}-label`}
+                        errorText={fieldState.error?.message}
                         label="Label"
                         noMarginTop
-                        onChange={(e) =>
-                          onSelectedImageChange(e, image.id, 'newLabel')
-                        }
-                        value={image.newLabel ?? ''}
+                        {...field}
                       />
                     )}
                   />
                   <Controller
                     control={control}
                     name={`images.${index}.description`}
-                    render={() => (
+                    render={({ field, fieldState }) => (
                       <TextField
                         data-testid={`selected-image-${index}-description`}
+                        errorText={fieldState.error?.message}
                         label="Description"
                         multiline
                         noMarginTop
-                        onChange={(e) =>
-                          onSelectedImageChange(e, image.id, 'newDescription')
-                        }
+                        {...field}
                         rows={1}
-                        value={image.newDescription ?? ''}
                       />
                     )}
                   />
