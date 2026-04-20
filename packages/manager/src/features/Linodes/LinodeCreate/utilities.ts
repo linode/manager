@@ -123,6 +123,19 @@ export const getLinodeCreatePayload = (
               isDualStackEnabled
             )
           );
+
+      // For legacy mode with reserved IP: add root-level ipv4 field
+      const publicInterfaceWithReservedIP = formValues.linodeInterfaces.find(
+        (iface) =>
+          iface.purpose === 'public' &&
+          iface.public?.ipv4?.addresses?.[0]?.address
+      );
+
+      if (publicInterfaceWithReservedIP?.public?.ipv4?.addresses) {
+        values.ipv4 = [
+          publicInterfaceWithReservedIP.public.ipv4.addresses[0].address,
+        ];
+      }
     }
   } else {
     values.interfaces = getInterfacesPayload(
