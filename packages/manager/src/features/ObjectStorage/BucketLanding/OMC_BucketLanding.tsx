@@ -1,4 +1,3 @@
-import { useProfile } from '@linode/queries';
 import { CircleProgress, ErrorState, Notice, Typography } from '@linode/ui';
 import { readableBytes, useOpenClose } from '@linode/utilities';
 import Grid from '@mui/material/Grid';
@@ -21,7 +20,6 @@ import {
 } from 'src/utilities/analytics/customEventAnalytics';
 
 import { CancelNotice } from '../CancelNotice';
-import { BucketLandingEmptyState } from './BucketLandingEmptyState';
 import { BucketTable } from './BucketTable';
 import { useBucketDrawers } from './hooks/useBucketDrawers';
 
@@ -40,10 +38,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
 
 export const OMC_BucketLanding = (props: Props) => {
   const { isCreateBucketDrawerOpen } = props;
-  const { data: profile } = useProfile();
   const { availableStorageRegions } = useObjectStorageRegions();
-
-  const isRestrictedUser = profile?.restricted;
 
   const {
     data: objectStorageBucketsResponse,
@@ -152,10 +147,6 @@ export const OMC_BucketLanding = (props: Props) => {
     preferenceKey: 'object-storage-buckets',
   });
 
-  if (isRestrictedUser) {
-    return <RenderEmpty />;
-  }
-
   if (bucketsErrors) {
     return (
       <ErrorState
@@ -171,12 +162,10 @@ export const OMC_BucketLanding = (props: Props) => {
 
   if (objectStorageBucketsResponse?.buckets.length === 0) {
     return (
-      <>
-        {unavailableRegionLabels && unavailableRegionLabels.length > 0 && (
-          <UnavailableRegionsDisplay regionLabels={unavailableRegionLabels} />
-        )}
-        <RenderEmpty />
-      </>
+      unavailableRegionLabels &&
+      unavailableRegionLabels.length > 0 && (
+        <UnavailableRegionsDisplay regionLabels={unavailableRegionLabels} />
+      )
     );
   }
 
@@ -251,10 +240,6 @@ export const OMC_BucketLanding = (props: Props) => {
       </TypeToConfirmDialog>
     </React.Fragment>
   );
-};
-
-const RenderEmpty = () => {
-  return <BucketLandingEmptyState />;
 };
 
 interface UnavailableRegionLabelsProps {

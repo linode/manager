@@ -20,6 +20,7 @@ import { AccessKeysDrawerOutlet } from './AccessKeyLanding/AccessKeysDrawerOutle
 import { useAccessKeyDrawers } from './AccessKeyLanding/hooks/useAccessKeyDrawers';
 import { BillingNotice } from './BillingNotice';
 import { BucketDrawerOutlet } from './BucketLanding/BucketDrawerOutlet';
+import { BucketLandingEmptyState } from './BucketLanding/BucketLandingEmptyState';
 import { useBucketDrawers } from './BucketLanding/hooks/useBucketDrawers';
 import { OMC_BucketLanding } from './BucketLanding/OMC_BucketLanding';
 
@@ -39,7 +40,7 @@ const AccessKeyLanding = React.lazy(() =>
 export const ObjectStorageLanding = () => {
   const { promotionalOffers, objSummaryPage } = useFlags();
   const navigate = useNavigate();
-  const match = useMatch({ strict: false });
+  const { routeId } = useMatch({ strict: false });
 
   const { data: profile } = useProfile();
   const { data: accountSettings } = useAccountSettings();
@@ -78,14 +79,6 @@ export const ObjectStorageLanding = () => {
       offer.features.includes('Object Storage')
     ) ?? [];
 
-  // Users must explicitly cancel Object Storage in their Account Settings to avoid being billed.
-  // Display a warning if the service is active but no buckets are present.
-  const shouldDisplayBillingNotice =
-    !areBucketsLoading &&
-    !bucketsErrors &&
-    userHasNoBucketCreated &&
-    accountSettings?.object_storage === 'active';
-
   const shouldHideDocsAndCreateButtons =
     !areBucketsLoading &&
     tabIndex === bucketsTabIndex &&
@@ -105,12 +98,40 @@ export const ObjectStorageLanding = () => {
     }
   };
 
-  const isSummaryOpened = match.routeId === '/object-storage/summary';
-  const isCreateBucketOpen = match.routeId === '/object-storage/buckets/create';
+  const isObjectStorageEnabled = accountSettings?.object_storage === 'active';
+  const isObjectStorageOpened = routeId === '/object-storage/';
+  const isSummaryOpened = routeId === '/object-storage/summary';
+  const isCreateBucketOpen = routeId === '/object-storage/buckets/create';
+  const isLandingPageShown = !isObjectStorageEnabled || isRestrictedUser;
 
-  // TODO: Remove when OBJ Summary is enabled
-  if (match.routeId === '/object-storage/summary' && !objSummaryPage) {
-    navigate({ to: '/object-storage/buckets' });
+  // Users must explicitly cancel Object Storage in their Account Settings to avoid being billed.
+  // Display a warning if the service is active but no buckets are present.
+  const isBillingNoticeShown =
+    !areBucketsLoading &&
+    !bucketsErrors &&
+    userHasNoBucketCreated &&
+    isObjectStorageEnabled;
+
+  if (!isLandingPageShown && isObjectStorageOpened) {
+    // TODO: Remove condition when OBJ Summary is enabled
+    navigate({
+      to: objSummaryPage
+        ? '/object-storage/summary'
+        : '/object-storage/buckets',
+    });
+    return;
+  }
+
+  if (isLandingPageShown && !isObjectStorageOpened) {
+    if (isRestrictedUser) {
+      navigate({ to: '/object-storage' });
+      return;
+    }
+
+    if (!routeId.endsWith('/create')) {
+      navigate({ to: '/object-storage' });
+      return;
+    }
   }
 
   return (
@@ -122,56 +143,63 @@ export const ObjectStorageLanding = () => {
             : 'Object Storage'
         }`}
       />
-      <LandingHeader
-        breadcrumbProps={{ pathname: '/object-storage' }}
-        buttonDataAttrs={{
-          tooltipText: getRestrictedResourceText({
-            action: 'create',
-            isSingular: false,
-            resourceType: 'Buckets',
-          }),
-        }}
-        createButtonText={createButtonText}
-        disabledCreateButton={isRestrictedUser}
-        docsLink="https://www.linode.com/docs/platform/object-storage/"
-        entity="Object Storage"
-        onButtonClick={isSummaryOpened ? undefined : createButtonAction}
-        removeCrumbX={1}
-        shouldHideDocsAndCreateButtons={shouldHideDocsAndCreateButtons}
-        spacingBottom={4}
-        title="Object Storage"
-      />
 
-      <Tabs index={tabIndex} onChange={handleTabChange}>
-        <TanStackTabLinkList tabs={tabs} />
+      {!isLandingPageShown && (
+        <LandingHeader
+          breadcrumbProps={{ pathname: '/object-storage' }}
+          buttonDataAttrs={{
+            tooltipText: getRestrictedResourceText({
+              action: 'create',
+              isSingular: false,
+              resourceType: 'Buckets',
+            }),
+          }}
+          createButtonText={createButtonText}
+          disabledCreateButton={isRestrictedUser}
+          docsLink="https://www.linode.com/docs/platform/object-storage/"
+          entity="Object Storage"
+          onButtonClick={isSummaryOpened ? undefined : createButtonAction}
+          removeCrumbX={1}
+          shouldHideDocsAndCreateButtons={shouldHideDocsAndCreateButtons}
+          spacingBottom={4}
+          title="Object Storage"
+        />
+      )}
 
-        {objPromotionalOffers.map((promotionalOffer) => (
-          <StyledPromotionalOfferCard
-            key={promotionalOffer.name}
-            {...promotionalOffer}
-            fullWidth
-          />
-        ))}
-        {shouldDisplayBillingNotice && <BillingNotice />}
+      {isLandingPageShown ? (
+        <BucketLandingEmptyState isRestricted={isRestrictedUser} />
+      ) : (
+        <Tabs index={tabIndex} onChange={handleTabChange}>
+          <TanStackTabLinkList tabs={tabs} />
 
-        <React.Suspense fallback={<SuspenseLoader />}>
-          <TabPanels>
-            {objSummaryPage && (
-              <SafeTabPanel index={summaryTabIndex}>
-                <SummaryLanding />
+          {objPromotionalOffers.map((promotionalOffer) => (
+            <StyledPromotionalOfferCard
+              key={promotionalOffer.name}
+              {...promotionalOffer}
+              fullWidth
+            />
+          ))}
+          {isBillingNoticeShown && <BillingNotice />}
+
+          <React.Suspense fallback={<SuspenseLoader />}>
+            <TabPanels>
+              {objSummaryPage && (
+                <SafeTabPanel index={summaryTabIndex}>
+                  <SummaryLanding />
+                </SafeTabPanel>
+              )}
+              <SafeTabPanel index={bucketsTabIndex}>
+                <OMC_BucketLanding
+                  isCreateBucketDrawerOpen={isCreateBucketOpen}
+                />
               </SafeTabPanel>
-            )}
-            <SafeTabPanel index={bucketsTabIndex}>
-              <OMC_BucketLanding
-                isCreateBucketDrawerOpen={isCreateBucketOpen}
-              />
-            </SafeTabPanel>
-            <SafeTabPanel index={accessKeysTabIndex}>
-              <AccessKeyLanding isRestrictedUser={isRestrictedUser} />
-            </SafeTabPanel>
-          </TabPanels>
-        </React.Suspense>
-      </Tabs>
+              <SafeTabPanel index={accessKeysTabIndex}>
+                <AccessKeyLanding isRestrictedUser={isRestrictedUser} />
+              </SafeTabPanel>
+            </TabPanels>
+          </React.Suspense>
+        </Tabs>
+      )}
 
       <BucketDrawerOutlet />
       <AccessKeysDrawerOutlet />
