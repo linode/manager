@@ -1,6 +1,7 @@
+import { Button } from '@akamai/cds-components/react/Button';
 import { useDatabaseCredentialsQuery } from '@linode/queries';
-import { Button, TooltipIcon, Typography } from '@linode/ui';
-import { Grid, styled } from '@mui/material';
+import { CircleProgress, Tooltip, TooltipIcon, Typography } from '@linode/ui';
+import { Box, Grid, styled } from '@mui/material';
 import copy from 'copy-to-clipboard';
 import { enqueueSnackbar } from 'notistack';
 import React, { useState } from 'react';
@@ -117,23 +118,27 @@ export const ServiceURI = (props: ServiceURIProps) => {
   const renderPassword = () => {
     if (hidePassword || credentialsError || !credentials) {
       return (
-        <Button
-          disabled={disablePasswordBtn}
-          loading={showBtnLoading}
-          onClick={() => {
-            getDatabaseCredentials();
-            setHidePassword(false);
-          }}
-          sx={{
-            p: 0,
-            '& .MuiButton-icon': {
-              margin: 0,
-            },
-          }}
-          tooltipText={disablePasswordBtn ? disabledPasswordTooltipText : ''}
-        >
-          {`{click to reveal password}`}
-        </Button>
+        <Tooltip title={disablePasswordBtn ? disabledPasswordTooltipText : ''}>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Button
+              disabled={disablePasswordBtn}
+              onClick={() => {
+                getDatabaseCredentials();
+                setHidePassword(false);
+              }}
+              processing={showBtnLoading}
+              style={{
+                padding: 0,
+                position: 'relative',
+                top: showBtnLoading ? 0 : 8,
+                display: 'flex',
+              }}
+              variant="link"
+            >
+              {`{click to reveal password}`}
+            </Button>
+          </Box>
+        </Tooltip>
       );
     }
 
@@ -193,9 +198,16 @@ export const ServiceURI = (props: ServiceURIProps) => {
         )}
       </StyledValueGrid>
       {isCopying ? (
-        <Button loading sx={{ paddingLeft: 2 }}>
-          {' '}
-        </Button>
+        <Box
+          sx={(theme) => ({
+            paddingX: theme.spacingFunction(8),
+            position: 'relative',
+            top: theme.spacingFunction(),
+            backgroundColor: theme.palette.background.paper,
+          })}
+        >
+          <CircleProgress noPadding size="xs" />
+        </Box>
       ) : (
         <Grid alignContent="center" size="auto">
           <StyledCopyTooltip
