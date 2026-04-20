@@ -21,7 +21,7 @@ const isTargetPlan = (linode: Linode) => {
 
 export const ComputePricingPlanBanner: React.FC = () => {
   const flags = useFlags();
-  const hasBannerText = Boolean(flags.computePricing?.banner?.text);
+  const hasBannerText = Boolean(flags.computePricing?.banner.text);
 
   // Fetch all Linodes only when LD flag banner text is present
   const { data: linodes } = useAllLinodesQuery({}, {}, hasBannerText);
@@ -42,7 +42,7 @@ export const ComputePricingPlanBanner: React.FC = () => {
       variant="info"
     >
       <Typography>
-        {flags.computePricing?.banner?.text}{' '}
+        {flags.computePricing?.banner.text}{' '}
         {flags.computePricing?.banner.learnMoreLink && (
           <Link to={flags.computePricing?.banner.learnMoreLink}>
             Learn more
