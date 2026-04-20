@@ -1,3 +1,4 @@
+import { TableCell, TableRow } from '@akamai/cds-components/react/Table';
 import {
   FormControlLabel,
   Hidden,
@@ -7,7 +8,6 @@ import {
 } from '@linode/ui';
 import { convertStorageUnit, pluralize } from '@linode/utilities';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { TableCell, TableRow } from 'akamai-cds-react-components/Table';
 import React from 'react';
 
 import CloudInitIcon from 'src/assets/icons/cloud-init.svg';

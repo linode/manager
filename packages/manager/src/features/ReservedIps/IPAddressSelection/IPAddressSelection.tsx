@@ -25,6 +25,11 @@ type IPAddressMode = 'auto' | 'reserved';
 type IPAddressOption = IPAddress & { label: string };
 
 export interface IPAddressSelectionProps {
+  // Header label for the selection component
+  label?: {
+    fontSize?: string;
+    text: string;
+  };
   /**
    * Controlled value for IP mode - drives the radio selection
    */
@@ -46,6 +51,13 @@ export interface IPAddressSelectionProps {
    * Used to restore selection when component remounts
    */
   selectedIP?: IPAddress | null;
+  /**
+   * Custom tooltip text for auto and reserved options
+   */
+  tooltipText?: {
+    auto: string;
+    reserved: string;
+  };
 }
 
 /**
@@ -56,11 +68,20 @@ export interface IPAddressSelectionProps {
  * that supports reserved IPs.
  */
 export const IPAddressSelection = ({
+  label = { fontSize: '14px', text: 'IP Address' },
   mode = 'auto',
   onIPModeChange,
   onReservedIPSelect,
   regionId,
   selectedIP = null,
+  tooltipText = {
+    auto: "A public IPv4 address automatically assigned to your Linode. \
+      Use this for standard web traffic that doesn't require a permanent, static IP.",
+    reserved:
+      "A reserved IPv4 address is a static public IP that can be assigned to \
+      Linodes in the same region. Use it for services that require a consistent IP address. \
+      Charges apply while the IP is reserved, even if it's not assigned to a Linode.",
+  },
 }: IPAddressSelectionProps) => {
   const [isReserveIPDrawerOpen, setIsReserveIPDrawerOpen] =
     React.useState(false);
@@ -89,8 +110,10 @@ export const IPAddressSelection = ({
 
   return (
     <FormControl>
-      <Box alignItems="center" display="flex" flexDirection="row" mt={1}>
-        <FormLabel id="ip-address-label">IP Address</FormLabel>
+      <Box alignItems="center" display="flex" flexDirection="row">
+        <FormLabel id="ip-address-label" sx={{ fontSize: label.fontSize }}>
+          {label.text}
+        </FormLabel>
       </Box>
       <RadioGroup
         aria-labelledby="ip-address-label"
@@ -109,7 +132,7 @@ export const IPAddressSelection = ({
               <TooltipIcon
                 status="info"
                 sxTooltipIcon={{ p: 0, ml: 0.5 }}
-                text="A public IPv4 address automatically assigned to your Linode. Use this for standard web traffic that doesn't require a permanent, static IP."
+                text={tooltipText.auto}
                 tooltipPosition="right"
               />
             </Stack>
@@ -127,7 +150,7 @@ export const IPAddressSelection = ({
               <TooltipIcon
                 status="info"
                 sxTooltipIcon={{ p: 0, ml: 0.5 }}
-                text="A reserved IPv4 address is a static public IP that can be assigned to Linodes in the same region. Use it for services that require a consistent IP address. Charges apply while the IP is reserved, even if it's not assigned to a Linode."
+                text={tooltipText.reserved}
                 tooltipPosition="right"
               />
             </Stack>

@@ -171,7 +171,11 @@ describe('StreamEdit', () => {
 
           // Test connection
           await user.click(testConnectionButton);
-          expect(verifyDestinationSpy).toHaveBeenCalled();
+
+          // Wait for async verification to complete
+          await waitFor(() => {
+            expect(verifyDestinationSpy).toHaveBeenCalled();
+          });
 
           await waitFor(() => {
             expect(saveStreamButton).toBeEnabled();
@@ -180,7 +184,11 @@ describe('StreamEdit', () => {
           // Edit stream
           await user.click(saveStreamButton);
 
-          expect(createDestinationSpy).toHaveBeenCalled();
+          // Wait for destination creation to complete
+          await waitFor(() => {
+            expect(createDestinationSpy).toHaveBeenCalled();
+          });
+
           await waitFor(() => {
             expect(editStreamSpy).toHaveBeenCalled();
           });
@@ -336,7 +344,11 @@ describe('StreamEdit', () => {
 
         await user.click(testConnectionButton);
 
-        expect(verifyDestinationSpy).toHaveBeenCalled();
+        // Wait for async verification to complete
+        await waitFor(() => {
+          expect(verifyDestinationSpy).toHaveBeenCalled();
+        });
+
         expect(saveStreamButton).toBeDisabled();
       });
     });

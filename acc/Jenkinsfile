@@ -13,6 +13,14 @@ pipeline {
 
     stages {
         stage("Setup pnpm") {
+            when {
+                anyOf {
+                    branch 'develop'
+                    branch 'staging'
+                    branch 'master'
+                    expression { env.CHANGE_ID != null } // It's a PR
+                }
+            }
             steps {
               nodejs(configId: "npmrc-ro", nodeJSInstallationName: "v22") {
                 sh "node -v"
@@ -23,8 +31,15 @@ pipeline {
             }
         }
 
-
         stage("Build dependencies") {
+            when {
+                anyOf {
+                    branch 'develop'
+                    branch 'staging'
+                    branch 'master'
+                    expression { env.CHANGE_ID != null } // It's a PR
+                }
+            }
             steps {
                 nodejs(configId: "npmrc-ro", nodeJSInstallationName: "v22") {
                     sh "pnpm build:validation"
@@ -33,8 +48,15 @@ pipeline {
             }
         }
 
-
         stage("Validate") {
+            when {
+                anyOf {
+                    branch 'develop'
+                    branch 'staging'
+                    branch 'master'
+                    expression { env.CHANGE_ID != null } // It's a PR
+                }
+            }
             parallel {
                 stage("Lint") {
                     steps {
@@ -60,19 +82,6 @@ pipeline {
             }
         }
 
-
-        stage('Build feature') {
-            when {
-                branch pattern: "feature/*"
-            }
-            steps {
-                nodejs(configId: "npmrc-ro", nodeJSInstallationName: "v22") {
-                    sh "pnpm build"
-                }
-            }
-        }
-
-
         stage("Build PR") {
             when {
                 expression { env.CHANGE_ID != null } // It's a PR
@@ -83,7 +92,6 @@ pipeline {
                 }
             }
         }
-
 
         stage("Build develop") {
             when {
@@ -107,7 +115,6 @@ pipeline {
                 }
             }
         }
-
 
         stage("Build staging") {
             when {
@@ -141,7 +148,6 @@ pipeline {
             }
         }
 
-
         stage("Build master") {
             when {
                 anyOf {
@@ -174,7 +180,6 @@ pipeline {
             }
         }
 
-
         stage("Scan") {
             when {
                 anyOf {
@@ -184,7 +189,7 @@ pipeline {
                 }
             }
             steps {
-                pulsarBlackduck(bdApplicationId: "cloud-manager", buildType: "FREESTYLE")
+                pulsarBlackduck(bdApplicationId: "cloud-manager", buildType: "FRONTEND")
                 pulsarSonar(jobType: "FREESTYLE", projectName: "cloud-manager", customSrc: true)
             }
         }
