@@ -11,7 +11,7 @@ export default mergeConfig(
       hookTimeout: 30000, // 30 seconds for hooks
       teardownTimeout: 30000, // 30 seconds for teardown
       // Cap in-test concurrency on CI to reduce jsdom / MSW flakes on busy agents
-      maxConcurrency: process.env.CI ? 4 : undefined,
+      maxConcurrency: process.env.CI ? 5 : undefined,
       // Additional test-specific config
       include: ['**/*.test.{js,jsx,ts,tsx}'],
       environment: 'jsdom',
