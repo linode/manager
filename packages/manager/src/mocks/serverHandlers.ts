@@ -176,6 +176,7 @@ import type {
   TokenRequest,
   UpdateImageRegionsPayload,
   User,
+  VolumesQuota,
   VolumeStatus,
 } from '@linode/api-v4';
 
@@ -1831,7 +1832,7 @@ export const handlers = [
     ];
     return HttpResponse.json(makeResourcePage(endpoints));
   }),
-  http.get('*/v4*/object-storage/quotas*', () => {
+  http.get('*/v4*/object-storage/quotas', () => {
     const quotas = [
       objEndpointQuotaFactory.build({
         description: 'The total capacity of your Object Storage account',
@@ -1840,6 +1841,46 @@ export const handlers = [
         quota_name: 'Total Capacity',
         resource_metric: 'byte',
       }),
+    ];
+
+    return HttpResponse.json(makeResourcePage(quotas));
+  }),
+  http.get('*/v4*/volumes/quotas', () => {
+    const quotas: VolumesQuota[] = [
+      {
+        quota_id: 'vol-capacity-us-east',
+        description: 'Maximum storage capacity in us-east region',
+        quota_limit: 51200,
+        quota_name: 'Block Storage Capacity',
+        quota_type: 'vol-capacity',
+        resource_metric: 'gigabyte',
+        scope: 'region',
+        region: 'us-east',
+        has_usage: true,
+      },
+      {
+        quota_id: 'vol-volumes-us-east',
+        quota_type: 'vol-volumes',
+        quota_name: 'Block Storage Volume Count',
+        description: 'Maximum number of volumes in us-east region',
+        quota_limit: 50,
+        resource_metric: 'volume',
+        scope: 'region',
+        region: 'us-east',
+        has_usage: true,
+      },
+      {
+        quota_id: 'vol-attachments-us-east',
+        quota_type: 'vol-attachments',
+        quota_name: 'Block Storage Attachment Count',
+        description:
+          'Maximum number of concurrent volume attachments in us-east region',
+        quota_limit: 400,
+        resource_metric: 'attachment',
+        scope: 'region',
+        region: 'us-east',
+        has_usage: true,
+      },
     ];
 
     return HttpResponse.json(makeResourcePage(quotas));

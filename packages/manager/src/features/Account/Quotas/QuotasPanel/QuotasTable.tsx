@@ -18,12 +18,13 @@ import type { Quota } from '@linode/api-v4';
 import type {
   QuotaScope,
   QuotaService,
+  ScopeValueType,
 } from 'src/features/Account/Quotas/quotaServices';
 import type { AttachmentError } from 'src/features/Support/SupportTicketDetail/SupportTicketDetail';
 
 interface QuotasTableProps {
   scope: QuotaScope;
-  scopeValue: null | string;
+  scopeValue: ScopeValueType;
   service: QuotaService;
 }
 

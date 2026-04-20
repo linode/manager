@@ -1,4 +1,4 @@
-import { Divider, Paper, Stack, Typography } from '@linode/ui';
+import { Paper, Stack, Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
@@ -37,35 +37,25 @@ export const QuotasPanel: React.FC<QuotasPanelProps> = ({ service, scope }) => {
       })}
       variant="outlined"
     >
-      <Typography variant="h2">
+      <Typography marginBottom={1} variant="h3">
         {service.label}:{' '}
-        {`${scope === 'global' ? '' : 'per-'}${quotaLabels[scope]}`}
+        {`${scope === 'global' ? '' : 'per '}${quotaLabels[scope]}`}
       </Typography>
 
       {scope !== 'global' && (
         <>
-          <Typography marginBottom={2} marginTop={2}>
+          <Typography marginTop={2}>
             View your {service.label} quotas by applying the{' '}
             {quotaLabels[scope]} filter below.
           </Typography>
 
-          <Stack spacing={1}>
+          <Stack marginBottom={4} spacing={1}>
             <ScopeValueSelect
               additionalProps={service.scopes[scope]?.scopeValueSelectorProps}
               onChange={(value) => setScopeValue(value)}
               scope={scope}
               sx={{ flexGrow: 1, mr: 2 }}
             />
-          </Stack>
-
-          <Divider spacingBottom={40} spacingTop={40} />
-
-          <Stack
-            direction="row"
-            justifyContent="space-between"
-            marginBottom={2}
-          >
-            <Typography variant="h3">Quotas</Typography>
           </Stack>
 
           {scope === 'obj-endpoint' ? (

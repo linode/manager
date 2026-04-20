@@ -34,10 +34,12 @@ export const QuotaServicePanel: React.FC<ServicePanelProps> = ({
 
   const serviceOptions: ServiceSelectOption[] | undefined = React.useMemo(
     () =>
-      availableServices?.map((service) => ({
-        label: service.label,
-        value: service.type,
-      })) ?? [],
+      availableServices
+        ?.map((service) => ({
+          label: service.label,
+          value: service.type,
+        }))
+        ?.sort((a, b) => a.label.localeCompare(b.label)) ?? [],
     [availableServices]
   );
 
