@@ -9,16 +9,22 @@ pipeline {
 
     environment {
         CI = 'true'
+        // Vitest JUnit for Jenkins test reporting (full + PR partial runs).
+        VITEST_JUNIT_OUT = "${WORKSPACE}/reports/vitest-junit.xml"
     }
 
     stages {
+        // Core CI only for protected branches and open PRs — not for every feature-branch push.
+        // (Lunabuild must trigger the multibranch *PR* job so CHANGE_ID / BITBUCKET_PR_ID is set;
+        // otherwise branch-only indexing runs will skip these stages.)
         stage("Setup pnpm") {
             when {
                 anyOf {
                     branch 'develop'
                     branch 'staging'
                     branch 'master'
-                    expression { env.CHANGE_ID != null } // It's a PR
+                    expression { env.CHANGE_ID != null }
+                    expression { env.BITBUCKET_PR_ID != null }
                 }
             }
             steps {
@@ -37,7 +43,8 @@ pipeline {
                     branch 'develop'
                     branch 'staging'
                     branch 'master'
-                    expression { env.CHANGE_ID != null } // It's a PR
+                    expression { env.CHANGE_ID != null }
+                    expression { env.BITBUCKET_PR_ID != null }
                 }
             }
             steps {
@@ -54,7 +61,8 @@ pipeline {
                     branch 'develop'
                     branch 'staging'
                     branch 'master'
-                    expression { env.CHANGE_ID != null } // It's a PR
+                    expression { env.CHANGE_ID != null }
+                    expression { env.BITBUCKET_PR_ID != null }
                 }
             }
             parallel {
@@ -81,12 +89,13 @@ pipeline {
               branch 'develop'
               branch 'staging'
               branch 'master'
-              expression { env.CHANGE_ID != null } // It's a PR
+              expression { env.CHANGE_ID != null }
+              expression { env.BITBUCKET_PR_ID != null }
             }
           }
           steps {
               nodejs(configId: "npmrc-ro", nodeJSInstallationName: "v22") {
-                sh "pnpm test"
+                sh "pnpm test:ci"
               }
             }
         }
@@ -201,6 +210,12 @@ pipeline {
                 pulsarBlackduck(bdApplicationId: "cloud-manager", buildType: "FRONTEND")
                 pulsarSonar(jobType: "FREESTYLE", projectName: "cloud-manager", customSrc: true)
             }
+        }
+    }
+
+    post {
+        always {
+            junit testResults: 'reports/vitest-junit*.xml', allowEmptyResults: true
         }
     }
 }
