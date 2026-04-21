@@ -1,6 +1,7 @@
+import { Select } from '@akamai/cds-components/react';
 import { useAccountUsers } from '@linode/queries';
 import { getAPIFilterFromQuery } from '@linode/search';
-import { Button, Paper, Select } from '@linode/ui';
+import { Button, Paper } from '@linode/ui';
 import { Grid, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { useNavigate, useSearch } from '@tanstack/react-router';
@@ -208,23 +209,25 @@ export const UsersLanding = () => {
             {isChildOrDelegateWithDelegationEnabled && (
               <Select
                 disabled={!permissions?.view_user}
-                hideLabel
-                label="Select user type"
-                onChange={(_, selected) => {
+                items={filterableOptions}
+                onChange={(event) => {
+                  const nextSelected =
+                    event.detail as unknown as null | SelectOption;
+
                   pagination.handlePageChange(1);
-                  setUserType(selected ?? null);
+                  setUserType(nextSelected ?? null);
                   navigate({
                     to: '/iam/users',
                     search: (prev) => ({
                       ...prev,
-                      users: String(selected?.value ?? 'all'),
+                      users: String(nextSelected?.value ?? 'all'),
                     }),
                   });
                 }}
-                options={filterableOptions}
                 placeholder="All User Types"
-                sx={{ minWidth: 250 }}
-                value={userType}
+                selected={userType}
+                style={{ minWidth: 250 }}
+                valueFn={(item) => (item as SelectOption).label}
               />
             )}
           </Grid>

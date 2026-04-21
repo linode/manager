@@ -79,13 +79,13 @@ describe('DefaultEntityAccess', () => {
       },
       isLoading: false,
     });
-    renderWithTheme(<DefaultEntityAccess />);
+    const { container } = renderWithTheme(<DefaultEntityAccess />);
 
     expect(
       screen.getByText('Default Entity Access for Delegate Users')
     ).toBeVisible();
     expect(screen.getByPlaceholderText('Search')).toBeVisible();
-    expect(screen.getByPlaceholderText('All Entities')).toBeVisible();
+    expect(container.querySelector('cds-select')).toBeVisible();
     expect(screen.getByRole('table')).toBeVisible();
   });
   it('should render empty state', async () => {
