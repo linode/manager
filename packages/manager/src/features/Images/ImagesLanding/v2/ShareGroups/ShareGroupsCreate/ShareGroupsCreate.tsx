@@ -194,7 +194,9 @@ export const ShareGroupsCreate = () => {
                 <Typography variant="body1">
                   <b>{index + 1}. Original image: </b>
                 </Typography>
-                <Typography variant="body1">{image.label}</Typography>
+                <Typography variant="body1">
+                  {selectedImages[index].label}
+                </Typography>
               </Stack>
               <Controller
                 control={control}
