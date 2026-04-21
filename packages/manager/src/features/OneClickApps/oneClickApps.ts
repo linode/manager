@@ -2399,11 +2399,12 @@ export const oneClickApps: Record<number, OCA> = {
       start: '000000',
     },
     description: `Run open-source models like Llama 3, Mistral, and Gemma with a simple CLI and API. Ollama handles model weights, configuration, and GPU acceleration, making it easy to integrate AI into your local workflow.`,
+    isNew: true,
     logo_url: 'ollama.svg',
     related_guides: [
       {
-        href: 'https://www.linode.com/docs/guides/how-to-deploy-ollama/',
-        title: 'Deploy Ollama on a GPU Instance',
+        href: 'https://www.linode.com/docs/marketplace-docs/guides/ollama/',
+        title: 'Deploy Ollama',
       },
     ],
     summary: 'A lightweight, extensible framework for running LLMs locally.',
