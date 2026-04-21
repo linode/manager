@@ -134,6 +134,60 @@ We support mocking API requests both in test suites and the browser using the [m
 
 These mocks are automatically enabled for tests (using `beforeAll` and `afterAll` in src/setupTests.ts, which is run when setting up the Vitest environment).
 
+### CI-scoped test runs
+
+In CI, Pull Request builds automatically run only the tests that are relevant to the files changed in the branch. This avoids running the full suite (~800 test files) on every PR and keeps feedback fast.
+
+#### How it works
+
+The `pnpm test:ci` script (backed by `acc/run-vitest-ci.mjs`) decides what to run:
+
+| Scenario | What runs |
+|---|---|
+| No PR environment variables (local / nightly) | Full suite via `vitest run` |
+| PR with only CI / docs / lockfile changes | Skipped — stub JUnit written so Jenkins stays green |
+| PR with source files changed in `packages/manager` | `vitest related <changed files>` scoped to that package |
+| PR changing root `vitest.config.ts` | Full suite (config change invalidates everything) |
+| PR changing `packages/*/vite.config.ts` or `src/testSetup.ts` | Full suite for that package only |
+| PR changing `packages/queries` or `packages/validation` | Full suite for `packages/manager` + `packages/api-v4` |
+| Multiple packages changed | Per-package scoped runs in sequence, one JUnit XML per package |
+
+`vitest related` traces the import graph upward: given the changed source files, it finds every test file that directly or transitively imports one of them and runs only those. Running from inside the package directory (rather than the workspace root) keeps the graph bounded to that package.
+
+#### Running the CI script locally
+
+By default `pnpm test:ci` runs the full suite because there are no PR environment variables. To simulate a PR scoped run locally:
+
+```shell
+# compute the merge-base once
+MB=$(git merge-base HEAD develop)
+
+# simulate a PR run — only tests affected by your branch changes will run
+VITEST_CI_MODE=changed VITEST_CHANGED_SINCE="$MB" pnpm test:ci
+```
+
+Or force a specific mode regardless of environment variables:
+
+```shell
+# always run the full suite (same as nightly)
+VITEST_CI_MODE=full pnpm test:ci
+
+# always run in scoped mode, auto-fetching merge-base from origin/develop
+VITEST_CI_MODE=changed pnpm test:ci
+```
+
+#### Relevant environment variables
+
+| Variable | Description | Default |
+|---|---|---|
+| `VITEST_CI_MODE` | `full` or `changed` — overrides auto-detection | Auto (PR vars → `changed`, otherwise `full`) |
+| `VITEST_CHANGED_SINCE` | Explicit git ref used as base for diff; skips `git fetch` | Computed via `git merge-base HEAD origin/<target>` |
+| `CHANGE_TARGET` | Target branch for merge-base resolution | `develop` |
+| `BITBUCKET_PR_DESTINATION_BRANCH` | Bitbucket equivalent of `CHANGE_TARGET` | — |
+| `VITEST_JUNIT_OUT` | Path for JUnit XML output | `<repo>/reports/vitest-junit.xml` |
+
+JUnit reports from scoped runs are written per package: `reports/vitest-junit-manager.xml`, `reports/vitest-junit-ui.xml`, etc. The Jenkins pipeline collects all of them with `reports/vitest-junit*.xml`.
+
 ## End-to-End tests
 
 We use [Cypress](https://cypress.io) for end-to-end testing. Test files are found in the `packages/manager/cypress/e2e` directory.
