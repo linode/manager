@@ -97,7 +97,7 @@ describe('Users', () => {
       data: profileFactory.build({ user_type: 'child' }),
     });
 
-    const { getByPlaceholderText, getByLabelText } = renderWithTheme(
+    const { container, getByPlaceholderText } = renderWithTheme(
       <UsersLanding />,
       {
         initialRoute: '/iam',
@@ -108,6 +108,6 @@ describe('Users', () => {
     );
 
     expect(getByPlaceholderText('Filter')).toBeVisible();
-    expect(getByLabelText('Select user type')).toBeVisible();
+    expect(container.querySelector('cds-select')).toBeVisible();
   });
 });
