@@ -1,7 +1,6 @@
 import { useAccountUser, useUserRoles } from '@linode/queries';
 import {
   CircleProgress,
-  ErrorState,
   Notice,
   Paper,
   Typography,
@@ -11,13 +10,11 @@ import { useParams } from '@tanstack/react-router';
 import React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { ErrorState } from 'src/features/IAM/Shared/ErrorState/ErrorState';
 
 import { usePermissions } from '../../hooks/usePermissions';
 import { AssignedEntitiesTable } from '../../Shared/AssignedEntitiesTable/AssignedEntitiesTable';
-import {
-  ERROR_STATE_TEXT,
-  NO_ASSIGNED_ENTITIES_TEXT,
-} from '../../Shared/constants';
+import { NO_ASSIGNED_ENTITIES_TEXT } from '../../Shared/constants';
 import { NoAssignedRoles } from '../../Shared/NoAssignedRoles/NoAssignedRoles';
 
 export const UserEntities = () => {
@@ -53,7 +50,7 @@ export const UserEntities = () => {
   }
 
   if (error || assignedRolesError) {
-    return <ErrorState errorText={ERROR_STATE_TEXT} />;
+    return <ErrorState />;
   }
 
   return (

@@ -9,6 +9,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import {
   ERROR_STATE_TEXT,
+  ERROR_STATE_TITLE,
   NO_ASSIGNED_ROLES_TEXT,
 } from '../../Shared/constants';
 import { UserRoles } from './UserRoles';
@@ -212,6 +213,7 @@ describe('UserRoles', () => {
     });
 
     renderWithTheme(<UserRoles />);
+    expect(screen.getByText(ERROR_STATE_TITLE)).toBeVisible();
     expect(screen.getByText(ERROR_STATE_TEXT)).toBeVisible();
   });
 });
