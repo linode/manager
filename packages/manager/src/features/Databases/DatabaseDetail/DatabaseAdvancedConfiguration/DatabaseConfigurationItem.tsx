@@ -1,3 +1,4 @@
+import { Button } from '@akamai/cds-components/react';
 import {
   Autocomplete,
   CloseIcon,
@@ -6,7 +7,6 @@ import {
   Toggle,
   Typography,
 } from '@linode/ui';
-import { Button } from 'akamai-cds-react-components';
 import React from 'react';
 
 import {

@@ -41,6 +41,7 @@ yarn-error.log*
 
 # Test results
 junit.xml
+reports/vitest-junit*.xml
 
 # Runtime data
 pids

@@ -1,3 +1,4 @@
+import { QueryClient } from '@tanstack/react-query';
 import { waitForElementToBeRemoved } from '@testing-library/react';
 import * as React from 'react';
 
@@ -108,6 +109,12 @@ describe('NetworkLoadBalancersLanding', () => {
   });
 
   it('displays error state when there is an error', async () => {
+    // Use a custom QueryClient with retries disabled so we don't have to wait for React Query's retry logic.
+    // If we didn't do this, the test would need to wait for up to 7+ seconds because of React Query's exponential backoff retry delay.
+    const queryClient = new QueryClient({
+      defaultOptions: { queries: { retry: false } },
+    });
+
     server.use(
       http.get('*/v4beta/netloadbalancers', () => {
         return HttpResponse.json(
@@ -123,18 +130,13 @@ describe('NetworkLoadBalancersLanding', () => {
       })
     );
 
-    const { getByTestId } = renderWithTheme(<NetworkLoadBalancersLanding />);
+    const { findByText } = renderWithTheme(<NetworkLoadBalancersLanding />, {
+      queryClient,
+    });
 
-    // Wait for the component to load and display the error
-    await waitForElementToBeRemoved(() => getByTestId(loadingTestId)).catch(
-      () => {
-        // Component might show error without removing the loading state
-      }
-    );
+    const errorElement = await findByText('An unexpected error occurred.');
 
-    // The component should display an error message
-    const errorElement = document.body.querySelector('*');
-    expect(errorElement).toBeTruthy();
+    expect(errorElement).toBeVisible();
   });
 
   it('displays loading state initially', () => {

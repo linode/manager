@@ -1,10 +1,9 @@
 import { QuotaResourceMetrics } from '@linode/api-v4';
 import { profileFactory } from '@linode/utilities';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { renderHook } from '@testing-library/react';
-import * as React from 'react';
 
 import { quotaFactory, quotaUsageFactory } from 'src/factories/quotas';
+import { wrapWithTheme } from 'src/utilities/testHelpers';
 
 import {
   convertResourceMetric,
@@ -30,25 +29,11 @@ vi.mock('src/queries/object-storage/queries', () => {
 });
 
 describe('useGetLocationsForQuotaService', () => {
-  const wrapper = ({ children }: { children: React.ReactNode }) => {
-    const queryClient = new QueryClient({
-      defaultOptions: {
-        queries: {
-          retry: false,
-        },
-      },
-    });
-
-    return (
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-    );
-  };
-
   it('should handle object storage endpoints with null values', () => {
     const { result } = renderHook(
       () => useGetLocationsForQuotaService('object-storage'),
       {
-        wrapper,
+        wrapper: wrapWithTheme,
       }
     );
 
@@ -72,7 +57,7 @@ describe('useGetLocationsForQuotaService', () => {
     const { result } = renderHook(
       () => useGetLocationsForQuotaService('object-storage'),
       {
-        wrapper,
+        wrapper: wrapWithTheme,
       }
     );
 

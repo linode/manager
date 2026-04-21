@@ -139,13 +139,27 @@ describe('AssignedEntitiesTable', () => {
       data: mockEntities,
     });
 
-    renderWithTheme(<AssignedEntitiesTable />);
+    const { container, rerender } = renderWithTheme(<AssignedEntitiesTable />);
 
-    const autocomplete = screen.getByPlaceholderText('All Entities');
-    await userEvent.type(autocomplete, 'Firewalls');
+    const cdsSelect = container.querySelector('cds-select');
+    expect(cdsSelect).not.toBeNull();
+
+    cdsSelect!.dispatchEvent(
+      new CustomEvent('change', {
+        detail: { label: 'Firewalls', value: 'firewall' },
+        bubbles: true,
+      })
+    );
+
+    queryMocks.useSearch.mockReturnValue({
+      query: '',
+      entityType: 'firewall',
+    });
+
+    rerender(<AssignedEntitiesTable />);
 
     await waitFor(() => {
-      expect(screen.queryByText('no_devices')).toBeVisible();
+      expect(screen.getByText('no_devices')).toBeVisible();
     });
   });
 });

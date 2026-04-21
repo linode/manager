@@ -219,6 +219,26 @@ export const getStickinessOptions = (protocol: Protocol) => {
   );
 };
 
+export const getBackendStatusIndicator = (up?: number, down?: number) => {
+  if (up === undefined && down === undefined) {
+    return 'inactive';
+  }
+
+  if (down === 0 && up === 0) {
+    return 'inactive';
+  }
+
+  if (down === 0) {
+    return 'active';
+  }
+
+  if (up === 0) {
+    return 'error';
+  }
+
+  return 'other';
+};
+
 /**
  * Returns whether or not features related to the NB-VPC project
  * should be enabled.
@@ -236,7 +256,7 @@ export const useIsNodebalancerVPCEnabled = () => {
 };
 
 /**
- * Returns whether or not features related to the NodeBalancer Dual Stack project
+ * Returns whether or not features related to the NodeBalancer IPv6 project
  * should be enabled.
  *
  * Currently, this just uses the `nodebalancerIPv6` feature flag as a source of truth,
