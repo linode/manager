@@ -25,6 +25,36 @@ HTMLCanvasElement.prototype.getContext = () => {
 };
 
 /**
+ * Stub LaunchDarkly in unit tests: avoids loading the real SDK (slow, flaky teardown
+ * when several Vitest processes run) while preserving `LDProvider` + `flags` behavior
+ * via React context so `renderWithTheme(..., { flags })` keeps working.
+ */
+vi.mock('launchdarkly-react-client-sdk', async () => {
+  const React = await import('react');
+  const LDFlagsContext = React.createContext<Record<string, unknown>>({});
+
+  return {
+    LDProvider: ({
+      children,
+      flags,
+    }: {
+      children?: React.ReactNode;
+      flags?: Record<string, unknown>;
+    }) =>
+      React.createElement(
+        LDFlagsContext.Provider,
+        { value: flags ?? {} },
+        children ?? null
+      ),
+    useFlags: () => React.useContext(LDFlagsContext),
+    useLDClient: () => ({
+      identify: vi.fn().mockResolvedValue(undefined),
+    }),
+    withLDProvider: () => (component: React.ComponentType) => component,
+  };
+});
+
+/**
  * When we mock chartjs below, we need
  * to use a class component for Line,
  * bc our abstraction passes a ref to it.
