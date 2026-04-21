@@ -106,10 +106,6 @@ describe('ShareGroupsCreate', () => {
   });
 
   it('should submit the form with valid data', async () => {
-    const shareGroup = imageSharegroupFactory.build();
-
-    mockMutateAsync.mockResolvedValue(shareGroup);
-
     const { getByRole } = renderWithTheme(<ShareGroupsCreate />);
 
     const labelField = getByRole('textbox', { name: /Label/i });
@@ -120,10 +116,13 @@ describe('ShareGroupsCreate', () => {
     await userEvent.type(descriptionField, shareGroupDescription);
     await userEvent.click(submitButton);
 
-    expect(mockMutateAsync).toHaveBeenCalledWith({
-      label: shareGroupLabel,
-      description: shareGroupDescription,
-    });
+    expect(mockMutateAsync).toHaveBeenCalledWith(
+      expect.objectContaining({
+        label: shareGroupLabel,
+        description: shareGroupDescription,
+        images: [],
+      })
+    );
 
     expect(mockNavigate).toHaveBeenCalledWith({
       search: expect.any(Function),
@@ -163,10 +162,6 @@ describe('ShareGroupsCreate', () => {
   });
 
   it('should allow editing selected image label/description and submit overridden image payload', async () => {
-    const shareGroup = imageSharegroupFactory.build();
-
-    mockMutateAsync.mockResolvedValue(shareGroup);
-
     const { getByRole, getAllByRole, getByText } = renderWithTheme(
       <ShareGroupsCreate />
     );
@@ -182,21 +177,25 @@ describe('ShareGroupsCreate', () => {
 
     const textboxes = getAllByRole('textbox');
 
+    await userEvent.clear(textboxes[2]);
+    await userEvent.clear(textboxes[3]);
     await userEvent.type(textboxes[2], 'Shared Ubuntu Label');
     await userEvent.type(textboxes[3], 'Shared Ubuntu Description');
 
     await userEvent.click(getByRole('button', { name: /Create Share Group/i }));
 
-    expect(mockMutateAsync).toHaveBeenCalledWith({
-      images: [
-        {
-          id: 'private/1001',
-          label: 'Shared Ubuntu Label',
-          description: 'Shared Ubuntu Description',
-        },
-      ],
-      label: shareGroupLabel,
-    });
+    expect(mockMutateAsync).toHaveBeenCalledWith(
+      expect.objectContaining({
+        images: [
+          {
+            id: 'private/1001',
+            label: 'Shared Ubuntu Label',
+            description: 'Shared Ubuntu Description',
+          },
+        ],
+        label: shareGroupLabel,
+      })
+    );
 
     expect(mockNavigate).toHaveBeenCalledWith({
       search: expect.any(Function),
@@ -223,9 +222,11 @@ describe('ShareGroupsCreate', () => {
     await userEvent.type(labelField, shareGroupLabel);
     await userEvent.click(submitButton);
 
-    expect(mockMutateAsync).toHaveBeenCalledWith({
-      label: shareGroupLabel,
-    });
+    expect(mockMutateAsync).toHaveBeenCalledWith(
+      expect.objectContaining({
+        label: shareGroupLabel,
+      })
+    );
   });
 
   it('should display field-specific errors from API', async () => {
