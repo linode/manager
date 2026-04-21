@@ -8,7 +8,7 @@ import { useFlags } from 'src/hooks/useFlags';
 
 import type { Linode } from '@linode/api-v4';
 
-// Checks if the Linode type matches any targeted plan matcher as defined by feature flags
+// Checks if thef Linode type matches any targeted plan matcher from LD flag
 const isTargetPlan = (linode: Linode, targetPlanMatchers: string[]) => {
   const linodeType = linode.type;
   if (!linodeType) return false;
