@@ -232,7 +232,9 @@ export const createDatabaseConnectionPoolSchema = object({
     .required('Pool name is required')
     .max(63, 'Pool name must not exceed 63 characters'),
   size: DatabaseConnectionPoolSize.required(),
-  username: string().required('Username is required').nullable(),
+  username: string()
+    .required('Either reuse inbound user or enter a specific username')
+    .nullable(),
 });
 
 export const updateDatabaseConnectionPoolSchema = object({
