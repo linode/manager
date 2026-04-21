@@ -63,8 +63,7 @@ export const QuotasTable = (props: QuotasTableProps) => {
   if (quotasError) {
     return (
       <Stack data-testid={testId}>
-        {' '}
-        <ErrorState errorText={quotasError} />;{' '}
+        <ErrorState errorText={quotasError} />
       </Stack>
     );
   }
