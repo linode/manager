@@ -7,7 +7,7 @@
 import type { ProductTabDetails } from '.';
 
 const overviewMarkdown = `
-Myota is a cyberstorage platform that protects data at the storage layer. It presents as S3-compatible object storage. Applications write data to Myota using the same S3 API they already use. At write time, Myota encrypts each chunk with a unique AES-256 key, shards the encrypted data across multiple storage locations using Reed-Solomon erasure coding, and splits the encryption keys themselves across distributed repositories using Shamir’s Secret Sharing. No single location holds a complete, readable copy of anything.
+Myota is a cyberstorage platform that protects data at the storage layer. It presents as S3-compatible object storage. Applications write data to Myota using the same S3 API they already use. At write time, Myota encrypts each chunk with a unique AES-256 key, shards the encrypted data across multiple storage locations using Reed-Solomon erasure coding, and splits the encryption keys themselves across distributed repositories using Shamir's Secret Sharing. No single location holds a complete, readable copy of anything.
 
 At read time, the application performs a standard S3 GET. Myota reassembles the minimum number of shards needed (two of four by default), decrypts in memory, and returns the data. The plaintext exists only in memory for the duration of the request. At rest, every location holds only unintelligible fragments. This is runtime-only decryption applied to object storage.
 
@@ -31,7 +31,7 @@ Akamai Cloud provides compute, object storage with versioning and Object Lock, K
 
 ### Key features
 
-* **Shard and Spread™**: Every chunk is encrypted with a unique AES-256 key, sharded via Reed-Solomon, keys split via Shamir’s Secret Sharing. Security is intrinsic to the data at write time.
+* **Shard and Spread™**: Every chunk is encrypted with a unique AES-256 key, sharded via Reed-Solomon, keys split via Shamir's Secret Sharing. Security is intrinsic to the data at write time.
 * **S3-compatible**: Standard S3 API. Backup orchestrators, analytics engines (Spark, Presto, Trino), and any application that writes to S3 works with Myota without code changes.
 * **Runtime-only decryption**: Data is only readable when the application performs a GET. At rest, no complete object exists anywhere.
 * **Resilience without redundancy**: Shards distributed across Akamai regions. Lose a storage node or an entire region. Data reconstructed from remaining shards. No replication, no failover, no intervention.
@@ -69,7 +69,7 @@ const documentationMarkdown = `
 | :---- | :---- |
 | **Deployment Model** | SaaS (Myota Cloud), on-prem (Myota-in-a-Box with StorONE), or hybrid. Cortex runs on Akamai LKE or standard Linode compute. |
 | **Storage API** | S3-compatible (PutObject, GetObject, DeleteObject, ListObjects, multipart upload) |
-| **Encryption** | AES-256 per chunk, unique key per object. Keys protected via Shamir’s Secret Sharing (no master key). |
+| **Encryption** | AES-256 per chunk, unique key per object. Keys protected via Shamir's Secret Sharing (no master key). |
 | **Erasure Coding** | Reed-Solomon. Default 4 shards, 2 required for reconstruction. Configurable up to 90+ locations. |
 | **Shard Repositories** | Any S3-compatible storage. Akamai Object Storage, AWS S3, Azure Blob, GCP, on-prem. |
 | **Immutability** | WORM-compliant. Object lock with versioning. Tamper-proof change log for instant rewind. |

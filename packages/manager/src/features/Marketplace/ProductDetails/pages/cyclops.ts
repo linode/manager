@@ -9,7 +9,7 @@ import type { ProductTabDetails } from '.';
 const overviewMarkdown = `
 Redflag AI is a premier content security platform designed to protect high-value live sports and entertainment assets from sophisticated piracy. We solve the "visibility gap" by detecting illicit streams/videos that use AI-cloaking, mirroring, and speed-manipulation to bypass standard security. Our platform ensures rights holders maintain absolute control over their broadcasts/assets, protecting rights valuation and reclaiming revenue from the "shadow ecosystem."
 
-Powered by Cyclops AI, the platform provides real-time detection across global IPTV networks, internet websites and social media. Through our deep integration with Akamai’s edge, we deploy forensic watermarking that survives re-streaming to map leaks back to specific users. Once identified, our automated kill-switch executes a session-level override to terminate the pirate feed instantly, while our Content ID suite monetizes unauthorized highlights.
+Powered by Cyclops AI, the platform provides real-time detection across global IPTV networks, internet websites and social media. Through our deep integration with Akamai's edge, we deploy forensic watermarking that survives re-streaming to map leaks back to specific users. Once identified, our automated kill-switch executes a session-level override to terminate the pirate feed instantly, while our Content ID suite monetizes unauthorized highlights.
 
 As an official YouTube partner and Google TCRP member, Redflag AI offers infrastructure-level enforcement at the speed of live sports. We are the only solution that combines surgical forensic attribution with a "zero-friction" deployment, making us the ideal choice for global leagues and broadcasters looking to turn piracy into a managed asset class.
 
@@ -20,7 +20,7 @@ As an official YouTube partner and Google TCRP member, Redflag AI offers infrast
 * **Automated Live Kill-Switch**: Terminate pirate feeds in seconds by triggering a session-level override that swaps unauthorized streams for black frames or custom segments.
 * **Unified Revenue Recovery**: Convert stolen views into profit through an integrated Content ID dashboard that automatically claims and monetizes unauthorized match highlights.
 * **Infrastructure-Level Takedowns**: Accelerate removals via direct API escalations with CDNs, DNS providers, and registrars to collapse pirate networks at the source.
-* **Google TCRP Integration**: Maintain search engine dominance by utilizing priority access to Google’s Trusted Copyright Removal Program for high-speed de-indexing.
+* **Google TCRP Integration**: Maintain search engine dominance by utilizing priority access to Google's Trusted Copyright Removal Program for high-speed de-indexing.
 * **Comprehensive Analytics Dashboard**: Track recovered revenue and monitor the global "shadow ecosystem" with real-time heatmaps and forensic attribution metrics.
 * **Zero-Friction Deployment**: Protect your entire live roster in minutes using a language-agnostic, lightweight edge integration designed for high-stakes broadcasting.
 
@@ -30,7 +30,7 @@ As an official YouTube partner and Google TCRP member, Redflag AI offers infrast
 Shield high-value broadcast windows for live events like football, racing, or combat sports. Detect illicit restreaming within minutes of kickoff and use the forensic kill-switch to terminate the specific sessions feeding pirate networks without affecting legitimate subscribers.
 
 **Automated Highlight Monetization**
-Convert viral piracy into a new revenue stream by automatically identifying and claiming unauthorized match highlights across YouTube and social media. Use the unified Content ID dashboard to redirect ad revenue from "shadow channels" back to the league’s official coffers.
+Convert viral piracy into a new revenue stream by automatically identifying and claiming unauthorized match highlights across YouTube and social media. Use the unified Content ID dashboard to redirect ad revenue from "shadow channels" back to the league's official coffers.
 
 **Infrastructure-Level Anti-Cloning**
 Neutralize sophisticated pirate networks that clone entire OTT web platforms using cloaking and redirects to hide from search engines. Use Cyclops AI to unmask hidden infringements and trigger domain-level de-indexing through Google TCRP and direct CDN escalations.
@@ -41,7 +41,7 @@ Identify the exact source of pre-release VOD leaks or "insider" streaming by ext
 **Cross-Platform Social Enforcement**
 Maintain brand integrity by monitoring and removing unauthorized live broadcasts and "clips" across TikTok, Instagram, and Facebook. Automate the submission of high-volume takedown notices through registered agent status to collapse infringing audiences in real-time.
 
-Ready to reclaim your broadcast revenue and secure your live window? Contact our team to schedule a live demo of the Redflag AI platform and receive a Free Leak Audit of your current sports assets. We’ll work with your team to design a seamless, edge-integrated proof-of-concept that demonstrates our forensic detection and kill-switch capabilities in your specific environment.
+Ready to reclaim your broadcast revenue and secure your live window? Contact our team to schedule a live demo of the Redflag AI platform and receive a Free Leak Audit of your current sports assets. We'll work with your team to design a seamless, edge-integrated proof-of-concept that demonstrates our forensic detection and kill-switch capabilities in your specific environment.
 `.trim();
 
 const documentationMarkdown = `
@@ -54,7 +54,7 @@ const documentationMarkdown = `
 | **Packager compatibility** | Native: Shaka, Bento4, Unified Streaming, Harmonic, Ateme, MediaKind |
 | **Edge integration** | Language-Agnostic: Akamai, CloudFront, Fastly (Requires KV Store access) |
 | **Detection latency** | Live Window: <60 seconds from stream start |
-| **Enforcement speed** | Kill-Switch: 1–10 minutes for identification and session termination |
+| **Enforcement speed** | Kill-Switch: 1-10 minutes for identification and session termination |
 | **Encoder requirements** | CPU/GPU: Linux/Windows VM (Min: 8GB vCPU / 1GB RAM or 2GB vRAM) |
 | **Ingress support** | UDP or SRT (MPEG-TS, single program, h.264 video stream) |
 | **Processing speed** | 3.6 seconds to read/modulate/write a 5-second 1080p60 chunk |
