@@ -45,6 +45,7 @@
     "docs": "bunx vitepress@1.0.0-rc.44 dev docs",
     "storybook": "pnpm run --filter @linode/cloud-manager storybook",
     "test": "vitest run",
+    "test:ci": "node acc/run-vitest-ci.mjs",
     "test:watch": "vitest",
     "test:manager": "pnpm run --filter @linode/cloud-manager test",
     "test:sdk": "pnpm run --filter @linode/api-v4 test",

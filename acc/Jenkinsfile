@@ -1,6 +1,6 @@
 pipeline {
     agent {
-        label "cloud-focal"
+        label "fee"
     }
 
     options {
@@ -9,10 +9,24 @@ pipeline {
 
     environment {
         CI = 'true'
+        // Vitest JUnit for Jenkins test reporting (full + PR partial runs).
+        VITEST_JUNIT_OUT = "${WORKSPACE}/reports/vitest-junit.xml"
     }
 
     stages {
+        // Core CI only for protected branches and open PRs — not for every feature-branch push.
+        // (Lunabuild must trigger the multibranch *PR* job so CHANGE_ID / BITBUCKET_PR_ID is set;
+        // otherwise branch-only indexing runs will skip these stages.)
         stage("Setup pnpm") {
+            when {
+                anyOf {
+                    branch 'develop'
+                    branch 'staging'
+                    branch 'master'
+                    expression { env.CHANGE_ID != null }
+                    expression { env.BITBUCKET_PR_ID != null }
+                }
+            }
             steps {
               nodejs(configId: "npmrc-ro", nodeJSInstallationName: "v22") {
                 sh "node -v"
@@ -23,8 +37,16 @@ pipeline {
             }
         }
 
-
         stage("Build dependencies") {
+            when {
+                anyOf {
+                    branch 'develop'
+                    branch 'staging'
+                    branch 'master'
+                    expression { env.CHANGE_ID != null }
+                    expression { env.BITBUCKET_PR_ID != null }
+                }
+            }
             steps {
                 nodejs(configId: "npmrc-ro", nodeJSInstallationName: "v22") {
                     sh "pnpm build:validation"
@@ -33,8 +55,16 @@ pipeline {
             }
         }
 
-
         stage("Validate") {
+            when {
+                anyOf {
+                    branch 'develop'
+                    branch 'staging'
+                    branch 'master'
+                    expression { env.CHANGE_ID != null }
+                    expression { env.BITBUCKET_PR_ID != null }
+                }
+            }
             parallel {
                 stage("Lint") {
                     steps {
@@ -50,28 +80,25 @@ pipeline {
                         }
                     }
                 }
-                stage("Test") {
-                    steps {
-                        nodejs(configId: "npmrc-ro", nodeJSInstallationName: "v22") {
-                            sh "pnpm test"
-                        }
-                    }
-                }
             }
         }
 
-
-        stage('Build feature') {
-            when {
-                branch pattern: "feature/*"
+        stage("Test") {
+          when {
+            anyOf {
+              branch 'develop'
+              branch 'staging'
+              branch 'master'
+              expression { env.CHANGE_ID != null }
+              expression { env.BITBUCKET_PR_ID != null }
             }
-            steps {
-                nodejs(configId: "npmrc-ro", nodeJSInstallationName: "v22") {
-                    sh "pnpm build"
-                }
+          }
+          steps {
+              nodejs(configId: "npmrc-ro", nodeJSInstallationName: "v22") {
+                sh "pnpm test:ci"
+              }
             }
         }
-
 
         stage("Build PR") {
             when {
@@ -83,7 +110,6 @@ pipeline {
                 }
             }
         }
-
 
         stage("Build develop") {
             when {
@@ -107,7 +133,6 @@ pipeline {
                 }
             }
         }
-
 
         stage("Build staging") {
             when {
@@ -141,7 +166,6 @@ pipeline {
             }
         }
 
-
         stage("Build master") {
             when {
                 anyOf {
@@ -174,7 +198,6 @@ pipeline {
             }
         }
 
-
         stage("Scan") {
             when {
                 anyOf {
@@ -184,9 +207,15 @@ pipeline {
                 }
             }
             steps {
-                pulsarBlackduck(bdApplicationId: "cloud-manager", buildType: "FREESTYLE")
+                pulsarBlackduck(bdApplicationId: "cloud-manager", buildType: "FRONTEND")
                 pulsarSonar(jobType: "FREESTYLE", projectName: "cloud-manager", customSrc: true)
             }
+        }
+    }
+
+    post {
+        always {
+            junit testResults: 'reports/vitest-junit*.xml', allowEmptyResults: true
         }
     }
 }

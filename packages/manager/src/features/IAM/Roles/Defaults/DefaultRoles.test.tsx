@@ -5,6 +5,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import {
   ERROR_STATE_TEXT,
+  ERROR_STATE_TITLE,
   NO_ASSIGNED_DEFAULT_ROLES_TEXT,
 } from '../../Shared/constants';
 import { DefaultRoles } from './DefaultRoles';
@@ -103,6 +104,7 @@ describe('DefaultRoles', () => {
     });
 
     renderWithTheme(<DefaultRoles />);
+    expect(screen.getByText(ERROR_STATE_TITLE)).toBeVisible();
     expect(screen.getByText(ERROR_STATE_TEXT)).toBeVisible();
   });
 

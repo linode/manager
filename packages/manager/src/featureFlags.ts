@@ -223,6 +223,7 @@ export interface Flags {
   aclpAlerting: AclpAlerting;
   aclpAlertServiceTypeConfig: AclpAlertServiceTypeConfig[];
   aclpLogs: AclpLogsFlag;
+  aclpNbMetricsIntegration: boolean;
   aclpReadEndpoint: string;
   aclpResourceTypeMap: CloudPulseResourceTypeMapFlag[];
   aclpServices: Partial<AclpServices>;
