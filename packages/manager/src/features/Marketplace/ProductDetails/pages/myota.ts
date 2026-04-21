@@ -22,7 +22,6 @@ Akamai Cloud provides compute, object storage with versioning and Object Lock, K
 | **Object immutability** | Object Lock (policy-based, Governance and Compliance modes) | Mathematical immutability via sharding. No admin override. No credentials can reverse it. Complementary to Object Lock. |
 | **Data protection at rest** | Versioning retains object history in one region | Data encrypted, sharded, and distributed across regions at write time. Protection against credential compromise, insider access, and storage breach. |
 | **Cross-region resilience** | Not available. Each bucket exists in a single region. | Shards distributed across Akamai regions by default. All regions are active. Lose a region, reconstruct from remaining shards. No replication needed. |
-| **Shards distributed across Akamai regions by default. All regions are active. Lose a region, reconstruct from remaining shards. No replication needed.** |
 | **Block storage protection** | No backup service for Block Storage volumes | Workloads that write to S3 (via Velero, application sync, or backup orchestrators) get Cyberstorage protection at the storage target. |
 | **Kubernetes data protection** | No native LKE backup | S3 target for Velero or any K8s backup tool. Persistent volume data protected by Shard and Spread™. |
 | **Cross-region backup automation** | Not available | Cross-region distribution is the default behavior. No replication jobs to configure or manage. |
