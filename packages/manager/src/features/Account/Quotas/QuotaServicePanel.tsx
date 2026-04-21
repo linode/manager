@@ -57,7 +57,7 @@ export const QuotaServicePanel: React.FC<ServicePanelProps> = ({
     ) {
       onServiceChange(null);
     }
-  }, [onServiceChange, selectedService, servicesByType]);
+  }, [selectedService, servicesByType]);
 
   return (
     <Paper

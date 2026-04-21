@@ -1,18 +1,24 @@
 import { getQuotas } from '@linode/api-v4';
 import { getAll } from '@linode/utilities';
 
-import type { Filter, Params, Quota, QuotaServiceType } from '@linode/api-v4';
+import type {
+  Filter,
+  Params,
+  Quota,
+  QuotaCollection,
+  QuotaServiceType,
+} from '@linode/api-v4';
 
 export const getAllQuotas = (
   service: QuotaServiceType,
-  apiCollection: string,
+  quotaCollection: QuotaCollection,
   passedParams: Params = {},
   passedFilter: Filter = {},
 ) =>
   getAll<Quota>((params, filter) =>
     getQuotas(
       service,
-      apiCollection,
+      quotaCollection,
       { ...params, ...passedParams },
       { ...filter, ...passedFilter },
     ),

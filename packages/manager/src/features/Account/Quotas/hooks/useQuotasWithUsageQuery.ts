@@ -33,7 +33,7 @@ export const useQuotasWithUsageQuery = ({
   // The provided scope should always be supported by the provided service, but just
   // for the sake of error handling, fallback to a default scope if it's not
   const scopeDefinition: QuotaScopeDefinition = service.scopes[scope] ?? {
-    collection: 'quotas',
+    quotaCollection: 'quotas',
   };
 
   const apiFilter: Filter = React.useMemo(() => {
@@ -50,7 +50,7 @@ export const useQuotasWithUsageQuery = ({
     isError: isQuotasFetchError,
   } = useAllQuotasQuery(
     service.type,
-    scopeDefinition.collection,
+    scopeDefinition.quotaCollection,
     apiFilter,
     enabled
   );
@@ -66,7 +66,7 @@ export const useQuotasWithUsageQuery = ({
 
   const quotaUsageQueries = useQuotaUsageQueries(
     service.type,
-    scopeDefinition.collection,
+    scopeDefinition.quotaCollection,
     quotaIdsHavingUsage,
     enabled
   );
