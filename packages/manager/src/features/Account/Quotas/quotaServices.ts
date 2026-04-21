@@ -3,6 +3,7 @@ import { type Capabilities } from '@linode/api-v4';
 import type {
   ObjectStorageEndpointQuota,
   Quota,
+  QuotaCollection,
   QuotaServiceType,
 } from '@linode/api-v4';
 
@@ -35,7 +36,7 @@ export interface QuotaScopeDefinition {
    * The name of the quota API collection that corresponds to this quota scope.
    * In most cases this will be 'quotas'.
    */
-  collection: QuotaCollection;
+  quotaCollection: QuotaCollection;
 
   /**
    * An optional object specifying additional props to pass to the value selector component
@@ -88,7 +89,7 @@ export const linodeQuotaService: QuotaService = {
   label: 'Linodes',
   scopes: {
     region: {
-      collection: 'quotas',
+      quotaCollection: 'quotas',
       scopeValueSelectorProps: {
         regionCapability: 'Linodes',
       },
@@ -103,7 +104,7 @@ export const lkeQuotaService: QuotaService = {
   label: 'Kubernetes',
   scopes: {
     region: {
-      collection: 'quotas',
+      quotaCollection: 'quotas',
       scopeValueSelectorProps: {
         regionCapability: 'Kubernetes',
       },
@@ -111,6 +112,16 @@ export const lkeQuotaService: QuotaService = {
     },
   },
 };
+
+const DISPLAYED_OBJECT_STORAGE_ENDPOINT_QUOTA_TYPES: ObjectStorageEndpointQuota['quota_type'][] =
+  [
+    'obj-buckets',
+    'obj-bytes',
+    'obj-objects',
+    'obj-total-concurrent-requests',
+    'obj-total-egress-throughput',
+    'obj-total-ingress-throughput',
+  ] as const;
 
 export const objectStorageQuotaService = (
   objectStorageGlobalQuotasEnabled?: boolean
@@ -121,21 +132,16 @@ export const objectStorageQuotaService = (
     scopes: {
       ...(objectStorageGlobalQuotasEnabled
         ? ({
-            global: { collection: 'global-quotas' },
+            global: { quotaCollection: 'global-quotas' },
           } satisfies Partial<Record<QuotaScope, QuotaScopeDefinition>>)
         : {}),
       'obj-endpoint': {
-        collection: 'quotas',
+        quotaCollection: 'quotas',
         apiFilterFunction: (endpoint: string) => ({ s3_endpoint: endpoint }),
         visibilityFilterFunction: (quota: Quota) =>
-          [
-            'obj-buckets',
-            'obj-bytes',
-            'obj-objects',
-            'obj-total-concurrent-requests',
-            'obj-total-egress-throughput',
-            'obj-total-ingress-throughput',
-          ].includes((quota as ObjectStorageEndpointQuota).quota_type),
+          DISPLAYED_OBJECT_STORAGE_ENDPOINT_QUOTA_TYPES.includes(
+            (quota as ObjectStorageEndpointQuota).quota_type
+          ),
         transformFunction: (quota: Quota) => ({
           ...quota,
           quota_name: quota.quota_name.replace(' (per endpoint)', ''),
