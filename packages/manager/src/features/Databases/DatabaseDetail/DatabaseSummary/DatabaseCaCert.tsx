@@ -1,8 +1,8 @@
+import { Button } from '@akamai/cds-components/react';
 import { getSSLFields } from '@linode/api-v4/lib/databases/databases';
 import { TooltipIcon } from '@linode/ui';
 import { downloadFile } from '@linode/utilities';
 import { styled } from '@mui/material/styles';
-import { Button } from 'akamai-cds-react-components';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 

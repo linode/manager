@@ -1,13 +1,13 @@
-import { Hidden } from '@linode/ui';
-import { useTheme } from '@mui/material/styles';
-import { Pagination } from 'akamai-cds-react-components/Pagination';
+import { Pagination } from '@akamai/cds-components/react/Pagination';
 import {
   Table,
   TableBody,
   TableHead,
   TableHeaderCell,
   TableRow,
-} from 'akamai-cds-react-components/Table';
+} from '@akamai/cds-components/react/Table';
+import { Hidden } from '@linode/ui';
+import { useTheme } from '@mui/material/styles';
 import React from 'react';
 
 import { MIN_PAGE_SIZE } from 'src/components/PaginationFooter/PaginationFooter.constants';
@@ -117,7 +117,7 @@ const DatabaseLandingTable = ({
               headerborder
             >
               <TableHeaderCell
-                sort={() =>
+                onSort={() =>
                   handleOrderChange('label', order === 'asc' ? 'desc' : 'asc')
                 }
                 sortable
@@ -129,7 +129,7 @@ const DatabaseLandingTable = ({
                 Cluster Label
               </TableHeaderCell>
               <TableHeaderCell
-                sort={() =>
+                onSort={() =>
                   handleOrderChange('status', order === 'asc' ? 'desc' : 'asc')
                 }
                 sortable
@@ -139,7 +139,7 @@ const DatabaseLandingTable = ({
               </TableHeaderCell>
               {isNewDatabase && (
                 <TableHeaderCell
-                  sort={() =>
+                  onSort={() =>
                     handleOrderChange('type', order === 'asc' ? 'desc' : 'asc')
                   }
                   sortable
@@ -150,7 +150,7 @@ const DatabaseLandingTable = ({
               )}
               <Hidden smDown>
                 <TableHeaderCell
-                  sort={() =>
+                  onSort={() =>
                     handleOrderChange(
                       'cluster_size',
                       order === 'asc' ? 'desc' : 'asc'
@@ -163,7 +163,7 @@ const DatabaseLandingTable = ({
                 </TableHeaderCell>
               </Hidden>
               <TableHeaderCell
-                sort={() =>
+                onSort={() =>
                   handleOrderChange('engine', order === 'asc' ? 'desc' : 'asc')
                 }
                 sortable
@@ -173,7 +173,7 @@ const DatabaseLandingTable = ({
               </TableHeaderCell>
               <Hidden mdDown>
                 <TableHeaderCell
-                  sort={() =>
+                  onSort={() =>
                     handleOrderChange(
                       'region',
                       order === 'asc' ? 'desc' : 'asc'
@@ -187,7 +187,7 @@ const DatabaseLandingTable = ({
               </Hidden>
               <Hidden lgDown>
                 <TableHeaderCell
-                  sort={() =>
+                  onSort={() =>
                     handleOrderChange(
                       'created',
                       order === 'asc' ? 'desc' : 'asc'
