@@ -27,4 +27,30 @@ export default defineConfig({
     allowedHosts: ['cloud.lindev.local'],
     port: 3000,
   },
+  test: {
+    // Limit test concurrency in CI to prevent resource exhaustion
+    maxWorkers: process.env.CI ? '50%' : undefined,
+    // Additional test-specific config
+    include: ['**/*.test.{js,jsx,ts,tsx}'],
+    sequence: {
+      groupOrder: 1,
+    },
+    environment: 'jsdom',
+    globals: true,
+    setupFiles: './src/testSetup.ts',
+    coverage: {
+      exclude: [
+        'src/**/*.constants.{js,jsx,ts,tsx}',
+        'src/**/*.stories.{js,jsx,ts,tsx}',
+        'src/**/index.{js,jsx,ts,tsx}',
+        'src/**/*.styles.{js,jsx,ts,tsx}',
+      ],
+      include: [
+        'src/components/**/*.{js,jsx,ts,tsx}',
+        'src/hooks/*{js,jsx,ts,tsx}',
+        'src/utilities/**/*.{js,jsx,ts,tsx}',
+        'src/**/*.utils.{js,jsx,ts,tsx}',
+      ],
+    },
+  },
 });
