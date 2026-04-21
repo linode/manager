@@ -19,7 +19,7 @@ const isTargetPlan = (linode: Linode) => {
   );
 };
 
-export const ComputePricingPlanBanner: React.FC = () => {
+export const ComputePricingPlanBanner = () => {
   const flags = useFlags();
   const hasBannerText = Boolean(flags.computePricing?.banner.text);
 
