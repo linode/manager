@@ -421,7 +421,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     <Stack gap={2}>
       {isLoading && (
         <Stack alignItems="center" gap={2}>
-          <CircleProgress />
+          <CircleProgress size="md" />
           {showLoadingIndicator && <DelayedLoadingMessage />}
         </Stack>
       )}

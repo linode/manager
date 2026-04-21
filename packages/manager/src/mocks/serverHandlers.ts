@@ -4716,7 +4716,7 @@ export const handlers = [
         result: [
           {
             metric: {
-              entity_id: '1',
+              entity_id: 'ob.j-bucket-583.us-ord.linodeobjects.com',
               metric_name: 'average_cpu_usage',
               linode_id: '1',
               node_id: 'primary-1',
@@ -4760,7 +4760,7 @@ export const handlers = [
           // })),
           {
             metric: {
-              entity_id: '7',
+              entity_id: 'obj-bucket-230.ap-west.linodeobjects.com',
               metric_name: 'average_cpu_usage',
               linode_id: '7',
               node_id: 'primary-2',

@@ -5,6 +5,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import {
   ERROR_STATE_TEXT,
+  ERROR_STATE_TITLE,
   NO_ASSIGNED_DEFAULT_ENTITIES_TEXT,
 } from '../../Shared/constants';
 import { DefaultEntityAccess } from './DefaultEntityAccess';
@@ -107,6 +108,7 @@ describe('DefaultEntityAccess', () => {
     });
 
     renderWithTheme(<DefaultEntityAccess />);
+    expect(screen.getByText(ERROR_STATE_TITLE)).toBeVisible();
     expect(screen.getByText(ERROR_STATE_TEXT)).toBeVisible();
   });
 
