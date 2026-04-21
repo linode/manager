@@ -2391,8 +2391,10 @@ export const oneClickApps: Record<number, OCA> = {
     website: 'https://openclaw.ai/',
   },
   2088700: {
-    alt_description: 'Local large language model runner.',
-    alt_name: 'LLM: local language model runner',
+    alt_description:
+      'An open-source framework for running, managing, and customizing large language models locally.',
+    alt_name:
+      'Run Large Language Models (LLMs)—like Llama 3, Mistral, or Gemma',
     categories: ['LLM', 'Chat', 'AI'],
     colors: {
       end: 'ffffff',
