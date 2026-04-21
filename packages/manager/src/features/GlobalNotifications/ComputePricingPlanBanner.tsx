@@ -8,30 +8,36 @@ import { useFlags } from 'src/hooks/useFlags';
 
 import type { Linode } from '@linode/api-v4';
 
-// Checks if the Linode type is g6, g7, g8, or GPU
-const isTargetPlan = (linode: Linode) => {
-  if (!linode.type) return false;
-  return (
-    linode.type.startsWith('g6') ||
-    linode.type.startsWith('g7') ||
-    linode.type.startsWith('g8') ||
-    linode.type.includes('gpu')
+// Checks if the Linode type matches any targeted plan matcher as defined by feature flags
+const isTargetPlan = (linode: Linode, targetPlanMatchers: string[]) => {
+  const linodeType = linode.type;
+  if (!linodeType) return false;
+
+  return targetPlanMatchers.some((matcher) =>
+    linodeType.includes(matcher.toLowerCase())
   );
 };
 
 export const ComputePricingPlanBanner = () => {
   const flags = useFlags();
   const hasBannerText = Boolean(flags.computePricing?.banner.text);
+  // Get targeted plan matchers from LD flag
+  const targetPlanMatchers = React.useMemo(
+    () => flags.computePricing?.banner.targetPlanMatchers ?? [],
+    [flags.computePricing?.banner.targetPlanMatchers]
+  );
 
   // Fetch all Linodes only when LD flag banner text is present
   const { data: linodes } = useAllLinodesQuery({}, {}, hasBannerText);
 
   const hasTargetPlan = React.useMemo(
-    () => Array.isArray(linodes) && linodes.some(isTargetPlan),
-    [linodes]
+    () =>
+      Array.isArray(linodes) &&
+      linodes.some((linode) => isTargetPlan(linode, targetPlanMatchers)),
+    [linodes, targetPlanMatchers]
   );
 
-  // Show banner only if the LD flag banner text is present and a target plan exists
+  // Show banner only if the LD flag banner text is present and a targeted plan exists
   const showBanner = hasBannerText && hasTargetPlan;
 
   if (!showBanner) return null;

@@ -220,9 +220,9 @@ interface ResourceLockFlag {
 interface ComputePricing {
   /**
    * Global banner configuration displayed only to users
-   * who have at least one g6, g7, g8, or GPU plan.
+   * who have at least one plan matching any of the patterns provided in `targetPlanMatchers`.
    */
-  banner: { learnMoreLink: string; text: string };
+  banner: { learnMoreLink: string; targetPlanMatchers: string[]; text: string };
   // keyof PriceObject - ensures the LD billing value is always a valid API field name.
   // This represents active billing mode for the Compute product (e.g. 'monthly', 'hourly', etc.)
   billing: keyof PriceObject;
