@@ -1,3 +1,4 @@
+import { Button } from '@akamai/cds-components/react/Button';
 import { Pagination } from '@akamai/cds-components/react/Pagination';
 import {
   Table,
@@ -9,11 +10,11 @@ import {
 } from '@akamai/cds-components/react/Table';
 import { useDatabaseConnectionPoolsQuery } from '@linode/queries';
 import {
-  Button,
   CircleProgress,
   ErrorState,
   Hidden,
   Stack,
+  Tooltip,
   Typography,
 } from '@linode/ui';
 import Grid from '@mui/material/Grid';
@@ -94,20 +95,22 @@ export const DatabaseConnectionPools = ({ database }: Props) => {
             </Link>
           </Typography>
         </Stack>
-        <Button
-          buttonType="outlined"
-          className={classes.actionBtn}
-          disabled={isDatabaseInactive}
-          onClick={() => setIsAddPoolDrawerOpen(true)}
-          TooltipProps={{ placement: 'top' }}
-          tooltipText={
+        <Tooltip
+          placement="top"
+          title={
             isDatabaseInactive
               ? 'You can only add connection pools to active database clusters.'
               : ''
           }
         >
-          Add Pool
-        </Button>
+          <Button
+            className={classes.actionBtn}
+            disabled={isDatabaseInactive}
+            onClick={() => setIsAddPoolDrawerOpen(true)}
+          >
+            Add Pool
+          </Button>
+        </Tooltip>
       </div>
       {flags?.hostnameEndpoints &&
         connectionPools &&
