@@ -15,13 +15,13 @@ const isTargetPlan = (linode: Linode) => {
     linode.type.startsWith('g6') ||
     linode.type.startsWith('g7') ||
     linode.type.startsWith('g8') ||
-    linode.type.toLowerCase().includes('gpu')
+    linode.type.includes('gpu')
   );
 };
 
 export const ComputePricingPlanBanner: React.FC = () => {
   const flags = useFlags();
-  const hasBannerText = Boolean(flags.computePricing?.banner.text);
+  const hasBannerText = Boolean(flags.computePricing?.banner?.text);
 
   // Fetch all Linodes only when LD flag banner text is present
   const { data: linodes } = useAllLinodesQuery({}, {}, hasBannerText);
@@ -42,13 +42,15 @@ export const ComputePricingPlanBanner: React.FC = () => {
       variant="info"
     >
       <Typography>
-        {flags.computePricing?.banner.text}{' '}
-        {flags.computePricing?.banner.learnMoreLink && (
-          <Link to={flags.computePricing?.banner.learnMoreLink}>
-            Learn more
-          </Link>
+        {flags.computePricing?.banner?.text}{' '}
+        {flags.computePricing?.banner?.learnMoreLink && (
+          <>
+            <Link to={flags.computePricing?.banner.learnMoreLink}>
+              Learn more
+            </Link>
+            .
+          </>
         )}
-        .
       </Typography>
     </DismissibleBanner>
   );
