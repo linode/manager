@@ -44,12 +44,9 @@ export const ComputePricingPlanBanner: React.FC = () => {
       <Typography>
         {flags.computePricing?.banner?.text}{' '}
         {flags.computePricing?.banner?.learnMoreLink && (
-          <>
-            <Link to={flags.computePricing?.banner.learnMoreLink}>
-              Learn more
-            </Link>
-            .
-          </>
+          <Link to={flags.computePricing?.banner.learnMoreLink}>
+            Learn more
+          </Link>
         )}
       </Typography>
     </DismissibleBanner>
