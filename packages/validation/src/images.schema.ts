@@ -3,6 +3,7 @@ import { array, boolean, number, object, string } from 'yup';
 const labelSchema = string()
   .min(1, 'Label must be between 1 and 50 characters.')
   .max(50, 'Label must be between 1 and 50 characters.')
+  .matches(/^\D/, 'Label must not start with a number.')
   .matches(
     /^[a-zA-Z0-9,.?\-_\s']+$/,
     'Image labels cannot contain special characters.',
