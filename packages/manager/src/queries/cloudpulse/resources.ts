@@ -2,7 +2,12 @@ import { useQuery } from '@tanstack/react-query';
 
 import { queryFactory } from './queries';
 
-import type { Filter, FirewallDeviceEntity, Params } from '@linode/api-v4';
+import type {
+  APIError,
+  Filter,
+  FirewallDeviceEntity,
+  Params,
+} from '@linode/api-v4';
 import type { CloudPulseResources } from 'src/features/CloudPulse/shared/CloudPulseResourcesSelect';
 import type { AssociatedEntityType } from 'src/features/CloudPulse/shared/types';
 import type { QueryFunctionType } from 'src/features/CloudPulse/Utils/models';
@@ -15,7 +20,7 @@ export const useResourcesQuery = (
   associatedEntityType?: AssociatedEntityType,
   filterFn?: (resources: QueryFunctionType) => QueryFunctionType
 ) =>
-  useQuery<any[], unknown, CloudPulseResources[]>({
+  useQuery<any[], APIError[], CloudPulseResources[]>({
     ...queryFactory.resources(resourceType, params, filters),
     enabled,
     retry: resourceType === 'objectstorage' ? false : 3,

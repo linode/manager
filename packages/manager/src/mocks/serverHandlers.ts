@@ -983,6 +983,8 @@ export const handlers = [
     return HttpResponse.json(linodeTypeFactory.build());
   }),
   http.get('*/linode/instances', async ({ request }) => {
+
+    return HttpResponse.json({ errors: [{ reason: 'unauthorized' }] }, { status: 403 });
     linodeFactory.resetSequenceNumber();
     const linodesWithFirewalls = linodeFactory.buildList(10, {
       region: 'ap-west',
