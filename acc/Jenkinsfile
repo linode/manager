@@ -1,6 +1,6 @@
 pipeline {
     agent {
-        label "cloud-focal"
+        label "fee"
     }
 
     options {
@@ -72,13 +72,22 @@ pipeline {
                         }
                     }
                 }
-                stage("Test") {
-                    steps {
-                        nodejs(configId: "npmrc-ro", nodeJSInstallationName: "v22") {
-                            sh "pnpm test"
-                        }
-                    }
-                }
+            }
+        }
+
+        stage("Test") {
+          when {
+            anyOf {
+              branch 'develop'
+              branch 'staging'
+              branch 'master'
+              expression { env.CHANGE_ID != null } // It's a PR
+            }
+          }
+          steps {
+              nodejs(configId: "npmrc-ro", nodeJSInstallationName: "v22") {
+                sh "pnpm test"
+              }
             }
         }
 
