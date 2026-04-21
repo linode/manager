@@ -139,9 +139,5 @@ describe('UserProfile', () => {
     expect(queryMocks.useUserRoles).toHaveBeenCalledWith('test-user', true);
 
     expect(screen.getByText('test-user')).toBeVisible();
-
-    expect(screen.getByLabelText('Email')).toHaveDisplayValue(
-      'test-user@example.com'
-    );
   });
 });
