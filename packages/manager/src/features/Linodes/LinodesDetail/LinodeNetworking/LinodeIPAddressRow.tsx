@@ -13,6 +13,7 @@ import * as React from 'react';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { TableCell } from 'src/components/TableCell';
 import { StyledTableRow } from 'src/features/Linodes/LinodeEntityDetail.styles';
+import { useIsReserveIpEnabled } from 'src/features/ReservedIps/utils';
 
 import { LinodeNetworkingActionMenu } from './LinodeNetworkingActionMenu';
 
@@ -61,6 +62,7 @@ export const LinodeIPAddressRow = (props: LinodeIPAddressRowProps) => {
 
   const { data: ips } = useLinodeIPsQuery(linodeId);
   const { data: linode } = useLinodeQuery(linodeId);
+  const { isReserveIpEnabled } = useIsReserveIpEnabled();
   const isLinodeSubResourcesLocked =
     linode?.locks?.includes('cannot_delete_with_subresources') ?? false;
   const { data: maskSensitiveDataPreference } = usePreferences(
@@ -120,7 +122,9 @@ export const LinodeIPAddressRow = (props: LinodeIPAddressRowProps) => {
             isOnlyPublicIP={isOnlyPublicIP}
             onEdit={handleOpenEditRDNS}
             onRemove={openRemoveIPDialog}
-            onReserve={handleOpenReserveIPDrawer}
+            onReserve={
+              isReserveIpEnabled ? handleOpenReserveIPDrawer : undefined
+            }
             readOnly={readOnly}
           />
         ) : _range ? (

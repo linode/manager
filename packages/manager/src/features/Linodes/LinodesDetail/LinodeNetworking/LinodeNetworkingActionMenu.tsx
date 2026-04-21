@@ -11,10 +11,10 @@ import {
   PUBLIC_IP_ADDRESSES_LINODE_INTERFACE_DEFAULT_ROUTE_TOOLTIP_TEXT,
   PUBLIC_IP_ADDRESSES_LINODE_INTERFACE_NOT_ASSIGNED_TOOLTIP_TEXT,
 } from 'src/features/Linodes/constants';
+import { useIsReserveIpEnabled } from 'src/features/ReservedIps/utils';
 
 import type { IPTypes } from './types';
 import type { IPAddress, IPRange } from '@linode/api-v4/lib/networking';
-import type { Theme } from '@mui/material/styles';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
@@ -32,8 +32,9 @@ interface Props {
 }
 
 export const LinodeNetworkingActionMenu = (props: Props) => {
-  const theme = useTheme<Theme>();
+  const theme = useTheme();
   const matchesMdDown = useMediaQuery(theme.breakpoints.down('lg'));
+  const { isReserveIpEnabled } = useIsReserveIpEnabled();
   const {
     hasPublicInterface,
     ipAddress,
@@ -93,7 +94,7 @@ export const LinodeNetworkingActionMenu = (props: Props) => {
   const isAlreadyReserved = isIPAddress && ipAddress.reserved;
 
   const actions = [
-    onReserve && isIPAddress && ipType === 'Public – IPv4'
+    isReserveIpEnabled && onReserve && isIPAddress && ipType === 'Public – IPv4'
       ? {
           disabled: readOnly || isAlreadyReserved,
           id: 'reserve',
@@ -154,21 +155,27 @@ export const LinodeNetworkingActionMenu = (props: Props) => {
 
   return actions.length > 0 ? (
     <>
-      {!matchesMdDown &&
-        actions.map((action) => {
-          return (
-            <InlineMenuAction
-              actionText={action.title}
-              data-testid={`action-menu-item-${action.id}`}
-              disabled={action.disabled}
-              key={action.id}
-              onClick={action.onClick}
-              tooltip={action.tooltip}
-            />
-          );
-        })}
-      {matchesMdDown && (
+      {isReserveIpEnabled ? (
         <ActionMenu actionsList={actions} ariaLabel={getAriaLabel()} />
+      ) : (
+        <>
+          {!matchesMdDown &&
+            actions.map((action) => {
+              return (
+                <InlineMenuAction
+                  actionText={action.title}
+                  data-testid={`action-menu-item-${action.id}`}
+                  disabled={action.disabled}
+                  key={action.id}
+                  onClick={action.onClick}
+                  tooltip={action.tooltip}
+                />
+              );
+            })}
+          {matchesMdDown && (
+            <ActionMenu actionsList={actions} ariaLabel={getAriaLabel()} />
+          )}
+        </>
       )}
     </>
   ) : (

@@ -25,6 +25,7 @@ import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { ReserveIPDrawer } from 'src/features/ReservedIps/ReserveIPDrawer';
+import { useIsReserveIpEnabled } from 'src/features/ReservedIps/utils';
 import { useDetermineUnreachableIPs } from 'src/hooks/useDetermineUnreachableIPs';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
@@ -60,6 +61,7 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
   const { data: linode } = useLinodeQuery(linodeID);
   const { data: regions } = useRegionsQuery();
   const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
+  const { isReserveIpEnabled } = useIsReserveIpEnabled();
   const [isOpen, setIsOpen] = React.useState<boolean>(false);
 
   const linodeIsInDistributedRegion = getIsDistributedRegion(
@@ -146,7 +148,7 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
     handleOpenEditRDNS,
     handleOpenEditRDNSForRange,
     handleOpenIPV6Details,
-    handleOpenReserveIPDrawer,
+    ...(isReserveIpEnabled && { handleOpenReserveIPDrawer }),
     openRemoveIPDialog,
     openRemoveIPRangeDialog,
   };
@@ -335,12 +337,14 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
         // TODO: change to allocate_linode_ip_address permission
         readOnly={!permissions.update_linode}
       />
-      <ReserveIPDrawer
-        ipAddress={selectedIPForReserve ?? undefined}
-        mode="reserve"
-        onClose={() => setIsReserveIPDrawerOpen(false)}
-        open={isReserveIPDrawerOpen}
-      />
+      {isReserveIpEnabled && selectedIPForReserve && (
+        <ReserveIPDrawer
+          ipAddress={selectedIPForReserve ?? undefined}
+          mode="reserve"
+          onClose={() => setIsReserveIPDrawerOpen(false)}
+          open={isReserveIPDrawerOpen}
+        />
+      )}
       <IPTransfer
         linodeId={linodeID}
         onClose={() => setIsTransferDialogOpen(false)}

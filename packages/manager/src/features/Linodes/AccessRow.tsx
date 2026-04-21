@@ -5,6 +5,7 @@ import React from 'react';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { TableCell } from 'src/components/TableCell';
+import { useIsReserveIpEnabled } from 'src/features/ReservedIps/utils';
 
 import {
   StyledCopyTooltip,
@@ -37,6 +38,8 @@ export const AccessRow = (props: AccessRowProps) => {
     (preferences) => preferences?.maskSensitiveData
   );
 
+  const { isReserveIpEnabled } = useIsReserveIpEnabled();
+
   const [isTextMasked, setIsTextMasked] = React.useState(
     maskedPreferenceSetting
   );
@@ -59,6 +62,7 @@ export const AccessRow = (props: AccessRowProps) => {
           />
         </StyledGradientDiv>
         <Stack alignItems="center" direction="row" spacing={1}>
+          {isReserveIpEnabled && isReserved && <Badge>Reserved</Badge>}
           {isDisabled ? (
             <PublicIPAddressTooltip
               hasPublicInterface={Boolean(hasPublicInterface)}
@@ -73,7 +77,6 @@ export const AccessRow = (props: AccessRowProps) => {
               isVisible={!isTextMasked}
             />
           )}
-          {isReserved && <Badge>Reserved</Badge>}
         </Stack>
       </StyledTableCell>
     </StyledTableRow>
