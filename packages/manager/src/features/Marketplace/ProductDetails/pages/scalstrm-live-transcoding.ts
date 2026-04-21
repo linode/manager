@@ -35,9 +35,9 @@ A cloud-based live transcoding and Origin setup serves as a disaster recovery en
 For live events and gaming tournaments, cloud-based transcoding enables rapid deployment of event-specific channels, including multi-view and parallel feeds. High-density cloud processing supports multiple camera angles and perspectives, while Origin services deliver synchronized streams globally. This allows platforms to scale instantly for peak audience demand and tear down resources when the event ends.
 
 **Launch live and event channels with speed and confidence**
-high-density VPU processing, built-in scheduling, and real-time monitoring, you can scale effortlessly while reducing hardware, power, and operational costs. 
+Scalstrm Live & Event-Based Transcoding lets you deploy channels in minutes using pre-configured templates that automate ingest, transcoding, packaging, and DRM. With high-density VPU processing, built-in scheduling, and real-time monitoring, you can scale effortlessly while reducing hardware, power, and operational costs. 
 
-**Book a demo today** and discover how seamlessly Scalstrm integrates into your existing streaming workflow.Scalstrm Live & Event-Based Transcoding lets you deploy channels in minutes using pre-configured templates that automate ingest, transcoding, packaging, and DRM. With 
+**Book a demo today** and discover how seamlessly Scalstrm integrates into your existing streaming workflow.
 `.trim();
 
 const documentationMarkdown = `
