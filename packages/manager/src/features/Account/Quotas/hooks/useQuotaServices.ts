@@ -1,8 +1,8 @@
 import { useAccountSettings, useProfile } from '@linode/queries';
-import { useFlags } from 'launchdarkly-react-client-sdk';
 import { useMemo } from 'react';
 
 import { objectStorageQuotaService } from 'src/features/Account/Quotas/quotaServices';
+import { useFlags } from 'src/hooks/useFlags';
 
 import type { QuotaService } from 'src/features/Account/Quotas/quotaServices';
 
