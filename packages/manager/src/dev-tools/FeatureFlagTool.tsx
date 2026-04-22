@@ -23,6 +23,10 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'aclpAlerting', label: 'CloudPulse Alerting' },
   { flag: 'aclpServices', label: 'ACLP Services' },
   { flag: 'aclpLogs', label: 'ACLP Logs' },
+  {
+    flag: 'aclpNbMetricsIntegration',
+    label: 'ACLP NodeBalancer Metrics Integration',
+  },
   { flag: 'apl', label: 'Akamai App Platform' },
   { flag: 'aplGeneralAvailability', label: 'Akamai App Platform GA' },
   { flag: 'aplLkeE', label: 'Akamai App Platform LKE-E' },

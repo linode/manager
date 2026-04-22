@@ -1,4 +1,4 @@
-import { formatDuration } from '@linode/utilities';
+import { formatDuration } from '@akamai/compute-ui-core/datetime';
 import { DateTime, Duration } from 'luxon';
 import * as React from 'react';
 

@@ -1,5 +1,6 @@
-import { Pagination } from '@akamai/cds-components/react/Pagination';
 import {
+  Pagination,
+  Select,
   sortRows,
   Table,
   TableBody,
@@ -8,8 +9,8 @@ import {
   TableHeaderCell,
   TableRow,
   TableRowExpanded,
-} from '@akamai/cds-components/react/Table';
-import { Button, Hidden, Select, Typography } from '@linode/ui';
+} from '@akamai/cds-components/react';
+import { Button, Hidden, Typography } from '@linode/ui';
 import { capitalizeAllWords } from '@linode/utilities';
 import { useTheme } from '@mui/material';
 import Grid from '@mui/material/Grid';
@@ -145,7 +146,9 @@ export const RolesTable = ({ roles = [] }: Props) => {
     });
   };
 
-  const handleChangeEntityTypeFilter = (_: never, entityType: SelectOption) => {
+  const handleChangeEntityTypeFilter = (event: CustomEvent) => {
+    const entityType = event.detail as null | SelectOption;
+
     setFilterableEntityType(entityType ?? ALL_ROLES_OPTION);
   };
 
@@ -159,12 +162,12 @@ export const RolesTable = ({ roles = [] }: Props) => {
     setIsDrawerOpen(true);
   };
 
-  const handlePageChange = (event: CustomEvent<{ page: number }>) => {
+  const handlePageChange = (event: CustomEvent<unknown>) => {
     pagination.handlePageChange(Number(event.detail));
   };
 
-  const handlePageSizeChange = (event: CustomEvent<{ pageSize: number }>) => {
-    const newSize = event.detail.pageSize;
+  const handlePageSizeChange = (event: CustomEvent<unknown>) => {
+    const newSize = (event.detail as { pageSize: number }).pageSize;
     pagination.handlePageSizeChange(newSize);
   };
 
@@ -204,13 +207,12 @@ export const RolesTable = ({ roles = [] }: Props) => {
               value={query ?? ''}
             />
             <Select
-              hideLabel
-              label="Select type"
+              items={filterableOptions}
               onChange={handleChangeEntityTypeFilter}
-              options={filterableOptions}
               placeholder="All Roles"
-              sx={{ minWidth: 250 }}
-              value={filterableEntityType}
+              selected={filterableEntityType}
+              style={{ minWidth: 250 }}
+              valueFn={(item) => (item as SelectOption).label}
             />
           </Grid>
           <Button

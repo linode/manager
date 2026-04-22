@@ -1,5 +1,5 @@
 import { useAccountUser, useUserRoles } from '@linode/queries';
-import { CircleProgress, Notice, Stack } from '@linode/ui';
+import { Notice, Stack } from '@linode/ui';
 import { useParams } from '@tanstack/react-router';
 import React from 'react';
 
@@ -8,6 +8,7 @@ import { ErrorState } from 'src/features/IAM/Shared/ErrorState/ErrorState';
 import { NotFound } from 'src/features/IAM/Shared/NotFound/NotFound';
 
 import { usePermissions } from '../../hooks/usePermissions';
+import { CircleProgress } from '../../Shared/CircleProgress/CircleProgress';
 import { DeleteUserPanel } from './DeleteUserPanel';
 import { UserDetailsPanel } from './UserDetailsPanel';
 import { UserEmailPanel } from './UserEmailPanel';
