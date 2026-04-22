@@ -5,6 +5,9 @@ import * as React from 'react';
 
 import { EntityDetail } from 'src/components/EntityDetail/EntityDetail';
 
+import { BackendConfigurationVPC } from './BackendConfigVPC';
+import { FrontendConfiguration } from './FrontendConfiguration';
+import { LKEClusterInfo } from './LKEClusterInfo';
 import { NodeBalancerDetailBody } from './NodeBalancerDetailBody';
 import { NodeBalancerDetailFooter } from './NodeBalancerDetailFooter';
 import { NodeBalancerDetailHeader } from './NodeBalancerDetailHeader';
@@ -24,6 +27,9 @@ export const SummaryPanel = () => {
           header={<NodeBalancerDetailHeader />}
         />
       </Box>
+      <LKEClusterInfo nodebalancer={nodebalancer} />
+      <FrontendConfiguration nodebalancer={nodebalancer} />
+      <BackendConfigurationVPC />
     </Stack>
   );
 };

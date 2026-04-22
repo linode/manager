@@ -19,6 +19,7 @@ import { useTabs } from 'src/hooks/useTabs';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
 import { NodeBalancerConfigurationsWrapper } from './NodeBalancerConfigurationsWrapper';
+import { NodeBalancerMetrics } from './NodeBalancerMetrics';
 import { NodeBalancerSettings } from './NodeBalancerSettings';
 import { NodeBalancerSummary } from './NodeBalancerSummary/NodeBalancerSummary';
 import { NodeBalancerSummaryV2 } from './NodeBalancerSummaryV2/NodeBalancerSummaryV2';
@@ -126,7 +127,7 @@ export const NodeBalancerDetail = () => {
             </SafeTabPanel>
             {metricsTabIndex !== null && (
               <SafeTabPanel index={metricsTabIndex}>
-                <Notice text="Metrics tab coming soon.." variant="info" />
+                <NodeBalancerMetrics />
               </SafeTabPanel>
             )}
 
