@@ -253,8 +253,8 @@ export const CloudPulseResourcesSelect = React.memo(
             component: ListboxWrapper,
             sx:
               getResourcesList.length > VIRTUALIZATION_CONFIG.THRESHOLD
-                ? { maxHeight: VIRTUALIZATION_CONFIG.MAX_VISIBLE_HEIGHT }
-                : {}, // Remove padding for virtualized listbox to avoid unnecessary space at the top and bottom of the list
+                ? { maxHeight: VIRTUALIZATION_CONFIG.MAX_VISIBLE_HEIGHT } // This is to set the max height of the listbox when virtualization is enabled, it will show a scrollbar if the number of options exceed the max visible height
+                : {},
           },
         }}
         textFieldProps={{
