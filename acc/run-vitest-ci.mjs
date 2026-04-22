@@ -63,7 +63,7 @@ function norm(p) {
 function isInfraOnlyPath(rel) {
   const n = norm(rel);
   return (
-    n.startsWith('acc/') ||
+    n === 'acc/publish.mjs' ||           // release script, no test impact
     n.startsWith('.github/') ||
     n.startsWith('.storybook/') ||
     n.startsWith('docs/') ||
@@ -82,11 +82,18 @@ function isInfraOnlyPath(rel) {
   );
 }
 
-/** Returns true if this root-level file change forces a full workspace run
- *  (only actual Vitest / workspace wiring — not package.json). */
+/** Returns true if this root-level file change forces a full workspace run. */
 function isRootVitestInput(rel) {
   const n = norm(rel);
-  return n === 'vitest.config.ts' || n === 'vitest.config.js';
+  // Root vitest config wires all workspace projects — must re-run everything.
+  // Jenkinsfile / run-vitest-ci.mjs changes affect how tests execute — validate
+  // with a full run so the new pipeline logic is exercised end-to-end.
+  return (
+    n === 'vitest.config.ts' ||
+    n === 'vitest.config.js' ||
+    n === 'acc/Jenkinsfile' ||
+    n === 'acc/run-vitest-ci.mjs'
+  );
 }
 
 function git(args) {
