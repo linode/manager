@@ -5,7 +5,10 @@ import { enqueueSnackbar } from 'notistack';
 import React from 'react';
 
 import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
-import { useEditAlertDefinition } from 'src/queries/cloudpulse/alerts';
+import {
+  useAllEntitiesByAlertIdQuery,
+  useEditAlertDefinition,
+} from 'src/queries/cloudpulse/alerts';
 
 import { AlertResources } from '../AlertsResources/AlertsResources';
 import { entityLabelMap } from '../constants';
@@ -31,11 +34,21 @@ export const EditAlertResources = (props: EditAlertProps) => {
   const [showConfirmation, setShowConfirmation] =
     React.useState<boolean>(false);
 
+  // Fetch entities using the new API
+  const {
+    data: entities,
+    isLoading: isEntitiesLoading,
+    isError: isEntitiesError,
+  } = useAllEntitiesByAlertIdQuery(serviceType, String(alertId));
+
+  const entityIds = React.useMemo(
+    () => entities?.map((entity) => entity.id) ?? [],
+    [entities]
+  );
+
   React.useEffect(() => {
-    setSelectedResources(
-      alertDetails ? alertDetails.entity_ids.map((id) => id) : []
-    );
-  }, [alertDetails]);
+    setSelectedResources(entityIds);
+  }, [entityIds]);
 
   const { newPathname, overrides } = React.useMemo(() => {
     const overrides: CrumbOverridesProps[] = [
@@ -47,7 +60,7 @@ export const EditAlertResources = (props: EditAlertProps) => {
     ];
 
     return { newPathname: '/Definitions/Edit', overrides };
-  }, [serviceType, alertId]);
+  }, []);
 
   const saveResources = () => {
     editAlert({
@@ -69,22 +82,16 @@ export const EditAlertResources = (props: EditAlertProps) => {
         );
       });
   };
-  const isSameResourcesSelected = React.useMemo(
-    () => isResourcesEqual(alertDetails?.entity_ids, selectedResources),
-    [alertDetails, selectedResources]
-  );
 
+  const isSameResourcesSelected = React.useMemo(
+    () => isResourcesEqual(entityIds, selectedResources),
+    [entityIds, selectedResources]
+  );
   const handleResourcesSelection = (resourceIds: string[]) => {
     setSelectedResources(resourceIds); // keep track of the selected resources and update it on save
   };
 
-  const {
-    class: alertClass,
-    entity_ids,
-    label,
-    service_type,
-    type,
-  } = alertDetails;
+  const { class: alertClass, label, service_type, type } = alertDetails;
 
   const entityType =
     serviceType === 'firewall'
@@ -94,6 +101,7 @@ export const EditAlertResources = (props: EditAlertProps) => {
         ? 'nodebalancer'
         : 'linode'
       : undefined;
+
   return (
     <>
       <Breadcrumb crumbOverrides={overrides} pathname={newPathname} />
@@ -107,10 +115,15 @@ export const EditAlertResources = (props: EditAlertProps) => {
         <AlertResources
           alertClass={alertClass}
           alertLabel={label}
-          alertResourceIds={entity_ids}
+          alertResourceIds={entityIds}
           alertType={type}
           entityType={entityType}
+          errorText={
+            isEntitiesError ? 'Error loading entities. Please try again.' : ''
+          }
           handleResourcesSelection={handleResourcesSelection}
+          isEntitiesError={isEntitiesError}
+          isEntitiesLoading={isEntitiesLoading}
           isSelectionsNeeded
           serviceType={service_type}
         />

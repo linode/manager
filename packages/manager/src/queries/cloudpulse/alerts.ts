@@ -13,9 +13,13 @@ import { queryPresets } from '@linode/queries';
 import {
   keepPreviousData,
   useMutation,
+  useQueries,
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query';
+import React from 'react';
+
+import { getAllEntitiesByAlerts } from 'src/features/CloudPulse/Utils/utils';
 
 import { queryFactory } from './queries';
 import { invalidateAclpAlerts } from './useAlertsMutation';
@@ -29,11 +33,13 @@ import type {
   DeleteChannelPayload,
   EditAlertPayloadWithService,
   EditNotificationChannelPayloadWithId,
+  Entities,
   EntityAlertUpdatePayload,
   NotificationChannel,
   NotificationChannelAlerts,
 } from '@linode/api-v4/lib/cloudpulse';
 import type { APIError, Filter, Params } from '@linode/api-v4/lib/types';
+import type { UseQueryOptions } from '@tanstack/react-query';
 
 export const useCreateAlertDefinition = (serviceType: string) => {
   const queryClient = useQueryClient();
@@ -122,7 +128,21 @@ export const useEditAlertDefinition = () => {
     mutationFn: ({ alertId, serviceType, ...data }) =>
       editAlertDefinition(data, serviceType, alertId),
 
-    onSuccess(data) {
+    onSuccess(data, variables) {
+      // Use entity_ids from the request payload to update the entities cache directly
+      if (variables.entity_ids) {
+        queryClient.setQueryData<Entities[]>(
+          queryFactory.entities._ctx.all(data.service_type, String(data.id))
+            .queryKey,
+          variables.entity_ids.map((id) => ({
+            id,
+            label: '',
+            type: '',
+            url: '',
+          }))
+        );
+      }
+
       const allAlertsKey = queryFactory.alerts._ctx.all().queryKey;
 
       queryClient.setQueryData<Alert[] | undefined>(allAlertsKey, (prev) => {
@@ -182,14 +202,24 @@ export const useAddEntityToAlert = () => {
       const { alert, entityId } = variable;
       const { id: alertId, service_type: serviceType } = alert;
 
-      alert.entity_ids.push(entityId);
-      queryClient.setQueryData(
-        queryFactory.alerts._ctx.alertByServiceTypeAndId(
+      const entitiesKey = queryFactory.entities._ctx.all(
+        serviceType,
+        String(alertId)
+      ).queryKey;
+
+      // Append the new entity to the cached entities list
+      queryClient.setQueryData<Entities[]>(entitiesKey, (prev) => [
+        ...(prev ?? []),
+        { id: entityId, label: '', type: '', url: '' },
+      ]);
+
+      queryClient.invalidateQueries({
+        queryKey: queryFactory.alerts._ctx.alertByServiceTypeAndId(
           serviceType,
           String(alertId)
         ).queryKey,
-        alert
-      );
+      });
+
       queryClient.invalidateQueries({
         queryKey:
           queryFactory.alerts._ctx.alertsByServiceType(serviceType).queryKey,
@@ -215,17 +245,23 @@ export const useRemoveEntityFromAlert = () => {
       const { alert, entityId } = variable;
       const { id: alertId, service_type: serviceType } = alert;
 
-      const index = alert.entity_ids.indexOf(entityId);
-      if (index > -1) {
-        alert.entity_ids.splice(index, 1);
-      }
-      queryClient.setQueryData(
-        queryFactory.alerts._ctx.alertByServiceTypeAndId(
+      const entitiesKey = queryFactory.entities._ctx.all(
+        serviceType,
+        String(alertId)
+      ).queryKey;
+
+      // Remove the entity from the cached entities list
+      queryClient.setQueryData<Entities[]>(entitiesKey, (prev) =>
+        prev ? prev.filter((e) => e.id !== entityId) : []
+      );
+
+      queryClient.invalidateQueries({
+        queryKey: queryFactory.alerts._ctx.alertByServiceTypeAndId(
           serviceType,
           String(alertId)
         ).queryKey,
-        alert
-      );
+      });
+
       queryClient.invalidateQueries({
         queryKey:
           queryFactory.alerts._ctx.alertsByServiceType(serviceType).queryKey,
@@ -312,6 +348,12 @@ export const useCreateNotificationChannel = () => {
           newChannel,
         ]);
       }
+
+      queryClient.setQueryData(
+        queryFactory.notificationChannels._ctx.channelById(newChannel.id)
+          .queryKey,
+        newChannel
+      );
     },
   });
 };
@@ -398,4 +440,44 @@ export const useAllAlertsByNotificationChannelIdQuery = (channelId: number) => {
     ...queryFactory.notificationChannelAlerts(channelId),
     refetchInterval: 120000,
   });
+};
+
+export const useAllEntitiesByAlertIdQuery = (
+  serviceType: string,
+  alertId: string,
+  params?: Params,
+  filter?: Filter,
+  enabled: boolean = true
+) => {
+  return useQuery<Entities[], APIError[]>({
+    ...queryFactory.entities._ctx.all(serviceType, alertId, params, filter),
+    enabled,
+  });
+};
+
+/**
+ * Fetches entities for multiple alerts in parallel.
+ * Returns a Map of alertId → entity IDs alongside loading/error state.
+ * Errors are handled per-alert: a failed query contributes an empty entry to
+ * the map so that alert is simply not pre-checked, rather than breaking everything.
+ */
+export const useAllEntitiesByAlertsQuery = (
+  alerts: { id: number; scope: string; service_type: string }[],
+  entityId?: string
+): {
+  alertEntityMap: Map<number, string[]>;
+  isError: boolean;
+  isLoading: boolean;
+} => {
+  const results = useQueries({
+    queries: alerts.map<UseQueryOptions<Entities[], APIError[]>>((alert) => ({
+      ...queryFactory.entities._ctx.all(alert.service_type, String(alert.id)),
+      enabled: alert.scope === 'entity' && !!entityId,
+    })),
+  });
+
+  return React.useMemo(
+    () => getAllEntitiesByAlerts(results, alerts),
+    [results, alerts]
+  );
 };
