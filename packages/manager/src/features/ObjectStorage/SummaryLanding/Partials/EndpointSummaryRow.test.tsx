@@ -1,7 +1,9 @@
-import { QuotaResourceMetrics } from '@linode/api-v4';
 import * as React from 'react';
 
-import { quotaFactory, quotaUsageFactory } from 'src/factories/quotas';
+import {
+  objEndpointQuotaFactory,
+  quotaUsageFactory,
+} from 'src/factories/quotas';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { EndpointSummaryRow } from './EndpointSummaryRow';
@@ -38,7 +40,7 @@ vi.mock('@tanstack/react-query', async () => {
 });
 
 const quotasMock = [
-  quotaFactory.build({
+  objEndpointQuotaFactory.build({
     quota_id: `obj-buckets-${testEndpoint}`,
     quota_type: 'obj-buckets',
     quota_name: 'Number of Buckets',
@@ -46,9 +48,9 @@ const quotasMock = [
     s3_endpoint: testEndpoint,
     description: 'Current number of buckets per account, per endpoint',
     quota_limit: 10,
-    resource_metric: QuotaResourceMetrics.BUCKET,
+    resource_metric: 'bucket',
   }),
-  quotaFactory.build({
+  objEndpointQuotaFactory.build({
     quota_id: `obj-bytes-${testEndpoint}`,
     quota_type: 'obj-bytes',
     quota_name: 'Total Capacity',
@@ -56,9 +58,9 @@ const quotasMock = [
     s3_endpoint: testEndpoint,
     description: 'Current total capacity per account, per endpoint',
     quota_limit: 2048,
-    resource_metric: QuotaResourceMetrics.BYTE,
+    resource_metric: 'byte',
   }),
-  quotaFactory.build({
+  objEndpointQuotaFactory.build({
     quota_id: `obj-objects-${testEndpoint}`,
     quota_type: 'obj-objects',
     quota_name: 'Number of Objects',
@@ -66,7 +68,7 @@ const quotasMock = [
     s3_endpoint: testEndpoint,
     description: 'Current number of objects per account, per endpoint',
     quota_limit: 10,
-    resource_metric: QuotaResourceMetrics.OBJECT,
+    resource_metric: 'object',
   }),
 ];
 
@@ -83,7 +85,7 @@ const objectsUsageMock = quotaUsageFactory.build({
   usage: 5,
 });
 
-const errorMock = { error: [{ reason: 'An error occurred.' }] };
+const errorMock = [{ reason: 'An error occurred.' }];
 
 describe('EndpointSummaryRow', () => {
   it('should display usage per endpoint', async () => {
@@ -154,7 +156,7 @@ describe('EndpointSummaryRow', () => {
     ).toBeVisible();
   });
 
-  it('should display error if any usage request is failed', async () => {
+  it('should display data not available if any usage request has failed', async () => {
     queryMocks.useQueries.mockReturnValue([
       {
         isFetching: false,
@@ -176,14 +178,11 @@ describe('EndpointSummaryRow', () => {
       isFetching: false,
     });
 
-    const { findByText } = renderWithTheme(
+    const { findAllByText } = renderWithTheme(
       <EndpointSummaryRow endpoint={testEndpoint} />
     );
 
-    expect(
-      await findByText(
-        `There was an error retrieving ${testEndpoint} endpoint data.`
-      )
-    ).toBeVisible();
+    const notAvailable = await findAllByText('Data not available');
+    expect(notAvailable.length).toEqual(1);
   });
 });

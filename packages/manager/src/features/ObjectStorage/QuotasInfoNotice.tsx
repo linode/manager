@@ -13,7 +13,7 @@ export const QuotasInfoNotice = ({ action }: { action: string }) => {
     >
       <Typography fontSize="inherit">
         Did you know you can check your usage and quotas before {action}?{' '}
-        <Link to="/account/quotas">View Quotas</Link>.
+        <Link to="/quotas?service=object-storage">View Quotas</Link>.
       </Typography>
     </DismissibleBanner>
   );
