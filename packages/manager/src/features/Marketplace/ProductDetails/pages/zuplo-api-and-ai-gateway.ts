@@ -48,7 +48,7 @@ const documentationMarkdown = `
 | **Deployment Model** | SaaS, deployed on Akamai Cloud |
 | **API Type** | REST, GraphQL, WebSocket, HTTP/2, SOAP (via HTTP proxy) |
 | **Programming Languages** | TypeScript (custom policies, handlers, and modules via @zuplo/runtime); shareable via npm packages |
-| **Data Volume Limits** | 500 MB maximum request body limit (per request). You can find additional platform limits here. |
+| **Data Volume Limits** | 500 MB maximum request body limit (per request). You can find additional platform limits [here](https://zuplo.com/docs/articles/limits). |
 | **Latency** | <br /> Zuplo adds approximately 20-30 ms of base latency with no policies. Individual policies typically add 1-5 ms each, while more complex policies, such as authentication, rate limiting, or custom code can add 5-15 ms. <br/><br/> The gateway is embedded in the Akamai Connected Cloud to optimize performance with the Akamai edge network. |
 | **Availability SLA** | Enterprise SLA with contractual uptime guarantees; 24/7 incident response; redundant by design with no single point of failure and no maintenance windows |
 | **Security** | TLS 1.2+ in transit, AES encryption at rest, mTLS (client-gateway and gateway-backend), IP allowlisting, native plugin for API security, and Firewall for AI |
