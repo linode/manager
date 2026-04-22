@@ -1,9 +1,10 @@
+import { Select } from '@akamai/cds-components/react';
 import {
   useAccountRoles,
   useGetDefaultDelegationAccessQuery,
   useUserRoles,
 } from '@linode/queries';
-import { Button, CircleProgress, Select, Typography } from '@linode/ui';
+import { Button, CircleProgress, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import { useNavigate, useParams, useSearch } from '@tanstack/react-router';
@@ -445,11 +446,12 @@ export const AssignedRolesTable = () => {
             value={queryParam ?? ''}
           />
           <Select
-            hideLabel
-            label="Select type"
-            onChange={(_, selected) => {
+            items={filterableOptions}
+            onChange={(event) => {
+              const selected = event.detail as unknown as null | SelectOption;
               const nextRoleType = (selected?.value ??
                 ALL_ROLES_OPTION.value) as 'all' | AccessType;
+
               navigate({
                 to: isDefaultDelegationRolesForChildAccount
                   ? DEFAULTS_ROLES_URL
@@ -464,10 +466,10 @@ export const AssignedRolesTable = () => {
                 }),
               });
             }}
-            options={filterableOptions}
             placeholder="All Assigned Roles"
-            sx={{ minWidth: 250 }}
-            value={selectedEntityTypeOption}
+            selected={selectedEntityTypeOption}
+            style={{ minWidth: 250 }}
+            valueFn={(item) => (item as SelectOption).label}
           />
         </Grid>
         <Grid sx={{ alignSelf: 'flex-start' }}>

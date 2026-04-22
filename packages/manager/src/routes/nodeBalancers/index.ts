@@ -71,6 +71,24 @@ const nodeBalancerDetailConfigurationRoute = createRoute({
   ).then((m) => m.nodeBalancerDetailLazyRoute)
 );
 
+const nodeBalancerDetailMetricsRoute = createRoute({
+  getParentRoute: () => nodeBalancersRoute,
+  path: '$id/metrics',
+  beforeLoad: async ({ context, params }) => {
+    if (!context.flags.aclpNbMetricsIntegration) {
+      throw redirect({
+        to: '/nodebalancers/$id/summary',
+        params: { id: params.id },
+        replace: true,
+      });
+    }
+  },
+}).lazy(() =>
+  import(
+    'src/features/NodeBalancers/NodeBalancerDetail/nodeBalancersDetailLazyRoute'
+  ).then((m) => m.nodeBalancerDetailLazyRoute)
+);
+
 const nodeBalancerDetailSettingsRoute = createRoute({
   getParentRoute: () => nodeBalancersRoute,
   path: '$id/settings',
@@ -124,6 +142,7 @@ export const nodeBalancersRouteTree = nodeBalancersRoute.addChildren([
     nodeBalancerDetailConfigurationsRoute.addChildren([
       nodeBalancerDetailConfigurationRoute,
     ]),
+    nodeBalancerDetailMetricsRoute,
     nodeBalancerDetailSettingsRoute.addChildren([
       nodeBalancerDetailSettingsDeleteRoute,
       nodeBalancerDetailSettingsAddFirewallRoute,

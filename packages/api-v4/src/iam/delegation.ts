@@ -1,4 +1,4 @@
-import { BETA_API_ROOT } from '../constants';
+import { API_ROOT } from '../constants';
 import Request, {
   setData,
   setHeaders,
@@ -30,13 +30,13 @@ export const getChildAccountsIam = ({
 }: GetChildAccountsIamParams) => {
   return users
     ? Request<Page<ChildAccountWithDelegates>>(
-        setURL(`${BETA_API_ROOT}/iam/delegation/child-accounts?users=true`),
+        setURL(`${API_ROOT}/iam/delegation/child-accounts?users=true`),
         setMethod('GET'),
         setParams(params),
         setXFilter(filter),
       )
     : Request<Page<ChildAccount>>(
-        setURL(`${BETA_API_ROOT}/iam/delegation/child-accounts`),
+        setURL(`${API_ROOT}/iam/delegation/child-accounts`),
         setMethod('GET'),
         setParams(params),
         setXFilter(filter),
@@ -50,7 +50,7 @@ export const getDelegatedChildAccountsForUser = ({
 }: GetDelegatedChildAccountsForUserParams) =>
   Request<Page<ChildAccount>>(
     setURL(
-      `${BETA_API_ROOT}/iam/delegation/users/${encodeURIComponent(username)}/child-accounts`,
+      `${API_ROOT}/iam/delegation/users/${encodeURIComponent(username)}/child-accounts`,
     ),
     setMethod('GET'),
     setParams(params),
@@ -63,7 +63,7 @@ export const getChildAccountDelegates = ({
 }: GetChildAccountDelegatesParams) =>
   Request<Page<string>>(
     setURL(
-      `${BETA_API_ROOT}/iam/delegation/child-accounts/${encodeURIComponent(euuid)}/users`,
+      `${API_ROOT}/iam/delegation/child-accounts/${encodeURIComponent(euuid)}/users`,
     ),
     setMethod('GET'),
     setParams(params),
@@ -75,7 +75,7 @@ export const updateChildAccountDelegates = ({
 }: UpdateChildAccountDelegatesParams) =>
   Request<Page<string>>(
     setURL(
-      `${BETA_API_ROOT}/iam/delegation/child-accounts/${encodeURIComponent(euuid)}/users`,
+      `${API_ROOT}/iam/delegation/child-accounts/${encodeURIComponent(euuid)}/users`,
     ),
     setMethod('PUT'),
     setData({ users }),
@@ -86,7 +86,7 @@ export const getMyDelegatedChildAccounts = ({
   filter,
 }: GetMyDelegatedChildAccountsParams) =>
   Request<Page<Account>>(
-    setURL(`${BETA_API_ROOT}/iam/delegation/profile/child-accounts`),
+    setURL(`${API_ROOT}/iam/delegation/profile/child-accounts`),
     setMethod('GET'),
     setParams(params),
     setXFilter(filter),
@@ -95,7 +95,7 @@ export const getMyDelegatedChildAccounts = ({
 export const getDelegatedChildAccount = ({ euuid }: { euuid: string }) =>
   Request<Account>(
     setURL(
-      `${BETA_API_ROOT}/iam/delegation/profile/child-accounts/${encodeURIComponent(euuid)}`,
+      `${API_ROOT}/iam/delegation/profile/child-accounts/${encodeURIComponent(euuid)}`,
     ),
     setMethod('GET'),
   );
@@ -106,7 +106,7 @@ export const generateChildAccountToken = ({
 }: ChildAccountTokenPayload) =>
   Request<Token>(
     setURL(
-      `${BETA_API_ROOT}/iam/delegation/profile/child-accounts/${encodeURIComponent(euuid)}/token`,
+      `${API_ROOT}/iam/delegation/profile/child-accounts/${encodeURIComponent(euuid)}/token`,
     ),
     setMethod('POST'),
     setHeaders(headers),
@@ -115,13 +115,13 @@ export const generateChildAccountToken = ({
 
 export const getDefaultDelegationAccess = () =>
   Request<IamUserRoles>(
-    setURL(`${BETA_API_ROOT}/iam/delegation/default-role-permissions`),
+    setURL(`${API_ROOT}/iam/delegation/default-role-permissions`),
     setMethod('GET'),
   );
 
 export const updateDefaultDelegationAccess = (data: IamUserRoles) =>
   Request<IamUserRoles>(
-    setURL(`${BETA_API_ROOT}/iam/delegation/default-role-permissions`),
+    setURL(`${API_ROOT}/iam/delegation/default-role-permissions`),
     setMethod('PUT'),
     setData(data),
   );

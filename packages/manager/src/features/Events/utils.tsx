@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { formatDuration } from '@linode/utilities';
+import { formatDuration } from '@akamai/compute-ui-core/datetime';
 import { Duration } from 'luxon';
 import type { JSX } from 'react';
 

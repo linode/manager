@@ -1,8 +1,9 @@
+import { Select } from '@akamai/cds-components/react';
 import {
   useGetDefaultDelegationAccessQuery,
   useUserRoles,
 } from '@linode/queries';
-import { Select, Typography, useTheme } from '@linode/ui';
+import { Typography, useTheme } from '@linode/ui';
 import Grid from '@mui/material/Grid';
 import { useNavigate, useSearch } from '@tanstack/react-router';
 import React from 'react';
@@ -361,11 +362,12 @@ export const AssignedEntitiesTable = ({ username }: Props) => {
           value={appliedQuery}
         />
         <Select
-          hideLabel
-          label="Select type"
-          onChange={(_, selected) => {
+          items={filterableOptions}
+          onChange={(event) => {
+            const selected = event.detail as unknown as null | SelectOption;
             const nextEntityType = (selected?.value ??
               ALL_ENTITIES_OPTION.value) as 'all' | EntityType;
+
             navigate({
               to: isDefaultDelegationRolesForChildAccount
                 ? DEFAULTS_ENTITIES_URL
@@ -381,10 +383,10 @@ export const AssignedEntitiesTable = ({ username }: Props) => {
               }),
             });
           }}
-          options={filterableOptions}
           placeholder="All Entities"
-          sx={{ minWidth: 250 }}
-          value={selectedEntityTypeOption}
+          selected={selectedEntityTypeOption}
+          style={{ maxWidth: 250 }}
+          valueFn={(item) => (item as SelectOption).label}
         />
       </Grid>
       <Table aria-label="Assigned Entities">

@@ -1,4 +1,4 @@
-import { BETA_API_ROOT } from '../constants';
+import { API_ROOT } from '../constants';
 import Request, {
   setData,
   setMethod,
@@ -28,9 +28,7 @@ import type { EntityType } from 'src/entities/types';
 export const getUserRoles = (username: string) =>
   Request<IamUserRoles>(
     setURL(
-      `${BETA_API_ROOT}/iam/users/${encodeURIComponent(
-        username,
-      )}/role-permissions`,
+      `${API_ROOT}/iam/users/${encodeURIComponent(username)}/role-permissions`,
     ),
     setMethod('GET'),
   );
@@ -47,9 +45,7 @@ export const getUserRoles = (username: string) =>
 export const updateUserRoles = (username: string, data: IamUserRoles) =>
   Request<IamUserRoles>(
     setURL(
-      `${BETA_API_ROOT}/iam/users/${encodeURIComponent(
-        username,
-      )}/role-permissions`,
+      `${API_ROOT}/iam/users/${encodeURIComponent(username)}/role-permissions`,
     ),
     setMethod('PUT'),
     setData(data),
@@ -63,7 +59,7 @@ export const updateUserRoles = (username: string, data: IamUserRoles) =>
  */
 export const getAccountRoles = () => {
   return Request<IamAccountRoles>(
-    setURL(`${BETA_API_ROOT}/iam/role-permissions`),
+    setURL(`${API_ROOT}/iam/role-permissions`),
     setMethod('GET'),
   );
 };
@@ -79,7 +75,7 @@ export const getAccountRoles = () => {
 export const getUserAccountPermissions = (username: string) =>
   Request<PermissionType[]>(
     setURL(
-      `${BETA_API_ROOT}/iam/users/${encodeURIComponent(
+      `${API_ROOT}/iam/users/${encodeURIComponent(
         username,
       )}/permissions/account`,
     ),
@@ -104,7 +100,7 @@ export const getUserEntityPermissions = (
 ) =>
   Request<PermissionType[]>(
     setURL(
-      `${BETA_API_ROOT}/iam/users/${encodeURIComponent(
+      `${API_ROOT}/iam/users/${encodeURIComponent(
         username,
       )}/permissions/${entityType}/${entityId}`,
     ),
@@ -136,7 +132,7 @@ export const getUserEntitiesByPermission = ({
 }: GetEntitiesByPermissionParams) =>
   Request<ResourcePage<EntityByPermission>>(
     setURL(
-      `${BETA_API_ROOT}/iam/users/${username}/entities/${entityType}?permission=${permission}`,
+      `${API_ROOT}/iam/users/${username}/entities/${entityType}?permission=${permission}`,
     ),
     setMethod('GET'),
     setParams(params),
