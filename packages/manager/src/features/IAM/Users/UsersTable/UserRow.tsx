@@ -7,7 +7,6 @@ import React from 'react';
 import { Avatar } from 'src/components/Avatar/Avatar';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { Link } from 'src/components/Link';
-import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
@@ -20,6 +19,7 @@ import {
   IAM_DELEGATE_USERS_PENDO_IDS,
   IAM_PARENT_USERS_PENDO_IDS,
 } from '../../Shared/constants';
+import { MaskableText } from '../../Shared/MaskableText/MaskableText';
 import { UsersActionMenu } from './UsersActionMenu';
 
 import type { User } from '@linode/api-v4';
