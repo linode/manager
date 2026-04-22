@@ -36,6 +36,11 @@ vi.mock('src/queries/cloudpulse/alerts', () => ({
   useAlertDefinitionQuery: queryMocks.useAlertDefinitionQuery,
   useAllAlertNotificationChannelsQuery:
     queryMocks.useAllAlertNotificationChannelsQuery,
+  useAllEntitiesByAlertIdQuery: () => ({
+    data: [],
+    isError: false,
+    isLoading: false,
+  }),
 }));
 
 vi.mock('src/queries/cloudpulse/services', () => {

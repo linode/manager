@@ -1,5 +1,6 @@
 import { type Alert, type APIError } from '@linode/api-v4';
-import { Box, Button, TooltipIcon } from '@linode/ui';
+import { useLinodeQuery } from '@linode/queries';
+import { Box, Button, CircleProgress, TooltipIcon } from '@linode/ui';
 import { Grid, TableBody, TableHead } from '@mui/material';
 import { useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
@@ -14,6 +15,7 @@ import { TableContentWrapper } from 'src/components/TableContentWrapper/TableCon
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { ALERTS_BETA_PROMPT } from 'src/features/Linodes/constants';
+import { useAllEntitiesByAlertsQuery } from 'src/queries/cloudpulse/alerts';
 import {
   invalidateAclpAlerts,
   servicePayloadTransformerMap,
@@ -156,9 +158,50 @@ export const AlertInformationActionTable = (
 
   const alertsTableRef = React.useRef<HTMLTableElement>(null);
 
-  const _error = error
-    ? getAPIErrorOrDefault(error, 'Error while fetching the alerts')
-    : undefined;
+  // For linode: fetch the linode directly — it has alerts.system_alerts / user_alerts.
+  // For other services: fetch entities per alert via the entities API.
+  const isLinodeService = serviceType === 'linode';
+
+  const {
+    alertEntityMap: entitiesMap,
+    isError: isEntitiesError,
+    isLoading: isEntitiesLoading,
+  } = useAllEntitiesByAlertsQuery(
+    alerts,
+    !isLinodeService ? entityId : undefined
+  );
+
+  const {
+    data: linode,
+    isError: isLinodeError,
+    isLoading: isLinodeLoading,
+  } = useLinodeQuery(Number(entityId), isLinodeService && !!entityId);
+
+  // True while we are still waiting for the data source that backs alertEntityMap.
+  // We gate the onToggleAlert notification on this so the parent never receives an
+  // empty-array payload before entity data has resolved.
+  const isEntityDataLoading = isLinodeService
+    ? isLinodeLoading
+    : isEntitiesLoading;
+
+  const alertEntityMap = React.useMemo(() => {
+    if (isLinodeService && linode && entityId) {
+      const map = new Map<number, string[]>();
+      [
+        ...(linode.alerts?.system_alerts ?? []),
+        ...(linode.alerts?.user_alerts ?? []),
+      ].forEach((alertId) => map.set(alertId, [entityId]));
+      return map;
+    }
+    return entitiesMap;
+  }, [isLinodeService, linode, entityId, entitiesMap]);
+
+  const isEntityError = isLinodeService ? isLinodeError : isEntitiesError;
+
+  const _error =
+    error || isEntityError
+      ? getAPIErrorOrDefault(error ?? [], 'Error while fetching the alerts')
+      : undefined;
   const { enqueueSnackbar } = useSnackbar();
   const [isDialogOpen, setIsDialogOpen] = React.useState<boolean>(false);
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
@@ -169,7 +212,7 @@ export const AlertInformationActionTable = (
     alert.type === 'system' ? 'system_alerts' : 'user_alerts';
 
   const { enabledAlerts, setEnabledAlerts, hasUnsavedChanges, initialState } =
-    useContextualAlertsState(alerts, entityId);
+    useContextualAlertsState(alerts, entityId, alertEntityMap);
 
   const isAccountOrRegionAlert = (alert: Alert) =>
     alert.scope === 'region' || alert.scope === 'account';
@@ -177,17 +220,33 @@ export const AlertInformationActionTable = (
   // Mutation to update alerts as per service type
   const updateAlerts = useAlertsMutation(serviceType, entityId ?? '');
 
+  // Keep refs to always have the latest values available in the unmount cleanup
+  // without those values being deps of the cleanup effect.
+  const onToggleAlertRef = React.useRef(onToggleAlert);
+  const isEditModeRef = React.useRef(isEditMode);
   React.useEffect(() => {
-    // To send initial state of alerts through toggle handler function in edit mode.
-    // This ensures the service owner receives the initial enabled-alert state immediately
-    // when the component is ready, regardless of whether any toggle action is performed.
-    if (isEditMode && onToggleAlert) {
-      onToggleAlert(enabledAlerts);
+    onToggleAlertRef.current = onToggleAlert;
+    isEditModeRef.current = isEditMode;
+  });
+
+  // Send current enabled state to the parent whenever it changes in edit mode,
+  // but only after entity data has finished loading. This prevents sending an
+  // empty-array payload before async data resolves — the parent receives exactly
+  // one initial call with the real pre-checked state, then subsequent calls on
+  // every user toggle.
+  React.useEffect(() => {
+    if (isEditMode && onToggleAlertRef.current && !isEntityDataLoading) {
+      onToggleAlertRef.current(enabledAlerts, hasUnsavedChanges);
     }
+  }, [enabledAlerts, hasUnsavedChanges, isEditMode, isEntityDataLoading]);
+
+  // Cleanup only on actual unmount — uses refs so this effect never re-runs
+  // mid-lifecycle, which would incorrectly send onToggleAlert({}, false) between
+  // renders while the component is still mounted.
+  React.useEffect(() => {
     return () => {
-      // Cleanup on unmount (For Edit flow)
-      if (isEditMode && onToggleAlert) {
-        onToggleAlert({}, false);
+      if (isEditModeRef.current && onToggleAlertRef.current) {
+        onToggleAlertRef.current({}, false);
       }
     };
   }, []);
@@ -213,8 +272,14 @@ export const AlertInformationActionTable = (
           enqueueSnackbar('Your settings for alerts have been saved.', {
             variant: 'success',
           });
-          onToggleAlert?.({}, false);
-          invalidateAclpAlerts(queryClient, serviceType, entityId, payload);
+          onToggleAlertRef.current?.({}, false);
+          invalidateAclpAlerts(
+            queryClient,
+            serviceType,
+            entityId,
+            payload,
+            alertEntityMap
+          );
         })
         .catch(() => {
           enqueueSnackbar('Alerts changes were not saved, please try again.', {
@@ -226,7 +291,14 @@ export const AlertInformationActionTable = (
           setIsDialogOpen(false);
         });
     },
-    [updateAlerts, enqueueSnackbar, onToggleAlert]
+    [
+      updateAlerts,
+      serviceType,
+      enqueueSnackbar,
+      queryClient,
+      entityId,
+      alertEntityMap,
+    ]
   );
 
   const handleToggleAlert = React.useCallback(
@@ -253,15 +325,15 @@ export const AlertInformationActionTable = (
           !arraysEqual(newPayload.system_alerts, initialState.system_alerts) ||
           !arraysEqual(newPayload.user_alerts, initialState.user_alerts);
 
-        // Call onToggleAlert in both create and edit flow
-        if (onToggleAlert) {
-          onToggleAlert(newPayload, hasNewUnsavedChanges);
+        // Call onToggleAlert only in create mode - in edit mode, the useEffect handles it
+        if (isCreateMode && onToggleAlertRef.current) {
+          onToggleAlertRef.current(newPayload, hasNewUnsavedChanges);
         }
 
         return newPayload;
       });
     },
-    [initialState, onToggleAlert, setEnabledAlerts]
+    [initialState, setEnabledAlerts, isCreateMode]
   );
 
   const handleCustomPageChange = React.useCallback(
@@ -275,6 +347,9 @@ export const AlertInformationActionTable = (
     []
   );
 
+  if (isEntitiesLoading) {
+    return <CircleProgress />;
+  }
   return (
     <>
       <OrderBy data={alerts} order="asc" orderBy={orderByColumn}>

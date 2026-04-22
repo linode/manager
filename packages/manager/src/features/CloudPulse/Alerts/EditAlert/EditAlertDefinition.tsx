@@ -9,7 +9,10 @@ import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
 
 import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
 import { useFlags } from 'src/hooks/useFlags';
-import { useEditAlertDefinition } from 'src/queries/cloudpulse/alerts';
+import {
+  useAllEntitiesByAlertIdQuery,
+  useEditAlertDefinition,
+} from 'src/queries/cloudpulse/alerts';
 import { useCloudPulseServiceByServiceType } from 'src/queries/cloudpulse/services';
 
 import {
@@ -70,8 +73,8 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
   const entityType =
     serviceType === 'firewall'
       ? alertDetails.rule_criteria.rules[0]?.label.includes(
-        entityLabelMap['nodebalancer']
-      )
+          entityLabelMap['nodebalancer']
+        )
         ? 'nodebalancer'
         : 'linode'
       : undefined;
@@ -100,7 +103,22 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
 
   const alertId = alertDetails.id;
   const { mutateAsync: editAlert } = useEditAlertDefinition();
-  const { control, formState, handleSubmit, setError } = formMethods;
+  const { control, formState, handleSubmit, setError, setValue } = formMethods;
+
+  // Fetch entities using the new API instead of relying on entity_ids from the response
+  const { data: entities } = useAllEntitiesByAlertIdQuery(
+    serviceType,
+    String(alertId)
+  );
+
+  React.useEffect(() => {
+    if (entities) {
+      setValue(
+        'entity_ids',
+        entities.map((entity) => entity.id)
+      );
+    }
+  }, [entities, setValue]);
   const [maxScrapeInterval, setMaxScrapeInterval] = React.useState<number>(0);
   const scopeWatcher = useWatch<EditAlertDefintionForm>({
     name: 'scope',
