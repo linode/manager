@@ -245,6 +245,7 @@ export interface Flags {
   aplLkeE: boolean;
   blockStorageContextualMetrics: boolean;
   blockStorageEncryption: boolean;
+  blockStorageQuotas: boolean;
   blockStorageVolumeLimit: boolean;
   cloudManagerDesignUpdatesBanner: DesignUpdatesBannerFlag;
   cloudNat: CloudNatFlag;

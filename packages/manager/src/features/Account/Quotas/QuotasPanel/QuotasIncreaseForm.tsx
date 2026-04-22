@@ -21,6 +21,7 @@ import type { APIError, Quota, TicketRequest } from '@linode/api-v4';
 import type {
   QuotaScope,
   QuotaService,
+  ScopeValueType,
 } from 'src/features/Account/Quotas/quotaServices';
 
 interface QuotasIncreaseFormProps {
@@ -33,7 +34,7 @@ interface QuotasIncreaseFormProps {
   open: boolean;
   quota: Quota;
   scope: QuotaScope;
-  scopeValue: null | string;
+  scopeValue: ScopeValueType;
   service: QuotaService;
 }
 

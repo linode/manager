@@ -10,6 +10,7 @@ export type ObjectStorageEndpointQuotaResourceMetric =
   | 'object'
   | 'request';
 export type ObjectStorageGlobalQuotaResourceMetric = 'key';
+export type VolumesQuotaResourceMetric = 'attachment' | 'gigabyte' | 'volume';
 
 interface QuotaCommon<T> {
   /**
@@ -62,7 +63,7 @@ export type LinodeQuota =
 export type LkeQuota = QuotaCommonWithRegionApplied<LkeQuotaResourceMetric>;
 
 export interface ObjectStorageGlobalQuota
-  extends QuotaCommon<ObjectStorageGlobalQuotaResourceMetric> {
+  extends QuotaCommonWithUsage<ObjectStorageGlobalQuotaResourceMetric> {
   /**
    * Represents the quota type.
    */
@@ -98,6 +99,24 @@ export interface ObjectStorageEndpointQuota
   s3_endpoint: string;
 }
 
+export interface VolumesQuota
+  extends QuotaCommonWithUsage<VolumesQuotaResourceMetric> {
+  /**
+   * Represents the quota type.
+   */
+  quota_type: 'vol-attachments' | 'vol-capacity' | 'vol-volumes';
+
+  /**
+   * The region slug to which this limit applies, if the scope is region.
+   */
+  region: null | string;
+
+  /**
+   * The scope of this quota.
+   */
+  scope: 'global' | 'region';
+}
+
 /**
  * A Quota is a service used limit that is rated based on service metrics such
  * as vCPUs used, instances or storage size.
@@ -106,7 +125,8 @@ export type Quota =
   | LinodeQuota
   | LkeQuota
   | ObjectStorageEndpointQuota
-  | ObjectStorageGlobalQuota;
+  | ObjectStorageGlobalQuota
+  | VolumesQuota;
 
 /**
  * A usage limit for a given Quota based on service metrics such
@@ -132,7 +152,7 @@ export interface QuotaUsage {
  * Represents the type of service for a given quota, e.g. Linodes, Object Storage, etc.
  * The type must match the service part of the quota endpoint paths.
  */
-export type QuotaServiceType = 'linode' | 'lke' | 'object-storage';
+export type QuotaServiceType = 'linode' | 'lke' | 'object-storage' | 'volumes';
 
 /**
  * Represents the API collection name for quotas, e.g. quotas or global-quotas.

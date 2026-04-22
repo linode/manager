@@ -41,7 +41,7 @@ describe('QuotasPanel', () => {
       <QuotasPanel scope={'region'} service={linodeQuotaService} />
     );
 
-    expect(getByText('Linodes: per-region')).toBeInTheDocument();
+    expect(getByText('Linodes: per region')).toBeInTheDocument();
     expect(
       getByText('View your Linodes quotas by applying the region filter below.')
     ).toBeInTheDocument();
