@@ -13,6 +13,7 @@ import {
   ENDPOINT,
   FIREWALL,
   INTERFACE_ID,
+  LOADING_DELAYS,
   NODE_TYPE,
   NODEBALANCER_ID,
   PARENT_ENTITY_REGION,
@@ -36,7 +37,9 @@ import {
 } from '../Utils/FilterBuilder';
 import { FILTER_CONFIG } from '../Utils/FilterConfig';
 import { type CloudPulseServiceTypeFilters } from '../Utils/models';
+import { useDelayedLoadingIndicator } from '../Utils/useDelayedLoadingIndicator';
 import { clearChildPreferences } from '../Utils/UserPreference';
+import { DelayedLoadingMessage } from './DelayedLoadingMessage';
 
 import type {
   CloudPulseMetricsFilter,
@@ -114,6 +117,12 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
 
     const dependentFilterReference: React.MutableRefObject<CloudPulseMetricsFilter> =
       React.useRef({});
+
+    // Show loading indicator only if loading continues for more than 10 seconds
+    const showLoadingIndicator = useDelayedLoadingIndicator(
+      isLoading,
+      LOADING_DELAYS.LARGE_DATASET
+    );
 
     const checkAndUpdateDependentFilters = React.useCallback(
       (filterKey: string, value: FilterValueType) => {
@@ -549,10 +558,12 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
           <GridLegacy
             alignItems="center"
             container
+            direction="column"
             display="flex"
             justifyContent="center"
           >
             <CircleProgress size="md" />
+            {showLoadingIndicator && <DelayedLoadingMessage />}
           </GridLegacy>
         ) : (
           <GridLegacy
