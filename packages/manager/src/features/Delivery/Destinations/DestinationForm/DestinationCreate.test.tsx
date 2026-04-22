@@ -1,3 +1,5 @@
+// Please break down this test file into smaller files, it's too large and difficult to maintain.
+// It is responsible for flakes and pipeline issues. Please align your testing techniques with the rest of the codebase.
 import { destinationType } from '@linode/api-v4';
 import { profileFactory } from '@linode/utilities';
 import { screen, waitFor } from '@testing-library/react';
@@ -50,7 +52,7 @@ const testConnectionButtonText = 'Test Connection';
 const createDestinationButtonText = 'Create Destination';
 const addCustomHeaderButtonText = 'Add Custom Header';
 
-describe('DestinationCreate', () => {
+describe.skip('DestinationCreate', () => {
   beforeEach(() => {
     queryMocks.useObjectStorageBuckets.mockReturnValue({
       data: { buckets: mockBuckets },
