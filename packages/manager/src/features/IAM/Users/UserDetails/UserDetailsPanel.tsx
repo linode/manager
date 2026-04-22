@@ -3,10 +3,10 @@ import Grid from '@mui/material/Grid';
 import React from 'react';
 
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
-import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TextTooltip } from 'src/components/TextTooltip';
 
+import { MaskableText } from '../../Shared/MaskableText/MaskableText';
 import { getTotalAssignedRoles } from './utils';
 
 import type { IamUserRoles, User } from '@linode/api-v4';
