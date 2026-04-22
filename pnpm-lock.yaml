@@ -124,14 +124,14 @@ importers:
   packages/manager:
     dependencies:
       '@akamai/cds-components':
-        specifier: 0.0.0-20260422090048
-        version: 0.0.0-20260422090048(@akamai/cds-icons@0.0.0-20260422090048(lit@3.3.2)(react@19.1.0))(@akamai/cds-tokens@0.0.0-20260422090048)(@lit/react@1.0.8(@types/react@19.1.6))(lit@3.3.2)(luxon@3.4.4)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        specifier: 0.0.0-20260422113144
+        version: 0.0.0-20260422113144(@akamai/cds-icons@0.0.0-20260422113144(lit@3.3.2)(react@19.1.0))(@akamai/cds-tokens@0.0.0-20260422113144)(@lit/react@1.0.8(@types/react@19.1.6))(lit@3.3.2)(luxon@3.4.4)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@akamai/cds-icons':
-        specifier: 0.0.0-20260422090048
-        version: 0.0.0-20260422090048(lit@3.3.2)(react@19.1.0)
+        specifier: 0.0.0-20260422113144
+        version: 0.0.0-20260422113144(lit@3.3.2)(react@19.1.0)
       '@akamai/cds-tokens':
-        specifier: 0.0.0-20260422090048
-        version: 0.0.0-20260422090048
+        specifier: 0.0.0-20260422113144
+        version: 0.0.0-20260422113144
       '@akamai/compute-ui-core':
         specifier: ^0.0.4
         version: 0.0.4(luxon@3.4.4)
@@ -821,11 +821,11 @@ packages:
   '@adobe/css-tools@4.4.4':
     resolution: {integrity: sha512-Elp+iwUx5rN5+Y8xLt5/GRoG20WGoDCQ/1Fb+1LiGtvwbDavuSk0jhD/eZdckHAuzcDzccnkv+rEjyWfRx18gg==}
 
-  '@akamai/cds-components@0.0.0-20260422090048':
-    resolution: {integrity: sha512-wh++P3d5qkx2CKz9ufPOFVFLUKXNOxLw+8KgjkqduGAwsOw1ylAMP6XFyZtWCjTkvwbKBti0k9embBfROoHp3g==, tarball: https://repos.akamai.com/artifactory/api/npm/npmjs-repos/@akamai/cds-components/-/@akamai/cds-components-0.0.0-20260422090048.tgz}
+  '@akamai/cds-components@0.0.0-20260422113144':
+    resolution: {integrity: sha512-a9a5uC00BKxsGxZcYpj70UYX7asThUBis1gYQKEWklBA5FkLCIjsyA11//mkQ2YCoQhf+wANdRqG9BeurckR+A==, tarball: https://repos.akamai.com/artifactory/api/npm/npmjs-repos/@akamai/cds-components/-/@akamai/cds-components-0.0.0-20260422113144.tgz}
     peerDependencies:
-      '@akamai/cds-icons': 0.0.0-20260422090048
-      '@akamai/cds-tokens': 0.0.0-20260422090048
+      '@akamai/cds-icons': 0.0.0-20260422113144
+      '@akamai/cds-tokens': 0.0.0-20260422113144
       '@angular/core': ^21.2.5
       '@angular/forms': ^21.2.5
       '@lit/react': ^1.0.0
@@ -847,8 +847,8 @@ packages:
       react-dom:
         optional: true
 
-  '@akamai/cds-icons@0.0.0-20260422090048':
-    resolution: {integrity: sha512-hRjMTRvmHKC3H+xXPsoqjKAN28Jj2sGVtUKjrG4CBxvEhAvWAajgrLJZAoBQLc1ivsFE1TomCFOGy1p77qJVZg==, tarball: https://repos.akamai.com/artifactory/api/npm/npmjs-repos/@akamai/cds-icons/-/@akamai/cds-icons-0.0.0-20260422090048.tgz}
+  '@akamai/cds-icons@0.0.0-20260422113144':
+    resolution: {integrity: sha512-+vhg/2IrA+kO7ciSaEE/O9JKI1l5VdowRwxDnPKRO/gP7++99pcVpAX4/TWgnq4Yw2zWQ1xPwS41UyMb27hxHA==, tarball: https://repos.akamai.com/artifactory/api/npm/npmjs-repos/@akamai/cds-icons/-/@akamai/cds-icons-0.0.0-20260422113144.tgz}
     peerDependencies:
       lit: ^3.2.1
       react: ^18.0.0
@@ -858,8 +858,8 @@ packages:
       react:
         optional: true
 
-  '@akamai/cds-tokens@0.0.0-20260422090048':
-    resolution: {integrity: sha512-pjcvT0t0Z2tgFDbqRYENFQKUfNBV1RDsDPSg+PPdvuTE8QGVdIl/NCTD9HZFWrYSLBpdDNSq5s5N31J/X1aLAw==, tarball: https://repos.akamai.com/artifactory/api/npm/npmjs-repos/@akamai/cds-tokens/-/@akamai/cds-tokens-0.0.0-20260422090048.tgz}
+  '@akamai/cds-tokens@0.0.0-20260422113144':
+    resolution: {integrity: sha512-eLYR61ZtDB7V57mXS/nQf49nxE0H45jz4y/Ug9dEJe88kDChxiS3rh6MrJi9NakeqFkO0/3pSOUnh+Ms/n8rJQ==, tarball: https://repos.akamai.com/artifactory/api/npm/npmjs-repos/@akamai/cds-tokens/-/@akamai/cds-tokens-0.0.0-20260422113144.tgz}
 
   '@akamai/compute-ui-core@0.0.4':
     resolution: {integrity: sha512-viByVLM/ZREfHMNO1RwAJJ3Hf4WAQ1cHN1onkR6RMgj+Ky+rFdRIrZC/mGTSaEnunDAvt37VwSIyJYVEP0jEuA==, tarball: https://repos.akamai.com/artifactory/api/npm/npmjs-repos/@akamai/compute-ui-core/-/@akamai/compute-ui-core-0.0.4.tgz}
@@ -7012,10 +7012,10 @@ snapshots:
 
   '@adobe/css-tools@4.4.4': {}
 
-  '@akamai/cds-components@0.0.0-20260422090048(@akamai/cds-icons@0.0.0-20260422090048(lit@3.3.2)(react@19.1.0))(@akamai/cds-tokens@0.0.0-20260422090048)(@lit/react@1.0.8(@types/react@19.1.6))(lit@3.3.2)(luxon@3.4.4)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
+  '@akamai/cds-components@0.0.0-20260422113144(@akamai/cds-icons@0.0.0-20260422113144(lit@3.3.2)(react@19.1.0))(@akamai/cds-tokens@0.0.0-20260422113144)(@lit/react@1.0.8(@types/react@19.1.6))(lit@3.3.2)(luxon@3.4.4)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
     dependencies:
-      '@akamai/cds-icons': 0.0.0-20260422090048(lit@3.3.2)(react@19.1.0)
-      '@akamai/cds-tokens': 0.0.0-20260422090048
+      '@akamai/cds-icons': 0.0.0-20260422113144(lit@3.3.2)(react@19.1.0)
+      '@akamai/cds-tokens': 0.0.0-20260422113144
       lit: 3.3.2
     optionalDependencies:
       '@lit/react': 1.0.8(@types/react@19.1.6)
@@ -7023,12 +7023,12 @@ snapshots:
       react: 19.1.0
       react-dom: 19.1.0(react@19.1.0)
 
-  '@akamai/cds-icons@0.0.0-20260422090048(lit@3.3.2)(react@19.1.0)':
+  '@akamai/cds-icons@0.0.0-20260422113144(lit@3.3.2)(react@19.1.0)':
     optionalDependencies:
       lit: 3.3.2
       react: 19.1.0
 
-  '@akamai/cds-tokens@0.0.0-20260422090048': {}
+  '@akamai/cds-tokens@0.0.0-20260422113144': {}
 
   '@akamai/compute-ui-core@0.0.4(luxon@3.4.4)':
     dependencies:

@@ -17,9 +17,9 @@
     "url": "https://github.com/Linode/manager.git"
   },
   "dependencies": {
-    "@akamai/cds-components": "0.0.0-20260422090048",
-    "@akamai/cds-icons": "0.0.0-20260422090048",
-    "@akamai/cds-tokens": "0.0.0-20260422090048",
+    "@akamai/cds-components": "0.0.0-20260422113144",
+    "@akamai/cds-icons": "0.0.0-20260422113144",
+    "@akamai/cds-tokens": "0.0.0-20260422113144",
     "@akamai/compute-ui-core": "^0.0.4",
     "@braintree/sanitize-url": "^7.1.0",
     "@dnd-kit/core": "^6.1.0",
