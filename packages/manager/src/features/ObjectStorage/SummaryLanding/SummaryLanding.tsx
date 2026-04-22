@@ -27,7 +27,7 @@ export const SummaryLanding = () => {
       <Typography>
         Select endpoint(s) in the dropdown to see a summary of your Global
         account. Check your usage and{' '}
-        <Link to="/account/quotas">View Quotas</Link>.
+        <Link to="/quotas?service=object-storage">View Quotas</Link>.
       </Typography>
 
       <EndpointMultiselect

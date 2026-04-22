@@ -1,61 +1,42 @@
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 
+import { useQueries } from '../index';
 import { quotaQueries } from './keys';
 
 import type {
   APIError,
   Filter,
-  Params,
   Quota,
-  QuotaType,
+  QuotaCollection,
+  QuotaServiceType,
   QuotaUsage,
-  ResourcePage,
 } from '@linode/api-v4';
-
-export const useQuotaQuery = (
-  service: QuotaType,
-  collection: string,
-  id: number,
-  enabled = true,
-) =>
-  useQuery<Quota, APIError[]>({
-    ...quotaQueries.service(service, collection)._ctx.quota(id),
-    enabled,
-  });
-
-export const useQuotasQuery = (
-  service: QuotaType,
-  collection: string,
-  params: Params = {},
-  filter: Filter,
-  enabled = true,
-) => {
-  return useQuery<ResourcePage<Quota>, APIError[]>({
-    ...quotaQueries.service(service, collection)._ctx.paginated(params, filter),
-    enabled,
-    placeholderData: keepPreviousData,
-  });
-};
+import type { UseQueryResult } from '@tanstack/react-query';
 
 export const useAllQuotasQuery = (
-  service: QuotaType,
-  collection: string,
-  params: Params = {},
-  filter: Filter,
+  serviceType: QuotaServiceType,
+  quotaCollection: QuotaCollection,
+  filter: Filter = {},
   enabled = true,
-) =>
+): UseQueryResult<Quota[], APIError[]> =>
   useQuery<Quota[], APIError[]>({
-    ...quotaQueries.service(service, collection)._ctx.all(params, filter),
+    ...quotaQueries
+      .serviceQuotas(serviceType, quotaCollection)
+      ._ctx.all({}, filter),
     enabled,
   });
 
-export const useQuotaUsageQuery = (
-  service: QuotaType,
-  collection: string,
-  id: string,
+export const useQuotaUsageQueries = (
+  serviceType: QuotaServiceType,
+  quotaCollection: QuotaCollection,
+  quotaIds: string[],
   enabled = true,
-) =>
-  useQuery<QuotaUsage, APIError[]>({
-    ...quotaQueries.service(service, collection)._ctx.usage(id),
-    enabled,
+): UseQueryResult<QuotaUsage, APIError[]>[] =>
+  useQueries({
+    queries: quotaIds.map((quotaId) => ({
+      ...quotaQueries
+        .serviceQuotas(serviceType, quotaCollection)
+        ._ctx.usage(quotaId),
+      enabled: enabled && quotaIds.length > 0,
+    })),
   });

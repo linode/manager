@@ -141,15 +141,13 @@ import { accountAgreementsFactory } from 'src/factories/accountAgreements';
 import { accountLoginFactory } from 'src/factories/accountLogin';
 import { accountUserFactory } from 'src/factories/accountUsers';
 import { LinodeKernelFactory } from 'src/factories/linodeKernel';
-import { quotaFactory } from 'src/factories/quotas';
+import { objEndpointQuotaFactory } from 'src/factories/quotas';
 import { getStorage } from 'src/utilities/storage';
 
 import type { PathParams } from 'msw';
 
 const getRandomWholeNumber = (min: number, max: number) =>
   Math.floor(Math.random() * (max - min + 1) + min);
-
-import { QuotaResourceMetrics } from '@linode/api-v4';
 
 import { accountEntityFactory } from 'src/factories/accountEntities';
 import { accountRolesFactory } from 'src/factories/accountRoles';
@@ -1835,13 +1833,12 @@ export const handlers = [
   }),
   http.get('*/v4*/object-storage/quotas*', () => {
     const quotas = [
-      quotaFactory.build({
+      objEndpointQuotaFactory.build({
         description: 'The total capacity of your Object Storage account',
         endpoint_type: 'E0',
         quota_limit: 1_000_000_000_000_000,
         quota_name: 'Total Capacity',
-        resource_metric: QuotaResourceMetrics.BYTE,
-        s3_endpoint: 'endpoint1',
+        resource_metric: 'byte',
       }),
     ];
 

@@ -1,4 +1,3 @@
-import { QuotaResourceMetrics } from '@linode/api-v4';
 import { regionFactory } from '@linode/utilities';
 import { profileFactory } from '@linode/utilities';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
@@ -20,10 +19,14 @@ import { randomDomainName, randomLabel } from 'support/util/random';
 
 import { supportTicketFactory } from 'src/factories';
 import { objectStorageEndpointsFactory } from 'src/factories';
-import { quotaFactory, quotaUsageFactory } from 'src/factories/quotas';
+import {
+  objEndpointQuotaFactory,
+  quotaUsageFactory,
+} from 'src/factories/quotas';
+import { objectStorageQuotaService } from 'src/features/Account/Quotas/quotaServices';
 import { getQuotaIncreaseMessage } from 'src/features/Account/Quotas/utils';
 
-import type { Quota } from '@linode/api-v4';
+import type { ObjectStorageEndpointQuota, Quota } from '@linode/api-v4';
 
 const mockFeatureFlags = {
   limitsEvolution: {
@@ -33,7 +36,7 @@ const mockFeatureFlags = {
   objectStorageGlobalQuotas: false,
 };
 
-const placeholderText = 'Select an Object Storage S3 endpoint';
+const placeholderText = 'Select an Object Storage endpoint';
 
 const mockDomain = randomDomainName();
 
@@ -68,34 +71,34 @@ const mockSelectedEndpoint = mockEndpoints[1];
 const selectedDomain = mockSelectedEndpoint.s3_endpoint || '';
 
 const mockQuotas = [
-  quotaFactory.build({
+  objEndpointQuotaFactory.build({
     quota_id: `obj-bytes-${selectedDomain}`,
     quota_type: 'obj-bytes',
     description: randomLabel(50),
     endpoint_type: mockSelectedEndpoint.endpoint_type,
     quota_limit: 10,
     quota_name: randomLabel(15),
-    resource_metric: QuotaResourceMetrics.BYTE,
+    resource_metric: 'byte',
     s3_endpoint: selectedDomain,
   }),
-  quotaFactory.build({
+  objEndpointQuotaFactory.build({
     quota_id: `obj-buckets-${selectedDomain}`,
     quota_type: 'obj-buckets',
     description: randomLabel(50),
     endpoint_type: mockSelectedEndpoint.endpoint_type,
     quota_limit: 78,
     quota_name: randomLabel(15),
-    resource_metric: QuotaResourceMetrics.BUCKET,
+    resource_metric: 'bucket',
     s3_endpoint: selectedDomain,
   }),
-  quotaFactory.build({
+  objEndpointQuotaFactory.build({
     quota_id: `obj-objects-${selectedDomain}`,
     quota_type: 'obj-objects',
     description: randomLabel(50),
     endpoint_type: mockSelectedEndpoint.endpoint_type,
     quota_limit: 400,
     quota_name: randomLabel(15),
-    resource_metric: QuotaResourceMetrics.OBJECT,
+    resource_metric: 'object',
     s3_endpoint: selectedDomain,
   }),
 ];
@@ -151,7 +154,7 @@ describe('Quota workflow tests', () => {
 
   describe('Quota storage table', () => {
     it('Quotas and quota usages display properly', () => {
-      cy.visitWithLogin('/quotas');
+      cy.visitWithLogin('/quotas?service=object-storage');
 
       cy.wait(['@getFeatureFlags', '@getObjectStorageEndpoints']);
 
@@ -175,7 +178,7 @@ describe('Quota workflow tests', () => {
 
       cy.wait(['@getQuotas', '@getQuotaUsages']);
 
-      cy.get('table[data-testid="table-endpoint-quotas"]')
+      cy.get('[data-testid="quotas-table-obj-endpoint"]')
         .find('tbody')
         .within(() => {
           cy.get('[data-testid="table-row-empty"]').should('not.exist');
@@ -223,34 +226,34 @@ describe('Quota workflow tests', () => {
       const updatedEndpoint = mockEndpoints[mockEndpoints.length - 1];
       const updatedDomain = updatedEndpoint.s3_endpoint || '';
       const updatedQuotas = [
-        quotaFactory.build({
+        objEndpointQuotaFactory.build({
           quota_id: `obj-bytes-${updatedDomain}`,
           quota_type: 'obj-bytes',
           description: randomLabel(50),
           endpoint_type: updatedEndpoint.endpoint_type,
           quota_limit: 20,
           quota_name: randomLabel(15),
-          resource_metric: QuotaResourceMetrics.BYTE,
+          resource_metric: 'byte',
           s3_endpoint: updatedDomain,
         }),
-        quotaFactory.build({
+        objEndpointQuotaFactory.build({
           quota_id: `obj-buckets-${updatedDomain}`,
           quota_type: 'obj-buckets',
           description: randomLabel(50),
           endpoint_type: updatedEndpoint.endpoint_type,
           quota_limit: 122,
           quota_name: randomLabel(15),
-          resource_metric: QuotaResourceMetrics.BUCKET,
+          resource_metric: 'bucket',
           s3_endpoint: updatedDomain,
         }),
-        quotaFactory.build({
+        objEndpointQuotaFactory.build({
           quota_id: `obj-objects-${updatedDomain}`,
           quota_type: 'obj-objects',
           description: randomLabel(50),
           endpoint_type: updatedEndpoint.endpoint_type,
           quota_limit: 450,
           quota_name: randomLabel(15),
-          resource_metric: QuotaResourceMetrics.OBJECT,
+          resource_metric: 'object',
           s3_endpoint: updatedDomain,
         }),
       ];
@@ -295,10 +298,7 @@ describe('Quota workflow tests', () => {
       ui.autocomplete
         .findByLabel('Object Storage Endpoint')
         .should('be.visible')
-        .clear();
-      ui.autocomplete
-        .findByLabel('Object Storage Endpoint')
-        .type(updatedDomain);
+        .click();
       ui.autocompletePopper
         .findByTitle(updatedDomain, { exact: false })
         .should('be.visible')
@@ -306,7 +306,7 @@ describe('Quota workflow tests', () => {
 
       cy.wait(['@getUpdatedQuotas', '@getUpdatedQuotaUsages']);
 
-      cy.get('table[data-testid="table-endpoint-quotas"]')
+      cy.get('[data-testid="quotas-table-obj-endpoint"]')
         .find('tbody')
         .within(() => {
           cy.get('[data-testid="table-row-empty"]').should('not.exist');
@@ -354,7 +354,7 @@ describe('Quota workflow tests', () => {
       const errorMsg = 'Request failed.';
       mockGetObjectStorageQuotaError(errorMsg).as('getQuotasError');
 
-      cy.visitWithLogin('/account/quotas');
+      cy.visitWithLogin('/quotas?service=object-storage');
 
       cy.wait(['@getFeatureFlags', '@getObjectStorageEndpoints']);
       ui.autocomplete
@@ -366,7 +366,7 @@ describe('Quota workflow tests', () => {
         .should('be.visible')
         .click();
       cy.wait('@getQuotasError');
-      cy.get('[data-testid="endpoint-quotas-table-container"]').within(() => {
+      cy.get('[data-testid="quotas-table-obj-endpoint"]').within(() => {
         cy.get('[data-qa-error-msg="true"]')
           .should('be.visible')
           .should('have.text', errorMsg);
@@ -403,7 +403,7 @@ describe('Quota workflow tests', () => {
         },
       ];
       mockQuotas.forEach((mockQuota: Quota, index: number) => {
-        cy.visitWithLogin('/account/quotas');
+        cy.visitWithLogin('/quotas?service=object-storage');
         cy.wait([
           '@getFeatureFlags',
           '@getProfile',
@@ -422,10 +422,9 @@ describe('Quota workflow tests', () => {
             profile: mockProfile,
             quantity: expectedResults[index].newQuotaLimit,
             quota: mockQuota,
-            selectedService: {
-              label: 'Object Storage',
-              value: 'object-storage',
-            },
+            service: objectStorageQuotaService(),
+            scope: 'obj-endpoint',
+            scopeValue: (mockQuota as ObjectStorageEndpointQuota).s3_endpoint,
           }).description,
         });
         cy.findByPlaceholderText(placeholderText)
@@ -524,7 +523,7 @@ describe('Quota workflow tests', () => {
     it('Quota error results in error message being displayed', () => {
       const errorMsg = 'Request failed.';
       mockGetObjectStorageQuotaError(errorMsg).as('getQuotasError');
-      cy.visitWithLogin('/account/quotas');
+      cy.visitWithLogin('/quotas?service=object-storage');
 
       cy.wait('@getObjectStorageEndpoints');
 
@@ -538,7 +537,7 @@ describe('Quota workflow tests', () => {
         .click();
       cy.wait('@getQuotasError');
 
-      cy.get('[data-testid="endpoint-quotas-table-container"]').within(() => {
+      cy.get('[data-testid="quotas-table-obj-endpoint"]').within(() => {
         cy.get('[data-qa-error-msg="true"]')
           .should('be.visible')
           .should('have.text', errorMsg);
@@ -551,7 +550,7 @@ describe('Quota workflow tests', () => {
       mockApiInternalUser();
       const errorMessage = 'Ticket creation failed.';
       mockCreateSupportTicketError(errorMessage).as('createTicketError');
-      cy.visitWithLogin('/account/quotas');
+      cy.visitWithLogin('/quotas?service=object-storage');
 
       cy.wait(['@getFeatureFlags', '@getObjectStorageEndpoints']);
 
@@ -601,7 +600,7 @@ describe('Quota workflow tests', () => {
           requestForIncreaseDisabledForInternalAccountsOnly: false,
         },
       }).as('getFeatureFlags');
-      cy.visitWithLogin('/account/quotas');
+      cy.visitWithLogin('/quotas?service=object-storage');
       cy.wait(['@getFeatureFlags', '@getObjectStorageEndpoints']);
       ui.autocomplete
         .findByLabel('Object Storage Endpoint')
@@ -635,7 +634,7 @@ describe('Quota workflow tests', () => {
 
       mockApiInternalUser();
 
-      cy.visitWithLogin('/account/quotas');
+      cy.visitWithLogin('/quotas?service=object-storage');
       cy.wait(['@getFeatureFlags', '@getObjectStorageEndpoints']);
       ui.autocomplete
         .findByLabel('Object Storage Endpoint')
@@ -665,7 +664,7 @@ describe('Quota workflow tests', () => {
           requestForIncreaseDisabledForAll: true,
         },
       }).as('getFeatureFlags');
-      cy.visitWithLogin('/account/quotas');
+      cy.visitWithLogin('/quotas?service=object-storage');
       cy.wait(['@getFeatureFlags', '@getObjectStorageEndpoints']);
       ui.autocomplete
         .findByLabel('Object Storage Endpoint')
@@ -696,7 +695,7 @@ describe('Quota workflow tests', () => {
         },
       }).as('getFeatureFlags');
       mockApiInternalUser();
-      cy.visitWithLogin('/account/quotas');
+      cy.visitWithLogin('/quotas?service=object-storage');
       cy.wait(['@getFeatureFlags', '@getObjectStorageEndpoints']);
       ui.autocomplete
         .findByLabel('Object Storage Endpoint')
@@ -727,7 +726,7 @@ describe('Quota workflow tests', () => {
           requestForIncreaseDisabledForInternalAccountsOnly: true,
         },
       }).as('getFeatureFlags');
-      cy.visitWithLogin('/account/quotas');
+      cy.visitWithLogin('/quotas?service=object-storage');
       cy.wait(['@getFeatureFlags', '@getObjectStorageEndpoints']);
       ui.autocomplete
         .findByLabel('Object Storage Endpoint')
@@ -759,7 +758,7 @@ describe('Quota workflow tests', () => {
         },
       }).as('getFeatureFlags');
       mockApiInternalUser();
-      cy.visitWithLogin('/account/quotas');
+      cy.visitWithLogin('/quotas?service=object-storage');
       cy.wait(['@getFeatureFlags', '@getObjectStorageEndpoints']);
       ui.autocomplete
         .findByLabel('Object Storage Endpoint')
