@@ -49,6 +49,8 @@ const documentationMarkdown = `
 | **Security** | TLS 1.3 in transit; runs within customer-controlled cloud VPC or on-premises infrastructure |
 | **License model** | Subscription-based (per channel, or enterprise) |
 
+Full documentation could be found [here](https://docs.norsk.video/welcome/index.html).
+
 ![Norsk Platform Architecture](/assets/marketplace/norsk_platform_architecture.svg)
 
 ![Norsk Process Flow](/assets/marketplace/norsk_process_flow.svg)
