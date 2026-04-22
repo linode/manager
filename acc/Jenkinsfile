@@ -246,19 +246,40 @@ print(f'{icon} {tests - failures} passed, {failures} failed')
                 //
                 // Requires SMTP configured in Jenkins global settings:
                 //   Manage Jenkins → Configure System → Email Notification
-                def status = currentBuild.currentResult  // 'SUCCESS', 'FAILURE', etc.
-                def icon   = (status == 'SUCCESS') ? '✓' : '✗'
-                def body   = """cloud-manager unit tests — ${env.BRANCH_NAME} #${env.BUILD_NUMBER}
+                def status     = currentBuild.currentResult
+                def passed     = (status == 'SUCCESS')
+                def color      = passed ? '#2e7d32' : '#c62828'
+                def icon       = passed ? '✓' : '✗'
+                def commitInfo = sh(returnStdout: true,
+                    script: "git log -1 --pretty=format:'%h — %s (%an)'"
+                ).trim()
 
-Result  : ${icon} ${status}
-Summary : ${summary ?: 'no test report generated'}
-Branch  : ${env.BRANCH_NAME}
-Build   : ${env.BUILD_URL}
-"""
+                def body = """<!DOCTYPE html><html><body style="font-family:sans-serif;margin:0;padding:0;background:#f5f5f5">
+<table width="100%" cellpadding="0" cellspacing="0"><tr><td style="padding:24px">
+  <table width="600" cellpadding="0" cellspacing="0" style="background:#fff;border-radius:6px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.15)">
+    <tr><td style="background:${color};padding:20px 28px">
+      <span style="color:#fff;font-size:20px;font-weight:600">${icon} cloud-manager — unit tests ${status.toLowerCase()}</span>
+    </td></tr>
+    <tr><td style="padding:24px 28px">
+      <table cellpadding="6" cellspacing="0" style="width:100%;font-size:14px;color:#333">
+        <tr><td style="color:#666;width:90px">Branch</td><td><strong>${env.BRANCH_NAME}</strong></td></tr>
+        <tr><td style="color:#666">Build</td><td>#${env.BUILD_NUMBER}</td></tr>
+        <tr><td style="color:#666">Commit</td><td style="font-family:monospace;font-size:13px">${commitInfo}</td></tr>
+        <tr><td style="color:#666">Tests</td><td>${summary ?: 'no report generated (infra-only change)'}</td></tr>
+      </table>
+      <div style="margin-top:24px">
+        <a href="${env.BUILD_URL}" style="background:${color};color:#fff;padding:10px 20px;border-radius:4px;text-decoration:none;font-size:14px;font-weight:500">View build →</a>
+      </div>
+    </td></tr>
+  </table>
+</td></tr></table>
+</body></html>"""
+
                 mail(
-                    to:      'abailly@akamai.com',
-                    subject: "[cloud-manager] ${icon} ${status} — ${env.BRANCH_NAME} #${env.BUILD_NUMBER}",
-                    body:    body
+                    to:       'abailly@akamai.com',
+                    subject:  "[cloud-manager] ${icon} ${status} — ${env.BRANCH_NAME} #${env.BUILD_NUMBER} | ${summary ?: 'no tests run'}",
+                    body:     body,
+                    mimeType: 'text/html'
                 )
             }
         }
