@@ -46,29 +46,31 @@ export const ShareGroupRow = (props: Props) => {
       style={{ padding: 0 }}
       zebra={isTableStripingEnabled}
     >
-      <Tooltip title={label.length > 32 ? label : ''}>
-        <TableCell
-          className="group-column"
-          data-pendo-id={`Images Groups Owned-Group name`}
-        >
-          <LinkButton
-            onClick={() => {}}
-            sx={{
-              textOverflow: 'ellipsis',
-              whiteSpace: 'nowrap',
-              overflow: 'hidden',
-              display: 'block',
-            }}
-          >
-            {truncateEnd(label, 32)}
-          </LinkButton>
-        </TableCell>
-      </Tooltip>
-      <Tooltip title={description.length > 50 ? description : ''}>
-        <TableCell className="description-column">
-          {truncateEnd(description, 50)}
-        </TableCell>
-      </Tooltip>
+      <TableCell
+        className="group-column"
+        data-pendo-id={`Images Groups Owned-Group name`}
+      >
+        <Tooltip title={label.length > 32 ? label : ''}>
+          <span>
+            <LinkButton
+              onClick={() => {}}
+              sx={{
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                display: 'block',
+              }}
+            >
+              {truncateEnd(label, 32)}
+            </LinkButton>
+          </span>
+        </Tooltip>
+      </TableCell>
+      <TableCell className="description-column">
+        <Tooltip title={description.length > 50 ? description : ''}>
+          <span>{truncateEnd(description, 50)}</span>
+        </Tooltip>
+      </TableCell>
       <TableCell className="membersCount-column">{members_count}</TableCell>
       <Hidden smDown>
         <TableCell className="imagesCount-column">{images_count}</TableCell>
