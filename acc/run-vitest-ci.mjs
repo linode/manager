@@ -188,9 +188,11 @@ function buildPlan(files) {
       }
     }
 
-    // Files in packages/queries or packages/validation touch shared types —
-    // safer to run full manager + api-v4 suites.
     if (!owningPkg) {
+      // packages/queries and packages/validation are consumed by manager and api-v4.
+      // vitest related with cross-package src paths is unreliable — if pnpm resolves
+      // @linode/queries to a compiled dist/ the src path won't match the module graph
+      // and tests would be silently skipped (false negative). Full suite is safer.
       if (n.startsWith('packages/queries/')) {
         for (const p of ['packages/manager', 'packages/api-v4']) {
           if (!byPkg[p]) byPkg[p] = { mode: 'full', srcFiles: [] };
