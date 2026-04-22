@@ -31,6 +31,7 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'aplGeneralAvailability', label: 'Akamai App Platform GA' },
   { flag: 'aplLkeE', label: 'Akamai App Platform LKE-E' },
   { flag: 'blockStorageEncryption', label: 'Block Storage Encryption (BSE)' },
+  { flag: 'blockStorageQuotas', label: 'Block Storage Quotas' },
   { flag: 'blockStorageVolumeLimit', label: 'Block Storage Volume Limit' },
   { flag: 'cloudNat', label: 'Cloud NAT' },
   { flag: 'disableLargestGbPlans', label: 'Disable Largest GB Plans' },

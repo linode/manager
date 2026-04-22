@@ -6,6 +6,7 @@ import type { Profile, Quota } from '@linode/api-v4';
 import type {
   QuotaScope,
   QuotaService,
+  ScopeValueType,
 } from 'src/features/Account/Quotas/quotaServices';
 
 export interface QuotaWithUsage {
@@ -27,7 +28,7 @@ interface GetQuotaIncreaseFormDefaultValuesProps {
   quantity: number;
   quota: Quota;
   scope: QuotaScope;
-  scopeValue: null | string;
+  scopeValue: ScopeValueType;
   service: QuotaService;
 }
 
@@ -116,6 +117,13 @@ export const convertResourceMetric = ({
           unit: 'GB',
           base10: true,
         }).value,
+      };
+    }
+    case 'gigabyte': {
+      return {
+        convertedUsage: initialUsage,
+        convertedLimit: initialLimit,
+        convertedResourceMetric: 'GB',
       };
     }
     default: {

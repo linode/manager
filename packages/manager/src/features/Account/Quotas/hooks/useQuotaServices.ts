@@ -1,7 +1,10 @@
 import { useAccountSettings, useProfile } from '@linode/queries';
 import { useMemo } from 'react';
 
-import { objectStorageQuotaService } from 'src/features/Account/Quotas/quotaServices';
+import {
+  objectStorageQuotaService,
+  volumesQuotaService,
+} from 'src/features/Account/Quotas/quotaServices';
 import { useFlags } from 'src/hooks/useFlags';
 
 import type { QuotaService } from 'src/features/Account/Quotas/quotaServices';
@@ -12,7 +15,7 @@ export interface UseQuotaServicesResult {
 }
 
 export const useQuotaServices = (): UseQuotaServicesResult => {
-  const { objectStorageGlobalQuotas } = useFlags();
+  const { blockStorageQuotas, objectStorageGlobalQuotas } = useFlags();
   const { data: profile, isFetching: isFetchingProfile } = useProfile();
   const { data: accountSettings, isFetching: isFetchingAccountSettings } =
     useAccountSettings();
@@ -26,8 +29,12 @@ export const useQuotaServices = (): UseQuotaServicesResult => {
     ) {
       result.push(objectStorageQuotaService(objectStorageGlobalQuotas));
     }
+    if (blockStorageQuotas) {
+      result.push(volumesQuotaService);
+    }
+
     return result;
-  }, [objectStorageGlobalQuotas, profile, accountSettings]);
+  }, [objectStorageGlobalQuotas, blockStorageQuotas, profile, accountSettings]);
 
   return {
     data: result,

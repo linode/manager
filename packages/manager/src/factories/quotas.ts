@@ -4,6 +4,7 @@ import type {
   LinodeQuota,
   LkeQuota,
   ObjectStorageEndpointQuota,
+  VolumesQuota,
 } from '@linode/api-v4';
 import type { QuotaUsage } from '@linode/api-v4/lib/quotas/types';
 
@@ -37,6 +38,18 @@ export const objEndpointQuotaFactory =
     s3_endpoint: 'endpoint-1.linodeobjects.com',
     endpoint_type: 'E1',
   });
+
+export const volumesQuotaFactory = Factory.Sync.makeFactory<VolumesQuota>({
+  description: 'Maximum storage capacity in us-east region',
+  quota_id: Factory.each((id) => id.toString()),
+  quota_limit: 51200,
+  quota_name: 'Block Storage Capacity',
+  quota_type: 'vol-capacity',
+  resource_metric: 'gigabyte',
+  scope: 'region',
+  region: 'us-east',
+  has_usage: true,
+});
 
 export const quotaUsageFactory = Factory.Sync.makeFactory<QuotaUsage>({
   quota_limit: 50,
