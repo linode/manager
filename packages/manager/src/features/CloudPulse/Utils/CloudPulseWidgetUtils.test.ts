@@ -108,7 +108,10 @@ describe('generateGraphData method', () => {
         result: [
           {
             metric: { entity_id: '1' },
-            values: [[1234567890, '50']],
+            values: [
+              [1234567890, '50'],
+              [1234567900, null],
+            ],
           },
         ],
         result_type: 'matrix',
@@ -136,6 +139,10 @@ describe('generateGraphData method', () => {
       {
         'linode-1': 50,
         timestamp: 1234567890000,
+      },
+      {
+        'linode-1': null,
+        timestamp: 1234567900000,
       },
     ]);
 

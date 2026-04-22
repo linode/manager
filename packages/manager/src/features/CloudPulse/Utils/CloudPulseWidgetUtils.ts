@@ -223,7 +223,8 @@ export const generateGraphData = (props: GraphDataOptionsProps): GraphData => {
     humanizableUnits: humanizedUnits,
   } = props;
   const legendRowsData: MetricsDisplayRow[] = [];
-  const dimension: { [timestamp: number]: { [label: string]: number } } = {};
+  const dimension: { [timestamp: number]: { [label: string]: null | number } } =
+    {};
   const areas: AreaProps[] = [];
   const colors = Object.values(Alias.Chart.Categorical);
   const isHumanizableUnit = humanizedUnits?.some(
@@ -276,12 +277,10 @@ export const generateGraphData = (props: GraphDataOptionsProps): GraphData => {
         data.forEach((dataPoint) => {
           const timestamp = dataPoint[0];
           const value = dataPoint[1];
-          if (value !== null) {
-            dimension[timestamp] = {
-              ...dimension[timestamp],
-              [labelName]: value,
-            };
-          }
+          dimension[timestamp] = {
+            ...dimension[timestamp],
+            [labelName]: value,
+          };
         });
         // construct a legend row with the dimension
         const legendRow: MetricsDisplayRow = {
@@ -304,7 +303,10 @@ export const generateGraphData = (props: GraphDataOptionsProps): GraphData => {
         (oldValue, newValue) => {
           return {
             ...oldValue,
-            [newValue[0]]: convertValueToUnit(newValue[1], maxUnit),
+            [newValue[0]]:
+              newValue[1] !== null
+                ? convertValueToUnit(newValue[1], maxUnit)
+                : null,
           };
         },
         {}

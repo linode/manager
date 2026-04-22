@@ -236,7 +236,7 @@ export const convertTimeDurationToStartAndEndTimeRange = (
  * @returns formatted data based on the time range between @startTime & @endTime
  */
 export const seriesDataFormatter = (
-  data: [number, number][],
+  data: [number, null | number][],
   startTime: number,
   endTime: number
 ): [number, null | number][] => {
