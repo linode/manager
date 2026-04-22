@@ -38,34 +38,6 @@ export const getCookie = (name: string) => {
 };
 
 /**
- * This function parses the categories in the OptanonConsent cookie to check if consent is provided.
- * @param optanonCookie the OptanonConsent cookie from OneTrust
- * @param selectedCategory the category code based on cookie type
- * @returns true if the user has consented to cookie enablement for the category; else, false
- */
-export const checkOptanonConsent = (
-  optanonCookie: string | undefined,
-  selectedCategory: (typeof ONE_TRUST_COOKIE_CATEGORIES)[keyof typeof ONE_TRUST_COOKIE_CATEGORIES]
-): boolean => {
-  const optanonGroups = optanonCookie?.match(/groups=([^&]*)/);
-
-  if (!optanonCookie || !optanonGroups) {
-    return false;
-  }
-
-  // Optanon consent groups will be of the form: "C000[N]:[0/1]".
-  const unencodedOptanonGroups = decodeURIComponent(optanonGroups[1]).split(
-    ','
-  );
-  return unencodedOptanonGroups.some((consentGroup) => {
-    if (consentGroup.includes(selectedCategory)) {
-      return Number(consentGroup.split(':')[1]) === 1; // Cookie enabled
-    }
-    return false;
-  });
-};
-
-/**
  * Sends a direct call rule events to Adobe for a Component Click (and optionally, with `data`, Component Details).
  * This should be used for all custom events other than form events, which should use sendFormEvent.
  * @param eventPayload - Custom event payload

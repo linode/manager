@@ -1,6 +1,7 @@
+import { checkOptanonConsent } from '@akamai/compute-ui-core/analytics';
+
 import { generateTimeOfDay } from './customEventAnalytics';
 import {
-  checkOptanonConsent,
   getCookie,
   getFormattedStringFromFormEventOptions,
   ONE_TRUST_COOKIE_CATEGORIES,
