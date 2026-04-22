@@ -1,5 +1,5 @@
 import type { OCA } from './features/OneClickApps/types';
-import type { Region } from '@linode/api-v4';
+import type { PriceObject, Region } from '@linode/api-v4';
 import type {
   AlertStatusType,
   CloudPulseServiceType,
@@ -217,6 +217,17 @@ interface ResourceLockFlag {
   linodes: boolean;
 }
 
+interface ComputePricing {
+  /**
+   * Global banner configuration displayed only to users
+   * who have at least one plan matching any of the patterns provided in `TARGET_PLAN_MATCHERS`.
+   */
+  banner: { learnMoreLink: string; text: string };
+  // keyof PriceObject - ensures the LD billing value is always a valid API field name.
+  // This represents active billing mode for the Compute product (e.g. 'monthly', 'hourly', etc.)
+  billing: keyof PriceObject;
+}
+
 export interface Flags {
   acceleratedPlans: AcceleratedPlansFlag;
   aclp: AclpFlag;
@@ -237,6 +248,7 @@ export interface Flags {
   blockStorageVolumeLimit: boolean;
   cloudManagerDesignUpdatesBanner: DesignUpdatesBannerFlag;
   cloudNat: CloudNatFlag;
+  computePricing: ComputePricing;
   databaseAdvancedConfig: boolean;
   databaseBeta: boolean;
   databasePgBouncer: boolean;
