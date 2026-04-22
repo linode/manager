@@ -43,17 +43,3 @@ export const formatExpiry = (expiry: string): string => {
     ? `${expiryData[0]}/${expiryData[1].slice(-2)}`
     : expiry;
 };
-
-export const parseExpiryYear = (
-  expiryYear: string | undefined
-): string | undefined => {
-  if (!expiryYear) {
-    return undefined;
-  }
-
-  if (expiryYear.length > 2) {
-    return expiryYear;
-  }
-
-  return String(new Date().getFullYear()).slice(0, 2) + expiryYear;
-};
