@@ -425,7 +425,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
 
   return (
     <Stack gap={2}>
-      {isLoading && <CircleProgress />}
+      {isLoading && <CircleProgress size="md" />}
       {!hideLabel && (
         <Typography
           display={isLoading ? 'none' : 'block'}

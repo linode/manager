@@ -31,6 +31,7 @@ import {
   arraysEqual,
   filterFirewallResources,
   filterKubernetesClusters,
+  formatObjectStorageUrl,
   getEnabledServiceTypes,
   getFilteredDimensions,
   getValidSortedEndpoints,
@@ -747,5 +748,52 @@ describe('getValidSortedEndpoints', () => {
       { id: 'a', label: 'a', region: 'us-east' },
       { id: 'c', label: 'c', region: 'us-east' },
     ]);
+  });
+});
+
+describe('formatObjectStorageUrl', () => {
+  it('should format a full object storage URL with bucket name', () => {
+    expect(formatObjectStorageUrl('mybucket.us-ord.linodeobjects.com')).toBe(
+      'mybucket[us-ord]'
+    );
+  });
+
+  it('should format URLs with multiple dots in bucket name', () => {
+    expect(formatObjectStorageUrl('xyz123.yuhh.us-ord.linodeobjects.com')).toBe(
+      'xyz123.yuhh[us-ord]'
+    );
+    expect(
+      formatObjectStorageUrl('xzz12.yuh.hhh.us-iad.linodeobjects.com')
+    ).toBe('xzz12.yuh.hhh[us-iad]');
+  });
+
+  it('should return original URL for bare endpoints without bucket name', () => {
+    // Bare endpoints have only 3 parts when split by '.'
+    expect(formatObjectStorageUrl('us-east.linodeobjects.com')).toBe(
+      'us-east.linodeobjects.com'
+    );
+    expect(formatObjectStorageUrl('us-ord.linodeobjects.com')).toBe(
+      'us-ord.linodeobjects.com'
+    );
+  });
+
+  it('should return original URL for malformed URLs', () => {
+    expect(formatObjectStorageUrl('invalid')).toBe('invalid');
+    expect(formatObjectStorageUrl('invalid.com')).toBe('invalid.com');
+    expect(formatObjectStorageUrl('bucket.region')).toBe('bucket.region');
+  });
+
+  it('should return original URL when there is no prefix after removing domain', () => {
+    // This would happen if URL is just 'linodeobjects.com'
+    expect(formatObjectStorageUrl('linodeobjects.com')).toBe(
+      'linodeobjects.com'
+    );
+  });
+
+  it('should handle URLs with different TLDs', () => {
+    // Should format correctly if it has the right structure
+    expect(formatObjectStorageUrl('bucket.region.linodeobjects.org')).toBe(
+      'bucket[region]'
+    );
   });
 });
