@@ -82,10 +82,10 @@ describe('RolesTable', () => {
   });
 
   it('renders roles correctly when roles array is provided', async () => {
-    const { getAllByRole } = renderWithTheme(<RolesTable roles={mockRoles} />);
+    const { container } = renderWithTheme(<RolesTable roles={mockRoles} />);
 
     screen.getByTestId('roles-table');
-    expect(getAllByRole('combobox').length).toEqual(1);
+    expect(container.querySelector('cds-select')).toBeVisible();
     screen.getByText('Account linode admin');
   });
 
