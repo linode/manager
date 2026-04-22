@@ -251,6 +251,9 @@ export const CloudPulseResourcesSelect = React.memo(
         slotProps={{
           listbox: {
             component: ListboxWrapper,
+            sx: {
+              maxHeight: VIRTUALIZATION_CONFIG.MAX_VISIBLE_HEIGHT,
+            },
           },
         }}
         textFieldProps={{
