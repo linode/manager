@@ -216,6 +216,51 @@ pipeline {
     post {
         always {
             junit testResults: 'reports/vitest-junit*.xml', allowEmptyResults: true
+
+            script {
+                // Parse JUnit XML into a one-line summary, e.g. "✓ 799 passed, 0 failed".
+                def xmlFiles = findFiles(glob: 'reports/vitest-junit*.xml')
+                def summary = ''
+                if (xmlFiles.length > 0) {
+                    summary = sh(returnStdout: true, script: '''
+                        python3 -c "
+import glob, xml.etree.ElementTree as ET
+tests=failures=0
+for f in glob.glob('reports/vitest-junit*.xml'):
+    root = ET.parse(f).getroot()
+    for ts in ([root] if root.tag == 'testsuite' else root.findall('testsuite')):
+        tests += int(ts.get('tests', 0))
+        failures += int(ts.get('failures', 0))
+icon = chr(10003) if failures == 0 else chr(10007)
+print(f'{icon} {tests - failures} passed, {failures} failed')
+"
+                    ''').trim()
+                    if (summary) {
+                        currentBuild.description = summary
+                    }
+                }
+
+                // ── Email notification ────────────────────────────────────────────
+                // TODO: once confirmed working, restrict to:
+                //   if (env.BRANCH_NAME in ['develop', 'staging', 'master'])
+                //
+                // Requires SMTP configured in Jenkins global settings:
+                //   Manage Jenkins → Configure System → Email Notification
+                def status = currentBuild.currentResult  // 'SUCCESS', 'FAILURE', etc.
+                def icon   = (status == 'SUCCESS') ? '✓' : '✗'
+                def body   = """cloud-manager unit tests — ${env.BRANCH_NAME} #${env.BUILD_NUMBER}
+
+Result  : ${icon} ${status}
+Summary : ${summary ?: 'no test report generated'}
+Branch  : ${env.BRANCH_NAME}
+Build   : ${env.BUILD_URL}
+"""
+                mail(
+                    to:      'abailly@akamai.com',
+                    subject: "[cloud-manager] ${icon} ${status} — ${env.BRANCH_NAME} #${env.BUILD_NUMBER}",
+                    body:    body
+                )
+            }
         }
     }
 }
