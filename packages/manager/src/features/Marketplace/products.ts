@@ -132,27 +132,18 @@ export const PRODUCTS: Product[] = [
     },
   },
   {
-    categories: [
-      'AI',
-      'Data Analytics',
-      'Compute',
-      'Storage',
-      'Kubernetes',
-      'Development Tools',
-      'Enterprise',
-      'Other Software and APIs',
-    ],
+    categories: ['AI', 'Storage', 'Enterprise'],
     id: 'myota',
-    name: 'Myota',
+    name: 'Myota Cyberstorage',
     partner: {
       email: 'sales@myota.io',
       logoDarkMode: 'Myota-dark.svg',
       logoLightMode: 'Myota-light.svg',
       name: 'Myota, Inc.',
-      url: 'https://myota.io/akamai',
+      url: 'https://www.myota.io/',
     },
     shortDescription:
-      'Myota provides S3-compatible cyberstorage that makes data 100% immune to ransomware and cloud outages. Automatically encrypts, shards, and spreads across locations, while lowering data storage cost by 50%.',
+      'S3-compatible cyberstorage. Encrypts at write, shards across locations, decrypts only at runtime. Ransomware immunity. More storage-efficient than replica-based protection. No application changes.',
     type: {
       name: 'SaaS & APIs',
     },
@@ -381,6 +372,165 @@ export const PRODUCTS: Product[] = [
     },
     shortDescription:
       'Yospace is the most trusted provider of Dynamic Ad Insertion (DAI) technology in the world today.',
+    type: {
+      name: 'SaaS & APIs',
+    },
+  },
+  {
+    categories: [
+      'Data Analytics',
+      'Database Management',
+      'Data Sources',
+      'Networking',
+      'Compute',
+      'Storage',
+      'Kubernetes',
+      'Development Tools',
+      'Enterprise',
+      'CDN Affiliated',
+      'Other Software and APIs',
+    ],
+    id: 'cyclops',
+    name: 'Cyclops',
+    partner: {
+      email: 'sales@redflagai.co',
+      logoDarkMode: 'Redflag-dark.svg',
+      logoLightMode: 'Redflag-light.svg',
+      name: 'Redflag AI',
+      url: 'https://www.redflagai.co/industries/sports',
+    },
+    shortDescription:
+      'Forensic video content watermarking at the edge: identify leakers in real-time, trigger automated kill-switches, and neutralize live-stream piracy across global CDN infrastructure.',
+    type: {
+      name: 'Data Service',
+    },
+  },
+  {
+    categories: [
+      'AI',
+      'Enterprise',
+      'CDN Affiliated',
+      'Other Software and APIs',
+    ],
+    id: 'zuplo-api-and-ai-gateway',
+    name: 'Zuplo API and AI Gateway',
+    partner: {
+      email: 'akamai@zuplo.com',
+      logoDarkMode: 'Zuplo-dark.svg',
+      logoLightMode: 'Zuplo-light.svg',
+      name: 'Zuplo',
+      url: 'https://zuplo.com/',
+    },
+    shortDescription:
+      'The programmable, GitOps-ready gateway that delivers best-in-class API management and native support for agentic workflows through MCP, AI gateway, and TypeScript extensibility.',
+    type: {
+      name: 'SaaS & APIs',
+    },
+  },
+  {
+    categories: [
+      'Data Analytics',
+      'Data Sources',
+      'Networking',
+      'Compute',
+      'Storage',
+      'Kubernetes',
+      'Development Tools',
+      'Enterprise',
+      'CDN Affiliated',
+      'Media & Entertainment, Gaming',
+      'Other Software and APIs',
+    ],
+    id: 'scalstrm-live-transcoding',
+    name: 'Scalstrm Live Transcoding (24/7 and event channels)',
+    partner: {
+      email: 'sales@scalstrm.com',
+      logoDarkMode: 'Scalstrm-dark.svg',
+      logoLightMode: 'Scalstrm-light.svg',
+      name: 'Scalstrm',
+      url: 'https://scalstrm.com/transcoding/',
+    },
+    shortDescription:
+      'Scalstrm Live Transcoding delivers fast and scalable live and event-based transcoding up to 4K HEVC, minimizing costs and setup time with fully automated, cloud-ready workflows.',
+    type: {
+      name: 'SaaS & APIs',
+    },
+  },
+  {
+    categories: [
+      'Data Analytics',
+      'Data Sources',
+      'Networking',
+      'Compute',
+      'Storage',
+      'Kubernetes',
+      'Development Tools',
+      'Enterprise',
+      'CDN Affiliated',
+      'Media & Entertainment, Gaming',
+      'Other Software and APIs',
+    ],
+    id: 'scalstrm-origin-packaging-platform',
+    name: 'Scalstrm Origin Packaging Platform',
+    partner: {
+      email: 'sales@scalstrm.com',
+      logoDarkMode: 'Scalstrm-dark.svg',
+      logoLightMode: 'Scalstrm-light.svg',
+      name: 'Scalstrm',
+      url: 'https://scalstrm.com/origin-platform/',
+    },
+    shortDescription:
+      'Scalstrm Origin is a resilient, scalable media origin and packaging platform delivering live and on-demand OTT and broadcast services with multi-format support, ad insertion, and synchronized redundancy.',
+    type: {
+      name: 'SaaS & APIs',
+    },
+  },
+  {
+    categories: [
+      'Data Analytics',
+      'Data Sources',
+      'Networking',
+      'Compute',
+      'Storage',
+      'Kubernetes',
+      'Development Tools',
+      'Enterprise',
+      'CDN Affiliated',
+      'Media & Entertainment, Gaming',
+      'Other Software and APIs',
+    ],
+    id: 'scalstrm-vod-offline-transcoding',
+    name: 'Scalstrm VOD Offline Transcoding',
+    partner: {
+      email: 'sales@scalstrm.com',
+      logoDarkMode: 'Scalstrm-dark.svg',
+      logoLightMode: 'Scalstrm-light.svg',
+      name: 'Scalstrm',
+      url: 'https://scalstrm.com/transcoding/',
+    },
+    shortDescription:
+      'Offline VOD transcoding on a unified video platform seamlessly integrated with Scalstrm Origin, featuring built-in scheduling, CPU/VPU acceleration, customizable templates, real-time monitoring, and output in HLS and DASH formats.',
+    type: {
+      name: 'SaaS & APIs',
+    },
+  },
+  {
+    categories: [
+      'CDN Affiliated',
+      'Media & Entertainment, Gaming',
+      'Other Software and APIs',
+    ],
+    id: 'unified-origin',
+    name: 'Unified Origin',
+    partner: {
+      email: 'akamai@unified-streaming.com',
+      logoDarkMode: 'Unified-Streaming-dark.svg',
+      logoLightMode: 'Unified-Streaming-light.svg',
+      name: 'Unified Streaming',
+      url: 'https://www.unified-streaming.com/products/unified-origin',
+    },
+    shortDescription:
+      'Stream Live or VOD to all devices. Ingest video content and package on-the-fly to multiple formats supporting all major DRM systems.',
     type: {
       name: 'SaaS & APIs',
     },
