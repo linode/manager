@@ -21,6 +21,11 @@ export interface AutocompleteOption {
   value: string;
 }
 
+export interface AutocompleteBooleanOption
+  extends Omit<AutocompleteOption, 'value'> {
+  value: boolean;
+}
+
 export const destinationTypeOptions: AutocompleteOption[] = [
   {
     value: destinationType.CustomHttps,
