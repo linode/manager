@@ -1,5 +1,4 @@
 import { useAccountSettings, useProfile } from '@linode/queries';
-import { useOpenClose } from '@linode/utilities';
 import { styled } from '@mui/material/styles';
 import { useMatch, useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
@@ -13,17 +12,18 @@ import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
 import { useFlags } from 'src/hooks/useFlags';
-import { Tab, useTabs } from 'src/hooks/useTabs';
+import { useTabs } from 'src/hooks/useTabs';
 import { useObjectStorageBuckets } from 'src/queries/object-storage/queries';
 
 import { getRestrictedResourceText } from '../Account/utils';
+import { AccessKeysDrawerOutlet } from './AccessKeyLanding/AccessKeysDrawerOutlet';
+import { useAccessKeyDrawers } from './AccessKeyLanding/hooks/useAccessKeyDrawers';
 import { BillingNotice } from './BillingNotice';
-import { CreateBucketDrawer } from './BucketLanding/CreateBucketDrawer';
+import { BucketDrawerOutlet } from './BucketLanding/BucketDrawerOutlet';
+import { useBucketDrawers } from './BucketLanding/hooks/useBucketDrawers';
 import { OMC_BucketLanding } from './BucketLanding/OMC_BucketLanding';
-import { OMC_CreateBucketDrawer } from './BucketLanding/OMC_CreateBucketDrawer';
-import { useIsObjMultiClusterEnabled } from './hooks/useIsObjectStorageGen2Enabled';
 
-import type { MODE } from './AccessKeyLanding/types';
+import type { Tab } from 'src/hooks/useTabs';
 
 const SummaryLanding = React.lazy(() =>
   import('./SummaryLanding/SummaryLanding').then((module) => ({
@@ -41,12 +41,10 @@ export const ObjectStorageLanding = () => {
   const navigate = useNavigate();
   const match = useMatch({ strict: false });
 
-  const [mode, setMode] = React.useState<MODE>('creating');
-
-  const { isObjMultiClusterEnabled } = useIsObjMultiClusterEnabled();
-
   const { data: profile } = useProfile();
   const { data: accountSettings } = useAccountSettings();
+  const { openDrawer: openBucketDrawer } = useBucketDrawers();
+  const { openDrawer: openAccessKeyDrawer } = useAccessKeyDrawers();
 
   const isRestrictedUser = profile?.restricted ?? false;
 
@@ -99,26 +97,16 @@ export const ObjectStorageLanding = () => {
     ? 'Create Access Key'
     : 'Create Bucket';
 
-  const openDrawer = useOpenClose();
-
-  const handleOpenAccessDrawer = (mode: MODE) => {
-    setMode(mode);
-    openDrawer.open();
-  };
-
   const createButtonAction = () => {
     if (isAccessKeysTab) {
-      navigate({ to: '/object-storage/access-keys/create' });
-      handleOpenAccessDrawer('creating');
+      openAccessKeyDrawer('create-access-key');
     } else {
-      navigate({ to: '/object-storage/buckets/create' });
+      openBucketDrawer('create-bucket');
     }
   };
 
   const isSummaryOpened = match.routeId === '/object-storage/summary';
   const isCreateBucketOpen = match.routeId === '/object-storage/buckets/create';
-  const isCreateAccessKeyOpen =
-    match.routeId === '/object-storage/access-keys/create';
 
   // TODO: Remove when OBJ Summary is enabled
   if (match.routeId === '/object-storage/summary' && !objSummaryPage) {
@@ -126,7 +114,7 @@ export const ObjectStorageLanding = () => {
   }
 
   return (
-    <React.Fragment>
+    <>
       <DocumentTitleSegment
         segment={`${
           isCreateBucketOpen && !objectStorageBucketsResponse?.buckets.length
@@ -179,33 +167,15 @@ export const ObjectStorageLanding = () => {
               />
             </SafeTabPanel>
             <SafeTabPanel index={accessKeysTabIndex}>
-              <AccessKeyLanding
-                accessDrawerOpen={isCreateAccessKeyOpen || openDrawer.isOpen}
-                closeAccessDrawer={() => {
-                  navigate({ to: '/object-storage/access-keys' });
-                  openDrawer.close();
-                }}
-                isRestrictedUser={isRestrictedUser}
-                mode={mode}
-                openAccessDrawer={handleOpenAccessDrawer}
-              />
+              <AccessKeyLanding isRestrictedUser={isRestrictedUser} />
             </SafeTabPanel>
           </TabPanels>
         </React.Suspense>
-
-        {isObjMultiClusterEnabled ? (
-          <OMC_CreateBucketDrawer
-            isOpen={isCreateBucketOpen}
-            onClose={() => navigate({ to: '/object-storage/buckets' })}
-          />
-        ) : (
-          <CreateBucketDrawer
-            isOpen={isCreateBucketOpen}
-            onClose={() => navigate({ to: '/object-storage/buckets' })}
-          />
-        )}
       </Tabs>
-    </React.Fragment>
+
+      <BucketDrawerOutlet />
+      <AccessKeysDrawerOutlet />
+    </>
   );
 };
 

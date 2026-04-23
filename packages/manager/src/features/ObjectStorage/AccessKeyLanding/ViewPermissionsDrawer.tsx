@@ -8,20 +8,20 @@ import { BucketPermissionsTable } from './BucketPermissionsTable';
 import type { ObjectStorageKey } from '@linode/api-v4';
 
 export interface Props {
-  objectStorageKey: null | ObjectStorageKey;
+  isOpen: boolean;
+  objectStorageKey?: ObjectStorageKey;
   onClose: () => void;
-  open: boolean;
 }
 
 export const ViewPermissionsDrawer = (props: Props) => {
-  const { objectStorageKey, onClose, open } = props;
+  const { onClose, isOpen, objectStorageKey } = props;
 
   const { isObjMultiClusterEnabled } = useIsObjMultiClusterEnabled();
 
   return (
     <Drawer
       onClose={onClose}
-      open={open}
+      open={isOpen}
       title={`Permissions for ${objectStorageKey?.label}`}
       wide
     >

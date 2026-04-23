@@ -3,6 +3,7 @@ import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
+import { objectStorageKeyFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { HostNamesDrawer } from './HostNamesDrawer';
@@ -10,17 +11,18 @@ import { HostNamesDrawer } from './HostNamesDrawer';
 // Mock the onClose function
 const mockOnClose = vi.fn();
 
-// Mock regions data
-const mockS3Regions = [
-  {
-    id: 'region1',
-    s3_endpoint: 'endpoint1',
-  },
-  {
-    id: 'region2',
-    s3_endpoint: 'endpoint2',
-  },
-];
+const mockAccessKey = objectStorageKeyFactory.build({
+  regions: [
+    {
+      id: 'region1',
+      s3_endpoint: 'endpoint1',
+    },
+    {
+      id: 'region2',
+      s3_endpoint: 'endpoint2',
+    },
+  ],
+});
 
 vi.mock('@linode/queries', async (importOriginal) => ({
   ...(await importOriginal()),
@@ -36,9 +38,9 @@ describe('HostNamesDrawer', () => {
   it('renders the drawer with regions and copyable text', () => {
     renderWithTheme(
       <HostNamesDrawer
+        isOpen={true}
+        objectStorageKey={mockAccessKey}
         onClose={mockOnClose}
-        open={true}
-        regions={mockS3Regions}
       />
     );
 
@@ -67,9 +69,9 @@ describe('HostNamesDrawer', () => {
   it('calls onClose when the drawer is closed', async () => {
     renderWithTheme(
       <HostNamesDrawer
+        isOpen={true}
+        objectStorageKey={mockAccessKey}
         onClose={mockOnClose}
-        open={true}
-        regions={mockS3Regions}
       />
     );
 

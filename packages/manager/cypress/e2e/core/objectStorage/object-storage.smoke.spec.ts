@@ -44,7 +44,7 @@ describe('object storage smoke tests', () => {
     mockAppendFeatureFlags({
       gecko2: false,
       objMultiCluster: true,
-      objectStorageGen2: { enabled: false },
+      objectStorageGen2: { enabled: true },
     }).as('getFeatureFlags');
 
     mockGetBuckets([]).as('getBuckets');
@@ -66,7 +66,7 @@ describe('object storage smoke tests', () => {
         cy.findByLabelText('Bucket Name (required)').click();
         cy.focused().type(bucketLabel);
         ui.regionSelect.find().click();
-        cy.focused().type(`${mockCluster.id}{enter}`);
+        cy.focused().type(`${mockRegion.label}{enter}`);
         ui.buttonGroup
           .findButtonByTitle('Create Bucket')
           .should('be.visible')

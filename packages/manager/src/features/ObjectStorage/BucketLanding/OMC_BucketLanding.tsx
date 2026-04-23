@@ -21,9 +21,9 @@ import {
 } from 'src/utilities/analytics/customEventAnalytics';
 
 import { CancelNotice } from '../CancelNotice';
-import { BucketDetailsDrawer } from './BucketDetailsDrawer';
 import { BucketLandingEmptyState } from './BucketLandingEmptyState';
 import { BucketTable } from './BucketTable';
+import { useBucketDrawers } from './hooks/useBucketDrawers';
 
 import type { APIError, ObjectStorageBucket } from '@linode/api-v4';
 import type { Theme } from '@mui/material/styles';
@@ -55,25 +55,16 @@ export const OMC_BucketLanding = (props: Props) => {
 
   const { classes } = useStyles();
 
+  const { openDrawer } = useBucketDrawers();
+
   const removeBucketConfirmationDialog = useOpenClose();
 
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<APIError[] | undefined>(undefined);
-  const [bucketDetailDrawerOpen, setBucketDetailDrawerOpen] =
-    React.useState<boolean>(false);
 
   const [selectedBucket, setSelectedBucket] = React.useState<
     ObjectStorageBucket | undefined
   >(undefined);
-
-  const handleClickDetails = (bucket: ObjectStorageBucket) => {
-    setBucketDetailDrawerOpen(true);
-    setSelectedBucket(bucket);
-  };
-
-  const closeBucketDetailDrawer = () => {
-    setBucketDetailDrawerOpen(false);
-  };
 
   const handleClickRemove = (bucket: ObjectStorageBucket) => {
     setSelectedBucket(bucket);
@@ -200,7 +191,9 @@ export const OMC_BucketLanding = (props: Props) => {
       <Grid size={12}>
         <BucketTable
           data={orderedData ?? []}
-          handleClickDetails={handleClickDetails}
+          handleClickDetails={(bucket) =>
+            openDrawer('bucket-details', bucket.region, bucket.label)
+          }
           handleClickRemove={handleClickRemove}
           handleOrderChange={handleOrderChange}
           order={order}
@@ -256,11 +249,6 @@ export const OMC_BucketLanding = (props: Props) => {
           Account Settings. */}
         {buckets.length === 1 && <CancelNotice className={classes.copy} />}
       </TypeToConfirmDialog>
-      <BucketDetailsDrawer
-        onClose={closeBucketDetailDrawer}
-        open={bucketDetailDrawerOpen}
-        selectedBucket={selectedBucket}
-      />
     </React.Fragment>
   );
 };

@@ -50,12 +50,19 @@ describe('object storage access keys smoke tests', () => {
       .findByTitle('Create Access Key')
       .should('be.visible')
       .within(() => {
-        cy.findByLabelText('Label').click();
-        cy.focused().type(mockAccessKey.label);
+        cy.findByLabelText('Label', { exact: false })
+          .should('be.visible')
+          .type(mockAccessKey.label);
+
+        cy.findByLabelText('Regions', { exact: false })
+          .should('be.visible')
+          .type('Atlanta, {enter}');
+
         ui.buttonGroup
           .findButtonByTitle('Create Access Key')
           .as('qaCreateAccessKey')
           .scrollIntoView();
+
         cy.get('@qaCreateAccessKey')
           .should('be.visible')
           .should('be.enabled')
