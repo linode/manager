@@ -1,3 +1,18 @@
+## [2026-04-30] - v0.85.0
+
+
+### Changed:
+
+- Make root_pass optional to support passworless linode creation, rebuild and disk creation ([#13516](https://github.com/linode/manager/pull/13516))
+
+### Tech Stories:
+
+- Bump `tsup` from `8.4.0` to `8.5.1` ([#13559](https://github.com/linode/manager/pull/13559))
+
+### Upcoming Features:
+
+- Reserved IPs: Updated schemas to handle reserved IPs API changes ([#13517](https://github.com/linode/manager/pull/13517))
+
 ## [2026-03-31] - v0.84.0
 
 

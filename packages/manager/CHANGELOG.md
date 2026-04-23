@@ -4,6 +4,67 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2026-04-30] - v1.162.0
+
+
+### :
+
+- Mock `databaseResizeGenerationalPlans` feature flag to false for resize-database.spec.ts ([#13539](https://github.com/linode/manager/pull/13539))
+
+### Added:
+
+- Stream Metrics tab with embedded metrics dashboard ([#13492](https://github.com/linode/manager/pull/13492))
+- IAM: Divider componenent ([#13513](https://github.com/linode/manager/pull/13513))
+- IAM: Add Pendo IDs for Parent/Child ([#13537](https://github.com/linode/manager/pull/13537))
+- New stream statuses - deactivating, failed ([#13551](https://github.com/linode/manager/pull/13551))
+
+### Changed:
+
+- Use API error message in Stream and Destination Create and Edit forms snack bars ([#13552](https://github.com/linode/manager/pull/13552))
+- Logs Delivery copy based on tech writing updates ([#13556](https://github.com/linode/manager/pull/13556))
+- IAM: remove LA badge and add only New badge, text update for  User's Account Delegation search result ([#13571](https://github.com/linode/manager/pull/13571))
+
+### Fixed:
+
+- Stale state issue in legacy-ACLP alerts save flow ([#13545](https://github.com/linode/manager/pull/13545))
+- Increase profile preferences reliability ([#13547](https://github.com/linode/manager/pull/13547))
+- LKE version upgrade logic ([#13562](https://github.com/linode/manager/pull/13562))
+- Login issue: Use sessionStorage for codeVerifier and nonce ([#13570](https://github.com/linode/manager/pull/13570))
+- Destination Form: adjust tooltips' icons positions for Akamai Object Storage destination ([#13574](https://github.com/linode/manager/pull/13574))
+
+### Tech Stories:
+
+- Add dependency resolution for `minimatch` ([#13544](https://github.com/linode/manager/pull/13544))
+- Bump storybook from `9.1.17` to `10.3.3` ([#13546](https://github.com/linode/manager/pull/13546))
+- Upgrade Cypress to v15.13.0 ([#13555](https://github.com/linode/manager/pull/13555))
+- Bump `vite` from `7.2.2` to `7.3.2` ([#13559](https://github.com/linode/manager/pull/13559))
+
+### Tests:
+
+- Cypress tests for Custom HTTPS destination ([#13533](https://github.com/linode/manager/pull/13533))
+- Mock private image sharing flag to be disabled in Image tests ([#13572](https://github.com/linode/manager/pull/13572))
+
+### Upcoming Features:
+
+- Upcoming: [M3-10780] - prepare for LKE Dashboard removal ([#13485](https://github.com/linode/manager/pull/13485))
+- Private Image Sharing: Shared with me tab ([#13500](https://github.com/linode/manager/pull/13500))
+- DBaaS resource counts and databases resource table in VPC UI ([#13504](https://github.com/linode/manager/pull/13504))
+- Allow Creating Secure Linodes without Root Password ([#13516](https://github.com/linode/manager/pull/13516))
+- Reserved IPs - Add new endpoints, types and Queries ([#13517](https://github.com/linode/manager/pull/13517))
+- Implement Empty Landing State for Reserve IP ([#13521](https://github.com/linode/manager/pull/13521))
+- Private Image Sharing: update pagination footer in Owned groups tab ([#13535](https://github.com/linode/manager/pull/13535))
+- Generational plans changes for Databases ([#13539](https://github.com/linode/manager/pull/13539))
+- Reserve IP - Implement drawer to reserve an IP address ([#13541](https://github.com/linode/manager/pull/13541))
+- Private Image Sharing: properly tag Images search bar and docs links for Pendo ([#13543](https://github.com/linode/manager/pull/13543))
+- Implemented Reserved IPs Landing Page ([#13549](https://github.com/linode/manager/pull/13549))
+- Private Image Sharing: Implement basic structure of Share Group Create page ([#13550](https://github.com/linode/manager/pull/13550))
+- Add newFeatureChip to the PrimaryNav,AlertReusableComponent to ACLP Alert's heading ([#13554](https://github.com/linode/manager/pull/13554))
+- Private Image Sharing: add View Shared Image Details drawer ([#13558](https://github.com/linode/manager/pull/13558))
+- Private Image Sharing: implement Select Images table on Share Group Create page ([#13567](https://github.com/linode/manager/pull/13567))
+- Private Image Sharing: include public images in images table in Linode Rebuild dialog ([#13568](https://github.com/linode/manager/pull/13568))
+- Add databaseValkey feature flag ([#13573](https://github.com/linode/manager/pull/13573))
+- Reserved IPs - Unreserve an IP address ([#13577](https://github.com/linode/manager/pull/13577))
+
 ## [2026-03-31] - v1.161.0
 
 
