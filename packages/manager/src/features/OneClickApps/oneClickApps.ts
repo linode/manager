@@ -20,7 +20,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/wordpress/',
-        title: 'Deploy WordPress through the Linode Marketplace',
+        title: 'Deploy WordPress',
       },
     ],
     summary:
@@ -40,7 +40,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/drupal/',
-        title: 'Deploy Drupal through the Linode Marketplace',
+        title: 'Deploy Drupal',
       },
     ],
     summary: `Powerful content management system built on PHP and supported by a database engine.`,
@@ -60,7 +60,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/lamp-stack/',
-        title: 'Deploy a LAMP Stack through the Linode Marketplace',
+        title: 'Deploy a LAMP Stack',
       },
     ],
     summary: `Build PHP-based applications with the LAMP software stack: Linux, Apache, MySQL, and PHP.`,
@@ -80,7 +80,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/mern-stack/',
-        title: 'Deploy a MERN Stack through the Linode Marketplace',
+        title: 'Deploy a MERN Stack',
       },
     ],
     summary: `Build production-ready apps with the MERN stack: MongoDB, Express, React, and Node.js.`,
@@ -98,7 +98,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/wireguard/',
-        title: 'Deploy WireGuard Server through the Linode Marketplace',
+        title: 'Deploy WireGuard Server',
       },
     ],
     summary: `Modern VPN server which acts as a central hub for secure client connections using state-of-the-art cryptography.`,
@@ -118,7 +118,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/gitlab/',
-        title: 'Deploy GitLab through the Linode Marketplace',
+        title: 'Deploy GitLab',
       },
     ],
     summary:
@@ -138,7 +138,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/woocommerce/',
-        title: 'Deploy WooCommerce through the Linode Marketplace',
+        title: 'Deploy WooCommerce',
       },
     ],
     summary: `Highly customizable, secure, open source eCommerce platform built to integrate with Wordpress.`,
@@ -159,7 +159,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/minecraft/',
-        title: 'Deploy a Minecraft Server through the Linode Marketplace',
+        title: 'Deploy a Minecraft Server',
       },
     ],
     summary: `Build, explore, and adventure in your own 3D generated world.`,
@@ -178,7 +178,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/openvpn/',
-        title: 'Deploy OpenVPN through the Linode Marketplace',
+        title: 'Deploy OpenVPN',
       },
     ],
     summary: `Open-source virtual private network (VPN) application. OpenVPN securely connects your computer to your servers, or to the public Internet.`,
@@ -197,7 +197,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/plesk/',
-        title: 'Deploy Plesk through the Linode Marketplace',
+        title: 'Deploy Plesk',
       },
     ],
     summary:
@@ -218,7 +218,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/cpanel/',
-        title: 'Deploy cPanel through the Linode Marketplace',
+        title: 'Deploy cPanel',
       },
     ],
     summary:
@@ -239,7 +239,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/shadowsocks/',
-        title: 'Deploy Shadowsocks through the Linode Marketplace',
+        title: 'Deploy Shadowsocks',
       },
     ],
     summary:
@@ -259,7 +259,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/lemp-stack/',
-        title: 'Deploy a LEMP Stack through the Linode Marketplace',
+        title: 'Deploy a LEMP Stack',
       },
     ],
     summary: `The LEMP stack replaces the Apache web server component with NGINX (“Engine-X”), providing the E in the acronym: Linux, NGINX, MySQL/MariaDB, PHP.`,
@@ -277,7 +277,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/mysql/',
-        title: 'Deploy MySQL/MariaDB through the Linode Marketplace',
+        title: 'Deploy MySQL/MariaDB',
       },
     ],
     summary: `World's most popular open source database.`,
@@ -296,7 +296,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/jenkins/',
-        title: 'Deploy Jenkins through the Linode Marketplace',
+        title: 'Deploy Jenkins',
       },
     ],
     summary: `A tool that gives you access to a massive library of plugins to support automation in your project's lifecycle.`,
@@ -316,7 +316,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/docker/',
-        title: 'Deploy Docker through the Linode Marketplace',
+        title: 'Deploy Docker',
       },
     ],
     summary: `Securely build, share and run modern applications anywhere.`,
@@ -335,7 +335,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/redis/',
-        title: 'Deploy Redis&reg; through the Linode Marketplace',
+        title: 'Deploy Redis&reg;',
       },
     ],
     summary:
@@ -355,7 +355,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/ruby-on-rails/',
-        title: 'Deploy Ruby on Rails through the Linode Marketplace',
+        title: 'Deploy Ruby on Rails',
       },
     ],
     summary: `Ruby on Rails is a web framework that allows web designers and developers to implement dynamic, fully featured web applications.`,
@@ -374,7 +374,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/django/',
-        title: 'Deploy Django through the Linode Marketplace',
+        title: 'Deploy Django',
       },
     ],
     summary: `A framework for simplifying the process of building your web applications more quickly and with less code.`,
@@ -393,7 +393,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/flask/',
-        title: 'Deploy Flask through the Linode Marketplace',
+        title: 'Deploy Flask',
       },
     ],
     summary: `A quick light-weight web framework for Python that includes several utilities and libraries you can use to create a web application.`,
@@ -412,7 +412,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/postgresql/',
-        title: 'Deploy PostgreSQL through the Linode Marketplace',
+        title: 'Deploy PostgreSQL',
       },
     ],
     summary: `The PostgreSQL relational database system is a powerful, scalable, and standards-compliant open-source database platform.`,
@@ -431,7 +431,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/mean-stack/',
-        title: 'Deploy a MEAN Stack through the Linode Marketplace',
+        title: 'Deploy a MEAN Stack',
       },
     ],
     summary: `A MEAN (MongoDB, Express, Angular, Node.js) stack is a free and open-source web software bundle used to build modern web applications.`,
@@ -451,7 +451,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/nextcloud/',
-        title: 'Deploy Nextcloud through the Linode Marketplace',
+        title: 'Deploy Nextcloud',
       },
     ],
     summary: `A safe home for all your data.`,
@@ -469,7 +469,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/azuracast/',
-        title: 'Deploy AzuraCast through the Linode Marketplace',
+        title: 'Deploy AzuraCast',
       },
     ],
     summary: 'Open source, self-hosted web radio tool.',
@@ -489,7 +489,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/plex/',
-        title: 'Deploy Plex Media Server through the Linode Marketplace',
+        title: 'Deploy Plex Media Server',
       },
     ],
     summary:
@@ -509,7 +509,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/jitsi/',
-        title: 'Deploy Jitsi through the Linode Marketplace',
+        title: 'Deploy Jitsi',
       },
     ],
     summary: 'Free, open source video conferencing and communication platform.',
@@ -528,7 +528,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/rabbitmq/',
-        title: 'Deploy RabbitMQ through the Linode Marketplace',
+        title: 'Deploy RabbitMQ',
       },
     ],
     summary: 'Most popular open source message broker.',
@@ -547,7 +547,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/discourse/',
-        title: 'Deploy Discourse through the Linode Marketplace',
+        title: 'Deploy Discourse',
       },
     ],
     summary:
@@ -567,7 +567,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/vscode/',
-        title: 'Deploy VS Code through the Linode Marketplace',
+        title: 'Deploy VS Code',
       },
     ],
     summary: 'Run VS code in the cloud, right from your browser.',
@@ -586,7 +586,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/gitea/',
-        title: 'Deploy Gitea through the Linode Marketplace',
+        title: 'Deploy Gitea',
       },
     ],
     summary: 'Git with a cup of tea - A painless self-hosted Git service.',
@@ -605,7 +605,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/guacamole/',
-        title: 'Deploy Apache Guacamole through the Linode Marketplace',
+        title: 'Deploy Apache Guacamole',
       },
     ],
     summary: 'Free open source clientless remote desktop gateway.',
@@ -624,7 +624,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/filecloud/',
-        title: 'Deploy FileCloud through the Linode Marketplace',
+        title: 'Deploy FileCloud',
       },
     ],
     summary: 'Enterprise file sharing to manage and sync from any device.',
@@ -644,7 +644,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/cloudron/',
-        title: 'Deploy Cloudron through the Linode Marketplace',
+        title: 'Deploy Cloudron',
       },
     ],
     summary:
@@ -664,7 +664,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/openlitespeed-wordpress/',
-        title: 'Deploy OpenLiteSpeed Wordpress through the Linode Marketplace',
+        title: 'Deploy OpenLiteSpeed Wordpress',
       },
     ],
     summary: 'Blazing fast, open source alternative to LiteSpeed Web Server.',
@@ -683,7 +683,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/secure-your-server/',
-        title: 'Secure Your Server through the Linode Marketplace',
+        title: 'Secure Your Server',
       },
     ],
     summary: `Harden your Linode before you deploy with the Secure Your Server One-Click App.`,
@@ -702,7 +702,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/cyberpanel/',
-        title: 'Deploy CyberPanel through the Linode Marketplace',
+        title: 'Deploy CyberPanel',
       },
     ],
     summary: 'Next-generation hosting control panel by OpenLiteSpeed.',
@@ -721,7 +721,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/yacht/',
-        title: 'Deploy Yacht through the Linode Marketplace',
+        title: 'Deploy Yacht',
       },
     ],
     summary: 'Intuitive web interface for managing Docker containers.',
@@ -740,7 +740,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/zabbix/',
-        title: 'Deploy Zabbix through the Linode Marketplace',
+        title: 'Deploy Zabbix',
       },
     ],
     summary: 'Enterprise-class open source distributed monitoring solution.',
@@ -759,7 +759,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/peppermint/',
-        title: 'Deploy Peppermint through the Linode Marketplace',
+        title: 'Deploy Peppermint',
       },
     ],
     summary: 'Simple yet scalable open source ticket management.',
@@ -779,7 +779,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/antmediaserver/',
-        title: 'Deploy Ant Media Server through the Linode Marketplace',
+        title: 'Deploy Ant Media Server',
       },
     ],
     summary: 'A reliable, flexible and scalable video streaming solution.',
@@ -798,7 +798,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/owncast/',
-        title: 'Deploy Owncast through the Linode Marketplace',
+        title: 'Deploy Owncast',
       },
     ],
     summary:
@@ -818,7 +818,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/moodle/',
-        title: 'Deploy Moodle through the Linode Marketplace',
+        title: 'Deploy Moodle',
       },
     ],
     summary:
@@ -838,7 +838,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/aapanel/',
-        title: 'Deploy aaPanel through the Linode Marketplace',
+        title: 'Deploy aaPanel',
       },
     ],
     summary:
@@ -858,7 +858,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/splunk/',
-        title: 'Deploy Splunk through the Linode Marketplace',
+        title: 'Deploy Splunk',
       },
     ],
     summary:
@@ -878,7 +878,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/harbor/',
-        title: 'Deploy Harbor through the Linode Marketplace',
+        title: 'Deploy Harbor',
       },
     ],
     summary: 'Cloud native container registry for Kubernetes and more.',
@@ -897,7 +897,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/rocketchat/',
-        title: 'Deploy Rocket.Chat through the Linode Marketplace',
+        title: 'Deploy Rocket.Chat',
       },
     ],
     summary: 'Feature-rich self-hosted chat and collaboration platform.',
@@ -917,7 +917,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/wazuh/',
-        title: 'Deploy Wazuh through the Linode Marketplace',
+        title: 'Deploy Wazuh',
       },
     ],
     summary: 'Free open source security monitoring solution.',
@@ -936,7 +936,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/beef/',
-        title: 'Deploy BeEF through the Linode Marketplace',
+        title: 'Deploy BeEF',
       },
     ],
     summary:
@@ -956,7 +956,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/openlitespeed-django/',
-        title: 'Deploy OpenLiteSpeed Django through the Linode Marketplace',
+        title: 'Deploy OpenLiteSpeed Django',
       },
     ],
     summary: 'OLS web server with Django development framework.',
@@ -976,7 +976,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/openlitespeed-nodejs/',
-        title: 'Deploy OpenLiteSpeed Node.js through the Linode Marketplace',
+        title: 'Deploy OpenLiteSpeed Node.js',
       },
     ],
     summary: 'OLS web server with Node.js JavaScript runtime environment.',
@@ -995,7 +995,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/litespeed-cpanel/',
-        title: 'Deploy LiteSpeed cPanel through the Linode Marketplace',
+        title: 'Deploy LiteSpeed cPanel',
       },
     ],
     summary: 'Next-generation web server with cPanel and WHM.',
@@ -1015,7 +1015,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/akaunting/',
-        title: 'Deploy Akaunting through the Linode Marketplace',
+        title: 'Deploy Akaunting',
       },
     ],
     summary:
@@ -1035,7 +1035,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/pritunl/',
-        title: 'Deploy Pritunl through the Linode Marketplace',
+        title: 'Deploy Pritunl',
       },
     ],
     summary: 'Enterprise open source VPN.',
@@ -1054,7 +1054,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/pihole/',
-        title: 'Deploy Pi-hole through the Linode Marketplace',
+        title: 'Deploy Pi-hole',
       },
     ],
     summary: 'Free, open source, and highly scalable DNS sinkhole.',
@@ -1074,7 +1074,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/uptime-kuma/',
-        title: 'Deploy Uptime Kuma through the Linode Marketplace',
+        title: 'Deploy Uptime Kuma',
       },
     ],
     summary: 'Free, comprehensive, and “fancy” monitoring solution.',
@@ -1093,7 +1093,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/grav/',
-        title: 'Deploy Grav through the Linode Marketplace',
+        title: 'Deploy Grav',
       },
     ],
     summary: 'Modern and open source flat-file content management system.',
@@ -1113,7 +1113,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/nodejs/',
-        title: 'Deploy Node.js through the Linode Marketplace',
+        title: 'Deploy Node.js',
       },
     ],
     summary:
@@ -1133,7 +1133,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/saltcorn/',
-        title: 'Deploy Saltcorn through the Linode Marketplace',
+        title: 'Deploy Saltcorn',
       },
     ],
     summary: 'Open source, no-code database application builder.',
@@ -1153,7 +1153,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/odoo/',
-        title: 'Deploy Odoo through the Linode Marketplace',
+        title: 'Deploy Odoo',
       },
     ],
     summary:
@@ -1173,7 +1173,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/focalboard/',
-        title: 'Deploy Focalboard through the Linode Marketplace',
+        title: 'Deploy Focalboard',
       },
     ],
     summary: 'Free open source project management tool.',
@@ -1192,7 +1192,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/prometheus-grafana/',
-        title: 'Deploy Prometheus & Grafana through the Linode Marketplace',
+        title: 'Deploy Prometheus & Grafana',
       },
     ],
     summary: 'Open source metrics and monitoring for real-time insights.',
@@ -1211,7 +1211,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/joomla/',
-        title: 'Deploy Joomla through the Linode Marketplace',
+        title: 'Deploy Joomla',
       },
     ],
     summary: 'Flexible and security-focused content management system.',
@@ -1231,8 +1231,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/antmediaenterpriseserver/',
-        title:
-          'Deploy Ant Media Enterprise Edition through the Linode Marketplace',
+        title: 'Deploy Ant Media Enterprise Edition',
       },
     ],
     summary: 'Highly scalable and feature-rich live video streaming platform.',
@@ -1252,7 +1251,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/joplin/',
-        title: 'Deploy Joplin through the Linode Marketplace',
+        title: 'Deploy Joplin',
       },
     ],
     summary: 'Open source multimedia note-taking app.',
@@ -1271,7 +1270,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/liveswitch/',
-        title: 'Deploy LiveSwitch through the Linode Marketplace',
+        title: 'Deploy LiveSwitch',
       },
     ],
     summary: 'High quality and reliable interactive live streaming.',
@@ -1291,7 +1290,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/easypanel/',
-        title: 'Deploy Easypanel through the Linode Marketplace',
+        title: 'Deploy Easypanel',
       },
     ],
     summary: 'Modern server control panel based on Docker.',
@@ -1311,7 +1310,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/kali-linux/',
-        title: 'Deploy Kali Linux through the Linode Marketplace',
+        title: 'Deploy Kali Linux',
       },
     ],
     summary:
@@ -1333,7 +1332,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/hashicorp-nomad',
-        title: 'Deploy HashiCorp Nomad through the Linode Marketplace',
+        title: 'Deploy HashiCorp Nomad',
       },
     ],
     summary: 'Flexible scheduling and orchestration for diverse workloads.',
@@ -1353,7 +1352,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/hashicorp-vault',
-        title: 'Deploy HashiCorp Vault through the Linode Marketplace',
+        title: 'Deploy HashiCorp Vault',
       },
     ],
     summary: 'An open source, centralized secrets management system.',
@@ -1372,7 +1371,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/microweber/',
-        title: 'Deploy Microweber through the Linode Marketplace',
+        title: 'Deploy Microweber',
       },
     ],
     summary: `Drag and drop CMS and website builder.`,
@@ -1391,7 +1390,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/postgresql-cluster/',
-        title: 'Deploy PostgreSQL Cluster through the Linode Marketplace',
+        title: 'Deploy PostgreSQL Cluster',
       },
     ],
     summary: `The PostgreSQL relational database system is a powerful, scalable, and standards-compliant open-source database platform.`,
@@ -1410,7 +1409,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/galera-cluster/',
-        title: 'Deploy Galera Cluster through the Linode Marketplace',
+        title: 'Deploy Galera Cluster',
       },
     ],
     summary: `Multi-master MariaDB database cluster.`,
@@ -1429,7 +1428,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/mastodon/',
-        title: 'Deploy Mastodon through the Linode Marketplace',
+        title: 'Deploy Mastodon',
       },
     ],
     summary:
@@ -1450,7 +1449,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/apache-airflow/',
-        title: 'Deploy Apache Airflow through the Linode Marketplace',
+        title: 'Deploy Apache Airflow',
       },
     ],
     summary:
@@ -1470,7 +1469,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/haltdos-community-waf/',
-        title: 'Deploy Haltdos Community WAF through the Linode Marketplace',
+        title: 'Deploy Haltdos Community WAF',
       },
     ],
     summary: 'User-friendly web application firewall.',
@@ -1489,7 +1488,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/passky/',
-        title: 'Deploy Passky through the Linode Marketplace',
+        title: 'Deploy Passky',
       },
     ],
     summary: 'Simple open source password manager.',
@@ -1508,7 +1507,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/onlyoffice/',
-        title: 'Deploy ONLYOFFICE Docs through the Linode Marketplace',
+        title: 'Deploy ONLYOFFICE Docs',
       },
     ],
     summary: 'Open source comprehensive office suite.',
@@ -1527,7 +1526,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/redis-cluster/',
-        title: 'Deploy Redis® Sentinel Cluster through the Linode Marketplace',
+        title: 'Deploy Redis® Sentinel Cluster',
       },
     ],
     summary:
@@ -1548,7 +1547,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/appwrite/',
-        title: 'Deploy Appwrite through the Linode Marketplace',
+        title: 'Deploy Appwrite',
       },
     ],
     summary:
@@ -1570,7 +1569,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/hashicorp-nomad-cluster',
-        title: 'Deploy HashiCorp Nomad Cluster through the Linode Marketplace',
+        title: 'Deploy HashiCorp Nomad Cluster',
       },
     ],
     summary: 'Flexible scheduling and orchestration for diverse workloads.',
@@ -1591,8 +1590,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/hashicorp-nomad-clients-cluster',
-        title:
-          'Deploy HashiCorp Nomad Clients Cluster through the Linode Marketplace',
+        title: 'Deploy HashiCorp Nomad Clients Cluster',
       },
     ],
     summary: 'Flexible scheduling and orchestration for diverse workloads.',
@@ -1611,8 +1609,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/mainconcept-ffmpeg-plugins-demo/',
-        title:
-          'Deploy MainConcept FFmpeg Plugins Demo through the Linode Marketplace',
+        title: 'Deploy MainConcept FFmpeg Plugins Demo',
       },
     ],
     summary:
@@ -1632,8 +1629,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/mainconcept-live-encoder-demo/',
-        title:
-          'Deploy MainConcept Live Encoder Demo through the Linode Marketplace',
+        title: 'Deploy MainConcept Live Encoder Demo',
       },
     ],
     summary: 'MainConcept Live Encoder is a real time video encoding engine.',
@@ -1652,8 +1648,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/mainconcept-p2-avc-ultra-demo/',
-        title:
-          'Deploy MainConcept P2 AVC ULTRA Transcoder Demo through the Linode Marketplace',
+        title: 'Deploy MainConcept P2 AVC ULTRA Transcoder Demo',
       },
     ],
     summary:
@@ -1673,8 +1668,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/mainconcept-xavc-transcoder-demo/',
-        title:
-          'Deploy MainConcept XAVC Transcoder Demo through the Linode Marketplace',
+        title: 'Deploy MainConcept XAVC Transcoder Demo',
       },
     ],
     summary:
@@ -1694,8 +1688,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/mainconcept-xdcam-transcoder-demo/',
-        title:
-          'Deploy MainConcept XDCAM Transcoder Demo through the Linode Marketplace',
+        title: 'Deploy MainConcept XDCAM Transcoder Demo',
       },
     ],
     summary:
@@ -1715,7 +1708,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/simplex/',
-        title: 'Deploy SimpleX chat through the Linode Marketplace',
+        title: 'Deploy SimpleX chat',
       },
     ],
     summary: 'Private by design messaging server.',
@@ -1735,7 +1728,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/jupyterlab/',
-        title: 'Deploy JupyterLab through the Linode Marketplace',
+        title: 'Deploy JupyterLab',
       },
     ],
     summary: 'Data science development environment.',
@@ -1755,7 +1748,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/nats-single-node/',
-        title: 'Deploy NATS single node through the Linode Marketplace',
+        title: 'Deploy NATS single node',
       },
     ],
     summary: 'Cloud native application messaging service.',
@@ -1775,7 +1768,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/linuxgsm/',
-        title: 'Deploy LinuxGSM through the Linode Marketplace',
+        title: 'Deploy LinuxGSM',
       },
     ],
     summary: 'Simple command line multiplayer game servers.',
@@ -1795,7 +1788,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/jitsi-cluster/',
-        title: 'Deploy Jitsi Cluster through the Linode Marketplace',
+        title: 'Deploy Jitsi Cluster',
       },
     ],
     summary: 'Free, open source video conferencing and communication platform.',
@@ -1815,7 +1808,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/glusterfs-cluster/',
-        title: 'Deploy GlusterFS Cluster through the Linode Marketplace',
+        title: 'Deploy GlusterFS Cluster',
       },
     ],
     summary: 'Open source network filesystem.',
@@ -1835,7 +1828,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/apache-cassandra-cluster/',
-        title: 'Deploy Apache Cassandra Cluster through the Linode Marketplace',
+        title: 'Deploy Apache Cassandra Cluster',
       },
     ],
     summary: 'Open source NoSQL database cluster.',
@@ -1855,8 +1848,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/couchbase-cluster/',
-        title:
-          'Deploy a Couchbase Enterprise Server cluster through the Linode Marketplace',
+        title: 'Deploy a Couchbase Enterprise Server cluster',
       },
     ],
     summary: 'NoSQL production database cluster.',
@@ -1875,7 +1867,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/apache-kafka-cluster/',
-        title: 'Deploy an Apache Kafka cluster through the Linode Marketplace',
+        title: 'Deploy an Apache Kafka cluster',
       },
     ],
     summary: 'Open source data streaming.',
@@ -1894,7 +1886,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/valkey/',
-        title: 'Deploy Valkey through the Linode Marketplace',
+        title: 'Deploy Valkey',
       },
     ],
     summary: 'Open Source key/value database',
@@ -1913,7 +1905,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/openbao/',
-        title: 'Deploy OpenBao through the Linode Marketplace',
+        title: 'Deploy OpenBao',
       },
     ],
     summary: 'Open source password and credentials security.',
@@ -1932,7 +1924,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/influxdb/',
-        title: 'Deploy InfluxDB through the Linode Marketplace',
+        title: 'Deploy InfluxDB',
       },
     ],
     summary: 'High-performance database for analytics, monitoring and IoT.',
@@ -1952,7 +1944,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/marketplace-docs/guides/apache-spark-cluster/',
-        title: 'Deploy Apache Spark through the Linode Marketplace',
+        title: 'Deploy Apache Spark',
       },
     ],
     summary: 'Unified analytics engine for big data processing.',
@@ -1971,8 +1963,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/passbolt/',
-        title:
-          'Deploy Passbolt Community Edition through the Linode Marketplace',
+        title: 'Deploy Passbolt Community Edition',
       },
     ],
     summary: 'Open-source password manager for teams and businesses.',
@@ -1992,7 +1983,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/marketplace-docs/guides/backstage/',
-        title: 'Deploy Backstage through the Linode Marketplace',
+        title: 'Deploy Backstage',
       },
     ],
     summary: 'Developer portal for managing services and infrastructure.',
@@ -2012,7 +2003,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/netfoundry/',
-        title: 'Deploy Netfoundry through the Linode Marketplace',
+        title: 'Deploy Netfoundry',
       },
     ],
     summary: 'Software gateway solution at the edge.',
@@ -2033,7 +2024,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/arangodb/',
-        title: 'Deploy ArangoDB through the Linode Marketplace',
+        title: 'Deploy ArangoDB',
       },
     ],
     summary:
@@ -2055,7 +2046,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/memgraph/',
-        title: 'Deploy Memgraph through the Linode Marketplace',
+        title: 'Deploy Memgraph',
       },
     ],
     summary:
@@ -2077,7 +2068,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/neo4j/',
-        title: 'Deploy Neo4j through the Linode Marketplace',
+        title: 'Deploy Neo4j',
       },
     ],
     summary: 'Leading graph database for connected data applications.',
@@ -2096,7 +2087,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/wireguard/',
-        title: 'Deploy WireGuard Client through the Linode Marketplace',
+        title: 'Deploy WireGuard Client',
       },
     ],
     summary: `Modern VPN client that connects to a remote WireGuard server for secure network access using state-of-the-art cryptography.`,
@@ -2115,7 +2106,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/cribl/',
-        title: 'Deploy Cribl through the Linode Marketplace',
+        title: 'Deploy Cribl',
       },
     ],
     summary: `Observability pipeline for collecting, reducing, enriching, and routing telemetry data in real-time across 80+ sources and destinations.`,
@@ -2134,7 +2125,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/jaeger/',
-        title: 'Deploy Jaeger through the Linode Marketplace',
+        title: 'Deploy Jaeger',
       },
     ],
     summary: `All-in-one distributed tracing platform with integrated UI, collector, and storage for monitoring microservices.`,
@@ -2156,7 +2147,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/elastic-stack/',
-        title: 'Deploy An Elastic Stack through the Linode Marketplace',
+        title: 'Deploy An Elastic Stack',
       },
     ],
     summary:
@@ -2179,7 +2170,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/weaviate/',
-        title: 'Deploy Weaviate through the Linode Marketplace',
+        title: 'Deploy Weaviate',
       },
     ],
     summary:
@@ -2202,7 +2193,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/chromadb/',
-        title: 'Deploy ChromaDB through the Linode Marketplace',
+        title: 'Deploy ChromaDB',
       },
     ],
     summary: 'Vector database designed for building advanced AI applications.',
@@ -2224,8 +2215,7 @@ export const oneClickApps: Record<number, OCA> = {
     related_guides: [
       {
         href: 'https://www.linode.com/docs/products/tools/marketplace/guides/mistral7b-instruct-with-openwebui/',
-        title:
-          'Deploy Mistral-7B Instruct with Open WebUI through the Linode Marketplace',
+        title: 'Deploy Mistral-7B Instruct with Open WebUI',
       },
     ],
     summary: 'Open-source AI web and chat interface.',
