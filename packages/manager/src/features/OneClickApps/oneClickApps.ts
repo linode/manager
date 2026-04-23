@@ -2390,4 +2390,26 @@ export const oneClickApps: Record<number, OCA> = {
     summary: 'Autonomous AI agent.',
     website: 'https://openclaw.ai/',
   },
+  2088700: {
+    alt_description:
+      'An open-source framework for running, managing, and customizing large language models locally.',
+    alt_name:
+      'Run Large Language Models (LLMs)—like Llama 3, Mistral, or Gemma',
+    categories: ['LLM', 'Chat', 'AI'],
+    colors: {
+      end: 'ffffff',
+      start: '000000',
+    },
+    description: `Run open-source models like Llama 3, Mistral, and Gemma with a simple CLI and API. Ollama handles model weights, configuration, and GPU acceleration, making it easy to integrate AI into your local workflow.`,
+    isNew: true,
+    logo_url: 'ollama.svg',
+    related_guides: [
+      {
+        href: 'https://www.linode.com/docs/marketplace-docs/guides/ollama/',
+        title: 'Deploy Ollama',
+      },
+    ],
+    summary: 'A lightweight, extensible framework for running LLMs locally.',
+    website: 'https://ollama.com/',
+  },
 };
