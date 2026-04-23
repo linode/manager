@@ -10,7 +10,8 @@ import type {
 } from 'src/components/EmptyLandingPageResources/ResourcesLinksTypes';
 
 export const headers: ResourcesHeaders = {
-  description: '',
+  description:
+    'To enable Object Storage, you must create a bucket or an access key.',
   subtitle: 'S3-compatible storage solution',
   title: 'Object Storage',
 };
