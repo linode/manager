@@ -1,4 +1,3 @@
-import { useProfile } from '@linode/queries';
 import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
@@ -14,17 +13,19 @@ import {
 } from './BucketLandingEmptyResourcesData';
 import { StyledBucketIcon } from './StylesBucketIcon';
 
-export const BucketLandingEmptyState = () => {
+interface Props {
+  isRestricted: boolean;
+}
+
+export const BucketLandingEmptyState = ({ isRestricted }: Props) => {
   const navigate = useNavigate();
-  const { data: profile } = useProfile();
-  const isBucketCreationRestricted = profile?.restricted;
 
   return (
     <ResourcesSection
       buttonProps={[
         {
           children: 'Create Bucket',
-          disabled: isBucketCreationRestricted,
+          disabled: isRestricted,
           onClick: () => {
             sendEvent({
               action: 'Click:button',
@@ -37,6 +38,23 @@ export const BucketLandingEmptyState = () => {
             action: 'create',
             isSingular: false,
             resourceType: 'Buckets',
+          }),
+        },
+        {
+          children: 'Create Access Key',
+          disabled: isRestricted,
+          onClick: () => {
+            sendEvent({
+              action: 'Click:button',
+              category: linkAnalyticsEvent.category,
+              label: 'Create Access Key',
+            });
+            navigate({ to: '/object-storage/access-keys/create' });
+          },
+          tooltipText: getRestrictedResourceText({
+            action: 'create',
+            isSingular: false,
+            resourceType: 'Access Keys',
           }),
         },
       ]}
