@@ -99,10 +99,11 @@ function changedFiles(mergeBase) {
   return r.stdout.split('\n').map((s) => s.trim()).filter(Boolean);
 }
 
-function mergeBaseWithTarget(target) {
-  const mb = git(['merge-base', 'HEAD', `origin/${target}`]);
-  if (mb.status === 0 && mb.stdout.trim()) return mb.stdout.trim();
-  if (mb.stderr?.trim()) console.error(mb.stderr.trim());
+function tryMergeBase(...refs) {
+  for (const ref of refs) {
+    const mb = git(['merge-base', 'HEAD', ref]);
+    if (mb.status === 0 && mb.stdout.trim()) return mb.stdout.trim();
+  }
   return null;
 }
 
@@ -115,6 +116,9 @@ function resolveMergeBase() {
     process.env.BITBUCKET_PR_DESTINATION_BRANCH ||
     'develop';
 
+  // Jenkins fetches the target branch but only updates FETCH_HEAD, NOT
+  // origin/<target>. We must try both refs: origin/<target> for full clones,
+  // FETCH_HEAD for the Jenkins shallow checkout case.
   const fetch = spawnSync('git', ['fetch', '--depth=2048', 'origin', target], {
     cwd: repoRoot,
     stdio: 'inherit',
@@ -124,33 +128,10 @@ function resolveMergeBase() {
     return null;
   }
 
-  let base = mergeBaseWithTarget(target);
+  const base = tryMergeBase(`origin/${target}`, 'FETCH_HEAD');
   if (base) return base;
 
-  // Shallow Jenkins checkouts often omit enough history for merge-base.
-  // Deepen the local clone, then retry before giving up on scoped runs.
-  console.error(
-    '[run-vitest-ci] merge-base failed (likely shallow clone); deepening...'
-  );
-  const deepen = spawnSync('git', ['fetch', '--deepen=5000', 'origin'], {
-    cwd: repoRoot,
-    stdio: 'inherit',
-  });
-  if (deepen.status === 0) {
-    base = mergeBaseWithTarget(target);
-    if (base) return base;
-  }
-
-  const unshallow = spawnSync('git', ['fetch', '--unshallow', 'origin'], {
-    cwd: repoRoot,
-    stdio: 'inherit',
-  });
-  if (unshallow.status === 0) {
-    base = mergeBaseWithTarget(target);
-    if (base) return base;
-  }
-
-  console.error('[run-vitest-ci] merge-base still failed; will run full suite.');
+  console.error('[run-vitest-ci] merge-base failed; will run full suite.');
   return null;
 }
 
