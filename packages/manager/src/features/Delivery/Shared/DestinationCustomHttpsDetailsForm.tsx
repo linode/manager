@@ -1,4 +1,4 @@
-import { authenticationType } from '@linode/api-v4';
+import { authenticationType, contentType } from '@linode/api-v4';
 import {
   Autocomplete,
   Divider,
@@ -15,6 +15,9 @@ import { HideShowText } from 'src/components/PasswordInput/HideShowText';
 import {
   getAuthenticationTypeOption,
   getContentTypeOption,
+  getDestinationFormPendoId,
+  mapAutocompleteOptionsWithPendo,
+  renderOptionsWithPendo,
 } from 'src/features/Delivery/deliveryUtils';
 import { CustomHeaders } from 'src/features/Delivery/Shared/CustomHeaders';
 import {
@@ -22,7 +25,11 @@ import {
   contentTypeOptions,
 } from 'src/features/Delivery/Shared/types';
 
-import type { FormMode, FormType } from 'src/features/Delivery/Shared/types';
+import type {
+  AutocompleteOption,
+  FormMode,
+  FormType,
+} from 'src/features/Delivery/Shared/types';
 
 interface DestinationCustomHttpsDetailsFormProps {
   controlPaths: {
@@ -46,7 +53,7 @@ interface DestinationCustomHttpsDetailsFormProps {
 export const DestinationCustomHttpsDetailsForm = (
   props: DestinationCustomHttpsDetailsFormProps
 ) => {
-  const { controlPaths } = props;
+  const { controlPaths, mode, entity } = props;
   const theme = useTheme();
 
   const { control, setValue } = useFormContext();
@@ -55,6 +62,19 @@ export const DestinationCustomHttpsDetailsForm = (
     control,
     name: controlPaths.authenticationType,
   });
+
+  const pendoIdPrefix = `${getDestinationFormPendoId(entity, mode)}-`;
+  const pendoIds = {
+    [authenticationType.Basic]: `${pendoIdPrefix}Authentication Basic`,
+    [authenticationType.None]: `${pendoIdPrefix}Authentication None`,
+    [contentType.Json]: `${pendoIdPrefix}Json`,
+    [contentType.JsonUtf8]: `${pendoIdPrefix}Json Utf8`,
+  };
+  const authenticationTypeOptionsWithPendos: AutocompleteOption[] =
+    mapAutocompleteOptionsWithPendo(authenticationTypeOptions, pendoIds);
+
+  const contentTypeOptionsWithPendo: AutocompleteOption[] =
+    mapAutocompleteOptionsWithPendo(contentTypeOptions, pendoIds);
 
   return (
     <>
@@ -73,10 +93,14 @@ export const DestinationCustomHttpsDetailsForm = (
               }
               field.onChange(value);
             }}
-            options={authenticationTypeOptions}
+            options={authenticationTypeOptionsWithPendos}
+            renderOption={renderOptionsWithPendo}
             textFieldProps={{
               labelTooltipText:
                 'The authentication method used for requests sent to your HTTPS endpoint.',
+              inputProps: {
+                'data-pendo-id': `${pendoIdPrefix}Authentication Type`,
+              },
             }}
             value={getAuthenticationTypeOption(field.value)}
           />
@@ -91,6 +115,9 @@ export const DestinationCustomHttpsDetailsForm = (
               <TextField
                 aria-required
                 errorText={fieldState.error?.message}
+                inputProps={{
+                  'data-pendo-id': `${pendoIdPrefix}Username`,
+                }}
                 label="Username"
                 onBlur={field.onBlur}
                 onChange={(value) => {
@@ -107,6 +134,9 @@ export const DestinationCustomHttpsDetailsForm = (
               <HideShowText
                 aria-required
                 errorText={fieldState.error?.message}
+                inputProps={{
+                  'data-pendo-id': `${pendoIdPrefix}Password`,
+                }}
                 label="Password"
                 onBlur={field.onBlur}
                 onChange={(value) => field.onChange(value)}
@@ -123,6 +153,9 @@ export const DestinationCustomHttpsDetailsForm = (
           <TextField
             aria-required
             errorText={fieldState.error?.message}
+            inputProps={{
+              'data-pendo-id': `${pendoIdPrefix}Endpoint URL`,
+            }}
             label="Endpoint URL"
             labelTooltipText="The HTTPS endpoint for audit log delivery."
             onBlur={field.onBlur}
@@ -159,6 +192,9 @@ export const DestinationCustomHttpsDetailsForm = (
         render={({ field, fieldState }) => (
           <TextField
             errorText={fieldState.error?.message}
+            inputProps={{
+              'data-pendo-id': `${pendoIdPrefix}TLS Hostname`,
+            }}
             label="TLS Hostname"
             labelTooltipText="The hostname used to verify the server’s certificate and matches the Subject Alternative Names (SANs) in the certificate. If not provided, the hostname is fetched from the endpoint URL."
             multiline
@@ -176,6 +212,9 @@ export const DestinationCustomHttpsDetailsForm = (
         render={({ field, fieldState }) => (
           <TextField
             errorText={fieldState.error?.message}
+            inputProps={{
+              'data-pendo-id': `${pendoIdPrefix}Client Ca Certificate`,
+            }}
             label="CA Certificate"
             labelTooltipText="The certification authority (CA) certificate used to verify the origin server’s certificate. If the certificate is not signed by a well-known certification authority, enter the CA certificate in the PEM format for verification."
             multiline
@@ -193,6 +232,9 @@ export const DestinationCustomHttpsDetailsForm = (
         render={({ field, fieldState }) => (
           <TextField
             errorText={fieldState.error?.message}
+            inputProps={{
+              'data-pendo-id': `${pendoIdPrefix}Client Certificate`,
+            }}
             label="Client Certificate"
             labelTooltipText="The digital certificate you want to use to authenticate requests to your destination. Provide both the client certificate and the client private key in the PEM format to use mutual authentication."
             multiline
@@ -210,6 +252,9 @@ export const DestinationCustomHttpsDetailsForm = (
         render={({ field, fieldState }) => (
           <TextField
             errorText={fieldState.error?.message}
+            inputProps={{
+              'data-pendo-id': `${pendoIdPrefix}Private Key`,
+            }}
             label="Client Private Key"
             labelTooltipText="The private key you want to use to authenticate to the backend server. Provide both the client certificate and the client private key in the non-encrypted PKCS8 format to use mutual authentication."
             multiline
@@ -240,16 +285,24 @@ export const DestinationCustomHttpsDetailsForm = (
             onChange={(_, value) => {
               field.onChange(value?.value || null);
             }}
-            options={contentTypeOptions}
+            options={contentTypeOptionsWithPendo}
+            renderOption={renderOptionsWithPendo}
             textFieldProps={{
               labelTooltipText:
                 'The format and character encoding of the delivered audit log data.',
+              inputProps: {
+                'data-pendo-id': `${pendoIdPrefix}Content Type`,
+              },
             }}
             value={field.value ? getContentTypeOption(field.value) : null}
           />
         )}
       />
-      <CustomHeaders controlPath={controlPaths.customHeaders} />
+      <CustomHeaders
+        controlPath={controlPaths.customHeaders}
+        entity={entity}
+        mode={mode}
+      />
     </>
   );
 };
