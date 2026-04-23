@@ -28,9 +28,13 @@ export default defineConfig({
     port: 3000,
   },
   test: {
-    // Limit test concurrency in CI to prevent resource exhaustion
+    // Limit parallelism in CI to prevent resource exhaustion on shared agents.
     maxWorkers: process.env.CI ? '50%' : undefined,
-    // Additional test-specific config
+    // Generous timeouts: MSW + async React state updates need room to breathe.
+    // 5 s (Vitest default) is too tight for integration-style component tests.
+    // A test exceeding 30 s is almost certainly broken, not just slow.
+    testTimeout: 30000,
+    hookTimeout: 30000,
     include: ['**/*.test.{js,jsx,ts,tsx}'],
     sequence: {
       groupOrder: 1,
