@@ -99,6 +99,13 @@ function changedFiles(mergeBase) {
   return r.stdout.split('\n').map((s) => s.trim()).filter(Boolean);
 }
 
+function mergeBaseWithTarget(target) {
+  const mb = git(['merge-base', 'HEAD', `origin/${target}`]);
+  if (mb.status === 0 && mb.stdout.trim()) return mb.stdout.trim();
+  if (mb.stderr?.trim()) console.error(mb.stderr.trim());
+  return null;
+}
+
 function resolveMergeBase() {
   const since = process.env.VITEST_CHANGED_SINCE?.trim();
   if (since) return since;
@@ -117,12 +124,34 @@ function resolveMergeBase() {
     return null;
   }
 
-  const mb = git(['merge-base', 'HEAD', `origin/${target}`]);
-  if (mb.status !== 0 || !mb.stdout.trim()) {
-    console.error('[run-vitest-ci] merge-base failed; will run full suite.');
-    return null;
+  let base = mergeBaseWithTarget(target);
+  if (base) return base;
+
+  // Shallow Jenkins checkouts often omit enough history for merge-base.
+  // Deepen the local clone, then retry before giving up on scoped runs.
+  console.error(
+    '[run-vitest-ci] merge-base failed (likely shallow clone); deepening...'
+  );
+  const deepen = spawnSync('git', ['fetch', '--deepen=5000', 'origin'], {
+    cwd: repoRoot,
+    stdio: 'inherit',
+  });
+  if (deepen.status === 0) {
+    base = mergeBaseWithTarget(target);
+    if (base) return base;
   }
-  return mb.stdout.trim();
+
+  const unshallow = spawnSync('git', ['fetch', '--unshallow', 'origin'], {
+    cwd: repoRoot,
+    stdio: 'inherit',
+  });
+  if (unshallow.status === 0) {
+    base = mergeBaseWithTarget(target);
+    if (base) return base;
+  }
+
+  console.error('[run-vitest-ci] merge-base still failed; will run full suite.');
+  return null;
 }
 
 function detectMode() {
