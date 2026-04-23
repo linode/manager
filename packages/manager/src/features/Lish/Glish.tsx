@@ -1,4 +1,5 @@
-import { Box, CircleProgress, ErrorState } from '@linode/ui';
+import { Box, Button, CircleProgress, ErrorState } from '@linode/ui';
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { VncScreen } from 'react-vnc';
 import type { VncScreenHandle } from 'react-vnc';
@@ -12,6 +13,13 @@ interface Props extends Omit<LinodeLishData, 'weblish_url'> {
 }
 
 let monitor: WebSocket;
+
+// RFB key codes for Ctrl+Alt+Delete
+const KEY_CODES = {
+  ctrl: 0xffe3,
+  alt: 0xffe9,
+  del: 0xffff,
+};
 
 const Glish = (props: Props) => {
   const { glish_url, linode, monitor_url, refreshToken, ws_protocols } = props;
@@ -111,25 +119,51 @@ const Glish = (props: Props) => {
   const rfbOptions = { wsProtocols: ws_protocols };
 
   return (
-    <VncScreen
-      autoConnect={false}
-      loadingUI={
-        <Box p={8} position="absolute" top="0" width="100%">
-          <CircleProgress />
-        </Box>
-      }
-      ref={ref}
-      rfbOptions={rfbOptions}
-      scaleViewport
-      showDotCursor
-      style={{
-        height: 'calc(100vh - 60px)',
-        padding: 8,
-      }}
-      url={glish_url}
-    />
+    <div>
+      <ButtonContainer>
+        <StyledButton onClick={() => sendCtrlAltDel(ref)} variant="outlined">
+          Send Ctrl+Alt+Del
+        </StyledButton>
+      </ButtonContainer>
+      <VncScreen
+        autoConnect={false}
+        loadingUI={
+          <Box p={8} position="absolute" top="0" width="100%">
+            <CircleProgress />
+          </Box>
+        }
+        ref={ref}
+        rfbOptions={rfbOptions}
+        scaleViewport
+        showDotCursor
+        style={{
+          height: 'calc(100vh - 110px)',
+          padding: 8,
+        }}
+        url={glish_url}
+      />
+    </div>
   );
 };
+
+const ButtonContainer = styled('div')(({ theme }) => ({
+  display: 'flex',
+  justifyContent: 'flex-end',
+  padding: theme.spacing(1),
+  position: 'absolute',
+  right: 0,
+  bottom: 0,
+  zIndex: 5,
+}));
+
+const StyledButton = styled(Button)(({ theme }) => ({
+  backgroundColor: theme.palette.primary.main,
+  color: theme.name === 'light' ? theme.color.white : theme.color.black,
+  fontSize: 13,
+  '&:hover': {
+    backgroundColor: theme.palette.primary.light,
+  },
+}));
 
 export default Glish;
 
@@ -196,4 +230,34 @@ const sendString = (
     sendCharacter(character, ref);
     sendString(contents.slice(1), ref);
   }, delay);
+};
+
+/**
+ * Sends Ctrl+Alt+Delete key combination via RFB.
+ */
+const sendCtrlAltDel = (ref: React.RefObject<null | VncScreenHandle>) => {
+  if (
+    !ref.current?.rfb ||
+    ref.current.rfb._rfbConnectionState !== 'connected'
+  ) {
+    return;
+  }
+
+  // Press Ctrl
+  ref.current.rfb.sendKey(KEY_CODES.ctrl, undefined, true);
+  // Press Alt
+  ref.current.rfb.sendKey(KEY_CODES.alt, undefined, true);
+  // Press Delete (with modifiers held)
+  ref.current.rfb.sendKey(KEY_CODES.del, undefined, true);
+
+  // Release in reverse order
+  setTimeout(() => {
+    ref.current?.rfb?.sendKey(KEY_CODES.del, undefined, false);
+  }, 10);
+  setTimeout(() => {
+    ref.current?.rfb?.sendKey(KEY_CODES.alt, undefined, false);
+  }, 20);
+  setTimeout(() => {
+    ref.current?.rfb?.sendKey(KEY_CODES.ctrl, undefined, false);
+  }, 30);
 };
