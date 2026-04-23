@@ -1,3 +1,4 @@
+import { linodeFactory } from '@linode/utilities';
 import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
@@ -9,7 +10,9 @@ import { AlertReusableComponent } from './AlertReusableComponent';
 
 const mockQuery = vi.hoisted(() => ({
   useAlertDefinitionByServiceTypeQuery: vi.fn(),
+  useAllEntitiesByAlertsQuery: vi.fn(),
   useServiceAlertsMutation: vi.fn(),
+  useLinodeQuery: vi.fn(),
 }));
 
 vi.mock('src/queries/cloudpulse/alerts', async () => {
@@ -18,7 +21,15 @@ vi.mock('src/queries/cloudpulse/alerts', async () => {
     ...actual,
     useAlertDefinitionByServiceTypeQuery:
       mockQuery.useAlertDefinitionByServiceTypeQuery,
+    useAllEntitiesByAlertsQuery: mockQuery.useAllEntitiesByAlertsQuery,
     useServiceAlertsMutation: mockQuery.useServiceAlertsMutation,
+  };
+});
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
+  return {
+    ...actual,
+    useLinodeQuery: mockQuery.useLinodeQuery,
   };
 });
 const serviceType = 'linode';
@@ -37,11 +48,9 @@ const alerts = [
     regions: ['us-ord'],
   }),
   ...alertFactory.buildList(7, {
-    entity_ids: [entityId],
     service_type: serviceType,
   }),
   ...alertFactory.buildList(1, {
-    entity_ids: [entityId],
     service_type: serviceType,
     regions: ['us-ord'],
     status: 'enabled',
@@ -68,6 +77,16 @@ const component = (
 mockQuery.useAlertDefinitionByServiceTypeQuery.mockReturnValue(mockReturnValue);
 mockQuery.useServiceAlertsMutation.mockReturnValue({
   mutateAsync: vi.fn(),
+});
+mockQuery.useAllEntitiesByAlertsQuery.mockReturnValue({
+  alertEntityMap: new Map(),
+  isError: false,
+  isLoading: false,
+});
+mockQuery.useLinodeQuery.mockReturnValue({
+  data: linodeFactory.build(),
+  isError: false,
+  isLoading: false,
 });
 
 describe('Alert Resuable Component for contextual view', () => {
@@ -97,6 +116,18 @@ describe('Alert Resuable Component for contextual view', () => {
 
     const alert = alerts[alerts.length - 1];
     expect(getByText(alert.label)).toBeInTheDocument();
+  });
+  it('Should not show header for create mode', async () => {
+    const componentWithoutEntityData = (
+      <AlertReusableComponent
+        onToggleAlert={onToggleAlert}
+        regionId={region}
+        serviceType={serviceType}
+      />
+    );
+    renderWithTheme(componentWithoutEntityData);
+    expect(screen.queryByText('Manage Alerts')).toBeNull();
+    expect(screen.queryByText('Alerts')).toBeNull();
   });
 
   it('Should hide manage alerts button for undefined entityId', () => {
@@ -142,5 +173,67 @@ describe('Alert Resuable Component for contextual view', () => {
       screen.queryByRole('heading', { level: 2, name: 'Alerts' })
     ).not.toBeInTheDocument();
     expect(screen.getByTestId('manage-alerts')).toBeVisible();
+  });
+  it('should show the beta chip when beta is enabled in aclpAlerting feature flag', async () => {
+    const flags = {
+      aclpAlerting: {
+        accountAlertLimit: 10,
+        accountMetricLimit: 10,
+        alertDefinitions: true,
+        beta: true,
+        new: true,
+        notificationChannels: true,
+        recentActivity: true,
+      },
+    };
+
+    const { findByTestId, queryByTestId } = renderWithTheme(
+      <AlertReusableComponent
+        entityId={entityId}
+        entityName={entityName}
+        onToggleAlert={onToggleAlert}
+        regionId={region}
+        serviceType="dbaas"
+      />,
+      {
+        flags,
+      }
+    );
+
+    const betaChip = await findByTestId('betaChip');
+    const newFeatureChip = queryByTestId('newFeatureChip');
+    expect(betaChip).toBeVisible();
+    expect(newFeatureChip).toBeNull();
+  });
+  it('should show the new chip when beta is disabled and new is enabled in aclpAlerting feature flag', async () => {
+    const flags = {
+      aclpAlerting: {
+        accountAlertLimit: 10,
+        accountMetricLimit: 10,
+        alertDefinitions: true,
+        beta: false,
+        new: true,
+        notificationChannels: true,
+        recentActivity: true,
+      },
+    };
+
+    const { findByTestId, queryByTestId } = renderWithTheme(
+      <AlertReusableComponent
+        entityId={entityId}
+        entityName={entityName}
+        onToggleAlert={onToggleAlert}
+        regionId={region}
+        serviceType="dbaas"
+      />,
+      {
+        flags,
+      }
+    );
+
+    const betaChip = queryByTestId('betaChip');
+    const newFeatureChip = await findByTestId('newFeatureChip');
+    expect(betaChip).toBeNull();
+    expect(newFeatureChip).toBeVisible();
   });
 });

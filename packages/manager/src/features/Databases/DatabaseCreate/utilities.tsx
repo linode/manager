@@ -35,10 +35,12 @@ export const determineReplicationCommitType = (engine: string) => {
 interface EngineIconsProps {
   mysql: React.JSX.Element;
   postgresql: React.JSX.Element;
+  valkey: React.JSX.Element;
 }
 export const engineIcons: EngineIconsProps = {
   mysql: <MySQLIcon height="24" width="24" />,
   postgresql: <PostgreSQLIcon height="24" width="24" />,
+  valkey: <PostgreSQLIcon height="24" width="24" />, // TO DO: (UIE-10551) Replace this placeholder with Valkey icon
 };
 
 export const getEngineOptions = (engines: DatabaseEngine[]) => {

@@ -21,6 +21,11 @@ export interface AutocompleteOption {
   value: string;
 }
 
+export interface AutocompleteBooleanOption
+  extends Omit<AutocompleteOption, 'value'> {
+  value: boolean;
+}
+
 export const destinationTypeOptions: AutocompleteOption[] = [
   {
     value: destinationType.CustomHttps,
@@ -48,6 +53,16 @@ export const streamStatusOptions: AutocompleteOption[] = [
     value: streamStatus.Active,
     label: 'Active',
     pendoId: 'Logs Delivery Streams-Status Active',
+  },
+  {
+    value: streamStatus.Deactivating,
+    label: 'Deactivating',
+    pendoId: 'Logs Delivery Streams-Status Deactivating',
+  },
+  {
+    value: streamStatus.Failed,
+    label: 'Failed',
+    pendoId: 'Logs Delivery Streams-Status Failed',
   },
   {
     value: streamStatus.Inactive,

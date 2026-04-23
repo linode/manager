@@ -5,6 +5,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import {
   ERROR_STATE_TEXT,
+  ERROR_STATE_TITLE,
   NO_ASSIGNED_DEFAULT_ENTITIES_TEXT,
 } from '../../Shared/constants';
 import { DefaultEntityAccess } from './DefaultEntityAccess';
@@ -78,13 +79,13 @@ describe('DefaultEntityAccess', () => {
       },
       isLoading: false,
     });
-    renderWithTheme(<DefaultEntityAccess />);
+    const { container } = renderWithTheme(<DefaultEntityAccess />);
 
     expect(
       screen.getByText('Default Entity Access for Delegate Users')
     ).toBeVisible();
     expect(screen.getByPlaceholderText('Search')).toBeVisible();
-    expect(screen.getByPlaceholderText('All Entities')).toBeVisible();
+    expect(container.querySelector('cds-select')).toBeVisible();
     expect(screen.getByRole('table')).toBeVisible();
   });
   it('should render empty state', async () => {
@@ -107,6 +108,7 @@ describe('DefaultEntityAccess', () => {
     });
 
     renderWithTheme(<DefaultEntityAccess />);
+    expect(screen.getByText(ERROR_STATE_TITLE)).toBeVisible();
     expect(screen.getByText(ERROR_STATE_TEXT)).toBeVisible();
   });
 

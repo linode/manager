@@ -1,8 +1,9 @@
 import { useAccountRoles } from '@linode/queries';
-import { CircleProgress, Notice, Paper, Typography } from '@linode/ui';
+import { Notice, Paper, Typography } from '@linode/ui';
 import React from 'react';
 
 import { RolesTable } from 'src/features/IAM/Roles/RolesTable/RolesTable';
+import { CircleProgress } from 'src/features/IAM/Shared/CircleProgress/CircleProgress';
 import { mapAccountPermissionsToRoles } from 'src/features/IAM/Shared/utilities';
 
 import { useDelegationRole } from '../hooks/useDelegationRole';

@@ -1,5 +1,5 @@
 import type { OCA } from './features/OneClickApps/types';
-import type { Region } from '@linode/api-v4';
+import type { PriceObject, Region } from '@linode/api-v4';
 import type {
   AlertStatusType,
   CloudPulseServiceType,
@@ -135,6 +135,10 @@ interface AclpLogsFlag extends BetaFeatureFlag {
    */
   customHttpsEnabled?: boolean;
   /**
+   * This property indicates whether to show the "Metrics" tab on Logs Stream details page or not
+   */
+  metricsEnabled?: boolean;
+  /**
    * This property indicates whether the feature is new or not
    */
   new?: boolean;
@@ -213,12 +217,24 @@ interface ResourceLockFlag {
   linodes: boolean;
 }
 
+interface ComputePricing {
+  /**
+   * Global banner configuration displayed only to users
+   * who have at least one plan matching any of the patterns provided in `TARGET_PLAN_MATCHERS`.
+   */
+  banner: { learnMoreLink: string; text: string };
+  // keyof PriceObject - ensures the LD billing value is always a valid API field name.
+  // This represents active billing mode for the Compute product (e.g. 'monthly', 'hourly', etc.)
+  billing: keyof PriceObject;
+}
+
 export interface Flags {
   acceleratedPlans: AcceleratedPlansFlag;
   aclp: AclpFlag;
   aclpAlerting: AclpAlerting;
   aclpAlertServiceTypeConfig: AclpAlertServiceTypeConfig[];
   aclpLogs: AclpLogsFlag;
+  aclpNbMetricsIntegration: boolean;
   aclpReadEndpoint: string;
   aclpResourceTypeMap: CloudPulseResourceTypeMapFlag[];
   aclpServices: Partial<AclpServices>;
@@ -229,16 +245,20 @@ export interface Flags {
   aplLkeE: boolean;
   blockStorageContextualMetrics: boolean;
   blockStorageEncryption: boolean;
+  blockStorageQuotas: boolean;
   blockStorageVolumeLimit: boolean;
   cloudManagerDesignUpdatesBanner: DesignUpdatesBannerFlag;
   cloudNat: CloudNatFlag;
+  computePricing: ComputePricing;
   databaseAdvancedConfig: boolean;
   databaseBeta: boolean;
   databasePgBouncer: boolean;
   databasePremium: boolean;
   databaseResize: boolean;
+  databaseResizeGenerationalPlans: boolean;
   databaseRestrictPlanResize: boolean;
   databases: boolean;
+  databaseValkey: BetaFeatureFlag;
   databaseVpc: boolean;
   databaseVpcBeta: boolean;
   dbaasV2: BetaFeatureFlag;
@@ -251,7 +271,7 @@ export interface Flags {
   hostnameEndpoints: boolean;
   iam: BaseFeatureFlag;
   iamDelegation: BaseFeatureFlag;
-  iamLimitedAvailabilityBadges: boolean;
+  iamNewBadge: boolean;
   ipv6Sharing: boolean;
   kubernetesBlackwellPlans: boolean;
   limitsEvolution: LimitsEvolution;
@@ -274,6 +294,7 @@ export interface Flags {
   objectStorageGlobalQuotas: boolean;
   objMultiCluster: boolean;
   objSummaryPage: boolean;
+  passwordlessLinodes: boolean;
   placementGroupPolicyUpdate: boolean;
   privateImageSharing: boolean;
   productInformationBanners: ProductInformationBannerFlag[];
@@ -294,6 +315,7 @@ export interface Flags {
   udp: boolean;
   vmHostMaintenance: VMHostMaintenanceFlag;
   volumeSummaryPage: boolean;
+  vpcDbaasResources: boolean;
   vpcIpv6: boolean;
 }
 

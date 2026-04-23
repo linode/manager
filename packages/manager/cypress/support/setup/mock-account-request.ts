@@ -15,7 +15,7 @@ import type { Account } from '@linode/api-v4';
 export const mockAccountRequest = () => {
   // `cloudManagerAccount` is fetched during setup if the `fetchAccount` plugin is used.
   // See also: `cypress/support/plugins/fetch-account.ts`.
-  const cachedAccount = Cypress.env('cloudManagerAccount') as
+  const cachedAccount = Cypress.expose('cloudManagerAccount') as
     | Account
     | undefined;
 

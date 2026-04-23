@@ -1,19 +1,13 @@
 import { useGetDefaultDelegationAccessQuery } from '@linode/queries';
-import {
-  CircleProgress,
-  ErrorState,
-  Notice,
-  Paper,
-  Typography,
-} from '@linode/ui';
+import { Notice, Paper, Typography } from '@linode/ui';
 import * as React from 'react';
+
+import { ErrorState } from 'src/features/IAM/Shared/ErrorState/ErrorState';
 
 import { usePermissions } from '../../hooks/usePermissions';
 import { AssignedRolesTable } from '../../Shared/AssignedRolesTable/AssignedRolesTable';
-import {
-  ERROR_STATE_TEXT,
-  NO_ASSIGNED_DEFAULT_ROLES_TEXT,
-} from '../../Shared/constants';
+import { CircleProgress } from '../../Shared/CircleProgress/CircleProgress';
+import { NO_ASSIGNED_DEFAULT_ROLES_TEXT } from '../../Shared/constants';
 import { NoAssignedRoles } from '../../Shared/NoAssignedRoles/NoAssignedRoles';
 
 export const DefaultRoles = () => {
@@ -47,7 +41,7 @@ export const DefaultRoles = () => {
   }
 
   if (error) {
-    return <ErrorState errorText={ERROR_STATE_TEXT} />;
+    return <ErrorState />;
   }
 
   return (

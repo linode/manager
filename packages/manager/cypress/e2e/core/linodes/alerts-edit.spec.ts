@@ -95,7 +95,6 @@ describe('region enables alerts', function () {
         severity: 1,
         status: 'enabled',
         type: 'system',
-        entity_ids: [MOCK_LINODE_ID.toString()],
       }),
       alertFactory.build({
         id: 2,
@@ -105,7 +104,6 @@ describe('region enables alerts', function () {
         severity: 1,
         status: 'enabled',
         type: 'system',
-        entity_ids: [MOCK_LINODE_ID.toString()],
       }),
       alertFactory.build({
         id: 3,
@@ -115,7 +113,6 @@ describe('region enables alerts', function () {
         severity: 1,
         status: 'enabled',
         type: 'user',
-        entity_ids: [MOCK_LINODE_ID.toString()],
       }),
     ];
     cy.wrap(alertDefinitions).as('alertDefinitions');

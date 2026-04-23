@@ -20,8 +20,8 @@ import { ui } from 'support/ui';
 import { randomIp, randomNumber } from 'support/util/random';
 
 import {
+  configsByEngine,
   databaseFactory,
-  getEngineConfig,
   mysqlConfigResponse,
   postgresConfigResponse,
 } from 'src/factories/databases';
@@ -248,7 +248,7 @@ describe('Update database clusters', () => {
               status: 'active',
               type: configuration.linodeType,
               version: configuration.version,
-              engine_config: getEngineConfig(configuration.dbType),
+              engine_config: configsByEngine[configuration.dbType],
             })
             .build();
 
@@ -269,7 +269,7 @@ describe('Update database clusters', () => {
 
           // Get an arrayy of all the default configs for an engine
           const defaultEngineConfig = getFlattenDefaultConfigs(
-            getEngineConfig(configuration.dbType)
+            configsByEngine[configuration.dbType]
           );
 
           // Confirm all the default configs rendered in the Advanced Configuration tab
@@ -335,7 +335,7 @@ describe('Update database clusters', () => {
               status: 'active',
               type: configuration.linodeType,
               version: configuration.version,
-              engine_config: getEngineConfig(configuration.dbType),
+              engine_config: configsByEngine[configuration.dbType],
             })
             .build();
 
@@ -445,7 +445,7 @@ describe('Update database clusters', () => {
               status: 'active',
               type: configuration.linodeType,
               version: configuration.version,
-              engine_config: getEngineConfig(configuration.dbType),
+              engine_config: configsByEngine[configuration.dbType],
             })
             .build();
 
@@ -567,7 +567,7 @@ describe('Update database clusters', () => {
               status: 'active',
               type: configuration.linodeType,
               version: configuration.version,
-              engine_config: getEngineConfig(configuration.dbType),
+              engine_config: configsByEngine[configuration.dbType],
             })
             .build();
 

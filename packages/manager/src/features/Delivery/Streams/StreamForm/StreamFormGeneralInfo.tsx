@@ -1,26 +1,20 @@
 import { streamType } from '@linode/api-v4';
-import {
-  Autocomplete,
-  Box,
-  Paper,
-  SelectedIcon,
-  TextField,
-  Typography,
-} from '@linode/ui';
-import { capitalize } from '@linode/utilities';
+import { Autocomplete, Paper, TextField, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import {
+  getPendoPageId,
   getStreamTypeOption,
   isFormInEditMode,
+  mapAutocompleteOptionsWithPendo,
+  renderOptionsWithPendo,
   useIsLkeEAuditLogsTypeSelectionEnabled,
 } from 'src/features/Delivery/deliveryUtils';
 import { streamTypeOptions } from 'src/features/Delivery/Shared/types';
 
 import type { StreamAndDestinationFormType } from './types';
-import type { StreamType } from '@linode/api-v4';
 import type {
   AutocompleteOption,
   FormMode,
@@ -39,16 +33,16 @@ export const StreamFormGeneralInfo = (props: StreamFormGeneralInfoProps) => {
   const isLkeEAuditLogsTypeSelectionDisabled =
     !useIsLkeEAuditLogsTypeSelectionEnabled();
 
-  const capitalizedMode = capitalize(mode);
+  const pendoIdPrefix = `${getPendoPageId('stream', mode)}-`;
   const description = {
     audit_logs:
-      'Audit logs record state-changing operations on cloud resources and authentication events, delivered in CloudEvents JSON format.',
+      'Audit logs record state-changing operations on cloud resources and authentication events, and are delivered in CloudEvents JSON format.',
     lke_audit_logs:
-      'Kubernetes API server audit logs capture state-changing operations on LKE-E cluster resources.',
+      'Kubernetes API server audit logs capture state-changing operations on LKE-E cluster resources, and are delivered in native Kubernetes audit format.',
   };
   const pendoIds = {
-    audit_logs: `Logs Delivery Streams ${capitalizedMode}-Audit Logs`,
-    lke_audit_logs: `Logs Delivery Streams ${capitalizedMode}-Kubernetes Audit Logs`,
+    audit_logs: `${pendoIdPrefix}Audit Logs`,
+    lke_audit_logs: `${pendoIdPrefix}Kubernetes Audit Logs`,
   };
 
   const filteredStreamTypeOptions = isLkeEAuditLogsTypeSelectionDisabled
@@ -56,10 +50,7 @@ export const StreamFormGeneralInfo = (props: StreamFormGeneralInfoProps) => {
     : streamTypeOptions;
 
   const streamTypeOptionsWithPendo: AutocompleteOption[] =
-    filteredStreamTypeOptions.map((option) => ({
-      ...option,
-      pendoId: pendoIds[option.value as StreamType],
-    }));
+    mapAutocompleteOptionsWithPendo(filteredStreamTypeOptions, pendoIds);
 
   const selectedStreamType = useWatch({
     control,
@@ -88,7 +79,7 @@ export const StreamFormGeneralInfo = (props: StreamFormGeneralInfoProps) => {
             aria-required
             errorText={fieldState.error?.message}
             inputProps={{
-              'data-pendo-id': `Logs Delivery Streams ${capitalizedMode}-Name`,
+              'data-pendo-id': `${pendoIdPrefix}Name`,
             }}
             label="Stream Name"
             onBlur={field.onBlur}
@@ -111,33 +102,15 @@ export const StreamFormGeneralInfo = (props: StreamFormGeneralInfoProps) => {
             errorText={fieldState.error?.message}
             label="Stream Type"
             onBlur={field.onBlur}
-            onChange={(_, { value }) => {
+            onChange={(_, { value }: AutocompleteOption) => {
               field.onChange(value);
               updateStreamDetails(value);
             }}
             options={streamTypeOptionsWithPendo}
-            renderOption={(props, option, { selected }) => {
-              return (
-                <li
-                  {...props}
-                  data-pendo-id={option.pendoId}
-                  data-qa-option
-                  key={props.key}
-                >
-                  <Box
-                    sx={{
-                      flexGrow: 1,
-                    }}
-                  >
-                    {option.label}
-                  </Box>
-                  <SelectedIcon visible={selected} />
-                </li>
-              );
-            }}
+            renderOption={renderOptionsWithPendo}
             textFieldProps={{
               inputProps: {
-                'data-pendo-id': `Logs Delivery Streams ${capitalizedMode}-Stream Type`,
+                'data-pendo-id': `${pendoIdPrefix}Stream Type`,
               },
             }}
             value={getStreamTypeOption(field.value)}

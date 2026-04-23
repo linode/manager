@@ -1,128 +1,125 @@
-import { QueryClient } from '@tanstack/react-query';
-import { screen, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { Quotas } from './Quotas';
+import { objectStorageQuotaService } from './quotaServices';
 
-import type { Quota, QuotaUsage } from '@linode/api-v4';
-
-const queryMocks = vi.hoisted(() => ({
-  getQuotasFilters: vi.fn().mockReturnValue({}),
-  getQuotaVisibilityFilter: vi
-    .fn()
-    .mockReturnValue({ isVisible: (quota: Quota) => true }),
-  getQuotaMapper: vi
-    .fn()
-    .mockReturnValue({ mapQuota: (quota: Quota, usage: QuotaUsage) => quota }),
-  useFlags: vi.fn().mockReturnValue({}),
-  useGetLocationsForQuotaService: vi.fn().mockReturnValue({}),
-  useObjectStorageEndpoints: vi.fn().mockReturnValue({}),
-  convertResourceMetric: vi.fn().mockReturnValue({}),
-  pluralizeMetric: vi.fn().mockReturnValue({}),
+const mocks = vi.hoisted(() => ({
+  useQuotaServices: vi.fn(),
+  useNavigate: vi.fn(),
+  useSearch: vi.fn(),
 }));
 
-vi.mock('src/hooks/useFlags', () => {
-  const actual = vi.importActual('src/hooks/useFlags');
+vi.mock('src/features/Account/Quotas/hooks/useQuotaServices', () => ({
+  useQuotaServices: mocks.useQuotaServices,
+}));
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
   return {
     ...actual,
-    useFlags: queryMocks.useFlags,
+    useNavigate: mocks.useNavigate,
+    useSearch: mocks.useSearch,
   };
 });
 
-vi.mock('@linode/queries', async () => {
-  const actual = await vi.importActual('@linode/queries');
-  return {
-    ...actual,
-    useObjectStorageEndpoints: queryMocks.useObjectStorageEndpoints,
-  };
-});
+vi.mock('src/features/Account/Quotas/QuotaServicePanel', () => ({
+  QuotaServicePanel: (props: Record<string, any>) => (
+    <div data-testid="quota-service-panel">
+      isFetching:{String(props.isFetchingServices)}
+      selectedService:{String(Boolean(props.selectedService))}
+      availableServicesLength:{String(props.availableServices?.length ?? 0)}
+    </div>
+  ),
+}));
 
-vi.mock('./utils', () => ({
-  getQuotasFilters: queryMocks.getQuotasFilters,
-  getQuotaVisibilityFilter: queryMocks.getQuotaVisibilityFilter,
-  getQuotaMapper: queryMocks.getQuotaMapper,
-  useGetLocationsForQuotaService: queryMocks.useGetLocationsForQuotaService,
-  convertResourceMetric: queryMocks.convertResourceMetric,
-  pluralizeMetric: queryMocks.pluralizeMetric,
-  QUOTA_ROW_MIN_HEIGHT: 58,
+vi.mock('src/features/Account/Quotas/QuotasPanel/QuotasPanel', () => ({
+  QuotasPanel: (props: Record<string, any>) => (
+    <div data-testid="quotas-panel">scope:{String(props.scope)}</div>
+  ),
 }));
 
 describe('Quotas', () => {
-  const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: {
-        retry: false,
-      },
-    },
+  beforeEach(() => {
+    mocks.useQuotaServices.mockReset();
+    mocks.useNavigate.mockReset();
+    mocks.useSearch.mockReset();
   });
 
-  it('renders the component with initial state', async () => {
-    const { getByText } = renderWithTheme(<Quotas />, {
-      queryClient,
-    });
+  it('renders loading state when services are being fetched', () => {
+    mocks.useQuotaServices.mockReturnValue({ data: null, isFetching: true });
+    // useSearch not used in this branch but stub anyway
+    mocks.useSearch.mockReturnValue({});
+    mocks.useNavigate.mockReturnValue(vi.fn());
 
-    expect(getByText('Quotas')).toBeInTheDocument();
-    expect(getByText('Learn more about quotas')).toBeInTheDocument();
-    expect(getByText('Object Storage Endpoint')).toBeInTheDocument();
-    expect(
-      screen.getByPlaceholderText('Select an Object Storage S3 endpoint')
-    ).toBeInTheDocument();
-    expect(
-      getByText('Apply filters above to see quotas and current usage.')
-    ).toBeInTheDocument();
-  });
+    const { getByTestId, queryByTestId } = renderWithTheme(<Quotas />);
 
-  it('allows endpoint selection', async () => {
-    queryMocks.useGetLocationsForQuotaService.mockReturnValue({
-      isFetchingS3Endpoints: false,
-      regions: null,
-      s3Endpoints: [{ label: 'endpoint1 (Standard E0)', value: 'endpoint1' }],
-      service: 'object-storage',
-    });
-
-    const { getByPlaceholderText, getByRole } = renderWithTheme(<Quotas />, {
-      queryClient,
-    });
-
-    const endpointSelect = getByPlaceholderText(
-      'Select an Object Storage S3 endpoint'
+    expect(getByTestId('quota-service-panel')).toHaveTextContent(
+      'isFetching:true'
     );
-
-    await waitFor(() => {
-      expect(endpointSelect).not.toHaveValue(null);
-    });
-
-    await waitFor(() => {
-      expect(endpointSelect).toBeInTheDocument();
-    });
-
-    await userEvent.click(endpointSelect);
-    await waitFor(async () => {
-      const endpointOption = getByRole('option', {
-        name: 'endpoint1 (Standard E0)',
-      });
-      await userEvent.click(endpointOption);
-    });
-
-    await waitFor(() => {
-      expect(endpointSelect).toHaveValue('endpoint1 (Standard E0)');
-    });
+    expect(queryByTestId('quotas-panel')).toBeNull();
   });
 
-  it('shows loading state when fetching data', async () => {
-    queryMocks.useGetLocationsForQuotaService.mockReturnValue({
-      isFetchingS3Endpoints: true,
-      s3Endpoints: null,
-      service: 'object-storage',
+  it('renders service panel when services available and no service selected', () => {
+    const service = objectStorageQuotaService();
+    mocks.useQuotaServices.mockReturnValue({
+      data: [service],
+      isFetching: false,
     });
+    mocks.useSearch.mockReturnValue({});
+    mocks.useNavigate.mockReturnValue(vi.fn());
 
-    const { getByPlaceholderText } = renderWithTheme(<Quotas />, {
-      queryClient,
+    const { getByTestId, queryByTestId } = renderWithTheme(<Quotas />);
+
+    const panel = getByTestId('quota-service-panel');
+    expect(panel).toHaveTextContent('isFetching:false');
+    expect(panel).toHaveTextContent('selectedService:false');
+    expect(panel).toHaveTextContent('availableServicesLength:1');
+
+    // no QuotasPanel rendered because no service selected via search
+    expect(queryByTestId('quotas-panel')).toBeNull();
+  });
+
+  it('renders QuotasPanel for each available scope when a service is selected via search', () => {
+    const service = objectStorageQuotaService();
+    mocks.useQuotaServices.mockReturnValue({
+      data: [service],
+      isFetching: false,
     });
+    mocks.useSearch.mockReturnValue({ service: service.type });
+    mocks.useNavigate.mockReturnValue(vi.fn());
 
-    expect(getByPlaceholderText('Loading S3 endpoints...')).toBeInTheDocument();
+    const { getAllByTestId } = renderWithTheme(<Quotas />);
+
+    // objectStorageQuotaService defines scopes that include 'obj-endpoint' (and possibly 'global') depending on flag
+    const panels = getAllByTestId('quotas-panel');
+    // at least one panel should be rendered for the service scopes
+    expect(panels.length).toBeGreaterThanOrEqual(1);
+    // ensure the first panel contains its scope prop
+    expect(panels[0]).toHaveTextContent('scope:');
+  });
+
+  it('resets search if the provided service query param is not available', () => {
+    const service = objectStorageQuotaService();
+    // available services do not include the invalid type
+    mocks.useQuotaServices.mockReturnValue({
+      data: [service],
+      isFetching: false,
+    });
+    mocks.useSearch.mockReturnValue({ service: 'unknown-service' });
+
+    const navigateMock = vi.fn();
+    mocks.useNavigate.mockReturnValue(navigateMock);
+
+    renderWithTheme(<Quotas />);
+
+    // useEffect should call navigate to update search and clear the invalid service param
+    expect(navigateMock).toHaveBeenCalled();
+    // ensure it was called with an object that includes a `search` function
+    const calledWith = navigateMock.mock.calls[0][0];
+    expect(typeof calledWith.search).toBe('function');
+    // invoking the provided search updater should not throw (it returns an object)
+    expect(() => calledWith.search(() => ({}))).not.toThrow();
   });
 });

@@ -1,11 +1,5 @@
 import { useGetDelegatedChildAccountsForUserQuery } from '@linode/queries';
-import {
-  CircleProgress,
-  ErrorState,
-  Paper,
-  Stack,
-  Typography,
-} from '@linode/ui';
+import { Paper, Stack, Typography } from '@linode/ui';
 import { useNavigate, useParams, useSearch } from '@tanstack/react-router';
 import * as React from 'react';
 
@@ -20,9 +14,12 @@ import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { useIsIAMDelegationEnabled } from 'src/features/IAM/hooks/useIsIAMEnabled';
-import { NO_DELEGATED_USERS_TEXT } from 'src/features/IAM/Shared/constants';
+import { NO_ITEMS_TO_DISPLAY_TEXT } from 'src/features/IAM/Shared/constants';
+import { ErrorState } from 'src/features/IAM/Shared/ErrorState/ErrorState';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
+
+import { CircleProgress } from '../../Shared/CircleProgress/CircleProgress';
 
 import type { Theme } from '@mui/material';
 
@@ -130,7 +127,7 @@ export const UserDelegationsTable = () => {
           </TableHead>
           <TableBody>
             {childAccounts?.data.length === 0 && (
-              <TableRowEmpty colSpan={1} message={NO_DELEGATED_USERS_TEXT} />
+              <TableRowEmpty colSpan={1} message={NO_ITEMS_TO_DISPLAY_TEXT} />
             )}
             {childAccounts?.data?.map((childAccount) => (
               <TableRow key={childAccount.euuid}>

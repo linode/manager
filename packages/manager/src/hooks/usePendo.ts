@@ -1,3 +1,4 @@
+import { checkOptanonConsent } from '@akamai/compute-ui-core/analytics';
 import { useAccount, useProfile } from '@linode/queries';
 import { loadScript } from '@linode/utilities'; // `loadScript` from `useScript` hook
 import React from 'react';
@@ -6,16 +7,11 @@ import { PENDO_API_KEY } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
 import { getAppRoot } from 'src/OAuth/constants';
 import {
-  checkOptanonConsent,
   getCookie,
   ONE_TRUST_COOKIE_CATEGORIES,
 } from 'src/utilities/analytics/utils';
 
-declare global {
-  interface Window {
-    pendo: any;
-  }
-}
+import type { PendoSDK } from '@akamai/compute-ui-core/analytics';
 
 const appRoot = getAppRoot();
 
@@ -96,7 +92,7 @@ export const usePendo = () => {
       // Refer to: https://support.pendo.io/hc/en-us/articles/21362607464987-Components-of-the-install-script#01H6S2EXET8C9FGSHP08XZAE4F
 
       // Set up Pendo namespace and queue
-      const pendo = (window['pendo'] = window['pendo'] || {});
+      const pendo = (window['pendo'] = (window['pendo'] || {}) as PendoSDK);
       pendo._q = pendo._q || [];
 
       // Define the methods Pendo uses in a queue
@@ -127,7 +123,7 @@ export const usePendo = () => {
         location: 'head',
       }).then(() => {
         try {
-          window.pendo.initialize({
+          window.pendo?.initialize({
             account: {
               id: accountId, // Highly recommended, required if using Pendo Feedback
               // name:         // Optional

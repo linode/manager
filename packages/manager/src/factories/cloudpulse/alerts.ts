@@ -6,6 +6,7 @@ import type {
   AlertDefinitionMetricCriteria,
   CreateAlertDefinitionPayload,
   Dimension,
+  Entities,
   MetricCriteria,
   MetricDefinition,
   TriggerCondition,
@@ -188,6 +189,13 @@ export const newEgressConnectionsRulesFactory = {
   metric: 'new_egress_connections',
 };
 
+export const entitiesFactory = Factory.Sync.makeFactory<Entities>({
+  id: Factory.each((i) => `${i + 1}`),
+  label: Factory.each((i) => `Entity-${i + 1}`),
+  type: 'linode',
+  url: Factory.each((i) => `/v4/linode/instances/${i + 1}`),
+});
+
 export const alertDefinitionFactory =
   Factory.Sync.makeFactory<CreateAlertDefinitionPayload>({
     channel_ids: [1, 2, 3],
@@ -221,10 +229,13 @@ export const alertFactory = Factory.Sync.makeFactory<Alert>({
   created: new Date().toISOString(),
   created_by: 'system',
   description: 'Test description',
-  entity_ids: ['1', '2', '3', '48', '50', '51'],
+  entities: {
+    count: 6,
+    has_more_resources: true,
+    url: '/v4/monitor/services/linode/alert-definitions/1/entities',
+  },
   scope: 'entity',
   regions: regionFactory.buildList(3).map(({ id }) => id),
-  has_more_resources: true,
   id: Factory.each((i) => i),
   label: Factory.each((id) => `Alert-${id}`),
   rule_criteria: {
@@ -274,7 +285,6 @@ export const firewallMetricDefinitionFactory =
     available_aggregate_functions: ['avg', 'max', 'min'],
     dimensions: firewallLinodeDimensions,
   });
-
 export const firewallMetricDefinitionsResponse: MetricDefinition[] = [
   firewallMetricDefinitionFactory.build({
     label: 'Current connections (Linode)',

@@ -1,11 +1,3 @@
-/**
- * @file DBaaS integration tests for resize operations.
- */
-import {
-  ClusterSize,
-  DatabaseStatus,
-  RegionAvailability,
-} from '@linode/api-v4';
 import { accountFactory } from '@src/factories';
 import {
   databaseConfigurationsResize,
@@ -20,6 +12,7 @@ import {
   mockResize,
   mockResizeProvisioningDatabase,
 } from 'support/intercepts/databases';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockGetRegionAvailability } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
 import { randomIp, randomNumber, randomString } from 'support/util/random';
@@ -27,6 +20,14 @@ import { getRegionById } from 'support/util/regions';
 
 import { databaseFactory } from 'src/factories/databases';
 
+/**
+ * @file DBaaS integration tests for resize operations.
+ */
+import type {
+  ClusterSize,
+  DatabaseStatus,
+  RegionAvailability,
+} from '@linode/api-v4';
 import type { DatabaseClusterConfiguration } from 'support/constants/databases';
 
 /**
@@ -63,16 +64,20 @@ const resizeDatabase = (initialLabel: string) => {
  * @param clusterSize - Database Cluster Size
  */
 const getNodes = (clusterSize: number) => {
-  const nodes =
-    clusterSize == 1
-      ? 'Primary (1 Node)'
-      : clusterSize == 2
-        ? 'Primary (+1 Node)'
-        : 'Primary (+2 Nodes)';
-  return nodes;
+  return clusterSize === 1
+    ? 'Primary (1 Node)'
+    : clusterSize === 2
+      ? 'Primary (+1 Node)'
+      : 'Primary (+2 Nodes)';
 };
 
 describe('Resizing existing clusters', () => {
+  beforeEach(() => {
+    mockAppendFeatureFlags({
+      databaseResizeGenerationalPlans: false,
+    });
+  });
+
   databaseConfigurationsResize.forEach(
     (configuration: DatabaseClusterConfiguration) => {
       describe(`Resizes a ${configuration.linodeType} ${configuration.engine} v${configuration.version}.x ${configuration.clusterSize}-node cluster`, () => {
@@ -198,7 +203,7 @@ describe('Resizing existing clusters', () => {
                   });
                 const desiredPlanPrice = nodeType.engines[
                   configuration.dbType
-                ].find((dbClusterSizeObj: { quantity: number }) => {
+                ]?.find((dbClusterSizeObj: { quantity: number }) => {
                   return dbClusterSizeObj.quantity === database.cluster_size;
                 })?.price;
                 if (!desiredPlanPrice) {

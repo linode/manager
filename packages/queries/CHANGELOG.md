@@ -1,3 +1,13 @@
+## [2026-04-30] - v0.24.0
+
+
+### Added:
+
+
+### Upcoming Features:
+
+- Reserved IPs: Added queries for Reserved IPs ([#13517](https://github.com/linode/manager/pull/13517))
+
 ## [2026-03-31] - v0.23.0
 
 

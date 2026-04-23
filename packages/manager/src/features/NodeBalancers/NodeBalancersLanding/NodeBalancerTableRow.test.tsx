@@ -57,8 +57,7 @@ describe('NodeBalancerTableRow', () => {
     const { getByText } = renderWithTheme(<NodeBalancerTableRow {...props} />);
 
     expect(getByText('nodebalancer-id-1')).toBeVisible();
-    expect(getByText('0 up')).toBeVisible();
-    expect(getByText('0 down')).toBeVisible();
+    expect(getByText('0 up - 0 down')).toBeVisible();
     expect(getByText('0 bytes')).toBeVisible();
     expect(getByText('0.0.0.0')).toBeVisible();
     expect(getByText('us-east')).toBeVisible();

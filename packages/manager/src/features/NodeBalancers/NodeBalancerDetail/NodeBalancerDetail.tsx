@@ -2,6 +2,7 @@ import {
   useNodeBalancerQuery,
   useNodebalancerUpdateMutation,
 } from '@linode/queries';
+import { getFeatureChip } from '@linode/shared';
 import { CircleProgress, ErrorState, Notice } from '@linode/ui';
 import { useParams } from '@tanstack/react-router';
 import React from 'react';
@@ -13,12 +14,15 @@ import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
+import { useFlags } from 'src/hooks/useFlags';
 import { useTabs } from 'src/hooks/useTabs';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
 import { NodeBalancerConfigurationsWrapper } from './NodeBalancerConfigurationsWrapper';
+import { NodeBalancerMetrics } from './NodeBalancerMetrics';
 import { NodeBalancerSettings } from './NodeBalancerSettings';
 import { NodeBalancerSummary } from './NodeBalancerSummary/NodeBalancerSummary';
+import { NodeBalancerSummaryV2 } from './NodeBalancerSummaryV2/NodeBalancerSummaryV2';
 
 export const NodeBalancerDetail = () => {
   const { id } = useParams({
@@ -30,6 +34,8 @@ export const NodeBalancerDetail = () => {
     mutateAsync: updateNodeBalancer,
     reset,
   } = useNodebalancerUpdateMutation(Number(id));
+
+  const { aclp, aclpNbMetricsIntegration } = useFlags();
 
   const {
     data: nodebalancer,
@@ -43,7 +49,7 @@ export const NodeBalancerDetail = () => {
     nodebalancer?.id
   );
 
-  const { handleTabChange, tabIndex, tabs } = useTabs([
+  const { getTabIndex, handleTabChange, tabIndex, tabs } = useTabs([
     {
       title: 'Summary',
       to: '/nodebalancers/$id/summary',
@@ -51,6 +57,12 @@ export const NodeBalancerDetail = () => {
     {
       title: 'Configurations',
       to: '/nodebalancers/$id/configurations',
+    },
+    {
+      title: 'Metrics',
+      to: '/nodebalancers/$id/metrics',
+      hide: !aclpNbMetricsIntegration,
+      chip: getFeatureChip(aclp ?? {}),
     },
     {
       title: 'Settings',
@@ -74,6 +86,9 @@ export const NodeBalancerDetail = () => {
 
   const errorMap = getErrorMap(['label'], updateError);
   const labelError = errorMap.label;
+
+  const metricsTabIndex = getTabIndex('/nodebalancers/$id/metrics');
+  const settingsTabIndex = getTabIndex('/nodebalancers/$id/settings');
 
   return (
     <React.Fragment>
@@ -101,14 +116,26 @@ export const NodeBalancerDetail = () => {
         <React.Suspense fallback={<SuspenseLoader />}>
           <TabPanels>
             <SafeTabPanel index={0}>
-              <NodeBalancerSummary />
+              {!aclpNbMetricsIntegration ? (
+                <NodeBalancerSummary />
+              ) : (
+                <NodeBalancerSummaryV2 />
+              )}
             </SafeTabPanel>
             <SafeTabPanel index={1}>
               <NodeBalancerConfigurationsWrapper />
             </SafeTabPanel>
-            <SafeTabPanel index={2}>
-              <NodeBalancerSettings />
-            </SafeTabPanel>
+            {metricsTabIndex !== null && (
+              <SafeTabPanel index={metricsTabIndex}>
+                <NodeBalancerMetrics />
+              </SafeTabPanel>
+            )}
+
+            {settingsTabIndex !== null && (
+              <SafeTabPanel index={settingsTabIndex}>
+                <NodeBalancerSettings />
+              </SafeTabPanel>
+            )}
           </TabPanels>
         </React.Suspense>
       </Tabs>

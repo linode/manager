@@ -34,7 +34,6 @@ import type {
   AclpAlertServiceTypeConfig,
   AclpServices,
 } from 'src/featureFlags';
-
 it('test getServiceTypeLabel method', () => {
   const services = serviceTypesFactory.buildList(3);
   services.forEach((service) => {
@@ -44,6 +43,7 @@ it('test getServiceTypeLabel method', () => {
     );
   });
 });
+
 it('test convertSecondsToMinutes method', () => {
   expect(convertSecondsToMinutes(0)).toBe('0 minutes');
   expect(convertSecondsToMinutes(60)).toBe('1 minute');
@@ -101,7 +101,6 @@ it('should correctly convert an alert definition values to the required format',
   const {
     alert_channels,
     description,
-    entity_ids,
     id,
     label,
     rule_criteria,
@@ -114,7 +113,7 @@ it('should correctly convert an alert definition values to the required format',
     alertId: id,
     channel_ids: alert_channels.map((channel) => channel.id),
     description: description || undefined,
-    entity_ids,
+    entity_ids: undefined,
     label,
     rule_criteria: {
       rules: rule_criteria.rules.map((rule) => ({
@@ -262,46 +261,69 @@ describe('useContextualAlertsState', () => {
     });
   });
 
-  it('should include alerts that match entityId in initial states', () => {
+  it('should return empty initial state when alertEntityMap is empty', () => {
     const entityId = '123';
     const alerts = [
-      alertFactory.build({
-        id: 1,
-        label: 'alert1',
-        type: 'system',
-        entity_ids: [entityId],
-        scope: 'entity',
-      }),
-      alertFactory.build({
-        id: 2,
-        label: 'alert2',
-        type: 'user',
-        entity_ids: [entityId],
-        scope: 'entity',
-      }),
+      alertFactory.build({ id: 1, type: 'system', scope: 'entity' }),
+      alertFactory.build({ id: 2, type: 'user', scope: 'entity' }),
     ];
 
     const { result } = renderHook(() =>
-      useContextualAlertsState(alerts, entityId)
+      useContextualAlertsState(alerts, entityId, new Map())
+    );
+
+    expect(result.current.initialState).toEqual({
+      system_alerts: [],
+      user_alerts: [],
+    });
+  });
+
+  it('should include alerts whose alertEntityMap entry contains the entityId', () => {
+    const entityId = '123';
+    const alerts = [
+      alertFactory.build({ id: 1, type: 'system', scope: 'entity' }),
+      alertFactory.build({ id: 2, type: 'user', scope: 'entity' }),
+    ];
+    const alertEntityMap = new Map<number, string[]>();
+    alertEntityMap.set(1, [entityId]);
+    alertEntityMap.set(2, [entityId]);
+
+    const { result } = renderHook(() =>
+      useContextualAlertsState(alerts, entityId, alertEntityMap)
     );
 
     expect(result.current.initialState.system_alerts).toContain(1);
     expect(result.current.initialState.user_alerts).toContain(2);
   });
 
+  it('should not include alerts whose alertEntityMap entry does not contain the entityId', () => {
+    const entityId = '123';
+    const alerts = [
+      alertFactory.build({ id: 1, type: 'system', scope: 'entity' }),
+      alertFactory.build({ id: 2, type: 'user', scope: 'entity' }),
+    ];
+    const alertEntityMap = new Map<number, string[]>();
+    alertEntityMap.set(1, [entityId]);
+    alertEntityMap.set(2, ['999']); // different entity
+
+    const { result } = renderHook(() =>
+      useContextualAlertsState(alerts, entityId, alertEntityMap)
+    );
+
+    expect(result.current.initialState.system_alerts).toContain(1);
+    expect(result.current.initialState.user_alerts).not.toContain(2);
+  });
+
   it('should detect unsaved changes when alerts are modified', () => {
     const entityId = '123';
     const alerts = [
-      alertFactory.build({
-        label: 'alert1',
-        type: 'system',
-        entity_ids: [entityId],
-        scope: 'entity',
-      }),
+      alertFactory.build({ id: 1, type: 'system', scope: 'entity' }),
     ];
+    const alertEntityMap = new Map<number, string[]>();
+    alertEntityMap.set(1, [entityId]);
 
     const { result } = renderHook(() =>
-      useContextualAlertsState(alerts, entityId)
+      useContextualAlertsState(alerts, entityId, alertEntityMap)
     );
 
     expect(result.current.hasUnsavedChanges).toBe(false);
@@ -315,61 +337,67 @@ describe('useContextualAlertsState', () => {
 
     expect(result.current.hasUnsavedChanges).toBe(true);
   });
-});
 
-describe('filterRegionByServiceType', () => {
-  const regions = [
-    regionFactory.build({
-      monitors: {
-        alerts: ['Linodes'],
-        metrics: ['Managed Databases'],
-      },
-    }),
-    ...regionFactory.buildList(3, {
-      monitors: {
-        metrics: [],
-        alerts: [],
-      },
-    }),
-    ...regionFactory.buildList(3, {
-      monitors: {
-        alerts: ['Linodes', 'Managed Databases'],
-        metrics: [],
-      },
-    }),
-    regionFactory.build({
-      monitors: undefined,
-    }),
-  ];
+  it('should reset to initial state after changes', () => {
+    const entityId = '123';
+    const alerts = [
+      alertFactory.build({ id: 1, type: 'system', scope: 'entity' }),
+    ];
+    const alertEntityMap = new Map<number, string[]>();
+    alertEntityMap.set(1, [entityId]);
 
-  it('should return empty list for linode metrics', () => {
-    const result = filterRegionByServiceType('metrics', regions, 'linode');
-
-    expect(result).toHaveLength(0);
-  });
-
-  it('should return 4 regions for linode alerts', () => {
-    expect(filterRegionByServiceType('alerts', regions, 'linode')).toHaveLength(
-      4
+    const { result } = renderHook(() =>
+      useContextualAlertsState(alerts, entityId, alertEntityMap)
     );
+
+    act(() => {
+      result.current.setEnabledAlerts({
+        system_alerts: [],
+        user_alerts: [999],
+      });
+    });
+
+    expect(result.current.hasUnsavedChanges).toBe(true);
+
+    act(() => {
+      result.current.resetToInitialState();
+    });
+
+    expect(result.current.enabledAlerts).toEqual({
+      system_alerts: [1],
+      user_alerts: [],
+    });
+    expect(result.current.hasUnsavedChanges).toBe(false);
   });
 
-  it('should return 1 region for dbaas metrics', () => {
-    expect(filterRegionByServiceType('metrics', regions, 'dbaas')).toHaveLength(
-      1
+  it('should sync enabledAlerts when alertEntityMap changes across rerenders', () => {
+    const entityId = '123';
+    const alerts = [
+      alertFactory.build({ id: 1, type: 'system', scope: 'entity' }),
+      alertFactory.build({ id: 2, type: 'user', scope: 'entity' }),
+    ];
+    const emptyMap = new Map<number, string[]>();
+    const populatedMap = new Map<number, string[]>();
+    populatedMap.set(1, [entityId]);
+    populatedMap.set(2, [entityId]);
+
+    const { result, rerender } = renderHook(
+      ({ map }) => useContextualAlertsState(alerts, entityId, map),
+      { initialProps: { map: emptyMap } }
     );
-  });
 
-  it('should return 3 regions for dbaas alerts', () => {
-    expect(filterRegionByServiceType('alerts', regions, 'dbaas')).toHaveLength(
-      3
-    );
-  });
+    expect(result.current.enabledAlerts).toEqual({
+      system_alerts: [],
+      user_alerts: [],
+    });
 
-  it('should return no regions for nodebalancer service type', () => {
-    const result = filterRegionByServiceType('alerts', regions, 'nodebalancer');
+    rerender({ map: populatedMap });
 
-    expect(result).toHaveLength(0);
+    expect(result.current.enabledAlerts).toEqual({
+      system_alerts: [1],
+      user_alerts: [2],
+    });
+    expect(result.current.hasUnsavedChanges).toBe(false);
   });
 });
 

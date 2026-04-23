@@ -53,12 +53,12 @@ export const DatabaseSummarySection = (props: Props) => {
   const isVPCSelected = Boolean(selectedVPC);
   const displayVPC = isCreate && isVPCEnabled;
 
-  const currentPrice = currentPlan?.engines[currentEngine].find(
+  const currentPrice = currentPlan?.engines[currentEngine]?.find(
     (cluster: DatabaseClusterSizeObject) =>
       cluster.quantity === currentClusterSize
   )?.price as DatabasePriceObject;
 
-  const currentBasePrice = currentPlan?.engines[currentEngine][0]
+  const currentBasePrice = currentPlan?.engines[currentEngine]?.[0]
     .price as DatabasePriceObject;
 
   const currentNodePrice = `$${currentPrice?.monthly}/month`;

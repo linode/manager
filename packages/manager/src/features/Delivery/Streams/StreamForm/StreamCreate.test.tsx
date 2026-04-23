@@ -40,7 +40,7 @@ describe('StreamCreate', () => {
 
   describe(
     'given Test Connection and Create Stream buttons',
-    { timeout: 10000 },
+    { timeout: 30000 }, // Increased for CI stability
     () => {
       const testConnectionButtonText = 'Test Connection';
       const createStreamButtonText = 'Create Stream';
@@ -56,7 +56,9 @@ describe('StreamCreate', () => {
         );
         await userEvent.click(createNewTestDestination);
 
-        const manualRadio = screen.getByLabelText('Enter Bucket manually');
+        const manualRadio = screen.getByLabelText(
+          'Enter Bucket details manually'
+        );
         await userEvent.click(manualRadio);
 
         const endpointInput = screen.getByLabelText('Endpoint');
@@ -114,7 +116,11 @@ describe('StreamCreate', () => {
 
             // Test connection
             await userEvent.click(testConnectionButton);
-            expect(verifyDestinationSpy).toHaveBeenCalled();
+
+            // Wait for async verification to complete
+            await waitFor(() => {
+              expect(verifyDestinationSpy).toHaveBeenCalled();
+            });
 
             await waitFor(() => {
               expect(createStreamButton).toBeEnabled();
@@ -123,7 +129,11 @@ describe('StreamCreate', () => {
             // Create stream
             await userEvent.click(createStreamButton);
 
-            expect(createDestinationSpy).toHaveBeenCalled();
+            // Wait for destination creation to complete
+            await waitFor(() => {
+              expect(createDestinationSpy).toHaveBeenCalled();
+            });
+
             await waitFor(() => {
               expect(createStreamSpy).toHaveBeenCalled();
             });

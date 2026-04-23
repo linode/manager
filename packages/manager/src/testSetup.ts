@@ -1,23 +1,58 @@
 import * as matchers from '@testing-library/jest-dom/matchers';
-import { cleanup } from '@testing-library/react';
+import { cleanup, configure } from '@testing-library/react';
 import { expect } from 'vitest';
 
 import { server } from './mocks/testServer';
 
 expect.extend(matchers);
 
+// Configure testing-library timeouts for CI stability
+configure({
+  asyncUtilTimeout: process.env.CI ? 10000 : 5000, // Increase waitFor timeout in CI
+});
+
 afterEach(() => {
   cleanup();
 });
 
-beforeAll(() => server.listen({ onUnhandledRequest: 'warn' }));
-afterAll(() => server.close());
+beforeAll(() => server.listen({ onUnhandledRequest: 'warn' }), 30000); // 30s timeout for MSW setup
+afterAll(() => server.close(), 30000); // 30s timeout for cleanup
 afterEach(() => server.resetHandlers());
 
 // @ts-expect-error this prevents some console errors
 HTMLCanvasElement.prototype.getContext = () => {
   return 0;
 };
+
+/**
+ * Stub LaunchDarkly in unit tests: avoids loading the real SDK (slow, flaky teardown
+ * when several Vitest processes run) while preserving `LDProvider` + `flags` behavior
+ * via React context so `renderWithTheme(..., { flags })` keeps working.
+ */
+vi.mock('launchdarkly-react-client-sdk', async () => {
+  const React = await import('react');
+  const LDFlagsContext = React.createContext<Record<string, unknown>>({});
+
+  return {
+    LDProvider: ({
+      children,
+      flags,
+    }: {
+      children?: React.ReactNode;
+      flags?: Record<string, unknown>;
+    }) =>
+      React.createElement(
+        LDFlagsContext.Provider,
+        { value: flags ?? {} },
+        children ?? null
+      ),
+    useFlags: () => React.useContext(LDFlagsContext),
+    useLDClient: () => ({
+      identify: vi.fn().mockResolvedValue(undefined),
+    }),
+    withLDProvider: () => (component: React.ComponentType) => component,
+  };
+});
 
 /**
  * When we mock chartjs below, we need

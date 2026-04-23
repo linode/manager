@@ -324,7 +324,6 @@ export const convertAlertDefinitionValues = (
   {
     alert_channels,
     description,
-    entity_ids,
     id,
     label,
     rule_criteria,
@@ -339,7 +338,7 @@ export const convertAlertDefinitionValues = (
     alertId: id,
     channel_ids: alert_channels.map((channel) => channel.id),
     description: description || undefined,
-    entity_ids,
+    entity_ids: undefined, // entity_ids are now fetched via useAllEntitiesByAlertIdQuery
     label,
     rule_criteria: {
       rules: rule_criteria.rules.map((rule) => ({

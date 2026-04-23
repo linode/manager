@@ -122,7 +122,7 @@ describe('VPC Subnets table', () => {
         vpcRegion=""
       />,
       {
-        flags: { nodebalancerVpc: true },
+        flags: { nodebalancerVpc: true, vpcDbaasResources: true },
       }
     );
 
@@ -137,7 +137,11 @@ describe('VPC Subnets table', () => {
 
     expect(getByText('Resources')).toBeVisible();
     expect(
-      getByText(subnet.linodes.length + subnet.nodebalancers.length)
+      getByText(
+        subnet.linodes.length +
+          subnet.nodebalancers.length +
+          subnet.databases.length
+      )
     ).toBeVisible();
 
     const actionMenuButton = getByLabelText(
@@ -264,7 +268,7 @@ describe('VPC Subnets table', () => {
 
   it(
     'should show Nodebalancer table head data when table is expanded',
-    { timeout: 15_000 },
+    { timeout: 30000 },
     async () => {
       const subnet = subnetFactory.build();
 
@@ -291,6 +295,37 @@ describe('VPC Subnets table', () => {
       await findByText('Frontend IPv6');
       await findByText('Backend IPv4 Ranges');
       await findByText('Backend IPv6 Ranges');
+    }
+  );
+
+  it(
+    'should show Databases table head data when table is expanded',
+    { timeout: 30000 },
+    async () => {
+      const subnet = subnetFactory.build();
+
+      queryMocks.useSubnetsQuery.mockReturnValue({
+        data: {
+          data: [subnet],
+        },
+      });
+
+      const { getByLabelText, findByText } = renderWithTheme(
+        <VPCSubnetsTable
+          isVPCLKEEnterpriseCluster={false}
+          vpcId={3}
+          vpcRegion=""
+        />,
+        { flags: { nodebalancerVpc: true, vpcDbaasResources: true } }
+      );
+
+      const expandTableButton = getByLabelText(`expand ${subnet.label} row`);
+      await userEvent.click(expandTableButton);
+
+      await findByText('Database Cluster');
+      await findByText('IPv4 Address(es)');
+      await findByText('VPC IPv4 Range');
+      await findByText('VPC IPv6 Range');
     }
   );
 

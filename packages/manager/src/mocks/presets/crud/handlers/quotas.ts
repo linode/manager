@@ -1,9 +1,8 @@
-import { QuotaResourceMetrics } from '@linode/api-v4';
-import { pickRandom, regions } from '@linode/utilities';
+import { regions } from '@linode/utilities';
 import { http } from 'msw';
 
 import { objectStorageEndpointsFactory } from 'src/factories/objectStorage';
-import { quotaFactory, quotaUsageFactory } from 'src/factories/quotas';
+import { linodeQuotaFactory, lkeQuotaFactory } from 'src/factories/quotas';
 import {
   makeNotFoundResponse,
   makePaginatedResponse,
@@ -11,10 +10,14 @@ import {
 } from 'src/mocks/utilities/response';
 
 import type {
+  LinodeQuota,
+  LkeQuota,
   ObjectStorageEndpoint,
+  ObjectStorageEndpointQuota,
   Quota,
-  QuotaType,
+  QuotaServiceType,
   QuotaUsage,
+  VolumesQuota,
 } from '@linode/api-v4';
 import type { StrictResponse } from 'msw';
 import type {
@@ -22,103 +25,221 @@ import type {
   APIPaginatedResponse,
 } from 'src/mocks/utilities/response';
 
-const mockQuotas: Record<QuotaType, Quota[]> = {
-  linode: [
-    ...regions.map((region) =>
-      quotaFactory.build({
-        description:
-          'Max number of vCPUs assigned to Linodes with Dedicated plans',
-        quota_limit: 50,
-        quota_name: 'Dedicated CPU',
-        region_applied: region.id,
-        resource_metric: QuotaResourceMetrics.CPU,
-      })
-    ),
-    ...regions.map((region) =>
-      quotaFactory.build({
-        description:
-          'Max number of vCPUs assigned to Linodes with Shared plans',
+const mockS3Endpoints = [
+  objectStorageEndpointsFactory.build({
+    endpoint_type: 'E0',
+    region: 'us-east',
+    s3_endpoint: 'us-east-1.linodeobjects.com',
+  }),
+  objectStorageEndpointsFactory.build({
+    endpoint_type: 'E0',
+    region: 'us-west',
+    s3_endpoint: 'us-west-1.linodeobjects.com',
+  }),
+  objectStorageEndpointsFactory.build({
+    endpoint_type: 'E3',
+    region: 'br-gru',
+    s3_endpoint: 'br-gru-1.linodeobjects.com',
+  }),
+];
+
+const blockStorageRegions = regions.filter((region) =>
+  region.capabilities.includes('Block Storage')
+);
+
+const mockQuotas: Record<QuotaServiceType, Record<string, Quota[]>> = {
+  linode: {
+    quotas: [
+      ...regions.map(
+        (region): LinodeQuota =>
+          linodeQuotaFactory.build({
+            description:
+              'Max number of vCPUs assigned to Linodes with Dedicated plans',
+            quota_limit: 50,
+            quota_name: 'Dedicated CPU',
+            region_applied: region.id,
+            resource_metric: 'CPU',
+          })
+      ),
+      ...regions.map(
+        (region): LinodeQuota =>
+          linodeQuotaFactory.build({
+            description:
+              'Max number of vCPUs assigned to Linodes with Shared plans',
+            quota_limit: 100,
+            quota_name: 'Shared CPU',
+            region_applied: region.id,
+            resource_metric: 'CPU',
+          })
+      ),
+      ...regions.map(
+        (region): LinodeQuota =>
+          linodeQuotaFactory.build({
+            description:
+              'Max number of GPUs assigned to Linodes with GPU plans',
+            quota_limit: 25,
+            quota_name: 'GPU',
+            region_applied: region.id,
+            resource_metric: 'GPU',
+          })
+      ),
+      ...regions.map(
+        (region): LinodeQuota =>
+          linodeQuotaFactory.build({
+            description:
+              'Max number of VPUs assigned to Linodes with VPU plans',
+            quota_limit: 10,
+            quota_name: 'VPU',
+            region_applied: region.id,
+            resource_metric: 'VPU',
+          })
+      ),
+      ...regions.map(
+        (region): LinodeQuota =>
+          linodeQuotaFactory.build({
+            description:
+              'Max number of vCPUs assigned to Linodes with High Memory plans',
+            quota_limit: 15,
+            quota_name: 'High Memory',
+            region_applied: region.id,
+            resource_metric: 'CPU',
+          })
+      ),
+    ],
+  },
+  lke: {
+    quotas: [
+      ...regions.map(
+        (region): LkeQuota =>
+          lkeQuotaFactory.build({
+            quota_limit: 50,
+            quota_name: 'Total number of Clusters',
+            region_applied: region.id,
+            resource_metric: 'cluster',
+          })
+      ),
+    ],
+  },
+  'object-storage': {
+    'global-quotas': [
+      {
+        quota_id: 'keys',
+        quota_name: 'Number of Access Keys',
+        quota_type: 'keys',
+        description: 'Current number of access keys per account',
         quota_limit: 100,
-        quota_name: 'Shared CPU',
-        region_applied: region.id,
-        resource_metric: QuotaResourceMetrics.CPU,
-      })
-    ),
-    ...regions.map((region) =>
-      quotaFactory.build({
-        description: 'Max number of GPUs assigned to Linodes with GPU plans',
-        quota_limit: 25,
-        quota_name: 'GPU',
-        region_applied: region.id,
-        resource_metric: QuotaResourceMetrics.GPU,
-      })
-    ),
-    ...regions.map((region) =>
-      quotaFactory.build({
-        description: 'Max number of VPUs assigned to Linodes with VPU plans',
-        quota_limit: 10,
-        quota_name: 'VPU',
-        region_applied: region.id,
-        resource_metric: QuotaResourceMetrics.VPU,
-      })
-    ),
-    ...regions.map((region) =>
-      quotaFactory.build({
-        description:
-          'Max number of vCPUs assigned to Linodes with High Memory plans',
-        quota_limit: 15,
-        quota_name: 'High Memory',
-        region_applied: region.id,
-        resource_metric: QuotaResourceMetrics.CPU,
-      })
-    ),
-  ],
-  lke: [
-    ...regions.map((region) =>
-      quotaFactory.build({
-        quota_limit: 50,
-        quota_name: 'Total number of Clusters',
-        region_applied: region.id,
-        resource_metric: QuotaResourceMetrics.CLUSTER,
-      })
-    ),
-  ],
-  'object-storage': [
-    quotaFactory.build({
-      description: 'The total capacity of your Object Storage account',
-      endpoint_type: 'E0',
-      quota_limit: 1_000_000_000_000_000, // a petabyte
-      quota_name: 'Total Capacity',
-      resource_metric: QuotaResourceMetrics.BYTE,
-      s3_endpoint: 'us-east-1.linodeobjects.com',
-    }),
-    quotaFactory.build({
-      description:
-        'The allowed number of buckets in your Object Storage account',
-      endpoint_type: 'E0',
-      quota_limit: 100,
-      quota_name: 'Number of Buckets',
-      resource_metric: QuotaResourceMetrics.BUCKET,
-      s3_endpoint: 'us-west-1.linodeobjects.com',
-    }),
-    quotaFactory.build({
-      description: 'The total number of objects in your Object Storage account',
-      endpoint_type: 'E3',
-      quota_limit: 10_000_000,
-      quota_name: 'Number of Objects',
-      resource_metric: QuotaResourceMetrics.OBJECT,
-      s3_endpoint: 'br-gru-1.linodeobjects.com',
-    }),
-  ],
+        resource_metric: 'key',
+        has_usage: true,
+      },
+    ],
+    quotas: [
+      ...mockS3Endpoints.map(
+        (obj_endpoint): ObjectStorageEndpointQuota => ({
+          quota_id: `obj-bytes-${obj_endpoint.s3_endpoint}`,
+          quota_type: 'obj-bytes',
+          description: 'The total capacity of your Object Storage account',
+          quota_limit:
+            obj_endpoint.endpoint_type === 'E3'
+              ? 549755813888000
+              : 109951162777600,
+          quota_name: 'Total Capacity',
+          resource_metric: 'byte',
+          endpoint_type: obj_endpoint.endpoint_type,
+          s3_endpoint: obj_endpoint.s3_endpoint!,
+          has_usage: true,
+        })
+      ),
+      ...mockS3Endpoints.map(
+        (obj_endpoint): ObjectStorageEndpointQuota => ({
+          quota_id: `obj-buckets-${obj_endpoint.s3_endpoint}`,
+          quota_type: 'obj-buckets',
+          description:
+            'The allowed number of buckets in your Object Storage account',
+          quota_limit: 1000,
+          quota_name: 'Number of Buckets',
+          resource_metric: 'bucket',
+          endpoint_type: obj_endpoint.endpoint_type,
+          s3_endpoint: obj_endpoint.s3_endpoint!,
+          has_usage: true,
+        })
+      ),
+      ...mockS3Endpoints.map(
+        (obj_endpoint): ObjectStorageEndpointQuota => ({
+          quota_id: `obj-objects-${obj_endpoint.s3_endpoint}`,
+          quota_type: 'obj-objects',
+          description:
+            'The total number of objects in your Object Storage account',
+          quota_limit:
+            obj_endpoint.endpoint_type === 'E3' ? 500_000_000 : 100_000_000,
+          quota_name: 'Number of Objects',
+          resource_metric: 'object',
+          endpoint_type: obj_endpoint.endpoint_type,
+          s3_endpoint: obj_endpoint.s3_endpoint!,
+          has_usage: true,
+        })
+      ),
+    ],
+  },
+  volumes: {
+    quotas: [
+      {
+        quota_id: 'vol-capacity-global',
+        quota_type: 'vol-capacity',
+        quota_name: 'Block Storage Capacity',
+        description: 'Maximum storage capacity across all regions',
+        quota_limit: 102400,
+        resource_metric: 'gigabyte',
+        scope: 'global',
+        region: null,
+        has_usage: true,
+      },
+      ...blockStorageRegions.map(
+        (region): VolumesQuota => ({
+          quota_id: `vol-capacity-${region.id}`,
+          description: `Maximum storage capacity in ${region.id} region`,
+          quota_limit: 51200,
+          quota_name: 'Block Storage Capacity',
+          quota_type: 'vol-capacity',
+          resource_metric: 'gigabyte',
+          scope: 'region',
+          region: region.id,
+          has_usage: true,
+        })
+      ),
+      ...blockStorageRegions.map(
+        (region): VolumesQuota => ({
+          quota_id: `vol-volumes-${region.id}`,
+          quota_type: 'vol-volumes',
+          quota_name: `Block Storage Volume Count`,
+          description: `Maximum number of volumes in ${region.id} region`,
+          quota_limit: 50,
+          resource_metric: 'volume',
+          scope: 'region',
+          region: region.id,
+          has_usage: true,
+        })
+      ),
+      ...blockStorageRegions.map((region) => ({
+        quota_id: `vol-attachments-${region.id}`,
+        quota_type: 'vol-attachments' as VolumesQuota['quota_type'],
+        quota_name: 'Block Storage Attachment Count',
+        description: `Maximum number of concurrent volume attachments in ${region.id} region`,
+        quota_limit: 400,
+        resource_metric: 'attachment' as VolumesQuota['resource_metric'],
+        scope: 'region' as VolumesQuota['scope'],
+        region: region.id,
+        has_usage: true,
+      })),
+    ],
+  },
 };
 
-const mockS3Endpoints = mockQuotas['object-storage'].map((quota) =>
-  objectStorageEndpointsFactory.build({
-    endpoint_type: quota.endpoint_type,
-    region: quota.region_applied,
-    s3_endpoint: quota.s3_endpoint,
-  })
-);
+const getMockQuotas = (
+  service: QuotaServiceType,
+  collection: string
+): Quota[] => {
+  return mockQuotas[service as QuotaServiceType]?.[collection];
+};
 
 export const getS3Endpoint = () => [
   http.get(
@@ -140,38 +261,32 @@ export const getS3Endpoint = () => [
 
 export const getQuotas = () => [
   http.get(
-    '*/v4*/:service/quotas',
+    '*/v4*/:service/:collection/:id/usage',
     async ({
       params,
-      request,
-    }): Promise<
-      StrictResponse<APIErrorResponse | APIPaginatedResponse<Quota>>
-    > => {
-      const xFilters = request.headers.get('X-Filter');
-      const filters = xFilters ? JSON.parse(xFilters) : {};
+    }): Promise<StrictResponse<APIErrorResponse | QuotaUsage>> => {
+      const quota = getMockQuotas(
+        params.service as QuotaServiceType,
+        params.collection as string
+      )?.find(({ quota_id }) => quota_id === params.id);
 
-      // if we got a global filter, do a randomized sorting on the data,
-      // otherwise, return the data as is
-      const data =
-        filters.region_applied || filters.s3_endpoint === 'global'
-          ? mockQuotas[params.service as QuotaType].sort(
-              () => Math.random() - 0.5
-            )
-          : mockQuotas[params.service as QuotaType];
+      if (!quota) {
+        return makeNotFoundResponse();
+      }
 
-      return makePaginatedResponse({
-        data,
-        request,
+      return makeResponse({
+        quota_limit: quota.quota_limit,
+        usage: Math.floor(Math.random() * quota.quota_limit),
       });
     }
   ),
-
   http.get(
-    '*/v4*/:service/quotas/:id',
+    '*/v4*/:service/:collection/:id',
     async ({ params }): Promise<StrictResponse<APIErrorResponse | Quota>> => {
-      const quota = mockQuotas[params.service as QuotaType].find(
-        ({ quota_id }) => quota_id === params.id
-      );
+      const quota = getMockQuotas(
+        params.service as QuotaServiceType,
+        params.collection as string
+      )?.find(({ quota_id }) => quota_id === params.id);
 
       if (!quota) {
         return makeNotFoundResponse();
@@ -180,104 +295,40 @@ export const getQuotas = () => [
       return makeResponse(quota);
     }
   ),
-
   http.get(
-    '*/v4*/:service/quotas/:id/usage',
+    '*/v4*/:service/:collection',
     async ({
       params,
-    }): Promise<StrictResponse<APIErrorResponse | QuotaUsage>> => {
-      const service = params.service as QuotaType;
-      const quota = mockQuotas[service].find(
-        ({ quota_id }) => quota_id === params.id
+      request,
+    }): Promise<
+      StrictResponse<APIErrorResponse | APIPaginatedResponse<Quota>>
+    > => {
+      let data = getMockQuotas(
+        params.service as QuotaServiceType,
+        params.collection as string
       );
-
-      if (!quota) {
+      if (!data) {
         return makeNotFoundResponse();
       }
 
-      switch (service) {
-        case 'linode':
-          switch (quota.quota_name) {
-            case 'Dedicated CPU':
-              return makeResponse(
-                quotaUsageFactory.build({
-                  quota_limit: quota.quota_limit,
-                  usage: 45,
-                })
-              );
-            case 'GPU':
-              return makeResponse(
-                quotaUsageFactory.build({
-                  quota_limit: quota.quota_limit,
-                  usage: 3,
-                })
-              );
-            case 'Shared CPU':
-              return makeResponse(
-                quotaUsageFactory.build({
-                  quota_limit: quota.quota_limit,
-                  usage: 24,
-                })
-              );
-            case 'VPU':
-              return makeResponse(
-                quotaUsageFactory.build({
-                  quota_limit: quota.quota_limit,
-                  usage: 7,
-                })
-              );
-            default:
-              return makeResponse(
-                quotaUsageFactory.build({
-                  quota_limit: quota.quota_limit,
-                  usage: null,
-                })
-              );
-          }
-        case 'lke':
-          return makeResponse(
-            quotaUsageFactory.build({
-              quota_limit: quota.quota_limit,
-              usage: pickRandom([2, 27, 5, 38, 49]),
-            })
-          );
-        case 'object-storage':
-          switch (quota.quota_name) {
-            case 'Number of Buckets':
-              return makeResponse(
-                quotaUsageFactory.build({
-                  quota_limit: quota.quota_limit,
-                  usage: 75,
-                })
-              );
-            case 'Number of Objects':
-              return makeResponse(
-                quotaUsageFactory.build({
-                  quota_limit: quota.quota_limit,
-                  usage: 10_000_000,
-                })
-              );
-            case 'Total Capacity':
-              return makeResponse(
-                quotaUsageFactory.build({
-                  quota_limit: quota.quota_limit,
-                  usage: 100_000_000_000_000,
-                })
-              );
-            default:
-              makeResponse(
-                quotaUsageFactory.build({
-                  quota_limit: quota.quota_limit,
-                  usage: null,
-                })
-              );
-          }
-          break;
-        default:
-          return makeNotFoundResponse();
+      const xFilters = request.headers.get('X-Filter');
+      const filters: Record<string, any> = xFilters ? JSON.parse(xFilters) : {};
+      const filterKeys = Object.keys(filters);
+
+      if (filterKeys.length > 0) {
+        data = data.filter((quota) =>
+          filterKeys.every((key) => {
+            const filterVal = filters[key];
+            const quotaVal = (quota as Record<string, any>)[key];
+            return filterVal === quotaVal;
+          })
+        );
       }
 
-      return makeNotFoundResponse();
+      return makePaginatedResponse({
+        data,
+        request,
+      });
     }
   ),
 ];

@@ -14,25 +14,15 @@ import { useFlags } from 'src/hooks/useFlags';
 import { AccessKeyActionMenu } from './AccessKeyActionMenu';
 import { HostNameTableCell } from './HostNameTableCell';
 
-import type { OpenAccessDrawer } from '../types';
-import type { ObjectStorageKey, ObjectStorageKeyRegions } from '@linode/api-v4';
+import type { ObjectStorageKey } from '@linode/api-v4';
 
 interface Props {
-  openDrawer: OpenAccessDrawer;
   openRevokeDialog: (storageKeyData: ObjectStorageKey) => void;
-  setHostNames: (hostNames: ObjectStorageKeyRegions[]) => void;
-  setShowHostNamesDrawers: (show: boolean) => void;
   storageKeyData: ObjectStorageKey;
 }
 
 export const AccessKeyTableRow = (props: Props) => {
-  const {
-    openDrawer,
-    openRevokeDialog,
-    setHostNames,
-    setShowHostNamesDrawers,
-    storageKeyData,
-  } = props;
+  const { openRevokeDialog, storageKeyData } = props;
 
   const { data: account } = useAccount();
   const flags = useFlags();
@@ -56,22 +46,13 @@ export const AccessKeyTableRow = (props: Props) => {
       </TableCell>
       {isObjMultiClusterEnabled && (
         <Hidden smDown>
-          <HostNameTableCell
-            setHostNames={setHostNames}
-            setShowHostNamesDrawers={setShowHostNamesDrawers}
-            storageKeyData={storageKeyData}
-          />
+          <HostNameTableCell storageKeyData={storageKeyData} />
         </Hidden>
       )}
       <TableCell actionCell>
         <AccessKeyActionMenu
           label={storageKeyData.label}
           objectStorageKey={storageKeyData}
-          openDrawer={openDrawer}
-          openHostnamesDrawer={() => {
-            setShowHostNamesDrawers(true);
-            setHostNames(storageKeyData.regions);
-          }}
           openRevokeDialog={openRevokeDialog}
         />
       </TableCell>

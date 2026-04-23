@@ -5,10 +5,15 @@ import React from 'react';
 import { useFlags } from 'src/hooks/useFlags';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 
-import { CLUSTERS_TOOLTIP_TEXT, RESOURCE_FILTER_MAP } from '../Utils/constants';
+import {
+  CLUSTERS_TOOLTIP_TEXT,
+  RESOURCE_FILTER_MAP,
+  VIRTUALIZATION_CONFIG,
+} from '../Utils/constants';
 import { filterUsingDependentFilters } from '../Utils/FilterBuilder';
-import { deepEqual } from '../Utils/utils';
+import { deepEqual, formatObjectStorageUrl } from '../Utils/utils';
 import { CLOUD_PULSE_TEXT_FIELD_PROPS } from './styles';
+import { VirtualizedListbox } from './VirtualizedListBox';
 
 import type { CloudPulseMetricsFilter } from '../Dashboard/CloudPulseDashboardLanding';
 import type { QueryFunctionType } from '../Utils/models';
@@ -97,8 +102,22 @@ export const CloudPulseResourcesSelect = React.memo(
     const isAutocompleteOpen = React.useRef(false); // Ref to track the open state of Autocomplete
 
     const getResourcesList = React.useMemo<CloudPulseResources[]>(() => {
-      return filterUsingDependentFilters(resources, xFilter) ?? [];
-    }, [resources, xFilter]);
+      const filteredResources =
+        filterUsingDependentFilters(resources, xFilter) ?? [];
+      if (resourceType !== 'objectstorage') {
+        return filteredResources;
+      }
+
+      return filteredResources.map((resource: CloudPulseResources) => {
+        if (resource.label) {
+          return {
+            ...resource,
+            label: formatObjectStorageUrl(resource.label),
+          };
+        }
+        return resource;
+      });
+    }, [resourceType, resources, xFilter]);
 
     // Maximum resource selection limit is fetched from launchdarkly
     const maxResourceSelectionLimit = React.useMemo(() => {
@@ -138,6 +157,25 @@ export const CloudPulseResourcesSelect = React.memo(
 
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [resources, region, xFilter, resourceType]);
+
+    // Wrapper component to connect VirtualizedListbox with MUI Autocomplete
+    const ListboxWrapper = React.useMemo(() => {
+      if (getResourcesList.length <= VIRTUALIZATION_CONFIG.THRESHOLD) {
+        return undefined;
+      }
+      return React.forwardRef<
+        HTMLDivElement,
+        React.HTMLAttributes<HTMLElement>
+      >((props, ref) => {
+        // Extract children and forward to VirtualizedListbox
+        const { children, ...otherProps } = props;
+        return (
+          <div ref={ref} {...otherProps}>
+            <VirtualizedListbox>{children}</VirtualizedListbox>
+          </div>
+        );
+      });
+    }, [getResourcesList.length]);
 
     return (
       <Autocomplete
@@ -209,6 +247,15 @@ export const CloudPulseResourcesSelect = React.memo(
               </>
             </ListItem>
           );
+        }}
+        slotProps={{
+          listbox: {
+            component: ListboxWrapper,
+            sx:
+              getResourcesList.length > VIRTUALIZATION_CONFIG.THRESHOLD
+                ? { maxHeight: VIRTUALIZATION_CONFIG.MAX_VISIBLE_HEIGHT } // This is to set the max height of the listbox when virtualization is enabled, it will show a scrollbar if the number of options exceed the max visible height
+                : {},
+          },
         }}
         textFieldProps={{
           ...CLOUD_PULSE_TEXT_FIELD_PROPS,

@@ -13,6 +13,7 @@ import { useDelegationRole } from '../IAM/hooks/useDelegationRole';
 import { APIMaintenanceBanner } from './APIMaintenanceBanner';
 import { ComplianceBanner } from './ComplianceBanner';
 import { ComplianceUpdateModal } from './ComplianceUpdateModal';
+import { ComputePricingPlanBanner } from './ComputePricingPlanBanner';
 import { CreditCardExpiredBanner } from './CreditCardExpiredBanner';
 import { EmailBounceNotificationSection } from './EmailBounce';
 import { MarketplaceV2Banner } from './MarketplaceV2Banner';
@@ -90,6 +91,7 @@ export const GlobalNotifications = () => {
         <TaxCollectionBanner />
       ) : null}
       {flags.marketplaceV2GlobalBanner ? <MarketplaceV2Banner /> : null}
+      <ComputePricingPlanBanner />
     </>
   );
 };

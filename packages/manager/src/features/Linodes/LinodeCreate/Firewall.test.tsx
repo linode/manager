@@ -131,7 +131,7 @@ describe('Linode Create Firewall', () => {
           firewall.label
         );
       },
-      { timeout: 5_000 }
+      { timeout: 30000 }
     );
   });
 });

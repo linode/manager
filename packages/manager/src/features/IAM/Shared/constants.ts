@@ -30,16 +30,25 @@ export const IAM_ROLES_PENDO_IDS = {
   addNewDefaultRolesDrawer:
     'IAM Roles for Delegate Users Add New Default Roles-Add',
   rolesChecked: 'IAM Roles-Roles checked',
+  rolesUnchecked: 'IAM Roles-Roles unchecked',
   assignSelectedRoles: 'IAM Roles-Assign Selected Roles',
+  assignSelectedRolesToUserOpen:
+    'IAM Roles Assign Selected Role to a User-User:open',
+  assignSelectedRolesAsDelegate: 'IAM Roles-Assign Selected Roles as Delegate',
+  assignSelectedRolesAsChild: 'IAM Roles-Assign Selected Roles as Child',
+  assignSelectedRolesAsParent: 'IAM Roles-Assign Selected Roles as Parent',
+
   assignSelectedRoleToUserDelegate:
     'IAM Roles Assign Selected Role to a User-Delegate User',
   assignSelectedRoleToUserParent:
     'IAM Roles Assign Selected Role to a User-Parent User',
-  assignSelectedRoleToChildUser:
+  assignSelectedRoleToUserChild:
     'IAM Roles Assign Selected Role to a User-Child User',
   assignSelectedRoleToUserAssign:
     'IAM Roles Assign Selected Role to a User-Assign',
-  assignRole: 'IAM Roles-Assign Role',
+  assignRoleAsParent: 'IAM Roles-Assign Role as Parent',
+  assignRoleAsChild: 'IAM Roles-Assign Role as Child',
+  assignRoleAsDelegate: 'IAM Roles-Assign Role as Delegate',
 };
 // Various constants for the IAM package
 
@@ -61,12 +70,12 @@ export const INTERNAL_ERROR_NO_CHANGES_SAVED = `Internal Error. No changes were 
 export const LAST_ACCOUNT_ADMIN_ERROR =
   'Failed to unassign the role. You need to have at least one user with the account_admin role on your account.';
 
-export const ERROR_STATE_TEXT =
-  'An unexpected error occurred. Refresh the page or try again later.';
+export const ERROR_STATE_TITLE = 'An unexpected error occurred.';
+
+export const ERROR_STATE_TEXT = 'Refresh the page or try again later.';
 
 // Delegation error messages
 export const NO_ITEMS_TO_DISPLAY_TEXT = 'No items to display.';
-export const NO_DELEGATED_USERS_TEXT = 'No users added.';
 
 // Links
 export const IAM_DOCS_LINK =

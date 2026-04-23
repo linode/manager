@@ -6,7 +6,11 @@ import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
-import { useGetQuotas } from 'src/features/Account/Quotas/hooks/useGetQuotas';
+import { useQuotasWithUsageQuery } from 'src/features/Account/Quotas/hooks/useQuotasWithUsageQuery';
+import { objectStorageQuotaService } from 'src/features/Account/Quotas/quotaServices';
+
+import type { ObjectStorageEndpointQuota } from '@linode/api-v4';
+import type { QuotaWithUsage } from 'src/features/Account/Quotas/utils';
 
 interface Props {
   endpoint: string;
@@ -14,19 +18,23 @@ interface Props {
 
 export const EndpointSummaryRow = ({ endpoint }: Props) => {
   const theme = useTheme();
+  const service = objectStorageQuotaService();
 
   const {
-    data: quotaWithUsage,
-    isFetching,
+    data: quotasWithUsage,
+    isFetching: isFetchingQuotas,
     isError,
-  } = useGetQuotas({
-    selectedLocation: endpoint,
-    selectedService: 'object-storage',
-    collectionName: 'quotas',
+  } = useQuotasWithUsageQuery({
+    service,
+    scope: 'obj-endpoint',
+    scopeValue: endpoint,
     enabled: Boolean(endpoint),
   });
 
-  if (isFetching) {
+  if (
+    isFetchingQuotas ||
+    quotasWithUsage?.some((quotaWithUsage) => quotaWithUsage.isFetchingUsage)
+  ) {
     return <TableRowLoading columns={3} />;
   }
 
@@ -39,48 +47,44 @@ export const EndpointSummaryRow = ({ endpoint }: Props) => {
     );
   }
 
-  const capacityQuota = quotaWithUsage.find(
-    (quota) => quota.quota_name === 'Total Capacity'
+  const quotasByType = quotasWithUsage.reduce(
+    (acc, quotaWithUsage) => {
+      acc[(quotaWithUsage.quota as ObjectStorageEndpointQuota).quota_type] =
+        quotaWithUsage;
+      return acc;
+    },
+    {} as Record<ObjectStorageEndpointQuota['quota_type'], QuotaWithUsage>
   );
-  const objectsQuota = quotaWithUsage.find(
-    (quota) => quota.quota_name === 'Number of Objects'
-  );
-  const bucketsQuota = quotaWithUsage.find(
-    (quota) => quota.quota_name === 'Number of Buckets'
-  );
+
+  const displayedTypes: ObjectStorageEndpointQuota['quota_type'][] = [
+    'obj-bytes',
+    'obj-objects',
+    'obj-buckets',
+  ];
 
   return (
     <TableRow>
-      {!!capacityQuota && (
-        <TableCell sx={{ paddingY: theme.spacingFunction(8) }}>
-          <Typography>{endpoint}</Typography>
-          <QuotaUsageBar
-            limit={capacityQuota.quota_limit}
-            resourceMetric={capacityQuota.resource_metric}
-            usage={capacityQuota?.usage?.usage ?? 0}
-          />
-        </TableCell>
-      )}
-      {!!objectsQuota && (
-        <TableCell sx={{ paddingY: theme.spacingFunction(8) }}>
-          <Typography>{endpoint}</Typography>
-          <QuotaUsageBar
-            limit={objectsQuota.quota_limit}
-            resourceMetric={objectsQuota.resource_metric}
-            usage={objectsQuota?.usage?.usage ?? 0}
-          />
-        </TableCell>
-      )}
-      {!!bucketsQuota && (
-        <TableCell sx={{ paddingY: theme.spacingFunction(8) }}>
-          <Typography>{endpoint}</Typography>
-          <QuotaUsageBar
-            limit={bucketsQuota.quota_limit}
-            resourceMetric={bucketsQuota.resource_metric}
-            usage={bucketsQuota?.usage?.usage ?? 0}
-          />
-        </TableCell>
-      )}
+      {displayedTypes.map((queryType) => {
+        const quotaWithUsage = quotasByType[queryType];
+        return (
+          <TableCell
+            key={queryType}
+            sx={{ paddingY: theme.spacingFunction(8) }}
+          >
+            <Typography>{endpoint}</Typography>
+
+            {quotaWithUsage && !quotaWithUsage.fetchingUsageFailed ? (
+              <QuotaUsageBar
+                limit={quotaWithUsage.quota.quota_limit}
+                resourceMetric={quotaWithUsage.quota.resource_metric}
+                usage={quotaWithUsage.usage ?? 0}
+              />
+            ) : (
+              <Typography>Data not available</Typography>
+            )}
+          </TableCell>
+        );
+      })}
     </TableRow>
   );
 };

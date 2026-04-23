@@ -194,7 +194,6 @@ describe('Create flow when beta alerts enabled by region and feature flag', func
     const alertDefinitions = [
       alertFactory.build({
         description: randomLabel(),
-        entity_ids: ['1', '2', '3'],
         label: randomLabel(),
         service_type: 'linode',
         severity: 1,
@@ -203,7 +202,6 @@ describe('Create flow when beta alerts enabled by region and feature flag', func
       }),
       alertFactory.build({
         description: randomLabel(),
-        entity_ids: ['1', '2', '3'],
         label: randomLabel(),
         service_type: 'linode',
         severity: 1,
@@ -212,7 +210,6 @@ describe('Create flow when beta alerts enabled by region and feature flag', func
       }),
       alertFactory.build({
         description: randomLabel(),
-        entity_ids: ['1', '2', '3'],
         label: randomLabel(),
         service_type: 'linode',
         severity: 1,

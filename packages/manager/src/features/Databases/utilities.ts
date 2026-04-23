@@ -9,6 +9,7 @@ import type {
   DatabaseEngine,
   DatabaseFork,
   DatabaseInstance,
+  DatabaseStatus,
   Engine,
   PendingUpdates,
 } from '@linode/api-v4';
@@ -218,6 +219,7 @@ export const toDatabaseFork = (
 export const DATABASE_ENGINE_MAP: Record<Engine, string> = {
   mysql: 'MySQL',
   postgresql: 'PostgreSQL',
+  valkey: 'Valkey',
 } as const;
 
 export const getDatabasesDescription = (
@@ -256,3 +258,6 @@ export const convertPrivateToPublicHostname = (host: string) => {
   const baseHostName = host.slice(privateStrIndex + 1);
   return `public-${baseHostName}`;
 };
+
+export const getIsLinkInactive = (status: DatabaseStatus) =>
+  ['migrated', 'resuming', 'suspended', 'suspending'].includes(status);

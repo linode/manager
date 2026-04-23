@@ -6,14 +6,14 @@ import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
-import { OMC_CreateBucketDrawer } from './OMC_CreateBucketDrawer';
+import { CreateBucketDrawer } from './OMC_CreateBucketDrawer';
 
 const props = {
   isOpen: true,
   onClose: vi.fn(),
 };
 
-describe('OMC_CreateBucketDrawer', () => {
+describe('CreateBucketDrawer', () => {
   beforeEach(() => {
     vi.resetAllMocks();
   });
@@ -21,7 +21,7 @@ describe('OMC_CreateBucketDrawer', () => {
   it('should render the drawer', () => {
     const { getByTestId, getByText, queryByText } =
       renderWithThemeAndHookFormContext({
-        component: <OMC_CreateBucketDrawer {...props} />,
+        component: <CreateBucketDrawer {...props} />,
         options: {
           flags: {
             objMultiCluster: true,
@@ -56,7 +56,7 @@ describe('OMC_CreateBucketDrawer', () => {
       );
 
       const { queryByText } = renderWithThemeAndHookFormContext({
-        component: <OMC_CreateBucketDrawer {...props} />,
+        component: <CreateBucketDrawer {...props} />,
         options: {
           flags: {
             objMultiCluster: true,
@@ -73,7 +73,7 @@ describe('OMC_CreateBucketDrawer', () => {
 
   it('should close the drawer', () => {
     const { getByText } = renderWithThemeAndHookFormContext({
-      component: <OMC_CreateBucketDrawer {...props} />,
+      component: <CreateBucketDrawer {...props} />,
     });
 
     const cancelButton = getByText('Cancel');

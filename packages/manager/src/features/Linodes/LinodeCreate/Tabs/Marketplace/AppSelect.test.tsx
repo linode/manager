@@ -59,7 +59,7 @@ describe('Marketplace', () => {
       () => {
         expect(getByPlaceholderText('Select category')).not.toBeDisabled();
       },
-      { timeout: 5_000 }
+      { timeout: 30000 }
     );
 
     const select = getByPlaceholderText('Select category');

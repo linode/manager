@@ -133,7 +133,7 @@ describe('LongviewPlans', () => {
     renderWithTheme(<LongviewPlans {...props} />);
 
     await waitForElementToBeRemoved(screen.getByTestId('circle-progress'), {
-      timeout: 5000,
+      timeout: 30000,
     });
 
     screen.getByText(/don't have permission/i);

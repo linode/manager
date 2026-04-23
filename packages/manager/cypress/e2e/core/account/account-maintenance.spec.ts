@@ -18,7 +18,7 @@ describe('Maintenance', () => {
     cy.exec(`rm -f ${downloadsFolder}/${filePatterns}`, {
       failOnNonZeroExit: false,
     }).then((result) => {
-      if (result.code === 0) {
+      if (result.exitCode === 0) {
         cy.log(`Deleted file: ${filePatterns}`);
       } else {
         cy.log(`Failed to delete file: ${filePatterns}`);

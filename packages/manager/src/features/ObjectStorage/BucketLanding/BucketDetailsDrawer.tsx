@@ -13,17 +13,17 @@ import { formatDate } from 'src/utilities/formatDate';
 import { AccessSelect } from '../BucketDetail/AccessTab/AccessSelect';
 import { useIsObjMultiClusterEnabled } from '../hooks/useIsObjectStorageGen2Enabled';
 
-import type { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
+import type { ObjectStorageBucket } from '@linode/api-v4';
 
 export interface BucketDetailsDrawerProps {
+  bucket?: ObjectStorageBucket;
+  isOpen: boolean;
   onClose: () => void;
-  open: boolean;
-  selectedBucket: ObjectStorageBucket | undefined;
 }
 
 export const BucketDetailsDrawer = React.memo(
   (props: BucketDetailsDrawerProps) => {
-    const { onClose, open, selectedBucket } = props;
+    const { onClose, isOpen, bucket } = props;
 
     const {
       cluster,
@@ -34,7 +34,7 @@ export const BucketDetailsDrawer = React.memo(
       objects,
       region,
       size,
-    } = selectedBucket ?? {};
+    } = bucket ?? {};
 
     const { isObjMultiClusterEnabled } = useIsObjMultiClusterEnabled();
 
@@ -65,7 +65,7 @@ export const BucketDetailsDrawer = React.memo(
     return (
       <Drawer
         onClose={onClose}
-        open={open}
+        open={isOpen}
         title={truncateMiddle(label ?? 'Bucket Detail')}
       >
         {formattedCreated && (
@@ -109,7 +109,7 @@ export const BucketDetailsDrawer = React.memo(
         {typeof objects === 'number' && (
           <Link
             to={`/object-storage/buckets/${
-              isObjMultiClusterEnabled && selectedBucket ? region : cluster
+              isObjMultiClusterEnabled && bucket ? region : cluster
             }/${label}`}
           >
             {pluralize('object', 'objects', objects)}

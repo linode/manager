@@ -12,6 +12,7 @@ import {
   mockDeleteBucketObjectS3,
   mockGetBucketObjects,
   mockGetBuckets,
+  mockGetBucketsForRegion,
   mockUploadBucketObject,
   mockUploadBucketObjectS3,
 } from 'support/intercepts/object-storage';
@@ -43,7 +44,7 @@ describe('object storage smoke tests', () => {
     mockAppendFeatureFlags({
       gecko2: false,
       objMultiCluster: true,
-      objectStorageGen2: { enabled: false },
+      objectStorageGen2: { enabled: true },
     }).as('getFeatureFlags');
 
     mockGetBuckets([]).as('getBuckets');
@@ -65,7 +66,7 @@ describe('object storage smoke tests', () => {
         cy.findByLabelText('Bucket Name (required)').click();
         cy.focused().type(bucketLabel);
         ui.regionSelect.find().click();
-        cy.focused().type(`${mockCluster.id}{enter}`);
+        cy.focused().type(`${mockRegion.label}{enter}`);
         ui.buttonGroup
           .findButtonByTitle('Create Bucket')
           .should('be.visible')
@@ -87,9 +88,10 @@ describe('object storage smoke tests', () => {
    */
   it('can upload, view, and delete bucket objects - smoke', () => {
     const bucketLabel = randomLabel();
-    const bucketCluster = 'us-southeast-1';
+    const bucketRegion = 'us-southeast';
+    const bucketCluster = `${bucketRegion}-1`;
     const bucketMock = objectStorageBucketFactory.build({
-      cluster: bucketCluster,
+      region: bucketRegion,
       hostname: `${bucketLabel}.${bucketCluster}.linodeobjects.com`,
       label: bucketLabel,
       objects: 0,
@@ -102,23 +104,23 @@ describe('object storage smoke tests', () => {
       'object-storage-files/4.zip',
     ];
 
-    mockGetBuckets([bucketMock]).as('getBuckets');
-    mockGetBucketObjects(bucketLabel, bucketCluster, []).as('getBucketObjects');
-
-    cy.visitWithLogin(
-      `/object-storage/buckets/${bucketCluster}/${bucketLabel}`
+    mockGetBucketsForRegion(bucketRegion, [bucketMock]).as(
+      'getBucketsForRegion'
     );
-    cy.wait('@getBuckets');
+    mockGetBucketObjects(bucketLabel, bucketRegion, []).as('getBucketObjects');
+
+    cy.visitWithLogin(`/object-storage/buckets/${bucketRegion}/${bucketLabel}`);
+    cy.wait('@getBucketsForRegion');
     cy.wait('@getBucketObjects');
 
     cy.log('Upload bucket objects');
     bucketContents.forEach((bucketFile) => {
       const filename = bucketFile.split('/')[1];
 
-      mockUploadBucketObject(bucketLabel, bucketCluster, filename).as(
+      mockUploadBucketObject(bucketLabel, bucketRegion, filename).as(
         'uploadBucketObject'
       );
-      mockUploadBucketObjectS3(bucketLabel, bucketCluster, filename).as(
+      mockUploadBucketObjectS3(bucketLabel, bucketRegion, filename).as(
         'uploadBucketObjectS3'
       );
       // @TODO Intercept and mock bucket objects GET request to reflect upload.
@@ -142,10 +144,10 @@ describe('object storage smoke tests', () => {
     bucketContents.forEach((bucketFile) => {
       const filename = bucketFile.split('/')[1];
 
-      mockDeleteBucketObject(bucketLabel, bucketCluster, filename).as(
+      mockDeleteBucketObject(bucketLabel, bucketRegion, filename).as(
         'deleteBucketObject'
       );
-      mockDeleteBucketObjectS3(bucketLabel, bucketCluster, filename).as(
+      mockDeleteBucketObjectS3(bucketLabel, bucketRegion, filename).as(
         'deleteBucketObjectS3'
       );
 

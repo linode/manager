@@ -1,3 +1,4 @@
+import { parseExpiryYear } from '@akamai/compute-ui-core/datetime';
 import { useAddPaymentMethodMutation } from '@linode/queries';
 import { ActionsPanel, Notice, TextField } from '@linode/ui';
 import { CreditCardSchema } from '@linode/validation';
@@ -10,7 +11,6 @@ import type { NumberFormatProps } from 'react-number-format';
 import { makeStyles } from 'tss-react/mui';
 
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
-import { parseExpiryYear } from 'src/utilities/creditCard';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
 
 import type { InputBaseComponentProps } from '@mui/material';

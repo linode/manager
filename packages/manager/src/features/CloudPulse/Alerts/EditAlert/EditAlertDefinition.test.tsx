@@ -16,6 +16,7 @@ import { EditAlertDefinition } from './EditAlertDefinition';
 const navigate = vi.fn();
 const queryMocks = vi.hoisted(() => ({
   useAllAlertNotificationChannelsQuery: vi.fn(),
+  useAllEntitiesByAlertIdQuery: vi.fn(),
   useEditAlertDefinition: vi.fn(),
   useNavigate: vi.fn(() => navigate),
 }));
@@ -24,6 +25,7 @@ vi.mock('src/queries/cloudpulse/alerts', () => ({
   ...vi.importActual('src/queries/cloudpulse/alerts'),
   useAllAlertNotificationChannelsQuery:
     queryMocks.useAllAlertNotificationChannelsQuery,
+  useAllEntitiesByAlertIdQuery: queryMocks.useAllEntitiesByAlertIdQuery,
   useEditAlertDefinition: queryMocks.useEditAlertDefinition,
 }));
 
@@ -45,6 +47,11 @@ beforeEach(() => {
   queryMocks.useAllAlertNotificationChannelsQuery.mockReturnValue(
     notificationChannelFactory.build()
   );
+  queryMocks.useAllEntitiesByAlertIdQuery.mockReturnValue({
+    data: [],
+    isError: false,
+    isLoading: false,
+  });
 });
 
 const alertDetails = alertFactory.build({
@@ -56,7 +63,7 @@ const alertDetails = alertFactory.build({
 const ENTITY_TYPE_SELECT_TEST_ID = 'entity-type-select';
 
 describe('EditAlertDefinition component', () => {
-  it('renders the components of the form', { timeout: 20000 }, async () => {
+  it('renders the components of the form', { timeout: 30000 }, async () => {
     const { findByPlaceholderText, getByLabelText, getByText } =
       renderWithTheme(
         <EditAlertDefinition alertDetails={alertDetails} serviceType="linode" />
@@ -82,7 +89,7 @@ describe('EditAlertDefinition component', () => {
     expect(getByText('4. Notification Channels')).toBeVisible();
   });
 
-  it('should submit form data correctly', { timeout: 10000 }, async () => {
+  it('should submit form data correctly', { timeout: 30000 }, async () => {
     navigate({
       to: '/alerts/definitions/edit/linode/1',
     });

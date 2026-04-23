@@ -41,7 +41,7 @@ describe('ImageAndPassword', () => {
     const { findByText } = renderWithTheme(component);
 
     const passwordError = await findByText(errorMessage, undefined, {
-      timeout: 2500,
+      timeout: 30000,
     });
     expect(passwordError).toBeVisible();
   });

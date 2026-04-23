@@ -1,20 +1,13 @@
 import { useGetDefaultDelegationAccessQuery } from '@linode/queries';
-import {
-  CircleProgress,
-  ErrorState,
-  Notice,
-  Paper,
-  Stack,
-  Typography,
-} from '@linode/ui';
+import { Notice, Paper, Stack, Typography } from '@linode/ui';
 import * as React from 'react';
+
+import { ErrorState } from 'src/features/IAM/Shared/ErrorState/ErrorState';
 
 import { usePermissions } from '../../hooks/usePermissions';
 import { AssignedEntitiesTable } from '../../Shared/AssignedEntitiesTable/AssignedEntitiesTable';
-import {
-  ERROR_STATE_TEXT,
-  NO_ASSIGNED_DEFAULT_ENTITIES_TEXT,
-} from '../../Shared/constants';
+import { CircleProgress } from '../../Shared/CircleProgress/CircleProgress';
+import { NO_ASSIGNED_DEFAULT_ENTITIES_TEXT } from '../../Shared/constants';
 import { NoAssignedRoles } from '../../Shared/NoAssignedRoles/NoAssignedRoles';
 
 export const DefaultEntityAccess = () => {
@@ -48,7 +41,7 @@ export const DefaultEntityAccess = () => {
   }
 
   if (error) {
-    return <ErrorState errorText={ERROR_STATE_TEXT} />;
+    return <ErrorState />;
   }
 
   return (

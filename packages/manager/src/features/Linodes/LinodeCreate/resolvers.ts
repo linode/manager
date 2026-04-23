@@ -10,6 +10,8 @@ import {
   CreateLinodeFromMarketplaceAppSchema,
   CreateLinodeFromStackScriptSchema,
   CreateLinodeSchema,
+  withRootPassOptional,
+  withRootPassRequired,
 } from './schemas';
 import {
   getDoesEmployeeNeedToAssignFirewall,
@@ -27,12 +29,15 @@ export const getLinodeCreateResolver = (
   tab: LinodeCreateType | undefined,
   queryClient: QueryClient
 ): Resolver<LinodeCreateFormValues, LinodeCreateFormContext> => {
-  const schema = linodeCreateResolvers[tab ?? 'OS'];
   return async (rawValues, context, options) => {
+    const linodeCreateSchemas = linodeCreateResolvers(
+      context?.isPasswordLessLinodesEnabled ?? false
+    );
+    const schema = linodeCreateSchemas[tab ?? 'OS'];
     const values = structuredClone(rawValues);
 
     // Because `interfaces` are so complex, we need to perform some transformations before
-    // we even try to valiate them with our vaidation schema.
+    // we even try to validate them with our vaidation schema.
     if (context?.isLinodeInterfacesEnabled) {
       values.interfaces = [];
       values.linodeInterfaces = values.linodeInterfaces.map(
@@ -136,11 +141,28 @@ export const getLinodeCreateResolver = (
   };
 };
 
-export const linodeCreateResolvers = {
-  Backups: CreateLinodeFromBackupSchema,
-  'Clone Linode': CreateLinodeSchema,
-  Images: CreateLinodeSchema,
-  OS: CreateLinodeSchema,
-  'One-Click': CreateLinodeFromMarketplaceAppSchema,
-  StackScripts: CreateLinodeFromStackScriptSchema,
+// This function returns the appropriate validation schema based on whether or not passwordLess Linodes are enabled. If passwordLess Linodes are enabled, then the root_pass field is optional. If passwordLess Linodes are not enabled, then the root_pass field is required.
+// Creating Linodes from Backups and Cloning Linodes do not require a root password, so they are unaffected by the passwordLess Linodes feature and their schemas remain the same regardless of whether or not passwordLess Linodes are enabled.
+export const linodeCreateResolvers = (
+  isPasswordLessLinodesEnabled: boolean
+) => {
+  if (!isPasswordLessLinodesEnabled) {
+    return {
+      Backups: CreateLinodeFromBackupSchema,
+      'Clone Linode': CreateLinodeSchema,
+      Images: withRootPassRequired(CreateLinodeSchema),
+      OS: withRootPassRequired(CreateLinodeSchema),
+      'One-Click': withRootPassRequired(CreateLinodeFromMarketplaceAppSchema),
+      StackScripts: withRootPassRequired(CreateLinodeFromStackScriptSchema),
+    };
+  }
+
+  return {
+    Backups: CreateLinodeFromBackupSchema,
+    'Clone Linode': CreateLinodeSchema,
+    Images: withRootPassOptional(CreateLinodeSchema),
+    OS: withRootPassOptional(CreateLinodeSchema),
+    'One-Click': withRootPassOptional(CreateLinodeFromMarketplaceAppSchema),
+    StackScripts: withRootPassOptional(CreateLinodeFromStackScriptSchema),
+  };
 };

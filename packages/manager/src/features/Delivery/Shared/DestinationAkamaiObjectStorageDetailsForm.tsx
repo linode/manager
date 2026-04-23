@@ -9,12 +9,13 @@ import {
   TextField,
   Typography,
 } from '@linode/ui';
-import { capitalize, FormControlLabel } from '@mui/material';
+import { FormControlLabel } from '@mui/material';
 import React, { useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import { HideShowText } from 'src/components/PasswordInput/HideShowText';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
+import { getDestinationFormPendoId } from 'src/features/Delivery/deliveryUtils';
 import { PathSample } from 'src/features/Delivery/Shared/PathSample';
 import { useFlags } from 'src/hooks/useFlags';
 import { useObjectStorageBuckets } from 'src/queries/object-storage/queries';
@@ -61,7 +62,7 @@ export const DestinationAkamaiObjectStorageDetailsForm = ({
     name: controlPaths?.path,
   });
 
-  const pendoPageId = `Logs Delivery ${capitalize(entity)}s ${capitalize(mode)}${entity === 'destination' ? '' : ' New Destination'}-`;
+  const pendoIdPrefix = `${getDestinationFormPendoId(entity, mode)}-`;
 
   const [selectedBucketConfiguration, setSelectedBucketConfiguration] =
     useState(
@@ -103,19 +104,30 @@ export const DestinationAkamaiObjectStorageDetailsForm = ({
       <Typography sx={{ mt: 2 }} variant="h3">
         Bucket
       </Typography>
+      <Typography
+        sx={{
+          mt: 2,
+          maxWidth: 440,
+          whiteSpace: 'preserve-spaces',
+        }}
+      >
+        Choose how to provide bucket details. Selecting a bucket associated with
+        your account will auto-fill the required settings. Entering a bucket
+        manually requires you to provide all connection details.
+      </Typography>
       <RadioGroup
         onChange={(_, value) => handleBucketConfigurationChange(value)}
         sx={{ '&[role="radiogroup"]': { mb: 0 } }}
         value={selectedBucketConfiguration}
       >
         <FormControlLabel
-          control={<Radio />}
+          control={<Radio data-pendo-id={`${pendoIdPrefix}Select Bucket`} />}
           label="Select Bucket associated with the account"
           value="bucket_from_account"
         />
         <FormControlLabel
-          control={<Radio />}
-          label="Enter Bucket manually"
+          control={<Radio data-pendo-id={`${pendoIdPrefix}Manual Bucket`} />}
+          label="Enter Bucket details manually"
           value="bucket_entered_manually"
         />
       </RadioGroup>
@@ -132,6 +144,9 @@ export const DestinationAkamaiObjectStorageDetailsForm = ({
             regions={regions ?? []}
             textFieldProps={{
               optional: true,
+              inputProps: {
+                'data-pendo-id': `${pendoIdPrefix}Region`,
+              },
             }}
             value={selectedRegion}
           />
@@ -155,9 +170,10 @@ export const DestinationAkamaiObjectStorageDetailsForm = ({
                   );
                 }}
                 options={buckets}
+                placeholder="Select a Bucket"
                 textFieldProps={{
                   inputProps: {
-                    'data-pendo-id': `${pendoPageId}Bucket`,
+                    'data-pendo-id': `${pendoIdPrefix}Bucket`,
                   },
                 }}
                 value={
@@ -176,7 +192,7 @@ export const DestinationAkamaiObjectStorageDetailsForm = ({
               aria-required
               errorText={fieldState.error?.message}
               inputProps={{
-                'data-pendo-id': `${pendoPageId}Bucket`,
+                'data-pendo-id': `${pendoIdPrefix}Bucket Name`,
               }}
               label="Bucket"
               onBlur={field.onBlur}
@@ -197,14 +213,15 @@ export const DestinationAkamaiObjectStorageDetailsForm = ({
             disabled={selectedBucketConfiguration === 'bucket_from_account'}
             errorText={fieldState.error?.message}
             inputProps={{
-              'data-pendo-id': `${pendoPageId}Host`,
+              'data-pendo-id': `${pendoIdPrefix}Endpoint`,
             }}
             label="Endpoint"
+            labelTooltipText="The Object Storage service endpoint associated with your bucket's region"
             onBlur={field.onBlur}
             onChange={(value) => {
               field.onChange(value);
             }}
-            placeholder="Endpoint for the destination"
+            placeholder="https://us-ord-1.linodeobjects.com"
             value={field.value}
           />
         )}
@@ -217,9 +234,10 @@ export const DestinationAkamaiObjectStorageDetailsForm = ({
             aria-required
             errorText={fieldState.error?.message}
             inputProps={{
-              'data-pendo-id': `${pendoPageId}Access Key ID`,
+              'data-pendo-id': `${pendoIdPrefix}Access Key ID`,
             }}
             label="Access Key ID"
+            labelTooltipText="The access key identifier used for authentication"
             onBlur={field.onBlur}
             onChange={(value) => field.onChange(value)}
             value={field.value}
@@ -234,9 +252,10 @@ export const DestinationAkamaiObjectStorageDetailsForm = ({
             aria-required
             errorText={fieldState.error?.message}
             inputProps={{
-              'data-pendo-id': `${pendoPageId}Secret Access Key`,
+              'data-pendo-id': `${pendoIdPrefix}Secret Access Key`,
             }}
             label="Secret Access Key"
+            labelTooltipText="The confidential security credential used with Access Key ID to access Object Storage"
             onBlur={field.onBlur}
             onChange={(value) => field.onChange(value)}
             value={field.value}
@@ -260,9 +279,10 @@ export const DestinationAkamaiObjectStorageDetailsForm = ({
               aria-required
               errorText={fieldState.error?.message}
               inputProps={{
-                'data-pendo-id': `${pendoPageId}Log Path Prefix`,
+                'data-pendo-id': `${pendoIdPrefix}Log Path Prefix`,
               }}
               label="Log Path Prefix"
+              labelTooltipText="The path prefix used for organizing uploaded objects"
               onBlur={field.onBlur}
               onChange={(value) => field.onChange(value)}
               optional

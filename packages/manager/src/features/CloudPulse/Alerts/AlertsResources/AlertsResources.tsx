@@ -7,6 +7,9 @@ import EntityIcon from 'src/assets/icons/entityIcons/alertsresources.svg';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 
+import { DelayedLoadingMessage } from '../../shared/DelayedLoadingMessage';
+import { LOADING_DELAYS } from '../../Utils/constants';
+import { useDelayedLoadingIndicator } from '../../Utils/useDelayedLoadingIndicator';
 import { StyledPlaceholder } from '../AlertsDetail/AlertDetail';
 import { MULTILINE_ERROR_SEPARATOR } from '../constants';
 import { AlertListNoticeMessages } from '../Utils/AlertListNoticeMessages';
@@ -86,6 +89,16 @@ export interface AlertResourcesProp {
   hideLabel?: boolean;
 
   /**
+   * Whether there was an error loading entities data from the entities API
+   */
+  isEntitiesError?: boolean;
+
+  /**
+   * Whether the entities data is currently loading from the entities API
+   */
+  isEntitiesLoading?: boolean;
+
+  /**
    * This controls whether we need to show the checkbox in case of editing the resources
    */
   isSelectionsNeeded?: boolean;
@@ -120,12 +133,15 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     errorText,
     handleResourcesSelection,
     hideLabel,
+    isEntitiesError = false,
+    isEntitiesLoading = false,
     isSelectionsNeeded,
     maxSelectionCount,
     scrollElement,
     serviceType,
     setError,
   } = props;
+
   const [searchText, setSearchText] = React.useState<string>();
   const [filteredRegions, setFilteredRegions] = React.useState<string[]>();
   const [selectedResources, setSelectedResources] =
@@ -218,11 +234,11 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
   );
 
   React.useEffect(() => {
-    const hasError = isResourcesError || isRegionsError;
+    const hasError = isResourcesError || isRegionsError || isEntitiesError;
     if (setError) {
       setError(hasError);
     }
-  }, [setError, isResourcesError, isRegionsError]);
+  }, [setError, isResourcesError, isRegionsError, isEntitiesError]);
 
   const regionFilteredResources = React.useMemo(() => {
     if (
@@ -275,7 +291,8 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
       alertResourceIds
     );
   }, [alertResourceIds, isSelectionsNeeded, regionFilteredResources]);
-  const isDataLoadingError = isRegionsError || isResourcesError;
+  const isDataLoadingError =
+    isRegionsError || isResourcesError || isEntitiesError;
 
   const handleSearchTextChange = (searchText: string) => {
     setSearchText(searchText);
@@ -369,6 +386,14 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     !isDataLoadingError && !isSelectionsNeeded && alertResourceIds.length === 0;
   const showEditInformation = isSelectionsNeeded && alertType === 'system';
 
+  const isLoading = isRegionsLoading || isResourcesLoading || isEntitiesLoading;
+
+  // Show loading indicator only if loading continues for more than 10 seconds
+  const showLoadingIndicator = useDelayedLoadingIndicator(
+    isLoading,
+    LOADING_DELAYS.LARGE_DATASET
+  );
+
   if (isNoResources) {
     return (
       <Stack gap={2}>
@@ -407,10 +432,14 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
       ? Math.max(0, maxSelectionCount - selectedResources.length)
       : undefined;
 
-  const isLoading = isRegionsLoading || isResourcesLoading;
   return (
     <Stack gap={2}>
-      {isLoading && <CircleProgress />}
+      {isLoading && (
+        <Stack alignItems="center" gap={2}>
+          <CircleProgress size="md" />
+          {showLoadingIndicator && <DelayedLoadingMessage />}
+        </Stack>
+      )}
       {!hideLabel && (
         <Typography
           display={isLoading ? 'none' : 'block'}

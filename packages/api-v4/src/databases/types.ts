@@ -14,13 +14,18 @@ export interface DatabaseClusterSizeObject {
   quantity: number;
 }
 
-export type Engines = Record<Engine, DatabaseClusterSizeObject[]>;
+export type Engines = {
+  mysql?: DatabaseClusterSizeObject[];
+  postgresql?: DatabaseClusterSizeObject[];
+  valkey?: DatabaseClusterSizeObject[];
+};
+
 export interface DatabaseType extends BaseType {
   class: DatabaseTypeClass;
   engines: Engines;
 }
 
-export type Engine = 'mysql' | 'postgresql';
+export type Engine = 'mysql' | 'postgresql' | 'valkey';
 
 export interface DatabaseEngine {
   deprecated?: boolean;
@@ -118,6 +123,7 @@ type MemberType = 'failover' | 'primary';
 // DatabaseInstance is the interface for the shape of data returned by the /databases/instances endpoint.
 export interface DatabaseInstance {
   allow_list: string[];
+  available_restore_times: null | string[]; // Used by the Valkey database engine, will be returned as null for PostgreSQL and MySQL database engines
   cluster_size: ClusterSize;
   connection_strings: ConnectionStrings[];
   created: string;
@@ -133,7 +139,7 @@ export interface DatabaseInstance {
    * A key/value object where the key is an IP address and the value is a member type.
    */
   members: Record<string, MemberType>;
-  oldest_restore_time?: string;
+  oldest_restore_time?: null | string; // Used by PostgreSQL and MySQL database engines, will be returned as null for the Valkey database engine
   platform?: Platform;
   readonly_count?: ReadonlyCount;
   region: string;

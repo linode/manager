@@ -1,7 +1,13 @@
-import { getIPs, getIPv6Ranges } from '@linode/api-v4';
+import { getIPs, getIPv6Ranges, getReservedIPsTypes } from '@linode/api-v4';
 import { getAll } from '@linode/utilities';
 
-import type { Filter, IPAddress, IPRange, Params } from '@linode/api-v4';
+import type {
+  Filter,
+  IPAddress,
+  IPRange,
+  Params,
+  PriceType,
+} from '@linode/api-v4';
 
 export const getAllIps = (
   passedParams: Params = {},
@@ -21,3 +27,8 @@ export const getAllIPv6Ranges = (
       { ...filter, ...passedFilter },
     ),
   )().then((data) => data.data);
+
+export const getAllReservedIPsTypes = () =>
+  getAll<PriceType>((params) => getReservedIPsTypes(params))().then(
+    (results) => results.data,
+  );

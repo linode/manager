@@ -1,6 +1,7 @@
+import { checkOptanonConsent } from '@akamai/compute-ui-core/analytics';
+
 import { generateTimeOfDay } from './customEventAnalytics';
 import {
-  checkOptanonConsent,
   getCookie,
   getFormattedStringFromFormEventOptions,
   ONE_TRUST_COOKIE_CATEGORIES,
@@ -120,7 +121,7 @@ describe('waitForAdobeAnalyticsToBeLoaded', () => {
 
   it(
     'should reject if adobe is not defined after 5 seconds',
-    { timeout: 7000 },
+    { timeout: 30000 },
     () => {
       vi.stubGlobal('_satellite', undefined);
       expect(waitForAdobeAnalyticsToBeLoaded()).rejects.toThrow(

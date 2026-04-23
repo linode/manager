@@ -69,15 +69,17 @@ export const DestinationCreate = () => {
         );
       })
       .catch((errors) => {
+        let errorMessage = `There was an issue creating your destination`;
         for (const error of errors) {
           if (error.field) {
             form.setError(error.field, { message: error.reason });
           } else {
+            errorMessage = error.reason;
             form.setError('root', { message: error.reason });
           }
         }
 
-        return enqueueSnackbar('There was an issue creating your destination', {
+        return enqueueSnackbar(errorMessage, {
           variant: 'error',
         });
       });

@@ -42,6 +42,9 @@ export interface PlansPanelProps {
   currentPlanHeading?: string;
   disabled?: boolean;
   disabledClasses?: LinodeTypeClass[];
+  // @TODO remove dbaas resize class type restriction sometime post-release when we support resizing across different plans
+  disabledResizeFromPremiumPlans?: PlanSelectionType[];
+  disabledResizeToPremiumPlans?: PlanSelectionType[];
   disabledSmallerPlans?: PlanSelectionType[];
   disabledTabs?: string[];
   docsLink?: JSX.Element;
@@ -80,6 +83,9 @@ export const PlansPanel = (props: PlansPanelProps) => {
     disabled,
     disabledClasses,
     disabledSmallerPlans,
+    // @TODO remove dbaas resize class type restriction sometime post-release when we support resizing across different plans
+    disabledResizeToPremiumPlans,
+    disabledResizeFromPremiumPlans,
     docsLink,
     error,
     flow = 'linode',
@@ -180,7 +186,11 @@ export const PlansPanel = (props: PlansPanelProps) => {
         disableLargestGbPlansFlag: flags.disableLargestGbPlans,
         disabledClasses,
         disabledSmallerPlans,
+        // @TODO remove dbaas resize class type restriction sometime post-release when we support resizing across different plans
+        disabledResizeFromPremiumPlans,
+        disabledResizeToPremiumPlans,
         isLegacyDatabase,
+        isDatabaseResize,
         isResize: isDatabaseResize ? false : isResize,
         plans: plansMap,
         regionAvailabilities,
