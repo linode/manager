@@ -1,3 +1,11 @@
+## [2026-04-30] - v0.17.0
+
+
+### Upcoming Features:
+
+- Add new fields related to Reserved IPs ([#13517](https://github.com/linode/manager/pull/13517))
+- Add shareGroup factory for testing and mocking data ([#13535](https://github.com/linode/manager/pull/13535))
+
 ## [2026-03-31] - v0.16.0
 
 

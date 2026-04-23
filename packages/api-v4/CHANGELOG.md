@@ -1,3 +1,21 @@
+## [2026-04-30] - v0.160.0
+
+
+### :
+
+
+### Added:
+
+- SubnetAssignedDatabaseData interface and update to Subnet to include databases property ([#13504](https://github.com/linode/manager/pull/13504))
+
+### Tech Stories:
+
+- Bump `tsup` from `8.4.0` to `8.5.1` ([#13559](https://github.com/linode/manager/pull/13559))
+
+### Upcoming Features:
+
+- Reserved IPs: Added new API endpoints ([#13517](https://github.com/linode/manager/pull/13517))
+
 ## [2026-03-31] - v0.159.0
 
 
