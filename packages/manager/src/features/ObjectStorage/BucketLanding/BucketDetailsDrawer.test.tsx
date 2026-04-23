@@ -93,9 +93,9 @@ describe('BucketDetailsDrawer: Legacy UI', () => {
     renderWithThemeAndHookFormContext({
       component: (
         <BucketDetailsDrawer
+          bucket={bucket}
+          isOpen={true}
           onClose={mockOnClose}
-          open={true}
-          selectedBucket={bucket}
         />
       ),
     });
@@ -114,9 +114,9 @@ describe('BucketDetailsDrawer: Legacy UI', () => {
     renderWithThemeAndHookFormContext({
       component: (
         <BucketDetailsDrawer
+          bucket={bucket}
+          isOpen={false}
           onClose={mockOnClose}
-          open={false}
-          selectedBucket={bucket}
         />
       ),
     });
@@ -128,9 +128,9 @@ describe('BucketDetailsDrawer: Legacy UI', () => {
     renderWithThemeAndHookFormContext({
       component: (
         <BucketDetailsDrawer
+          bucket={bucket}
+          isOpen={true}
           onClose={mockOnClose}
-          open={true}
-          selectedBucket={bucket}
         />
       ),
     });
@@ -142,9 +142,9 @@ describe('BucketDetailsDrawer: Legacy UI', () => {
     renderWithThemeAndHookFormContext({
       component: (
         <BucketDetailsDrawer
+          bucket={undefined}
+          isOpen={true}
           onClose={mockOnClose}
-          open={true}
-          selectedBucket={undefined}
         />
       ),
     });
@@ -158,9 +158,9 @@ describe('BucketDetailsDrawer: Legacy UI', () => {
     renderWithThemeAndHookFormContext({
       component: (
         <BucketDetailsDrawer
+          bucket={bucket}
+          isOpen={true}
           onClose={mockOnClose}
-          open={true}
-          selectedBucket={bucket}
         />
       ),
       options: {
@@ -177,12 +177,13 @@ describe('BucketDetailsDrawer: Legacy UI', () => {
 
   it('does not render AccessSelect when cluster or bucketLabel is missing', async () => {
     const bucketWithoutCluster = { ...bucket, cluster: '' };
+
     renderWithThemeAndHookFormContext({
       component: (
         <BucketDetailsDrawer
+          bucket={bucketWithoutCluster}
+          isOpen={true}
           onClose={mockOnClose}
-          open={true}
-          selectedBucket={bucketWithoutCluster}
         />
       ),
       options: {
@@ -209,9 +210,9 @@ describe('BucketDetailDrawer: Gen2 UI', () => {
     renderWithThemeAndHookFormContext({
       component: (
         <BucketDetailsDrawer
+          bucket={e3Bucket}
+          isOpen={true}
           onClose={mockOnClose}
-          open={true}
-          selectedBucket={e3Bucket}
         />
       ),
       options: {
@@ -236,9 +237,9 @@ describe('BucketDetailDrawer: Gen2 UI', () => {
     const { getByText } = renderWithThemeAndHookFormContext({
       component: (
         <BucketDetailsDrawer
+          bucket={e3Bucket}
+          isOpen={true}
           onClose={mockOnClose}
-          open={true}
-          selectedBucket={e3Bucket}
         />
       ),
       options: {

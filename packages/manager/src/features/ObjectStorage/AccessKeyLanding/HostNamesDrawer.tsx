@@ -6,24 +6,27 @@ import { useObjectStorageRegions } from 'src/features/ObjectStorage/hooks/useObj
 
 import { CopyAllHostnames } from './CopyAllHostnames';
 
-import type { ObjectStorageKeyRegions } from '@linode/api-v4';
+import type { ObjectStorageKey } from '@linode/api-v4';
 
 interface Props {
+  isOpen: boolean;
+  objectStorageKey?: ObjectStorageKey;
   onClose: () => void;
-  open: boolean;
-  regions: ObjectStorageKeyRegions[];
 }
 
 export const HostNamesDrawer = (props: Props) => {
-  const { onClose, open, regions } = props;
+  const { onClose, isOpen, objectStorageKey } = props;
+
   const { availableStorageRegions, regionsByIdMap } = useObjectStorageRegions();
+
+  const regions = objectStorageKey?.regions || [];
 
   if (!availableStorageRegions || !regionsByIdMap) {
     return null;
   }
 
   return (
-    <Drawer onClose={onClose} open={open} title="Regions / S3 Hostnames">
+    <Drawer onClose={onClose} open={isOpen} title="Regions / S3 Hostnames">
       <Box sx={(theme) => ({ marginTop: theme.spacing(3) })}>
         <CopyAllHostnames
           text={

@@ -67,7 +67,7 @@ interface EndpointOption {
   s3_endpoint?: string;
 }
 
-export const OMC_CreateBucketDrawer = (props: Props) => {
+export const CreateBucketDrawer = (props: Props) => {
   const { data: profile } = useProfile();
   const { isOpen, onClose } = props;
   const isRestrictedUser = profile?.restricted;
