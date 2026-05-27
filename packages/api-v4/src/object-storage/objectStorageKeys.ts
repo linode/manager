@@ -33,6 +33,17 @@ export const getObjectStorageKeys = (params?: Params, filters?: Filter) =>
   );
 
 /**
+ * getObjectStorageKey
+ *
+ * Gets user's Object Storage Key by id
+ */
+export const getObjectStorageKey = (id: number) =>
+  Request<ObjectStorageKey>(
+    setMethod('GET'),
+    setURL(`${API_ROOT}/object-storage/keys/${id}`),
+  );
+
+/**
  * createObjectStorageKeys
  *
  * Creates an Object Storage key

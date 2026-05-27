@@ -48,6 +48,7 @@ import {
 import { accountQueries } from '../account';
 import { queryPresets } from '../base';
 import { firewallQueries } from '../firewalls';
+import { networkingQueries } from '../networking/networking';
 import { placementGroupQueries } from '../placementGroups';
 import { profileQueries } from '../profile/profile';
 import { vlanQueries } from '../vlans';
@@ -315,6 +316,16 @@ export const useDeleteLinodeMutation = (id: number) => {
     async onSuccess() {
       queryClient.invalidateQueries(linodeQueries.linodes);
 
+      // Invalidate Reserved IPs queries (so IPs show as Unassigned)
+      queryClient.invalidateQueries({
+        queryKey: networkingQueries.reservedIPs.queryKey,
+      });
+
+      // Invalidate networking IPs list
+      queryClient.invalidateQueries({
+        queryKey: networkingQueries.ips._def,
+      });
+
       // If the linode is assigned to a placement group,
       // we need to invalidate the placement group queries
       if (placementGroupId) {
@@ -428,6 +439,16 @@ export const useCreateLinodeMutation = () => {
           queryKey: firewallQueries.firewall(variables.firewall_id).queryKey,
         });
       }
+
+      // Invalidate Reserved IPs queries so the table reflects the newly assigned resource
+      queryClient.invalidateQueries({
+        queryKey: networkingQueries.reservedIPs.queryKey,
+      });
+
+      // Invalidate networking IPs list
+      queryClient.invalidateQueries({
+        queryKey: networkingQueries.ips._def,
+      });
     },
   });
 };

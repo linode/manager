@@ -1,18 +1,12 @@
+import { NotificationBanner } from '@akamai/cds-components/react';
+import { Spacing } from '@akamai/cds-tokens';
 import {
   useDatabaseMutation,
   useDatabaseTypesQuery,
   useRegionAvailabilityQuery,
   useRegionsQuery,
 } from '@linode/queries';
-import {
-  Box,
-  CircleProgress,
-  Divider,
-  ErrorState,
-  Notice,
-  Paper,
-  Typography,
-} from '@linode/ui';
+import { Box, Typography } from '@linode/ui';
 import { formatStorageUnits } from '@linode/utilities';
 import { useNavigate } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
@@ -36,10 +30,15 @@ import { useFlags } from 'src/hooks/useFlags';
 import { useIsGenerationalPlansEnabled } from 'src/utilities/linodes';
 
 import {
+  PREMIUM_CPU_PLANS_RENAME,
   RESIZE_DISABLED_DEDICATED_SHARED_PLAN_TABS_TEXT,
   RESIZE_DISABLED_NON_G7_DEDICATED_SHARED_PLAN_TABS_TEXT,
   RESIZE_DISABLED_PREMIUM_PLAN_TAB_TEXT,
 } from '../../constants';
+import { CircleProgress } from '../../shared/CircleProgress/CircleProgress';
+import { Divider } from '../../shared/Divider/Divider';
+import { ErrorState } from '../../shared/ErrorState/ErrorState';
+import { Paper } from '../../shared/Paper/Paper';
 import { useDatabaseDetailContext } from '../DatabaseDetailContext';
 import {
   StyledGrid,
@@ -118,10 +117,7 @@ export const DatabaseResize = () => {
     currentPlanType?.class
   );
 
-  const disabledTabsConfig: {
-    disabledTabs: string[];
-    disabledTabsCopy: string;
-  } = React.useMemo(() => {
+  const disabledTabsConfig = React.useMemo(() => {
     if (
       !flags.databaseRestrictPlanResize ||
       (flags.databaseResizeGenerationalPlans &&
@@ -129,22 +125,32 @@ export const DatabaseResize = () => {
     ) {
       return {
         disabledTabs: [],
-        disabledTabsCopy: '',
       };
     }
 
     if (!isGenerationalPlansEnabled && currentPlanType?.class === 'premium') {
       return {
-        disabledTabs: ['shared', 'dedicated'],
-        disabledTabsCopy: RESIZE_DISABLED_DEDICATED_SHARED_PLAN_TABS_TEXT,
+        disabledTabs: [
+          {
+            tab: 'shared',
+            copy: RESIZE_DISABLED_DEDICATED_SHARED_PLAN_TABS_TEXT,
+          },
+          {
+            tab: 'dedicated',
+            copy: RESIZE_DISABLED_DEDICATED_SHARED_PLAN_TABS_TEXT,
+          },
+        ],
       };
     }
 
     if (isGenerationalPlansEnabled && currentPlanType?.class === 'premium') {
       return {
-        disabledTabs: ['shared'],
-        disabledTabsCopy:
-          RESIZE_DISABLED_NON_G7_DEDICATED_SHARED_PLAN_TABS_TEXT,
+        disabledTabs: [
+          {
+            tab: 'shared',
+            copy: RESIZE_DISABLED_NON_G7_DEDICATED_SHARED_PLAN_TABS_TEXT,
+          },
+        ],
       };
     }
 
@@ -154,14 +160,22 @@ export const DatabaseResize = () => {
       currentPlanType?.class !== 'premium'
     ) {
       return {
-        disabledTabs: ['premium'],
-        disabledTabsCopy: 'Premium CPUs are now called G7 Dedicated plans.',
+        disabledTabs: [
+          {
+            tab: 'premium',
+            copy: PREMIUM_CPU_PLANS_RENAME,
+          },
+        ],
       };
     }
 
     return {
-      disabledTabs: ['premium'],
-      disabledTabsCopy: RESIZE_DISABLED_PREMIUM_PLAN_TAB_TEXT,
+      disabledTabs: [
+        {
+          tab: 'premium',
+          copy: RESIZE_DISABLED_PREMIUM_PLAN_TAB_TEXT,
+        },
+      ],
     };
   }, [
     currentPlanType?.class,
@@ -256,27 +270,30 @@ export const DatabaseResize = () => {
     database.cluster_size === 1 ? (
       <>
         {costSummary}
-        <Notice variant="warning">
+        <NotificationBanner
+          style={{ marginBottom: Spacing.S16 }}
+          type="warning"
+        >
           <Typography variant="h3">{`Warning: This operation will cause downtime for your resized node cluster.`}</Typography>
-        </Notice>
+        </NotificationBanner>
       </>
     ) : (
       <>
         {costSummary}
-        <Notice variant="info">
+        <NotificationBanner style={{ marginBottom: Spacing.S16 }} type="info">
           <Typography variant="h3">{`Operation can take up to 2 hours and will incur a failover.`}</Typography>
-        </Notice>
+        </NotificationBanner>
       </>
     );
 
   const currentPlanUnavailableNotice = (
-    <Notice variant="warning">
+    <NotificationBanner style={{ marginBottom: Spacing.S16 }} type="warning">
       <PlanNoticeTypography variant="h3">
         {
           'Warning: Your current plan is currently unavailable and it can\u{2019}t be used to resize the cluster. You can only resize the cluster using other available plans.'
         }
       </PlanNoticeTypography>
-    </Notice>
+    </NotificationBanner>
   );
 
   const displayTypes: PlanSelectionWithDatabaseType[] = React.useMemo(() => {
@@ -284,7 +301,11 @@ export const DatabaseResize = () => {
       return [];
     }
 
-    return dbTypes.map((type: DatabaseType) => {
+    const _dbtypes = dbTypes.filter((type) =>
+      Boolean(type.engines[selectedEngine])
+    );
+
+    return _dbtypes.map((type: DatabaseType) => {
       const { label } = type;
       const formattedLabel = formatStorageUnits(label);
 
@@ -423,18 +444,18 @@ export const DatabaseResize = () => {
   }
 
   if (typesError || regionsError) {
-    return <ErrorState errorText="An unexpected error occurred." />;
+    return <ErrorState />;
   }
 
   return (
     <>
-      <Paper sx={{ marginTop: 2 }}>
+      <Paper>
         {resizeDescription}
         <Box sx={{ marginTop: 2 }}>
           <DatabaseResizeCurrentConfiguration database={database} />
         </Box>
       </Paper>
-      <Paper sx={{ marginTop: 2 }}>
+      <Paper marginTop={Spacing.S16}>
         <StyledPlansPanel
           additionalBanners={
             isCurrentPlanUnavailable && Boolean(flags.databasePremium)
@@ -458,12 +479,11 @@ export const DatabaseResize = () => {
           regionsData={shouldProvideRegions ? regionsData : undefined}
           selectedId={selectedPlanId}
           selectedRegionID={databaseRegion}
-          tabDisabledMessage={disabledTabsConfig.disabledTabsCopy}
           types={displayTypes}
         />
         {isNewDatabaseGA && (
           <>
-            <Divider spacingBottom={20} spacingTop={20} />
+            <Divider marginBottom={Spacing.S20} marginTop={Spacing.S20} />
             <DatabaseNodeSelector
               currentClusterSize={database.cluster_size}
               currentPlan={currentPlan}
@@ -484,7 +504,7 @@ export const DatabaseResize = () => {
           </>
         )}
       </Paper>
-      <Paper sx={{ marginTop: 2 }}>
+      <Paper marginTop={Spacing.S16}>
         <DatabaseSummarySection
           currentClusterSize={database.cluster_size}
           currentEngine={selectedEngine}
@@ -524,7 +544,11 @@ export const DatabaseResize = () => {
         title={`Resize Database Cluster ${database.label}?`}
       >
         {resizeError ? (
-          <Notice text={resizeError[0].reason} variant="error" />
+          <NotificationBanner
+            style={{ marginBottom: Spacing.S16 }}
+            text={resizeError[0].reason}
+            type="error"
+          />
         ) : null}
         {confirmationPopUpMessage}
       </TypeToConfirmDialog>

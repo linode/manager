@@ -45,6 +45,7 @@ import { TOPMENU_HEIGHT } from './features/TopMenu/constants';
 import { GoTo } from './GoTo';
 import { useAdobeAnalytics } from './hooks/useAdobeAnalytics';
 import { useGlobalErrors } from './hooks/useGlobalErrors';
+import { useLiveChatBootstrap } from './hooks/useLiveChatBootstrap';
 import { useNewRelic } from './hooks/useNewRelic';
 import { usePendo } from './hooks/usePendo';
 import { useSessionExpiryToast } from './hooks/useSessionExpiryToast';
@@ -290,6 +291,7 @@ export const Root = () => {
 const GlobalListeners = () => {
   useEventsPoller();
   useAdobeAnalytics();
+  useLiveChatBootstrap();
   usePendo();
   useNewRelic();
   useSessionExpiryToast();

@@ -1,4 +1,4 @@
-import { roundTo } from '@linode/utilities';
+import { roundTo } from '@akamai/compute-ui-core/formatting';
 
 const supportedUnits = {
   B: 'Bytes',
@@ -239,9 +239,9 @@ export const generateCurrentUnit = (baseUnit: string): string => {
  * @returns transformed data based on the base unit
  */
 export const transformData = (
-  data: [number, string][],
+  data: [number, null | string][],
   baseUnit: string
-): [number, number][] => {
+): [number, null | number][] => {
   const unit: string = generateCurrentUnit(baseUnit);
 
   return data.map((d) => [

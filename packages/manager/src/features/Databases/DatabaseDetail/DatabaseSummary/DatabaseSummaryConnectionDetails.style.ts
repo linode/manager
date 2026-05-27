@@ -42,7 +42,6 @@ export const useStyles = makeStyles()((theme: Theme) => ({
       backgroundColor: 'transparent',
     },
     display: 'inline-flex',
-    marginLeft: theme.spacing(0.5),
   },
   progressCtn: {
     '& circle': {

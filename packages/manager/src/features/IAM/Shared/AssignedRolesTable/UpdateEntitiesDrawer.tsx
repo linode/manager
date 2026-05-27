@@ -1,10 +1,12 @@
+import { NotificationBanner } from '@akamai/cds-components/react';
+import { Spacing } from '@akamai/cds-tokens';
 import {
   useGetDefaultDelegationAccessQuery,
   useUpdateDefaultDelegationAccessQuery,
   useUserRoles,
   useUserRolesMutation,
 } from '@linode/queries';
-import { ActionsPanel, Drawer, Notice, Typography } from '@linode/ui';
+import { ActionsPanel, Drawer, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material';
 import { useParams } from '@tanstack/react-router';
 import { enqueueSnackbar } from 'notistack';
@@ -132,9 +134,21 @@ export const UpdateEntitiesDrawer = ({ onClose, open, role }: Props) => {
   };
 
   return (
-    <Drawer onClose={handleClose} open={open} title="Update List of Entities">
+    <Drawer
+      onClose={handleClose}
+      open={open}
+      slotProps={{
+        paper: {
+          sx: {
+            maxWidth: { xs: '100% !important', sm: '600px !important' },
+          },
+        },
+      }}
+      title="Update List of Entities"
+      wide
+    >
       {errors.root?.message && (
-        <Notice text={errors.root?.message} variant="error" />
+        <NotificationBanner text={errors.root?.message} type="error" />
       )}
       <FormProvider {...form}>
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -162,7 +176,7 @@ export const UpdateEntitiesDrawer = ({ onClose, open, role }: Props) => {
                 key={role?.name}
                 onChange={field.onChange}
                 role={role!}
-                sx={{ marginBottom: theme.tokens.spacing.S16 }}
+                sx={{ marginBottom: Spacing.S16 }}
                 value={field.value}
               />
             )}

@@ -1,17 +1,18 @@
+import { Icon, Menu, MenuItem, Tooltip } from '@akamai/cds-components/react';
+import { Spacing } from '@akamai/cds-tokens';
 import { useResumeDatabaseMutation } from '@linode/queries';
 import { useNavigate } from '@tanstack/react-router';
 import { enqueueSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { useIsDatabasesEnabled } from '../utilities';
 
+import type { Action } from '../shared/types';
 import type { DatabaseStatus, Engine } from '@linode/api-v4';
-import type { Action } from 'src/components/ActionMenu/ActionMenu';
 import type { ActionType } from 'src/features/Account/utils';
 
 interface Props {
@@ -141,9 +142,49 @@ export const DatabaseActionMenu = (props: Props) => {
   }
 
   return (
-    <ActionMenu
-      actionsList={actions}
-      ariaLabel={`Action menu for Database ${databaseLabel}`}
-    />
+    <Menu
+      aria-label={`Action menu for Database ${databaseLabel}`}
+      data-testid="database-action-menu"
+      icon="actions"
+      position="bottom-right"
+    >
+      {actions.map((action) => (
+        <MenuItem
+          data-testid={action.title}
+          disabled={action.disabled}
+          key={action.title}
+          onSelect={action.onClick}
+          style={{
+            minWidth: '210px',
+            paddingRight: Spacing.S4,
+          }}
+          title={action.title}
+          value={action.title}
+        >
+          <span
+            style={{
+              alignItems: 'center',
+              display: 'flex',
+              justifyContent: 'space-between',
+              minWidth: '210px',
+            }}
+          >
+            {action.title}
+            {action.disabled && action.tooltip ? (
+              <Tooltip
+                disabled={!action.disabled}
+                key={action.title}
+                noArrow={true}
+                style={{ textAlign: 'left', whiteSpace: 'normal' }}
+                tooltipPlacement="left"
+                tooltipText={action.tooltip}
+              >
+                <Icon icon="info-outline" size="m" />
+              </Tooltip>
+            ) : null}
+          </span>
+        </MenuItem>
+      ))}
+    </Menu>
   );
 };

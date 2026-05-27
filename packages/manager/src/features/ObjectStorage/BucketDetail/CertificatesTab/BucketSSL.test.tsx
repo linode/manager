@@ -14,7 +14,7 @@ describe('BucketSSL', () => {
     );
 
     const { findByLabelText, getByText } = renderWithTheme(
-      <BucketSSL bucketName="test" clusterId="test" />
+      <BucketSSL bucketName="test" regionId="test" />
     );
 
     await findByLabelText('Certificate');
@@ -31,7 +31,7 @@ describe('BucketSSL', () => {
     );
 
     const { findByText, getByText } = renderWithTheme(
-      <BucketSSL bucketName="test" clusterId="test" />
+      <BucketSSL bucketName="test" regionId="test" />
     );
 
     await findByText(

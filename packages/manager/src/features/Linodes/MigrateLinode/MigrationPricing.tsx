@@ -1,5 +1,5 @@
+import { isNumber } from '@akamai/compute-ui-core/formatting';
 import { Box, Typography } from '@linode/ui';
-import { isNumber } from '@linode/utilities';
 import { useTheme } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';

@@ -4,6 +4,7 @@ export interface SearchResults {
 }
 
 interface SearchItemData extends Record<string, string | string[] | undefined> {
+  address?: string;
   created?: string;
   description: string;
   path: string;
@@ -28,6 +29,7 @@ export type SearchableEntityType =
   | 'kubernetesCluster'
   | 'linode'
   | 'nodebalancer'
+  | 'reservedIp'
   | 'stackscript'
   | 'stream'
   | 'volume';
@@ -45,6 +47,7 @@ export interface SearchResultsByEntity {
   kubernetesCluster: SearchableItem[];
   linode: SearchableItem[];
   nodebalancer: SearchableItem[];
+  reservedIp: SearchableItem[];
   stackscript: SearchableItem[];
   stream: SearchableItem[];
   volume: SearchableItem[];

@@ -1,4 +1,4 @@
-import { capitalize } from '@linode/utilities';
+import { capitalize } from '@akamai/compute-ui-core/formatting';
 import { screen } from '@testing-library/react';
 import React from 'react';
 
@@ -55,8 +55,8 @@ describe('Alert list table row', () => {
       />
     );
 
-    expect(screen.getByRole('checkbox')).toHaveProperty('checked');
-    expect(screen.getByRole('checkbox')).toBeDisabled();
+    expect(screen.getByRole('switch')).toHaveProperty('checked');
+    expect(screen.getByRole('switch')).toBeDisabled();
 
     expect(
       screen.getByLabelText(

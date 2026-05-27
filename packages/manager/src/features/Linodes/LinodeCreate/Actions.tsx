@@ -8,7 +8,6 @@ import { useGetLinodeCreateType } from 'src/features/Linodes/LinodeCreate/Tabs/u
 import { useFlags } from 'src/hooks/useFlags';
 import { sendApiAwarenessClickEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
-import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
 import { ApiAwarenessModal } from './ApiAwarenessModal/ApiAwarenessModal';
 import {
@@ -26,7 +25,6 @@ export const Actions = ({ isAclpAlertsMode }: ActionProps) => {
   const createType = useGetLinodeCreateType();
   const [isAPIAwarenessModalOpen, setIsAPIAwarenessModalOpen] = useState(false);
 
-  const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
   const { aclpServices } = useFlags();
 
   const { formState, getValues, trigger, control } =
@@ -102,7 +100,7 @@ export const Actions = ({ isAclpAlertsMode }: ActionProps) => {
         isOpen={isAPIAwarenessModalOpen}
         onClose={() => setIsAPIAwarenessModalOpen(false)}
         payLoad={getLinodeCreatePayload(structuredClone(getValues()), {
-          isShowingNewNetworkingUI: isLinodeInterfacesEnabled,
+          isShowingNewNetworkingUI: true,
           isAclpAlertsEnabled: aclpServices?.linode?.alerts?.enabled,
           isAclpAlertsMode,
         })}

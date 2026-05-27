@@ -37,14 +37,7 @@ export const CreateBucketSchema = object()
             );
           },
         ),
-      cluster: string().when('region', {
-        is: (region: string) => !region || region.length === 0,
-        then: (schema) => schema.required('Cluster is required.'),
-      }),
-      region: string().when('cluster', {
-        is: (cluster: string) => !cluster || cluster.length === 0,
-        then: (schema) => schema.required('Region is required.'),
-      }),
+      region: string().required('Region is required.'),
       endpoint_type: string()
         .oneOf([...ENDPOINT_TYPES])
         .optional(),
@@ -59,7 +52,6 @@ export const CreateBucketSchema = object()
         .optional(),
       s3_endpoint: string().optional(),
     },
-    [['cluster', 'region']],
   )
   .test('cors-enabled-check', 'Invalid CORS configuration.', function (value) {
     const { endpoint_type, cors_enabled } = value;

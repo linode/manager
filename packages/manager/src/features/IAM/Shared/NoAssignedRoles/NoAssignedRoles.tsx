@@ -1,11 +1,13 @@
 import {
+  Button,
+  Icon,
+  Tooltip,
   ZeroErrorActions,
   ZeroErrorDescription,
   ZeroErrorIcon,
   ZeroErrorState,
   ZeroErrorTitle,
 } from '@akamai/cds-components/react';
-import { Button } from '@linode/ui';
 import React from 'react';
 
 import { useIsDefaultDelegationRolesForChildAccount } from '../../hooks/useDelegationRole';
@@ -40,25 +42,27 @@ export const NoAssignedRoles = (props: Props) => {
       <ZeroErrorDescription>{text}</ZeroErrorDescription>
       <ZeroErrorActions>
         {hasAssignNewRoleDrawer && (
-          <Button
-            buttonType="primary"
-            data-pendo-id={
-              isDefaultDelegationRolesForChildAccount
-                ? IAM_ROLES_PENDO_IDS.addNewDefaultRoles
-                : undefined
-            }
-            disabled={!permissionToCheck}
-            onClick={() => setIsAssignNewRoleDrawerOpen(true)}
-            tooltipText={
-              !permissionToCheck
-                ? 'You do not have permission to assign roles.'
-                : undefined
-            }
+          <Tooltip
+            disabled={permissionToCheck}
+            tooltipPlacement="bottom"
+            tooltipText="You do not have permission to assign roles."
           >
-            {isDefaultDelegationRolesForChildAccount
-              ? 'Add New Default Roles'
-              : 'Assign New Roles'}
-          </Button>
+            <Button
+              data-pendo-id={
+                isDefaultDelegationRolesForChildAccount
+                  ? IAM_ROLES_PENDO_IDS.addNewDefaultRoles
+                  : undefined
+              }
+              disabled={!permissionToCheck}
+              onClick={() => setIsAssignNewRoleDrawerOpen(true)}
+              variant="primary"
+            >
+              {isDefaultDelegationRolesForChildAccount
+                ? 'Add New Default Roles'
+                : 'Assign New Roles'}
+              {!permissionToCheck && <Icon icon="info-outline" size="m" />}
+            </Button>
+          </Tooltip>
         )}
       </ZeroErrorActions>
       <AssignNewRoleDrawer

@@ -29,6 +29,11 @@ export interface AllocateIPPayload {
   type: string;
 }
 
+export interface UpdateIPPayload {
+  rdns?: null | string;
+  reserved?: boolean;
+}
+
 export interface IPRangeBaseData {
   prefix: number;
   range: string;

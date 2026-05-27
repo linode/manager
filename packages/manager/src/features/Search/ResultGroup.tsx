@@ -1,6 +1,6 @@
+import { capitalize, splitAt } from '@akamai/compute-ui-core/formatting';
 import { isEmpty } from '@linode/api-v4';
 import { Hidden } from '@linode/ui';
-import { capitalize, splitAt } from '@linode/utilities';
 import Grid from '@mui/material/Grid';
 import * as React from 'react';
 

@@ -1,4 +1,4 @@
-import { downloadFile } from '@linode/utilities';
+import { downloadFile } from '@akamai/compute-ui-core/browser';
 import { fireEvent, waitFor } from '@testing-library/react';
 import * as React from 'react';
 
@@ -18,8 +18,8 @@ vi.mock('@linode/api-v4/lib/domains', async () => {
   };
 });
 
-vi.mock('@linode/utilities', async () => {
-  const actual = await vi.importActual<any>('@linode/utilities');
+vi.mock('@akamai/compute-ui-core/browser', async () => {
+  const actual = await vi.importActual<any>('@akamai/compute-ui-core/browser');
   return {
     ...actual,
     downloadFile: vi.fn(),

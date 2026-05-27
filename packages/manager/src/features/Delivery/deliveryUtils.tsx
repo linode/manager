@@ -1,3 +1,4 @@
+import { capitalize } from '@akamai/compute-ui-core/formatting';
 import {
   type Destination,
   type DestinationDetailsPayload,
@@ -10,7 +11,6 @@ import {
 } from '@linode/api-v4';
 import { useAccount } from '@linode/queries';
 import { Box, omitProps, SelectedIcon } from '@linode/ui';
-import { capitalize, isFeatureEnabledV2 } from '@linode/utilities';
 import React from 'react';
 
 import {
@@ -34,35 +34,12 @@ import type {
 } from 'src/features/Delivery/Shared/types';
 
 /**
- * Hook to determine if the ACLP Logs feature is enabled for the current user.
-
- * @returns {{ isACLPLogsEnabled: boolean, isACLPLogsBeta: boolean, isACLPLogsNew: boolean, isACLPLogsCustomHttpsEnabled: boolean }}
+ * Hook to determine if the ACLP Logs feature is new for the current user.
  */
-export const useIsACLPLogsEnabled = (): {
-  isACLPLogsBeta: boolean;
-  isACLPLogsCustomHttpsEnabled: boolean;
-  isACLPLogsEnabled: boolean;
-  isACLPLogsMetricsEnabled: boolean;
-  isACLPLogsNew: boolean;
-} => {
-  const { data: account } = useAccount();
+export const useIsACLPLogsNew = (): boolean => {
   const flags = useFlags();
 
-  const isACLPLogsEnabled =
-    (flags.aclpLogs?.enabled && flags.aclpLogs?.bypassAccountCapabilities) ||
-    isFeatureEnabledV2(
-      'Akamai Cloud Pulse Logs',
-      !!flags.aclpLogs?.enabled,
-      account?.capabilities ?? []
-    );
-
-  return {
-    isACLPLogsBeta: !!flags.aclpLogs?.beta,
-    isACLPLogsCustomHttpsEnabled: !!flags.aclpLogs?.customHttpsEnabled,
-    isACLPLogsMetricsEnabled: !!flags.aclpLogs?.metricsEnabled,
-    isACLPLogsNew: !!flags.aclpLogs?.new,
-    isACLPLogsEnabled,
-  };
+  return !!flags.aclpLogs?.new;
 };
 
 export const getDestinationTypeOption = (

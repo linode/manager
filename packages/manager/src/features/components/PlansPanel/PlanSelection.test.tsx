@@ -1,5 +1,5 @@
 import { breakpoints } from '@linode/ui';
-import { fireEvent, waitFor } from '@testing-library/react';
+import { fireEvent, waitFor, within } from '@testing-library/react';
 import React from 'react';
 
 import {
@@ -7,6 +7,8 @@ import {
   planSelectionTypeFactory,
 } from 'src/factories/types';
 import { LIMITED_AVAILABILITY_COPY } from 'src/features/components/PlansPanel/constants';
+import * as linodesPricing from 'src/utilities/pricing/linodes';
+import { useComputePricing } from 'src/utilities/pricing/useComputePricing';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import { resizeScreenSize } from 'src/utilities/testHelpers';
 import { wrapWithTableBody } from 'src/utilities/testHelpers';
@@ -15,6 +17,37 @@ import { PlanSelection } from './PlanSelection';
 
 import type { PlanSelectionProps } from './PlanSelection';
 import type { PlanWithAvailability } from './types';
+import type { PriceObject } from '@linode/api-v4';
+
+vi.mock('src/utilities/pricing/useComputePricing', () => ({
+  useComputePricing: vi.fn(() => ({
+    billing: 'monthly' as const,
+    formatPrice: (p: null | PriceObject | undefined) =>
+      String(p?.monthly ?? '--.--'),
+    getPrice: (p: null | PriceObject | undefined) => p?.monthly ?? '--.--',
+    priceLabel: 'month',
+  })),
+}));
+
+const mockMonthlyBilling = () =>
+  vi.mocked(useComputePricing).mockReturnValue({
+    billing: 'monthly',
+    formatPrice: (p: null | PriceObject | undefined) =>
+      String(p?.monthly ?? '--.--'),
+    getPrice: (p: null | PriceObject | undefined) => p?.monthly ?? '--.--',
+    hasHourlyEligiblePlans: () => false,
+    priceLabel: 'month',
+  });
+
+const mockHourlyBilling = () =>
+  vi.mocked(useComputePricing).mockReturnValue({
+    billing: 'hourly',
+    formatPrice: (p: null | PriceObject | undefined) =>
+      String(p?.hourly ?? '--.--'),
+    getPrice: (p: null | PriceObject | undefined) => p?.hourly ?? '--.--',
+    hasHourlyEligiblePlans: () => true,
+    priceLabel: 'hour',
+  });
 
 const mockPlan: PlanWithAvailability = planSelectionTypeFactory.build({
   heading: 'Dedicated 20 GB',
@@ -207,6 +240,138 @@ describe('PlanSelection (table, desktop)', () => {
 
     expect(getByText(LIMITED_AVAILABILITY_COPY)).toBeVisible();
   });
+
+  describe('billing mode - switching via computePricing LD flag (table, desktop)', () => {
+    afterEach(() => {
+      vi.resetAllMocks();
+    });
+
+    it('calls useComputePricing in PlanSelection with the plan id', () => {
+      renderWithTheme(
+        wrapWithTableBody(<PlanSelection {...defaultProps} isCreate={true} />)
+      );
+      expect(useComputePricing).toHaveBeenCalledWith(mockPlan.id);
+    });
+
+    it('shows monthly and hourly prices in monthly billing mode (default)', () => {
+      mockMonthlyBilling();
+
+      const { getAllByRole } = renderWithTheme(
+        wrapWithTableBody(
+          <PlanSelection
+            {...defaultProps}
+            isCreate={true}
+            selectedRegionId={'us-east'}
+          />
+        )
+      );
+
+      const [monthlyCell, hourlyCell] = getAllByRole('cell').slice(2);
+      expect(monthlyCell).toHaveTextContent('$10');
+      expect(hourlyCell).toHaveTextContent('$0.015');
+    });
+
+    it('always shows "N/A" in the monthly cell in hourly billing mode regardless of what the API returns', () => {
+      // Hourly-scoped plans are billed purely by the hour — monthly pricing does not apply.
+      // The monthly cell must show "N/A" in both cases:
+      //   1. The API returns a monthly price (e.g. $10) — unlikely for hourly-scoped plans, but we still show N/A as a defensive safeguard.
+      //   2. The API returns null for monthly - also N/A, same outcome.
+
+      // Case 1: API returns a monthly price - should still be N/A.
+      mockHourlyBilling();
+
+      const { getAllByRole, rerender } = renderWithTheme(
+        wrapWithTableBody(
+          <PlanSelection
+            {...defaultProps}
+            isCreate={true}
+            selectedRegionId={'us-east'}
+          />
+        )
+      );
+
+      let [monthlyCell, hourlyCell] = getAllByRole('cell').slice(2);
+      expect(monthlyCell).toHaveTextContent('N/A');
+      expect(hourlyCell).toHaveTextContent('$0.015');
+
+      // Case 2: API returns null for monthly - should also be N/A.
+      mockHourlyBilling();
+      vi.spyOn(linodesPricing, 'getLinodeRegionPrice').mockReturnValueOnce({
+        hourly: 0.015,
+        monthly: null,
+      });
+
+      rerender(
+        wrapWithTableBody(
+          <PlanSelection
+            {...defaultProps}
+            isCreate={true}
+            selectedRegionId={'us-east'}
+          />
+        )
+      );
+
+      [monthlyCell, hourlyCell] = getAllByRole('cell').slice(2);
+      expect(monthlyCell).toHaveTextContent('N/A');
+      expect(hourlyCell).toHaveTextContent('$0.015');
+    });
+
+    it('shows $--.-- with an error tooltip in the monthly cell in monthly billing when API monthly price is unexpectedly absent', () => {
+      // This error state occurs in two scenarios:
+      // 1. LD billing is set to 'monthly' for all plans OR
+      // 2. LD billing is 'hourly' + activeBillingPlanMatchers has entries, but the given plan does not match -> it falls back to monthly billing.
+      // In both cases the plan is in monthly billing mode, where a null monthly price from the API is unexpected
+      // and should be treated as an error (unlike hourly billing, where null monthly is intentional and shown as N/A).
+      mockMonthlyBilling();
+      vi.spyOn(linodesPricing, 'getLinodeRegionPrice').mockReturnValueOnce({
+        hourly: 0.015,
+        monthly: null,
+      });
+
+      const { getAllByRole } = renderWithTheme(
+        wrapWithTableBody(
+          <PlanSelection
+            {...defaultProps}
+            isCreate={true}
+            selectedRegionId={'us-east'}
+          />
+        )
+      );
+
+      const [monthlyCell, hourlyCell] = getAllByRole('cell').slice(2);
+      expect(monthlyCell).toHaveTextContent('$--.--');
+      // Monthly price unexpectedly absent in monthly billing — error tooltip must appear
+      const errorTooltip = within(monthlyCell).getByRole('button');
+      expect(errorTooltip).toBeVisible();
+      expect(hourlyCell).toHaveTextContent('$0.015');
+    });
+
+    it('shows $--.-- with an error tooltip in the hourly cell regardless of billing mode when hourly price is unavailable for the selected region', () => {
+      // The hourly cell error condition is independent of billing mode - it executes whenever
+      // hourly price is null regardless of whether billing is 'monthly' or 'hourly'.
+      mockMonthlyBilling();
+      vi.spyOn(linodesPricing, 'getLinodeRegionPrice').mockReturnValueOnce({
+        hourly: null,
+        monthly: null,
+      });
+
+      const { getAllByRole } = renderWithTheme(
+        wrapWithTableBody(
+          <PlanSelection
+            {...defaultProps}
+            isCreate={true}
+            selectedRegionId={'us-east'}
+          />
+        )
+      );
+
+      const [hourlyCell] = getAllByRole('cell').slice(3);
+      expect(hourlyCell).toHaveTextContent('$--.--');
+      // Hourly price unexpectedly absent — error tooltip must appear
+      const errorTooltip = within(hourlyCell).getByRole('button');
+      expect(errorTooltip).toBeVisible();
+    });
+  });
 });
 
 describe('PlanSelection (card, mobile)', () => {
@@ -295,5 +460,46 @@ describe('PlanSelection (card, mobile)', () => {
     expect(
       container.querySelector('[data-qa-select-card-subheading="subheading-4"]')
     ).toHaveTextContent('40 Gbps In / 2 Gbps Out');
+  });
+
+  describe('billing mode - switching via computePricing LD flag (card, mobile)', () => {
+    afterEach(() => {
+      vi.resetAllMocks();
+    });
+
+    it('subheading displays "$monthly/mo ($hourly/hr)" in monthly billing mode', () => {
+      mockMonthlyBilling();
+
+      const { getByText } = renderWithTheme(
+        <PlanSelection {...defaultProps} selectedRegionId={'us-east'} />
+      );
+
+      expect(getByText('$10/mo ($0.015/hr)')).toBeVisible();
+    });
+
+    it('subheading displays "$monthly/mo ($hourly/hr)" in hourly billing mode when monthly price is present', () => {
+      mockHourlyBilling();
+
+      const { getByText } = renderWithTheme(
+        <PlanSelection {...defaultProps} selectedRegionId={'us-east'} />
+      );
+
+      expect(getByText('$10/mo ($0.015/hr)')).toBeVisible();
+    });
+
+    it('subheading shows only "$hourly/hr" in hourly billing mode when monthly price is absent', () => {
+      mockHourlyBilling();
+      vi.spyOn(linodesPricing, 'getLinodeRegionPrice').mockReturnValueOnce({
+        hourly: 0.015,
+        monthly: null,
+      });
+
+      const { getByText, queryByText } = renderWithTheme(
+        <PlanSelection {...defaultProps} selectedRegionId={'us-east'} />
+      );
+
+      expect(getByText('$0.015/hr')).toBeVisible();
+      expect(queryByText(/\/mo/)).not.toBeInTheDocument();
+    });
   });
 });

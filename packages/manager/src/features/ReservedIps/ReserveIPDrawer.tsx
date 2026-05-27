@@ -36,12 +36,9 @@ import { Link } from 'src/components/Link';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { useFlags } from 'src/hooks/useFlags';
-import {
-  getDCSpecificPriceByType,
-  renderMonthlyPriceToCorrectDecimalPlace,
-} from 'src/utilities/pricing/dynamicPricing';
 
-import { RESERVE_IP_DESCRIPTION, RESERVED_IPS_DOCS_LINK } from './constants';
+import { RESERVE_AN_IP_DOC_LINK, RESERVE_IP_DESCRIPTION } from './constants';
+import { getReservedIPHourlyPrice } from './utils';
 
 import type { APIError, IPAddress } from '@linode/api-v4';
 import type { TagOption } from 'src/components/TagsInput/TagsInput';
@@ -131,7 +128,7 @@ export const ReserveIPDrawer = (props: ReserveIPDrawerProps) => {
 
   const selectedRegion = useWatch({ control, name: 'region' });
 
-  const reservedIPPrice = getDCSpecificPriceByType({
+  const reservedIPPrice = getReservedIPHourlyPrice({
     regionId: selectedRegion,
     type: reservedIPTypes?.[0],
   });
@@ -145,14 +142,17 @@ export const ReserveIPDrawer = (props: ReserveIPDrawerProps) => {
       const tags = values.tags.map((tag) => tag.value);
 
       switch (mode) {
-        case 'create':
+        // Reserve any random IP address in the selected region with the provided tags
+        case 'create': {
           const created = await reserveIP({ region: values.region, tags });
           enqueueSnackbar(`${created.address} has been reserved`, {
             variant: 'success',
           });
           props.onSuccess?.(created);
           break;
-        case 'edit':
+        }
+        // Update tags for the provided Reserved IP address
+        case 'edit': {
           const edited = await updateReservedIP({
             address: ipAddress?.address ?? '',
             tags,
@@ -162,17 +162,29 @@ export const ReserveIPDrawer = (props: ReserveIPDrawerProps) => {
           });
           props.onSuccess?.(edited);
           break;
-        case 'reserve':
+        }
+        // Reserve the provided Ephemeral IP address with the provided tags and region.
+        case 'reserve': {
           const reserved = await updateIP({
             address: ipAddress?.address ?? '',
-            rdns: ipAddress?.rdns ?? null,
+            rdns: undefined,
             reserved: true,
           });
+
+          // Update tags separately(as updateIP API call doesn't handle tags) if tags are provided
+          if (tags.length > 0) {
+            await updateReservedIP({
+              address: ipAddress?.address ?? '',
+              tags,
+            });
+          }
+
           enqueueSnackbar(`${ipAddress?.address} has been reserved`, {
             variant: 'success',
           });
           props.onSuccess?.(reserved);
           break;
+        }
         default:
           return;
       }
@@ -207,7 +219,7 @@ export const ReserveIPDrawer = (props: ReserveIPDrawerProps) => {
               <Typography variant="body1">
                 {RESERVE_IP_DESCRIPTION}
                 <br />
-                <Link to={RESERVED_IPS_DOCS_LINK}>Learn more</Link>.
+                <Link to={RESERVE_AN_IP_DOC_LINK}>Learn more</Link>.
               </Typography>
             )}
 
@@ -219,7 +231,12 @@ export const ReserveIPDrawer = (props: ReserveIPDrawerProps) => {
 
             {(mode === 'reserve' || mode === 'edit') && ipAddress?.address && (
               <Box>
-                <Typography sx={{ fontWeight: 'bold' }} variant="body2">
+                <Typography
+                  sx={(theme) => ({
+                    font: theme.font.bold,
+                  })}
+                  variant="body2"
+                >
                   IP Address
                 </Typography>
                 <Typography
@@ -274,9 +291,7 @@ export const ReserveIPDrawer = (props: ReserveIPDrawerProps) => {
                 sx={(theme) => ({ color: theme.palette.text.secondary })}
                 variant="body1"
               >
-                {`$${renderMonthlyPriceToCorrectDecimalPlace(
-                  Number(reservedIPPrice)
-                )} / mo.`}
+                {`$${reservedIPPrice} / hour.`}
               </Typography>
             )}
           </Stack>
@@ -287,7 +302,8 @@ export const ReserveIPDrawer = (props: ReserveIPDrawerProps) => {
               disabled: isSubmitDisabled,
               label: reserveIPDrawerConfig[mode].submitLabel,
               loading: isSubmitting,
-              type: 'submit',
+              type: 'button',
+              onClick: handleSubmit(onSubmit),
             }}
             secondaryButtonProps={{
               'data-testid': 'cancel-button',

@@ -83,4 +83,27 @@ describe('Currency Component', () => {
     rerender(<Currency quantity={99} />);
     expect(getByText('$99.00')).toBeVisible();
   });
+
+  it('useAdaptivePrecision: integers show without decimals, non-integers use at least 2 decimal places', () => {
+    const { getByText, rerender } = renderWithTheme(
+      <Currency quantity={10.0} useAdaptivePrecision />
+    );
+    expect(getByText('$10')).toBeVisible();
+
+    rerender(<Currency quantity={0.0159} useAdaptivePrecision />);
+    expect(getByText('$0.0159')).toBeVisible();
+
+    rerender(<Currency quantity={10.5} useAdaptivePrecision />);
+    expect(getByText('$10.50')).toBeVisible();
+
+    rerender(<Currency quantity={99.99} useAdaptivePrecision />);
+    expect(getByText('$99.99')).toBeVisible();
+  });
+
+  it('decimalPlaces takes priority over useAdaptivePrecision', () => {
+    const { getByText } = renderWithTheme(
+      <Currency decimalPlaces={2} quantity={10} useAdaptivePrecision />
+    );
+    expect(getByText('$10.00')).toBeVisible();
+  });
 });

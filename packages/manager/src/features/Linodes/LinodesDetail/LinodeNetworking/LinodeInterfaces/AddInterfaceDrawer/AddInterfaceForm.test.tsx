@@ -103,6 +103,100 @@ describe('AddInterfaceForm', () => {
     await findByDisplayValue(firewall.label);
   });
 
+  it('keeps selected Firewall when toggling VPC to VLAN and back to VPC', async () => {
+    const firewallSettings = firewallSettingsFactory.build({
+      default_firewall_ids: {
+        vpc_interface: 5,
+      },
+    });
+
+    const firewall = firewallFactory.build({ id: 5 });
+
+    server.use(
+      http.get('*/networking/firewalls/settings', () => {
+        return HttpResponse.json(firewallSettings);
+      }),
+      http.get('*/networking/firewalls', () => {
+        return HttpResponse.json(makeResourcePage([firewall]));
+      })
+    );
+
+    const { getByRole, findByDisplayValue, findByRole } = renderWithTheme(
+      <AddInterfaceForm {...props} />
+    );
+
+    await findByRole('radio', { name: 'VPC' });
+
+    await userEvent.click(getByRole('radio', { name: 'VPC' }));
+    await findByDisplayValue(firewall.label);
+
+    await userEvent.click(getByRole('radio', { name: 'VLAN' }));
+    await userEvent.click(getByRole('radio', { name: 'VPC' }));
+
+    await findByDisplayValue(firewall.label);
+  });
+
+  it('does not auto-select "No firewall" when toggling VLAN to VPC without a default firewall', async () => {
+    const firewallSettings = firewallSettingsFactory.build({
+      default_firewall_ids: {},
+    });
+
+    server.use(
+      http.get('*/networking/firewalls/settings', () => {
+        return HttpResponse.json(firewallSettings);
+      }),
+      http.get('*/networking/firewalls', () => {
+        return HttpResponse.json(makeResourcePage([]));
+      })
+    );
+
+    const { getByRole, findByRole, queryByText } = renderWithTheme(
+      <AddInterfaceForm {...props} />
+    );
+
+    await findByRole('radio', { name: 'VPC' });
+
+    await userEvent.click(getByRole('radio', { name: 'VLAN' }));
+    await userEvent.click(getByRole('radio', { name: 'VPC' }));
+
+    expect(
+      queryByText(
+        /This Linode, or its Linode interface, is not secured with a Cloud Firewall/i
+      )
+    ).toBeNull();
+  });
+
+  it('does not carry VPC firewall to Public when Public has no saved/default firewall', async () => {
+    const firewallSettings = firewallSettingsFactory.build({
+      default_firewall_ids: {
+        vpc_interface: 5,
+      },
+    });
+
+    const firewall = firewallFactory.build({ id: 5 });
+
+    server.use(
+      http.get('*/networking/firewalls/settings', () => {
+        return HttpResponse.json(firewallSettings);
+      }),
+      http.get('*/networking/firewalls', () => {
+        return HttpResponse.json(makeResourcePage([firewall]));
+      })
+    );
+
+    const { getByRole, findByRole, findByDisplayValue, queryByDisplayValue } =
+      renderWithTheme(<AddInterfaceForm {...props} />);
+
+    await findByRole('radio', { name: 'VPC' });
+
+    await userEvent.click(getByRole('radio', { name: 'VPC' }));
+    await findByDisplayValue(firewall.label);
+
+    await userEvent.click(getByRole('radio', { name: 'Public' }));
+
+    expect(queryByDisplayValue(firewall.label)).toBeNull();
+  });
+
   it('should show a warning notice on selection of VPC option if a Public interface already exists', async () => {
     const mockPublicInterface = linodeInterfaceFactoryPublic.build();
 

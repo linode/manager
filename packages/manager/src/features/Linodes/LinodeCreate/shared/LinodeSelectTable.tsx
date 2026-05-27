@@ -1,4 +1,4 @@
-import { useLinodesQuery } from '@linode/queries';
+import { useLinodesQuery, useRegionsQuery } from '@linode/queries';
 import { getAPIFilterFromQuery } from '@linode/search';
 import { Box, Notice, Stack, Typography } from '@linode/ui';
 import Grid from '@mui/material/Grid';
@@ -9,6 +9,7 @@ import React, { useState } from 'react';
 import { useController, useFormContext } from 'react-hook-form';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
+import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
@@ -81,7 +82,10 @@ export const LinodeSelectTable = (props: Props) => {
   const {
     control,
     formState: {
-      dirtyFields: { label: isLabelFieldDirty },
+      dirtyFields: {
+        label: isLabelFieldDirty,
+        disk_encryption: isDiskEncryptionFieldDirty,
+      },
     },
     getValues,
     reset,
@@ -95,6 +99,9 @@ export const LinodeSelectTable = (props: Props) => {
     }
   );
 
+  const { isDiskEncryptionFeatureEnabled } =
+    useIsDiskEncryptionFeatureEnabled();
+  const { data: regions } = useRegionsQuery();
   const createType = useGetLinodeCreateType();
 
   const [query, setQuery] = useState(
@@ -162,6 +169,21 @@ export const LinodeSelectTable = (props: Props) => {
           values: getValues(),
         })
       );
+    }
+
+    if (isDiskEncryptionFeatureEnabled && !isDiskEncryptionFieldDirty) {
+      const selectedRegion = regions?.find((r) => r.id === linode.region);
+      const regionSupportsDiskEncryption =
+        selectedRegion?.capabilities.includes('Disk Encryption') ||
+        selectedRegion?.capabilities.includes('LA Disk Encryption');
+
+      if (selectedRegion?.site_type === 'distributed') {
+        // If a distributed region is selected, make sure we don't send disk_encryption in the payload.
+        setValue('disk_encryption', undefined);
+      } else if (regionSupportsDiskEncryption) {
+        // Enable disk encryption by default if the region supports it
+        setValue('disk_encryption', 'enabled');
+      }
     }
   };
 

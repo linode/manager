@@ -1,5 +1,6 @@
-import { Box, Button, Chip, CloseIcon, Tooltip } from '@linode/ui';
-import { sortByString } from '@linode/utilities';
+import { Button, Tooltip } from '@akamai/cds-components/react';
+import { sortByString } from '@akamai/compute-ui-core/formatting';
+import { Box, Chip, CloseIcon } from '@linode/ui';
 import { useTheme } from '@mui/material';
 import * as React from 'react';
 
@@ -51,8 +52,9 @@ export const AssignedEntities = ({
       }}
     >
       <Tooltip
-        placement="top"
-        title={entity.name.length > 30 ? entity.name : null}
+        disabled={entity.name.length <= 30}
+        tooltipPlacement="top"
+        tooltipText={entity.name}
       >
         <Chip
           data-testid="entities"
@@ -110,14 +112,19 @@ export const AssignedEntities = ({
                 top: 2,
               }}
             >
-              <Tooltip placement="top" title="Click to View All Entities">
+              <Tooltip
+                tooltipPlacement="top"
+                tooltipText="Click to View All Entities"
+              >
                 <Button
                   onClick={() => onButtonClick(role.name as EntityRoleType)}
-                  sx={{
+                  size="small"
+                  style={{
                     color: theme.tokens.alias.Content.Text.Primary.Default,
                     font: theme.tokens.alias.Typography.Label.Regular.Xs,
                     padding: 0,
                   }}
+                  variant="link"
                 >
                   +{numHiddenItems}
                 </Button>

@@ -1,5 +1,7 @@
+import { NotificationBanner } from '@akamai/cds-components/react';
+import { Spacing } from '@akamai/cds-tokens';
 import { useDatabaseMutation } from '@linode/queries';
-import { ActionsPanel, Notice, Typography } from '@linode/ui';
+import { ActionsPanel, Typography } from '@linode/ui';
 import { useNavigate } from '@tanstack/react-router';
 import { enqueueSnackbar } from 'notistack';
 import React from 'react';
@@ -78,7 +80,13 @@ export const DatabaseNetworkingUnassignVPCDialog = (props: Props) => {
       open={open}
       title={`Unassign ${databaseLabel} from VPC?`}
     >
-      {error && <Notice variant="error">{error[0].reason}</Notice>}
+      {error && (
+        <NotificationBanner
+          style={{ marginBottom: Spacing.S16 }}
+          text={error[0].reason}
+          type="error"
+        />
+      )}
       <Typography>
         The unassignment of the VPC will cause a temporary downtime during the
         transition and will make the cluster accessible only via its public IP.

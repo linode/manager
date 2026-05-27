@@ -1,3 +1,4 @@
+import { sortByString } from '@akamai/compute-ui-core/formatting';
 import { useAccountSettings, useProfile } from '@linode/queries';
 import {
   ActionsPanel,
@@ -7,7 +8,7 @@ import {
   TextField,
   Typography,
 } from '@linode/ui';
-import { sortByString, useOpenClose } from '@linode/utilities';
+import { useOpenClose } from '@linode/utilities';
 import {
   createObjectStorageKeysSchema,
   updateObjectStorageKeysSchema,
@@ -93,12 +94,14 @@ export const getDefaultScopes = (
   regionLookup: { [key: string]: Region } = {}
 ): DisplayedAccessKeyScope[] =>
   buckets
-    .map((thisBucket) => ({
-      bucket_name: thisBucket.label,
-      cluster: thisBucket.cluster,
-      permissions: null,
-      region: thisBucket.region,
-    }))
+    .map(
+      (thisBucket): DisplayedAccessKeyScope => ({
+        bucket_name: thisBucket.label,
+        region: thisBucket.region,
+        cluster: thisBucket.cluster,
+        permissions: null,
+      })
+    )
     .sort(sortByRegion(regionLookup));
 
 export const AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
@@ -272,11 +275,10 @@ export const AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
       : updateObjectStorageKeysSchema,
   });
 
-  // @TODO OBJ Multicluster: The objectStorageKey check is a temporary fix to handle error cases when the feature flag is enabled without Mock Service Worker (MSW). This can be removed during the feature flag cleanup.
   const isSaveDisabled =
     isRestrictedUser ||
     (mode !== 'creating' &&
-      objectStorageKey?.regions &&
+      objectStorageKey &&
       !hasLabelOrRegionsChanged(formik.values, objectStorageKey)) ||
     (mode === 'creating' &&
       limitedAccessChecked &&
@@ -439,12 +441,14 @@ export const AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
         )}
       </Drawer>
 
-      <SecretTokenDialog
-        objectStorageKey={keyToDisplay}
-        onClose={displayKeysDialog.close}
-        open={displayKeysDialog.isOpen}
-        title="Access Keys"
-      />
+      {keyToDisplay && (
+        <SecretTokenDialog
+          objectStorageKey={keyToDisplay}
+          onClose={displayKeysDialog.close}
+          open={displayKeysDialog.isOpen}
+          title="Access Keys"
+        />
+      )}
     </>
   );
 };

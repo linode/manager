@@ -1,8 +1,6 @@
 import { FormControlLabel, Toggle, TooltipIcon, Typography } from '@linode/ui';
 import * as React from 'react';
 
-import { useIsObjMultiClusterEnabled } from '../hooks/useIsObjectStorageGen2Enabled';
-import { AccessTable } from './AccessTable';
 import { BucketPermissionsTable } from './BucketPermissionsTable';
 
 import type { MODE } from './types';
@@ -35,8 +33,6 @@ interface Props {
 export const LimitedAccessControls = React.memo((props: Props) => {
   const { checked, handleToggle, ...rest } = props;
 
-  const { isObjMultiClusterEnabled } = useIsObjMultiClusterEnabled();
-
   return (
     <>
       <FormControlLabel
@@ -49,14 +45,10 @@ export const LimitedAccessControls = React.memo((props: Props) => {
           />
         }
         label={
-          isObjMultiClusterEnabled ? (
-            <LabelWithTooltip
-              labelText="Limited Access"
-              tooltipText="A Limited Access key has no permissions and you can manually set them. If you don't turn on Limited Access, the key is granted full permission in all regions."
-            />
-          ) : (
-            'Limited Access'
-          )
+          <LabelWithTooltip
+            labelText="Limited Access"
+            tooltipText="A Limited Access key has no permissions and you can manually set them. If you don't turn on Limited Access, the key is granted full permission in all regions."
+          />
         }
         sx={(theme) => ({
           marginBottom: theme.spacing(0.5),
@@ -68,11 +60,7 @@ export const LimitedAccessControls = React.memo((props: Props) => {
         also create new buckets, but will not have access to the buckets they
         create.
       </Typography>
-      {isObjMultiClusterEnabled ? (
-        <BucketPermissionsTable checked={checked} {...rest} />
-      ) : (
-        <AccessTable checked={checked} {...rest} />
-      )}
+      <BucketPermissionsTable checked={checked} {...rest} />
     </>
   );
 });

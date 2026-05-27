@@ -1,8 +1,11 @@
 import { userNameErrors } from '@linode/validation';
-import { fireEvent } from '@testing-library/react';
-import { userEvent } from '@testing-library/user-event';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
 
+import {
+  expectNotificationBannerText,
+  getCdsTextFieldInput,
+} from 'src/features/IAM/utilities/testHelpers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
@@ -15,59 +18,80 @@ const props = {
 
 const testEmail = 'testuser@example.com';
 
+const getDrawerInputs = async () => {
+  const usernameHost = document.querySelector<HTMLElement>(
+    'cds-text-field[data-qa-create-username]'
+  );
+  const emailHost = document.querySelector<HTMLElement>(
+    'cds-text-field[data-qa-create-email]'
+  );
+
+  expect(usernameHost).toBeInTheDocument();
+  expect(emailHost).toBeInTheDocument();
+
+  const usernameInput = await getCdsTextFieldInput(usernameHost!);
+  const emailInput = await getCdsTextFieldInput(emailHost!);
+
+  expect(usernameInput).toBeTruthy();
+  expect(emailInput).toBeTruthy();
+
+  return {
+    emailInput: emailInput!,
+    usernameInput: usernameInput!,
+  };
+};
+
 describe('CreateUserDrawer', () => {
   it('should render the drawer when open is true', () => {
-    const { getByRole } = renderWithTheme(<CreateUserDrawer {...props} />);
+    const { getByTestId } = renderWithTheme(<CreateUserDrawer {...props} />);
 
-    const dialog = getByRole('dialog');
+    const dialog = getByTestId('drawer');
     expect(dialog).toBeInTheDocument();
   });
 
-  it('should allow the user to fill out the form', () => {
-    const { getByLabelText, getByRole } = renderWithTheme(
+  it('should allow the user to fill out the form',  async () => {
+    const { getByTestId } = renderWithTheme(
       <CreateUserDrawer {...props} />
     );
 
-    const dialog = getByRole('dialog');
+    const dialog = getByTestId('drawer');
     expect(dialog).toBeInTheDocument();
 
-    fireEvent.change(getByLabelText(/username/i), {
-      target: { value: 'testuser' },
-    });
-    fireEvent.change(getByLabelText(/email/i), {
-      target: { value: testEmail },
-    });
+    const { emailInput, usernameInput } = await getDrawerInputs();
 
-    expect(getByLabelText(/username/i)).toHaveValue('testuser');
-    expect(getByLabelText(/email/i)).toHaveValue(testEmail);
+    await userEvent.type(usernameInput, 'testuser');
+    await userEvent.type(emailInput, testEmail);
+
+    expect(usernameInput).toHaveValue('testuser');
+    expect(emailInput).toHaveValue(testEmail);
   });
 
   it('should display an error message when submission fails', async () => {
+    const mockErrorMessage = 'An unexpected error occurred.';
+
     server.use(
       http.post('*/account/users', () => {
         return HttpResponse.json(
-          { error: [{ reason: 'An unexpected error occurred.' }] },
+          { errors: [{ reason: mockErrorMessage }] },
           { status: 500 }
         );
       })
     );
 
-    const { findByText, getByLabelText, getByRole, getByTestId } =
-      renderWithTheme(<CreateUserDrawer {...props} />);
+    const { getByTestId } = renderWithTheme(
+      <CreateUserDrawer {...props} />
+    );
 
-    const dialog = getByRole('dialog');
+    const dialog = getByTestId('drawer');
     expect(dialog).toBeInTheDocument();
 
-    fireEvent.change(getByLabelText(/username/i), {
-      target: { value: 'testuser' },
-    });
-    fireEvent.change(getByLabelText(/email/i), {
-      target: { value: testEmail },
-    });
-    fireEvent.click(getByTestId('submit'));
+    const { emailInput, usernameInput } = await getDrawerInputs();
 
-    const errorMessage = await findByText('An unexpected error occurred.');
-    expect(errorMessage).toBeInTheDocument();
+    await userEvent.type(usernameInput, 'testuser');
+    await userEvent.type(emailInput, testEmail);
+    await userEvent.click(getByTestId('submit'));
+
+    await expectNotificationBannerText(mockErrorMessage);
   });
 });
 
@@ -78,12 +102,14 @@ describe('CreateUserDrawer - Username Validation', () => {
     username: string,
     expectedError: string
   ) => {
-    const { findByText, getByLabelText, getByTestId } = renderWithTheme(
+    const { findByText, getByTestId } = renderWithTheme(
       <CreateUserDrawer {...props} />
     );
 
-    await userEvent.type(getByLabelText(/username/i), username);
-    await userEvent.type(getByLabelText(/email/i), validEmail);
+    const { emailInput, usernameInput } = await getDrawerInputs();
+
+    await userEvent.type(usernameInput, username);
+    await userEvent.type(emailInput, validEmail);
     await userEvent.click(getByTestId('submit'));
 
     const errorMessage = await findByText(expectedError);
@@ -133,13 +159,13 @@ describe('CreateUserDrawer - Username Validation', () => {
 
   describe('Valid usernames', () => {
     const testValidUsername = async (username: string) => {
-      const { queryByText, getByLabelText } = renderWithTheme(
-        <CreateUserDrawer {...props} />
-      );
+      const { queryByText } = renderWithTheme(<CreateUserDrawer {...props} />);
 
-      await userEvent.type(getByLabelText(/username/i), username);
-      await userEvent.type(getByLabelText(/email/i), validEmail);
-      await userEvent.click(getByLabelText(/username/i));
+      const { emailInput, usernameInput } = await getDrawerInputs();
+
+      await userEvent.type(usernameInput, username);
+      await userEvent.type(emailInput, validEmail);
+      await userEvent.click(usernameInput);
       await new Promise((resolve) => setTimeout(resolve, 100));
 
       expect(

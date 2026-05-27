@@ -1,7 +1,7 @@
 import { Badge } from '@akamai/cds-components/react/Badge';
 import { TableCell, TableRow } from '@akamai/cds-components/react/Table';
+import { splitAt } from '@akamai/compute-ui-core/formatting';
 import { Hidden, Stack, styled } from '@linode/ui';
-import { splitAt } from '@linode/utilities';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';

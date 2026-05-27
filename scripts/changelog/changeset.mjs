@@ -1,7 +1,6 @@
 import fs from 'fs';
 import inquirer from 'inquirer';
 import { execSync } from "child_process";
-import { getPullRequestId } from "./utils/getPullRequestId.mjs";
 import { promisify } from "util";
 import { logger } from "./utils/logger.mjs";
 import {
@@ -14,23 +13,23 @@ const writeFileAsync = promisify(fs.writeFile);
 
 async function generateChangeset() {
   /**
-   * Check if the "gh" command-line tool is installed.
+   * Prompt the user for the Bitbucket PR ID.
    */
-  try {
-    execSync("gh version");
-  } catch (error) {
-    logger.error({
-      message: 'Error: The "gh" command-line tool is not installed.',
-      info:
-        "Please install it from https://github.com/cli/cli#installation\nand sign in with your GitHub account.",
-    });
-  }
-
-  /**
-   * Get the pull request number for the current branch.
-   * This will fail if the current branch is not a pull request and use will get a message to open a pull request.
-   */
-  const pullRequestId = await getPullRequestId();
+  const { pullRequestId } = await inquirer.prompt([
+    {
+      type: "input",
+      prefix: `🔗 Bitbucket PR`,
+      name: "pullRequestId",
+      message: "\nEnter the Bitbucket PR number:",
+      validate: (input) => {
+        const trimmed = input.trim();
+        if (!/^[0-9]+$/.test(trimmed)) {
+          return "PR number must be a number.";
+        }
+        return true;
+      },
+    },
+  ]);
 
   /**
    * Prompt the user for the linode package, type of change, a description and a commit option.
@@ -98,7 +97,7 @@ async function generateChangeset() {
     },
   ]);
 
-  const prLink = `https://github.com/linode/manager/pull/${pullRequestId}`;
+  const prLink = `https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/${pullRequestId}`;
   const changesetPath = changesetDirectory(linodePackage);
   const changesetFile = `${changesetPath}/pr-${pullRequestId}-${type
     .toLowerCase()
@@ -126,10 +125,10 @@ async function generateChangeset() {
 
   try {
     const addCmd = `git add "${changesetFile}"`;
-    // This allows backticks in the commit message. We first need to sanitize against any number of backslashes 
-    // that appear before backtick in description, to avoid having unescaped characters. Then we can add back 
+    // This allows backticks in the commit message. We first need to sanitize against any number of backslashes
+    // that appear before backtick in description, to avoid having unescaped characters. Then we can add back
     // two backslashes before the backtick to make sure backticks show up in the commit message.
-    const escapedDescription = description.replace(/\\*`/g, "\\`"); 
+    const escapedDescription = description.replace(/\\*`/g, "\\`");
     const commitCmd = `git commit -m "Added changeset: ${escapedDescription}"`;
     execSync(addCmd);
     execSync(commitCmd);

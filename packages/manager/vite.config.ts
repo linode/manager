@@ -1,12 +1,23 @@
-import react from '@vitejs/plugin-react-swc';
+import react from '@vitejs/plugin-react';
 import { URL } from 'url';
 import svgr from 'vite-plugin-svgr';
-import { defineConfig } from 'vitest/config';
+import { defineConfig, type Plugin } from 'vitest/config';
 
 import { urlCanParsePolyfill } from './src/polyfills/urlCanParse';
 
 // ESM-friendly alternative to `__dirname`.
 const DIRNAME = new URL('.', import.meta.url).pathname;
+
+// Re-scopes @akamai/cds-tokens dark theme from :root{} to [data-theme="dark"]{}
+// so it only activates when LinodeThemeWrapper sets data-theme="dark" on <body>.
+const cdsDarkTokensScope = (): Plugin => ({
+  name: 'cds-dark-tokens-scope',
+  transform(code, id) {
+    if (id.includes('@akamai/cds-tokens') && id.includes('themes/dark')) {
+      return code.replace(':root {', '[data-theme="dark"] {');
+    }
+  },
+});
 
 export default defineConfig({
   build: {
@@ -14,6 +25,7 @@ export default defineConfig({
   },
   envPrefix: 'REACT_APP_',
   plugins: [
+    cdsDarkTokensScope(),
     react(),
     svgr({ svgrOptions: { exportType: 'default' }, include: '**/*.svg' }),
     urlCanParsePolyfill(),
@@ -21,6 +33,13 @@ export default defineConfig({
   resolve: {
     alias: {
       src: `${DIRNAME}/src`,
+      // In test mode, stub out msw/browser so Vite never tries to resolve the
+      // real subpath export. `vitest related` scans the full source tree and
+      // hits mswWorkers.ts → msw/browser, which fails under Node conditions in
+      // Vite 7 + Node 22. The browser worker is never used in unit tests.
+      ...(process.env.VITEST
+        ? { 'msw/browser': `${DIRNAME}/src/mocks/mswBrowserStub.ts` }
+        : {}),
     },
   },
   server: {
@@ -28,6 +47,9 @@ export default defineConfig({
     port: 3000,
   },
   test: {
+    env: {
+      REACT_APP_CLIENT_ID: 'test-client-id',
+    },
     // Limit parallelism in CI to prevent resource exhaustion on shared agents.
     maxWorkers: process.env.CI ? '50%' : undefined,
     // Generous timeouts: MSW + async React state updates need room to breathe.

@@ -1,3 +1,4 @@
+import { formatDate } from '@akamai/compute-ui-core/datetime';
 import { useProfile, useRegionsQuery } from '@linode/queries';
 import { Box, Typography } from '@linode/ui';
 import { getFormattedStatus } from '@linode/utilities';
@@ -8,7 +9,6 @@ import React from 'react';
 import Lock from 'src/assets/icons/lock.svg';
 import Unlock from 'src/assets/icons/unlock.svg';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
-import { formatDate } from 'src/utilities/formatDate';
 
 import { AttachedToValue } from '../../Partials/AttachedToValue';
 import { volumeStatusIconMap } from '../../utils';

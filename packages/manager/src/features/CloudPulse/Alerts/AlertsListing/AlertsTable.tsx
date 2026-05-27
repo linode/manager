@@ -13,6 +13,10 @@ interface UngroupedAlertsProps {
    */
   alerts: Alert[];
   /**
+   * Callback function to handle cloning an alert
+   */
+  handleClone: (alert: Alert) => void;
+  /**
    * Callback function to handle deleting an alert
    */
   handleDelete: (alert: Alert) => void;
@@ -36,6 +40,7 @@ interface UngroupedAlertsProps {
 
 export const AlertsTable = ({
   alerts,
+  handleClone,
   handleDelete,
   handleDetails,
   handleEdit,
@@ -48,6 +53,7 @@ export const AlertsTable = ({
         <AlertTableRow
           alert={alert}
           handlers={{
+            handleClone: () => handleClone(alert),
             handleDelete: () => handleDelete(alert),
             handleDetails: () => handleDetails(alert),
             handleEdit: () => handleEdit(alert),

@@ -513,6 +513,7 @@ export const TextField = (props: TextFieldProps) => {
         <FormHelperText
           data-qa-textfield-error-text={label}
           error
+          id={errorTextId}
           role="alert"
           sx={{
             ...((editable || hasAbsoluteError) && {

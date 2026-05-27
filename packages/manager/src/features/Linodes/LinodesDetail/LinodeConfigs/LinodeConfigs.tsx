@@ -23,7 +23,6 @@ import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useCanUpgradeInterfaces } from 'src/hooks/useCanUpgradeInterfaces';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { sendLinodeConfigurationDocsEvent } from 'src/utilities/analytics/customEventAnalytics';
-import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
 import { useLinodeDetailContext } from '../LinodesDetailContext';
 import { BootConfigDialog } from './BootConfigDialog';
@@ -49,7 +48,6 @@ const LinodeConfigs = () => {
   );
 
   const { data: linode } = useLinodeQuery(id);
-  const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
   const { canUpgradeInterfaces, unableToUpgradeReasons } =
     useCanUpgradeInterfaces(
       linode?.lke_cluster_id,
@@ -151,27 +149,26 @@ const LinodeConfigs = () => {
             sendLinodeConfigurationDocsEvent('Configuration Profiles');
           }}
         />
-        {isLinodeInterfacesEnabled &&
-          linode?.interface_generation !== 'linode' && (
-            <Button
-              alwaysShowTooltip
-              buttonType="outlined"
-              disabled={isReadOnly || !canUpgradeInterfaces}
-              onClick={openUpgradeInterfacesDialog}
-              TooltipProps={{
-                slotProps: {
-                  tooltip: {
-                    sx: {
-                      maxWidth: !canUpgradeInterfaces ? '210px' : '260px',
-                    },
+        {linode?.interface_generation !== 'linode' && (
+          <Button
+            alwaysShowTooltip
+            buttonType="outlined"
+            disabled={isReadOnly || !canUpgradeInterfaces}
+            onClick={openUpgradeInterfacesDialog}
+            TooltipProps={{
+              slotProps: {
+                tooltip: {
+                  sx: {
+                    maxWidth: !canUpgradeInterfaces ? '210px' : '260px',
                   },
                 },
-              }}
-              tooltipText={upgradeInterfacesTooltipText}
-            >
-              Upgrade Interfaces
-            </Button>
-          )}
+              },
+            }}
+            tooltipText={upgradeInterfacesTooltipText}
+          >
+            Upgrade Interfaces
+          </Button>
+        )}
         <Button
           buttonType="primary"
           disabled={!permissions.create_linode_config_profile}

@@ -1,0 +1,40 @@
+.root {
+  align-items: baseline;
+  color: var(--link-color);
+}
+
+.root:hover {
+  color: var(--link-hover-color);
+}
+
+.root:hover svg {
+  color: var(--link-hover-color);
+}
+
+.forceCopyColor {
+  color: var(--link-copy-color);
+  transition: color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+}
+
+.forceCopyColor:hover,
+.forceCopyColor:focus,
+.forceCopyColor svg {
+  color: var(--link-copy-hover-color);
+}
+
+.iconContainer {
+  color: var(--link-icon-container-color);
+  display: inline-block;
+  height: 14px;
+  margin-left: -10px;
+  position: relative;
+  top: 3px;
+  transform: translateX(18px);
+  width: 14px;
+}
+
+.iconContainer svg {
+  color: var(--link-icon-color);
+  height: 16px;
+  width: 16px;
+}

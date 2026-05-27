@@ -1,7 +1,6 @@
+import { getStorage, setStorage } from '@akamai/compute-ui-core/browser';
 import Grid from '@mui/material/Grid';
 import * as React from 'react';
-
-import { getStorage, setStorage } from 'src/utilities/storage';
 
 export const MOCK_THEME_STORAGE_KEY = 'devTools/theme';
 

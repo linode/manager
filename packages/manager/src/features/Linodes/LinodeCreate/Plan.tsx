@@ -33,11 +33,28 @@ export const Plan = () => {
     types,
   });
 
+  const disabledTabsConfig = React.useMemo(() => {
+    if (shouldDisablePremiumPlansTab) {
+      return {
+        disabledTabs: [
+          {
+            tab: 'premium',
+            copy: 'Premium CPUs are now called G7 Dedicated plans.',
+          },
+        ],
+      };
+    }
+
+    return {
+      disabledTabs: [],
+    };
+  }, [shouldDisablePremiumPlansTab]);
+
   return (
     <PlansPanel
       data-qa-select-plan
       disabled={!permissions.create_linode}
-      disabledTabs={shouldDisablePremiumPlansTab ? ['premium'] : undefined}
+      disabledTabs={disabledTabsConfig.disabledTabs}
       docsLink={
         <DocsLink
           href="https://techdocs.akamai.com/cloud-computing/docs/how-to-choose-a-compute-instance-plan"
@@ -61,11 +78,6 @@ export const Plan = () => {
       selectedId={field.value}
       selectedRegionID={regionId}
       showLimits
-      tabDisabledMessage={
-        shouldDisablePremiumPlansTab
-          ? 'Premium CPUs are now called G7 Dedicated plans.'
-          : undefined
-      }
       types={types?.map(extendType) ?? []} // @todo don't extend type
     />
   );

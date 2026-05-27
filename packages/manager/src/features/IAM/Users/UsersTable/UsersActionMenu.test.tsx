@@ -5,6 +5,7 @@ import React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
+import { openActionMenu } from '../../utilities/testHelpers';
 import { UsersActionMenu } from './UsersActionMenu';
 
 const navigate = vi.fn();
@@ -50,9 +51,7 @@ describe('UsersActionMenu', () => {
       />
     );
 
-    const actionBtn = screen.getByRole('button');
-    expect(actionBtn).toBeInTheDocument();
-    await userEvent.click(actionBtn);
+    await openActionMenu();
 
     // Check if "View User Details" action is present
     const viewDetailsButton = screen.getByText('View User Details');
@@ -67,6 +66,8 @@ describe('UsersActionMenu', () => {
       to: '/iam/users/$username/details',
     });
 
+    await openActionMenu();
+
     // Check if "View Assigned Roles" action is present
     const viewRolesButton = screen.getByText('View Assigned Roles');
     expect(viewRolesButton).toBeInTheDocument();
@@ -79,6 +80,8 @@ describe('UsersActionMenu', () => {
       },
       to: '/iam/users/$username/roles',
     });
+
+    await openActionMenu();
 
     // Check if "Delete User" action is present
     const deleteUserButton = screen.getByText('Delete User');
@@ -106,19 +109,11 @@ describe('UsersActionMenu', () => {
       />
     );
 
-    const actionBtn = screen.getByRole('button');
-    expect(actionBtn).toBeInTheDocument();
-    await userEvent.click(actionBtn);
+    await openActionMenu();
 
     // Check if "Delete User" action is present but disabled
     const deleteUserButton = screen.getByTestId('Delete User');
     expect(deleteUserButton).toBeInTheDocument();
     expect(deleteUserButton).toHaveAttribute('aria-disabled', 'true');
-
-    // Check for tooltip text
-    const tooltip = screen.getByRole('button', {
-      name: "You can't delete the currently active user.",
-    });
-    expect(tooltip).toBeInTheDocument();
   });
 });

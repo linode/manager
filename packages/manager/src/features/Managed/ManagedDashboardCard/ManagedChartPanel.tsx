@@ -1,6 +1,6 @@
+import { getUserTimezone } from '@akamai/compute-ui-core/datetime';
 import { useProfile } from '@linode/queries';
 import { Box, CircleProgress, ErrorState, Typography } from '@linode/ui';
-import { getUserTimezone } from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 

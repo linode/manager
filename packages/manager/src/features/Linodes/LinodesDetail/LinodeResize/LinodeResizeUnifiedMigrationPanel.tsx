@@ -1,3 +1,4 @@
+import { capitalize } from '@akamai/compute-ui-core/formatting';
 import { FormControlLabel, Typography } from '@linode/ui';
 import {
   Box,
@@ -7,7 +8,6 @@ import {
   RadioGroup,
   TooltipIcon,
 } from '@linode/ui';
-import { capitalize } from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 

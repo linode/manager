@@ -1,5 +1,5 @@
 import { useGetDelegatedChildAccountsForUserQuery } from '@linode/queries';
-import { Paper, Stack, Typography } from '@linode/ui';
+import { Stack, Typography } from '@linode/ui';
 import { useNavigate, useParams, useSearch } from '@tanstack/react-router';
 import * as React from 'react';
 
@@ -20,6 +20,7 @@ import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
 import { CircleProgress } from '../../Shared/CircleProgress/CircleProgress';
+import { Paper } from '../../Shared/Paper/Paper';
 
 import type { Theme } from '@mui/material';
 

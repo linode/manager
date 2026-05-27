@@ -22,6 +22,7 @@ const mockHandleDetails = vi.fn();
 const mockHandleEdit = vi.fn();
 const mockHandleStatusChange = vi.fn();
 const mockHandleDelete = vi.fn();
+const mockHandleClone = vi.fn();
 const mockServices: Item<string, CloudPulseServiceType>[] = [
   { label: 'Linode', value: 'linode' },
   { label: 'Databases', value: 'dbaas' },
@@ -43,6 +44,7 @@ describe('GroupedAlertsTable', () => {
     renderWithTheme(
       <GroupedAlertsTable
         groupedAlerts={mockAlerts}
+        handleClone={mockHandleClone}
         handleDelete={mockHandleDelete}
         handleDetails={mockHandleDetails}
         handleEdit={mockHandleEdit}
@@ -66,6 +68,7 @@ describe('GroupedAlertsTable', () => {
     renderWithTheme(
       <GroupedAlertsTable
         groupedAlerts={alerts}
+        handleClone={mockHandleClone}
         handleDelete={mockHandleDelete}
         handleDetails={mockHandleDetails}
         handleEdit={mockHandleEdit}
@@ -89,6 +92,7 @@ describe('GroupedAlertsTable', () => {
     renderWithTheme(
       <GroupedAlertsTable
         groupedAlerts={alerts}
+        handleClone={mockHandleClone}
         handleDelete={mockHandleDelete}
         handleDetails={mockHandleDetails}
         handleEdit={mockHandleEdit}

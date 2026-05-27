@@ -224,7 +224,8 @@ export const generateGraphData = (props: GraphDataOptionsProps): GraphData => {
     humanizableUnits: humanizedUnits,
   } = props;
   const legendRowsData: MetricsDisplayRow[] = [];
-  const dimension: { [timestamp: number]: { [label: string]: number } } = {};
+  const dimension: { [timestamp: number]: { [label: string]: null | number } } =
+    {};
   const areas: AreaProps[] = [];
   const colors = Object.values(Alias.Chart.Categorical);
   const isHumanizableUnit = humanizedUnits?.some(
@@ -277,16 +278,24 @@ export const generateGraphData = (props: GraphDataOptionsProps): GraphData => {
         data.forEach((dataPoint) => {
           const timestamp = dataPoint[0];
           const value = dataPoint[1];
-          if (value !== null) {
-            dimension[timestamp] = {
-              ...dimension[timestamp],
-              [labelName]: value,
-            };
-          }
+          dimension[timestamp] = {
+            ...dimension[timestamp],
+            [labelName]: value,
+          };
         });
+
+        const formattedData: number[][] = data.flatMap((dataPoint) => {
+          if (dataPoint[1] !== null) {
+            return [[dataPoint[0], dataPoint[1]]];
+          }
+
+          // Return empty array to filter out the null cases
+          return [];
+        });
+
         // construct a legend row with the dimension
         const legendRow: MetricsDisplayRow = {
-          data: getMetrics(data as number[][]),
+          data: getMetrics(formattedData), // get the metrics for the dimension to be shown in legend using formatted data with null values filtered out
           format: isHumanizableUnit
             ? (value: number) => `${humanizeLargeData(value)} ${unit}` // we need to humanize count values in legend
             : (value: number) => formatToolTip(value, unit),
@@ -305,7 +314,10 @@ export const generateGraphData = (props: GraphDataOptionsProps): GraphData => {
         (oldValue, newValue) => {
           return {
             ...oldValue,
-            [newValue[0]]: convertValueToUnit(newValue[1], maxUnit),
+            [newValue[0]]:
+              newValue[1] !== null
+                ? convertValueToUnit(newValue[1], maxUnit)
+                : null,
           };
         },
         {}

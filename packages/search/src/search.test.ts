@@ -165,6 +165,36 @@ describe("getAPIFilterFromQuery", () => {
     });
   });
 
+  it("allows '=' symbol in search values", () => {
+    const query = 'tag:env=production_us_east';
+
+    expect(getAPIFilterFromQuery(query, { searchableFieldsWithoutOperator: [] })).toEqual({
+      filter: {
+        tags: { '+contains': "env=production_us_east" }
+      },
+      error: null,
+    });
+  });
+
+  it("allows unquoted search values containing '=' with additonal filters", () => {
+    const query = 'tag: env=production region = us-east label: env=dev';
+
+    expect(getAPIFilterFromQuery(query, { searchableFieldsWithoutOperator: [] })).toEqual({
+      filter: {
+        "+and": [
+          { tags: { "+contains": "env=production" } },
+          {
+            '+and': [
+              { region: "us-east" },
+              { label: { "+contains": "env=dev" } },
+            ]
+          }
+        ],
+      },
+      error: null,
+    });
+  });
+
   it("allows '@' symbol in search", () => {
     const query = 'email: thisisafakeemail@linode.com';
 

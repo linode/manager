@@ -50,7 +50,6 @@ import {
   handleFieldErrors,
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
-import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
 import { InterfaceSelect } from '../LinodeSettings/InterfaceSelect';
 import { KernelSelect } from '../LinodeSettings/KernelSelect';
@@ -245,8 +244,6 @@ export const LinodeConfigDialog = (props: Props) => {
     console.warn('Invalid memory value:', availableMemory);
   }
   const deviceLimit = useGetDeviceLimit(availableMemory);
-
-  const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -971,8 +968,7 @@ export const LinodeConfigDialog = (props: Props) => {
 
             <Grid size={12}>
               <Box alignItems="center" display="flex">
-                {(isLegacyConfigInterface ||
-                  (isLinodeInterface && isLinodeInterfacesEnabled)) && (
+                {(isLegacyConfigInterface || isLinodeInterface) && (
                   <Typography variant="h3">Networking</Typography>
                 )}
                 {isLegacyConfigInterface && (
@@ -987,7 +983,7 @@ export const LinodeConfigDialog = (props: Props) => {
                   />
                 )}
               </Box>
-              {isLinodeInterface && isLinodeInterfacesEnabled && (
+              {isLinodeInterface && (
                 <>
                   <Typography sx={(theme) => ({ marginTop: theme.spacing(2) })}>
                     Go to{' '}

@@ -203,7 +203,7 @@ export const getSharegroupMembers = (
   params: Params = {},
   filters: Filter = {},
 ) => {
-  Request<Page<SharegroupMember>>(
+  return Request<Page<SharegroupMember>>(
     setURL(
       `${BETA_API_ROOT}/images/sharegroups/${encodeURIComponent(sharegroupId)}/members`,
     ),
@@ -212,7 +212,6 @@ export const getSharegroupMembers = (
     setXFilter(filters),
   );
 };
-
 /**
  * Get member details of a user from the Sharegroup
  *
@@ -238,7 +237,7 @@ export const getUserSharegroupTokens = (
   params: Params = {},
   filters: Filter = {},
 ) => {
-  Request<Page<SharegroupToken>>(
+  return Request<Page<SharegroupToken>>(
     setURL(`${BETA_API_ROOT}/images/sharegroups/tokens`),
     setMethod('GET'),
     setParams(params),

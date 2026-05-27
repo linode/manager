@@ -29,29 +29,6 @@ vi.mock('src/features/IAM/hooks/usePermissions', () => ({
 }));
 describe('VPC Landing Table', () => {
   it('should render vpc landing table with items', async () => {
-    const vpcsWithSubnet = vpcFactory.buildList(3, {
-      subnets: subnetFactory.buildList(Math.floor(Math.random() * 10) + 1),
-    });
-    queryMocks.useVPCsQuery.mockReturnValue({
-      data: {
-        data: vpcsWithSubnet,
-        page: 1,
-        pages: 1,
-        results: 3,
-      },
-    });
-
-    const { getByText } = renderWithTheme(<VPCLanding />);
-
-    // Static text and table column headers
-    expect(getByText('Label')).toBeVisible();
-    expect(getByText('Region')).toBeVisible();
-    expect(getByText('VPC ID')).toBeVisible();
-    expect(getByText('Subnets')).toBeVisible();
-    expect(getByText('Linodes')).toBeVisible();
-  });
-
-  it('should render vpc landing table with items with nodebalancerVpc flag enabled', async () => {
     queryMocks.useVPCsQuery.mockReturnValue({
       data: {
         data: vpcFactory.buildList(3, {
@@ -63,9 +40,7 @@ describe('VPC Landing Table', () => {
       },
     });
 
-    const { getByText } = renderWithTheme(<VPCLanding />, {
-      flags: { nodebalancerVpc: true },
-    });
+    const { getByText } = renderWithTheme(<VPCLanding />);
 
     // Static text and table column headers
     expect(getByText('Label')).toBeVisible();

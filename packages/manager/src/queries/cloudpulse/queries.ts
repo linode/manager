@@ -193,10 +193,14 @@ const getAllBuckets = async () => {
   const endpoints = await getAllObjectStorageEndpoints();
 
   // Get all the buckets from the endpoints
-  const allBuckets = await getAllBucketsFromEndpoints(endpoints);
+  const allBuckets = await getAllBucketsFromEndpoints(endpoints, true);
 
   // Throw the error if we encounter any error for any single call.
   if (allBuckets.errors.length) {
+    const firstError = allBuckets.errors[0]?.error?.[0]; // it is enough to check the first error since if there is an error in any of the endpoint call, we want to throw error and stop the execution.
+    if (firstError?.reason === 'Unauthorized') {
+      throw new Error('Unauthorized');
+    }
     throw new Error('Unable to fetch the data.');
   }
 

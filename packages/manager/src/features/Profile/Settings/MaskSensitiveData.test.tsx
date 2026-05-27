@@ -24,8 +24,8 @@ describe('MaskSensitiveData', () => {
     const { getByRole, getByText } = renderWithTheme(<MaskSensitiveData />);
 
     await waitFor(() => {
-      expect(getByRole('checkbox')).toBeEnabled();
-      expect(getByRole('checkbox')).toBeChecked();
+      expect(getByRole('switch')).toBeEnabled();
+      expect(getByRole('switch')).toBeChecked();
     });
 
     expect(getByText('Sensitive data is masked')).toBeVisible();
@@ -43,10 +43,10 @@ describe('MaskSensitiveData', () => {
     const { getByRole, getByText } = renderWithTheme(<MaskSensitiveData />);
 
     await waitFor(() => {
-      expect(getByRole('checkbox')).toBeEnabled();
+      expect(getByRole('switch')).toBeEnabled();
     });
 
-    expect(getByRole('checkbox')).not.toBeChecked();
+    expect(getByRole('switch')).not.toBeChecked();
     expect(getByText('Sensitive data is visible')).toBeVisible();
   });
 
@@ -58,10 +58,10 @@ describe('MaskSensitiveData', () => {
     const { getByRole, getByText } = renderWithTheme(<MaskSensitiveData />);
 
     await waitFor(() => {
-      expect(getByRole('checkbox')).toBeEnabled();
+      expect(getByRole('switch')).toBeEnabled();
     });
 
-    expect(getByRole('checkbox')).not.toBeChecked();
+    expect(getByRole('switch')).not.toBeChecked();
     expect(getByText('Sensitive data is visible')).toBeVisible();
   });
 });

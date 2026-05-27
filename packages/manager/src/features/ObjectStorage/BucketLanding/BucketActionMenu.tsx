@@ -8,7 +8,6 @@ import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuActi
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 export interface BucketActionMenuProps {
-  cluster: string;
   label: string;
   onDetails: () => void;
   onRemove: () => void;

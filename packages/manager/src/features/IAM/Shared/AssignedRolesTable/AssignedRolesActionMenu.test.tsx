@@ -1,8 +1,9 @@
-import { fireEvent } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
+import { openActionMenu } from '../../utilities/testHelpers';
 import { AssignedRolesActionMenu } from './AssignedRolesActionMenu';
 
 import type { ExtendedRoleView } from '../types';
@@ -34,8 +35,8 @@ const mockEntityRole: ExtendedRoleView = {
 };
 
 describe('AssignedRolesActionMenu', () => {
-  it('should render actions for account access roles correctly', () => {
-    const { getByRole, queryByText } = renderWithTheme(
+  it('should render actions for account access roles correctly', async () => {
+    renderWithTheme(
       <AssignedRolesActionMenu
         handleChangeRole={mockOnChangeRole}
         handleUnassignRole={mockOnUnassignRole}
@@ -49,18 +50,18 @@ describe('AssignedRolesActionMenu', () => {
       />
     );
 
-    const actionBtn = getByRole('button');
-    expect(actionBtn).toBeInTheDocument();
-    fireEvent.click(actionBtn);
+    await openActionMenu();
 
-    expect(queryByText('Change Role')).toBeInTheDocument();
-    expect(queryByText('Unassign Role')).toBeInTheDocument();
-    expect(queryByText('Update List of Entities')).not.toBeInTheDocument();
-    expect(queryByText('View Entities')).not.toBeInTheDocument();
+    expect(screen.getByText('Change Role')).toBeInTheDocument();
+    expect(screen.getByText('Unassign Role')).toBeInTheDocument();
+    expect(
+      screen.queryByText('Update List of Entities')
+    ).not.toBeInTheDocument();
+    expect(screen.queryByText('View Entities')).not.toBeInTheDocument();
   });
 
-  it('should render actions for entity access roles correctly', () => {
-    const { getByRole, queryByText } = renderWithTheme(
+  it('should render actions for entity access roles correctly', async () => {
+    renderWithTheme(
       <AssignedRolesActionMenu
         handleChangeRole={mockOnChangeRole}
         handleUnassignRole={mockOnUnassignRole}
@@ -74,14 +75,11 @@ describe('AssignedRolesActionMenu', () => {
       />
     );
 
-    // Check if "Manage Access" action is present
-    const actionBtn = getByRole('button');
-    expect(actionBtn).toBeInTheDocument();
-    fireEvent.click(actionBtn);
+    await openActionMenu();
 
-    expect(queryByText('View Entities')).toBeInTheDocument();
-    expect(queryByText('Update List of Entities')).toBeInTheDocument();
-    expect(queryByText('Change Role')).toBeInTheDocument();
-    expect(queryByText('Unassign Role')).toBeInTheDocument();
+    expect(screen.getByText('View Entities')).toBeInTheDocument();
+    expect(screen.getByText('Update List of Entities')).toBeInTheDocument();
+    expect(screen.getByText('Change Role')).toBeInTheDocument();
+    expect(screen.getByText('Unassign Role')).toBeInTheDocument();
   });
 });

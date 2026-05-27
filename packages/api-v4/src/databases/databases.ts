@@ -245,27 +245,6 @@ export const getDatabaseBackup = (
   );
 
 /**
- * legacyRestoreWithBackup
- *
- * Fully restore a backup to the cluster
- */
-export const legacyRestoreWithBackup = (
-  engine: Engine,
-  databaseID: number,
-  backupID: number,
-) =>
-  Request<{}>(
-    setURL(
-      `${API_ROOT}/databases/${encodeURIComponent(
-        engine,
-      )}/instances/${encodeURIComponent(
-        databaseID,
-      )}/backups/${encodeURIComponent(backupID)}/restore`,
-    ),
-    setMethod('POST'),
-  );
-
-/**
  * restoreWithBackup for the New Database
  *
  * Fully restore a backup to the cluster

@@ -137,7 +137,8 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
       values,
       serviceType,
       alertDetails.severity,
-      alertId
+      alertId,
+      flags.aclpAlerting?.enableGroupBy
     );
     try {
       await editAlert(editPayload);

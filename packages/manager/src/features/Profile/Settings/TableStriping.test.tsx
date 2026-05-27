@@ -26,10 +26,10 @@ describe('EnableTableStriping', () => {
     const { getByRole, getByText } = renderWithTheme(<TableStriping />);
 
     await waitFor(() => {
-      expect(getByRole('checkbox')).toBeEnabled();
+      expect(getByRole('switch')).toBeEnabled();
     });
 
-    expect(getByRole('checkbox')).toBeChecked();
+    expect(getByRole('switch')).toBeChecked();
     expect(getByText('Table striping is enabled')).toBeVisible();
   });
 
@@ -45,10 +45,10 @@ describe('EnableTableStriping', () => {
     const { getByRole, getByText } = renderWithTheme(<TableStriping />);
 
     await waitFor(() => {
-      expect(getByRole('checkbox')).toBeEnabled();
+      expect(getByRole('switch')).toBeEnabled();
     });
 
-    expect(getByRole('checkbox')).not.toBeChecked();
+    expect(getByRole('switch')).not.toBeChecked();
     expect(getByText('Table striping is disabled')).toBeVisible();
   });
 
@@ -60,10 +60,10 @@ describe('EnableTableStriping', () => {
     const { getByRole, getByText } = renderWithTheme(<TableStriping />);
 
     await waitFor(() => {
-      expect(getByRole('checkbox')).toBeEnabled();
+      expect(getByRole('switch')).toBeEnabled();
     });
 
-    expect(getByRole('checkbox')).toBeChecked();
+    expect(getByRole('switch')).toBeChecked();
     expect(getByText('Table striping is enabled')).toBeVisible();
   });
 });

@@ -1,6 +1,7 @@
+import { NotificationBanner } from '@akamai/cds-components/react';
+import { Spacing } from '@akamai/cds-tokens';
 import {
   FormControlLabel,
-  Notice,
   Radio,
   RadioGroup,
   styled,
@@ -80,10 +81,11 @@ export const DatabaseCreateAccessControls = (props: AccessProps) => {
       <Box>
         {errors &&
           errors.map((apiError: APIError) => (
-            <Notice
+            <NotificationBanner
               key={apiError.reason}
+              style={{ marginBottom: Spacing.S16 }}
               text={apiError.reason}
-              variant="error"
+              type="error"
             />
           ))}
         <Controller

@@ -1,8 +1,8 @@
+import { formatDate } from '@akamai/compute-ui-core/datetime';
 import { screen } from '@testing-library/react';
 import React from 'react';
 
 import { notificationChannelFactory } from 'src/factories/cloudpulse/channels';
-import { formatDate } from 'src/utilities/formatDate';
 import { renderWithTheme, wrapWithTableBody } from 'src/utilities/testHelpers';
 
 import { NotificationChannelTableRow } from './NotificationChannelTableRow';

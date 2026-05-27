@@ -1,4 +1,4 @@
-import { capitalize } from '@linode/utilities';
+import { capitalize } from '@akamai/compute-ui-core/formatting';
 
 import type { TransferEntities } from '@linode/api-v4';
 

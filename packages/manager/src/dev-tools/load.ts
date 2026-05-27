@@ -105,7 +105,7 @@ export async function loadDevTools() {
 
     const baseHandlers = resolveMockPreset(mswPreset, mergedContext);
 
-    const worker = mswWorker(extraHandlers, baseHandlers);
+    const worker = await mswWorker(extraHandlers, baseHandlers);
     await worker.start({ onUnhandledRequest: 'bypass' });
   }
 }

@@ -8,7 +8,10 @@ import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { useFlags } from 'src/hooks/useFlags';
 import { useIsGenerationalPlansEnabled } from 'src/utilities/linodes';
-import { PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE } from 'src/utilities/pricing/constants';
+import {
+  MONTHLY_COLUMN_HOURLY_ONLY_TOOLTIP_TEXT,
+  PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE,
+} from 'src/utilities/pricing/constants';
 
 import { StyledTable, StyledTableCell } from './PlanContainer.styles';
 
@@ -24,6 +27,7 @@ interface PlanSelectionTableProps {
   planType?: LinodeTypeClass;
   renderPlanSelection?: (plans: PlanWithAvailability[]) => React.JSX.Element[];
   shouldDisplayNoRegionSelectedMessage: boolean;
+  showMonthlyColumnHourlyOnlyTooltip?: boolean;
   showNetwork?: boolean;
   showTransfer?: boolean;
   showUsableStorage?: boolean;
@@ -54,6 +58,7 @@ export const PlanSelectionTable = (props: PlanSelectionTableProps) => {
     plans,
     renderPlanSelection,
     shouldDisplayNoRegionSelectedMessage,
+    showMonthlyColumnHourlyOnlyTooltip,
     showNetwork: shouldShowNetwork,
     showTransfer: shouldShowTransfer,
     showUsableStorage,
@@ -158,6 +163,11 @@ export const PlanSelectionTable = (props: PlanSelectionTableProps) => {
                     'Usable storage is smaller than the actual plan storage due to the overhead from the database platform.',
                     240
                   )}
+                {/* Only show when a region is selected and the tab has hourly-only plans. */}
+                {cellName === 'Monthly' &&
+                  showMonthlyColumnHourlyOnlyTooltip &&
+                  !shouldDisplayNoRegionSelectedMessage &&
+                  showTooltip('info', MONTHLY_COLUMN_HOURLY_ONLY_TOOLTIP_TEXT)}
               </StyledTableCell>
             );
           })}

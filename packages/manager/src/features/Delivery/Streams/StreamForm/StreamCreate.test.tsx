@@ -65,7 +65,7 @@ describe('StreamCreate', () => {
         await waitFor(() => {
           expect(endpointInput).toBeDefined();
         });
-        await userEvent.type(endpointInput, 'test');
+        await userEvent.type(endpointInput, 'test.com');
         const bucketInput = screen.getByLabelText('Bucket');
         await userEvent.type(bucketInput, 'test');
         const accessKeyIDInput = screen.getByLabelText('Access Key ID');

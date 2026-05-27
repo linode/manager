@@ -1,4 +1,4 @@
-import { truncate } from '@linode/utilities';
+import { truncate } from '@akamai/compute-ui-core/formatting';
 import Algolia from 'algoliasearch';
 import * as React from 'react';
 

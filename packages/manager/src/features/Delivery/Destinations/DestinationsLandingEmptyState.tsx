@@ -1,3 +1,4 @@
+import { sendEvent } from '@akamai/compute-ui-core/analytics';
 import * as React from 'react';
 
 import MonitorIcon from 'src/assets/icons/entityIcons/monitor.svg';
@@ -8,7 +9,6 @@ import {
   headers,
   linkAnalyticsEvent,
 } from 'src/features/Delivery/Destinations/DestinationsLandingEmptyStateData';
-import { sendEvent } from 'src/utilities/analytics/utils';
 
 interface DestinationsLandingEmptyStateProps {
   navigateToCreate: () => void;

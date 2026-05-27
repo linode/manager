@@ -1,5 +1,5 @@
 import { defaultTimeDuration } from './CloudPulseDateTimePickerUtils';
-import { ENDPOINT } from './constants';
+import { ENDPOINT, REFRESH } from './constants';
 import { FILTER_CONFIG, isEndpointsOnlyDashboard } from './FilterConfig';
 import { CloudPulseAvailableViews } from './models';
 
@@ -63,6 +63,10 @@ export const getDashboardProperties = (
     savePref: false,
     groupBy,
     region,
+    manualRefreshTimeStamp:
+      filterValue[REFRESH] && typeof filterValue[REFRESH] === 'number'
+        ? filterValue[REFRESH]
+        : undefined,
   };
 };
 

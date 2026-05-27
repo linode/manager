@@ -1,12 +1,14 @@
-import { Box, Button, Tooltip, Typography, useTheme } from '@linode/ui';
+import { Button, Tooltip } from '@akamai/cds-components/react';
+import { Spacing } from '@akamai/cds-tokens';
+import { Box, Typography, useTheme } from '@linode/ui';
 import React from 'react';
 
-import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow/TableRow';
 
 import { usePermissions } from '../hooks/usePermissions';
 import { IAM_PARENT_USERS_PENDO_IDS } from '../Shared/constants';
+import { InlineMenuAction } from '../Shared/InlineMenuAction/InlineMenuAction';
 import { TruncatedList } from '../Shared/TruncatedList';
 import { UpdateDelegationsDrawer } from './UpdateDelegationsDrawer';
 
@@ -77,16 +79,17 @@ export const AccountDelegationsTableRow = ({ delegation, index }: Props) => {
                 }}
               >
                 <Tooltip
-                  placement="top"
-                  title="Click to View All Delegate Users"
+                  tooltipPlacement="top"
+                  tooltipText="Click to View All Delegate Users"
                 >
                   <Button
                     onClick={handleUpdateDelegations}
-                    sx={{
+                    style={{
                       color: theme.tokens.alias.Content.Text.Primary.Default,
                       font: theme.tokens.alias.Typography.Label.Regular.Xs,
                       padding: 0,
                     }}
+                    variant="link"
                   >
                     +{numHiddenItems}
                   </Button>
@@ -123,18 +126,19 @@ export const AccountDelegationsTableRow = ({ delegation, index }: Props) => {
           </Typography>
         )}
       </TableCell>
-      <TableCell sx={{ textAlign: 'right', whiteSpace: 'nowrap', pr: 0 }}>
+      <TableCell
+        actionCell
+        sx={{
+          textAlign: 'center',
+          paddingRight: Spacing.S0,
+        }}
+      >
         <InlineMenuAction
-          actionText="Update Delegation"
-          buttonHeight={40}
-          data-pendo-id={IAM_PARENT_USERS_PENDO_IDS.updateDelegation}
-          disabled={!permissions.update_delegate_users}
+          isActionDisabled={!permissions.update_delegate_users}
+          label="Update Delegation"
           onClick={handleUpdateDelegations}
-          tooltip={
-            !permissions.update_delegate_users
-              ? 'You do not have permission to update delegations.'
-              : undefined
-          }
+          pendoID={IAM_PARENT_USERS_PENDO_IDS.updateDelegation}
+          tooltipText="You do not have permission to update delegations."
         />
       </TableCell>
       <UpdateDelegationsDrawer

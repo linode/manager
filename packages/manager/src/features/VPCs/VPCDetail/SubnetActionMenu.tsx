@@ -2,7 +2,6 @@ import * as React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
-import { useIsNodebalancerVPCEnabled } from 'src/features/NodeBalancers/utils';
 
 import type { Subnet } from '@linode/api-v4';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
@@ -15,8 +14,7 @@ interface SubnetActionHandlers {
 }
 
 interface Props extends SubnetActionHandlers {
-  numLinodes: number;
-  numNodebalancers: number;
+  numUniqueResources: number;
   subnet: Subnet;
   vpcId: number;
 }
@@ -27,13 +25,10 @@ export const SubnetActionMenu = (props: Props) => {
     handleDelete,
     handleEdit,
     handleUnassignLinodes,
-    numLinodes,
-    numNodebalancers,
+    numUniqueResources,
     subnet,
     vpcId,
   } = props;
-
-  const flags = useIsNodebalancerVPCEnabled();
 
   const { data: permissions } = usePermissions(
     'vpc',
@@ -70,14 +65,14 @@ export const SubnetActionMenu = (props: Props) => {
     },
     {
       // TODO: change to 'delete_vpc_subnet' once it's available
-      disabled: numLinodes !== 0 || numNodebalancers !== 0 || !canDeleteVPC,
+      disabled: numUniqueResources !== 0 || !canDeleteVPC,
       onClick: () => {
         handleDelete(subnet);
       },
       title: 'Delete',
       tooltip:
-        numLinodes > 0 || numNodebalancers > 0
-          ? `${flags.isNodebalancerVPCEnabled ? 'Resources' : 'Linodes'} assigned to a subnet must be unassigned before the subnet can be deleted.`
+        numUniqueResources > 0
+          ? 'Resources assigned to a subnet must be unassigned before the subnet can be deleted.'
           : !canDeleteVPC
             ? 'You do not have permission to delete this subnet.'
             : undefined,

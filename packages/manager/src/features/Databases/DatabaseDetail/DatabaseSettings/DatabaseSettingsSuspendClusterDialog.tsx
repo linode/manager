@@ -1,5 +1,7 @@
+import { Checkbox, NotificationBanner } from '@akamai/cds-components/react';
+import { Spacing } from '@akamai/cds-tokens';
 import { useSuspendDatabaseMutation } from '@linode/queries';
-import { ActionsPanel, Checkbox, Notice, Typography } from '@linode/ui';
+import { ActionsPanel, Typography } from '@linode/ui';
 import { useNavigate } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -88,16 +90,20 @@ export const DatabaseSettingsSuspendClusterDialog = (
       open={open}
       title={`Suspend ${databaseLabel} cluster?`}
     >
-      <Notice variant="warning">
+      <NotificationBanner style={{ marginBottom: Spacing.S16 }} type="warning">
         <Typography style={{ fontSize: '0.875rem' }}>
           <b>{SUSPENDED_CLUSTER_COPY}</b>
         </Typography>
-      </Notice>
+      </NotificationBanner>
       <Checkbox
         checked={hasConfirmed}
-        onChange={() => setHasConfirmed((confirmed) => !confirmed)}
-        text="I understand the effects of this action."
-      />
+        data-testid="database-suspend-confirmation-checkbox"
+        onChange={(e) => {
+          setHasConfirmed((e as CustomEvent<boolean>).detail);
+        }}
+      >
+        I understand the effects of this action.
+      </Checkbox>
     </ConfirmationDialog>
   );
 };

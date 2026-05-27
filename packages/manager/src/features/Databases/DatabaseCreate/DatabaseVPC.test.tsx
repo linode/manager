@@ -1,5 +1,5 @@
 import { regionFactory } from '@linode/utilities';
-import { screen } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 import { describe, expect, it, vi } from 'vitest';
@@ -223,7 +223,12 @@ describe('DatabaseCreateVPC', () => {
     ) as HTMLInputElement;
     expect(subnetInput?.value).toBe(expectedSubnetValue);
     expect(publicAccessCheckbox).toBeInTheDocument();
-    expect(publicAccessCheckbox.querySelector('input')).toBeChecked();
+    await customElements.whenDefined('cds-checkbox');
+    await waitFor(() => {
+      expect(
+        (publicAccessCheckbox as HTMLElement & { checked?: boolean }).checked
+      ).toBe(true);
+    });
   });
 
   it.skip('Should clear VPC and subnet when selectedRegionId changes', () => {
@@ -406,19 +411,21 @@ describe('DatabaseCreateVPC', () => {
       },
     });
 
-    // Clear VPC selection
+    // Clear VPC selection (MUI Autocomplete exposes clear via aria-label, not title)
     const vpcSelector = screen.getByTestId(vpcSelectorTestId);
     const clearButton = vpcSelector.querySelector(
-      'button[title="Clear"]'
+      'button[aria-label="Clear"]'
     ) as HTMLElement;
     await userEvent.click(clearButton);
 
     const subnetSelector = screen.queryByTestId(subnetSelectorTestId);
     expect(subnetSelector).not.toBeInTheDocument();
-    expect(
-      screen.getByText(
+    // Info copy is inside cds-notification-banner shadow DOM
+    await waitFor(() => {
+      const banner = document.querySelector('cds-notification-banner');
+      expect(banner?.shadowRoot?.textContent ?? '').toContain(
         'The cluster will have public access by default if a VPC is not assigned.'
-      )
-    ).toBeVisible();
+      );
+    });
   });
 });

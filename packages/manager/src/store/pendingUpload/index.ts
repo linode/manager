@@ -1,4 +1,4 @@
-import actionCreatorFactory, { isType } from 'typescript-fsa';
+import { actionCreatorFactory, isType } from 'typescript-fsa';
 
 import type { Reducer } from 'redux';
 

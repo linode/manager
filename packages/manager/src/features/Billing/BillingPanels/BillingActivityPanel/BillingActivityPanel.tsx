@@ -1,3 +1,4 @@
+import { formatDate, parseAPIDate } from '@akamai/compute-ui-core/datetime';
 import { getInvoiceItems } from '@linode/api-v4/lib/account';
 import {
   useAccount,
@@ -41,8 +42,6 @@ import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useFlags } from 'src/hooks/useFlags';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
-import { parseAPIDate } from 'src/utilities/date';
-import { formatDate } from 'src/utilities/formatDate';
 
 import { getTaxID } from '../../billingUtils';
 

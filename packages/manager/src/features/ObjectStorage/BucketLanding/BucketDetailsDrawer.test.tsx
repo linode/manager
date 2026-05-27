@@ -1,8 +1,9 @@
+import { formatDate } from '@akamai/compute-ui-core/datetime';
+import { truncateMiddle } from '@akamai/compute-ui-core/formatting';
 import {
   profileFactory,
   readableBytes,
   regionFactory,
-  truncateMiddle,
 } from '@linode/utilities';
 import { screen, waitFor } from '@testing-library/react';
 import React from 'react';
@@ -12,7 +13,6 @@ import {
   objectStorageBucketFactory,
   objectStorageBucketFactoryGen2,
 } from 'src/factories';
-import { formatDate } from 'src/utilities/formatDate';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
 import { BucketDetailsDrawer } from './BucketDetailsDrawer';
@@ -23,14 +23,25 @@ vi.mock('@linode/utilities', async () => {
   return {
     ...actual,
     readableBytes: vi.fn(),
+  };
+});
+vi.mock('@akamai/compute-ui-core/formatting', async () => {
+  const actual = await vi.importActual('@akamai/compute-ui-core/formatting');
+  return {
+    ...actual,
     truncateMiddle: vi.fn(),
   };
 });
-vi.mock('src/utilities/formatDate');
+vi.mock('@akamai/compute-ui-core/datetime', async () => {
+  const actual = await vi.importActual('@akamai/compute-ui-core/datetime');
+  return {
+    ...actual,
+    formatDate: vi.fn(),
+  };
+});
 
 // Hoist query mocks
 const queryMocks = vi.hoisted(() => ({
-  useObjectStorageClusters: vi.fn().mockReturnValue({}),
   useProfile: vi.fn().mockReturnValue({}),
   useRegionQuery: vi.fn().mockReturnValue({}),
   useRegionsQuery: vi.fn().mockReturnValue({}),
@@ -45,8 +56,8 @@ vi.mock('@linode/queries', async () => {
   };
 });
 
-vi.mock('src/queries/regions/regions', async () => {
-  const actual = await vi.importActual('src/queries/regions/regions');
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
   return {
     ...actual,
     useRegionQuery: queryMocks.useRegionQuery,
@@ -54,20 +65,13 @@ vi.mock('src/queries/regions/regions', async () => {
   };
 });
 
-vi.mock('src/queries/object-storage/queries', async () => {
-  const actual = await vi.importActual('src/queries/object-storage/queries');
-  return {
-    ...actual,
-    useObjectStorageClusters: queryMocks.useObjectStorageClusters,
-  };
-});
-
 const mockOnClose = vi.fn();
 
-describe('BucketDetailsDrawer: Legacy UI', () => {
-  const bucket = objectStorageBucketFactory.build();
-  const region = regionFactory.build({
-    id: bucket.region,
+describe('BucketDetailsDrawer: Gen1 endpoint', () => {
+  const region = regionFactory.build();
+
+  const bucket = objectStorageBucketFactory.build({
+    region: region.id,
   });
 
   beforeEach(() => {
@@ -76,8 +80,6 @@ describe('BucketDetailsDrawer: Legacy UI', () => {
       data: profileFactory.build({ timezone: 'UTC' }),
     });
     queryMocks.useRegionQuery.mockReturnValue({ data: region });
-    queryMocks.useRegionsQuery.mockReturnValue({ data: [region] });
-    queryMocks.useObjectStorageClusters.mockReturnValue({ data: [] });
 
     // These utils are used in the component
     vi.mocked(formatDate).mockReturnValue('2019-12-12');
@@ -89,7 +91,7 @@ describe('BucketDetailsDrawer: Legacy UI', () => {
     });
   });
 
-  it('renders correctly when open', () => {
+  it('renders correctly when open', async () => {
     renderWithThemeAndHookFormContext({
       component: (
         <BucketDetailsDrawer
@@ -104,10 +106,16 @@ describe('BucketDetailsDrawer: Legacy UI', () => {
     expect(screen.getByTestId('createdTime')).toHaveTextContent(
       'Created: 2019-12-12'
     );
-    expect(screen.getByTestId('cluster')).toHaveTextContent(region.id);
+    expect(screen.getByTestId('region')).toHaveTextContent(region.label);
     expect(screen.getByText(bucket.hostname)).toBeInTheDocument();
     expect(screen.getByText('1 MB')).toBeInTheDocument();
     expect(screen.getByText('103 objects')).toBeInTheDocument();
+
+    await waitFor(() => {
+      expect(
+        screen.queryByLabelText('Access Control List (ACL)')
+      ).toBeInTheDocument();
+    });
   });
 
   it('does not render when closed', () => {
@@ -124,21 +132,9 @@ describe('BucketDetailsDrawer: Legacy UI', () => {
     expect(screen.queryByText(bucket.label)).not.toBeInTheDocument();
   });
 
-  it('renders correctly with objMultiCluster disabled', () => {
-    renderWithThemeAndHookFormContext({
-      component: (
-        <BucketDetailsDrawer
-          bucket={bucket}
-          isOpen={true}
-          onClose={mockOnClose}
-        />
-      ),
-    });
-
-    expect(screen.getByTestId('cluster')).toHaveTextContent(region.id);
-  });
-
   it('handles undefined selectedBucket gracefully', () => {
+    queryMocks.useRegionQuery.mockReturnValue({ data: undefined });
+
     renderWithThemeAndHookFormContext({
       component: (
         <BucketDetailsDrawer
@@ -151,93 +147,19 @@ describe('BucketDetailsDrawer: Legacy UI', () => {
 
     expect(screen.getByText('Bucket Detail')).toBeInTheDocument();
     expect(screen.queryByTestId('createdTime')).not.toBeInTheDocument();
-    expect(screen.queryByTestId('cluster')).not.toBeInTheDocument();
-  });
-
-  it('renders AccessSelect when cluster and bucketLabel are available', async () => {
-    renderWithThemeAndHookFormContext({
-      component: (
-        <BucketDetailsDrawer
-          bucket={bucket}
-          isOpen={true}
-          onClose={mockOnClose}
-        />
-      ),
-      options: {
-        flags: { objectStorageGen2: { enabled: true } },
-      },
-    });
-
-    await waitFor(() => {
-      expect(
-        screen.queryByLabelText('Access Control List (ACL)')
-      ).toBeInTheDocument();
-    });
-  });
-
-  it('does not render AccessSelect when cluster or bucketLabel is missing', async () => {
-    const bucketWithoutCluster = { ...bucket, cluster: '' };
-
-    renderWithThemeAndHookFormContext({
-      component: (
-        <BucketDetailsDrawer
-          bucket={bucketWithoutCluster}
-          isOpen={true}
-          onClose={mockOnClose}
-        />
-      ),
-      options: {
-        flags: { objectStorageGen2: { enabled: true } },
-      },
-    });
-
-    await waitFor(() => {
-      expect(
-        screen.queryByLabelText('Access Control List (ACL)')
-      ).not.toBeInTheDocument();
-    });
-  });
-});
-
-describe('BucketDetailDrawer: Gen2 UI', () => {
-  const e3Bucket = objectStorageBucketFactoryGen2.build();
-
-  const region = regionFactory.build({
-    id: e3Bucket.region,
-  });
-
-  it('renders correctly when open', () => {
-    renderWithThemeAndHookFormContext({
-      component: (
-        <BucketDetailsDrawer
-          bucket={e3Bucket}
-          isOpen={true}
-          onClose={mockOnClose}
-        />
-      ),
-      options: {
-        flags: { objectStorageGen2: { enabled: true } },
-      },
-    });
-
-    expect(screen.getByText(e3Bucket.label)).toBeInTheDocument();
-    expect(screen.getByTestId('createdTime')).toHaveTextContent(
-      'Created: 2019-12-12'
-    );
-    expect(screen.getByTestId('endpointType')).toHaveTextContent(
-      `Endpoint Type: E3`
-    );
-    expect(screen.getByTestId('cluster')).toHaveTextContent(region.id);
-    expect(screen.getByText(e3Bucket.hostname)).toBeInTheDocument();
-    expect(screen.getByText('1 MB')).toBeInTheDocument();
-    expect(screen.getByText('103 objects')).toBeInTheDocument();
+    expect(screen.queryByTestId('region')).toHaveTextContent('');
   });
 
   it("doesn't show the CORS switch for E2 and E3 buckets", async () => {
+    const gen2Bucket = objectStorageBucketFactoryGen2.build({
+      region: region.id,
+    });
+    queryMocks.useRegionQuery.mockReturnValue({ data: region });
+
     const { getByText } = renderWithThemeAndHookFormContext({
       component: (
         <BucketDetailsDrawer
-          bucket={e3Bucket}
+          bucket={gen2Bucket}
           isOpen={true}
           onClose={mockOnClose}
         />

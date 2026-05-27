@@ -20,6 +20,7 @@ export interface CreateAlertDefinitionForm
   > {
   entity_ids?: string[];
   entity_type?: AssociatedEntityType;
+  group_by?: string[];
   hasAPIError?: boolean;
   regions?: string[];
   rule_criteria: {

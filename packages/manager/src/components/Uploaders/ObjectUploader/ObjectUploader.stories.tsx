@@ -10,7 +10,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 export const _ObjectUploader: StoryObj<typeof ObjectUploader> = {
   args: {
     bucketName: 'my-bucket',
-    clusterId: 'us-east',
+    regionId: 'us-east',
     maybeAddObjectToTable: () => null,
     prefix: '/',
   },

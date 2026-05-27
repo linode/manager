@@ -1,7 +1,5 @@
-import { useAccount } from '@linode/queries';
 import { Stack, Typography } from '@linode/ui';
 import { Hidden } from '@linode/ui';
-import { isFeatureEnabledV2 } from '@linode/utilities';
 import { styled } from '@mui/material/styles';
 import React from 'react';
 
@@ -9,7 +7,6 @@ import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { useFlags } from 'src/hooks/useFlags';
 
 import { AccessKeyActionMenu } from './AccessKeyActionMenu';
 import { HostNameTableCell } from './HostNameTableCell';
@@ -24,15 +21,6 @@ interface Props {
 export const AccessKeyTableRow = (props: Props) => {
   const { openRevokeDialog, storageKeyData } = props;
 
-  const { data: account } = useAccount();
-  const flags = useFlags();
-
-  const isObjMultiClusterEnabled = isFeatureEnabledV2(
-    'Object Storage Access Key Regions',
-    Boolean(flags.objMultiCluster),
-    account?.capabilities ?? []
-  );
-
   return (
     <TableRow data-qa-table-row={storageKeyData.label} key={storageKeyData.id}>
       <TableCell>{storageKeyData.label}</TableCell>
@@ -44,11 +32,9 @@ export const AccessKeyTableRow = (props: Props) => {
           <StyledCopyIcon text={storageKeyData.access_key} />
         </Stack>
       </TableCell>
-      {isObjMultiClusterEnabled && (
-        <Hidden smDown>
-          <HostNameTableCell storageKeyData={storageKeyData} />
-        </Hidden>
-      )}
+      <Hidden smDown>
+        <HostNameTableCell storageKeyData={storageKeyData} />
+      </Hidden>
       <TableCell actionCell>
         <AccessKeyActionMenu
           label={storageKeyData.label}

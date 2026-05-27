@@ -1,4 +1,4 @@
-import { loadScript } from '@linode/utilities'; // `loadScript` from `useScript` hook
+import { loadScript } from '@akamai/compute-ui-core/browser';
 import React from 'react';
 
 /**

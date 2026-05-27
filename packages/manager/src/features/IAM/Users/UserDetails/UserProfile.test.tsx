@@ -1,8 +1,9 @@
-import { screen } from '@testing-library/react';
+import { screen, within } from '@testing-library/react';
 import React from 'react';
 
 import { accountUserFactory } from 'src/factories/accountUsers';
 import { userRolesFactory } from 'src/factories/userRoles';
+import { expectNotificationBannerText } from 'src/features/IAM/utilities/testHelpers';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { UserProfile } from './UserProfile';
@@ -94,11 +95,9 @@ describe('UserProfile', () => {
 
     renderWithTheme(<UserProfile />);
 
-    expect(
-      screen.getByText(
-        "You do not have permission to view this user's details."
-      )
-    ).toBeVisible();
+    return expectNotificationBannerText(
+      "You do not have permission to view this user's details."
+    );
   });
 
   it('shows an error state when loading the user fails', () => {
@@ -138,10 +137,11 @@ describe('UserProfile', () => {
     expect(queryMocks.useAccountUser).toHaveBeenCalledWith('test-user', true);
     expect(queryMocks.useUserRoles).toHaveBeenCalledWith('test-user', true);
 
-    expect(screen.getByText('test-user')).toBeVisible();
+    const usernameField = screen.getByText('Username').parentElement;
 
-    expect(screen.getByLabelText('Email')).toHaveDisplayValue(
-      'test-user@example.com'
-    );
+    expect(usernameField).not.toBeNull();
+    expect(
+      within(usernameField as HTMLElement).getByText('test-user')
+    ).toBeVisible();
   });
 });

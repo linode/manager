@@ -134,20 +134,11 @@ describe('UpdateEntitiesDrawer', () => {
 
     renderWithTheme(<UpdateEntitiesDrawer {...props} />);
 
-    const autocomplete = screen.getByRole('combobox');
-
-    // Verify that 'Linode 1' is initially selected
+    // Linode 1 is initially selected (from role.entity_ids)
     expect(screen.getByText('Linode 1')).toBeVisible();
 
-    // Open the dropdown
-    await userEvent.click(autocomplete);
-
-    // Type to filter options
-    await userEvent.type(autocomplete, 'Linode 2');
-
-    // Wait for and select the 'Linode 2' option
-    const newRole = await screen.findByText('Linode 2');
-    await userEvent.click(newRole);
+    // Click Linode 2 row to add it
+    await userEvent.click(screen.getByText('Linode 2'));
 
     await waitFor(() => {
       expect(screen.getAllByText('Linode 2')[0]).toBeInTheDocument();

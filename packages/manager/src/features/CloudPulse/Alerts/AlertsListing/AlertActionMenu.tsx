@@ -9,6 +9,10 @@ import type { AlertDefinitionType, AlertStatusType } from '@linode/api-v4';
 
 export interface ActionHandlers {
   /**
+   * Callback for clone action
+   */
+  handleClone: () => void;
+  /**
    * Callback for delete action
    */
   handleDelete: () => void;
@@ -56,11 +60,12 @@ export const AlertActionMenu = (props: AlertActionMenuProps) => {
   return (
     <ActionMenu
       actionsList={
-        getAlertTypeToActionsList(
+        getAlertTypeToActionsList({
           handlers,
           alertStatus,
-          aclpAlerting?.editDisabledStatuses
-        )[alertType]
+          editDisableStatuses: aclpAlerting?.editDisabledStatuses,
+          cloneEnabled: aclpAlerting?.cloneAlertDefinition,
+        })[alertType]
       }
       ariaLabel={`Action menu for Alert ${alertLabel}`}
     />

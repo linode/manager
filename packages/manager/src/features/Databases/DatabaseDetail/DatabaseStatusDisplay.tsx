@@ -1,5 +1,5 @@
+import { capitalize } from '@akamai/compute-ui-core/formatting';
 import { Typography } from '@linode/ui';
-import { capitalize } from '@linode/utilities';
 import React from 'react';
 
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';

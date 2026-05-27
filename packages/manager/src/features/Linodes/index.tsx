@@ -19,7 +19,7 @@ import { statusToPriority } from './LinodesLanding/utils';
 import { linodesInTransition } from './transitions';
 
 import type { ExtendedStatus } from './LinodesLanding/utils';
-import type { RegionFilter } from 'src/utilities/storage';
+import type { RegionFilter } from '@akamai/compute-ui-core/browser';
 
 const LinodesLanding = React.lazy(
   () => import('./LinodesLanding/LinodesLanding')

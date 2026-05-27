@@ -27,11 +27,11 @@ import type { CreateObjectStorageBucketSSLPayload } from '@linode/api-v4';
 
 interface Props {
   bucketName: string;
-  clusterId: string;
+  regionId: string;
 }
 
 export const BucketSSL = (props: Props) => {
-  const { bucketName, clusterId } = props;
+  const { bucketName, regionId } = props;
 
   return (
     <Paper>
@@ -47,14 +47,14 @@ export const BucketSSL = (props: Props) => {
         </Link>
         .
       </Typography>
-      <SSLBody bucketName={bucketName} clusterId={clusterId} />
+      <SSLBody bucketName={bucketName} regionId={regionId} />
     </Paper>
   );
 };
 
 export const SSLBody = (props: Props) => {
-  const { bucketName, clusterId } = props;
-  const { data, error, isLoading } = useBucketSSLQuery(clusterId, bucketName);
+  const { bucketName, regionId } = props;
+  const { data, error, isLoading } = useBucketSSLQuery(regionId, bucketName);
   const hasSSL = Boolean(data?.ssl);
 
   if (isLoading) {
@@ -73,10 +73,10 @@ export const SSLBody = (props: Props) => {
 };
 
 const AddCertForm = (props: Props) => {
-  const { bucketName, clusterId } = props;
+  const { bucketName, regionId } = props;
   const { enqueueSnackbar } = useSnackbar();
   const { error, isPending, mutateAsync } = useBucketSSLMutation(
-    clusterId,
+    regionId,
     bucketName
   );
 
@@ -146,14 +146,14 @@ const AddCertForm = (props: Props) => {
 };
 
 const RemoveCertForm = (props: Props) => {
-  const { bucketName, clusterId } = props;
+  const { bucketName, regionId } = props;
   const [open, setOpen] = React.useState(false);
   const { enqueueSnackbar } = useSnackbar();
   const {
     error,
     isPending,
     mutateAsync: deleteSSLCert,
-  } = useBucketSSLDeleteMutation(clusterId, bucketName);
+  } = useBucketSSLDeleteMutation(regionId, bucketName);
 
   const removeCertificate = async () => {
     await deleteSSLCert();

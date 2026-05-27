@@ -1,9 +1,9 @@
+import { parseAPIDate } from '@akamai/compute-ui-core/datetime';
 import { Box, Divider, Stack, Typography } from '@linode/ui';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
-import { parseAPIDate } from 'src/utilities/date';
 
 import { OFFICIAL_USERNAMES } from './ticketUtils';
 

@@ -11,12 +11,12 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import React from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
+import { Currency } from 'src/components/Currency';
 import { TextTooltip } from 'src/components/TextTooltip';
 import { useIsAclpSupportedRegion } from 'src/features/CloudPulse/Utils/utils';
 import { useFlags } from 'src/hooks/useFlags';
-import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
-import { getMonthlyBackupsPrice } from 'src/utilities/pricing/backups';
-import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/dynamicPricing';
+import { getLinodeBackupPrice } from 'src/utilities/pricing/backups';
+import { useComputePricing } from 'src/utilities/pricing/useComputePricing';
 
 import { getLinodePrice } from './utilities';
 
@@ -29,7 +29,6 @@ interface SummaryProps {
 export const Summary = ({ isAclpAlertsMode }: SummaryProps) => {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
-  const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
 
   const { control } = useFormContext<LinodeCreateFormValues>();
 
@@ -44,8 +43,6 @@ export const Summary = ({ isAclpAlertsMode }: SummaryProps) => {
     backupsEnabled,
     privateIPEnabled,
     placementGroupId,
-    vlanLabel,
-    vpcId,
     diskEncryption,
     stackscriptData,
     clusterName,
@@ -63,8 +60,6 @@ export const Summary = ({ isAclpAlertsMode }: SummaryProps) => {
       'backups_enabled',
       'private_ip',
       'placement_group.id',
-      'interfaces.1.label',
-      'interfaces.0.vpc_id',
       'disk_encryption',
       'stackscript_data',
       'stackscript_data.cluster_name',
@@ -80,6 +75,15 @@ export const Summary = ({ isAclpAlertsMode }: SummaryProps) => {
 
   const { aclpServices } = useFlags();
 
+  // Billing mode scoped to the selected plan — if the LD flag restricts the active billing
+  // to certain plan types (e.g. 'g8', 'gpu'), only those plans and their backups will
+  // reflect it; everything else stays on monthly.
+  const {
+    getPrice,
+    billing,
+    priceLabel: backupsPriceLabel,
+  } = useComputePricing(typeId);
+
   const isAclpAlertsSupportedRegionLinode = useIsAclpSupportedRegion({
     capability: 'Linodes',
     regionId,
@@ -88,24 +92,23 @@ export const Summary = ({ isAclpAlertsMode }: SummaryProps) => {
 
   const region = regions?.find((r) => r.id === regionId);
 
-  const backupsPrice = renderMonthlyPriceToCorrectDecimalPlace(
-    getMonthlyBackupsPrice({ region: regionId, type })
-  );
+  const backupsPrice = getPrice(getLinodeBackupPrice(type, regionId));
 
   const price = getLinodePrice({
+    interval: billing,
     regionId,
     types,
     stackscriptData,
     type,
   });
 
-  const hasVPC = isLinodeInterfacesEnabled
-    ? linodeInterfaces?.some((i) => i.purpose === 'vpc' && i.vpc?.subnet_id)
-    : vpcId;
+  const hasVPC = linodeInterfaces?.some(
+    (i) => i.purpose === 'vpc' && i.vpc?.subnet_id
+  );
 
-  const hasVLAN = isLinodeInterfacesEnabled
-    ? linodeInterfaces?.some((i) => i.purpose === 'vlan' && i.vlan?.vlan_label)
-    : vlanLabel;
+  const hasVLAN = linodeInterfaces?.some(
+    (i) => i.purpose === 'vlan' && i.vlan?.vlan_label
+  );
 
   const hasFirewall =
     interfaceGeneration === 'linode'
@@ -158,7 +161,12 @@ export const Summary = ({ isAclpAlertsMode }: SummaryProps) => {
     },
     {
       item: {
-        details: `$${backupsPrice}/month`,
+        details: (
+          <>
+            <Currency quantity={backupsPrice} useAdaptivePrecision />
+            {`/${backupsPriceLabel}`}
+          </>
+        ),
         title: 'Backups',
       },
       show: backupsEnabled && Boolean(type),
@@ -191,9 +199,7 @@ export const Summary = ({ isAclpAlertsMode }: SummaryProps) => {
       item: {
         title: 'Public Internet',
       },
-      show:
-        isLinodeInterfacesEnabled &&
-        linodeInterfaces?.some((i) => i.purpose === 'public'),
+      show: linodeInterfaces?.some((i) => i.purpose === 'public'),
     },
     {
       item: {

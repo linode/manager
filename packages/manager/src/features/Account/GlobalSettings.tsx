@@ -8,7 +8,6 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
 import { BackupDrawer } from '../Backups';
 import { usePermissions } from '../IAM/hooks/usePermissions';
@@ -36,7 +35,6 @@ const GlobalSettings = () => {
     isLoading: accountSettingsLoading,
   } = useAccountSettings();
 
-  const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
   const { isVMHostMaintenanceEnabled } = useVMHostMaintenanceEnabled();
 
   const { data: linodes } = useAllLinodesQuery();
@@ -107,8 +105,8 @@ const GlobalSettings = () => {
     <div>
       <Stack spacing={2}>
         {isVMHostMaintenanceEnabled && <MaintenancePolicy />}
-        {isLinodeInterfacesEnabled && <NetworkInterfaceType />}
-        {isLinodeInterfacesEnabled && <DefaultFirewalls />}
+        <NetworkInterfaceType />
+        <DefaultFirewalls />
         <AutoBackups
           backups_enabled={backups_enabled}
           hasLinodesWithoutBackups={hasLinodesWithoutBackups}

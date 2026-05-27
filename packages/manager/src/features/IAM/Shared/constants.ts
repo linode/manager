@@ -52,6 +52,9 @@ export const IAM_ROLES_PENDO_IDS = {
 };
 // Various constants for the IAM package
 
+// Display limits
+export const EMAIL_MAX_LENGTH = 40;
+
 // Labels
 export const IAM_LABEL = 'Identity and Access';
 
@@ -92,6 +95,14 @@ export const USER_ROLES_LINK =
 
 export const USER_ENTITIES_LINK =
   'https://techdocs.akamai.com/cloud-computing/docs/identity-access-cm-manage-access#check-and-update-users-entity-assignment';
+
+// TODO: UIE-11341 - update this link when the doc is ready
+export const SSO_ENFORCEMENT_LINK =
+  'https://techdocs.akamai.com/cloud-computing/docs/identity-and-access-cm';
+
+// TODO: UIE-11341 - update this link when the doc is ready
+export const SSO_DOCS_LINK =
+  'https://techdocs.akamai.com/cloud-computing/docs/identity-and-access-cm';
 
 export const PAID_ENTITY_TYPES = [
   'database',

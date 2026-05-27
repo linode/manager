@@ -388,6 +388,85 @@ const iamUserNameDelegationsRoute = createRoute({
   ).then((m) => m.userDelegationsLazyRoute)
 );
 
+// ─── Settings ───────────────────────────────────────────────────────────
+
+const iamLoginSettingsRoute = createRoute({
+  getParentRoute: () => iamTabsRoute,
+  path: 'login-settings',
+  beforeLoad: ({ context }) => {
+    const isFederationEnabled = Boolean(context?.flags?.iamFederation);
+
+    if (!isFederationEnabled) {
+      throw redirect({ to: '/iam/users', replace: true });
+    }
+  },
+}).lazy(() =>
+  import('src/features/IAM/LoginSettings/loginSettingsLandingLazyRoute').then(
+    (m) => m.loginSettingsLandingLazyRoute
+  )
+);
+
+const iamLoginSettingsCatchAllRoute = createRoute({
+  getParentRoute: () => iamLoginSettingsRoute,
+  path: '/$invalidPath',
+  beforeLoad: () => {
+    throw redirect({ to: '/iam/login-settings', replace: true });
+  },
+});
+
+// ─── SSO sub-page (shell with 3 tabs) ─────────────────────────────────────────
+
+const iamSsoRoute = createRoute({
+  getParentRoute: () => iamRoute,
+  path: '/login-settings/sso',
+}).lazy(() =>
+  import('src/features/IAM/LoginSettings/SSO/ssoLandingLazyRoute').then(
+    (m) => m.ssoLandingLazyRoute
+  )
+);
+
+const iamSsoIndexRoute = createRoute({
+  getParentRoute: () => iamSsoRoute,
+  path: '/',
+  beforeLoad: () => {
+    throw redirect({
+      to: '/iam/login-settings/sso/idp-configurations',
+      replace: true,
+    });
+  },
+});
+
+const iamSsoIdpConfigurationsRoute = createRoute({
+  getParentRoute: () => iamSsoRoute,
+  path: 'idp-configurations',
+}).lazy(() =>
+  import(
+    'src/features/IAM/LoginSettings/SSO/IdpConfigurations/idpConfigurationsLazyRoute'
+  ).then((m) => m.idpConfigurationsLazyRoute)
+);
+
+const iamSsoEnforcementSettingsRoute = createRoute({
+  getParentRoute: () => iamSsoRoute,
+  path: 'enforcement-settings',
+}).lazy(() =>
+  import(
+    'src/features/IAM/LoginSettings/SSO/EnforcementSettings/enforcementSettingsLazyRoute'
+  ).then((m) => m.enforcementSettingsLazyRoute)
+);
+
+const iamSsoCatchAllRoute = createRoute({
+  getParentRoute: () => iamSsoRoute,
+  path: '/$invalidPath',
+  beforeLoad: () => {
+    throw redirect({
+      to: '/iam/login-settings/sso/idp-configurations',
+      replace: true,
+    });
+  },
+});
+
+// ─── Catch all route for user details page ───────────────────────────────────
+
 // Catch all route for user details page
 const iamUserNameCatchAllRoute = createRoute({
   getParentRoute: () => iamRoute,
@@ -449,11 +528,18 @@ export const iamRouteTree = iamRoute.addChildren([
     ]),
     iamUsersRoute,
     iamDelegationsRoute,
+    iamLoginSettingsRoute.addChildren([iamLoginSettingsCatchAllRoute]),
     iamUsersCatchAllRoute,
     iamRolesCatchAllRoute,
     iamDelegationsCatchAllRoute,
   ]),
   iamCatchAllRoute,
+  iamSsoRoute.addChildren([
+    iamSsoIndexRoute,
+    iamSsoIdpConfigurationsRoute,
+    iamSsoEnforcementSettingsRoute,
+    iamSsoCatchAllRoute,
+  ]),
   iamUserNameRoute.addChildren([
     iamUserNameIndexRoute,
     iamUserNameDetailsRoute,

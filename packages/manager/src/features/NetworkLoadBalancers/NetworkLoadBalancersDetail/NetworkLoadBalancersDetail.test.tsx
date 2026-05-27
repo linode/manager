@@ -1,3 +1,4 @@
+import { formatDate } from '@akamai/compute-ui-core/datetime';
 import { regionFactory } from '@linode/utilities';
 import * as React from 'react';
 
@@ -5,7 +6,6 @@ import {
   networkLoadBalancerFactory,
   networkLoadBalancerListenerFactory,
 } from 'src/factories/networkLoadBalancer';
-import { formatDate } from 'src/utilities/formatDate';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import NetworkLoadBalancersDetail from './NetworkLoadBalancersDetail';

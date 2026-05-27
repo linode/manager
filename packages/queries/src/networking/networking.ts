@@ -12,6 +12,7 @@ import {
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import {
   keepPreviousData,
+  useInfiniteQuery,
   useMutation,
   useQueries,
   useQuery,
@@ -20,6 +21,7 @@ import {
 import { useMemo } from 'react';
 
 import { linodeQueries } from '../linodes/linodes';
+import { nodebalancerQueries } from '../nodebalancers';
 import {
   getAllIps,
   getAllIPv6Ranges,
@@ -61,10 +63,20 @@ export const networkingQueries = createQueryKeys('networking', {
     queryFn: () => getIP(address),
     queryKey: [address],
   }),
-  reservedIPs: (params: Params = {}, filter: Filter = {}) => ({
-    queryFn: () => getReservedIPs(params, filter),
-    queryKey: [params, filter],
-  }),
+  reservedIPs: {
+    contextQueries: {
+      infinite: (filter: Filter = {}) => ({
+        queryFn: ({ pageParam }) =>
+          getReservedIPs({ page: pageParam as number, page_size: 25 }, filter),
+        queryKey: [filter],
+      }),
+      paginated: (params: Params = {}, filter: Filter = {}) => ({
+        queryFn: () => getReservedIPs(params, filter),
+        queryKey: [params, filter],
+      }),
+    },
+    queryKey: null,
+  },
   reservedIP: (address: string) => ({
     queryFn: () => getReservedIP(address),
     queryKey: [address],
@@ -82,6 +94,13 @@ export const useAllIPsQuery = (
 ) => {
   return useQuery<IPAddress[], APIError[]>({
     ...networkingQueries.ips(params, filter),
+    enabled,
+  });
+};
+
+export const useIPAddressQuery = (address: string, enabled: boolean = true) => {
+  return useQuery<IPAddress, APIError[]>({
+    ...networkingQueries.ip(address),
     enabled,
   });
 };
@@ -159,9 +178,9 @@ export const useUpdateIPMutation = (address: string) => {
   return useMutation<
     IPAddress,
     APIError[],
-    { address: string; rdns: null | string; reserved: boolean }
+    { address: string; rdns: null | string | undefined; reserved: boolean }
   >({
-    mutationFn: (data) => updateIP(address, data.rdns, data.reserved),
+    mutationFn: (data) => updateIP(address, { reserved: data.reserved }),
     onSuccess(ip) {
       queryClient.invalidateQueries({
         queryKey: networkingQueries.ips._def,
@@ -170,6 +189,23 @@ export const useUpdateIPMutation = (address: string) => {
         networkingQueries.ip(address).queryKey,
         ip,
       );
+      // Invalidate Reserved IPs queries (so the list updates)
+      queryClient.invalidateQueries({
+        queryKey: networkingQueries.reservedIPs.queryKey,
+      });
+      // Invalidate Linode queries
+      if (ip.linode_id) {
+        queryClient.invalidateQueries({
+          exact: true,
+          queryKey: linodeQueries.linode(ip.linode_id).queryKey,
+        });
+        queryClient.invalidateQueries({
+          queryKey: linodeQueries.linode(ip.linode_id)._ctx.ips.queryKey,
+        });
+        queryClient.invalidateQueries({
+          queryKey: linodeQueries.linodes.queryKey,
+        });
+      }
     },
   });
 };
@@ -180,11 +216,28 @@ export const useReservedIPsQuery = (
   enabled: boolean = true,
 ) => {
   return useQuery<ResourcePage<IPAddress>, APIError[]>({
-    ...networkingQueries.reservedIPs(params, filter),
+    ...networkingQueries.reservedIPs._ctx.paginated(params, filter),
     enabled,
     placeholderData: keepPreviousData,
   });
 };
+
+export const useReservedIPsInfiniteQuery = (
+  filter: Filter,
+  enabled?: boolean,
+) =>
+  useInfiniteQuery<ResourcePage<IPAddress>, APIError[]>({
+    ...networkingQueries.reservedIPs._ctx.infinite(filter),
+    enabled,
+    getNextPageParam: ({ page, pages }) => {
+      if (page === pages) {
+        return undefined;
+      }
+      return page + 1;
+    },
+    initialPageParam: 1,
+    retry: false,
+  });
 
 export const useReservedIPQuery = (address: string, enabled: boolean = true) =>
   useQuery<IPAddress, APIError[]>({
@@ -197,13 +250,48 @@ export const useReserveIPMutation = () => {
   return useMutation<IPAddress, APIError[], ReserveIPPayload>({
     mutationFn: reserveIP,
     onSuccess(reservedIP) {
+      // Invalidate Reserved IPs queries
       queryClient.invalidateQueries({
-        queryKey: networkingQueries.reservedIPs._def,
+        queryKey: networkingQueries.reservedIPs.queryKey,
       });
       queryClient.setQueryData<IPAddress>(
         networkingQueries.reservedIP(reservedIP.address).queryKey,
         reservedIP,
       );
+      // Invalidate networking IPs list
+      queryClient.invalidateQueries({
+        queryKey: networkingQueries.ips._def,
+      });
+      // Update the individual IP address query so useIPAddressQuery gets the updated reserved status
+      queryClient.setQueryData<IPAddress>(
+        networkingQueries.ip(reservedIP.address).queryKey,
+        reservedIP,
+      );
+      // Invalidate Linode queries (so the Reserved badge appears)
+      if (reservedIP.linode_id) {
+        queryClient.invalidateQueries({
+          exact: true,
+          queryKey: linodeQueries.linode(reservedIP.linode_id).queryKey,
+        });
+        queryClient.invalidateQueries({
+          queryKey: linodeQueries.linode(reservedIP.linode_id)._ctx.ips
+            .queryKey,
+        });
+        queryClient.invalidateQueries({
+          queryKey: linodeQueries.linodes.queryKey,
+        });
+      }
+      // If the IP is assigned to a NodeBalancer, invalidate NodeBalancer queries
+      if (reservedIP.assigned_entity?.type === 'nodebalancer') {
+        queryClient.invalidateQueries({
+          queryKey: nodebalancerQueries.nodebalancers.queryKey,
+        });
+        queryClient.invalidateQueries({
+          queryKey: nodebalancerQueries.nodebalancer(
+            reservedIP.assigned_entity.id,
+          ).queryKey,
+        });
+      }
     },
   });
 };
@@ -218,7 +306,7 @@ export const useUpdateReservedIPMutation = (address: string) => {
     mutationFn: (data) => updateReservedIP(address, data.tags),
     onSuccess(reservedIP) {
       queryClient.invalidateQueries({
-        queryKey: networkingQueries.reservedIPs._def,
+        queryKey: networkingQueries.reservedIPs.queryKey,
       });
       queryClient.setQueryData<IPAddress>(
         networkingQueries.reservedIP(reservedIP.address).queryKey,
@@ -230,15 +318,69 @@ export const useUpdateReservedIPMutation = (address: string) => {
 
 export const useUnReserveIPMutation = (address: string) => {
   const queryClient = useQueryClient();
-  return useMutation<object, APIError[]>({
+  return useMutation<object, APIError[], { linode_id?: null | number }>({
     mutationFn: () => unReserveIP(address),
-    onSuccess() {
+    onSuccess(_, variables) {
+      // Get cached IP data to check what linode_id we have
+      const cachedIP = queryClient.getQueryData<IPAddress>(
+        networkingQueries.ip(address).queryKey,
+      );
+
+      // Invalidate Reserved IPs queries
       queryClient.invalidateQueries({
-        queryKey: networkingQueries.reservedIPs._def,
+        queryKey: networkingQueries.reservedIPs.queryKey,
       });
+
       queryClient.removeQueries({
         queryKey: networkingQueries.reservedIP(address).queryKey,
       });
+
+      // Invalidate networking IPs list
+      queryClient.invalidateQueries({
+        queryKey: networkingQueries.ips._def,
+      });
+
+      // Immediately update the individual IP address query to set reserved: false
+      // This provides instant UI feedback instead of waiting for a refetch
+      if (cachedIP) {
+        queryClient.setQueryData<IPAddress>(
+          networkingQueries.ip(address).queryKey,
+          { ...cachedIP, reserved: false },
+        );
+      } else {
+        // Fallback to invalidation if no cached data exists
+        queryClient.invalidateQueries({
+          queryKey: networkingQueries.ip(address).queryKey,
+        });
+      }
+
+      const linodeId = variables.linode_id ?? cachedIP?.linode_id;
+
+      // Invalidate Linode queries (so the Reserved badge disappears)
+      if (linodeId) {
+        queryClient.invalidateQueries({
+          exact: true,
+          queryKey: linodeQueries.linode(linodeId).queryKey,
+        });
+        queryClient.invalidateQueries({
+          queryKey: linodeQueries.linode(linodeId)._ctx.ips.queryKey,
+        });
+        queryClient.invalidateQueries({
+          queryKey: linodeQueries.linodes.queryKey,
+        });
+      }
+
+      // If the IP is assigned to a NodeBalancer, invalidate NodeBalancer queries
+      if (cachedIP?.assigned_entity?.type === 'nodebalancer') {
+        queryClient.invalidateQueries({
+          queryKey: nodebalancerQueries.nodebalancers.queryKey,
+        });
+        queryClient.invalidateQueries({
+          queryKey: nodebalancerQueries.nodebalancer(
+            cachedIP.assigned_entity.id,
+          ).queryKey,
+        });
+      }
     },
   });
 };

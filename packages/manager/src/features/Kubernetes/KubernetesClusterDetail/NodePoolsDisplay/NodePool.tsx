@@ -1,5 +1,5 @@
+import { pluralize } from '@akamai/compute-ui-core/formatting';
 import { Accordion, Box, Divider, Hidden, Stack, Typography } from '@linode/ui';
-import { pluralize } from '@linode/utilities';
 import React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';

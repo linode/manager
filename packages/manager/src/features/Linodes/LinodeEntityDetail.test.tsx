@@ -218,12 +218,7 @@ describe('Linode Entity Detail', () => {
         handlers={handlers}
         id={mockLinode.id}
         linode={mockLinode}
-      />,
-      {
-        flags: {
-          linodeInterfaces: { enabled: true },
-        },
-      }
+      />
     );
 
     await waitFor(() => {
@@ -251,12 +246,7 @@ describe('Linode Entity Detail', () => {
         handlers={handlers}
         id={mockLinode.id}
         linode={mockLinode}
-      />,
-      {
-        flags: {
-          linodeInterfaces: { enabled: true },
-        },
-      }
+      />
     );
 
     await waitFor(() => {
@@ -299,12 +289,7 @@ describe('Linode Entity Detail', () => {
         handlers={handlers}
         id={mockLinode.id}
         linode={mockLinode}
-      />,
-      {
-        flags: {
-          linodeInterfaces: { enabled: true },
-        },
-      }
+      />
     );
 
     await waitFor(() => {

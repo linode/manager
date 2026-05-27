@@ -1,3 +1,4 @@
+import { getStorage, setStorage } from '@akamai/compute-ui-core/browser';
 import { useFlags as ldUseFlags } from 'launchdarkly-react-client-sdk';
 import * as React from 'react';
 import { useDispatch } from 'react-redux';
@@ -5,7 +6,6 @@ import { useDispatch } from 'react-redux';
 import withFeatureFlagProvider from 'src/containers/withFeatureFlagProvider.container';
 import { useFlags } from 'src/hooks/useFlags';
 import { setMockFeatureFlags } from 'src/store/mockFeatureFlags';
-import { getStorage, setStorage } from 'src/utilities/storage';
 
 import type { Flags, FlagSet } from 'src/featureFlags';
 import type { Dispatch } from 'src/hooks/types';
@@ -46,12 +46,12 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'limitsEvolution', label: 'Limits Evolution' },
   { flag: 'linodeDiskEncryption', label: 'Linode Disk Encryption (LDE)' },
   { flag: 'linodeInterfaces', label: 'Linode Interfaces' },
+  { flag: 'liveChat', label: 'Live Chat' },
   { flag: 'lkeEnterprise2', label: 'LKE-Enterprise' },
   { flag: 'marketplaceV2', label: 'MarketplaceV2' },
   { flag: 'networkLoadBalancer', label: 'Network Load Balancer' },
   { flag: 'nodebalancerIpv6', label: 'NodeBalancer Dual Stack (IPv6)' },
   { flag: 'nodebalancerVpc', label: 'NodeBalancer-VPC Integration' },
-  { flag: 'objMultiCluster', label: 'OBJ Multi-Cluster' },
   { flag: 'objectStorageGen2', label: 'OBJ Gen2' },
   { flag: 'objectStorageGlobalQuotas', label: 'OBJ Global Quotas' },
   { flag: 'passwordlessLinodes', label: 'PasswordLess Linodes' },
@@ -108,6 +108,7 @@ const options: { flag: keyof Flags; label: string }[] = [
     label: 'Object Storage Contextual Metrics',
   },
   { flag: 'objSummaryPage', label: 'OBJ Summary Page' },
+  { flag: 'objectStorageSummaryPageLinks', label: 'OBJ Summary Page Links' },
   { flag: 'vpcDbaasResources', label: 'VPC DBaaS Resources' },
   { flag: 'vpcIpv6', label: 'VPC IPv6' },
   { flag: 'reserveIp', label: 'Reserve IP' },

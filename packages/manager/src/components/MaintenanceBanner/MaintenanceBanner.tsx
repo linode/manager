@@ -1,3 +1,4 @@
+import { formatDate } from '@akamai/compute-ui-core/datetime';
 import { useAllAccountMaintenanceQuery, useProfile } from '@linode/queries';
 import { Notice, Typography } from '@linode/ui';
 import * as React from 'react';
@@ -5,7 +6,6 @@ import * as React from 'react';
 import { Link } from 'src/components/Link';
 import { PENDING_MAINTENANCE_FILTER } from 'src/features/Account/Maintenance/utilities';
 import { isPlatformMaintenance } from 'src/hooks/usePlatformMaintenance';
-import { formatDate } from 'src/utilities/formatDate';
 import { isPast } from 'src/utilities/isPast';
 
 import type { AccountMaintenance } from '@linode/api-v4/lib/account';

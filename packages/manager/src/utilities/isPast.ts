@@ -1,4 +1,4 @@
-import { parseAPIDate } from './date';
+import { parseAPIDate } from '@akamai/compute-ui-core/datetime';
 
 export const isPast =
   (a: string) =>

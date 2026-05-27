@@ -1,10 +1,10 @@
+import { formatDate } from '@akamai/compute-ui-core/datetime';
 import { useProfile } from '@linode/queries';
 import React from 'react';
 
 import { Link } from 'src/components/Link';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { formatDate } from 'src/utilities/formatDate';
 
 import { channelTypeMap } from '../../constants';
 import { NotificationChannelActionMenu } from './NotificationChannelActionMenu';

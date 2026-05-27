@@ -13,10 +13,7 @@ import {
   withRootPassOptional,
   withRootPassRequired,
 } from './schemas';
-import {
-  getDoesEmployeeNeedToAssignFirewall,
-  getInterfacesPayload,
-} from './utilities';
+import { getDoesEmployeeNeedToAssignFirewall } from './utilities';
 
 import type {
   LinodeCreateFormContext,
@@ -38,27 +35,21 @@ export const getLinodeCreateResolver = (
 
     // Because `interfaces` are so complex, we need to perform some transformations before
     // we even try to validate them with our vaidation schema.
-    if (context?.isLinodeInterfacesEnabled) {
-      values.interfaces = [];
-      values.linodeInterfaces = values.linodeInterfaces.map(
-        getCleanedLinodeInterfaceValues
-      );
-      if (
-        values.interface_generation === 'legacy_config' ||
-        tab === 'Clone Linode'
-      ) {
-        // firewall_id is required in the form under interfaces object when using linode interfaces, but not when using legacy interfaces.
-        // If the user selects legacy interfaces, we set firewall_id to -1 to bypass the firewall requirement in the validation schema.
-        values.linodeInterfaces.forEach((linodeInterface) => {
-          linodeInterface.firewall_id = -1;
-        });
-      } else {
-        values.firewall_id = -1;
-      }
+    values.interfaces = [];
+    values.linodeInterfaces = values.linodeInterfaces.map(
+      getCleanedLinodeInterfaceValues
+    );
+    if (
+      values.interface_generation === 'legacy_config' ||
+      tab === 'Clone Linode'
+    ) {
+      // firewall_id is required in the form under interfaces object when using linode interfaces, but not when using legacy interfaces.
+      // If the user selects legacy interfaces, we set firewall_id to -1 to bypass the firewall requirement in the validation schema.
+      values.linodeInterfaces.forEach((linodeInterface) => {
+        linodeInterface.firewall_id = -1;
+      });
     } else {
-      values.linodeInterfaces = [];
-      values.interfaces =
-        getInterfacesPayload(values.interfaces, values.private_ip) ?? [];
+      values.firewall_id = -1;
     }
 
     if (!values.placement_group?.id) {
@@ -131,6 +122,38 @@ export const getLinodeCreateResolver = (
         message: 'You must select a Firewall or bypass the Firewall policy.',
         type: 'validate',
       };
+    }
+
+    // Validate reserved IP selection:
+    // An empty addresses array means the user chose "Reserved" mode but didn't select an IP.
+    // (Auto mode uses the sentinel value [{ address: 'auto' }], so it won't be empty.)
+    if (context?.isReserveIpEnabled && values.linodeInterfaces) {
+      for (let i = 0; i < values.linodeInterfaces.length; i++) {
+        const linodeInterface = values.linodeInterfaces[i];
+        const addresses = linodeInterface.public?.ipv4?.addresses;
+
+        if (
+          linodeInterface.purpose === 'public' &&
+          Array.isArray(addresses) &&
+          addresses.length === 0
+        ) {
+          const typedErrors = errors as FieldErrors<LinodeCreateFormValues>;
+
+          typedErrors.linodeInterfaces = {
+            ...typedErrors.linodeInterfaces,
+            [i]: {
+              public: {
+                ipv4: {
+                  addresses: {
+                    message: 'Please select a reserved IP address.',
+                    type: 'validate',
+                  },
+                },
+              },
+            },
+          };
+        }
+      }
     }
 
     if (errors) {

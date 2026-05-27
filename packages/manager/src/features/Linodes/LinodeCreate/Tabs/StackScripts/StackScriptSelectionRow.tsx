@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
+import { truncate } from '@akamai/compute-ui-core/formatting';
 import { Radio, Stack, Typography } from '@linode/ui';
-import { truncate } from '@linode/utilities';
 import { useLocation } from '@tanstack/react-router';
 import React from 'react';
 

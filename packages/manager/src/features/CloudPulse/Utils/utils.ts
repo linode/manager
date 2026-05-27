@@ -1,5 +1,6 @@
+import { roundTo } from '@akamai/compute-ui-core/formatting';
 import { useAccount, useRegionsQuery } from '@linode/queries';
-import { isFeatureEnabledV2, roundTo } from '@linode/utilities';
+import { isFeatureEnabledV2 } from '@linode/utilities';
 import React from 'react';
 
 import { convertData } from 'src/features/Longview/shared/formatters';
@@ -268,7 +269,7 @@ export const convertTimeDurationToStartAndEndTimeRange = (
  * @returns formatted data based on the time range between @startTime & @endTime
  */
 export const seriesDataFormatter = (
-  data: [number, number][],
+  data: [number, null | number][],
   startTime: number,
   endTime: number
 ): [number, null | number][] => {

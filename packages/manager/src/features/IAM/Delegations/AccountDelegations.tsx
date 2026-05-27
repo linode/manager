@@ -1,5 +1,7 @@
+import { NotificationBanner } from '@akamai/cds-components/react/NotificationBanner';
+import { Spacing } from '@akamai/cds-tokens';
 import { useGetChildAccountsQuery } from '@linode/queries';
-import { Notice, Paper, Stack } from '@linode/ui';
+import { Stack } from '@linode/ui';
 import { useMediaQuery, useTheme } from '@mui/material';
 import { useNavigate, useSearch } from '@tanstack/react-router';
 import React from 'react';
@@ -11,6 +13,7 @@ import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
 import { useIsIAMDelegationEnabled } from '../hooks/useIsIAMEnabled';
 import { usePermissions } from '../hooks/usePermissions';
+import { Paper } from '../Shared/Paper/Paper';
 import { AccountDelegationsTable } from './AccountDelegationsTable';
 
 const DELEGATIONS_ROUTE = '/iam/delegations';
@@ -85,9 +88,10 @@ export const AccountDelegations = () => {
 
   if (!permissions?.list_all_child_accounts) {
     return (
-      <Notice variant="error">
-        You do not have permission to view account delegations.
-      </Notice>
+      <NotificationBanner
+        text="You do not have permission to view account delegations."
+        type="error"
+      />
     );
   }
 
@@ -96,7 +100,7 @@ export const AccountDelegations = () => {
   }
 
   return (
-    <Paper sx={(theme) => ({ marginTop: theme.tokens.spacing.S16 })}>
+    <Paper marginTop={Spacing.S16}>
       <Stack
         direction={isSmDown ? 'column' : 'row'}
         justifyContent="space-between"

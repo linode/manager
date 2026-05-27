@@ -126,6 +126,13 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
     setDeleteState((prev) => ({ ...prev, isDialogOpen: true }));
   }, []);
 
+  const handleClone = ({ id, service_type: serviceType }: Alert) => {
+    navigate({
+      to: '/alerts/definitions/clone/$serviceType/$originalAlertId',
+      params: { serviceType, originalAlertId: String(id) },
+    });
+  };
+
   const handleConfirm = React.useCallback(
     (alert: Alert, currentStatus: boolean) => {
       const toggleStatus = currentStatus ? 'disabled' : 'enabled';
@@ -325,6 +332,7 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
                   {isGroupedByTag ? (
                     <GroupedAlertsTable
                       groupedAlerts={sortGroups(groupByTags(sortedData ?? []))}
+                      handleClone={handleClone}
                       handleDelete={handleDelete}
                       handleDetails={handleDetails}
                       handleEdit={handleEdit}
@@ -334,6 +342,7 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
                   ) : (
                     <AlertsTable
                       alerts={paginatedAndOrderedAlerts}
+                      handleClone={handleClone}
                       handleDelete={handleDelete}
                       handleDetails={handleDetails}
                       handleEdit={handleEdit}

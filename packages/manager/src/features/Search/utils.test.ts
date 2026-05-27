@@ -48,6 +48,7 @@ describe('separate results by entity', () => {
       kubernetesCluster: [],
       linode: [],
       nodebalancer: [],
+      reservedIp: [],
       stackscript: [],
       stream: [],
       volume: [],

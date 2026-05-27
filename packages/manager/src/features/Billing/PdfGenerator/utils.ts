@@ -1,7 +1,7 @@
+import { formatDate } from '@akamai/compute-ui-core/datetime';
 import autoTable from 'jspdf-autotable';
 
 import { ADDRESSES } from 'src/constants';
-import { formatDate } from 'src/utilities/formatDate';
 import { MAGIC_DATE_THAT_DC_SPECIFIC_PRICING_WAS_IMPLEMENTED } from 'src/utilities/pricing/constants';
 
 import { getShouldUseAkamaiBilling } from '../billingUtils';

@@ -27,7 +27,19 @@ export const UpdateDelegationsDrawer = ({
   }, [delegation]);
 
   return (
-    <Drawer onClose={onClose} open={open} title="Update Delegation">
+    <Drawer
+      onClose={onClose}
+      open={open}
+      slotProps={{
+        paper: {
+          sx: {
+            maxWidth: { xs: '100% !important', sm: '600px !important' },
+          },
+        },
+      }}
+      title="Update Delegation"
+      wide
+    >
       {delegation && (
         <UpdateDelegationForm
           delegation={delegation}

@@ -1,3 +1,4 @@
+import { capitalize } from '@akamai/compute-ui-core/formatting';
 import {
   linodeQueries,
   nodebalancerQueries,
@@ -5,7 +6,6 @@ import {
   useMutateFirewall,
 } from '@linode/queries';
 import { ActionsPanel } from '@linode/ui';
-import { capitalize } from '@linode/utilities';
 import { useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';

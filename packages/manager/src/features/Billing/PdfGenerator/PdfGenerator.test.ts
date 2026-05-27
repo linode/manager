@@ -1,3 +1,4 @@
+import { formatDate } from '@akamai/compute-ui-core/datetime';
 import { regionFactory } from '@linode/utilities';
 import fs from 'fs';
 import { PdfReader } from 'pdfreader';
@@ -9,7 +10,6 @@ import {
   paymentFactory,
 } from 'src/factories';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
-import { formatDate } from 'src/utilities/formatDate';
 import { MAGIC_DATE_THAT_DC_SPECIFIC_PRICING_WAS_IMPLEMENTED } from 'src/utilities/pricing/constants';
 
 import { getShouldUseAkamaiBilling } from '../billingUtils';

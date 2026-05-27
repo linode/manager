@@ -1,6 +1,3 @@
-import { useAccount } from '@linode/queries';
-import { isFeatureEnabledV2 } from '@linode/utilities';
-
 import { useFlags } from 'src/hooks/useFlags';
 
 import type {
@@ -52,26 +49,6 @@ export const addMaintenanceToLinodes = (
         }
       : { ...thisLinode, maintenance: null };
   });
-};
-
-/**
- * Returns whether or not features related to the *Linode Interfaces* project
- * should be enabled.
- *
- * Currently, this just uses the `linodeInterfaces` feature flag as a source of truth,
- * but will eventually also look at account capabilities.
- */
-export const useIsLinodeInterfacesEnabled = () => {
-  const flags = useFlags();
-  const { data: account } = useAccount();
-
-  return {
-    isLinodeInterfacesEnabled: isFeatureEnabledV2(
-      'Linode Interfaces',
-      flags.linodeInterfaces?.enabled ?? false,
-      account?.capabilities ?? []
-    ),
-  };
 };
 
 /**
@@ -166,6 +143,5 @@ export const useIsGenerationalPlansEnabled = (
     isGenerationalPlansEnabled:
       isFlagEnabled && !shouldDisableDueToUnavailability,
     allowedPlans: flags.generationalPlansv2?.allowedPlans || [],
-    hasG7DedicatedPlans,
   };
 };

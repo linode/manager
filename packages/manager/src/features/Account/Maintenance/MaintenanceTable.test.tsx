@@ -1,3 +1,4 @@
+import { formatDate } from '@akamai/compute-ui-core/datetime';
 import {
   screen,
   waitForElementToBeRemoved,
@@ -8,7 +9,6 @@ import * as React from 'react';
 import { accountMaintenanceFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
-import { formatDate } from 'src/utilities/formatDate';
 import {
   mockMatchMedia,
   renderWithTheme,

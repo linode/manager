@@ -1,9 +1,11 @@
+import { Badge } from '@akamai/cds-components/react/Badge';
 import { usePreferences } from '@linode/queries';
 import { Stack, VisibilityTooltip } from '@linode/ui';
 import React from 'react';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { TableCell } from 'src/components/TableCell';
+import { useIsReserveIpEnabled } from 'src/features/ReservedIps/utils';
 
 import {
   StyledCopyTooltip,
@@ -18,16 +20,25 @@ interface AccessRowProps {
   heading?: string;
   isDisabled: boolean;
   isLinodeInterface?: boolean;
+  isReserved?: boolean;
   text: string;
 }
 
 export const AccessRow = (props: AccessRowProps) => {
-  const { heading, text, isDisabled, hasPublicInterface, isLinodeInterface } =
-    props;
+  const {
+    heading,
+    text,
+    isDisabled,
+    hasPublicInterface,
+    isLinodeInterface,
+    isReserved,
+  } = props;
 
   const { data: maskedPreferenceSetting } = usePreferences(
     (preferences) => preferences?.maskSensitiveData
   );
+
+  const { isReserveIpEnabled } = useIsReserveIpEnabled();
 
   const [isTextMasked, setIsTextMasked] = React.useState(
     maskedPreferenceSetting
@@ -51,6 +62,7 @@ export const AccessRow = (props: AccessRowProps) => {
           />
         </StyledGradientDiv>
         <Stack alignItems="center" direction="row" spacing={1}>
+          {isReserveIpEnabled && isReserved && <Badge>Reserved</Badge>}
           {isDisabled ? (
             <PublicIPAddressTooltip
               hasPublicInterface={Boolean(hasPublicInterface)}

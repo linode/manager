@@ -70,38 +70,6 @@ describe('VPC Detail Summary section', () => {
     });
   });
 
-  it('should display number of subnets and linodes, region, id, creation and update dates', async () => {
-    const vpcFactory1 = vpcFactory.build({
-      id: 23,
-      subnets: [subnetFactory.build()],
-      created: '2023-07-12T16:08:53',
-      updated: '2023-07-12T16:08:54',
-    });
-    queryMocks.useVPCQuery.mockReturnValue({
-      data: vpcFactory1,
-    });
-
-    const { getByText } = renderWithTheme(<VPCDetail />);
-
-    // there is 1 subnet with 5 linodes
-    expect(getByText('Subnets')).toBeVisible();
-    expect(getByText('1')).toBeVisible();
-    expect(getByText('Linodes')).toBeVisible();
-    expect(getByText('5')).toBeVisible();
-
-    expect(getByText('Region')).toBeVisible();
-    expect(getByText('US, Newark, NJ')).toBeVisible();
-
-    expect(getByText('VPC ID')).toBeVisible();
-    expect(getByText(vpcFactory1.id)).toBeVisible();
-
-    expect(getByText('Created')).toBeVisible();
-    expect(getByText(vpcFactory1.created)).toBeVisible();
-
-    expect(getByText('Updated')).toBeVisible();
-    expect(getByText(vpcFactory1.updated)).toBeVisible();
-  });
-
   it('should display number of subnets and resources, region, id, creation and update dates', async () => {
     const vpcFactory1 = vpcFactory.build({
       id: 42,

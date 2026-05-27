@@ -1,4 +1,4 @@
-import { capitalize } from '@linode/utilities';
+import { capitalize } from '@akamai/compute-ui-core/formatting';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';

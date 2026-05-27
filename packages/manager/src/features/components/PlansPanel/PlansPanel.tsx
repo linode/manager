@@ -35,6 +35,11 @@ import type { PlanSelectionType } from './types';
 import type { LinodeTypeClass, Region } from '@linode/api-v4';
 import type { LinodeCreateQueryParams } from 'src/features/Linodes/types';
 
+interface DisabledTab {
+  copy: string;
+  tab: string;
+}
+
 export interface PlansPanelProps {
   additionalBanners?: React.ReactNode[];
   className?: string;
@@ -46,7 +51,7 @@ export interface PlansPanelProps {
   disabledResizeFromPremiumPlans?: PlanSelectionType[];
   disabledResizeToPremiumPlans?: PlanSelectionType[];
   disabledSmallerPlans?: PlanSelectionType[];
-  disabledTabs?: string[];
+  disabledTabs?: DisabledTab[];
   docsLink?: JSX.Element;
   error?: string;
   flow?: 'database' | 'kubernetes' | 'linode';
@@ -62,7 +67,6 @@ export interface PlansPanelProps {
   selectedRegionID?: string;
   showLimits?: boolean;
   tabbedPanelInnerClass?: string;
-  tabDisabledMessage?: string;
   types: PlanSelectionType[];
 }
 
@@ -138,6 +142,7 @@ export const PlansPanel = (props: PlansPanelProps) => {
       !type.id.includes('dedicated-edge') && !type.id.includes('nanode-edge')
     );
   });
+
   const _plans = getPlanSelectionsByPlanType(
     flags.disableLargestGbPlans
       ? replaceOrAppendPlaceholder512GbPlans(_types)
@@ -197,10 +202,13 @@ export const PlansPanel = (props: PlansPanelProps) => {
         selectedRegionId: selectedRegionID,
       });
 
+      const disabledTab = props.disabledTabs
+        ? props.disabledTabs?.find((disabledTab) => disabledTab.tab === plan)
+        : undefined;
+
       return {
-        disabled: props.disabledTabs
-          ? props.disabledTabs?.includes(plan)
-          : false,
+        disabled: Boolean(disabledTab),
+        disabledMessage: disabledTab?.copy,
         render: () => {
           return (
             <>
@@ -291,6 +299,7 @@ export const PlansPanel = (props: PlansPanelProps) => {
   ) {
     tabs.push({
       disabled: true,
+      disabledMessage: 'Premium CPUs are now called G7 Dedicated Plans.',
       render: () => <div />,
       title: planTabInfoContent.premium?.title,
     });
@@ -302,13 +311,13 @@ export const PlansPanel = (props: PlansPanelProps) => {
       data-qa-select-plan
       docsLink={docsLink}
       error={error}
+      flow={flow}
       handleTabChange={handleTabChange}
       header={header || 'Linode Plan'}
       initTab={initialTab >= 0 ? initialTab : 0}
       innerClass={props.tabbedPanelInnerClass}
       rootClass={`${className} tabbedPanel`}
       sx={{ width: '100%' }}
-      tabDisabledMessage={props.tabDisabledMessage}
       tabs={tabs}
     />
   );

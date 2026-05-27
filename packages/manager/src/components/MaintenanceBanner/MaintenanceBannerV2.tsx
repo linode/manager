@@ -1,6 +1,6 @@
+import { pluralize } from '@akamai/compute-ui-core/formatting';
 import { useAllAccountMaintenanceQuery } from '@linode/queries';
 import { Notice, Typography } from '@linode/ui';
-import { pluralize } from '@linode/utilities';
 import { useLocation } from '@tanstack/react-router';
 import React from 'react';
 

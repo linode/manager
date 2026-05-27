@@ -15,6 +15,8 @@ describe('RolesTableActionMenu', () => {
       <RolesTableActionMenu canUpdateUserGrants={true} onClick={() => {}} />
     );
 
-    expect(screen.getByRole('button')).toBeInTheDocument();
+    expect(
+      screen.getByText('Assign Role').closest('cds-button')
+    ).toBeInTheDocument();
   });
 });

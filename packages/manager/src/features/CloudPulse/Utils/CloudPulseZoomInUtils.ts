@@ -1,4 +1,5 @@
-import { type Metrics, roundTo } from '@linode/utilities';
+import { roundTo } from '@akamai/compute-ui-core/formatting';
+import { type Metrics } from '@linode/utilities';
 
 import { humanizeLargeData } from './utils';
 

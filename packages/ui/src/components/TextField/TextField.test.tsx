@@ -126,7 +126,6 @@ describe('TextField', () => {
 
     const helperText = getByText('Helper text');
 
-    // ':rg:' being the default react generated id
-    expect(helperText.getAttribute('id')).toBe('«rg»-helper-text');
+    expect(helperText.getAttribute('id')).toContain('-helper-text');
   });
 });

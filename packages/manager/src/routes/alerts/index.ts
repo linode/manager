@@ -57,12 +57,21 @@ const cloudPulseAlertsDefinitionsEditRoute = createRoute({
   ).then((m) => m.cloudPulseAlertsDefinitionsEditLazyRoute)
 );
 
+const cloudPulseAlertsDefinitionsCloneRoute = createRoute({
+  getParentRoute: () => cloudPulseAlertsRoute,
+  path: 'definitions/clone/$serviceType/$originalAlertId',
+}).lazy(() =>
+  import(
+    'src/features/CloudPulse/Alerts/CloneAlert/cloudPulseAlertsDefinitionsCloneLazyRoute'
+  ).then((m) => m.cloudPulseAlertsDefinitionsCloneLazyRoute)
+);
+
 const cloudPulseAlertsDefinitionsCatchAllRoute = createRoute({
   getParentRoute: () => cloudPulseAlertsRoute,
   path: 'definitions/$invalidPath',
   beforeLoad: ({ params }) => {
     // Only redirect if the path doesn't match our valid routes
-    if (!['create', 'detail', 'edit'].includes(params.invalidPath)) {
+    if (!['clone', 'create', 'detail', 'edit'].includes(params.invalidPath)) {
       throw redirect({ to: '/alerts/definitions' });
     }
   },
@@ -123,6 +132,7 @@ export const cloudPulseAlertsRouteTree = cloudPulseAlertsRoute.addChildren([
   cloudPulseAlertsIndexRoute,
   cloudPulseAlertsDefinitionsRoute.addChildren([
     cloudPulseAlertsCreateRoute,
+    cloudPulseAlertsDefinitionsCloneRoute,
     cloudPulseAlertsDefinitionsDetailRoute,
     cloudPulseAlertsDefinitionsEditRoute,
   ]),

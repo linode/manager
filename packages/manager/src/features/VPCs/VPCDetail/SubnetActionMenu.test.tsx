@@ -27,8 +27,7 @@ const props = {
   handleDelete: vi.fn(),
   handleEdit: vi.fn(),
   handleUnassignLinodes: vi.fn(),
-  numLinodes: 1,
-  numNodebalancers: 1,
+  numUniqueResources: 2,
   subnet: subnetFactory.build({ label: 'subnet-1' }),
   vpcId: 1,
 };
@@ -44,26 +43,8 @@ describe('SubnetActionMenu', () => {
     view.getByText('Delete');
   });
 
-  it('should not allow the delete button to be clicked', async () => {
+  it('should not allow the delete button to be clicked when there are still resources assigned', async () => {
     const view = renderWithTheme(<SubnetActionMenu {...props} />);
-    const actionMenu = view.getByLabelText(`Action menu for Subnet subnet-1`);
-    await userEvent.click(actionMenu);
-
-    const deleteButton = view.getByRole('menuitem', { name: 'Delete' });
-    await userEvent.click(deleteButton, {
-      pointerEventsCheck: PointerEventsCheckLevel.Never,
-    });
-    expect(props.handleDelete).not.toHaveBeenCalled();
-    const tooltipText = view.getByLabelText(
-      'Linodes assigned to a subnet must be unassigned before the subnet can be deleted.'
-    );
-    expect(tooltipText).toBeInTheDocument();
-  });
-
-  it('should not allow the delete button to be clicked when isNodebalancerVPCEnabled is true', async () => {
-    const view = renderWithTheme(<SubnetActionMenu {...props} />, {
-      flags: { nodebalancerVpc: true },
-    });
 
     const actionMenu = view.getByLabelText(`Action menu for Subnet subnet-1`);
     await userEvent.click(actionMenu);
@@ -81,7 +62,7 @@ describe('SubnetActionMenu', () => {
 
   it('should allow the delete button to be clicked', async () => {
     const view = renderWithTheme(
-      <SubnetActionMenu {...props} numLinodes={0} numNodebalancers={0} />
+      <SubnetActionMenu {...props} numUniqueResources={0} />
     );
     const actionMenu = view.getByLabelText(`Action menu for Subnet subnet-1`);
     await userEvent.click(actionMenu);
@@ -90,14 +71,14 @@ describe('SubnetActionMenu', () => {
     await userEvent.click(deleteButton);
     expect(props.handleDelete).toHaveBeenCalled();
     const tooltipText = view.queryByLabelText(
-      'Linodes assigned to a subnet must be unassigned before the subnet can be deleted.'
+      'Resources assigned to a subnet must be unassigned before the subnet can be deleted.'
     );
     expect(tooltipText).not.toBeInTheDocument();
   });
 
   it('should allow the edit button to be clicked', async () => {
     const view = renderWithTheme(
-      <SubnetActionMenu {...props} numLinodes={0} numNodebalancers={0} />
+      <SubnetActionMenu {...props} numUniqueResources={0} />
     );
     const actionMenu = view.getByLabelText(`Action menu for Subnet subnet-1`);
     await userEvent.click(actionMenu);

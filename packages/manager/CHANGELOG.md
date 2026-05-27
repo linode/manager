@@ -4,6 +4,77 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2026-05-27] - v1.163.0
+
+
+### Added:
+
+- Object storage bucket tab filters ([#85](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/85))
+- Add global refresh functionality for contextual view dashboard component in CloudPulse metrics ([#152](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/152))
+- New formatter for response_type dimension filter in CloudPulse metrics ([#231](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/231))
+
+### Changed:
+
+- Allow free text input for Database Name and Username fields in PgBouncer Connection Pool drawers (#93)
+- Disable delete action for Streams with provisioning status ([#146](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/146))
+- Object storage summary page layout ([#225](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/225))
+- Add Akamai MCP & Ollama; Remove 9 deprecated Quick Deploy apps ([#226](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/226/overview))
+- product enhancements and corrections for Marketplace ([#240](https://github.com/linode/manager/pull/240))
+
+### Fixed:
+
+- Default Linode Encryption for Backup Linodes ([#207](https://github.com/linode/manager/pull/207))
+- Access key permissions drawer ([#193](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/193/overview))
+- Replace `@vitejs/plugin-react-swc` with `@vitejs/plugin-react` ([#198](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/198/overview))
+- Fix issue with reset of firewall selection in linode create and add interface forms ([#201](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/201/overview))
+- Default Linode Encryption for Backup Linodes ([#207](https://github.com/linode/manager/pull/207))
+- Omit private_ip from create Linode payload when using Linode interfaces ([#213](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/213/overview))
+- [UIE-10924] Eliminate useIsLinodeInterfacesEnabled hook and fix related unit tests ([#229](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/229/overview))
+
+### Removed:
+
+- Removed longview gpg key update banner ([#123](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/123))
+- Remove AclpLogs flags ([#124](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/124))
+
+### Tech Stories:
+
+- Remove old unique Linodes and isNodebalancerVPCEnabled code for VPCs and Subnets (#136)
+- Bump packages `@mui/x-date-pickers`, `@shikijs/langs`, `@shikijs/themes`, `axios`, `dompurify`, `ramda`, `react`, `react-dom`, `shiki`, `concurrently` and `vite-plugin-svgr`.
+- Remove Cypress from Cloud Manager ([#189](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/189/overview))
+- Bump formik, launchdarkly-react-client-sdk and recharts packages ([#191](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/191/overview))
+- Bump @mui/material from ^7.1.0 to ^7.3.11 and resolve failing tests. ([#192](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/192/overview))
+- Bump @mui/utils from ^7.1.0 to ^7.3.11 ([#205](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/205/overview))
+- Eliminate `mocha-junit-reporter` ([#242](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/242/overview))
+
+### Upcoming Features:
+
+- Compute pricing changes: add utilities and create Linode flow integration ([#59](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/59))
+- Implement Reserved IP integration for Linode details page ([#63](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/63/overview))
+- Private Image Sharing: Implement the selected images region in the Create Share group page ([#68](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/68/overview))
+- Reserved IP: Implemented Reserved IP integration for Create Linode flow ([#82](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/82))
+- Added live chat support for Account/Billing in Support Tickets, with fallback to ticket creation when chat is unavailable. ([#104](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/104/overview))
+- Private Image Sharing: Joined Groups tab landing content ([#114](https://github.com/linode/manager/pull/114))
+- Private Image Sharing: Implement the Share group details page ([#126](https://github.com/linode/manager/pull/126))
+- Private Image Sharing: Add unit tests, sorting, and pendo IDs to Share Group Details  ([#145](https://github.com/linode/manager/pull/145))
+- Handle Unauthorized error message state for cloudpulse metrics dashboards ([#129](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/129))
+- Reserved IP: Implement quick search integration ([#130](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/130))
+- Reserve IP - Integrate Reserve IP feature in Nodebalancer details page ([#133](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/133/overview))
+- Model Playground: Real endpoint, model selection, thinking blocks ([#159](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/159/overview))
+- Private Image Sharing: populate My Membership Requests tab ([#161](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/161))
+- Add featureFlags,Query hooks,utils & constants with routing and placeholder landing page for ACLP-Alerting : Clone feature ([#163](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/163/overview))
+- Private Image Sharing: Implement the delete Share Group dialog ([#168](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/168/overview))
+- Reserved IP: Implement hourly pricing display in Reserve IP drawer ([#171](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/171/overview))
+- Support null values from CloudPulse metrics response and show gaps in graphs ([#174](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/174))
+- Upcoming: [UIE-10551, UIE-10552] - Update Database Create to support Valkey engine (#176)
+- Private Image Sharing: Implement the group details drawer ([#187](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/187/overview))
+- Private Image Sharing: rename ShareGroupsLanding to ShareGroupsTabs for sake of consistency ([#200](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/200))
+-  Add CloneAlertDefinition, update CloneAlertLanding for ACLP-Alerts ([#209](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/209/overview))
+- Compute Pricing: Add hourly only pricing tooltip to monthly column in create linode flow ([#215](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/215/overview))
+- Private Image Sharing: Implement the Add Members drawer ([#216](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/216/overview))
+- Private Image Sharing: Implement the Revoke member access dialog ([#228](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/228/overview))
+- Reserve IP - Update techdoc links ([#245](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/245/overview))
+- Add Group-by dimensions feature for ACLP-Alerts by introducing CloudPulseAlertsGroupBy component ([#246](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/246/overview))
+
 ## [2026-04-30] - v1.162.0
 
 

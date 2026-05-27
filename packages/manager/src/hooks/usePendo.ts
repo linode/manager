@@ -1,64 +1,21 @@
-import { checkOptanonConsent } from '@akamai/compute-ui-core/analytics';
+import {
+  checkOptanonConsent,
+  getCookie,
+  getUniquePendoId,
+  ONE_TRUST_COOKIE_CATEGORIES,
+  transformUrl,
+} from '@akamai/compute-ui-core/analytics';
+import { loadScript } from '@akamai/compute-ui-core/browser';
 import { useAccount, useProfile } from '@linode/queries';
-import { loadScript } from '@linode/utilities'; // `loadScript` from `useScript` hook
 import React from 'react';
 
 import { PENDO_API_KEY } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
 import { getAppRoot } from 'src/OAuth/constants';
-import {
-  getCookie,
-  ONE_TRUST_COOKIE_CATEGORIES,
-} from 'src/utilities/analytics/utils';
 
 import type { PendoSDK } from '@akamai/compute-ui-core/analytics';
 
 const appRoot = getAppRoot();
-
-/**
- * This function prevents address ID collisions leading to muddled data between environments. Account and visitor IDs must be unique per API-key.
- * See: https://support.pendo.io/hc/en-us/articles/360031862352-Pendo-in-multiple-environments-for-development-and-testing
- * @returns Unique ID for the environment; else, undefined if missing values.
- */
-const getUniquePendoId = (id: string | undefined) => {
-  const isProdEnv = appRoot === 'https://cloud.linode.com';
-
-  if (!id || !appRoot) {
-    return;
-  }
-
-  // Append "-nonprod" to all IDs when in lower environments.
-  return `${id}${!isProdEnv ? '-nonprod' : ''}`;
-};
-
-/**
- * This function uses string matching and replacement to transform the page url into a sanitized url without unwanted data.
- * @param url The url of the page.
- * @returns A clean, transformed url of the page.
- */
-export const transformUrl = (url: string) => {
-  const idMatchingRegex = /(\/\d+)/g;
-  const bucketPathMatchingRegex = /(buckets\/[^\/]+\/[^\/]+)/;
-  const userPathMatchingRegex = /(users\/).*/;
-  const oauthPathMatchingRegex = /(#access_token).*/;
-
-  // Replace any ids with * and keep the rest of the URL intact
-  let transformedUrl = url.replace(idMatchingRegex, `/*`);
-
-  // Replace the region and bucket names with * and keep the rest of the URL intact.
-  // Object storage file navigation is truncated via the 'clear search' transform.
-  transformedUrl = transformedUrl.replace(
-    bucketPathMatchingRegex,
-    'buckets/*/*'
-  );
-
-  // Remove everything after access_token
-  transformedUrl = transformedUrl.replace(oauthPathMatchingRegex, '$1');
-
-  // Remove everything after /users
-  transformedUrl = transformedUrl.replace(userPathMatchingRegex, '$1');
-  return transformedUrl;
-};
 
 /**
  * Initializes our Pendo analytics script on mount if a valid `PENDO_API_KEY` exists and OneTrust consent is present.
@@ -67,8 +24,8 @@ export const usePendo = () => {
   const { data: account } = useAccount();
   const { data: profile } = useProfile();
 
-  const accountId = getUniquePendoId(account?.euuid);
-  const visitorId = getUniquePendoId(profile?.uid.toString());
+  const accountId = getUniquePendoId(account?.euuid, appRoot);
+  const visitorId = getUniquePendoId(profile?.uid.toString(), appRoot);
 
   const optanonCookie = getCookie('OptanonConsent');
   // Since OptanonConsent cookie always has a .linode.com domain, only check for consent in dev/staging/prod envs.

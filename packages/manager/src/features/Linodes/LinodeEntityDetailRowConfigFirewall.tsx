@@ -5,7 +5,6 @@ import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { useCanUpgradeInterfaces } from 'src/hooks/useCanUpgradeInterfaces';
-import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
 import {
   StyledBox,
@@ -39,8 +38,6 @@ export const LinodeEntityDetailRowConfigFirewall = (props: Props) => {
   const navigate = useNavigate();
   const theme = useTheme();
 
-  const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
-
   const { data: attachedFirewallData } = useLinodeFirewallsQuery(
     linodeId,
     interfaceGeneration !== 'linode'
@@ -64,7 +61,7 @@ export const LinodeEntityDetailRowConfigFirewall = (props: Props) => {
     });
   };
 
-  if (!isLinodeInterfacesEnabled && !linodeLkeClusterId && !attachedFirewall) {
+  if (!linodeLkeClusterId && !attachedFirewall) {
     return null;
   }
 
@@ -93,17 +90,12 @@ export const LinodeEntityDetailRowConfigFirewall = (props: Props) => {
           {linodeLkeClusterId && (
             <LKEClusterCell
               cluster={cluster}
-              hideLKECellRightBorder={
-                !attachedFirewall && !isLinodeInterfacesEnabled
-              }
+              hideLKECellRightBorder={!attachedFirewall}
               linodeLkeClusterId={linodeLkeClusterId ?? 1}
             />
           )}
           {attachedFirewall && (
             <FirewallCell
-              additionalSx={
-                !isLinodeInterfacesEnabled ? { borderRight: 'unset' } : {}
-              }
               cellLabel="Firewall:"
               firewall={attachedFirewall}
               hidePaddingLeft={!linodeLkeClusterId}
@@ -111,55 +103,53 @@ export const LinodeEntityDetailRowConfigFirewall = (props: Props) => {
           )}
         </StyledBox>
       )}
-      {isLinodeInterfacesEnabled && (
-        <StyledListItem
-          sx={{
-            ...(!linodeLkeClusterId && !attachedFirewall
-              ? { paddingLeft: 0 }
-              : {}),
-            borderRight: 'unset',
-          }}
-        >
-          <StyledLabelBox component="span">Interfaces:</StyledLabelBox>{' '}
-          <Box component="span" sx={{ alignItems: 'center', display: 'flex' }}>
-            Configuration Profile
-            <span>
-              <Tooltip
-                slotProps={{
-                  tooltip: {
-                    sx: {
-                      maxWidth: '260px',
-                    },
+      <StyledListItem
+        sx={{
+          ...(!linodeLkeClusterId && !attachedFirewall
+            ? { paddingLeft: 0 }
+            : {}),
+          borderRight: 'unset',
+        }}
+      >
+        <StyledLabelBox component="span">Interfaces:</StyledLabelBox>{' '}
+        <Box component="span" sx={{ alignItems: 'center', display: 'flex' }}>
+          Configuration Profile
+          <span>
+            <Tooltip
+              slotProps={{
+                tooltip: {
+                  sx: {
+                    maxWidth: '260px',
                   },
-                }}
-                sx={{ width: '500px' }}
-                title={DEFAULT_UPGRADE_BUTTON_HELPER_TEXT}
-              >
-                <Chip
-                  aria-label="Upgrade Configuration Profile Interfaces to Linode Interfaces"
-                  component="span"
-                  disabled={!canUpgradeInterfaces}
-                  label="UPGRADE"
-                  onClick={openUpgradeInterfacesDialog}
-                  size="small"
-                  sx={(theme) => ({
-                    backgroundColor: theme.color.tagButtonBg,
-                    color: theme.tokens.color.Neutrals[80],
-                    marginLeft: theme.spacingFunction(12),
-                  })}
-                />
-              </Tooltip>
-              {!canUpgradeInterfaces && unableToUpgradeTooltipText && (
-                <TooltipIcon
-                  status="info"
-                  sxTooltipIcon={{ padding: 0 }}
-                  text={unableToUpgradeTooltipText}
-                />
-              )}
-            </span>
-          </Box>
-        </StyledListItem>
-      )}
+                },
+              }}
+              sx={{ width: '500px' }}
+              title={DEFAULT_UPGRADE_BUTTON_HELPER_TEXT}
+            >
+              <Chip
+                aria-label="Upgrade Configuration Profile Interfaces to Linode Interfaces"
+                component="span"
+                disabled={!canUpgradeInterfaces}
+                label="UPGRADE"
+                onClick={openUpgradeInterfacesDialog}
+                size="small"
+                sx={(theme) => ({
+                  backgroundColor: theme.color.tagButtonBg,
+                  color: theme.tokens.color.Neutrals[80],
+                  marginLeft: theme.spacingFunction(12),
+                })}
+              />
+            </Tooltip>
+            {!canUpgradeInterfaces && unableToUpgradeTooltipText && (
+              <TooltipIcon
+                status="info"
+                sxTooltipIcon={{ padding: 0 }}
+                text={unableToUpgradeTooltipText}
+              />
+            )}
+          </span>
+        </Box>
+      </StyledListItem>
     </Grid>
   );
 };

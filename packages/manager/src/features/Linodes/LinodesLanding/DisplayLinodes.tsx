@@ -18,6 +18,7 @@ import { StyledControlHeader } from './DisplayLinodes.styles';
 import { RegionTypeFilter } from './RegionTypeFilter';
 import TableWrapper from './TableWrapper';
 
+import type { RegionFilter } from '@akamai/compute-ui-core/browser';
 import type { Config } from '@linode/api-v4/lib/linodes';
 import type { LockType } from '@linode/api-v4/lib/locks';
 import type { OrderByProps } from 'src/components/OrderBy';
@@ -25,7 +26,6 @@ import type { PaginationProps } from 'src/components/Paginate';
 import type { Action } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
 import type { DialogType } from 'src/features/Linodes/types';
 import type { LinodeWithMaintenance } from 'src/utilities/linodes';
-import type { RegionFilter } from 'src/utilities/storage';
 
 export interface RenderLinodesProps
   extends PaginationProps<LinodeWithMaintenance> {

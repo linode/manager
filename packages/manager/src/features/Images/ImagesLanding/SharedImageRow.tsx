@@ -1,3 +1,5 @@
+import { formatDate } from '@akamai/compute-ui-core/datetime';
+import { pluralize } from '@akamai/compute-ui-core/formatting';
 import { useProfile, useRegionsQuery } from '@linode/queries';
 import {
   Hidden,
@@ -7,7 +9,7 @@ import {
   TooltipIcon,
   Typography,
 } from '@linode/ui';
-import { convertStorageUnit, pluralize } from '@linode/utilities';
+import { convertStorageUnit } from '@linode/utilities';
 import React from 'react';
 
 import CloudInitIcon from 'src/assets/icons/cloud-init.svg';
@@ -20,7 +22,6 @@ import {
 } from 'src/features/components/PlansPanel/PlansAvailabilityNotice.styles';
 import { SHARED_WITH_ME_IMAGES_TAB_PENDO_IDS } from 'src/features/Images/constants';
 import { ImagesActionMenu } from 'src/features/Images/ImagesLanding/ImagesActionMenu';
-import { formatDate } from 'src/utilities/formatDate';
 
 import type { Event, Image, ImageRegion } from '@linode/api-v4';
 import type { Handlers } from 'src/features/Images/ImagesLanding/ImagesActionMenu';

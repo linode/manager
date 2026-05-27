@@ -18,7 +18,6 @@ import {
   isFormInEditMode,
   mapAutocompleteOptionsWithPendo,
   renderOptionsWithPendo,
-  useIsACLPLogsEnabled,
 } from 'src/features/Delivery/deliveryUtils';
 import { DestinationAkamaiObjectStorageDetailsForm } from 'src/features/Delivery/Shared/DestinationAkamaiObjectStorageDetailsForm';
 import { DestinationCustomHttpsDetailsForm } from 'src/features/Delivery/Shared/DestinationCustomHttpsDetailsForm';
@@ -59,7 +58,6 @@ const customHttpsDetailsControlPaths = {
 export const DestinationForm = (props: DestinationFormProps) => {
   const { mode, isSubmitting, onSubmit } = props;
 
-  const { isACLPLogsCustomHttpsEnabled } = useIsACLPLogsEnabled();
   const {
     verifyDestination,
     isPending: isVerifyingDestination,
@@ -119,9 +117,7 @@ export const DestinationForm = (props: DestinationFormProps) => {
               render={({ field }) => (
                 <Autocomplete
                   disableClearable
-                  disabled={
-                    isFormInEditMode(mode) || !isACLPLogsCustomHttpsEnabled
-                  }
+                  disabled={isFormInEditMode(mode)}
                   label="Destination Type"
                   onBlur={field.onBlur}
                   onChange={(_, { value }) => {
@@ -164,14 +160,13 @@ export const DestinationForm = (props: DestinationFormProps) => {
                 mode={mode}
               />
             )}
-            {isACLPLogsCustomHttpsEnabled &&
-              destination.type === destinationType.CustomHttps && (
-                <DestinationCustomHttpsDetailsForm
-                  controlPaths={customHttpsDetailsControlPaths}
-                  entity="destination"
-                  mode={mode}
-                />
-              )}
+            {destination.type === destinationType.CustomHttps && (
+              <DestinationCustomHttpsDetailsForm
+                controlPaths={customHttpsDetailsControlPaths}
+                entity="destination"
+                mode={mode}
+              />
+            )}
           </Paper>
         </Grid>
         <Grid size={{ lg: 3, md: 12, sm: 12, xs: 12 }}>

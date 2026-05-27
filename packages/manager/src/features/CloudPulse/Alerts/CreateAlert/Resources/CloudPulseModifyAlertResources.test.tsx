@@ -169,7 +169,7 @@ describe('CreateAlertResources component tests', () => {
     expect(getByText('More than 2 entities selected')).toBeInTheDocument();
     const resourceFour = getByTestId('select_item_4');
     expect(resourceFour).toBeInTheDocument();
-    expect(resourceFour).toHaveAttribute('aria-disabled', 'true');
+    expect(resourceFour.querySelector('input')).toBeDisabled();
 
     await userEvent.click(getByText('Deselect All'));
 

@@ -1,3 +1,4 @@
+import { formatDate } from '@akamai/compute-ui-core/datetime';
 import {
   useAccountAgreements,
   useAllLinodeDisksQuery,
@@ -38,7 +39,6 @@ import {
   useInProgressEvents,
 } from 'src/queries/events/events';
 import { sendMigrationInitiatedEvent } from 'src/utilities/analytics/customEventAnalytics';
-import { formatDate } from 'src/utilities/formatDate';
 import { getGDPRDetails } from 'src/utilities/formatRegion';
 import { getLinodeDescription } from 'src/utilities/getLinodeDescription';
 import { reportAgreementSigningError } from 'src/utilities/reportAgreementSigningError';

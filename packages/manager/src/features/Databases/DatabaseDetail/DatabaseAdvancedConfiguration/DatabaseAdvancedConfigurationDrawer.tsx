@@ -1,15 +1,8 @@
-import { Button } from '@akamai/cds-components/react';
+import { Button, NotificationBanner } from '@akamai/cds-components/react';
+import { Spacing } from '@akamai/cds-tokens';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useDatabaseEngineConfig, useDatabaseMutation } from '@linode/queries';
-import {
-  ActionsPanel,
-  CircleProgress,
-  Divider,
-  Drawer,
-  Notice,
-  Stack,
-  Typography,
-} from '@linode/ui';
+import { ActionsPanel, Drawer, Stack, Typography } from '@linode/ui';
 import { scrollErrorIntoViewV2 } from '@linode/utilities';
 import { createDynamicAdvancedConfigSchema } from '@linode/validation';
 import Grid from '@mui/material/Grid';
@@ -24,6 +17,8 @@ import {
   ADVANCED_CONFIG_INFO,
   ADVANCED_CONFIG_LEARN_MORE_LINK,
 } from '../../constants';
+import { CircleProgress } from '../../shared/CircleProgress/CircleProgress';
+import { Divider } from '../../shared/Divider/Divider';
 import { DatabaseConfigurationItem } from './DatabaseConfigurationItem';
 import { DatabaseConfigurationSelect } from './DatabaseConfigurationSelect';
 import {
@@ -161,18 +156,24 @@ export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
     <Drawer onClose={handleClose} open={open} title="Advanced Configuration">
       <form onSubmit={handleSubmit(onSubmit)} ref={formContainerRef}>
         {errors.root?.message && (
-          <Notice spacingBottom={16} spacingTop={16} variant="error">
+          <NotificationBanner
+            style={{ marginBottom: Spacing.S16, marginTop: Spacing.S16 }}
+            type="error"
+          >
             {errors.root.message}
-          </Notice>
+          </NotificationBanner>
         )}
         <Typography>
           Advanced parameters to configure your database cluster.
         </Typography>
         <Link to={ADVANCED_CONFIG_LEARN_MORE_LINK}>Learn more.</Link>
 
-        <Notice sx={{ mb: 1, mt: 3 }} variant="info">
+        <NotificationBanner
+          style={{ marginBottom: Spacing.S8, marginTop: Spacing.S24 }}
+          type="info"
+        >
           <Typography>{ADVANCED_CONFIG_INFO}</Typography>
-        </Notice>
+        </NotificationBanner>
 
         <Grid
           alignItems="end"
@@ -201,10 +202,13 @@ export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
             </Button>
           </Grid>
         </Grid>
-        <Divider spacingBottom={20} spacingTop={24} />
+        <Divider marginBottom={Spacing.S20} marginTop={Spacing.S24} />
         {isLoading && (
           <Stack alignItems="center" height="100%" justifyContent="center">
-            <CircleProgress size="sm" />
+            <CircleProgress
+              size="small"
+              style={{ flex: 'none', height: 'auto', margin: 0 }}
+            />
           </Stack>
         )}
         {!isLoading && configs.length === 0 && (
@@ -237,7 +241,7 @@ export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
             }}
           />
         ))}
-        <Divider spacingBottom={20} spacingTop={24} />
+        <Divider marginBottom={Spacing.S20} marginTop={Spacing.S24} />
         <ActionsPanel
           primaryButtonProps={{
             disabled: !isDirty,

@@ -1,6 +1,6 @@
+import { capitalize, truncateEnd } from '@akamai/compute-ui-core/formatting';
 import { useIncidentQuery } from '@linode/queries';
 import { Box, Typography } from '@linode/ui';
-import { capitalize, truncateEnd } from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
 import { DateTime } from 'luxon';
 import * as React from 'react';

@@ -14,11 +14,15 @@ import {
   transactionDateOptions,
 } from './BillingActivityPanel';
 
-vi.mock('@linode/utilities', async () => {
-  const actual = await vi.importActual('@linode/utilities');
+vi.mock('@akamai/compute-ui-core/datetime', async () => {
+  const actual = await vi.importActual<
+    typeof import('@akamai/compute-ui-core/datetime')
+  >('@akamai/compute-ui-core/datetime');
   return {
     ...actual,
     getUserTimezone: vi.fn().mockReturnValue('utc'),
+    formatDate: (date: number | string, options = {}) =>
+      actual.formatDate(date, { ...options, timezone: 'utc' }),
   };
 });
 

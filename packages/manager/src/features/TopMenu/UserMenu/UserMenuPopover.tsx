@@ -1,3 +1,4 @@
+import { getStorage } from '@akamai/compute-ui-core/browser';
 import { useAccount, useProfile } from '@linode/queries';
 import {
   BetaChip,
@@ -29,7 +30,6 @@ import {
   sendSwitchAccountEvent,
   sendSwitchToParentAccountEvent,
 } from 'src/utilities/analytics/customEventAnalytics';
-import { getStorage } from 'src/utilities/storage';
 
 import { getCompanyNameOrEmail } from './utils';
 

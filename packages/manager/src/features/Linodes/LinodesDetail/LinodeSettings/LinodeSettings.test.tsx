@@ -73,10 +73,12 @@ describe('LinodeSettings', () => {
 
     expect(queryByText('Shutdown Watchdog')).toBeVisible();
 
-    const saveLabelBtn = getByTestId('watchdog-toggle');
-    expect(saveLabelBtn).toBeInTheDocument();
+    const watchdogToggle = getByTestId('watchdog-toggle');
+    expect(watchdogToggle).toBeInTheDocument();
 
-    expect(saveLabelBtn).toHaveAttribute('aria-disabled', 'true');
+    // MUI v7: disabled is set on the inner <input role="switch">, not aria-disabled on the wrapper
+    const toggleInput = watchdogToggle.querySelector('input');
+    expect(toggleInput).toBeDisabled();
   });
   it('should disable "Save" button for Delete Linode if the user does not have delete_linode permission', async () => {
     const { queryByText } = renderWithTheme(<LinodeSettings />);

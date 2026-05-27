@@ -1,4 +1,4 @@
-import { capitalize } from '@linode/utilities';
+import { capitalize } from '@akamai/compute-ui-core/formatting';
 import { render } from '@testing-library/react';
 import * as React from 'react';
 
@@ -133,9 +133,7 @@ describe('FirewallRow', () => {
       });
 
       const { getByTestId, getByText } = render(
-        wrapWithTableBody(<FirewallRow {...baseProps} />, {
-          flags: { linodeInterfaces: { enabled: true } },
-        })
+        wrapWithTableBody(<FirewallRow {...baseProps} />)
       );
       getByTestId('firewall-row-1');
       getByText(firewall.label);

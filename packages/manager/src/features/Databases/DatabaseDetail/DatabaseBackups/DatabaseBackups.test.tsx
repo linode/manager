@@ -4,14 +4,31 @@ import React from 'react';
 import { databaseBackupFactory, databaseFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import {
+  getShadowRootElement,
+  renderWithTheme,
+} from 'src/utilities/testHelpers';
 
 import { DatabaseDetailContext } from '../DatabaseDetailContext';
 import { DatabaseBackups } from './DatabaseBackups';
 
+const backupsTestRoute = '/databases/mysql/1234567890/backups';
+
 const queryMocks = vi.hoisted(() => ({
   useParams: vi.fn(),
 }));
+
+const queriesMocks = vi.hoisted(() => ({
+  useDatabaseQuery: vi.fn(),
+}));
+
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
+  return {
+    ...actual,
+    useDatabaseQuery: queriesMocks.useDatabaseQuery,
+  };
+});
 
 vi.mock('@tanstack/react-router', async () => {
   const actual = await vi.importActual('@tanstack/react-router');
@@ -146,47 +163,63 @@ describe.skip('Database Backups (Legacy)', () => {
 describe('Database Backups (v2)', () => {
   beforeEach(() => {
     queryMocks.useParams.mockReturnValue({
-      engine: 'rdbms-default',
+      engine: 'mysql',
       databaseId: '1234567890',
     });
+    queriesMocks.useDatabaseQuery.mockReset();
   });
 
   it('should disable the restore button if no oldest_restore_time is returned', async () => {
     const mockDatabase = databaseFactory.build({
-      oldest_restore_time: undefined,
+      id: 1234567890,
+      oldest_restore_time: null,
       platform: 'rdbms-default',
     });
 
-    server.use(
-      http.get('*/databases/:engine/instances/:id', () => {
-        return HttpResponse.json(mockDatabase);
-      })
-    );
+    queriesMocks.useDatabaseQuery.mockReturnValue({
+      data: mockDatabase,
+      error: null,
+      isLoading: false,
+    });
 
-    const { findByText } = renderWithTheme(<DatabaseBackups />);
+    const { container } = renderWithTheme(<DatabaseBackups />, {
+      initialRoute: backupsTestRoute,
+    });
 
-    const restoreButton = (await findByText('Restore')).closest('button');
+    await waitFor(() => {
+      expect(
+        container.querySelector('[data-qa-settings-button="restore"]')
+      ).toBeTruthy();
+    });
 
+    // eslint-disable-next-line testing-library/no-node-access -- cds-button host for shadow root
+    const restoreHost = container.querySelector<HTMLElement>(
+      '[data-qa-settings-button="restore"]'
+    )!;
+
+    const restoreButton = await getShadowRootElement(restoreHost, 'button');
     expect(restoreButton).toBeDisabled();
   });
 
   it('should render a date picker when it is a default database', async () => {
     const mockDatabase = databaseFactory.build({
+      id: 1234567890,
       platform: 'rdbms-default',
     });
 
-    server.use(
-      http.get('*/databases/:engine/instances/:id', () => {
-        return HttpResponse.json(mockDatabase);
-      })
-    );
+    queriesMocks.useDatabaseQuery.mockReturnValue({
+      data: mockDatabase,
+      error: null,
+      isLoading: false,
+    });
 
     const { container } = renderWithTheme(
       <DatabaseDetailContext.Provider
         value={{ database: mockDatabase, engine: 'mysql' }}
       >
         <DatabaseBackups />
-      </DatabaseDetailContext.Provider>
+      </DatabaseDetailContext.Provider>,
+      { initialRoute: backupsTestRoute }
     );
 
     await waitFor(() => {
@@ -198,14 +231,15 @@ describe('Database Backups (v2)', () => {
 
   it('should render a time picker when it is a default database', async () => {
     const mockDatabase = databaseFactory.build({
+      id: 1234567890,
       platform: 'rdbms-default',
     });
 
-    server.use(
-      http.get('*/databases/:engine/instances/:id', () => {
-        return HttpResponse.json(mockDatabase);
-      })
-    );
+    queriesMocks.useDatabaseQuery.mockReturnValue({
+      data: mockDatabase,
+      error: null,
+      isLoading: false,
+    });
 
     const { findByText } = renderWithTheme(
       <DatabaseDetailContext.Provider
@@ -214,7 +248,7 @@ describe('Database Backups (v2)', () => {
         <DatabaseBackups />
       </DatabaseDetailContext.Provider>,
       {
-        initialRoute: '/databases/$engine/$databaseId/backups',
+        initialRoute: backupsTestRoute,
       }
     );
 

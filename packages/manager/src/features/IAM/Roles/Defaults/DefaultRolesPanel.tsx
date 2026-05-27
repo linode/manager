@@ -1,8 +1,10 @@
-import { Box, Button, Paper, Typography } from '@linode/ui';
+import { Button } from '@akamai/cds-components/react';
+import { Box, Typography } from '@linode/ui';
 import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { IAM_ROLES_PENDO_IDS } from '../../Shared/constants';
+import { Paper } from '../../Shared/Paper/Paper';
 
 export const DefaultRolesPanel = () => {
   const navigate = useNavigate();
@@ -24,9 +26,9 @@ export const DefaultRolesPanel = () => {
         </Box>
         <Box>
           <Button
-            buttonType="outlined"
             data-pendo-id={IAM_ROLES_PENDO_IDS.viewDefaultRoles}
             onClick={() => navigate({ to: '/iam/roles/defaults/roles' })}
+            variant="secondary"
           >
             View Default Roles
           </Button>

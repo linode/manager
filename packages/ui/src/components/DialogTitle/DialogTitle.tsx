@@ -11,6 +11,7 @@ export interface DialogTitleProps {
   id?: string;
   isFetching?: boolean;
   onClose?: () => void;
+  pendoId?: string;
   subtitle?: string;
   sx?: SxProps<Theme>;
   title: string;
@@ -24,6 +25,7 @@ const DialogTitle = (props: DialogTitleProps) => {
     id,
     isFetching,
     onClose,
+    pendoId,
     subtitle,
     sx,
     title,
@@ -67,6 +69,7 @@ const DialogTitle = (props: DialogTitleProps) => {
           <IconButton
             aria-label="Close"
             color="primary"
+            data-pendo-id={pendoId}
             data-qa-close-drawer
             onClick={onClose}
             size="large"

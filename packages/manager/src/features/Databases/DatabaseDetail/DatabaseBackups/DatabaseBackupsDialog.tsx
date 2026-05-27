@@ -1,5 +1,7 @@
+import { NotificationBanner } from '@akamai/cds-components/react';
+import { Spacing } from '@akamai/cds-tokens';
 import { useRestoreFromBackupMutation } from '@linode/queries';
-import { ActionsPanel, Dialog, Notice, Typography } from '@linode/ui';
+import { ActionsPanel, Dialog, Typography } from '@linode/ui';
 import { useNavigate } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -77,22 +79,26 @@ export const DatabaseBackupsDialog = (props: Props) => {
       title={`Restore ${database.label}`}
     >
       {error && (
-        <Notice
+        <NotificationBanner
+          style={{ marginBottom: Spacing.S16 }}
           text={
             getAPIErrorOrDefault(error, 'Unable to restore this backup.')[0]
               .reason
           }
-          variant="error"
+          type="error"
         />
       )}
       {isClusterWithVPCAndForkingToDifferentRegion && ( // Show warning when forking a cluster with VPC to a different region
-        <Notice variant="warning">
+        <NotificationBanner
+          style={{ marginBottom: Spacing.S16 }}
+          type="warning"
+        >
           The database cluster is currently assigned to a VPC. When you restore
           the cluster into a different region, it will not be assigned to a VPC
           by default. If your workflow requires a VPC, go to the cluster’s
           Networking tab after the restore is complete and assign the cluster to
           a VPC.
-        </Notice>
+        </NotificationBanner>
       )}
       <Typography sx={(theme) => ({ marginBottom: theme.spacingFunction(32) })}>
         Restoring a backup creates a fork from this backup. If you proceed and

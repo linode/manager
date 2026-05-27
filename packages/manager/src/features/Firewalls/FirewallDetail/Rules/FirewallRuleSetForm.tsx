@@ -1,3 +1,4 @@
+import { capitalize } from '@akamai/compute-ui-core/formatting';
 import { useAllFirewallRuleSetsQuery } from '@linode/queries';
 import {
   ActionsPanel,
@@ -9,7 +10,6 @@ import {
   Stack,
   Typography,
 } from '@linode/ui';
-import { capitalize } from '@linode/utilities';
 import * as React from 'react';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';

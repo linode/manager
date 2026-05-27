@@ -1,6 +1,7 @@
 import { screen, waitForElementToBeRemoved } from '@testing-library/react';
 import React from 'react';
 
+import { expectNotificationBannerText } from 'src/features/IAM/utilities/testHelpers';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import {
@@ -118,10 +119,8 @@ describe('DefaultRoles', () => {
 
     renderWithTheme(<DefaultRoles />);
 
-    expect(
-      screen.queryByText(
-        'You do not have permission to view default roles for delegate users.'
-      )
-    ).toBeVisible();
+    return expectNotificationBannerText(
+      'You do not have permission to view default roles for delegate users.'
+    );
   });
 });

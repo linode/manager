@@ -1,4 +1,7 @@
-import { truncateEnd, truncateMiddle } from '@linode/utilities';
+import {
+  truncateEnd,
+  truncateMiddle,
+} from '@akamai/compute-ui-core/formatting';
 import * as React from 'react';
 
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';

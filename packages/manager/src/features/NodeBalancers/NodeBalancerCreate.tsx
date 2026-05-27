@@ -174,6 +174,7 @@ const NodeBalancerCreate = () => {
   const [vpcSelected, setVPCSelected] = React.useState<null | VPC>(null);
   const [vpcErrors, setVPCErrors] = React.useState<APIError[]>([]);
   const formContainerRef = React.useRef<HTMLDivElement>(null);
+  const reservedIPSectionRef = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
     setVPCErrors([]);
@@ -182,6 +183,7 @@ const NodeBalancerCreate = () => {
   const { isReserveIpEnabled } = useIsReserveIpEnabled();
   const [ipMode, setIpMode] = React.useState<'auto' | 'reserved'>('auto');
   const [selectedIP, setSelectedIP] = React.useState<IPAddress | null>(null);
+  const [reservedIPError, setReservedIPError] = React.useState<string>();
 
   const addNodeBalancer = () => {
     if (!permissions.create_nodebalancer) {
@@ -335,6 +337,7 @@ const NodeBalancerCreate = () => {
       return { ...prev, configs: newConfigs };
     });
     setVPCErrors([]);
+    setReservedIPError(undefined);
   };
 
   const onCreate = () => {
@@ -347,6 +350,13 @@ const NodeBalancerCreate = () => {
       scrollErrorIntoViewV2(formContainerRef);
       return;
     }
+
+    if (isReserveIpEnabled && ipMode === 'reserved' && !selectedIP?.address) {
+      setReservedIPError('Please select a reserved IP address.');
+      scrollErrorIntoViewV2(reservedIPSectionRef);
+      return;
+    }
+
     clearErrors();
     /* transform node data for the requests */
     const nodeBalancerRequestData = clone(nodeBalancerFields);
@@ -743,12 +753,23 @@ const NodeBalancerCreate = () => {
           />
         )}
         {isReserveIpEnabled && (
-          <Paper>
+          <Paper ref={reservedIPSectionRef}>
             <IPAddressSelection
+              error={reservedIPError}
               label={{ text: 'Frontend IP Address', fontSize: '18px' }}
               mode={ipMode}
-              onIPModeChange={(mode) => setIpMode(mode)}
-              onReservedIPSelect={(ip) => setSelectedIP(ip)}
+              onIPModeChange={(mode) => {
+                setIpMode(mode);
+                setReservedIPError(undefined);
+
+                if (mode === 'auto') {
+                  setSelectedIP(null);
+                }
+              }}
+              onReservedIPSelect={(ip) => {
+                setSelectedIP(ip);
+                setReservedIPError(undefined);
+              }}
               regionId={nodeBalancerFields.region ?? ''}
               selectedIP={selectedIP}
               tooltipText={{

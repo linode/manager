@@ -1,10 +1,10 @@
+import { sendEvent } from '@akamai/compute-ui-core/analytics';
 import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
 import ComputeIcon from 'src/assets/icons/entityIcons/compute.svg';
 import { ResourcesSection } from 'src/components/EmptyLandingPageResources/ResourcesSection';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
-import { sendEvent } from 'src/utilities/analytics/utils';
 
 import {
   gettingStartedGuides,

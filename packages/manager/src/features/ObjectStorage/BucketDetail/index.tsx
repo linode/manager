@@ -39,12 +39,12 @@ const BucketMetrics = React.lazy(() =>
   }))
 );
 
-const BUCKET_DETAILS_URL = '/object-storage/buckets/$clusterId/$bucketName';
+const BUCKET_DETAILS_URL = '/object-storage/buckets/$regionId/$bucketName';
 const ENDPOINT_TYPES_WITH_NO_METRICS_SUPPORT = ['E0', 'E1'];
 const OBJECT_STORAGE_METRICS_KEY = 'Object Storage';
 
 export const BucketDetailLanding = React.memo(() => {
-  const { bucketName, clusterId } = useParams({
+  const { bucketName, regionId } = useParams({
     from: BUCKET_DETAILS_URL,
   });
 
@@ -60,7 +60,7 @@ export const BucketDetailLanding = React.memo(() => {
   } = useObjectStorageBuckets();
 
   const bucket = bucketsData?.buckets.find(
-    ({ label, region }) => label === bucketName && region === clusterId
+    ({ label, region }) => label === bucketName && region === regionId
   );
 
   const {
@@ -151,14 +151,14 @@ export const BucketDetailLanding = React.memo(() => {
             <SafeTabPanel index={1}>
               <BucketAccess
                 bucketName={bucketName}
-                clusterId={clusterId}
                 endpointType={endpoint_type}
+                regionId={regionId}
               />
             </SafeTabPanel>
 
             {!!sslTabIndex && (
               <SafeTabPanel index={sslTabIndex}>
-                <BucketSSL bucketName={bucketName} clusterId={clusterId} />
+                <BucketSSL bucketName={bucketName} regionId={regionId} />
               </SafeTabPanel>
             )}
 

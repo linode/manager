@@ -1,4 +1,4 @@
-import { Box, Divider } from '@linode/ui';
+import { Box, Divider, Notice } from '@linode/ui';
 import { IconButton } from '@mui/material';
 import { GridLegacy } from '@mui/material';
 import * as React from 'react';
@@ -104,7 +104,7 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
     handleAnyFilterChange(REFRESH, Date.now(), []);
   }, []);
 
-  const { isLoading, isError } = useResourcesQuery(
+  const { isLoading, isError, error } = useResourcesQuery(
     selectedDashboard !== undefined,
     selectedDashboard?.service_type ?? '',
     {},
@@ -122,6 +122,13 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
     },
     []
   );
+
+  const isUnAuthorizedError =
+    isError &&
+    ((error instanceof Error && error.message === 'Unauthorized') ||
+      (error instanceof Array &&
+        error.length > 0 &&
+        error[0]?.reason === 'Unauthorized'));
 
   return (
     <GridLegacy container>
@@ -191,7 +198,16 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
         </GridLegacy>
       )}
 
-      {selectedDashboard && (
+      {isUnAuthorizedError && (
+        <GridLegacy item margin={2} xs={12}>
+          <Notice
+            text="You don't have permission to view the entities behind these metrics. Contact your account administrator to request access."
+            variant="warning"
+          />
+        </GridLegacy>
+      )}
+
+      {selectedDashboard && !isUnAuthorizedError && (
         <CloudPulseDashboardFilterBuilder
           dashboard={selectedDashboard}
           emitFilterChange={emitFilterChange}

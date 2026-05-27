@@ -1,3 +1,4 @@
+import { parseAPIDate } from '@akamai/compute-ui-core/datetime';
 import { useAllLinodesQuery, useProfile } from '@linode/queries';
 import { Box, ErrorState, Typography } from '@linode/ui';
 import { DateTime, Interval } from 'luxon';
@@ -14,7 +15,6 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
-import { parseAPIDate } from 'src/utilities/date';
 
 import { useIsLkeEnterpriseEnabled } from '../../kubeUtils';
 import { NodeRow as _NodeRow } from './NodeRow';

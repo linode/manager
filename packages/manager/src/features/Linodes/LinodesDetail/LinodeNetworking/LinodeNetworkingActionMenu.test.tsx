@@ -67,4 +67,28 @@ describe('LinodeNetworkingActionMenu', () => {
       `Action menu for IP Address ${mockLinodeIPv6Range.range}`
     );
   });
+
+  it('should display the correct aria-label for IP address action menu with Reserve IP action', () => {
+    const unreservedIP = ipAddressFactory.build({
+      public: true,
+      reserved: false,
+      type: 'ipv4',
+    });
+
+    const { getByRole } = renderWithTheme(
+      <LinodeNetworkingActionMenu
+        {...props}
+        ipAddress={unreservedIP}
+        ipType="Public – IPv4"
+        isLinodeInterface={false}
+        onReserve={vi.fn()}
+      />
+    );
+
+    const actionMenuButton = getByRole('button');
+    expect(actionMenuButton).toHaveAttribute(
+      'aria-label',
+      `Action menu for IP Address ${unreservedIP.address}`
+    );
+  });
 });

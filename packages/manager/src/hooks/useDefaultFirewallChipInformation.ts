@@ -4,7 +4,6 @@ import {
   getDefaultFirewallDescription,
   getFirewallDefaultEntities,
 } from 'src/features/Firewalls/components/FirewallSelectOption.utils';
-import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
 /**
  * Hook to obtain the information regarding Default Firewalls which can be used for
@@ -17,10 +16,8 @@ export const useDefaultFirewallChipInformation = (
   firewallId: null | number | undefined,
   hideDefaultChips?: boolean
 ) => {
-  const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
-
   const { data: firewallSettings } = useFirewallSettingsQuery({
-    enabled: isLinodeInterfacesEnabled && !hideDefaultChips,
+    enabled: !hideDefaultChips,
   });
 
   const tooltipText =

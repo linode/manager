@@ -19,6 +19,7 @@ export interface TypeToConfirmProps extends Omit<TextFieldProps, 'onChange'> {
   hideInstructions?: boolean;
   isCloseAccount?: boolean;
   onChange: (value: string) => void;
+  preferencesPendoId?: string;
   textFieldStyle?: React.CSSProperties;
   title?: string;
   /**
@@ -39,6 +40,7 @@ export const TypeToConfirm = (props: TypeToConfirmProps) => {
     hideInstructions,
     isCloseAccount,
     onChange,
+    preferencesPendoId,
     textFieldStyle,
     title,
     titleVariant,
@@ -115,7 +117,11 @@ export const TypeToConfirm = (props: TypeToConfirmProps) => {
           sx={{ marginTop: 1 }}
         >
           To {disableOrEnable} type-to-confirm, go to the Type-to-Confirm
-          section of <Link to={'/profile/preferences'}>Preferences</Link>.
+          section of{' '}
+          <Link pendoId={preferencesPendoId} to={'/profile/preferences'}>
+            Preferences
+          </Link>
+          .
         </Typography>
       ) : null}
     </>

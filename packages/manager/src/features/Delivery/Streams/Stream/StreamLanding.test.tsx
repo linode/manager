@@ -9,8 +9,6 @@ import {
 import { StreamLanding } from 'src/features/Delivery/Streams/Stream/StreamLanding';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import type { Flags } from 'src/featureFlags';
-
 const queryMocks = vi.hoisted(() => ({
   useStreamQuery: vi.fn().mockReturnValue({}),
 }));
@@ -34,9 +32,8 @@ const mockStream = streamFactory.build({
 });
 
 describe('StreamLanding', () => {
-  const renderComponent = (flags: Partial<Flags>) => {
+  const renderComponent = () => {
     renderWithTheme(<StreamLanding />, {
-      flags,
       initialRoute: '/logs/delivery/streams/$streamId/summary',
     });
   };
@@ -49,34 +46,9 @@ describe('StreamLanding', () => {
       });
     });
 
-    describe('and metrics are not enabled', () => {
-      const flags = {
-        aclpLogs: {
-          enabled: true,
-          beta: false,
-          metricsEnabled: false,
-        },
-      };
-
-      it('should render the summary and not the metrics tab', async () => {
-        renderComponent(flags);
-
-        screen.getByText('Summary');
-        expect(screen.queryByText('Metrics')).not.toBeInTheDocument();
-      });
-    });
-
     describe('and metrics are enabled', () => {
-      const flags = {
-        aclpLogs: {
-          enabled: true,
-          beta: false,
-          metricsEnabled: true,
-        },
-      };
-
       it('should render the summary tab and metrics tab', async () => {
-        renderComponent(flags);
+        renderComponent();
 
         screen.getByText('Summary');
         expect(screen.queryByText('Metrics')).toBeInTheDocument();
@@ -92,7 +64,7 @@ describe('StreamLanding', () => {
     });
 
     it('should render loading spinner', async () => {
-      renderComponent({});
+      renderComponent();
 
       expect(screen.queryByText('Summary')).not.toBeInTheDocument();
       expect(screen.queryByText('Metrics')).not.toBeInTheDocument();
@@ -112,7 +84,7 @@ describe('StreamLanding', () => {
     });
 
     it('should render error state with message', async () => {
-      renderComponent({});
+      renderComponent();
 
       expect(screen.queryByText('Summary')).not.toBeInTheDocument();
       expect(screen.queryByText('Metrics')).not.toBeInTheDocument();

@@ -23,7 +23,6 @@ import {
   getPendoPageId,
   mapAutocompleteOptionsWithPendo,
   renderOptionsWithPendo,
-  useIsACLPLogsEnabled,
 } from 'src/features/Delivery/deliveryUtils';
 import { DestinationAkamaiObjectStorageDetailsForm } from 'src/features/Delivery/Shared/DestinationAkamaiObjectStorageDetailsForm';
 import { DestinationCustomHttpsDetailsForm } from 'src/features/Delivery/Shared/DestinationCustomHttpsDetailsForm';
@@ -89,7 +88,6 @@ interface StreamFormDeliveryProps {
 export const StreamFormDelivery = (props: StreamFormDeliveryProps) => {
   const { mode, setDisableTestConnection } = props;
 
-  const { isACLPLogsCustomHttpsEnabled } = useIsACLPLogsEnabled();
   const theme = useTheme();
   const { control, setValue, getValues, reset } =
     useFormContext<StreamAndDestinationFormType>();
@@ -179,7 +177,6 @@ export const StreamFormDelivery = (props: StreamFormDeliveryProps) => {
         render={({ field, fieldState }) => (
           <Autocomplete
             disableClearable
-            disabled={!isACLPLogsCustomHttpsEnabled}
             errorText={fieldState.error?.message}
             label="Destination Type"
             onBlur={field.onBlur}
@@ -325,24 +322,23 @@ export const StreamFormDelivery = (props: StreamFormDeliveryProps) => {
           )}
         </>
       )}
-      {isACLPLogsCustomHttpsEnabled &&
-        selectedDestinationType === destinationType.CustomHttps && (
-          <>
-            {creatingNewDestination && !selectedDestinations?.length && (
-              <DestinationCustomHttpsDetailsForm
-                controlPaths={customHttpsDetailsControlPaths}
-                entity="stream"
-                mode={mode}
-              />
-            )}
-            {findDestination(selectedDestinations?.[0])?.details && (
-              <DestinationCustomHTTPSDetailsSummary
-                {...(findDestination(selectedDestinations[0])
-                  ?.details as CustomHTTPSDetails)}
-              />
-            )}
-          </>
-        )}
+      {selectedDestinationType === destinationType.CustomHttps && (
+        <>
+          {creatingNewDestination && !selectedDestinations?.length && (
+            <DestinationCustomHttpsDetailsForm
+              controlPaths={customHttpsDetailsControlPaths}
+              entity="stream"
+              mode={mode}
+            />
+          )}
+          {findDestination(selectedDestinations?.[0])?.details && (
+            <DestinationCustomHTTPSDetailsSummary
+              {...(findDestination(selectedDestinations[0])
+                ?.details as CustomHTTPSDetails)}
+            />
+          )}
+        </>
+      )}
     </>
   );
 

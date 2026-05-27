@@ -258,7 +258,7 @@ export interface CreateSharegroupPayload {
   label: string;
 }
 
-export type UpdateSharegroupPayload = Omit<CreateImagePayload, 'images'>;
+export type UpdateSharegroupPayload = Omit<CreateSharegroupPayload, 'images'>;
 
 export interface AddSharegroupImagesPayload {
   /**
@@ -323,6 +323,12 @@ export interface GenerateSharegroupTokenPayload {
   valid_for_sharegroup_uuid: string;
 }
 
+export type SharegroupTokenStatus =
+  | 'active'
+  | 'expired'
+  | 'pending'
+  | 'revoked';
+
 export interface SharegroupToken {
   /**
    * The timestamp of when the token was created
@@ -347,7 +353,7 @@ export interface SharegroupToken {
   /**
    * The current status of this token
    */
-  status: string;
+  status: SharegroupTokenStatus;
   /**
    * A unique member token to join the sharegroup
    */

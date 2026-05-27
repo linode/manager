@@ -1,6 +1,5 @@
+import { parseAPIDate } from '@akamai/compute-ui-core/datetime';
 import { DateTime } from 'luxon';
-
-import { parseAPIDate } from 'src/utilities/date';
 
 export const getDateOptions = (linodeCreated: string) => {
   const currentTime = DateTime.local();

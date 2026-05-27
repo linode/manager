@@ -1,7 +1,6 @@
 import { profileFactory } from '@linode/utilities';
 import { AxiosHeaders } from 'axios';
 
-import { setAuthDataInLocalStorage } from './OAuth/oauth';
 import {
   getURL,
   handleError,
@@ -45,11 +44,9 @@ const error400: AxiosError<LinodeError> = {
 
 describe('Expiring Tokens', () => {
   it('should just promise reject if a non-401 error', () => {
-    setAuthDataInLocalStorage({
-      expires: 'never',
-      scopes: '*',
-      token: 'helloworld',
-    });
+    storage.authentication.expire.set('never');
+    storage.authentication.scopes.set('*');
+    storage.authentication.token.set('helloworld');
 
     const result = handleError(error400, store);
 

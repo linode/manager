@@ -1,11 +1,9 @@
+import { formatDate } from '@akamai/compute-ui-core/datetime';
 import { useProfile } from '@linode/queries';
 import { Typography } from '@linode/ui';
 import * as React from 'react';
 
-import { formatDate } from 'src/utilities/formatDate';
-
 import type { SxProps, Theme } from '@linode/ui';
-import type { TimeInterval } from 'src/utilities/formatDate';
 
 export interface DateTimeDisplayProps {
   /**
@@ -33,6 +31,11 @@ export interface DateTimeDisplayProps {
    */
   value: string;
 }
+
+/**
+ * Time interval units for date humanization cutoffs.
+ */
+type TimeInterval = 'day' | 'month' | 'never' | 'week' | 'year';
 
 const DateTimeDisplay = (props: DateTimeDisplayProps) => {
   const { className, displayTime, format, humanizeCutoff, value, sx } = props;

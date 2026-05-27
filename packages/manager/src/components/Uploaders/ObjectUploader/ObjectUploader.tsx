@@ -37,10 +37,6 @@ interface Props {
    */
   bucketName: string;
   /**
-   * The Object Storage cluster to upload to.
-   */
-  clusterId: string;
-  /**
    * A function that is called when an Object is uploaded successfully so we can manually update our local store to reflect the upload
    */
   maybeAddObjectToTable: (path: string, sizeInBytes: number) => void;
@@ -48,13 +44,17 @@ interface Props {
    * The Object Storage prefix (path) to upload to.
    */
   prefix: string;
+  /**
+   * The Object Storage region to upload to.
+   */
+  regionId: string;
 }
 
 /**
  * This component enables users to attach and upload files from a device to the specified Object Storage cluster and bucket.
  */
 export const ObjectUploader = React.memo((props: Props) => {
-  const { bucketName, clusterId, prefix } = props;
+  const { bucketName, regionId, prefix } = props;
   const { enqueueSnackbar } = useSnackbar();
   const { classes, cx } = useStyles();
   const queryClient = useQueryClient();
@@ -117,7 +117,7 @@ export const ObjectUploader = React.memo((props: Props) => {
   // We debounce this request to prevent unnecessary fetches.
   const debouncedGetBucket = React.useRef(
     debounce(3000, false, () =>
-      fetchBucketAndUpdateCache(clusterId, bucketName, queryClient)
+      fetchBucketAndUpdateCache(regionId, bucketName, queryClient)
     )
   ).current;
 
@@ -192,7 +192,7 @@ export const ObjectUploader = React.memo((props: Props) => {
           .catch((_) => handleError());
       } else {
         // Otherwise, we need to make an API request to get the URL.
-        getObjectURL(clusterId, bucketName, fullObjectName, 'PUT', {
+        getObjectURL(regionId, bucketName, fullObjectName, 'PUT', {
           content_type: file.type,
         })
           .then(({ exists, url }) => {

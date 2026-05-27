@@ -23,7 +23,6 @@ import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useGetAllUserEntitiesByPermission } from 'src/features/IAM/hooks/useGetAllUserEntitiesByPermission';
 import { getLinodeInterfaceType } from 'src/features/Linodes/LinodesDetail/LinodeNetworking/LinodeInterfaces/utilities';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
 
 import type { Linode, LinodeInterfaces } from '@linode/api-v4';
@@ -47,8 +46,6 @@ export const AddLinodeDrawer = (props: Props) => {
   const { id } = useParams({ strict: false });
 
   const { enqueueSnackbar } = useSnackbar();
-
-  const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
 
   const {
     data,
@@ -378,45 +375,43 @@ export const AddLinodeDrawer = (props: Props) => {
           options={linodeOptions}
           value={selectedLinodes.map((l) => l.id)}
         />
-        {isLinodeInterfacesEnabled &&
-          selectedLinodesWithMultipleInterfaces.length > 0 && (
-            <Typography marginTop={3}>
-              {`${selectedLinodesWithMultipleInterfaces.length === 1 ? 'This Linode has' : 'The following Linodes have'}
+        {selectedLinodesWithMultipleInterfaces.length > 0 && (
+          <Typography marginTop={3}>
+            {`${selectedLinodesWithMultipleInterfaces.length === 1 ? 'This Linode has' : 'The following Linodes have'}
             multiple interfaces that a firewall can be applied to. Select which interface to apply the firewall to.`}
-            </Typography>
-          )}
-        {isLinodeInterfacesEnabled &&
-          selectedLinodesWithMultipleInterfaces.map((linodeAndInterfaces) => {
-            const { linode, interfaces } = linodeAndInterfaces;
-            const options = interfaces.map((i) => ({
-              ...i,
-              label: `${getLinodeInterfaceType(i)} Interface (ID: ${i.id})`,
-            }));
-            return (
-              <Autocomplete
-                disableClearable
-                key={linode.id}
-                label={`${linode.label} Interface`}
-                onChange={(e, option) => {
-                  setSelectedIfacesToAdd((prev) => {
-                    const newInterfacesToAdd = { ...prev };
-                    newInterfacesToAdd[linode.id] = {
-                      linodeId: linode.id,
-                      linodeLabel: linode.label,
-                      interfaceId: option.id,
-                    };
-                    return newInterfacesToAdd;
-                  });
-                }}
-                options={options}
-                placeholder="Select Interface"
-                value={options.find(
-                  (iface) =>
-                    selectedIfacesToAdd[linode.id]?.interfaceId === iface.id
-                )}
-              />
-            );
-          })}
+          </Typography>
+        )}
+        {selectedLinodesWithMultipleInterfaces.map((linodeAndInterfaces) => {
+          const { linode, interfaces } = linodeAndInterfaces;
+          const options = interfaces.map((i) => ({
+            ...i,
+            label: `${getLinodeInterfaceType(i)} Interface (ID: ${i.id})`,
+          }));
+          return (
+            <Autocomplete
+              disableClearable
+              key={linode.id}
+              label={`${linode.label} Interface`}
+              onChange={(e, option) => {
+                setSelectedIfacesToAdd((prev) => {
+                  const newInterfacesToAdd = { ...prev };
+                  newInterfacesToAdd[linode.id] = {
+                    linodeId: linode.id,
+                    linodeLabel: linode.label,
+                    interfaceId: option.id,
+                  };
+                  return newInterfacesToAdd;
+                });
+              }}
+              options={options}
+              placeholder="Select Interface"
+              value={options.find(
+                (iface) =>
+                  selectedIfacesToAdd[linode.id]?.interfaceId === iface.id
+              )}
+            />
+          );
+        })}
         <ActionsPanel
           primaryButtonProps={{
             disabled: selectedLinodes.length === 0 || disabled,

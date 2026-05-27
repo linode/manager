@@ -18,7 +18,8 @@ import type {
 
 // filtering out the form properties which are not part of the payload
 export const filterFormValues = (
-  formValues: CreateAlertDefinitionForm
+  formValues: CreateAlertDefinitionForm,
+  enableGroupBy?: boolean
 ): CreateAlertDefinitionPayload => {
   const values = omitProps(formValues, [
     'serviceType',
@@ -27,6 +28,7 @@ export const filterFormValues = (
     'trigger_conditions',
     'entity_type',
     'hasAPIError',
+    'group_by',
   ]);
   const severity = formValues.severity ?? 1;
   const entityIds = formValues.entity_ids;
@@ -38,6 +40,9 @@ export const filterFormValues = (
     entity_ids: entityIds,
     regions,
     rule_criteria: { rules: filterMetricCriteriaFormValues(rules) },
+    ...(enableGroupBy && formValues.group_by?.length
+      ? { group_by: formValues.group_by }
+      : {}),
     severity,
     trigger_conditions: filterTriggerConditionFormValues(triggerConditions),
   };
@@ -54,7 +59,8 @@ export const filterEditFormValues = (
   formValues: CreateAlertDefinitionForm,
   serviceType: CloudPulseServiceType,
   severity: AlertSeverityType,
-  alertId: number
+  alertId: number,
+  enableGroupBy?: boolean
 ): EditAlertPayloadWithService => {
   const values = omitProps(formValues, [
     'serviceType',
@@ -63,6 +69,7 @@ export const filterEditFormValues = (
     'trigger_conditions',
     'entity_type',
     'hasAPIError',
+    'group_by',
   ]);
   const entityIds = formValues.entity_ids;
   const rules = formValues.rule_criteria.rules;
@@ -72,6 +79,9 @@ export const filterEditFormValues = (
     ...values,
     alertId,
     entity_ids: entityIds,
+    ...(enableGroupBy && formValues.group_by?.length
+      ? { group_by: formValues.group_by }
+      : {}),
     regions,
     rule_criteria: { rules: filterMetricCriteriaFormValues(rules) },
     serviceType,

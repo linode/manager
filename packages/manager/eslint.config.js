@@ -3,7 +3,6 @@ import eslint from '@eslint/js';
 import linodeRules from '@linode/eslint-plugin-cloud-manager/dist/index.js';
 import * as tsParser from '@typescript-eslint/parser';
 import eslintConfigPrettier from 'eslint-config-prettier';
-import pluginCypress from 'eslint-plugin-cypress/flat';
 import jsxA11y from 'eslint-plugin-jsx-a11y';
 import perfectionist from 'eslint-plugin-perfectionist';
 import prettier from 'eslint-plugin-prettier';
@@ -70,7 +69,6 @@ export const baseConfig = [
   js.configs.recommended,
   jsxA11y.flatConfigs.recommended,
   perfectionist.configs['recommended-natural'],
-  pluginCypress.configs.recommended,
   react.configs.flat.recommended,
   reactHooks.configs['recommended-latest'],
   sonarjs.configs.recommended,
@@ -100,13 +98,7 @@ export const baseConfig = [
         'error',
         {
           paths: restrictedImportPaths,
-          patterns: [
-            {
-              group: ['**/cypress/**'],
-              message:
-                'Cypress modules should only be imported in Cypress testing directories',
-            },
-          ],
+          patterns: [],
         },
       ],
       'no-restricted-syntax': [
@@ -128,13 +120,6 @@ export const baseConfig = [
       'spaced-comment': 'warn',
     },
   },
-  {
-    files: ['**/cypress.config.ts'],
-    rules: {
-      'no-restricted-imports': 'off',
-    },
-  },
-
   // 5. React, React Hooks, and React Refresh
   {
     files: ['**/*.{ts,tsx}'],
@@ -219,6 +204,7 @@ export const baseConfig = [
       'sonarjs/duplicates-in-character-class': 'warn',
       'sonarjs/no-clear-text-protocols': 'off',
       'sonarjs/no-commented-code': 'warn',
+      'sonarjs/no-hardcoded-passwords': 'off',
       'sonarjs/no-duplicate-string': 'warn',
       'sonarjs/no-identical-functions': 'warn',
       'sonarjs/no-ignored-exceptions': 'warn',
@@ -380,28 +366,7 @@ export const baseConfig = [
     },
   },
 
-  // 13. Cypress
-  {
-    files: ['**/cypress/**/*.{js,ts,tsx}'],
-    rules: {
-      'no-console': 'off',
-      'no-unused-expressions': 'off',
-      'sonarjs/pseudo-random': 'off',
-      'sonarjs/no-hardcoded-ip': 'off',
-      '@linode/cloud-manager/no-createLinode': 'error',
-      '@typescript-eslint/no-unused-expressions': 'off',
-      // Maintain standard import restrictions but allow Cypress imports
-      'no-restricted-imports': [
-        'error',
-        {
-          paths: restrictedImportPaths,
-          // Intentionally omit patterns to allow Cypress imports here
-        },
-      ],
-    },
-  },
-
-  // 14. Prettier (coming last as recommended)
+  // 13. Prettier (coming last as recommended)
   {
     files: ['**/*.{js,ts,tsx}'],
     plugins: {

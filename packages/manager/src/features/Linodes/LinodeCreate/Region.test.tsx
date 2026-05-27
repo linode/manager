@@ -5,8 +5,9 @@ import {
 } from '@linode/utilities';
 import { userEvent } from '@testing-library/user-event';
 import React from 'react';
+import { useWatch } from 'react-hook-form';
 
-import { imageFactory } from 'src/factories';
+import { accountSettingsFactory, imageFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
@@ -14,6 +15,10 @@ import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 import { Region } from './Region';
 
 import type { LinodeCreateFormValues } from './utilities';
+import type {
+  LinodeInterfaceAccountSetting,
+  Region as RegionType,
+} from '@linode/api-v4';
 
 const queryMocks = vi.hoisted(() => ({
   useLocation: vi.fn(),
@@ -200,6 +205,90 @@ describe('Region', () => {
         'Cloning a powered off instance across data centers may cause long periods of down time.'
       )
     ).toBeVisible();
+  });
+
+  describe('interface_generation auto-switch', () => {
+    const InterfaceGenerationProbe = () => {
+      const value = useWatch<LinodeCreateFormValues, 'interface_generation'>({
+        name: 'interface_generation',
+      });
+      return <span data-testid="interface-generation-probe">{value}</span>;
+    };
+
+    const setup = (
+      regions: RegionType[],
+      interfacesForNewLinodes: LinodeInterfaceAccountSetting = 'linode_default_but_legacy_config_allowed'
+    ) => {
+      server.use(
+        http.get('*/v4*/account/settings', () =>
+          HttpResponse.json(
+            accountSettingsFactory.build({
+              interfaces_for_new_linodes: interfacesForNewLinodes,
+            })
+          )
+        ),
+        http.get('*/v4*/regions', () =>
+          HttpResponse.json(makeResourcePage(regions))
+        )
+      );
+      return renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
+        component: (
+          <>
+            <Region />
+            <InterfaceGenerationProbe />
+          </>
+        ),
+        useFormOptions: {
+          defaultValues: { interface_generation: 'linode' },
+        },
+      });
+    };
+
+    const pickRegion = async (
+      result: ReturnType<typeof setup>,
+      region: RegionType
+    ) => {
+      await userEvent.click(result.getByPlaceholderText('Select a Region'));
+      await userEvent.click(
+        await result.findByText(`US, ${region.label} (${region.id})`)
+      );
+    };
+
+    it('switches interface_generation to legacy_config when the selected region lacks Linode Interfaces capability', async () => {
+      const regionA = regionFactory.build({ capabilities: ['Linodes'] });
+      const regionB = regionFactory.build({ capabilities: ['Linodes'] });
+      const result = setup([regionA, regionB]);
+
+      await pickRegion(result, regionB);
+
+      expect(
+        result.getByTestId('interface-generation-probe')
+      ).toHaveTextContent('legacy_config');
+    });
+
+    it('does not switch interface_generation when the account setting enforces linode_only', async () => {
+      const region = regionFactory.build({ capabilities: ['Linodes'] });
+      const result = setup([region], 'linode_only');
+
+      await pickRegion(result, region);
+
+      expect(
+        result.getByTestId('interface-generation-probe')
+      ).toHaveTextContent('linode');
+    });
+
+    it('leaves interface_generation alone when the selected region supports Linode Interfaces', async () => {
+      const region = regionFactory.build({
+        capabilities: ['Linodes', 'Linode Interfaces'],
+      });
+      const result = setup([region]);
+
+      await pickRegion(result, region);
+
+      expect(
+        result.getByTestId('interface-generation-probe')
+      ).toHaveTextContent('linode');
+    });
   });
 
   // TODO: this is an expected failure until we fix the filtering

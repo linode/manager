@@ -39,12 +39,17 @@ interface EntityInfo {
     | 'NodeBalancer'
     | 'Notification Channel'
     | 'Placement Group'
+    | 'Share Group'
     | 'Subnet'
     | 'Volume'
     | 'VPC';
 }
 
 interface TypeToConfirmDialogProps {
+  /**
+   * The pendo ID to be applied to the dialog's close icon button, if provided
+   */
+  closeIconPendoId?: string;
   /**
    * Props to be allow disabling the input
    */
@@ -82,6 +87,12 @@ interface TypeToConfirmDialogProps {
    * The open/closed state of the dialog
    */
   open: boolean;
+
+  /**
+   * The pendo ID to be applied to the link within the instructions text, if provided.
+   * This will only be applied if the type-to-confirm preference is disabled.
+   */
+  preferencesLinkPendoId?: string;
   /** Props for the primary button */
   primaryButtonProps?: Omit<ActionButtonsProps, 'label'>;
   /**
@@ -99,6 +110,7 @@ type CombinedProps = TypeToConfirmDialogProps &
 
 export const TypeToConfirmDialog = (props: CombinedProps) => {
   const {
+    closeIconPendoId,
     children,
     disableTypeToConfirmInput,
     disableTypeToConfirmSubmit,
@@ -112,6 +124,7 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
     onClick,
     onClose,
     open,
+    preferencesLinkPendoId,
     primaryButtonProps,
     reversePrimaryButtonPosition,
     secondaryButtonProps,
@@ -235,6 +248,7 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
           style={{ padding: 0 }}
         />
       }
+      closeIconPendoId={closeIconPendoId}
       entityError={entity.error}
       error={errors ? errors[0].reason : undefined}
       isFetching={isFetching}
@@ -258,6 +272,9 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
             confirmText: input,
           });
         }}
+        preferencesPendoId={
+          typeToConfirmPreference ? preferencesLinkPendoId : undefined
+        }
         textFieldStyle={textFieldStyle}
         typographyStyle={typographyStyle}
         typographyStyleSx={typographyStyleSx}

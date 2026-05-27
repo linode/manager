@@ -611,25 +611,6 @@ export const oneClickApps: Record<number, OCA> = {
     summary: 'Free open source clientless remote desktop gateway.',
     website: 'https://guacamole.apache.org/',
   },
-  691620: {
-    alt_description: 'File storage alternative to Dropbox and Google Drive.',
-    alt_name: 'File sharing',
-    categories: ['Productivity'],
-    colors: {
-      end: '0168ad',
-      start: '3e8cc1',
-    },
-    description: `File synchronization across multiple users’ computers and other devices to keep everyone working without interruption.`,
-    logo_url: 'filecloud.svg',
-    related_guides: [
-      {
-        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/filecloud/',
-        title: 'Deploy FileCloud through the Linode Marketplace',
-      },
-    ],
-    summary: 'Enterprise file sharing to manage and sync from any device.',
-    website: 'https://www.getfilecloud.com',
-  },
   691621: {
     alt_description:
       'Host multiple apps on one server and control panel, including WordPress, GitLab, and Nextcloud.',
@@ -707,25 +688,6 @@ export const oneClickApps: Record<number, OCA> = {
     ],
     summary: 'Next-generation hosting control panel by OpenLiteSpeed.',
     website: 'https://docs.litespeedtech.com/cloud/images/cyberpanel/',
-  },
-  741207: {
-    alt_description: 'Web interface for managing Docker containers.',
-    alt_name: 'Docker GUI',
-    categories: ['Development'],
-    colors: {
-      end: 'c4c4c4',
-      start: '41b883',
-    },
-    description: `Simplify Docker deployments and make containerization easy for anyone to use. Please note: Yacht is still in alpha and is not recommended for production use.`,
-    logo_url: 'yacht.svg',
-    related_guides: [
-      {
-        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/yacht/',
-        title: 'Deploy Yacht through the Linode Marketplace',
-      },
-    ],
-    summary: 'Intuitive web interface for managing Docker containers.',
-    website: 'https://github.com/SelfhostedPro/Yacht/',
   },
   741208: {
     alt_description: 'Enterprise infrastructure and IT resource montioring.',
@@ -1160,25 +1122,6 @@ export const oneClickApps: Record<number, OCA> = {
       'Open source, all-in-one business app suite with more than 7 million users.',
     website: 'https://www.odoo.com/',
   },
-  971045: {
-    alt_description: 'Free alternative to Trello and Asana.',
-    alt_name: 'Kanban board project management tool',
-    categories: ['Productivity'],
-    colors: {
-      end: '1d52ad',
-      start: '2997f8',
-    },
-    description: `Create boards, assign tasks, and keep projects moving with a free and robust alternative to tools like Trello and Asana.`,
-    logo_url: 'focalboard.svg',
-    related_guides: [
-      {
-        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/focalboard/',
-        title: 'Deploy Focalboard through the Linode Marketplace',
-      },
-    ],
-    summary: 'Free open source project management tool.',
-    website: 'https://www.focalboard.com/',
-  },
   985364: {
     alt_description: 'Monitoring server.',
     alt_name: 'Server monitoring and visualization',
@@ -1476,25 +1419,6 @@ export const oneClickApps: Record<number, OCA> = {
     summary: 'User-friendly web application firewall.',
     website: 'https://www.haltdos.com/',
   },
-  1102906: {
-    alt_description: 'Password Manager',
-    alt_name: 'Pass Key',
-    categories: ['Security'],
-    colors: {
-      end: '3A5EFF',
-      start: '709cff',
-    },
-    description: `Self-host a password manager designed to simplify and secure your digital life. Passky is a streamlined version of paid password managers designed for everyone to use.`,
-    logo_url: 'passky.svg',
-    related_guides: [
-      {
-        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/passky/',
-        title: 'Deploy Passky through the Linode Marketplace',
-      },
-    ],
-    summary: 'Simple open source password manager.',
-    website: 'https://passky.org/',
-  },
   1102907: {
     alt_description: 'Office Suite',
     alt_name: 'Office Docs',
@@ -1597,110 +1521,6 @@ export const oneClickApps: Record<number, OCA> = {
     ],
     summary: 'Flexible scheduling and orchestration for diverse workloads.',
     website: 'https://www.nomadproject.io/docs',
-  },
-  1243759: {
-    alt_description: 'FFmpeg encoder plugins.',
-    alt_name: 'Premium video encoding',
-    categories: ['Media and Entertainment'],
-    colors: {
-      end: '041125',
-      start: '6DBA98',
-    },
-    description: `MainConcept FFmpeg Plugins Demo is suited for both VOD and live production workflows, with advanced features such as Hybrid GPU acceleration and xHE-AAC audio format.`,
-    logo_url: 'mainconcept.svg',
-    related_guides: [
-      {
-        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/mainconcept-ffmpeg-plugins-demo/',
-        title:
-          'Deploy MainConcept FFmpeg Plugins Demo through the Linode Marketplace',
-      },
-    ],
-    summary:
-      'MainConcept FFmpeg Plugins Demo contains advanced video encoding tools.',
-    website: 'https://www.mainconcept.com/ffmpeg',
-  },
-  1243760: {
-    alt_description: 'Live video encoding engine.',
-    alt_name: 'Real time video encoding',
-    categories: ['Media and Entertainment'],
-    colors: {
-      end: '041125',
-      start: '6DBA98',
-    },
-    description: `MainConcept Live Encoder Demo is a powerful all-in-one encoding engine designed to simplify common broadcast and OTT video workflows.`,
-    logo_url: 'mainconcept.svg',
-    related_guides: [
-      {
-        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/mainconcept-live-encoder-demo/',
-        title:
-          'Deploy MainConcept Live Encoder Demo through the Linode Marketplace',
-      },
-    ],
-    summary: 'MainConcept Live Encoder is a real time video encoding engine.',
-    website: 'https://www.mainconcept.com/live-encoder',
-  },
-  1243762: {
-    alt_description: 'Panasonic camera format encoder.',
-    alt_name: 'Media encoding into professional file formats.',
-    categories: ['Media and Entertainment'],
-    colors: {
-      end: '041125',
-      start: '6DBA98',
-    },
-    description: `MainConcept P2 AVC ULTRA Transcoder Demo is an optimized Docker container for file-based transcoding of media files into professional Panasonic camera formats like P2 AVC-Intra, P2 AVC LongG and AVC-intra RP2027.v1 and AAC High Efficiency v2 formats into an MP4 container.`,
-    logo_url: 'mainconcept.svg',
-    related_guides: [
-      {
-        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/mainconcept-p2-avc-ultra-demo/',
-        title:
-          'Deploy MainConcept P2 AVC ULTRA Transcoder Demo through the Linode Marketplace',
-      },
-    ],
-    summary:
-      'MainConcept P2 AVC ULTRA Transcoder is a Docker container for file-based transcoding of media files into professional Panasonic camera formats.',
-    website: 'https://www.mainconcept.com/transcoders',
-  },
-  1243763: {
-    alt_description: 'Sony camera format encoder.',
-    alt_name: 'Media encoding into professional file formats.',
-    categories: ['Media and Entertainment'],
-    colors: {
-      end: '041125',
-      start: '6DBA98',
-    },
-    description: `MainConcept XAVC Transcoder Demo is an optimized Docker container for file-based transcoding of media files into professional Sony camera formats like XAVC-Intra, XAVC Long GOP and XAVC-S.`,
-    logo_url: 'mainconcept.svg',
-    related_guides: [
-      {
-        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/mainconcept-xavc-transcoder-demo/',
-        title:
-          'Deploy MainConcept XAVC Transcoder Demo through the Linode Marketplace',
-      },
-    ],
-    summary:
-      'MainConcept XAVC Transcoder is a Docker container for file-based transcoding of media files into professional Sony camera formats.',
-    website: 'https://www.mainconcept.com/transcoders',
-  },
-  1243764: {
-    alt_description: 'Sony XDCAM format encoder.',
-    alt_name: 'Media encoding into professional file formats.',
-    categories: ['Media and Entertainment'],
-    colors: {
-      end: '041125',
-      start: '6DBA98',
-    },
-    description: `MainConcept XDCAM Transcoder Demo is an optimized Docker container for file-based transcoding of media files into professional Sony camera formats like XDCAM HD, XDCAM EX, XDCAM IMX and DVCAM (XDCAM DV).`,
-    logo_url: 'mainconcept.svg',
-    related_guides: [
-      {
-        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/mainconcept-xdcam-transcoder-demo/',
-        title:
-          'Deploy MainConcept XDCAM Transcoder Demo through the Linode Marketplace',
-      },
-    ],
-    summary:
-      'MainConcept XDCAM Transcoder is a Docker container for file-based transcoding of media files into professional Sony camera formats.',
-    website: 'https://www.mainconcept.com/transcoders',
   },
   1243780: {
     alt_description: 'A private by design messaging platform.',
@@ -2389,5 +2209,48 @@ export const oneClickApps: Record<number, OCA> = {
     ],
     summary: 'Autonomous AI agent.',
     website: 'https://openclaw.ai/',
+  },
+  2088700: {
+    alt_description:
+      'An open-source framework for running, managing, and customizing large language models locally.',
+    alt_name:
+      'Run Large Language Models (LLMs)—like Llama 3, Mistral, or Gemma',
+    categories: ['LLM', 'Chat', 'AI'],
+    colors: {
+      end: 'ffffff',
+      start: '000000',
+    },
+    description: `Run open-source models like Llama 3, Mistral, and Gemma with a simple CLI and API. Ollama handles model weights, configuration, and GPU acceleration, making it easy to integrate AI into your local workflow.`,
+    isNew: true,
+    logo_url: 'ollama.svg',
+    related_guides: [
+      {
+        href: 'https://www.linode.com/docs/marketplace-docs/guides/ollama/',
+        title: 'Deploy Ollama',
+      },
+    ],
+    summary: 'A lightweight, extensible framework for running LLMs locally.',
+    website: 'https://ollama.com/',
+  },
+  2107652: {
+    alt_description: 'Akamai MCP Gateway Client',
+    alt_name: 'LLM agent that connects to the Akamai MCP Gateway',
+    categories: ['LLM', 'AI Agent', 'AI'],
+    colors: {
+      end: '0A76FA',
+      start: '0AA6FA',
+    },
+    description:
+      'Akamai MCP Gateway Client helps you bridge AI agents and applications with the Akamai product ecosystem. By abstracting individual product APIs into a standardized interface, your AI clients can discover and invoke capabilities through a single, unified protocol without building direct integrations.',
+    isNew: true,
+    logo_url: 'akamai.svg',
+    related_guides: [
+      {
+        href: 'https://www.linode.com/docs/marketplace-docs/guides/akamai-mcp-client/',
+        title: 'Deploy Akamai MCP Gateway Client',
+      },
+    ],
+    summary: 'Akamai MCP Gateway Client',
+    website: 'https://techdocs.akamai.com/mcp-gateway/docs/welcome',
   },
 };

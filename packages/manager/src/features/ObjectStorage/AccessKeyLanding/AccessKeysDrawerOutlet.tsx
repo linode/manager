@@ -11,7 +11,8 @@ export const AccessKeysDrawerOutlet = () => {
   const { drawer, closeDrawer } = useAccessKeyDrawers();
 
   const { data: objectStorageKey } = useObjectStorageAccessKey(
-    drawer?.accessKeyId
+    drawer?.accessKeyId ?? -1,
+    drawer?.accessKeyId !== null && drawer?.accessKeyId !== undefined
   );
 
   return (
@@ -30,8 +31,8 @@ export const AccessKeysDrawerOutlet = () => {
       />
 
       <ViewPermissionsDrawer
+        accessKeyId={drawer?.accessKeyId}
         isOpen={drawer?.type === 'access-key-permissions'}
-        objectStorageKey={objectStorageKey}
         onClose={closeDrawer}
       />
 

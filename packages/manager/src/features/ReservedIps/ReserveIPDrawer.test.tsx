@@ -392,7 +392,7 @@ describe('ReserveIPDrawer - cancel button', () => {
 });
 
 describe('ReserveIPDrawer - pricing', () => {
-  it('shows the monthly price in create mode once a region is selected', async () => {
+  it('shows the hourly price in create mode once a region is selected', async () => {
     renderWithTheme(
       <ReserveIPDrawer mode="create" onClose={mockOnClose} open />
     );
@@ -412,7 +412,7 @@ describe('ReserveIPDrawer - pricing', () => {
     await waitFor(() => {
       expect(
         screen.getByText(
-          (text) => text.startsWith('$') && text.endsWith(' / mo.')
+          (text) => text.startsWith('$') && text.endsWith(' / hour.')
         )
       ).toBeVisible();
     });
@@ -434,7 +434,9 @@ describe('ReserveIPDrawer - pricing', () => {
     );
 
     expect(
-      screen.queryByText((text) => text.startsWith('$') && text.endsWith('/mo'))
+      screen.queryByText(
+        (text) => text.startsWith('$') && text.endsWith('/ hour')
+      )
     ).toBeNull();
   });
 });

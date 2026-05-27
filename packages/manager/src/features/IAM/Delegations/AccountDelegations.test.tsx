@@ -2,6 +2,7 @@ import { screen, waitFor } from '@testing-library/react';
 import React from 'react';
 import { vi } from 'vitest';
 
+import { expectNotificationBannerText } from 'src/features/IAM/utilities/testHelpers';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import { AccountDelegations } from './AccountDelegations';
@@ -119,10 +120,9 @@ describe('AccountDelegations', () => {
       flags: { iamDelegation: { enabled: true }, iam: { enabled: true } },
       initialRoute: '/iam',
     });
-    expect(
-      screen.queryByText(
-        'You do not have permission to view account delegations.'
-      )
-    ).toBeVisible();
+
+    return expectNotificationBannerText(
+      'You do not have permission to view account delegations.'
+    );
   });
 });

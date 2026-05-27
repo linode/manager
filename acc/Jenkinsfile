@@ -121,6 +121,11 @@ pipeline {
                 REACT_APP_API_MAX_PAGE_SIZE = "500"
                 REACT_APP_API_ROOT = "https://api.devcloud.linode.com/v4"
                 REACT_APP_APP_ROOT = "https://cloud.devcloud.linode.com"
+                REACT_APP_CHAT_BOOTSTRAP_JS_URL = "https://akamai.my.site.com/ESWAkaChatCompute1778779688044/assets/js/bootstrap.min.js"
+                REACT_APP_CHAT_DEPLOYMENT_NAME = "AkaChat_Compute"
+                REACT_APP_CHAT_DEPLOYMENT_URL = "https://akamai.my.site.com/ESWAkaChatCompute1778779688044"
+                REACT_APP_CHAT_ORG_ID = "00DA0000000Hu5a"
+                REACT_APP_CHAT_SCRT2_URL = "https://akamai.my.salesforce-scrt.com"
                 REACT_APP_CLIENT_ID = "4bd20531408b51e73313"
                 REACT_APP_LAUNCH_DARKLY_ID = "67ed97f93736be0c14fa0ea2"
                 REACT_APP_LKE_HIGH_AVAILABILITY_PRICE = "60"
@@ -147,6 +152,12 @@ pipeline {
                 REACT_APP_ALGOLIA_SEARCH_KEY = "d4847002cd30392fe0fbd00a1da933ed"
                 REACT_APP_API_ROOT = "https://cloud.staging.linode.com/api/v4"
                 REACT_APP_APP_ROOT = "https://cloud.staging.linode.com"
+                // TODO(SD-966): Replace these AkaChat values with staging-specific endpoints when they are available.
+                REACT_APP_CHAT_BOOTSTRAP_JS_URL = "https://akamai.my.site.com/ESWAkaChatCompute1778779688044/assets/js/bootstrap.min.js"
+                REACT_APP_CHAT_DEPLOYMENT_NAME = "AkaChat_Compute"
+                REACT_APP_CHAT_DEPLOYMENT_URL = "https://akamai.my.site.com/ESWAkaChatCompute1778779688044"
+                REACT_APP_CHAT_ORG_ID = "00DA0000000Hu5a"
+                REACT_APP_CHAT_SCRT2_URL = "https://akamai.my.salesforce-scrt.com"
                 REACT_APP_CLIENT_ID = "6714f4f895cbe13a5781"
                 REACT_APP_ENVIRONMENT_NAME = "staging"
                 REACT_APP_LISH_ROOT = "webconsole.linode.com"
@@ -207,7 +218,7 @@ pipeline {
                 }
             }
             steps {
-                pulsarBlackduck(bdApplicationId: "cloud-manager", buildType: "FRONTEND")
+                pulsarBlackduck(bdApplicationId: "cloud-manager", jobType: "FRONTEND")
                 pulsarSonar(jobType: "FREESTYLE", projectName: "cloud-manager", customSrc: true)
             }
         }
@@ -216,6 +227,81 @@ pipeline {
     post {
         always {
             junit testResults: 'reports/vitest-junit*.xml', allowEmptyResults: true
+
+            script {
+                def xmlFiles = findFiles(glob: 'reports/vitest-junit*.xml')
+                def summary         = ''
+                def failedFilesHtml = ''
+
+                if (xmlFiles.length > 0) {
+                    // Single-line Python — avoids indented blocks that Jenkins
+                    // whitespace-stripping would break (IndentationError).
+                    summary = sh(returnStdout: true, script: '''python3 -c "import glob,xml.etree.ElementTree as ET; pairs=[(int(ts.get('tests',0)),int(ts.get('failures',0))) for f in glob.glob('reports/vitest-junit*.xml') for root in [ET.parse(f).getroot()] for ts in ([root] if root.tag=='testsuite' else root.findall('testsuite'))]; t,e=sum(p[0] for p in pairs),sum(p[1] for p in pairs); print(chr(10003 if e==0 else 10007),t-e,'passed,',e,'failed')"''').trim()
+                    if (summary) {
+                        currentBuild.description = summary
+                    }
+
+                    // Collect unique file paths of suites that had at least one failure.
+                    def failedFiles = sh(returnStdout: true, script: '''python3 -c "import glob,xml.etree.ElementTree as ET; seen=set(); [print(fp) for xml in glob.glob('reports/vitest-junit*.xml') for root in [ET.parse(xml).getroot()] for ts in ([root] if root.tag=='testsuite' else root.findall('testsuite')) if int(ts.get('failures',0))>0 for fp in [ts.get('file',ts.get('name','?'))] if fp not in seen and not seen.add(fp)]"''').trim()
+                    if (failedFiles) {
+                        def rows = failedFiles.split('\n').collect { f ->
+                            "<tr><td style=\"font-family:monospace;font-size:12px;color:#c62828;padding:2px 0\">${f}</td></tr>"
+                        }.join('')
+                        failedFilesHtml = """<tr><td style="color:#666;vertical-align:top;padding-top:8px">Failures</td><td><table cellpadding="0" cellspacing="2">${rows}</table></td></tr>"""
+                    }
+                }
+
+                // ── Email notification ────────────────────────────────────────────
+                // Requires SMTP configured in Jenkins global settings:
+                //   Manage Jenkins → Configure System → Email Notification
+                //
+                // Routing:
+                //   PR builds      → PR author only  (env.CHANGE_AUTHOR_EMAIL)
+                //   mainline builds → team DL
+                def TEAM_DL = 'dl-uie-team@akamai.com'
+
+                def status     = currentBuild.currentResult
+                def passed     = (status == 'SUCCESS')
+                def color      = passed ? '#2e7d32' : '#c62828'
+                def icon       = passed ? '✓' : '✗'
+                def commitInfo = sh(returnStdout: true,
+                    script: "git log -1 --pretty=format:'%h — %s (%an)'"
+                ).trim()
+
+                def isPR    = (env.CHANGE_ID != null || env.BITBUCKET_PR_ID != null)
+                def toAddr  = isPR
+                    ? (env.CHANGE_AUTHOR_EMAIL ?: TEAM_DL)   // fallback if var not set
+                    : TEAM_DL
+
+                def body = """<!DOCTYPE html><html><body style="font-family:sans-serif;margin:0;padding:0;background:#f5f5f5">
+<table width="100%" cellpadding="0" cellspacing="0"><tr><td style="padding:24px">
+  <table width="600" cellpadding="0" cellspacing="0" style="background:#fff;border-radius:6px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.15)">
+    <tr><td style="background:${color};padding:20px 28px">
+      <span style="color:#fff;font-size:20px;font-weight:600">${icon} Cloud Manager — ${env.BRANCH_NAME} #${env.BUILD_NUMBER} build ${status.toLowerCase()}</span>
+    </td></tr>
+    <tr><td style="padding:24px 28px">
+      <table cellpadding="6" cellspacing="0" style="width:100%;font-size:14px;color:#333">
+        <tr><td style="color:#666;width:90px">Branch</td><td><strong>${env.BRANCH_NAME}</strong></td></tr>
+        <tr><td style="color:#666">Build</td><td>#${env.BUILD_NUMBER}</td></tr>
+        <tr><td style="color:#666">Commit</td><td style="font-family:monospace;font-size:13px">${commitInfo}</td></tr>
+        <tr><td style="color:#666">Tests</td><td>${summary ?: 'no report generated (infra-only change)'}</td></tr>
+        ${failedFilesHtml}
+      </table>
+      <div style="margin-top:24px">
+        <a href="${env.BUILD_URL}" style="background:${color};color:#fff;padding:10px 20px;border-radius:4px;text-decoration:none;font-size:14px;font-weight:500">View build →</a>
+      </div>
+    </td></tr>
+  </table>
+</td></tr></table>
+</body></html>"""
+
+                mail(
+                    to:       toAddr,
+                    subject:  "[cloud-manager] ${icon} ${status} — ${env.BRANCH_NAME} #${env.BUILD_NUMBER} | ${summary ?: 'no tests run'}",
+                    body:     body,
+                    mimeType: 'text/html'
+                )
+            }
         }
     }
 }

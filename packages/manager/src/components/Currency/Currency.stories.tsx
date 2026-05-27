@@ -15,6 +15,22 @@ export const Default: Story = {
   render: (args) => <Currency {...args} />,
 };
 
+export const AdaptivePrecision: Story = {
+  args: {
+    quantity: 0.0159,
+    useAdaptivePrecision: true,
+  },
+  render: (args) => (
+    <>
+      <Currency {...args} quantity={10} />
+      {' · '}
+      <Currency {...args} quantity={0.0159} />
+      {' · '}
+      <Currency {...args} quantity={10.5} />
+    </>
+  ),
+};
+
 const meta: Meta<typeof Currency> = {
   argTypes: {
     decimalPlaces: {

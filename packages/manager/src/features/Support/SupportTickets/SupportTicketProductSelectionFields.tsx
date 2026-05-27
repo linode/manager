@@ -7,7 +7,7 @@ import {
   useAllVolumesQuery,
   useAllVPCsQuery,
 } from '@linode/queries';
-import { Autocomplete, FormHelperText, TextField } from '@linode/ui';
+import { Autocomplete, Box, FormHelperText, TextField } from '@linode/ui';
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
@@ -19,6 +19,11 @@ import {
   ENTITY_ID_TO_NAME_MAP,
   ENTITY_MAP,
 } from './constants';
+import { LiveChatChip } from './LiveChatChip';
+import {
+  SUPPORT_TOPIC_ACCOUNT_BILLING,
+  SUPPORT_TOPIC_GENERAL,
+} from './liveChatConstants';
 import { getEntityNameFromEntityType } from './ticketUtils';
 
 import type { AccountLimitCustomFields } from './SupportTicketAccountLimitFields';
@@ -30,11 +35,20 @@ import type {
 import type { APIError } from '@linode/api-v4';
 
 interface Props {
+  liveChat?: boolean;
   ticketType?: TicketType;
 }
 
+interface TopicOption {
+  label: string;
+  topicVariant?:
+    | typeof SUPPORT_TOPIC_ACCOUNT_BILLING
+    | typeof SUPPORT_TOPIC_GENERAL;
+  value: EntityType;
+}
+
 export const SupportTicketProductSelectionFields = (props: Props) => {
-  const { ticketType } = props;
+  const { liveChat, ticketType } = props;
   const {
     clearErrors,
     control,
@@ -203,20 +217,39 @@ export const SupportTicketProductSelectionFields = (props: Props) => {
           (thisEntity) => String(thisEntity.value) === entityId
         ) || null;
 
-  const renderEntityTypes = () => {
+  const renderEntityTypes = (): TopicOption[] => {
     return Object.keys(ENTITY_MAP).map((key: string) => {
       return { label: key, value: ENTITY_MAP[key] };
     });
   };
 
-  const topicOptions: { label: string; value: EntityType }[] = [
-    { label: 'General/Account/Billing', value: 'general' },
+  const topicOptions: TopicOption[] = [
+    {
+      label: 'Account/Billing',
+      topicVariant: SUPPORT_TOPIC_ACCOUNT_BILLING,
+      value: SUPPORT_TOPIC_GENERAL,
+    },
+    {
+      label: 'General',
+      topicVariant: SUPPORT_TOPIC_GENERAL,
+      value: SUPPORT_TOPIC_GENERAL,
+    },
     ...renderEntityTypes(),
   ];
 
-  const selectedTopic = topicOptions.find((eachTopic) => {
-    return eachTopic.value === entityType;
-  });
+  topicOptions.sort((a, b) => a.label.localeCompare(b.label));
+
+  const selectedGeneralTopicVariant =
+    entityInputValue === SUPPORT_TOPIC_GENERAL
+      ? SUPPORT_TOPIC_GENERAL
+      : SUPPORT_TOPIC_ACCOUNT_BILLING;
+
+  const selectedTopic =
+    entityType === SUPPORT_TOPIC_GENERAL
+      ? topicOptions.find(
+          (eachTopic) => eachTopic.topicVariant === selectedGeneralTopicVariant
+        )
+      : topicOptions.find((eachTopic) => eachTopic.value === entityType);
 
   const _entityType = getEntityNameFromEntityType(entityType, true);
 
@@ -248,22 +281,63 @@ export const SupportTicketProductSelectionFields = (props: Props) => {
           <Controller
             control={control}
             name="entityType"
-            render={({ field }) => (
+            render={({ field, fieldState }) => (
               <Autocomplete
                 data-qa-ticket-entity-type
-                disableClearable
+                errorText={fieldState.error?.message}
                 label="What is this regarding?"
                 onChange={(_e, type) => {
+                  const currentTopicVariant =
+                    entityType === 'general'
+                      ? selectedGeneralTopicVariant
+                      : undefined;
+
                   // Don't reset things if the type hasn't changed.
-                  if (type.value === entityType) {
+                  if (
+                    type?.value === entityType &&
+                    (type?.value !== SUPPORT_TOPIC_GENERAL ||
+                      type.topicVariant === currentTopicVariant)
+                  ) {
                     return;
                   }
-                  field.onChange(type.value);
+                  field.onChange(type?.value ?? 'none');
                   setValue('entityId', '');
-                  setValue('entityInputValue', '');
+                  setValue(
+                    'entityInputValue',
+                    type?.value === SUPPORT_TOPIC_GENERAL &&
+                      type.topicVariant === SUPPORT_TOPIC_GENERAL
+                      ? SUPPORT_TOPIC_GENERAL
+                      : type?.value === SUPPORT_TOPIC_GENERAL &&
+                          type.topicVariant === SUPPORT_TOPIC_ACCOUNT_BILLING
+                        ? SUPPORT_TOPIC_ACCOUNT_BILLING
+                        : ''
+                  );
                   clearErrors('entityId');
                 }}
                 options={topicOptions}
+                placeholder="Select an option?"
+                renderOption={
+                  liveChat
+                    ? (props, option) => (
+                        <li {...props}>
+                          <Box
+                            sx={{
+                              alignItems: 'center',
+                              display: 'flex',
+                              justifyContent: 'space-between',
+                              width: '100%',
+                            }}
+                          >
+                            <span>{option.label}</span>
+                            {option.topicVariant ===
+                              SUPPORT_TOPIC_ACCOUNT_BILLING && (
+                              <LiveChatChip size="medium" />
+                            )}
+                          </Box>
+                        </li>
+                      )
+                    : undefined
+                }
                 value={selectedTopic}
               />
             )}

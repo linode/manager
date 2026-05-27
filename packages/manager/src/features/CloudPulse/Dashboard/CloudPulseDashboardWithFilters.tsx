@@ -1,9 +1,10 @@
 import { useProfile } from '@linode/queries';
 import { Box, CircleProgress, Divider, ErrorState, Paper } from '@linode/ui';
-import { GridLegacy } from '@mui/material';
+import { GridLegacy, IconButton } from '@mui/material';
 import { DateTime } from 'luxon';
 import React from 'react';
 
+import Reload from 'src/assets/icons/refresh.svg';
 import {
   useCloudPulseDashboardByIdQuery,
   useCloudPulseDashboardsQuery,
@@ -17,11 +18,12 @@ import { CloudPulseDashboardFilterBuilder } from '../shared/CloudPulseDashboardF
 import { CloudPulseDashboardSelect } from '../shared/CloudPulseDashboardSelect';
 import { CloudPulseDateTimeRangePicker } from '../shared/CloudPulseDateTimeRangePicker';
 import { CloudPulseErrorPlaceholder } from '../shared/CloudPulseErrorPlaceholder';
+import { CloudPulseTooltip } from '../shared/CloudPulseTooltip';
 import {
   convertToGmt,
   defaultTimeDuration,
 } from '../Utils/CloudPulseDateTimePickerUtils';
-import { PARENT_ENTITY_REGION } from '../Utils/constants';
+import { PARENT_ENTITY_REGION, REFRESH } from '../Utils/constants';
 import { FILTER_CONFIG } from '../Utils/FilterConfig';
 import {
   checkIfFilterBuilderNeeded,
@@ -159,6 +161,10 @@ const CloudPulseDashboardWithFiltersRenderer = React.memo(
       []
     );
 
+    const handleGlobalRefresh = React.useCallback(() => {
+      onFilterChange(REFRESH, Date.now(), []);
+    }, [onFilterChange]);
+
     React.useEffect(() => {
       setGlobalFilterData(filterData);
     }, [filterData, setGlobalFilterData]);
@@ -239,6 +245,22 @@ const CloudPulseDashboardWithFiltersRenderer = React.memo(
                     handleStatsChange={handleTimeRangeChange}
                     savePreferences
                   />
+                  <CloudPulseTooltip placement="bottom-end" title="Refresh">
+                    <IconButton
+                      aria-label="Refresh Dashboard Metrics"
+                      color="inherit"
+                      data-testid="global-refresh"
+                      disabled={!currentDashboard}
+                      onClick={handleGlobalRefresh}
+                      size="small"
+                      sx={(theme) => ({
+                        marginBlockEnd: 'auto',
+                        marginTop: { md: theme.spacingFunction(28) },
+                      })}
+                    >
+                      <Reload height="24px" width="24px" />
+                    </IconButton>
+                  </CloudPulseTooltip>
                   <GlobalFilterGroupByRenderer
                     handleChange={handleGroupByChange}
                     selectedDashboard={currentDashboard}

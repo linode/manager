@@ -1,3 +1,4 @@
+import { parseAPIDate } from '@akamai/compute-ui-core/datetime';
 import { useSSHKeysQuery } from '@linode/queries';
 import { Box, Button, Stack, Typography } from '@linode/ui';
 import { Hidden } from '@linode/ui';
@@ -16,7 +17,6 @@ import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading'
 import { DeleteSSHKeyDialog } from 'src/features/Profile/SSHKeys/DeleteSSHKeyDialog';
 import { SSHKeyActionMenu } from 'src/features/Profile/SSHKeys/SSHKeyActionMenu';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
-import { parseAPIDate } from 'src/utilities/date';
 import { getSSHKeyFingerprint } from 'src/utilities/ssh-fingerprint';
 
 import { CreateSSHKeyDrawer } from './CreateSSHKeyDrawer';

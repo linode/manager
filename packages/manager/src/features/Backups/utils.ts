@@ -1,6 +1,6 @@
+import { pluralize } from '@akamai/compute-ui-core/formatting';
 import { enableBackups } from '@linode/api-v4';
 import { linodeQueries } from '@linode/queries';
-import { pluralize } from '@linode/utilities';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import type { APIError, Linode } from '@linode/api-v4';

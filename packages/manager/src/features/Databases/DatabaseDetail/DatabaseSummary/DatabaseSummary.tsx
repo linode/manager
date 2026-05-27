@@ -1,5 +1,5 @@
 import { useDatabaseConnectionPoolsQuery } from '@linode/queries';
-import { Paper, Typography } from '@linode/ui';
+import { Typography } from '@linode/ui';
 import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
@@ -13,6 +13,7 @@ import {
 import ConnectionDetails from 'src/features/Databases/DatabaseDetail/DatabaseSummary/DatabaseSummaryConnectionDetails';
 import { useFlags } from 'src/hooks/useFlags';
 
+import { Paper } from '../../shared/Paper/Paper';
 import { useDatabaseDetailContext } from '../DatabaseDetailContext';
 import { ServiceURI } from '../ServiceURI';
 import { DatabaseCaCert } from './DatabaseCaCert';

@@ -1,5 +1,4 @@
-import { screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { fireEvent, screen } from '@testing-library/react';
 import React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
@@ -36,7 +35,7 @@ describe('AssignedEntities', () => {
     expect(chips).toHaveLength(mockRole.entity_names!.length);
   });
 
-  it('calls onRemoveAssignment when the delete icon is clicked', async () => {
+  it('calls onRemoveAssignment when the delete icon is clicked', () => {
     renderWithTheme(
       <AssignedEntities
         onButtonClick={handleClick}
@@ -49,7 +48,7 @@ describe('AssignedEntities', () => {
     expect(deleteIcons).toHaveLength(mockRole.entity_names!.length);
 
     // Simulate clicking the delete icon for the first chip
-    await userEvent.click(deleteIcons[0]);
+    fireEvent.click(deleteIcons[0]);
 
     // Ensure the onRemoveAssignment handler is called with the correct arguments
     expect(handleRemove).toHaveBeenCalledTimes(1);
@@ -59,9 +58,9 @@ describe('AssignedEntities', () => {
     );
   });
 
-  it('renders a tooltip with the entity name when the name is longer than 30 characters', async () => {
+  it('renders a tooltip with the entity name when the name is longer than 30 characters', () => {
     const longName = 'this-is-a-long-entity-name-that-needs-to-be-truncated';
-    renderWithTheme(
+    const { container } = renderWithTheme(
       <AssignedEntities
         onButtonClick={handleClick}
         onRemoveAssignment={handleRemove}
@@ -69,7 +68,10 @@ describe('AssignedEntities', () => {
       />
     );
 
-    await userEvent.hover(screen.getByTestId('entities'));
-    expect(await screen.findByRole('tooltip')).toHaveTextContent(longName);
+    const tooltips = Array.from(container.querySelectorAll('cds-tooltip'));
+    const entityTooltip = tooltips.find(
+      (t) => (t as any).tooltipText === longName
+    );
+    expect(entityTooltip).toBeDefined();
   });
 });

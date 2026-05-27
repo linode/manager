@@ -1,3 +1,12 @@
+## [2026-05-27] - v0.27.0
+
+
+### Tech Stories:
+
+- Bump `@testing-library/jest-dom` from `6.4.2` to `6.9.1` ([#189](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/189/overview))
+- Bump @mui/material from ^7.1.0 to ^7.3.11 and resolve failing tests. ([#192](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/192/overview))
+- Bump @mui/utils from ^7.1.0 to ^7.3.11 ([#205](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/205/overview))
+
 ## [2026-04-30] - v0.26.0
 
 

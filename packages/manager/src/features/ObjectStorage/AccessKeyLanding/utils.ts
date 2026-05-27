@@ -1,4 +1,5 @@
-import { areArraysEqual, sortByString } from '@linode/utilities';
+import { sortByString } from '@akamai/compute-ui-core/formatting';
+import { areArraysEqual } from '@linode/utilities';
 
 import type { DisplayedAccessKeyScope, FormState } from './OMC_AccessKeyDrawer';
 import type { ObjectStorageKey } from '@linode/api-v4/lib/object-storage';

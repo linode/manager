@@ -1,4 +1,6 @@
 import {
+  Button,
+  Icon,
   Pagination,
   Select,
   sortRows,
@@ -9,17 +11,17 @@ import {
   TableHeaderCell,
   TableRow,
   TableRowExpanded,
+  Tooltip,
 } from '@akamai/cds-components/react';
-import { Button, Hidden, Typography } from '@linode/ui';
-import { capitalizeAllWords } from '@linode/utilities';
+import { Spacing } from '@akamai/cds-tokens';
+import { capitalizeAllWords } from '@akamai/compute-ui-core/formatting';
+import { Hidden, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material';
 import Grid from '@mui/material/Grid';
-import Paper from '@mui/material/Paper';
 import { useLocation, useNavigate, useSearch } from '@tanstack/react-router';
 import React, { useState } from 'react';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
-import { Link } from 'src/components/Link';
 import { AssignSelectedRolesDrawer } from 'src/features/IAM/Roles/RolesTable/AssignSelectedRolesDrawer';
 import { RolesTableActionMenu } from 'src/features/IAM/Roles/RolesTable/RolesTableActionMenu';
 import { RolesTableExpandedRow } from 'src/features/IAM/Roles/RolesTable/RolesTableExpandedRow';
@@ -31,11 +33,13 @@ import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
 import { useDelegationRole } from '../../hooks/useDelegationRole';
 import { usePermissions } from '../../hooks/usePermissions';
-import { IAM_ROLES_PENDO_IDS } from '../../Shared/constants';
 import {
+  IAM_ROLES_PENDO_IDS,
   ROLES_LEARN_MORE_LINK,
   ROLES_TABLE_PREFERENCE_KEY,
 } from '../../Shared/constants';
+import { Link } from '../../Shared/Link/Link';
+import { Paper } from '../../Shared/Paper/Paper';
 
 import type { RoleView } from '../../Shared/types';
 import type { Order } from '@akamai/cds-components/react/Table';
@@ -173,15 +177,20 @@ export const RolesTable = ({ roles = [] }: Props) => {
 
   return (
     <>
-      <Paper sx={(theme) => ({ marginTop: theme.tokens.spacing.S16 })}>
+      <Paper
+        marginTop={Spacing.S16}
+        padding={Spacing.S0}
+        paddingBottom={Spacing.S0}
+        paddingTop={Spacing.S0}
+      >
         <Grid
           container
           direction="row"
           spacing={2}
-          sx={(theme) => ({
+          sx={{
             justifyContent: 'space-between',
-            marginBottom: theme.tokens.spacing.S12,
-          })}
+            marginBottom: Spacing.S12,
+          }}
         >
           <Grid
             container
@@ -215,18 +224,9 @@ export const RolesTable = ({ roles = [] }: Props) => {
               valueFn={(item) => (item as SelectOption).label}
             />
           </Grid>
-          <Button
-            buttonType="primary"
-            data-pendo-id={
-              isDelegateUserType
-                ? IAM_ROLES_PENDO_IDS.assignSelectedRolesAsDelegate
-                : isChildUserType
-                  ? IAM_ROLES_PENDO_IDS.assignSelectedRolesAsChild
-                  : IAM_ROLES_PENDO_IDS.assignSelectedRolesAsParent
-            }
-            disabled={selectedRows.length === 0 || !isAccountAdmin}
-            onClick={() => handleAssignSelectedRoles()}
-            sx={{ height: 34 }}
+          <Tooltip
+            disabled={isAccountAdmin && selectedRows.length > 0}
+            tooltipPlacement="bottom"
             tooltipText={
               !isAccountAdmin
                 ? 'You do not have permission to assign roles.'
@@ -235,8 +235,25 @@ export const RolesTable = ({ roles = [] }: Props) => {
                   : undefined
             }
           >
-            Assign Selected Roles
-          </Button>
+            <Button
+              data-pendo-id={
+                isDelegateUserType
+                  ? IAM_ROLES_PENDO_IDS.assignSelectedRolesAsDelegate
+                  : isChildUserType
+                    ? IAM_ROLES_PENDO_IDS.assignSelectedRolesAsChild
+                    : IAM_ROLES_PENDO_IDS.assignSelectedRolesAsParent
+              }
+              disabled={selectedRows.length === 0 || !isAccountAdmin}
+              onClick={() => handleAssignSelectedRoles()}
+              style={{ height: 34 }}
+              variant="primary"
+            >
+              Assign Selected Roles
+              {!isAccountAdmin || selectedRows.length === 0 ? (
+                <Icon icon="info-outline" size="m" />
+              ) : null}
+            </Button>
+          </Tooltip>
         </Grid>
         <Table data-testid="roles-table">
           <TableHead>

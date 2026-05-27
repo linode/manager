@@ -1,3 +1,4 @@
+import { truncate } from '@akamai/compute-ui-core/formatting';
 import { useRegionsQuery, useVPCQuery } from '@linode/queries';
 import {
   Box,
@@ -6,7 +7,6 @@ import {
   LinkButton,
   Typography,
 } from '@linode/ui';
-import { truncate } from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
 import { useNavigate, useParams } from '@tanstack/react-router';
 import * as React from 'react';
@@ -17,13 +17,11 @@ import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { LKE_ENTERPRISE_AUTOGEN_VPC_WARNING } from 'src/features/Kubernetes/constants';
-import { useIsNodebalancerVPCEnabled } from 'src/features/NodeBalancers/utils';
 import { VPC_DOCS_LINK, VPC_LABEL } from 'src/features/VPCs/constants';
 import { useFlags } from 'src/hooks/useFlags';
 
 import {
   getIsVPCLKEEnterpriseCluster,
-  getUniqueLinodesFromSubnets,
   getUniqueResourcesFromSubnets,
 } from '../utils';
 import { VPCDeleteDialog } from '../VPCLanding/VPCDeleteDialog';
@@ -53,8 +51,6 @@ const VPCDetail = () => {
   } = useVPCQuery(Number(vpcId) || -1, Boolean(vpcId));
 
   const flags = useFlags();
-
-  const { isNodebalancerVPCEnabled } = useIsNodebalancerVPCEnabled();
 
   const { data: regions } = useRegionsQuery();
 
@@ -107,12 +103,10 @@ const VPCDetail = () => {
   const regionLabel =
     regions?.find((r) => r.id === vpc.region)?.label ?? vpc.region;
 
-  const numResources = isNodebalancerVPCEnabled
-    ? getUniqueResourcesFromSubnets(
-        vpc.subnets,
-        Boolean(flags.vpcDbaasResources)
-      )
-    : getUniqueLinodesFromSubnets(vpc.subnets);
+  const numResources = getUniqueResourcesFromSubnets(
+    vpc.subnets,
+    Boolean(flags.vpcDbaasResources)
+  );
 
   const summaryData = [
     [
@@ -121,7 +115,7 @@ const VPCDetail = () => {
         value: vpc.subnets.length,
       },
       {
-        label: isNodebalancerVPCEnabled ? 'Resources' : 'Linodes',
+        label: 'Resources',
         value: numResources,
       },
     ],

@@ -15,7 +15,6 @@ import {
 import {
   getLinodeInterfaceIPv4Ranges,
   getLinodeInterfacePrimaryIPv4,
-  getUniqueLinodesFromSubnets,
   getUniqueResourcesFromSubnets,
   getVPCInterfacePayload,
   hasUnrecommendedConfiguration,
@@ -123,45 +122,8 @@ describe('getUniqueResourcesFromSubnets', () => {
     expect(getUniqueResourcesFromSubnets(subnets2, false)).toBe(4);
     // updated factory for generating linode ids, so unique linodes will be different
     expect(getUniqueResourcesFromSubnets(subnets3, false)).toBe(16);
-    // Test databases count when getUniqueLinodesFromSubnets countDatabases param is true
+    // Test databases count when countDatabases param is true
     expect(getUniqueResourcesFromSubnets(subnets4, true)).toBe(18);
-  });
-});
-
-describe('getUniqueLinodesFromSubnets', () => {
-  it(`returns the number of unique linodes within a VPC's subnets`, () => {
-    const subnets0 = [subnetFactory.build({ linodes: [] })];
-    const subnets1 = [subnetFactory.build({ linodes: subnetLinodeInfoList1 })];
-    const subnets2 = [
-      subnetFactory.build({
-        linodes: [
-          subnetLinodeInfoId1,
-          subnetLinodeInfoId1,
-          subnetLinodeInfoId3,
-          subnetLinodeInfoId3,
-        ],
-      }),
-    ];
-    const subnets3 = [
-      subnetFactory.build({ linodes: subnetLinodeInfoList1 }),
-      subnetFactory.build({ linodes: [] }),
-      subnetFactory.build({ linodes: [subnetLinodeInfoId3] }),
-      subnetFactory.build({
-        linodes: [
-          subnetAssignedLinodeDataFactory.build({ id: 6 }),
-          subnetAssignedLinodeDataFactory.build({ id: 7 }),
-          subnetAssignedLinodeDataFactory.build({ id: 8 }),
-          subnetAssignedLinodeDataFactory.build({ id: 9 }),
-          subnetLinodeInfoId1,
-        ],
-      }),
-    ];
-
-    expect(getUniqueLinodesFromSubnets(subnets0)).toBe(0);
-    expect(getUniqueLinodesFromSubnets(subnets1)).toBe(4);
-    expect(getUniqueLinodesFromSubnets(subnets2)).toBe(2);
-    // updated factory for generating linode ids, so unique linodes will be different
-    expect(getUniqueLinodesFromSubnets(subnets3)).toBe(8);
   });
 });
 

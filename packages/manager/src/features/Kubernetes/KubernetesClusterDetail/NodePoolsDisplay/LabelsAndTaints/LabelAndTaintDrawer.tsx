@@ -1,3 +1,4 @@
+import { capitalize } from '@akamai/compute-ui-core/formatting';
 import {
   ActionsPanel,
   Button,
@@ -6,7 +7,6 @@ import {
   Notice,
   Typography,
 } from '@linode/ui';
-import { capitalize } from '@linode/utilities';
 import * as React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 

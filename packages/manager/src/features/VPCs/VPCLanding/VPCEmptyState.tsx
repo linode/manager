@@ -1,3 +1,4 @@
+import { sendEvent } from '@akamai/compute-ui-core/analytics';
 import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
@@ -6,7 +7,6 @@ import { ResourcesSection } from 'src/components/EmptyLandingPageResources/Resou
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { gettingStartedGuides } from 'src/features/VPCs/VPCLanding/VPCLandingEmptyStateData';
-import { sendEvent } from 'src/utilities/analytics/utils';
 
 import { headers, linkAnalyticsEvent } from './VPCEmptyStateData';
 

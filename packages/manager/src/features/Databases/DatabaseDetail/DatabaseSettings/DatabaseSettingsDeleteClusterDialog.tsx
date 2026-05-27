@@ -1,5 +1,7 @@
+import { NotificationBanner } from '@akamai/cds-components/react';
+import { Spacing } from '@akamai/cds-tokens';
 import { useDeleteDatabaseMutation } from '@linode/queries';
-import { Notice, Typography } from '@linode/ui';
+import { Typography } from '@linode/ui';
 import { useNavigate } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -64,23 +66,24 @@ export const DatabaseSettingsDeleteClusterDialog = (props: Props) => {
       title={`Delete Database Cluster ${databaseLabel}`}
     >
       {error ? (
-        <Notice
+        <NotificationBanner
+          style={{ marginBottom: Spacing.S16 }}
           text={
             getAPIErrorOrDefault(
               error,
               'There was an error deleting this Database Cluster.'
             )[0].reason
           }
-          variant="error"
+          type="error"
         />
       ) : null}
-      <Notice variant="warning">
+      <NotificationBanner style={{ marginBottom: Spacing.S16 }} type="warning">
         <Typography style={{ fontSize: '0.875rem' }}>
           <strong>Warning:</strong> Deleting your entire database will delete
           any backups and nodes associated with database {databaseLabel}, which
           may result in permanent data loss. This action cannot be undone.
         </Typography>
-      </Notice>
+      </NotificationBanner>
     </TypeToConfirmDialog>
   );
 };

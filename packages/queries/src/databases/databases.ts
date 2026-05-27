@@ -3,7 +3,6 @@ import {
   createDatabaseConnectionPool,
   deleteDatabase,
   deleteDatabaseConnectionPool,
-  legacyRestoreWithBackup,
   patchDatabase,
   resetDatabaseCredentials,
   restoreWithBackup,
@@ -316,25 +315,6 @@ export const useDatabaseCredentialsMutation = (engine: Engine, id: number) => {
       queryClient.invalidateQueries({
         queryKey: databaseQueries.database(engine, id)._ctx.credentials
           .queryKey,
-      });
-    },
-  });
-};
-
-export const useLegacyRestoreFromBackupMutation = (
-  engine: Engine,
-  databaseId: number,
-  backupId: number,
-) => {
-  const queryClient = useQueryClient();
-  return useMutation<{}, APIError[]>({
-    mutationFn: () => legacyRestoreWithBackup(engine, databaseId, backupId),
-    onSuccess() {
-      queryClient.invalidateQueries({
-        queryKey: databaseQueries.databases.queryKey,
-      });
-      queryClient.invalidateQueries({
-        queryKey: databaseQueries.database(engine, databaseId).queryKey,
       });
     },
   });

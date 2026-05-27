@@ -1,10 +1,13 @@
-import { screen, waitFor } from '@testing-library/react';
+import { fireEvent, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
 import { accountRolesFactory } from 'src/factories/accountRoles';
 import { userRolesFactory } from 'src/factories/userRoles';
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import {
+  getShadowRootElement,
+  renderWithTheme,
+} from 'src/utilities/testHelpers';
 
 import { ChangeRoleForEntityDrawer } from '../../Shared/AssignedEntitiesTable/ChangeRoleForEntityDrawer';
 
@@ -63,6 +66,8 @@ vi.mock('@linode/api-v4', async () => {
 
 describe('ChangeRoleForEntityDrawer', () => {
   beforeEach(() => {
+    Element.prototype.scrollIntoView ??= vi.fn();
+
     queryMocks.useParams.mockReturnValue({
       username: 'test_user',
     });
@@ -98,20 +103,43 @@ describe('ChangeRoleForEntityDrawer', () => {
 
     renderWithTheme(<ChangeRoleForEntityDrawer {...props} />);
 
-    const autocomplete = screen.getByRole('combobox');
+    const cdsSelect = document.querySelector('cds-select');
+    expect(cdsSelect).not.toBeNull();
 
+    const inputSelect = await getShadowRootElement<HTMLInputElement>(
+      cdsSelect as HTMLElement,
+      'input[role="combobox"]'
+    );
+
+    expect(inputSelect).not.toBeNull();
     // Open the dropdown
-    await userEvent.click(autocomplete);
+    await userEvent.click(inputSelect!);
 
+    await waitFor(() => {
+      expect(inputSelect).toHaveAttribute('aria-expanded', 'true');
+    });
     // Type to filter options
-    await userEvent.type(autocomplete, 'linode_viewer');
+    fireEvent.input(inputSelect!, {
+      target: { value: 'linode_viewer' },
+    });
 
-    // Wait for and select the "linode_viewer" option
-    const newRole = await screen.findByText('linode_viewer');
+    const newRole = await waitFor(() => {
+      const options = Array.from(
+        cdsSelect!.shadowRoot?.querySelectorAll<HTMLElement>(
+          'li[role="option"]'
+        ) ?? []
+      );
+      const option = options.find(
+        (item) => item.textContent?.trim() === 'linode_viewer'
+      );
+
+      expect(option).toBeDefined();
+      return option!;
+    });
     await userEvent.click(newRole);
 
     await waitFor(() => {
-      expect(autocomplete).toHaveValue('linode_viewer');
+      expect(inputSelect).toHaveValue('linode_viewer');
     });
 
     await userEvent.click(screen.getByText('Save Changes'));

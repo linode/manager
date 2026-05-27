@@ -81,8 +81,8 @@ export const createStreams = (mockState: MockState) => [
           destinations?.find(({ id }) => id === destinationId)
         ),
         details: payload['details'] ?? null,
-        created: DateTime.now().toISO(),
-        updated: DateTime.now().toISO(),
+        created: DateTime.now().toISO({ includeOffset: false }),
+        updated: DateTime.now().toISO({ includeOffset: false }),
       });
 
       await mswDB.add('streams', stream, mockState);
@@ -128,7 +128,7 @@ export const updateStream = (mockState: MockState) => [
         destinations: payload['destinations'].map((destinationId: number) =>
           destinations?.find(({ id }) => id === destinationId)
         ),
-        updated: DateTime.now().toISO(),
+        updated: DateTime.now().toISO({ includeOffset: false }),
       };
 
       await mswDB.update('streams', id, updatedStream, mockState);
@@ -230,8 +230,8 @@ export const createDestinations = (mockState: MockState) => [
       const payload: CreateDestinationPayload = await request.clone().json();
       const { label, type, details } = payload;
 
-      const created = DateTime.now().toISO();
-      const updated = DateTime.now().toISO();
+      const created = DateTime.now().toISO({ includeOffset: false });
+      const updated = DateTime.now().toISO({ includeOffset: false });
 
       const destination =
         type === destinationType.AkamaiObjectStorage
@@ -304,7 +304,7 @@ export const updateDestination = (mockState: MockState) => [
         ...destination,
         ...payload,
         version: `${majorVersion}.${+minorVersion + 1}`,
-        updated: DateTime.now().toISO(),
+        updated: DateTime.now().toISO({ includeOffset: false }),
       };
 
       await mswDB.update('destinations', id, updatedDestination, mockState);

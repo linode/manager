@@ -1,6 +1,7 @@
+import { formatDate } from '@akamai/compute-ui-core/datetime';
+import { pluralize } from '@akamai/compute-ui-core/formatting';
 import { useProfile, useVPCQuery } from '@linode/queries';
 import { Box, CircleProgress, LinkButton } from '@linode/ui';
-import { pluralize } from '@linode/utilities';
 import Grid from '@mui/material/Grid';
 import { useTheme } from '@mui/material/styles';
 import { enqueueSnackbar } from 'notistack';
@@ -17,7 +18,6 @@ import {
 } from 'src/features/Linodes/LinodeEntityDetail.styles';
 import { useKubernetesClusterMutation } from 'src/queries/kubernetes';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { formatDate } from 'src/utilities/formatDate';
 
 import { useIsLkeEnterpriseEnabled } from '../kubeUtils';
 

@@ -1,7 +1,7 @@
 import { regionFactory } from '@linode/utilities';
 import React from 'react';
 
-import { accountFactory, imageFactory, typeFactory } from 'src/factories';
+import { imageFactory, typeFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
@@ -106,8 +106,8 @@ describe('Linode Create Summary', () => {
     await findByText(type.label);
   });
 
-  it('should a monthly price if a region and plan are selected', async () => {
-    const type = typeFactory.build({ price: { monthly: 5 } });
+  it('should render a monthly price if a region and plan are selected', async () => {
+    const type = typeFactory.build({ price: { hourly: 0.007, monthly: 5 } });
 
     server.use(
       http.get('*/v4/linode/types/*', () => {
@@ -118,17 +118,52 @@ describe('Linode Create Summary', () => {
     const { findByText } = renderWithThemeAndHookFormContext({
       component: <Summary />,
       useFormOptions: { defaultValues: { region: 'us-east', type: type.id } },
+      options: {
+        flags: {
+          computePricing: {
+            activeBillingPlanMatchers: [],
+            banner: { learnMoreLink: '', text: '' },
+            billing: 'monthly',
+          },
+        },
+      },
     });
 
     await findByText('$5/month');
   });
 
-  it('should render a DC specific price if the selected region has price overrides', async () => {
+  it('should render an hourly price if a region and plan are selected with hourly interval', async () => {
+    const type = typeFactory.build({ price: { hourly: 0.007, monthly: 5 } });
+
+    server.use(
+      http.get('*/v4/linode/types/*', () => {
+        return HttpResponse.json(type);
+      })
+    );
+
+    const { findByText } = renderWithThemeAndHookFormContext({
+      component: <Summary />,
+      useFormOptions: { defaultValues: { region: 'us-east', type: type.id } },
+      options: {
+        flags: {
+          computePricing: {
+            activeBillingPlanMatchers: [],
+            banner: { learnMoreLink: '', text: '' },
+            billing: 'hourly',
+          },
+        },
+      },
+    });
+
+    await findByText('$0.007/hour');
+  });
+
+  it('should render a DC specific monthly price if the selected region has price overrides', async () => {
     const regionId = 'id-cgk';
 
     const type = typeFactory.build({
-      price: { monthly: 5 },
-      region_prices: [{ id: regionId, monthly: 7 }],
+      price: { hourly: 0.009, monthly: 5 },
+      region_prices: [{ id: regionId, hourly: 0.011, monthly: 7 }],
     });
 
     server.use(
@@ -140,15 +175,55 @@ describe('Linode Create Summary', () => {
     const { findByText } = renderWithThemeAndHookFormContext({
       component: <Summary />,
       useFormOptions: { defaultValues: { region: regionId, type: type.id } },
+      options: {
+        flags: {
+          computePricing: {
+            activeBillingPlanMatchers: [],
+            banner: { learnMoreLink: '', text: '' },
+            billing: 'monthly',
+          },
+        },
+      },
     });
 
     await findByText('$7/month');
   });
 
-  it('should render a backups price if backups are enabled, a type is selected, and a region is selected', async () => {
+  it('should render a DC specific hourly price if the selected region has price overrides', async () => {
+    const regionId = 'id-cgk';
+
+    const type = typeFactory.build({
+      price: { hourly: 0.009, monthly: 5 },
+      region_prices: [{ id: regionId, hourly: 0.011, monthly: 7 }],
+    });
+
+    server.use(
+      http.get('*/v4/linode/types/*', () => {
+        return HttpResponse.json(type);
+      })
+    );
+
+    const { findByText } = renderWithThemeAndHookFormContext({
+      component: <Summary />,
+      useFormOptions: { defaultValues: { region: regionId, type: type.id } },
+      options: {
+        flags: {
+          computePricing: {
+            activeBillingPlanMatchers: [],
+            banner: { learnMoreLink: '', text: '' },
+            billing: 'hourly',
+          },
+        },
+      },
+    });
+
+    await findByText('$0.011/hour');
+  });
+
+  it('should render a monthly backups price if backups are enabled, a type is selected, and a region is selected', async () => {
     const type = typeFactory.build({
       addons: {
-        backups: { price: { monthly: 2 } },
+        backups: { price: { hourly: 0.003, monthly: 2 } },
       },
     });
 
@@ -167,19 +242,64 @@ describe('Linode Create Summary', () => {
           type: type.id,
         },
       },
+      options: {
+        flags: {
+          computePricing: {
+            activeBillingPlanMatchers: [],
+            banner: { learnMoreLink: '', text: '' },
+            billing: 'monthly',
+          },
+        },
+      },
     });
 
-    await findByText('$2/month');
+    await findByText((_, el) => el?.textContent === '$2/month');
   });
 
-  it('should render a DC specific backups price if the region has overrides ', async () => {
+  it('should render an hourly backups price if backups are enabled, a type is selected, and a region is selected', async () => {
+    const type = typeFactory.build({
+      addons: {
+        backups: { price: { hourly: 0.003, monthly: 2 } },
+      },
+    });
+
+    server.use(
+      http.get('*/v4/linode/types/*', () => {
+        return HttpResponse.json(type);
+      })
+    );
+
+    const { findByText } = renderWithThemeAndHookFormContext({
+      component: <Summary />,
+      useFormOptions: {
+        defaultValues: {
+          backups_enabled: true,
+          region: 'us-east',
+          type: type.id,
+        },
+      },
+      options: {
+        flags: {
+          computePricing: {
+            activeBillingPlanMatchers: [],
+            banner: { learnMoreLink: '', text: '' },
+            billing: 'hourly',
+          },
+        },
+      },
+    });
+
+    await findByText((_, el) => el?.textContent === '$0.003/hour');
+  });
+
+  it('should render a DC specific monthly backups price if the region has overrides ', async () => {
     const regionId = 'id-cgk';
 
     const type = typeFactory.build({
       addons: {
         backups: {
-          price: { monthly: 2 },
-          region_prices: [{ id: regionId, monthly: 4.2 }],
+          price: { hourly: 0.003, monthly: 2 },
+          region_prices: [{ id: regionId, hourly: 0.006, monthly: 4.2 }],
         },
       },
     });
@@ -199,23 +319,69 @@ describe('Linode Create Summary', () => {
           type: type.id,
         },
       },
+      options: {
+        flags: {
+          computePricing: {
+            activeBillingPlanMatchers: [],
+            banner: { learnMoreLink: '', text: '' },
+            billing: 'monthly',
+          },
+        },
+      },
     });
 
-    await findByText('$4.20/month');
+    await findByText((_, el) => el?.textContent === '$4.20/month');
+  });
+
+  it('should render a DC specific hourly backups price if the region has overrides ', async () => {
+    const regionId = 'id-cgk';
+
+    const type = typeFactory.build({
+      addons: {
+        backups: {
+          price: { hourly: 0.003, monthly: 2 },
+          region_prices: [{ id: regionId, hourly: 0.006, monthly: 4.2 }],
+        },
+      },
+    });
+
+    server.use(
+      http.get('*/v4/linode/types/*', () => {
+        return HttpResponse.json(type);
+      })
+    );
+
+    const { findByText } = renderWithThemeAndHookFormContext({
+      component: <Summary />,
+      useFormOptions: {
+        defaultValues: {
+          backups_enabled: true,
+          region: regionId,
+          type: type.id,
+        },
+      },
+      options: {
+        flags: {
+          computePricing: {
+            activeBillingPlanMatchers: [],
+            banner: { learnMoreLink: '', text: '' },
+            billing: 'hourly',
+          },
+        },
+      },
+    });
+
+    await findByText((_, el) => el?.textContent === '$0.006/hour');
   });
 
   it('should render a summary item for an attached VLAN', async () => {
     const { getByText } =
-      renderWithThemeAndHookFormContext<CreateLinodeRequest>({
+      renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
         component: <Summary />,
         useFormOptions: {
           defaultValues: {
-            interfaces: [
-              {},
-              {
-                label: 'my-vlan',
-                purpose: 'vlan',
-              },
+            linodeInterfaces: [
+              { purpose: 'vlan', vlan: { vlan_label: 'my-vlan' } },
             ],
           },
         },
@@ -236,7 +402,7 @@ describe('Linode Create Summary', () => {
     expect(getByText('Encrypted')).toBeVisible();
   });
 
-  it('should render correct pricing for Marketplace app cluster deployments', async () => {
+  it('should render correct monthly pricing for Marketplace app cluster deployments', async () => {
     const type = typeFactory.build({
       price: { hourly: 0.5, monthly: 2 },
     });
@@ -259,12 +425,58 @@ describe('Linode Create Summary', () => {
             type: type.id,
           },
         },
+        options: {
+          flags: {
+            computePricing: {
+              activeBillingPlanMatchers: [],
+              banner: { learnMoreLink: '', text: '' },
+              billing: 'monthly',
+            },
+          },
+        },
       });
 
-    await findByText(`5 Nodes - $10/month $2.50/hr`);
+    await findByText(`5 Nodes - $10/month`);
   });
 
-  it('should render correct pricing for Marketplace app cluster deployments with multiple plans involved', async () => {
+  it('should render correct hourly pricing for Marketplace app cluster deployments', async () => {
+    const type = typeFactory.build({
+      price: { hourly: 0.5, monthly: 2 },
+    });
+
+    server.use(
+      http.get('*/v4/linode/types/*', () => {
+        return HttpResponse.json(type);
+      })
+    );
+
+    const { findByText } =
+      renderWithThemeAndHookFormContext<CreateLinodeRequest>({
+        component: <Summary />,
+        useFormOptions: {
+          defaultValues: {
+            region: 'fake-region',
+            stackscript_data: {
+              cluster_size: 5,
+            },
+            type: type.id,
+          },
+        },
+        options: {
+          flags: {
+            computePricing: {
+              activeBillingPlanMatchers: [],
+              banner: { learnMoreLink: '', text: '' },
+              billing: 'hourly',
+            },
+          },
+        },
+      });
+
+    await findByText(`5 Nodes - $2.50/hour`);
+  });
+
+  it('should render correct monthly pricing for Marketplace app cluster deployments with multiple plans involved', async () => {
     const types = [
       typeFactory.build({
         label: 'Dedicated 2GB',
@@ -306,9 +518,75 @@ describe('Linode Create Summary', () => {
             type: types[0].id,
           },
         },
+        options: {
+          flags: {
+            computePricing: {
+              activeBillingPlanMatchers: [],
+              banner: { learnMoreLink: '', text: '' },
+              billing: 'monthly',
+            },
+          },
+        },
       });
 
-    await findByText(`5 Nodes - $11/month $1.10/hr`);
+    await findByText(`5 Nodes - $11/month`);
+  });
+
+  it('should render correct hourly pricing for Marketplace app cluster deployments with multiple plans involved', async () => {
+    const types = [
+      typeFactory.build({
+        label: 'Dedicated 2GB',
+        price: { hourly: 0.1, monthly: 1 },
+      }),
+      typeFactory.build({
+        label: 'Dedicated 4GB',
+        price: { hourly: 0.2, monthly: 2 },
+      }),
+      typeFactory.build({
+        label: 'Dedicated 8GB',
+        price: { hourly: 0.3, monthly: 3 },
+      }),
+    ];
+
+    server.use(
+      http.get('*/v4*/linode/types/:id', ({ params }) => {
+        const type = types.find((type) => type.id === params.id);
+        return HttpResponse.json(type);
+      }),
+      http.get('*/v4*/linode/types', () => {
+        return HttpResponse.json(makeResourcePage(types));
+      })
+    );
+
+    const { findByText } =
+      renderWithThemeAndHookFormContext<CreateLinodeRequest>({
+        component: <Summary />,
+        useFormOptions: {
+          defaultValues: {
+            region: 'fake-region',
+            stackscript_data: {
+              cluster_size: 1,
+              elastic_cluster_size: 2,
+              elastic_cluster_type: types[1].label,
+              logstash_cluster_size: 2,
+              logstash_cluster_type: types[2].label,
+            },
+            type: types[0].id,
+          },
+        },
+        options: {
+          flags: {
+            computePricing: {
+              activeBillingPlanMatchers: [],
+              banner: { learnMoreLink: '', text: '' },
+              billing: 'hourly',
+            },
+          },
+        },
+      });
+
+    // 1 x 0.1 + 2 x 0.2 + 2 x 0.3 = 1.1
+    await findByText(`5 Nodes - $1.10/hour`);
   });
 
   it('should render "Encrypted" if a distributed region is selected', async () => {
@@ -328,62 +606,7 @@ describe('Linode Create Summary', () => {
     await findByText('Encrypted');
   });
 
-  describe('Legacy Interfaces', () => {
-    it('should render "VPC Assigned" if a VPC is selected', () => {
-      const { getByText } =
-        renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
-          component: <Summary />,
-          useFormOptions: {
-            defaultValues: { interfaces: [{ vpc_id: 1, subnet_id: 2 }] },
-          },
-          options: { flags: { linodeInterfaces: { enabled: false } } },
-        });
-
-      expect(getByText('VPC')).toBeVisible();
-    });
-
-    it('should render "VLAN Attached" if a VLAN is selected', () => {
-      const { getByText } =
-        renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
-          component: <Summary />,
-          useFormOptions: {
-            // VLAN interface is always stored at index 1 for legacy interfaces
-            defaultValues: { interfaces: [{}, { label: 'my-vlan-label' }] },
-          },
-          options: { flags: { linodeInterfaces: { enabled: false } } },
-        });
-
-      expect(getByText('VLAN')).toBeVisible();
-    });
-
-    it('should render "Firewall Assigned" if a Firewall is selected', () => {
-      const { getByText } =
-        renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
-          component: <Summary />,
-          useFormOptions: {
-            defaultValues: { firewall_id: 5 },
-          },
-          options: { flags: { linodeInterfaces: { enabled: false } } },
-        });
-
-      expect(getByText('Firewall Assigned')).toBeVisible();
-    });
-  });
-
   describe('Linode Interfaces', () => {
-    // Account capability must be present for Linode Interfaces
-    beforeEach(() => {
-      const account = accountFactory.build({
-        capabilities: ['Linodes', 'Linode Interfaces'],
-      });
-
-      server.use(
-        http.get('*/v4*/account', () => {
-          return HttpResponse.json(account);
-        })
-      );
-    });
-
     it('should render "VPC Assigned" if a VPC is selected', async () => {
       const { findByText } =
         renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
@@ -393,7 +616,6 @@ describe('Linode Create Summary', () => {
               linodeInterfaces: [{ purpose: 'vpc', vpc: { subnet_id: 2 } }],
             },
           },
-          options: { flags: { linodeInterfaces: { enabled: true } } },
         });
 
       const text = await findByText('VPC');
@@ -411,7 +633,6 @@ describe('Linode Create Summary', () => {
               ],
             },
           },
-          options: { flags: { linodeInterfaces: { enabled: true } } },
         });
 
       const text = await findByText('VLAN');
@@ -427,7 +648,6 @@ describe('Linode Create Summary', () => {
               linodeInterfaces: [{ purpose: 'public' }],
             },
           },
-          options: { flags: { linodeInterfaces: { enabled: true } } },
         });
 
       const text = await findByText('Public Internet');
@@ -444,7 +664,6 @@ describe('Linode Create Summary', () => {
               interface_generation: 'linode',
             },
           },
-          options: { flags: { linodeInterfaces: { enabled: true } } },
         });
 
       const text = await findByText('Firewall Assigned');

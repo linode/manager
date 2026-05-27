@@ -1,9 +1,9 @@
+import { sendEvent } from '@akamai/compute-ui-core/analytics';
 import * as React from 'react';
 
 import MonitorIcon from 'src/assets/icons/entityIcons/monitor.svg';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ResourcesSection } from 'src/components/EmptyLandingPageResources/ResourcesSection';
-import { sendEvent } from 'src/utilities/analytics/utils';
 
 import {
   gettingStartedGuides,

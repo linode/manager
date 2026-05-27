@@ -21,15 +21,14 @@ import { createFirewallFromTemplate } from 'src/components/GenerateFirewallDialo
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useGetLinodeCreateType } from 'src/features/Linodes/LinodeCreate/Tabs/utils/useGetLinodeCreateType';
 import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
-import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
 import { CustomFirewallFields } from './CustomFirewallFields';
 import { createFirewallResolver } from './formUtilities';
 import { TemplateFirewallFields } from './TemplateFirewallFields';
 
 import type { CreateFirewallFormValues } from './formUtilities';
+import type { LinodeCreateFormEventOptions } from '@akamai/compute-ui-core/analytics';
 import type { Firewall, FirewallDeviceEntityType } from '@linode/api-v4';
-import type { LinodeCreateFormEventOptions } from 'src/utilities/analytics/types';
 
 export interface CreateFirewallDrawerProps {
   createFlow: FirewallDeviceEntityType | undefined;
@@ -58,8 +57,6 @@ export const CreateFirewallDrawer = (props: CreateFirewallDrawerProps) => {
   const { createFlow, onClose, onFirewallCreated, open } = props;
 
   const queryClient = useQueryClient();
-
-  const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
 
   const { mutateAsync: createFirewall } = useCreateFirewall();
 
@@ -165,42 +162,40 @@ export const CreateFirewallDrawer = (props: CreateFirewallDrawerProps) => {
               />
             </Notice>
           )}
-          {isLinodeInterfacesEnabled && (
-            <>
-              <Typography style={{ marginTop: 24 }}>
-                <strong>Create</strong>
-              </Typography>
-              <Controller
-                control={control}
-                name="createFirewallFrom"
-                render={({ field }) => (
-                  <RadioGroup
-                    aria-label="Create custom firewall or from a template"
-                    data-testid="create-firewall-from-radio-group"
-                    onChange={(_, value) => {
-                      field.onChange(value);
-                      clearErrors();
-                    }}
-                    row
-                    value={field.value}
-                  >
-                    <FormControlLabel
-                      control={<Radio />}
-                      disabled={!permissions.create_firewall}
-                      label="Custom Firewall"
-                      value="custom"
-                    />
-                    <FormControlLabel
-                      control={<Radio />}
-                      disabled={!permissions.create_firewall}
-                      label="From a Template"
-                      value="template"
-                    />
-                  </RadioGroup>
-                )}
-              />
-            </>
-          )}
+          <>
+            <Typography style={{ marginTop: 24 }}>
+              <strong>Create</strong>
+            </Typography>
+            <Controller
+              control={control}
+              name="createFirewallFrom"
+              render={({ field }) => (
+                <RadioGroup
+                  aria-label="Create custom firewall or from a template"
+                  data-testid="create-firewall-from-radio-group"
+                  onChange={(_, value) => {
+                    field.onChange(value);
+                    clearErrors();
+                  }}
+                  row
+                  value={field.value}
+                >
+                  <FormControlLabel
+                    control={<Radio />}
+                    disabled={!permissions.create_firewall}
+                    label="Custom Firewall"
+                    value="custom"
+                  />
+                  <FormControlLabel
+                    control={<Radio />}
+                    disabled={!permissions.create_firewall}
+                    label="From a Template"
+                    value="template"
+                  />
+                </RadioGroup>
+              )}
+            />
+          </>
           <Controller
             control={control}
             name="label"
@@ -218,7 +213,7 @@ export const CreateFirewallDrawer = (props: CreateFirewallDrawerProps) => {
               />
             )}
           />
-          {createFirewallFrom === 'template' && isLinodeInterfacesEnabled ? (
+          {createFirewallFrom === 'template' ? (
             <TemplateFirewallFields
               userCannotAddFirewall={!permissions.create_firewall}
             />

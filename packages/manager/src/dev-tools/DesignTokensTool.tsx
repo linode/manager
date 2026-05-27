@@ -1,3 +1,4 @@
+import { capitalize } from '@akamai/compute-ui-core/formatting';
 import { ThemeProvider } from '@emotion/react';
 import {
   Box,
@@ -8,7 +9,6 @@ import {
   Stack,
   Typography,
 } from '@linode/ui';
-import { capitalize } from '@linode/utilities';
 import * as React from 'react';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';

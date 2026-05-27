@@ -1,3 +1,4 @@
+import { formatDate } from '@akamai/compute-ui-core/datetime';
 import { useLinodeUpdateMutation, useProfile } from '@linode/queries';
 import Grid from '@mui/material/Grid';
 import { useTheme } from '@mui/material/styles';
@@ -6,7 +7,6 @@ import * as React from 'react';
 
 import { TagCell } from 'src/components/TagCell/TagCell';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { formatDate } from 'src/utilities/formatDate';
 
 import { usePermissions } from '../IAM/hooks/usePermissions';
 import {

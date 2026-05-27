@@ -1,9 +1,9 @@
+import { isAfter } from '@akamai/compute-ui-core/datetime';
 import * as React from 'react';
 
 import { Markdown } from 'src/components/Markdown/Markdown';
 import { reportException } from 'src/exceptionReporting';
 import { useFlags } from 'src/hooks/useFlags';
-import { isAfter } from 'src/utilities/date';
 
 import { DismissibleBanner } from '../DismissibleBanner/DismissibleBanner';
 

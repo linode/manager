@@ -1,3 +1,5 @@
+import { NotificationBanner } from '@akamai/cds-components/react';
+import { Spacing } from '@akamai/cds-tokens';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
   useCreateDatabaseMutation,
@@ -6,7 +8,6 @@ import {
   useRegionAvailabilityQuery,
   useRegionsQuery,
 } from '@linode/queries';
-import { CircleProgress, Divider, ErrorState, Notice, Paper } from '@linode/ui';
 import { formatStorageUnits, scrollErrorIntoViewV2 } from '@linode/utilities';
 import { getDynamicDatabaseSchema } from '@linode/validation/lib/databases.schema';
 import Grid from '@mui/material/Grid';
@@ -36,6 +37,11 @@ import { typeLabelDetails } from 'src/features/Linodes/presentation';
 import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 
+import { PREMIUM_CPU_PLANS_RENAME } from '../constants';
+import { CircleProgress } from '../shared/CircleProgress/CircleProgress';
+import { Divider } from '../shared/Divider/Divider';
+import { ErrorState } from '../shared/ErrorState/ErrorState';
+import { Paper } from '../shared/Paper/Paper';
 import { DatabaseCreateAccessControls } from './DatabaseCreateAccessControls';
 import { DatabaseCreateNetworkingConfiguration } from './DatabaseCreateNetworkingConfiguration';
 
@@ -148,7 +154,12 @@ export const DatabaseCreate = () => {
     if (!dbtypes) {
       return [];
     }
-    return dbtypes.map((type) => {
+    // Only display plans that support the selected engine
+    const _dbtypes = dbtypes.filter((type) =>
+      Boolean(type.engines[selectedEngine])
+    );
+
+    return _dbtypes.map((type) => {
       const { label } = type;
       const formattedLabel = formatStorageUnits(label);
       const singleNodePricing = type.engines[selectedEngine]?.find(
@@ -259,12 +270,29 @@ export const DatabaseCreate = () => {
     types: dbtypes,
   });
 
+  const disabledTabsConfig = React.useMemo(() => {
+    if (shouldDisablePremiumPlansTab) {
+      return {
+        disabledTabs: [
+          {
+            tab: 'premium',
+            copy: PREMIUM_CPU_PLANS_RENAME,
+          },
+        ],
+      };
+    }
+
+    return {
+      disabledTabs: [],
+    };
+  }, [shouldDisablePremiumPlansTab]);
+
   if (regionsLoading || !regionsData || enginesLoading || typesLoading) {
     return <CircleProgress />;
   }
 
   if (regionsError || enginesError || typesError) {
-    return <ErrorState errorText="An unexpected error occurred." />;
+    return <ErrorState />;
   }
 
   return (
@@ -291,26 +319,29 @@ export const DatabaseCreate = () => {
           ref={formRef}
         >
           {isRestricted && (
-            <Notice
-              spacingTop={16}
+            <NotificationBanner
+              style={{ marginTop: Spacing.S16, marginBottom: Spacing.S16 }}
               text={getRestrictedResourceText({
                 action: 'create',
                 resourceType: 'Databases',
               })}
-              variant="error"
+              type="error"
             />
           )}
           <Paper>
             {errors.root?.message && (
-              <Notice variant="error">
+              <NotificationBanner
+                style={{ marginBottom: Spacing.S16 }}
+                type="error"
+              >
                 <ErrorMessage
                   entity={{ type: 'database_id' }}
                   message={errors.root.message}
                 />
-              </Notice>
+              </NotificationBanner>
             )}
             <DatabaseClusterData selectedPlan={selectedPlan} />
-            <Divider spacingBottom={12} spacingTop={38} />
+            <Divider marginBottom={Spacing.S12} marginTop={Spacing.S32} />
             <Grid>
               <Controller
                 control={control}
@@ -319,9 +350,7 @@ export const DatabaseCreate = () => {
                   <StyledPlansPanel
                     data-qa-select-plan
                     disabled={isRestricted}
-                    disabledTabs={
-                      shouldDisablePremiumPlansTab ? ['premium'] : undefined
-                    }
+                    disabledTabs={disabledTabsConfig.disabledTabs}
                     error={fieldState.error?.message}
                     flow="database"
                     handleTabChange={handleTabChange}
@@ -331,17 +360,12 @@ export const DatabaseCreate = () => {
                     regionsData={regionsData}
                     selectedId={field.value}
                     selectedRegionID={region}
-                    tabDisabledMessage={
-                      shouldDisablePremiumPlansTab
-                        ? 'Premium CPUs are now called G7 Dedicated plans.'
-                        : undefined
-                    }
                     types={displayTypes}
                   />
                 )}
               />
             </Grid>
-            <Divider spacingBottom={12} spacingTop={26} />
+            <Divider marginBottom={Spacing.S12} marginTop={Spacing.S24} />
             <Grid>
               <Controller
                 control={control}
@@ -359,7 +383,7 @@ export const DatabaseCreate = () => {
                 )}
               />
             </Grid>
-            <Divider spacingBottom={12} spacingTop={26} />
+            <Divider marginBottom={Spacing.S12} marginTop={Spacing.S24} />
             {isVPCEnabled ? (
               <DatabaseCreateNetworkingConfiguration
                 accessControlsConfiguration={accessControlsConfiguration}
@@ -369,7 +393,7 @@ export const DatabaseCreate = () => {
               <DatabaseCreateAccessControls {...accessControlsConfiguration} />
             )}
           </Paper>
-          <Paper sx={{ marginTop: 3 }}>
+          <Paper marginTop={Spacing.S24}>
             <DatabaseSummarySection
               currentClusterSize={clusterSize}
               currentEngine={selectedEngine}

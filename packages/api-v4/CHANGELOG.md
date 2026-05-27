@@ -1,3 +1,29 @@
+## [2026-05-27] - v0.161.0
+
+
+### Added:
+
+- Added the support live chat token API endpoint and Support Live Chat account capability ([#104](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/104/overview))
+- getObjectStorageKey function ([#193](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/193/overview))
+
+### Removed:
+
+- Removed legacyRestoreWithBackup ([#204](https://github.com/linode/manager/pull/204))
+- Removed legacyRestoreWithBackup ([#204](https://github.com/linode/manager/pull/204))
+
+### Tech Stories:
+
+- Bump `axios` from `1.15.0` to `1.16.0`, `concurrently` from `9.0.1` to `9.2.1`
+
+### Upcoming Features:
+
+- Add SharegroupTokenStatus type and use it for status property of SharegroupToken interface ([#114](https://github.com/linode/manager/pull/114))
+- Reserve IP - Make rdns field optional for updateIP API query ([#133](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/133/overview))
+- Add `CloneAlertPayloadWithService` and `cloneAlertDefinition` POST request for ACLP-Alerting: Clone feature ([#163](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/163/overview))
+- Support null values for CloudPulse metrics response payload ([#174](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/174))
+- Private Image Sharing: Replace reference to `CreateImagePayload` with `CreateSharegroupPayload` in `UpdateSharegroupPayload` type ([#187](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/187/overview))
+- Add group_by field for Alerts payload and response interfaces ([#246](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/246/overview))
+
 ## [2026-04-30] - v0.160.0
 
 

@@ -1,4 +1,6 @@
 import { TableCell, TableRow } from '@akamai/cds-components/react/Table';
+import { formatDate } from '@akamai/compute-ui-core/datetime';
+import { pluralize } from '@akamai/compute-ui-core/formatting';
 import {
   FormControlLabel,
   Hidden,
@@ -6,7 +8,7 @@ import {
   Radio,
   TooltipIcon,
 } from '@linode/ui';
-import { convertStorageUnit, pluralize } from '@linode/utilities';
+import { convertStorageUnit } from '@linode/utilities';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import React from 'react';
 
@@ -15,7 +17,6 @@ import {
   PlanTextTooltip,
   StyledFormattedRegionList,
 } from 'src/features/components/PlansPanel/PlansAvailabilityNotice.styles';
-import { formatDate } from 'src/utilities/formatDate';
 
 import { TABLE_CELL_BASE_STYLE } from './constants';
 import { getRegionListItem } from './utilities';

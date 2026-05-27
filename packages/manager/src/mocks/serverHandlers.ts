@@ -6,6 +6,7 @@
  *
  * New handlers should be added to the CRUD baseline preset instead (ex: src/mocks/presets/crud/handlers/linodes.ts) which support a much more dynamic data mocking.
  */
+import { getStorage } from '@akamai/compute-ui-core/browser';
 import {
   acceleratedTypeFactory,
   accountAvailabilityFactory,
@@ -21,6 +22,7 @@ import {
   linodeStatsFactory,
   linodeTransferFactory,
   linodeTypeFactory,
+  newlyGeneratedSharegroupTokenFactory,
   nodeBalancerConfigFactory,
   nodeBalancerConfigNodeFactory,
   nodeBalancerFactory,
@@ -31,6 +33,7 @@ import {
   regionAvailabilityFactory,
   regions,
   securityQuestionsFactory,
+  sharegroupTokenFactory,
 } from '@linode/utilities';
 import { DateTime } from 'luxon';
 import { http, HttpResponse } from 'msw';
@@ -109,7 +112,6 @@ import {
   notificationChannelFactory,
   notificationFactory,
   objectStorageBucketFactoryGen2,
-  objectStorageClusterFactory,
   objectStorageEndpointsFactory,
   objectStorageKeyFactory,
   objectStorageMetricCriteria,
@@ -143,7 +145,6 @@ import { accountLoginFactory } from 'src/factories/accountLogin';
 import { accountUserFactory } from 'src/factories/accountUsers';
 import { LinodeKernelFactory } from 'src/factories/linodeKernel';
 import { objEndpointQuotaFactory } from 'src/factories/quotas';
-import { getStorage } from 'src/utilities/storage';
 
 import type { PathParams } from 'msw';
 
@@ -415,12 +416,19 @@ const databases = [
   }),
 
   http.get('*/databases/engines', () => {
-    const engine1 = databaseEngineFactory.buildList(3);
-    const engine2 = databaseEngineFactory.buildList(3, {
+    const mysqlEngines = databaseEngineFactory.buildList(3);
+    const postgresEngines = databaseEngineFactory.buildList(3, {
       engine: 'postgresql',
     });
+    const valkeyEngines = databaseEngineFactory.buildList(3, {
+      engine: 'valkey',
+    });
 
-    const combinedList = [...engine1, ...engine2];
+    const combinedList = [
+      ...mysqlEngines,
+      ...postgresEngines,
+      ...valkeyEngines,
+    ];
 
     return HttpResponse.json(makeResourcePage(combinedList));
   }),
@@ -781,6 +789,33 @@ const premiumTypes = [
   }),
 ];
 const acceleratedType = acceleratedTypeFactory.buildList(7);
+const monthlyBillingSupportedTypes = [
+  dedicatedTypeFactory.build({
+    price: { hourly: 0.105, monthly: 75 },
+    label:
+      'Dedicated with monthly and hourly value (Monthly billing supported)',
+  }),
+  dedicatedTypeFactory.build({
+    price: { hourly: 0.105, monthly: null },
+    label: 'Dedicated with hourly value only (Monthly billing supported)',
+  }),
+];
+const hourlyBillingSupportedTypes = [
+  // Note: These types of plans should be included in LD flag ComputePricing -> activeBillingPlanMatchers
+  gpuTypeAdaFactory.build({
+    price: { hourly: 0.0879, monthly: null },
+    label: 'RTX4000 Ada (Hourly Billing Supported)',
+  }),
+  gpuTypeRtxFactory.build({
+    price: { hourly: 2.0, monthly: null },
+    label: 'Dedicated 32 GB + RTX6000 GPU (Hourly Billing Supported)',
+  }),
+  linodeTypeFactory.build({
+    id: 'g8-dedicated-256-64-hourly',
+    label: 'G8 Dedicated 256x64 (Hourly Billing Supported)',
+    price: { hourly: 1.68, monthly: null },
+  }),
+];
 
 const proxyAccountUser = accountUserFactory.build({
   email: 'partner@proxy.com',
@@ -935,6 +970,35 @@ export const handlers = [
 
     return HttpResponse.json(makeResourcePage([]));
   }),
+  http.get('*/images/sharegroups/tokens', () => {
+    const activeGroups = sharegroupTokenFactory.buildList(5);
+
+    const pendingGroup = sharegroupTokenFactory.build({
+      status: 'pending',
+    });
+
+    const expiredGroup = sharegroupTokenFactory.build({
+      status: 'expired',
+    });
+
+    const revokedGroup = sharegroupTokenFactory.build({
+      status: 'revoked',
+    });
+
+    const requestedGroup = newlyGeneratedSharegroupTokenFactory.build({
+      label: 'Requested',
+    });
+
+    const joinedOrRequestedGroups = [
+      ...activeGroups,
+      pendingGroup,
+      expiredGroup,
+      requestedGroup,
+      revokedGroup,
+    ];
+
+    return HttpResponse.json(makeResourcePage(joinedOrRequestedGroups));
+  }),
   http.post<any, UpdateImageRegionsPayload>(
     '*/v4/images/:id/regions',
     async ({ request }) => {
@@ -962,6 +1026,8 @@ export const handlers = [
         ...premiumTypes,
         ...acceleratedType,
         proDedicatedType,
+        ...monthlyBillingSupportedTypes,
+        ...hourlyBillingSupportedTypes,
       ])
     );
   }),
@@ -2029,29 +2095,6 @@ export const handlers = [
   }),
   http.post('*/object-storage/buckets', () => {
     return HttpResponse.json(objectStorageBucketFactoryGen2.build());
-  }),
-  http.get('*object-storage/clusters', () => {
-    const jakartaCluster = objectStorageClusterFactory.build({
-      id: `id-cgk-0` as any,
-      region: 'id-cgk',
-    });
-    const saoPauloCluster = objectStorageClusterFactory.build({
-      id: `br-gru-0` as any,
-      region: 'br-gru',
-    });
-    const basePricingCluster = objectStorageClusterFactory.build({
-      id: `us-east-0` as any,
-      region: 'us-east',
-    });
-    const clusters = objectStorageClusterFactory.buildList(3);
-    return HttpResponse.json(
-      makeResourcePage([
-        jakartaCluster,
-        saoPauloCluster,
-        basePricingCluster,
-        ...clusters,
-      ])
-    );
   }),
 
   http.get('*object-storage/keys', () => {
@@ -3433,6 +3476,24 @@ export const handlers = [
       return HttpResponse.json(response);
     }
   ),
+  http.post(
+    '*/monitor/services/:service_type/alert-definitions/:id/clone',
+    async ({ params, request }) => {
+      const reqBody = await request.json();
+
+      const serviceType = params.service_type as CloudPulseServiceType;
+      const response = alertFactory.build({
+        ...(reqBody as CreateAlertDefinitionPayload),
+        created_by: 'user1',
+        id: Number(params.id) + 1000,
+        service_type: serviceType,
+        type: 'user',
+        updated_by: 'user1',
+      });
+
+      return HttpResponse.json(response);
+    }
+  ),
   http.get(
     '*/monitor/services/:serviceType/alert-definitions',
     async ({ params }) => {
@@ -3610,6 +3671,7 @@ export const handlers = [
             rule_criteria: {
               rules: [firewallMetricRulesFactory.build()],
             },
+            group_by: ['entity_id', 'interface_id'],
           })
         );
       }
@@ -3623,6 +3685,7 @@ export const handlers = [
             rule_criteria: {
               rules: [objectStorageMetricCriteria.build()],
             },
+            group_by: ['endpoint', 'request_type'],
           })
         );
       }
@@ -3636,6 +3699,7 @@ export const handlers = [
             rule_criteria: {
               rules: [blockStorageMetricCriteria.build()],
             },
+            group_by: ['entity_id', 'linode_id'],
           })
         );
       }
@@ -4015,8 +4079,8 @@ export const handlers = [
           label: 'Databases',
           service_type: 'dbaas',
           alert: {
-            evaluation_period_seconds: [300],
-            polling_interval_seconds: [300],
+            evaluation_period_seconds: [300, 600],
+            polling_interval_seconds: [300, 600],
           },
         }),
         serviceTypesFactory.build({
@@ -4073,6 +4137,7 @@ export const handlers = [
   http.get('*/monitor/services/:serviceType', ({ params }) => {
     const serviceType = params.serviceType as CloudPulseServiceType;
     const serviceTypesMap: Record<CloudPulseServiceType, string> = {
+      ai: 'AI',
       linode: 'Linode',
       dbaas: 'Databases',
       nodebalancer: 'NodeBalancers',
@@ -4087,8 +4152,8 @@ export const handlers = [
       service_type: `${serviceType}`,
       label: serviceTypesMap[serviceType],
       alert: serviceAlertFactory.build({
-        evaluation_period_seconds: [300],
-        polling_interval_seconds: [300],
+        evaluation_period_seconds: [300, 600],
+        polling_interval_seconds: [300, 600],
         scope:
           serviceType === 'objectstorage' || serviceType === 'blockstorage'
             ? ['entity', 'account', 'region']
@@ -4600,6 +4665,39 @@ export const handlers = [
     } else if (id === '6') {
       serviceType = 'objectstorage';
       dashboardLabel = 'Object Storage Service I/O Statistics';
+      widgets = [
+        {
+          metric: 'obj_bucket_size',
+          unit: 'Bytes',
+          label: 'Content Stored',
+          color: 'default',
+          size: 6,
+          chart_type: 'line',
+          y_label: 'obj_bucket_size',
+          aggregate_function: 'sum',
+        },
+        {
+          metric: 'obj_bucket_num_objects',
+          unit: 'Count',
+          label: 'Number of Objects',
+          color: 'default',
+          size: 6,
+          chart_type: 'line',
+          y_label: 'obj_bucket_num_objects',
+          aggregate_function: 'sum',
+        },
+        {
+          metric: 'obj_responses_num',
+          unit: 'Count',
+          label: 'Total Responses',
+          color: 'default',
+          size: 6,
+          chart_type: 'line',
+          y_label: 'obj_responses_num',
+          group_by: ['response_type'],
+          aggregate_function: 'sum',
+        },
+      ];
     } else if (id === '7') {
       serviceType = 'blockstorage';
       dashboardLabel = 'Block Storage Dashboard';
@@ -4636,6 +4734,39 @@ export const handlers = [
     } else if (id === '10') {
       serviceType = 'objectstorage';
       dashboardLabel = 'Endpoint Dashboard';
+      widgets = [
+        {
+          metric: 'obj_bucket_size',
+          unit: 'Bytes',
+          label: 'Content Stored',
+          color: 'default',
+          size: 6,
+          chart_type: 'line',
+          y_label: 'obj_bucket_size',
+          aggregate_function: 'sum',
+        },
+        {
+          metric: 'obj_bucket_num_objects',
+          unit: 'Count',
+          label: 'Number Of Objects',
+          color: 'default',
+          size: 6,
+          chart_type: 'line',
+          y_label: 'obj_bucket_num_objects',
+          aggregate_function: 'sum',
+        },
+        {
+          metric: 'obj_responses_num',
+          unit: 'Count',
+          label: 'Total Responses',
+          color: 'default',
+          size: 6,
+          chart_type: 'line',
+          y_label: 'obj_responses_num',
+          group_by: ['response_type'],
+          aggregate_function: 'sum',
+        },
+      ];
     } else if (id === '5') {
       widgets = [
         {
@@ -4839,8 +4970,8 @@ export const handlers = [
             values: [
               [1721854379, '0.2744841110560275'],
               [1721857979, '0.2980357104166823'],
-              [1721861579, '0.3290476561287732'],
-              [1721865179, '0.32148793964961897'],
+              [1721861579, null],
+              [1721865179, null],
               [1721868779, '0.3269247326830727'],
               [1721872379, '0.3393055885526987'],
               [1721875979, '0.3237102833940027'],
@@ -4883,8 +5014,8 @@ export const handlers = [
             values: [
               [1721854379, '0.3744841110560275'],
               [1721857979, '0.4980357104166823'],
-              [1721861579, '0.3290476561287732'],
-              [1721865179, '0.42148793964961897'],
+              [1721861579, null],
+              [1721865179, null],
               [1721868779, '0.2269247326830727'],
               [1721872379, '0.3393055885526987'],
               [1721875979, '0.5237102833940027'],

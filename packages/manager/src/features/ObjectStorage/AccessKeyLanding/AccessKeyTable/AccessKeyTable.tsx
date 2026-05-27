@@ -7,7 +7,6 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 
-import { useIsObjMultiClusterEnabled } from '../../hooks/useIsObjectStorageGen2Enabled';
 import { AccessKeyTableBody } from './AccessKeyTableBody';
 
 import type { APIError, ObjectStorageKey } from '@linode/api-v4';
@@ -22,8 +21,6 @@ export interface AccessKeyTableProps {
 
 export const AccessKeyTable = (props: AccessKeyTableProps) => {
   const { data, error, isLoading, isRestrictedUser, openRevokeDialog } = props;
-
-  const { isObjMultiClusterEnabled } = useIsObjMultiClusterEnabled();
 
   return (
     <Table
@@ -43,11 +40,9 @@ export const AccessKeyTable = (props: AccessKeyTableProps) => {
             Label
           </TableCell>
           <TableCell>Access Key</TableCell>
-          {isObjMultiClusterEnabled && (
-            <Hidden smDown>
-              <TableCell>Regions/S3 Hostnames</TableCell>
-            </Hidden>
-          )}
+          <Hidden smDown>
+            <TableCell>Regions/S3 Hostnames</TableCell>
+          </Hidden>
           <TableCell />
         </TableRow>
       </TableHead>
@@ -56,7 +51,6 @@ export const AccessKeyTable = (props: AccessKeyTableProps) => {
           data={data}
           error={error}
           isLoading={isLoading}
-          isObjMultiClusterEnabled={isObjMultiClusterEnabled}
           isRestrictedUser={isRestrictedUser}
           openRevokeDialog={openRevokeDialog}
         />

@@ -2,6 +2,7 @@ import React from 'react';
 
 import MySQLIcon from 'src/assets/icons/mysql.svg';
 import PostgreSQLIcon from 'src/assets/icons/postgresql.svg';
+import ValkeyIcon from 'src/assets/icons/valkey.svg';
 import { getDatabasesDescription } from 'src/features/Databases/utilities';
 
 import type { DatabaseEngine } from '@linode/api-v4';
@@ -32,15 +33,10 @@ export const determineReplicationCommitType = (engine: string) => {
   return undefined;
 };
 
-interface EngineIconsProps {
-  mysql: React.JSX.Element;
-  postgresql: React.JSX.Element;
-  valkey: React.JSX.Element;
-}
-export const engineIcons: EngineIconsProps = {
+export const engineIcons = {
   mysql: <MySQLIcon height="24" width="24" />,
   postgresql: <PostgreSQLIcon height="24" width="24" />,
-  valkey: <PostgreSQLIcon height="24" width="24" />, // TO DO: (UIE-10551) Replace this placeholder with Valkey icon
+  valkey: <ValkeyIcon height="24" width="24" />,
 };
 
 export const getEngineOptions = (engines: DatabaseEngine[]) => {

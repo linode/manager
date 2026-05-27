@@ -1,4 +1,3 @@
-import { PlayCircleIcon, Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { Markdown } from 'src/components/Markdown/Markdown';
@@ -9,11 +8,7 @@ import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { allowedHTMLAttr, allowedHTMLTagsFlexible } from 'src/constants';
 
-import {
-  ContentSection,
-  OverviewContainer,
-  VideoPlaceholder,
-} from './ProductDetailsTabs.styles';
+import { ContentSection, OverviewContainer } from './ProductDetailsTabs.styles';
 import { StyledTabContent } from './TabContent.styles';
 
 import type { ProductTabDetails } from './pages';
@@ -77,19 +72,6 @@ export const ProductDetailsTabs = ({ details }: Props) => {
           <ContentSection>
             <MarkdownContentRenderer content={overview} />
           </ContentSection>
-          <VideoPlaceholder>
-            <PlayCircleIcon />
-            <Typography
-              sx={(theme) => ({
-                color: theme.tokens.alias.Content.Text.Secondary.Default,
-                fontFamily: theme.font.bold,
-                fontSize: theme.tokens.font.FontSize.Xs,
-              })}
-              variant="body1"
-            >
-              Video Coming Soon
-            </Typography>
-          </VideoPlaceholder>
         </OverviewContainer>
       ),
       label: 'Overview',

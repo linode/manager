@@ -9,8 +9,8 @@ import type { Linode, LinodeType, PriceObject } from '@linode/api-v4';
  * @returns backup pricing information for this specific linode type in a region
  */
 export const getLinodeBackupPrice = (
-  type: LinodeType,
-  regionId: string
+  type: LinodeType | undefined,
+  regionId: string | undefined
 ): PriceObject | undefined => {
   if (!type || !regionId) {
     return undefined;

@@ -1,0 +1,254 @@
+import {
+  FormError,
+  FormField,
+  FormLabel,
+  Icon,
+  TextField,
+  Tooltip,
+} from '@akamai/cds-components/react';
+import { Spacing } from '@akamai/cds-tokens';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useMutateProfile, useUpdateUserMutation } from '@linode/queries';
+import { ActionsPanel, Drawer } from '@linode/ui';
+import {
+  UpdateUserEmailSchema,
+  UpdateUserNameSchema,
+} from '@linode/validation';
+import { useNavigate } from '@tanstack/react-router';
+import { useSnackbar } from 'notistack';
+import * as React from 'react';
+import { Controller, useForm } from 'react-hook-form';
+
+import { RESTRICTED_FIELD_TOOLTIP } from 'src/features/Account/constants';
+
+import { useDelegationRole } from '../../hooks/useDelegationRole';
+
+import type { User } from '@linode/api-v4';
+
+interface Props {
+  activeUser: User;
+  canUpdateUser: boolean;
+  onClose: () => void;
+  open: boolean;
+}
+
+export const EditUserDetailsDrawer = (props: Props) => {
+  const { activeUser, canUpdateUser, onClose, open } = props;
+  const navigate = useNavigate();
+  const { enqueueSnackbar } = useSnackbar();
+  const { profileUserName } = useDelegationRole();
+
+  const isProxyOrDelegateUserType =
+    activeUser?.user_type === 'proxy' || activeUser?.user_type === 'delegate';
+
+  const { mutateAsync: updateUsername } = useUpdateUserMutation(
+    activeUser.username
+  );
+  const { mutateAsync: updateProfile } = useMutateProfile();
+
+  const {
+    control,
+    formState: { isDirty, isSubmitting },
+    handleSubmit,
+    reset,
+    setError,
+  } = useForm({
+    resolver: yupResolver(UpdateUserNameSchema.concat(UpdateUserEmailSchema)),
+    defaultValues: { username: activeUser.username, email: activeUser.email },
+    values: { username: activeUser.username, email: activeUser.email },
+  });
+
+  const onSubmit = async (values: { email: string; username: string }) => {
+    let hasError = false;
+
+    if (values.username !== activeUser.username) {
+      try {
+        const user = await updateUsername({ username: values.username });
+        navigate({
+          to: '/iam/users/$username/details',
+          params: { username: user.username },
+        });
+        enqueueSnackbar('Username updated successfully', {
+          variant: 'success',
+        });
+      } catch (error) {
+        setError('username', { message: error[0].reason });
+        hasError = true;
+      }
+    }
+
+    if (values.email !== activeUser.email) {
+      try {
+        await updateProfile({ email: values.email });
+        enqueueSnackbar('Email updated successfully', { variant: 'success' });
+      } catch (error) {
+        setError('email', { message: error[0].reason });
+        hasError = true;
+      }
+    }
+
+    if (!hasError) {
+      handleClose();
+    }
+  };
+
+  const handleClose = () => {
+    reset();
+    onClose();
+  };
+
+  let tooltipForDisabledUsernameField: string | undefined;
+  if (!canUpdateUser) {
+    tooltipForDisabledUsernameField =
+      'Restricted users cannot update their username. Please contact an account administrator.';
+  } else if (isProxyOrDelegateUserType) {
+    tooltipForDisabledUsernameField = RESTRICTED_FIELD_TOOLTIP;
+  }
+
+  let emailDisabledReason: string | undefined;
+  if (isProxyOrDelegateUserType) {
+    emailDisabledReason = RESTRICTED_FIELD_TOOLTIP;
+  } else if (profileUserName !== activeUser.username) {
+    emailDisabledReason = 'You can’t change another user’s email address.';
+  }
+
+  const disableEmailField =
+    profileUserName !== activeUser.username || isProxyOrDelegateUserType;
+
+  return (
+    <Drawer onClose={handleClose} open={open} title="Edit user details">
+      <form noValidate onSubmit={handleSubmit(onSubmit)}>
+        <Controller
+          control={control}
+          name="username"
+          render={({ field, fieldState }) => (
+            <FormField
+              error={Boolean(fieldState.error?.message)}
+              labelPosition="top"
+              style={{ padding: Spacing.S0 }}
+            >
+              <FormLabel
+                htmlFor="username"
+                slot="label"
+                style={{
+                  textAlign: 'left',
+                  padding: Spacing.S0,
+                  marginBottom: Spacing.S8,
+                }}
+              >
+                Username
+              </FormLabel>
+
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                }}
+              >
+                <TextField
+                  disabled={tooltipForDisabledUsernameField !== undefined}
+                  error={Boolean(fieldState.error?.message)}
+                  id="username"
+                  onBlur={field.onBlur}
+                  onChange={field.onChange}
+                  required
+                  style={{ boxSizing: 'border-box' }}
+                  value={field.value}
+                />
+                {!canUpdateUser || isProxyOrDelegateUserType ? (
+                  <Tooltip
+                    disabled={tooltipForDisabledUsernameField === undefined}
+                    key={tooltipForDisabledUsernameField}
+                    style={{
+                      textAlign: 'left',
+                      whiteSpace: 'normal',
+                      marginLeft: Spacing.S12,
+                    }}
+                    tooltipPlacement="left"
+                    tooltipText={tooltipForDisabledUsernameField}
+                  >
+                    <Icon icon="info-outline" size="m" />
+                  </Tooltip>
+                ) : null}
+              </div>
+              {Boolean(fieldState.error?.message) && (
+                <FormError slot="error">{fieldState.error?.message}</FormError>
+              )}
+            </FormField>
+          )}
+        />
+        <Controller
+          control={control}
+          name="email"
+          render={({ field, fieldState }) => (
+            <FormField
+              error={Boolean(fieldState.error?.message)}
+              labelPosition="top"
+            >
+              <FormLabel
+                htmlFor="email"
+                slot="label"
+                style={{
+                  textAlign: 'left',
+                  padding: Spacing.S0,
+                  marginBottom: Spacing.S8,
+                }}
+              >
+                Email
+              </FormLabel>
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                }}
+              >
+                <TextField
+                  disabled={disableEmailField}
+                  error={Boolean(fieldState.error?.message)}
+                  id="email"
+                  onBlur={field.onBlur}
+                  onChange={field.onChange}
+                  required
+                  style={{ boxSizing: 'border-box' }}
+                  value={field.value}
+                />
+                {disableEmailField ? (
+                  <Tooltip
+                    disabled={!disableEmailField}
+                    key={tooltipForDisabledUsernameField}
+                    style={{
+                      textAlign: 'left',
+                      whiteSpace: 'normal',
+                      marginLeft: Spacing.S12,
+                    }}
+                    tooltipPlacement="left"
+                    tooltipText={emailDisabledReason}
+                  >
+                    <Icon icon="info-outline" size="m" />
+                  </Tooltip>
+                ) : null}
+              </div>
+              {Boolean(fieldState.error?.message) && (
+                <FormError slot="error">{fieldState.error?.message}</FormError>
+              )}
+            </FormField>
+          )}
+        />
+        <ActionsPanel
+          primaryButtonProps={{
+            disabled: !isDirty,
+            label: 'Save',
+            loading: isSubmitting,
+            type: 'submit',
+          }}
+          secondaryButtonProps={{
+            label: 'Cancel',
+            onClick: handleClose,
+          }}
+        />
+      </form>
+    </Drawer>
+  );
+};

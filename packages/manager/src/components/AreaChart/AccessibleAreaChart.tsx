@@ -63,5 +63,5 @@ export const AccessibleAreaChart = (props: AccessibleAreaChartProps) => {
     );
   });
 
-  return <Box sx={visuallyHidden}>{tables}</Box>;
+  return <Box style={visuallyHidden}>{tables}</Box>;
 };

@@ -41,6 +41,7 @@ import { LinodesLandingEmptyState } from './LinodesLandingEmptyState';
 import { ListView } from './ListView';
 
 import type { Action } from '../PowerActionsDialogOrDrawer';
+import type { RegionFilter } from '@akamai/compute-ui-core/browser';
 import type {
   Config,
   LockType,
@@ -57,7 +58,6 @@ import type { WithProfileProps } from 'src/containers/profile.container';
 import type { DialogType } from 'src/features/Linodes/types';
 import type { Order } from 'src/hooks/useOrderV2';
 import type { LinodeWithMaintenance } from 'src/utilities/linodes';
-import type { RegionFilter } from 'src/utilities/storage';
 
 interface State {
   addLockDialogOpen: boolean;

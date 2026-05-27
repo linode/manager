@@ -1,4 +1,4 @@
-import { fireEvent, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import React from 'react';
 
 import { accountEntityFactory } from 'src/factories/accountEntities';
@@ -99,13 +99,11 @@ describe('AssignedPermissionsPanel', () => {
     expect(screen.getByText('create_linode')).toBeVisible();
     expect(screen.getByText('Entities')).toBeVisible();
 
-    const autocomplete = screen.getAllByRole('combobox');
-    expect(autocomplete).toHaveLength(1);
-    expect(autocomplete[0]).toBeInTheDocument();
-    expect(autocomplete[0]).toHaveAttribute('placeholder', 'Select Linodes');
+    // SelectionPanel renders entities as table rows instead of a combobox
+    expect(screen.getByText('linode-1')).toBeVisible();
   });
 
-  it('renders the Autocomplete when the access is an entity', () => {
+  it('renders entities in the table when the access is an entity', () => {
     queryMocks.useAllAccountEntities.mockReturnValue({
       data: mockEntities,
     });
@@ -113,10 +111,7 @@ describe('AssignedPermissionsPanel', () => {
       <AssignedPermissionsPanel role={mockEntitiesAcceessRole} />
     );
 
-    // Verify comboboxes exist
-    const autocomplete = screen.getAllByRole('combobox')[0];
-    fireEvent.focus(autocomplete);
-    fireEvent.mouseDown(autocomplete);
+    // Entity appears directly as a table row
     expect(screen.getByText('linode-1')).toBeVisible();
   });
 

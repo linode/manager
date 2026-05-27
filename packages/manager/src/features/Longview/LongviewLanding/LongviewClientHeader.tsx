@@ -1,3 +1,4 @@
+import { formatDate } from '@akamai/compute-ui-core/datetime';
 import { useProfile } from '@linode/queries';
 import { Typography } from '@linode/ui';
 import { formatUptime } from '@linode/utilities';
@@ -8,7 +9,6 @@ import { EditableEntityLabel } from 'src/components/EditableEntityLabel/Editable
 import { Link } from 'src/components/Link';
 import withClientStats from 'src/containers/longview.stats.container';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { formatDate } from 'src/utilities/formatDate';
 
 import { getPackageNoticeText } from '../shared/utilities';
 import {

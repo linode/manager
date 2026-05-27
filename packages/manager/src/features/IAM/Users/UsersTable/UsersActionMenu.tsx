@@ -1,7 +1,8 @@
+import { Icon, Menu, MenuItem, Tooltip } from '@akamai/cds-components/react';
+import { Spacing } from '@akamai/cds-tokens';
 import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
-import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { useIsIAMDelegationEnabled } from 'src/features/IAM/hooks/useIsIAMEnabled';
 
 import { useDelegationRole } from '../../hooks/useDelegationRole';
@@ -12,17 +13,25 @@ import {
 } from '../../Shared/constants';
 
 import type { PickPermissions, UserType } from '@linode/api-v4';
-import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 type UserActionMenuPermissions = PickPermissions<
   'delete_user' | 'is_account_admin' | 'view_user'
 >;
-
 interface Props {
   onDelete: (username: string) => void;
   permissions: Record<UserActionMenuPermissions, boolean>;
   username: string;
   userType?: UserType;
+}
+
+interface Action {
+  disabled?: boolean;
+  hidden?: boolean;
+  id?: string;
+  onClick: () => void;
+  pendoId?: string;
+  title: string;
+  tooltip?: string;
 }
 
 export const UsersActionMenu = (props: Props) => {
@@ -118,17 +127,67 @@ export const UsersActionMenu = (props: Props) => {
     },
   ];
 
+  const visibleActions = actions.filter((action) => !action.hidden);
+
+  if (!visibleActions || visibleActions.length === 0) {
+    return null;
+  }
+
+  const pendoChildId =
+    userType === 'child'
+      ? IAM_CHILD_USERS_PENDO_IDS.childUsernameActionMenu
+      : IAM_PARENT_USERS_PENDO_IDS.parentUsernameActionMenu;
+
+  const pendoId =
+    userType === 'delegate'
+      ? IAM_DELEGATE_USERS_PENDO_IDS.delegateUsernameActionMenu
+      : pendoChildId;
+
   return (
-    <ActionMenu
-      actionsList={actions}
-      ariaLabel={`Action menu for user ${username}`}
-      pendoId={
-        userType === 'delegate'
-          ? IAM_DELEGATE_USERS_PENDO_IDS.delegateUsernameActionMenu
-          : userType === 'child'
-            ? IAM_CHILD_USERS_PENDO_IDS.childUsernameActionMenu
-            : IAM_PARENT_USERS_PENDO_IDS.parentUsernameActionMenu
-      }
-    />
+    <Menu
+      aria-label={`Action menu for user ${username}`}
+      data-pendo-id={pendoId}
+      data-testid="user-action-menu"
+      icon="actions"
+      position="bottom-right"
+      style={{ paddingRight: Spacing.S12 }}
+    >
+      {visibleActions.map((action) => (
+        <MenuItem
+          data-testid={action.title}
+          disabled={Boolean(action.disabled)}
+          key={action.title}
+          onSelect={action.onClick}
+          style={{
+            minWidth: '210px',
+            paddingRight: Spacing.S4,
+          }}
+          value={action.title}
+        >
+          <span
+            style={{
+              alignItems: 'center',
+              display: 'flex',
+              justifyContent: 'space-between',
+              minWidth: '210px',
+            }}
+          >
+            {action.title}
+            {action.disabled ? (
+              <Tooltip
+                disabled={!action.disabled}
+                key={action.title}
+                noArrow={true}
+                style={{ textAlign: 'left', whiteSpace: 'normal' }}
+                tooltipPlacement="left"
+                tooltipText={action.tooltip}
+              >
+                <Icon icon="info-outline" size="m" />
+              </Tooltip>
+            ) : null}
+          </span>
+        </MenuItem>
+      ))}
+    </Menu>
   );
 };

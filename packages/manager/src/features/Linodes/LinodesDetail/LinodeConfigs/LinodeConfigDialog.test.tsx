@@ -204,10 +204,6 @@ describe('LinodeConfigDialog', () => {
       data: linode,
     });
 
-    queryMocks.useFlags.mockReturnValue({
-      linodeInterfaces: { enabled: true },
-    });
-
     const { queryByLabelText } = renderWithTheme(
       <LinodeConfigDialog
         config={linodeConfigFactory.build({ interfaces: null })}

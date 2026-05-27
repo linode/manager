@@ -1,5 +1,5 @@
+import { capitalize } from '@akamai/compute-ui-core/formatting';
 import { Box, Button, Divider, Paper, Stack, Typography } from '@linode/ui';
-import { capitalize } from '@linode/utilities';
 import { Link } from '@mui/material';
 import * as React from 'react';
 import { useMemo } from 'react';

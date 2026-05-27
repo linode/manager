@@ -1,0 +1,13 @@
+.paper {
+  background-color: var(--token-alias-background-normal, light-dark(#ffffff, #3d3d42));
+  margin-top: var(--paper-margin-top, 0);
+  margin-bottom: var(--paper-margin-bottom, 0);
+  padding: var(--paper-padding, 1.5rem);
+  padding-top: var(--paper-padding-top, 1rem);
+  padding-bottom: var(--paper-padding-bottom, 1.5rem);
+}
+
+.outlined {
+  border: 1px solid
+    var(--token-alias-interaction-border-light, light-dark(#d6d6dd, #515157));
+}

@@ -1,7 +1,7 @@
+import { capitalize } from '@akamai/compute-ui-core/formatting';
 import { useAccountUserGrants, useProfile } from '@linode/queries';
 import { Box, Chip, Stack, Typography } from '@linode/ui';
 import { Hidden } from '@linode/ui';
-import { capitalize } from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
 import React from 'react';
 

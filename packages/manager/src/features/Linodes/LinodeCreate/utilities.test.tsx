@@ -103,6 +103,38 @@ describe('getLinodeCreatePayload', () => {
     ).toEqual([{ public: {}, vpc: null, vlan: null }]);
   });
 
+  it('should omit private_ip when using Linode interfaces in the new networking UI', () => {
+    const values = {
+      ...createLinodeRequestFactory.build({
+        interface_generation: 'linode',
+        private_ip: true,
+      }),
+      linodeInterfaces: [{ purpose: 'public', public: {} }],
+    } as LinodeCreateFormValues;
+
+    expect(
+      getLinodeCreatePayload(values, {
+        isShowingNewNetworkingUI: true,
+      }).private_ip
+    ).toBeUndefined();
+  });
+
+  it('should include private_ip when using Configuration Profile interfaces in the new networking UI', () => {
+    const values = {
+      ...createLinodeRequestFactory.build({
+        interface_generation: 'legacy_config',
+        private_ip: true,
+      }),
+      linodeInterfaces: [{ purpose: 'public', public: {} }],
+    } as LinodeCreateFormValues;
+
+    expect(
+      getLinodeCreatePayload(values, {
+        isShowingNewNetworkingUI: true,
+      }).private_ip
+    ).toBe(true);
+  });
+
   it('should remove the root_pass and authorized_keys properties when passwordLessLinodes is enabled and no root password or SSH keys are provided', () => {
     const values = {
       ...createLinodeRequestFactory.build({

@@ -1,5 +1,7 @@
+import { NotificationBanner } from '@akamai/cds-components/react';
+import { Spacing } from '@akamai/cds-tokens';
 import { useDatabaseCredentialsMutation } from '@linode/queries';
-import { ActionsPanel, Notice, Typography } from '@linode/ui';
+import { ActionsPanel, Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
@@ -59,7 +61,13 @@ export const DatabaseSettingsResetPasswordDialog: React.FC<Props> = (props) => {
       open={open}
       title="Reset Root Password"
     >
-      {error ? <Notice variant="error">{error[0].reason}</Notice> : undefined}
+      {error ? (
+        <NotificationBanner
+          style={{ marginBottom: Spacing.S16 }}
+          text={error[0].reason}
+          type="error"
+        />
+      ) : undefined}
       <Typography>
         After resetting your root password, you can view your new password on
         the database cluster summary page.

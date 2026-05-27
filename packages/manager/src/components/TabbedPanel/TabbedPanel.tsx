@@ -13,6 +13,7 @@ import type { SxProps, Theme } from '@mui/material/styles';
 
 export interface Tab {
   disabled?: boolean;
+  disabledMessage?: string;
   render: (props: any) => JSX.Element | null;
   title: string;
 }
@@ -23,6 +24,7 @@ interface TabbedPanelProps {
   copy?: string;
   docsLink?: JSX.Element;
   error?: JSX.Element | string;
+  flow?: 'database' | 'kubernetes' | 'linode';
   handleTabChange?: (index: number) => void;
   header: string;
   initTab?: number;
@@ -31,7 +33,6 @@ interface TabbedPanelProps {
   notice?: JSX.Element;
   rootClass?: string;
   sx?: SxProps<Theme>;
-  tabDisabledMessage?: string;
   tabs: Tab[];
   value?: number;
 }
@@ -41,6 +42,7 @@ const TabbedPanel = React.memo((props: TabbedPanelProps) => {
     copy,
     docsLink,
     error,
+    flow,
     handleTabChange,
     header,
     initTab,
@@ -65,7 +67,11 @@ const TabbedPanel = React.memo((props: TabbedPanelProps) => {
     if (tabIndex === undefined && initTab !== undefined) {
       setTabIndex(initTab);
     }
-  }, [initTab]);
+    // PR 176: ensure correct selected tab index when switching between postgres/mysql and valkey engine
+    if (flow === 'database' && tabs.length === 2) {
+      setTabIndex(0);
+    }
+  }, [initTab, tabs]);
 
   return (
     <Paper
@@ -100,8 +106,8 @@ const TabbedPanel = React.memo((props: TabbedPanelProps) => {
                 >
                   {tab.title}
                 </StyledTab>
-                {tab.disabled && props.tabDisabledMessage && (
-                  <Tooltip tabIndex={0} title={props.tabDisabledMessage}>
+                {tab.disabled && tab.disabledMessage && (
+                  <Tooltip tabIndex={0} title={tab.disabledMessage}>
                     <Box
                       sx={(theme) => ({
                         marginLeft: `-${theme.spacingFunction(12)}`,

@@ -9,6 +9,7 @@ import {
   isFolder,
   prefixArrayToString,
   tableUpdateAction,
+  uniqueByKey,
 } from './utilities';
 
 import type { ObjectStorageObject } from '@linode/api-v4/lib/object-storage';
@@ -245,6 +246,23 @@ describe('Object Storage utilities', () => {
       );
       expect(openConfirmationDialog).toHaveBeenCalledTimes(1);
       expect(handleSubmit).toHaveBeenCalledTimes(0);
+    });
+  });
+
+  describe('uniqueByKey', () => {
+    it('should remove objects from a list that contain duplicate values for a provided key', () => {
+      const listOfObjects = [
+        { name: 'John', age: 22 },
+        { name: 'Jane', age: 35 },
+        { name: 'John', age: 55 },
+      ];
+
+      expect(listOfObjects.length).toBe(3);
+
+      const filteredList = uniqueByKey(listOfObjects, 'name');
+
+      expect(filteredList.length).toBe(2);
+      expect(filteredList.find((person) => person.age === 55)).toBeFalsy();
     });
   });
 });

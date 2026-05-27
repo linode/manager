@@ -1,3 +1,28 @@
+## [2026-05-27] - v0.25.0
+
+
+### :
+
+
+### Removed:
+
+- Removed useLegacyRestoreFromBackupMutation ([#204](https://github.com/linode/manager/pull/204))
+- Removed useLegacyRestoreFromBackupMutation ([#204](https://github.com/linode/manager/pull/204))
+
+### Tech Stories:
+
+- Bump `@testing-library/jest-dom` from `6.4.2` to `6.9.1` ([#189](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/189/overview))
+
+### Upcoming Features:
+
+- Private Image Sharing: add context queries for tokens and useShareGroupTokensQuery() ([#114](https://github.com/linode/manager/pull/114))
+- Reserved IP: Add infinite query support for Reserved IPs to enable pagination in global search ([#130](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/130))
+- Private Image Sharing: Add the delete Share Group query ([#168](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/168/overview))
+- Private Image Sharing: Add Share group update mutation ([#187](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/187/overview))
+- Private Image Sharing: Add useShareGroupsAddMembersMutation() query ([#216](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/216/overview))
+- Private Image Sharing: Add the useDeleteShareGroupMemberMutation() query ([#228](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/228/overview))
+- Reserve IP - Fix data refresh on Linode and Node balancer details on Reserve/ Unreserve actions([#245](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/245/overview))
+
 ## [2026-04-30] - v0.24.0
 
 

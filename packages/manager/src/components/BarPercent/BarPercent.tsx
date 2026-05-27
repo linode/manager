@@ -97,7 +97,7 @@ const StyledLinearProgress = styled(LinearProgress, {
   },
   '& .MuiLinearProgress-barColorPrimary': {
     // Increase contrast if we have a buffer bar
-    backgroundColor: props.customColors
+    background: props.customColors
       ? getCustomColor(props.customColors, props.value ?? 0)
       : props.valueBuffer
         ? theme.tokens.color.Green[70]

@@ -171,7 +171,7 @@ describe('database resize', () => {
     });
 
     it('when a plan is selected, resize button should be enabled and on click of it, it should show a confirmation dialog', async () => {
-      const { getByRole, getByTestId } = renderWithTheme(
+      const { getByTestId } = renderWithTheme(
         <DatabaseDetailContext.Provider
           value={{ database: mockDatabase, engine, isResizeEnabled }}
         >
@@ -195,7 +195,7 @@ describe('database resize', () => {
 
       await userEvent.click(resizeButton as HTMLButtonElement);
 
-      const dialogElement = getByRole('dialog');
+      const dialogElement = getByTestId('drawer');
       expect(dialogElement).toBeInTheDocument();
       expect(dialogElement).toHaveTextContent(
         `Resize Database Cluster ${mockDatabase.label}?`

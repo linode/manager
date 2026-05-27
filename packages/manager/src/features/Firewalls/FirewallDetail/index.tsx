@@ -30,7 +30,6 @@ import { useFlags } from 'src/hooks/useFlags';
 import { useSecureVMNoticesEnabled } from 'src/hooks/useSecureVMNoticesEnabled';
 import { useTabs } from 'src/hooks/useTabs';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
-import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
 import {
   FIREWALL_DEFAULT_ENTITY_TO_READABLE_NAME,
@@ -58,15 +57,13 @@ export const FirewallDetail = () => {
   const flags = useFlags();
   const [isGenerateDialogOpen, setIsGenerateDialogOpen] = React.useState(false);
 
-  const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
-
   const secureVMFirewallBanner =
     (secureVMNoticesEnabled && flags.secureVmCopy) ?? false;
 
   const firewallId = Number(id);
 
   const { data: firewallSettings } = useFirewallSettingsQuery({
-    enabled: isLinodeInterfacesEnabled,
+    enabled: true,
   });
 
   const defaultEntities =
@@ -88,7 +85,6 @@ export const FirewallDetail = () => {
       } else if (device.entity.type === 'nodebalancer') {
         acc.nodebalancerCount += 1;
       } else if (
-        isLinodeInterfacesEnabled &&
         device.entity.type === 'linode_interface' &&
         device.entity.parent_entity
       ) {
@@ -192,36 +188,32 @@ export const FirewallDetail = () => {
           {...secureVMFirewallBanner.firewallDetails}
         />
       )}
-      {isLinodeInterfacesEnabled &&
-        defaultEntities &&
-        defaultEntities.length > 0 && (
-          <Paper
-            sx={(theme) => ({
-              alignItems: 'center',
-              columnGap: 1,
-              display: 'flex',
-              flexWrap: 'wrap',
-              margin: `${theme.spacingFunction(8)} 0`,
-              padding: `${theme.spacingFunction(8)} ${theme.spacingFunction(
-                16
-              )}`,
-              rowGap: 1,
-            })}
+      {defaultEntities && defaultEntities.length > 0 && (
+        <Paper
+          sx={(theme) => ({
+            alignItems: 'center',
+            columnGap: 1,
+            display: 'flex',
+            flexWrap: 'wrap',
+            margin: `${theme.spacingFunction(8)} 0`,
+            padding: `${theme.spacingFunction(8)} ${theme.spacingFunction(16)}`,
+            rowGap: 1,
+          })}
+        >
+          <Typography
+            sx={(theme) => ({ marginRight: theme.spacingFunction(8) })}
           >
-            <Typography
-              sx={(theme) => ({ marginRight: theme.spacingFunction(8) })}
-            >
-              <strong>Default</strong>
-            </Typography>
-            {defaultEntities.map((defaultEntity) => (
-              <Chip
-                key={defaultEntity}
-                label={FIREWALL_DEFAULT_ENTITY_TO_READABLE_NAME[defaultEntity]}
-                size="small"
-              />
-            ))}
-          </Paper>
-        )}
+            <strong>Default</strong>
+          </Typography>
+          {defaultEntities.map((defaultEntity) => (
+            <Chip
+              key={defaultEntity}
+              label={FIREWALL_DEFAULT_ENTITY_TO_READABLE_NAME[defaultEntity]}
+              size="small"
+            />
+          ))}
+        </Paper>
+      )}
       <Tabs index={tabIndex} onChange={handleTabChange}>
         <TanStackTabLinkList tabs={tabs} />
         <React.Suspense fallback={<SuspenseLoader />}>

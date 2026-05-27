@@ -12,17 +12,10 @@ const queryMocks = vi.hoisted(() => ({
   userPermissions: vi.fn(() => ({
     data: { update_firewall: false, delete_firewall: false },
   })),
-  useIsLinodeInterfacesEnabled: vi.fn(() => ({
-    data: { isLinodeInterfacesEnabled: false },
-  })),
 }));
 
 vi.mock('src/features/IAM/hooks/usePermissions', () => ({
   usePermissions: queryMocks.userPermissions,
-}));
-
-vi.mock('src/utilities/linodes', () => ({
-  useIsLinodeInterfacesEnabled: queryMocks.useIsLinodeInterfacesEnabled,
 }));
 
 describe('FirewallActionMenu', () => {

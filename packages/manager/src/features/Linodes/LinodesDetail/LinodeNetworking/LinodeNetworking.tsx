@@ -3,15 +3,12 @@ import { CircleProgress, ErrorState, Stack } from '@linode/ui';
 import { useParams } from '@tanstack/react-router';
 import React from 'react';
 
-import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
-
 import { LinodeFirewalls } from './LinodeFirewalls/LinodeFirewalls';
 import { LinodeInterfaces } from './LinodeInterfaces/LinodeInterfaces';
 import { LinodeIPAddresses } from './LinodeIPAddresses';
 import { LinodeNetworkingSummaryPanel } from './NetworkingSummaryPanel/NetworkingSummaryPanel';
 
 export const LinodeNetworking = () => {
-  const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
   const { linodeId } = useParams({ from: '/linodes/$linodeId' });
   const id = Number(linodeId);
 
@@ -25,8 +22,7 @@ export const LinodeNetworking = () => {
     return <ErrorState errorText={error[0].reason} />;
   }
 
-  const showInterfacesTable =
-    isLinodeInterfacesEnabled && linode.interface_generation === 'linode';
+  const showInterfacesTable = linode.interface_generation === 'linode';
 
   const showFirewallsTable =
     !linode.interface_generation ||

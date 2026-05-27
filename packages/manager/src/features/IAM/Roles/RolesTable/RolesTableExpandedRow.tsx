@@ -1,5 +1,4 @@
-import { useTheme } from '@mui/material';
-import Paper from '@mui/material/Paper';
+import { Spacing } from '@akamai/cds-tokens';
 import * as React from 'react';
 
 import { Permissions } from 'src/features/IAM/Shared/Permissions/Permissions';
@@ -11,17 +10,15 @@ interface Props {
 }
 
 export const RolesTableExpandedRow = ({ permissions }: Props) => {
-  const theme = useTheme();
-
   return (
-    <Paper
-      sx={{
-        backgroundColor: 'transparent',
-        padding: `${theme.tokens.spacing.S12} ${theme.tokens.spacing.S8}`,
-        width: '100%',
+    <div
+      style={{
+        padding: Spacing.S8,
+        paddingBottom: Spacing.S12,
+        paddingTop: Spacing.S12,
       }}
     >
       <Permissions permissions={permissions} />
-    </Paper>
+    </div>
   );
 };

@@ -1,5 +1,6 @@
+import { NotificationBanner } from '@akamai/cds-components/react';
 import { useAccountUser, useUserRoles } from '@linode/queries';
-import { Notice, Stack } from '@linode/ui';
+import { Stack } from '@linode/ui';
 import { useParams } from '@tanstack/react-router';
 import React from 'react';
 
@@ -9,10 +10,7 @@ import { NotFound } from 'src/features/IAM/Shared/NotFound/NotFound';
 
 import { usePermissions } from '../../hooks/usePermissions';
 import { CircleProgress } from '../../Shared/CircleProgress/CircleProgress';
-import { DeleteUserPanel } from './DeleteUserPanel';
 import { UserDetailsPanel } from './UserDetailsPanel';
-import { UserEmailPanel } from './UserEmailPanel';
-import { UsernamePanel } from './UsernamePanel';
 
 export const UserProfile = () => {
   const { username } = useParams({ from: '/iam/users/$username' });
@@ -40,9 +38,10 @@ export const UserProfile = () => {
     !isLoadingPermissions
   ) {
     return (
-      <Notice variant="error">
-        You do not have permission to view this user&apos;s details.
-      </Notice>
+      <NotificationBanner
+        text="You do not have permission to view this user's details."
+        type="error"
+      />
     );
   }
 
@@ -61,15 +60,10 @@ export const UserProfile = () => {
         spacing={2}
         sx={(theme) => ({ marginTop: theme.tokens.spacing.S16 })}
       >
-        <UserDetailsPanel activeUser={user} assignedRoles={assignedRoles} />
-        <UsernamePanel
+        <UserDetailsPanel
           activeUser={user}
-          canUpdateUser={permissions?.update_user}
-        />
-        <UserEmailPanel activeUser={user} />
-        <DeleteUserPanel
-          activeUser={user}
-          canDeleteUser={permissions?.delete_user}
+          assignedRoles={assignedRoles}
+          permissions={permissions}
         />
       </Stack>
     </>

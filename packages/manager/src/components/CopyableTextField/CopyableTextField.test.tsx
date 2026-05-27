@@ -1,4 +1,4 @@
-import { downloadFile } from '@linode/utilities';
+import { downloadFile } from '@akamai/compute-ui-core/browser';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
@@ -8,8 +8,8 @@ import { CopyableTextField } from './CopyableTextField';
 
 import type { CopyableTextFieldProps } from './CopyableTextField';
 
-vi.mock('@linode/utilities', async () => ({
-  ...(await vi.importActual('@linode/utilities')),
+vi.mock('@akamai/compute-ui-core/browser', async () => ({
+  ...(await vi.importActual('@akamai/compute-ui-core/browser')),
   downloadFile: vi.fn(),
 }));
 

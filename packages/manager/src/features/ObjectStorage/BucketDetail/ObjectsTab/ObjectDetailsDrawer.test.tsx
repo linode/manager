@@ -25,7 +25,7 @@ vi.mock('@linode/api-v4/lib/object-storage/objects', async () => {
 
 const props: ObjectDetailsDrawerProps = {
   bucketName: 'my-bucket',
-  clusterId: 'cluster-id',
+  regionId: 'region-id',
   displayName: 'my-image.png',
   lastModified: '2019-12-31T23:59:59Z',
   name: 'my-dir/my-image.png',

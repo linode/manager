@@ -13,8 +13,12 @@ import {
   PRICE_ERROR_TOOLTIP_TEXT,
   UNKNOWN_PRICE,
 } from 'src/utilities/pricing/constants';
-import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/dynamicPricing';
 import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
+import {
+  formatPrice,
+  getLabelForInterval,
+} from 'src/utilities/pricing/priceInterval';
+import { useComputePricing } from 'src/utilities/pricing/useComputePricing';
 
 import { DisabledPlanSelectionTooltip } from './DisabledPlanSelectionTooltip';
 import { StyledChip, StyledRadioCell } from './PlanSelection.styles';
@@ -68,7 +72,12 @@ export const PlanSelection = (props: PlanSelectionProps) => {
   } = plan;
 
   const isSamePlan = plan.heading === currentPlanHeading;
-  const isGPU = plan.class === 'gpu';
+
+  // Pass plan.id so the LD flag's activeBillingPlanMatchers can scope the billing mode
+  // to specific plan classes (e.g. G8, GPU) without affecting others.
+  // This means different rows in the same table can have different billing modes at the same time —
+  // scoped plans resolve to 'hourly' while all other plans fall back to 'monthly'.
+  const { billing } = useComputePricing(plan.id);
 
   const { data: linode } = useLinodeQuery(
     linodeID ?? -1,
@@ -81,9 +90,32 @@ export const PlanSelection = (props: PlanSelectionProps) => {
   const price: PriceObject | undefined = !isDatabaseFlow
     ? getLinodeRegionPrice(plan, selectedRegionId)
     : plan.price;
-  plan.subHeadings[0] = `$${renderMonthlyPriceToCorrectDecimalPlace(
-    price?.monthly
-  )}/mo ($${price?.hourly ?? UNKNOWN_PRICE}/hr)`;
+
+  const getSubHeading = (price: PriceObject | undefined): string => {
+    const monthlyLabel = getLabelForInterval('monthly', 'short');
+    const hourlyLabel = getLabelForInterval('hourly', 'short');
+    const formattedHourly = `$${formatPrice(price?.hourly)}/${hourlyLabel}`;
+    const formattedMonthly = `$${formatPrice(price?.monthly)}/${monthlyLabel}`;
+    const hasMonthlyPrice = typeof price?.monthly === 'number';
+
+    if (billing === 'hourly') {
+      // Do not show monthly price in hourly billing mode when it is null.
+      // Even though formatPrice returns UNKNOWN_PRICE for null values,
+      // we avoid displaying it because monthly pricing is not applicable here.
+      if (!hasMonthlyPrice) {
+        return formattedHourly;
+      }
+      return `${formattedMonthly} (${formattedHourly})`;
+    }
+
+    if (billing === 'monthly') {
+      return `${formattedMonthly} (${formattedHourly})`;
+    }
+
+    return '';
+  };
+
+  plan.subHeadings[0] = getSubHeading(price);
 
   const rowIsDisabled =
     (!isDatabaseFlow && isSamePlan) ||
@@ -132,6 +164,20 @@ export const PlanSelection = (props: PlanSelectionProps) => {
     plan.id.includes('dedicated-edge') || plan.id.includes('nanode-edge');
 
   const networkOutGbps = plan.network_out && plan.network_out / 1000;
+
+  const renderMonthlyPriceCell = () => {
+    // Hourly-scoped plans are billed purely by the hour and have no monthly commitment,
+    // so the monthly cell is always "N/A" - even when the API happens to return a monthly value.
+    if (billing === 'hourly') {
+      return 'N/A'; // Not applicable in Hourly billing mode.
+    }
+    // Non-scoped plans use monthly billing, so display the monthly price when it is available.
+    if (typeof price?.monthly === 'number') {
+      return <Currency quantity={price.monthly} useAdaptivePrecision />;
+    }
+    // Monthly price is unexpectedly absent for a monthly-billed plan - show the error/unknown price.
+    return <Currency quantity={UNKNOWN_PRICE} />;
+  };
 
   return (
     <React.Fragment key={`tabbed-panel-${idx}`}>
@@ -193,22 +239,26 @@ export const PlanSelection = (props: PlanSelectionProps) => {
           </TableCell>
           <TableCell
             data-qa-monthly
-            errorCell={typeof price?.monthly !== 'number'}
-            errorText={!price?.monthly ? PRICE_ERROR_TOOLTIP_TEXT : undefined}
+            errorCell={
+              billing === 'monthly' && typeof price?.monthly !== 'number'
+            }
+            errorText={
+              billing === 'monthly' && !price?.monthly
+                ? PRICE_ERROR_TOOLTIP_TEXT
+                : undefined
+            }
           >
-            {' '}
-            ${renderMonthlyPriceToCorrectDecimalPlace(price?.monthly)}
+            {renderMonthlyPriceCell()}
           </TableCell>
           <TableCell
             data-qa-hourly
             errorCell={typeof price?.hourly !== 'number'}
             errorText={!price?.hourly ? PRICE_ERROR_TOOLTIP_TEXT : undefined}
           >
-            {isGPU ? (
-              <Currency quantity={price?.hourly ?? UNKNOWN_PRICE} />
-            ) : (
-              `$${price?.hourly ?? UNKNOWN_PRICE}`
-            )}
+            <Currency
+              quantity={price?.hourly ?? UNKNOWN_PRICE}
+              useAdaptivePrecision
+            />
           </TableCell>
           <TableCell center data-qa-ram noWrap>
             {convertMegabytesTo(plan.memory, true)}

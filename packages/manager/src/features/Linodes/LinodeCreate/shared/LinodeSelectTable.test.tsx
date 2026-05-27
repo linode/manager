@@ -1,6 +1,9 @@
-import { linodeFactory } from '@linode/utilities';
+import { linodeFactory, regionFactory } from '@linode/utilities';
+import { waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { http, HttpResponse } from 'msw';
 import React from 'react';
+import { useFormContext } from 'react-hook-form';
 
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { server } from 'src/mocks/testServer';
@@ -14,6 +17,9 @@ import { getLinodeXFilter, LinodeSelectTable } from './LinodeSelectTable';
 beforeAll(() => mockMatchMedia());
 
 const queryMocks = vi.hoisted(() => ({
+  useIsDiskEncryptionFeatureEnabled: vi.fn(() => ({
+    isDiskEncryptionFeatureEnabled: false,
+  })),
   useNavigate: vi.fn(),
   useParams: vi.fn(),
   useSearch: vi.fn(),
@@ -23,6 +29,11 @@ const queryMocks = vi.hoisted(() => ({
       create_linode: true,
     },
   })),
+}));
+
+vi.mock('src/components/Encryption/utils', () => ({
+  useIsDiskEncryptionFeatureEnabled:
+    queryMocks.useIsDiskEncryptionFeatureEnabled,
 }));
 
 vi.mock('src/features/IAM/hooks/usePermissions', () => ({
@@ -116,5 +127,107 @@ describe('Linode Select Table', () => {
 
     expect(radio).toBeEnabled();
     expect(radio).toBeChecked();
+  });
+
+  it('should set disk_encryption to enabled when selecting a linode in a region that supports it', async () => {
+    queryMocks.useIsDiskEncryptionFeatureEnabled.mockReturnValue({
+      isDiskEncryptionFeatureEnabled: true,
+    });
+
+    const region = regionFactory.build({
+      capabilities: ['Linodes', 'Disk Encryption'],
+      site_type: 'core',
+    });
+
+    const linode = linodeFactory.build({
+      id: 1,
+      label: 'my-encrypted-linode',
+      region: region.id,
+    });
+
+    server.use(
+      http.get('*/v4*/regions', () => {
+        return HttpResponse.json(makeResourcePage([region]));
+      }),
+      http.get('*/linode/instances*', () => {
+        return HttpResponse.json(makeResourcePage([linode]));
+      })
+    );
+
+    // Helper to observe react-hook-form state since renderWithThemeAndHookFormContext doesn't expose form methods
+    const FormValueDisplay = () => {
+      const { watch } = useFormContext();
+      return (
+        <span data-testid="disk-encryption">{watch('disk_encryption')}</span>
+      );
+    };
+
+    const { findByLabelText, getByTestId } = renderWithThemeAndHookFormContext({
+      component: (
+        <>
+          <LinodeSelectTable />
+          <FormValueDisplay />
+        </>
+      ),
+    });
+
+    const radio = await findByLabelText(linode.label);
+    await userEvent.click(radio);
+
+    await waitFor(() => {
+      expect(getByTestId('disk-encryption')).toHaveTextContent('enabled');
+    });
+  });
+
+  it('should not set disk_encryption to enabled when selecting a linode in a region that does not support it', async () => {
+    queryMocks.useIsDiskEncryptionFeatureEnabled.mockReturnValue({
+      isDiskEncryptionFeatureEnabled: true,
+    });
+
+    const region = regionFactory.build({
+      capabilities: ['Linodes'],
+      site_type: 'core',
+    });
+
+    const linode = linodeFactory.build({
+      id: 1,
+      label: 'my-unencrypted-linode',
+      region: region.id,
+    });
+
+    server.use(
+      http.get('*/v4*/regions', () => {
+        return HttpResponse.json(makeResourcePage([region]));
+      }),
+      http.get('*/linode/instances*', () => {
+        return HttpResponse.json(makeResourcePage([linode]));
+      })
+    );
+
+    const FormValueDisplay = () => {
+      const { watch } = useFormContext();
+      return (
+        <span data-testid="disk-encryption">
+          {watch('disk_encryption') ?? 'disabled'}
+        </span>
+      );
+    };
+
+    const { findByLabelText, getByTestId } = renderWithThemeAndHookFormContext({
+      component: (
+        <>
+          <LinodeSelectTable />
+          <FormValueDisplay />
+        </>
+      ),
+    });
+
+    const radio = await findByLabelText(linode.label);
+    await userEvent.click(radio);
+
+    // disk_encryption should remain 'disabled' since the region lacks the capability
+    await waitFor(() => {
+      expect(getByTestId('disk-encryption')).toHaveTextContent('disabled');
+    });
   });
 });

@@ -65,12 +65,12 @@ describe('DatabaseSettings Component', () => {
 
   it('should render a Paper component with headers for Manage Access, Resetting the Root password, and Deleting the Cluster', async () => {
     spy.mockReturnValue(v2GA());
-    const { container, getAllByRole } = renderWithTheme(
+    const { getAllByRole, getByTestId } = renderWithTheme(
       <DatabaseDetailContext.Provider value={{ database, engine }}>
         <DatabaseSettings />
       </DatabaseDetailContext.Provider>
     );
-    const paper = container.querySelector('.MuiPaper-root');
+    const paper = getByTestId('data-qa-paper');
     expect(paper).not.toBeNull();
     const headings = getAllByRole('heading');
     expect(headings[0].textContent).toBe('Suspend Cluster');
@@ -309,7 +309,7 @@ describe('DatabaseSettings Component', () => {
       isUserNewBeta: false,
     });
 
-    const { container, getAllByRole } = renderWithTheme(
+    const { getAllByRole, getByTestId } = renderWithTheme(
       <DatabaseDetailContext.Provider
         value={{ database: mockNewDatabase, engine }}
       >
@@ -317,7 +317,7 @@ describe('DatabaseSettings Component', () => {
       </DatabaseDetailContext.Provider>,
       { flags }
     );
-    const paper = container.querySelector('.MuiPaper-root');
+    const paper = getByTestId('data-qa-paper');
     expect(paper).not.toBeNull();
     const headings = getAllByRole('heading');
 

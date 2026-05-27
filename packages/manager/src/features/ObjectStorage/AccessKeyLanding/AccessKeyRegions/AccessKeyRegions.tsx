@@ -1,5 +1,5 @@
+import { sortByString } from '@akamai/compute-ui-core/formatting';
 import { useIsGeckoEnabled } from '@linode/shared';
-import { sortByString } from '@linode/utilities';
 import * as React from 'react';
 
 import { RegionMultiSelect } from 'src/components/RegionSelect/RegionMultiSelect';

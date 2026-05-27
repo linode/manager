@@ -27,11 +27,13 @@ import {
   StyledImageTableHeader,
   StyledImageTableSubheader,
 } from '../ImageLibrary/ImagesTable.styles';
+import { JoinedOrRequestedGroupRow } from './JoinedOrRequestedGroupRow';
 import { ShareGroupRow } from './ShareGroupRow';
 import { StyledShareGroupsTableContainer } from './ShareGroupTable.styles';
 
+import type { Handlers } from './ShareGroupActionMenu';
 import type { ShareGroupsViewTableColConfig } from './shareGroupsTabsConfig';
-import type { APIError, Sharegroup } from '@linode/api-v4';
+import type { APIError, Sharegroup, SharegroupToken } from '@linode/api-v4';
 import type { Order } from 'src/hooks/useOrderV2';
 
 interface HeaderProps {
@@ -55,6 +57,7 @@ interface ShareGroupsTableProps {
   };
   error?: APIError[] | null;
   handleOrderChange: (newOrderBy: string, newOrder: Order) => void;
+  handlers?: Handlers;
   headerProps?: HeaderProps;
   order: Order;
   orderBy: string;
@@ -66,7 +69,7 @@ interface ShareGroupsTableProps {
     pageSize: number;
   };
   query?: string;
-  shareGroups: Sharegroup[];
+  shareGroups: Sharegroup[] | SharegroupToken[]; // Owned Groups use Sharegroup type, Joined Groups use SharegroupToken type
 }
 
 export const ShareGroupsTable = (props: ShareGroupsTableProps) => {
@@ -76,6 +79,7 @@ export const ShareGroupsTable = (props: ShareGroupsTableProps) => {
     shareGroups,
     query,
     handleOrderChange,
+    handlers,
     error,
     emptyMessage,
     order,
@@ -179,7 +183,7 @@ export const ShareGroupsTable = (props: ShareGroupsTableProps) => {
                     cell
                   );
                 })}
-                <TableHeaderCell className="action-column" />
+                <TableHeaderCell />
               </TableRow>
             </TableHead>
             <TableBody>
@@ -221,9 +225,27 @@ export const ShareGroupsTable = (props: ShareGroupsTableProps) => {
                 </TableRow>
               )}
 
-              {shareGroups.map((sharegroup) => (
-                <ShareGroupRow key={sharegroup.id} shareGroup={sharegroup} />
-              ))}
+              {shareGroups.map((sharegroup) => {
+                const isJoinedOrRequestedGroup =
+                  'sharegroup_uuid' in sharegroup; // If the sharegroup has the property 'sharegroup_uuid', then it's a SharegroupToken which indicates a joined or requested group. Otherwise, it's a sharegroup which represents an owned group.
+
+                if (isJoinedOrRequestedGroup) {
+                  return (
+                    <JoinedOrRequestedGroupRow
+                      joinedGroup={sharegroup}
+                      key={sharegroup.token_uuid}
+                    />
+                  );
+                } else {
+                  return (
+                    <ShareGroupRow
+                      handlers={handlers}
+                      key={sharegroup.id}
+                      shareGroup={sharegroup}
+                    />
+                  );
+                }
+              })}
             </TableBody>
           </Table>
         </StyledShareGroupsTableContainer>

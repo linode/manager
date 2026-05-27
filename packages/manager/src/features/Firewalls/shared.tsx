@@ -1,10 +1,7 @@
+import { capitalize } from '@akamai/compute-ui-core/formatting';
 import { useAccount } from '@linode/queries';
 import { BetaChip, Box, Chip, NewFeatureChip, Tooltip } from '@linode/ui';
-import {
-  capitalize,
-  isFeatureEnabledV2,
-  truncateAndJoinList,
-} from '@linode/utilities';
+import { isFeatureEnabledV2, truncateAndJoinList } from '@linode/utilities';
 import React from 'react';
 
 import { Link } from 'src/components/Link';

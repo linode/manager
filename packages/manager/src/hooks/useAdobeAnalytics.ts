@@ -1,4 +1,4 @@
-import { loadScript } from '@linode/utilities';
+import { loadScript } from '@akamai/compute-ui-core/browser';
 import { useLocation } from '@tanstack/react-router';
 import React from 'react';
 

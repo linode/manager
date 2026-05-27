@@ -1,3 +1,4 @@
+import { pluralize } from '@akamai/compute-ui-core/formatting';
 import { enableManaged } from '@linode/api-v4/lib/managed';
 import { updateAccountSettingsData, useLinodesQuery } from '@linode/queries';
 import {
@@ -8,7 +9,6 @@ import {
   Stack,
   Typography,
 } from '@linode/ui';
-import { pluralize } from '@linode/utilities';
 import { useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
 

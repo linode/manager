@@ -4,7 +4,7 @@ import { AxiosHeaders } from 'axios';
 import { ACCESS_TOKEN, API_ROOT, DEFAULT_ERROR_MESSAGE } from 'src/constants';
 import { setErrors } from 'src/store/globalErrors/globalErrors.actions';
 
-import { clearAuthDataFromLocalStorage, redirectToLogin } from './OAuth/oauth';
+import { oauthClient } from './OAuth/oauthClient';
 import { getEnvLocalStorageOverrides, storage } from './utilities/storage';
 
 import type { ApplicationStore } from './store';
@@ -45,8 +45,8 @@ export const handleError = (
     window.location.pathname !== '/oauth/callback'
   ) {
     isRedirectingToLogin = true;
-    clearAuthDataFromLocalStorage();
-    redirectToLogin();
+    oauthClient.clearAuthDataFromStorage();
+    oauthClient.login();
   }
 
   const status: number = error.response?.status ?? 0;

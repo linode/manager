@@ -6,20 +6,20 @@ import type { AccessType, AccountEntity, EntityType } from '@linode/api-v4';
 type PlaceholderType = 'delegates' | AccessType;
 
 export const placeholderMap: Record<string, string> = {
-  account: 'Select Account',
-  database: 'Select Databases',
-  domain: 'Select Domains',
-  firewall: 'Select Firewalls',
-  image: 'Select Images',
-  linode: 'Select Linodes',
-  lkecluster: 'Select Kubernetes Clusters',
-  longview: 'Select Longviews',
-  nodebalancer: 'Select Nodebalancers',
-  placement_group: 'Select Placement Groups',
-  stackscript: 'Select Stackscripts',
-  volume: 'Select Volumes',
-  vpc: 'Select VPCs',
-  delegates: 'Select users',
+  account: 'Search Account',
+  database: 'Search Databases',
+  domain: 'Search Domains',
+  firewall: 'Search Firewalls',
+  image: 'Search Images',
+  linode: 'Search Linodes',
+  lkecluster: 'Search Kubernetes Clusters',
+  longview: 'Search Longviews',
+  nodebalancer: 'Search Nodebalancers',
+  placement_group: 'Search Placement Groups',
+  stackscript: 'Search Stackscripts',
+  volume: 'Search Volumes',
+  vpc: 'Search VPCs',
+  delegates: 'Search users',
 };
 
 export const getCreateLinkForEntityType = (entityType: AccessType): string => {
@@ -47,11 +47,11 @@ export const getPlaceholder = (
 
   if (currentValueLength > 0 && currentValueLength >= possibleEntitiesLength) {
     const label = placeholderMap[type] || type;
-    const subject = label.startsWith('Select ') ? label.slice(7) : label;
+    const subject = label.startsWith('Search ') ? label.slice(7) : label;
     return `All ${subject} selected`;
   }
 
-  return placeholderMap[type] || 'Select';
+  return placeholderMap[type] || 'Search';
 };
 
 export const mapEntitiesToOptions = (

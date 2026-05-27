@@ -1,5 +1,5 @@
+import { truncateEnd } from '@akamai/compute-ui-core/formatting';
 import { CloseIcon } from '@linode/ui';
-import { truncateEnd } from '@linode/utilities';
 import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 

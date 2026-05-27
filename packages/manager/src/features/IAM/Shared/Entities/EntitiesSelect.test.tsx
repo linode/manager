@@ -1,5 +1,4 @@
-import { screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { fireEvent, screen, waitFor } from '@testing-library/react';
 import React from 'react';
 
 import { accountEntityFactory } from 'src/factories/accountEntities';
@@ -8,6 +7,13 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { EntitiesSelect } from './EntitiesSelect';
 
 import type { EntitiesOption } from '../types';
+
+// Remove the debounce delay so filter changes take effect synchronously.
+vi.mock('@linode/utilities', async () => {
+  const actual = await vi.importActual('@linode/utilities');
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return { ...actual, useDebouncedValue: (value: any) => value };
+});
 
 const queryMocks = vi.hoisted(() => ({
   useAllAccountEntities: vi.fn().mockReturnValue({}),
@@ -32,6 +38,15 @@ const mockEntities = [
     label: 'firewall-1',
     type: 'firewall',
   }),
+];
+
+const linodeEntities = [
+  accountEntityFactory.build({ id: 1, label: 'linode-1', type: 'linode' }),
+  accountEntityFactory.build({ id: 2, label: 'linode-2', type: 'linode' }),
+];
+const bothSelected: EntitiesOption[] = [
+  { label: 'linode-1', value: 1 },
+  { label: 'linode-2', value: 2 },
 ];
 
 const mockOnChange = vi.fn();
@@ -85,7 +100,7 @@ describe('Entities', () => {
       data: mockEntities,
     });
 
-    renderWithTheme(
+    const { container } = renderWithTheme(
       <EntitiesSelect
         access="entity_access"
         mode="assign-role"
@@ -96,12 +111,9 @@ describe('Entities', () => {
     );
 
     expect(screen.getByText('Entities')).toBeVisible();
-
-    // Verify comboboxes exist
-    const autocomplete = screen.getAllByRole('combobox');
-    expect(autocomplete).toHaveLength(1);
-    expect(autocomplete[0]).toBeVisible();
-    expect(autocomplete[0]).toHaveAttribute('placeholder', 'None');
+    // SelectionPanel renders a cds-search-field instead of a combobox
+    expect(container.querySelector('cds-search-field')).toBeInTheDocument();
+    // No image entities in mockEntities, so the warning link is shown
     const link = screen.getByRole('link', { name: /Create an Image Entity/i });
     expect(link).toBeVisible();
   });
@@ -111,7 +123,7 @@ describe('Entities', () => {
       data: mockEntities,
     });
 
-    renderWithTheme(
+    const { container } = renderWithTheme(
       <EntitiesSelect
         access="entity_access"
         mode="assign-role"
@@ -122,17 +134,12 @@ describe('Entities', () => {
     );
 
     expect(screen.getByText('Entities')).toBeVisible();
-
-    // Verify comboboxes exist
-    const autocomplete = screen.getAllByRole('combobox');
-    expect(autocomplete).toHaveLength(1);
-    expect(autocomplete[0]).toBeVisible();
-    expect(autocomplete[0]).toHaveAttribute('placeholder', 'None');
+    expect(container.querySelector('cds-search-field')).toBeInTheDocument();
     const link = screen.getByRole('link', { name: /Create a VPC Entity/i });
     expect(link).toBeVisible();
   });
 
-  it('renders correct options in Autocomplete dropdown when it is an entity access', async () => {
+  it('renders entity options in the table when it is an entity access', () => {
     queryMocks.useAllAccountEntities.mockReturnValue({
       data: mockEntities,
     });
@@ -148,13 +155,11 @@ describe('Entities', () => {
     );
 
     expect(screen.getByText('Entities')).toBeVisible();
-
-    const autocomplete = screen.getAllByRole('combobox')[0];
-    await userEvent.click(autocomplete);
+    // firewall-1 appears directly as a table row (no click needed)
     expect(screen.getByText('firewall-1')).toBeVisible();
   });
 
-  it('updates selected options when Autocomplete value changes when it is an entity access', async () => {
+  it('renders entity options in the table when it is an entity access', () => {
     queryMocks.useAllAccountEntities.mockReturnValue({
       data: mockEntities,
     });
@@ -169,13 +174,12 @@ describe('Entities', () => {
       />
     );
 
-    const autocomplete = screen.getAllByRole('combobox')[0];
-    await userEvent.click(autocomplete);
+    // linode appears directly as a table row
     expect(screen.getByText('linode')).toBeVisible();
   });
 
-  it('renders Autocomplete as readonly when mode is "change-role"', () => {
-    renderWithTheme(
+  it('disables interactions when mode is "change-role"', () => {
+    const { container } = renderWithTheme(
       <EntitiesSelect
         access="entity_access"
         mode="change-role"
@@ -185,9 +189,11 @@ describe('Entities', () => {
       />
     );
 
-    const autocomplete = screen.getByRole('combobox');
-    expect(autocomplete).toBeVisible();
-    expect(autocomplete).toHaveAttribute('aria-expanded', 'false');
+    // In readonly mode the search field is disabled
+    const searchField = container.querySelector<
+      HTMLElement & { disabled?: boolean }
+    >('cds-search-field');
+    expect(searchField?.disabled).toBe(true);
   });
 
   it('displays errorText when provided', () => {
@@ -206,5 +212,75 @@ describe('Entities', () => {
 
     // Verify that the error message is displayed
     expect(screen.getByText(errorMessage)).toBeVisible();
+  });
+
+  it('filters visible rows by search text when the toggle is active', async () => {
+    queryMocks.useAllAccountEntities.mockReturnValue({ data: linodeEntities });
+    const { container } = renderWithTheme(
+      <EntitiesSelect
+        access="entity_access"
+        mode="assign-role"
+        onChange={mockOnChange}
+        type="linode"
+        value={bothSelected}
+      />
+    );
+
+    // Enable "Show selected only"
+    const showSelectedOnlyCheckbox = container.querySelector<
+      HTMLElement & { checked?: boolean }
+    >('cds-checkbox');
+    showSelectedOnlyCheckbox!.dispatchEvent(
+      new CustomEvent('change', { bubbles: true, detail: true })
+    );
+
+    // Wait for state to propagate
+    await waitFor(() => expect(showSelectedOnlyCheckbox?.checked).toBe(true));
+
+    // Both rows visible before any filter
+    expect(screen.getByText('linode-1')).toBeVisible();
+    expect(screen.getByText('linode-2')).toBeVisible();
+
+    // Type a filter targeting only linode-1
+    const searchField = container.querySelector('cds-search-field');
+    fireEvent.change(searchField!, { target: { value: 'linode-1' } });
+
+    // With useDebouncedValue mocked as pass-through, filter applies immediately
+    await waitFor(() => {
+      expect(screen.getByText('linode-1')).toBeVisible();
+      expect(screen.queryByText('linode-2')).not.toBeInTheDocument();
+    });
+  });
+
+  it('deactivates the toggle when "Clear all" empties the selection', async () => {
+    queryMocks.useAllAccountEntities.mockReturnValue({ data: linodeEntities });
+    const { container } = renderWithTheme(
+      <EntitiesSelect
+        access="entity_access"
+        mode="assign-role"
+        onChange={mockOnChange}
+        type="linode"
+        value={bothSelected}
+      />
+    );
+
+    // Enable "Show selected only"
+    const showSelectedOnlyCheckbox = container.querySelector<
+      HTMLElement & { checked?: boolean }
+    >('cds-checkbox');
+    showSelectedOnlyCheckbox!.dispatchEvent(
+      new CustomEvent('change', { bubbles: true, detail: true })
+    );
+
+    await waitFor(() => expect(showSelectedOnlyCheckbox?.checked).toBe(true));
+
+    // Click "Clear all" (synchronous fireEvent avoids async-act issues)
+    fireEvent.click(screen.getByText('Clear all'));
+
+    // onChange must have been called to clear the selection
+    expect(mockOnChange).toHaveBeenCalledWith([]);
+
+    // The toggle must be automatically deactivated
+    await waitFor(() => expect(showSelectedOnlyCheckbox?.checked).toBeFalsy());
   });
 });

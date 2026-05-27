@@ -1,5 +1,6 @@
+import { parseAPIDate } from '@akamai/compute-ui-core/datetime';
+import { pluralize } from '@akamai/compute-ui-core/formatting';
 import { Button, Tooltip, Typography } from '@linode/ui';
-import { pluralize } from '@linode/utilities';
 import copy from 'copy-to-clipboard';
 import { DateTime } from 'luxon';
 import * as React from 'react';
@@ -9,7 +10,6 @@ import {
   sendEntityTransferCopyDraftEmailEvent,
   sendEntityTransferCopyTokenEvent,
 } from 'src/utilities/analytics/customEventAnalytics';
-import { parseAPIDate } from 'src/utilities/date';
 
 import {
   StyledCopyableTextField,

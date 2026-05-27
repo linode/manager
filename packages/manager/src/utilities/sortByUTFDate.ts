@@ -1,4 +1,4 @@
-import { parseAPIDate } from 'src/utilities/date';
+import { parseAPIDate } from '@akamai/compute-ui-core/datetime';
 
 type SortOrder = 'asc' | 'desc';
 

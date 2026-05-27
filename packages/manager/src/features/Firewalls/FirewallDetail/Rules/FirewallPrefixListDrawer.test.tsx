@@ -1,4 +1,4 @@
-import { capitalize } from '@linode/utilities';
+import { capitalize } from '@akamai/compute-ui-core/formatting';
 import { within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
@@ -23,11 +23,12 @@ vi.mock('@linode/queries', async () => {
   return {
     ...actual,
     useAllFirewallPrefixListsQuery: queryMocks.useAllFirewallPrefixListsQuery,
+    useProfile: vi.fn().mockReturnValue({ data: { timezone: 'utc' } }),
   };
 });
 
-vi.mock('@linode/utilities', async () => {
-  const actual = await vi.importActual('@linode/utilities');
+vi.mock('@akamai/compute-ui-core/datetime', async () => {
+  const actual = await vi.importActual('@akamai/compute-ui-core/datetime');
   return {
     ...actual,
     getUserTimezone: vi.fn().mockReturnValue('utc'),

@@ -1,5 +1,5 @@
+import { sortByString } from '@akamai/compute-ui-core/formatting';
 import { Typography } from '@linode/ui';
-import { sortByString } from '@linode/utilities';
 import { Grid } from '@mui/material';
 import * as React from 'react';
 

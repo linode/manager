@@ -336,7 +336,7 @@ describe('For Owned groups', () => {
     queryMocks.onSearchWithText = 'new-search';
 
     const { getByText } = renderWithTheme(
-      <ShareGroupsView type="joined-groups" />
+      <ShareGroupsView type="owned-groups" />
     );
 
     await user.click(getByText('trigger-search'));
@@ -345,7 +345,7 @@ describe('For Owned groups', () => {
     const navigatePayload = queryMocks.navigate.mock.calls[0][0];
     expect(navigatePayload.to).toBe('/images/share-groups/$shareGroupsType');
     expect(navigatePayload.params).toEqual({
-      shareGroupsType: 'joined-groups',
+      shareGroupsType: 'owned-groups',
     });
 
     expect(

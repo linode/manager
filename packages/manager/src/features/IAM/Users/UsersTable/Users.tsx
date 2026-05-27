@@ -1,7 +1,7 @@
-import { Select } from '@akamai/cds-components/react';
+import { Button, Icon, Select, Tooltip } from '@akamai/cds-components/react';
+import { Spacing } from '@akamai/cds-tokens';
 import { useAccountUsers } from '@linode/queries';
 import { getAPIFilterFromQuery } from '@linode/search';
-import { Button, Paper } from '@linode/ui';
 import { Grid, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { useNavigate, useSearch } from '@tanstack/react-router';
@@ -22,6 +22,7 @@ import {
   IAM_DELEGATE_USERS_PENDO_IDS,
   IAM_PARENT_USERS_PENDO_IDS,
 } from '../../Shared/constants';
+import { Paper } from '../../Shared/Paper/Paper';
 import { UserDeleteConfirmation } from '../../Shared/UserDeleteConfirmation';
 import { CreateUserDrawer } from './CreateUserDrawer';
 import { UsersLandingTableBody } from './UsersLandingTableBody';
@@ -176,7 +177,7 @@ export const UsersLanding = () => {
   const canCreateUser = permissions.create_user;
   return (
     <React.Fragment>
-      <Paper sx={(theme) => ({ marginTop: theme.tokens.spacing.S16 })}>
+      <Paper marginTop={Spacing.S16}>
         <Grid
           container
           direction="row"
@@ -184,7 +185,7 @@ export const UsersLanding = () => {
           sx={{
             alignItems: 'center',
             justifyContent: 'space-between',
-            marginBottom: theme.tokens.spacing.S12,
+            marginBottom: Spacing.S12,
           }}
         >
           <Grid container direction="row" rowSpacing={1}>
@@ -232,25 +233,27 @@ export const UsersLanding = () => {
             )}
           </Grid>
           <Grid sx={{ alignSelf: 'flex-start' }}>
-            <Button
-              buttonType="primary"
-              data-pendo-id={
-                isDelegateUserType
-                  ? IAM_DELEGATE_USERS_PENDO_IDS.addUserButton
-                  : isChildUserType
-                    ? IAM_CHILD_USERS_PENDO_IDS.addUserButton
-                    : IAM_PARENT_USERS_PENDO_IDS.addUserButton
-              }
-              disabled={!canCreateUser}
-              onClick={() => setIsCreateDrawerOpen(true)}
-              tooltipText={
-                !canCreateUser
-                  ? 'You do not have permission to create other users.'
-                  : undefined
-              }
+            <Tooltip
+              disabled={canCreateUser}
+              tooltipPlacement="bottom"
+              tooltipText="You do not have permission to create other users."
             >
-              Add a User
-            </Button>
+              <Button
+                data-pendo-id={
+                  isDelegateUserType
+                    ? IAM_DELEGATE_USERS_PENDO_IDS.addUserButton
+                    : isChildUserType
+                      ? IAM_CHILD_USERS_PENDO_IDS.addUserButton
+                      : IAM_PARENT_USERS_PENDO_IDS.addUserButton
+                }
+                disabled={!canCreateUser}
+                onClick={() => setIsCreateDrawerOpen(true)}
+                variant="primary"
+              >
+                Add a User
+                {!canCreateUser && <Icon icon="info-outline" size="m" />}
+              </Button>
+            </Tooltip>
           </Grid>
         </Grid>
         <Table aria-label="List of Users" sx={{ tableLayout: 'fixed' }}>

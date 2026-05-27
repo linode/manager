@@ -1,5 +1,5 @@
+import { truncateEnd } from '@akamai/compute-ui-core/formatting';
 import { Tooltip, Typography } from '@linode/ui';
-import { truncateEnd } from '@linode/utilities';
 import * as React from 'react';
 import type { ComponentProps } from 'react';
 

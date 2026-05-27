@@ -1,13 +1,4 @@
-import { Box, Paper, styled, Typography } from '@linode/ui';
-
-export const StyledPaper = styled(Paper)(({ theme }) => ({
-  backgroundColor:
-    theme.name === 'light'
-      ? theme.tokens.color.Neutrals[5]
-      : theme.tokens.color.Neutrals[100],
-  marginTop: theme.tokens.spacing.S8,
-  padding: theme.tokens.spacing.S12,
-}));
+import { Box, styled, Typography } from '@linode/ui';
 
 export const StyledTitle = styled(Typography, {
   // Prevent the `showName` prop from being forwarded to the DOM.

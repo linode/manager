@@ -4,7 +4,7 @@ import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
 import { CustomFirewallFields } from './CustomFirewallFields';
 
-import type { LinodeCreateFormEventOptions } from 'src/utilities/analytics/types';
+import type { LinodeCreateFormEventOptions } from '@akamai/compute-ui-core/analytics';
 
 const props = {
   createFlow: undefined,

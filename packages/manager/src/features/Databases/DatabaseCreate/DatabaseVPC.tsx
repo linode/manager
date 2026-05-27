@@ -1,13 +1,13 @@
-import { useAllVPCsQuery, useRegionQuery } from '@linode/queries';
 import {
-  Autocomplete,
-  BetaChip,
-  Box,
+  Badge,
   Checkbox,
-  FormHelperText,
-  Notice,
-  Typography,
-} from '@linode/ui';
+  Icon,
+  NotificationBanner,
+  Tooltip,
+} from '@akamai/cds-components/react';
+import { Spacing } from '@akamai/cds-tokens';
+import { useAllVPCsQuery, useRegionQuery } from '@linode/queries';
+import { Autocomplete, Box, FormHelperText, Typography } from '@linode/ui';
 import * as React from 'react';
 import type { Control, UseFormSetValue, UseFormTrigger } from 'react-hook-form';
 import { Controller } from 'react-hook-form';
@@ -88,7 +88,15 @@ export const DatabaseVPC = (props: DatabaseVPCProps) => {
         })}
       >
         <Typography variant="h3">Assign a VPC</Typography>
-        {flags.databaseVpcBeta && <BetaChip />}
+        {flags.databaseVpcBeta && (
+          <Badge
+            color="neutral"
+            style={{ marginLeft: Spacing.S8 }}
+            variant="solid"
+          >
+            BETA
+          </Badge>
+        )}
       </Box>
       <Typography>
         Assign this cluster to an existing VPC.{' '}
@@ -167,16 +175,21 @@ export const DatabaseVPC = (props: DatabaseVPCProps) => {
               render={({ field, fieldState }) => (
                 <>
                   <Checkbox
-                    checked={field.value}
+                    checked={!!field.value}
                     data-testid="database-public-access-checkbox"
-                    onChange={(e, value) => {
-                      field.onChange(value ?? null);
+                    onChange={(e) => {
+                      field.onChange(e.detail);
                     }}
-                    text={'Enable public access'}
-                    toolTipText={
-                      'Adds a public endpoint to the database in addition to the private VPC endpoint.'
-                    }
-                  />
+                  >
+                    Enable public access
+                  </Checkbox>
+                  <Tooltip
+                    style={{ marginLeft: Spacing.S4 }}
+                    tooltipPlacement="bottom"
+                    tooltipText="Adds a public endpoint to the database in addition to the private VPC endpoint."
+                  >
+                    <Icon icon="info-outline" size="m" />
+                  </Tooltip>
                   {fieldState.error?.message && (
                     <FormHelperText
                       className="error-for-scroll"
@@ -194,12 +207,10 @@ export const DatabaseVPC = (props: DatabaseVPCProps) => {
         </>
       ) : (
         mode === 'create' && (
-          <Notice
-            sx={(theme: Theme) => ({
-              marginTop: theme.spacingFunction(20),
-            })}
+          <NotificationBanner
+            style={{ marginTop: Spacing.S16 }}
             text="The cluster will have public access by default if a VPC is not assigned."
-            variant="info"
+            type="info"
           />
         )
       )}

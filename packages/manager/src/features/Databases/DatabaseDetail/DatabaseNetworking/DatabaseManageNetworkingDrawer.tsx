@@ -1,6 +1,9 @@
+import { NotificationBanner } from '@akamai/cds-components/react';
+import { Button } from '@akamai/cds-components/react/Button';
+import { Spacing } from '@akamai/cds-tokens';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useDatabaseMutation } from '@linode/queries';
-import { Box, Button, Drawer, Notice } from '@linode/ui';
+import { Box, Drawer } from '@linode/ui';
 import { updatePrivateNetworkSchema } from '@linode/validation';
 import { useNavigate } from '@tanstack/react-router';
 import { enqueueSnackbar } from 'notistack';
@@ -111,7 +114,18 @@ const DatabaseManageNetworkingDrawer = (props: Props) => {
   return (
     <Drawer onClose={handleOnClose} open={open} title="Manage Networking">
       {errors.root?.message && (
-        <Notice text={errors.root.message} variant="error" />
+        <NotificationBanner
+          style={{ marginBottom: Spacing.S16 }}
+          text={errors.root.message}
+          type="error"
+        />
+      )}
+      {errors.private_network?.message && (
+        <NotificationBanner
+          style={{ marginBottom: Spacing.S16 }}
+          text={errors.private_network.message}
+          type="error"
+        />
       )}
       <FormProvider {...form}>
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -127,32 +141,24 @@ const DatabaseManageNetworkingDrawer = (props: Props) => {
           >
             {hasVPCConfigured && (
               <Button
-                buttonType="outlined"
                 disabled={!hasVPCConfigured}
-                loading={false}
                 onClick={handleOnUnassign}
+                variant="secondary"
               >
                 Unassign VPC
               </Button>
             )}
             <Box>
-              <Button
-                buttonType="secondary"
-                disabled={false}
-                loading={false}
-                onClick={handleOnClose}
-              >
+              <Button onClick={handleOnClose} variant="link">
                 Cancel
               </Button>
               <Button
-                buttonType="primary"
                 data-testid="save-networking-button"
                 disabled={isSaveDisabled}
-                loading={submitInProgress}
-                sx={(theme: Theme) => ({
-                  marginLeft: theme.spacingFunction(12),
-                })}
+                processing={submitInProgress}
+                style={{ marginLeft: Spacing.S24 }}
                 type="submit"
+                variant="primary"
               >
                 Save
               </Button>

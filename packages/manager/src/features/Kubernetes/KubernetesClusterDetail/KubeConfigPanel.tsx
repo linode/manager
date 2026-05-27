@@ -1,5 +1,5 @@
+import { downloadFile } from '@akamai/compute-ui-core/browser';
 import { Button, Paper, Typography } from '@linode/ui';
-import { downloadFile } from '@linode/utilities';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';

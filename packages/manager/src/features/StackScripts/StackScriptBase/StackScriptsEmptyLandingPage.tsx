@@ -1,3 +1,4 @@
+import { sendEvent } from '@akamai/compute-ui-core/analytics';
 import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
@@ -5,7 +6,6 @@ import ComputeIcon from 'src/assets/icons/entityIcons/compute.svg';
 import { ResourcesSection } from 'src/components/EmptyLandingPageResources/ResourcesSection';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { sendEvent } from 'src/utilities/analytics/utils';
 
 import {
   gettingStartedGuides,

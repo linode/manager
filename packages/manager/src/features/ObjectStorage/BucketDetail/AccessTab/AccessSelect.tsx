@@ -1,3 +1,4 @@
+import { capitalize } from '@akamai/compute-ui-core/formatting';
 import {
   ActionsPanel,
   Autocomplete,
@@ -6,7 +7,7 @@ import {
   Toggle,
   Typography,
 } from '@linode/ui';
-import { capitalize, useOpenClose } from '@linode/utilities';
+import { useOpenClose } from '@linode/utilities';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
@@ -33,10 +34,10 @@ import type {
 import type { Theme } from '@mui/material/styles';
 
 export interface Props {
-  bucketName?: string;
-  clusterOrRegion: string;
+  bucketName?: string; // used only when variant is 'object'
   endpointType?: ObjectStorageEndpointTypes;
-  name: string;
+  name: string; // either bucket name or object name
+  regionId: string;
   variant: 'bucket' | 'object';
 }
 
@@ -46,8 +47,9 @@ function isUpdateObjectStorageBucketAccessPayload(
   return 'cors_enabled' in response;
 }
 
+// TODO: separate to Object ACL and Bucket ACL Access Select components
 export const AccessSelect = React.memo((props: Props) => {
-  const { bucketName, clusterOrRegion, endpointType, name, variant } = props;
+  const { bucketName, regionId, endpointType, name, variant } = props;
 
   const { close: closeDialog, isOpen, open: openDialog } = useOpenClose();
   const label = capitalize(variant);
@@ -60,16 +62,16 @@ export const AccessSelect = React.memo((props: Props) => {
     data: bucketAccessData,
     error: bucketAccessError,
     isFetching: bucketAccessIsFetching,
-  } = useBucketAccess(clusterOrRegion, name, variant === 'bucket');
+  } = useBucketAccess(regionId, name, variant === 'bucket');
 
   const {
     data: objectAccessData,
     error: objectAccessError,
     isFetching: objectAccessIsFetching,
   } = useObjectAccess(
-    bucketName || '',
-    clusterOrRegion,
-    { name },
+    bucketName ?? '',
+    regionId,
+    { objectName: name },
     variant === 'object'
   );
 
@@ -77,13 +79,13 @@ export const AccessSelect = React.memo((props: Props) => {
     error: updateBucketAccessError,
     isSuccess: updateBucketAccessSuccess,
     mutateAsync: updateBucketAccess,
-  } = useUpdateBucketAccessMutation(clusterOrRegion, name);
+  } = useUpdateBucketAccessMutation(regionId, name);
 
   const {
     error: updateObjectAccessError,
     isSuccess: updateObjectAccessSuccess,
     mutateAsync: updateObjectAccess,
-  } = useUpdateObjectAccessMutation(clusterOrRegion, bucketName || '', name);
+  } = useUpdateObjectAccessMutation(regionId, bucketName ?? '', name);
 
   const formValues = React.useMemo(() => {
     const data = variant === 'object' ? objectAccessData : bucketAccessData;

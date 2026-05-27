@@ -179,7 +179,7 @@ describe('BackupDrawer', () => {
     const confirmButton = (await findByText('Confirm')).closest('button');
     expect(confirmButton).toBeDisabled();
 
-    expect(getByRole('checkbox')).toBeDisabled();
+    expect(getByRole('switch')).toBeDisabled();
   });
 
   it('should enable "Confirm" button and AutoEnroll checkbox if the user has "enable_linode_backups" permission', async () => {
@@ -195,6 +195,6 @@ describe('BackupDrawer', () => {
     const confirmButton = (await findByText('Confirm')).closest('button');
     expect(confirmButton).toBeEnabled();
 
-    expect(getByRole('checkbox')).toBeEnabled();
+    expect(getByRole('switch')).toBeEnabled();
   });
 });

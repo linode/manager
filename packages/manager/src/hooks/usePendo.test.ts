@@ -1,4 +1,4 @@
-import { transformUrl } from './usePendo';
+import { transformUrl } from '@akamai/compute-ui-core/analytics';
 
 const ID_URLS = [
   {

@@ -1,3 +1,4 @@
+import { capitalize } from '@akamai/compute-ui-core/formatting';
 import {
   ActionsPanel,
   Autocomplete,
@@ -9,7 +10,6 @@ import {
   TextField,
   Typography,
 } from '@linode/ui';
-import { capitalize } from '@linode/utilities';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 

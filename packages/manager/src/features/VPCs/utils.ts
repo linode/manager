@@ -4,28 +4,19 @@ import type {
   APIError,
   Config,
   CreateLinodeInterfacePayload,
+  Database,
   InterfacePayload,
+  Linode,
   LinodeInterface,
+  NodeBalancer,
   Subnet,
   VPC,
 } from '@linode/api-v4';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
 
-export const getUniqueLinodesFromSubnets = (subnets: Subnet[]) => {
-  const linodes: number[] = [];
-  for (const subnet of subnets) {
-    subnet.linodes.forEach((linodeInfo) => {
-      if (!linodes.includes(linodeInfo.id)) {
-        linodes.push(linodeInfo.id);
-      }
-    });
-  }
-  return linodes.length;
-};
-
 export const getUniqueResourcesFromSubnets = (
   subnets: Subnet[],
-  countDatabases: boolean
+  countDatabases?: boolean
 ) => {
   const linodes: number[] = [];
   const nodeBalancer: number[] = [];
@@ -50,6 +41,51 @@ export const getUniqueResourcesFromSubnets = (
     }
   }
   return linodes.length + nodeBalancer.length + databases.length;
+};
+
+export const getUniqueResourcesFromSubnet = (
+  subnet: Subnet,
+  countDatabases: boolean
+) => {
+  const linodes = subnet.linodes.reduce((acc, linode) => {
+    if (!acc.find((item: Linode) => item.id === linode.id)) {
+      return [...acc, linode];
+    } else {
+      return acc;
+    }
+  }, []);
+
+  const nodeBalancers = subnet.nodebalancers.reduce((acc, nb) => {
+    if (!acc.find((item: NodeBalancer) => item.id === nb.id)) {
+      return [...acc, nb];
+    } else {
+      return acc;
+    }
+  }, []);
+
+  if (countDatabases) {
+    const databases = subnet.databases.reduce((acc, db) => {
+      if (!acc.find((item: Database) => item.id === db.id)) {
+        return [...acc, db];
+      } else {
+        return acc;
+      }
+    }, []);
+
+    return {
+      linodes,
+      nodeBalancers,
+      databases,
+      numUniqueResources:
+        linodes.length + nodeBalancers.length + databases.length,
+    };
+  }
+
+  return {
+    linodes,
+    nodeBalancers,
+    numUniqueResources: linodes.length + nodeBalancers.length,
+  };
 };
 
 // Linode Interfaces: show unrecommended notice if (active) VPC interface has an IPv4 nat_1_1 address but isn't the default IPv4 route

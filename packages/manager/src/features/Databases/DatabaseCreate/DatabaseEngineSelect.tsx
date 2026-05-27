@@ -1,10 +1,12 @@
+import { Badge } from '@akamai/cds-components/react/Badge';
 import { useDatabaseEnginesQuery } from '@linode/queries';
-import { Autocomplete, Box, InputAdornment } from '@linode/ui';
-import Grid from '@mui/material/Grid';
+import { Autocomplete, Box, InputAdornment, Stack } from '@linode/ui';
 import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import { getEngineOptions } from 'src/features/Databases/DatabaseCreate/utilities';
+import { DATABASE_ENGINE_MAP } from 'src/features/Databases/utilities';
+import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 
 import type { DatabaseCreateValues } from './DatabaseCreate';
@@ -14,6 +16,7 @@ export const DatabaseEngineSelect = () => {
   const isRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_databases',
   });
+  const flags = useFlags();
 
   const engineOptions = React.useMemo(() => {
     if (!engines) {
@@ -22,9 +25,10 @@ export const DatabaseEngineSelect = () => {
     return getEngineOptions(engines);
   }, [engines]);
 
-  const { control } = useFormContext<DatabaseCreateValues>();
+  const { control, setValue } = useFormContext<DatabaseCreateValues>();
 
   const engineValue = useWatch({ control, name: 'engine' });
+
   const selectedEngine = React.useMemo(() => {
     return engineOptions.find((val) => val.value === engineValue);
   }, [engineValue, engineOptions]);
@@ -40,17 +44,12 @@ export const DatabaseEngineSelect = () => {
           disabled={isRestricted}
           errorText={fieldState.error?.message}
           groupBy={(option) => {
-            if (option.engine.match(/mysql/i)) {
-              return 'MySQL';
-            }
-            if (option.engine.match(/postgresql/i)) {
-              return 'PostgreSQL';
-            }
-            return 'Other';
+            return DATABASE_ENGINE_MAP[option.engine] ?? 'Other';
           }}
           label="Database Engine"
           onChange={(_, selected) => {
             field.onChange(selected.value);
+            setValue('type', '');
           }}
           options={engineOptions ?? []}
           placeholder="Select a Database Engine"
@@ -58,20 +57,17 @@ export const DatabaseEngineSelect = () => {
             const { key, ...rest } = props;
             return (
               <li {...rest} data-testid="db-engine-option" key={key}>
-                <Grid
-                  container
-                  direction="row"
-                  spacing={2}
-                  sx={{
-                    alignItems: 'center',
-                    justifyContent: 'flex-start',
-                  }}
-                >
-                  <Grid className="py0" height="20px" width="20px">
-                    {option.flag}
-                  </Grid>
-                  <Grid>{option.label}</Grid>
-                </Grid>
+                <Stack direction="row" spacing={2} width="100%">
+                  {option.flag}
+                  <Stack flexGrow={1}>{option.label}</Stack>
+                  {option.engine === 'valkey' &&
+                    flags.databaseValkey?.enabled &&
+                    flags.databaseValkey.beta && (
+                      <Badge color="neutral" variant="solid">
+                        Beta
+                      </Badge>
+                    )}
+                </Stack>
               </li>
             );
           }}
@@ -84,6 +80,13 @@ export const DatabaseEngineSelect = () => {
                   </Box>
                 </InputAdornment>
               ),
+              endAdornment: selectedEngine?.engine === 'valkey' &&
+                flags.databaseValkey?.enabled &&
+                flags.databaseValkey.beta && (
+                  <Badge color="neutral" variant="solid">
+                    Beta
+                  </Badge>
+                ),
             },
           }}
           value={selectedEngine}

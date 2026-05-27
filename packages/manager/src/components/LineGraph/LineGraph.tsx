@@ -2,7 +2,7 @@
  * ONLY USED IN LONGVIEW
  * Delete when Lonview is sunsetted, along with AccessibleGraphData
  */
-import { roundTo } from '@linode/utilities';
+import { roundTo } from '@akamai/compute-ui-core/formatting';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { Chart } from 'chart.js';

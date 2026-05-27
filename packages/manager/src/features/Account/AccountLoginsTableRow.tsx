@@ -1,6 +1,7 @@
+import { formatDate } from '@akamai/compute-ui-core/datetime';
+import { capitalize } from '@akamai/compute-ui-core/formatting';
 import { useProfile } from '@linode/queries';
 import { Hidden } from '@linode/ui';
-import { capitalize } from '@linode/utilities';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
@@ -8,7 +9,6 @@ import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { formatDate } from 'src/utilities/formatDate';
 
 import type {
   AccountLogin,

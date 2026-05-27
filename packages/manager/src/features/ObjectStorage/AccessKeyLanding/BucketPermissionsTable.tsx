@@ -9,7 +9,6 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { useObjectStorageRegions } from 'src/features/ObjectStorage/hooks/useObjectStorageRegions';
 
 import { AccessCell } from './AccessCell';
-import { getUpdatedScopes } from './AccessTable';
 import {
   StyledBucketCell,
   StyledClusterCell,
@@ -17,13 +16,31 @@ import {
   StyledRadioRow,
   StyledSelectAllRadioRow,
   StyledTableRoot,
-} from './AccessTable.styles';
+} from './BucketPermissionsTable.styles';
 
 import type { MODE } from './types';
 import type {
   ObjectStorageKeyBucketAccess,
   ObjectStorageKeyBucketAccessPermissions,
 } from '@linode/api-v4/lib/object-storage/types';
+
+const getUpdatedScopes = (
+  oldScopes: ObjectStorageKeyBucketAccess[],
+  newScope: ObjectStorageKeyBucketAccess
+): ObjectStorageKeyBucketAccess[] => {
+  // Region and bucket together form a primary key
+  const scopeToUpdateIndex = oldScopes.findIndex(
+    (thisScope) =>
+      thisScope.bucket_name === newScope.bucket_name &&
+      thisScope.region === newScope.region
+  );
+  if (scopeToUpdateIndex < 0) {
+    return oldScopes;
+  }
+  const updatedScopes = [...oldScopes];
+  updatedScopes[scopeToUpdateIndex] = newScope;
+  return updatedScopes;
+};
 
 export const SCOPES: Record<string, ObjectStorageKeyBucketAccessPermissions> = {
   none: 'none',

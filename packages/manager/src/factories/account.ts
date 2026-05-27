@@ -54,6 +54,7 @@ export const accountFactory = Factory.Sync.makeFactory<Account>({
     'Object Storage Endpoint Types',
     'Object Storage',
     'Placement Group',
+    'Support Live Chat',
     'Vlans',
     'Kubernetes Enterprise',
     'VPC Dual Stack',

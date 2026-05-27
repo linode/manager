@@ -43,7 +43,12 @@ describe('QuotaUsageBanner', () => {
     'should display correct byte quota usage text for $usage bytes used out of $limit bytes',
     ({ usage, limit, expectedText }) => {
       const { getByText } = renderWithTheme(
-        <QuotaUsageBar limit={limit} resourceMetric="byte" usage={usage} />
+        <QuotaUsageBar
+          limit={limit}
+          resourceMetric="byte"
+          usage={usage}
+          variant="quotas"
+        />
       );
       const quotaUsageText = getByText(expectedText);
       expect(quotaUsageText).toBeVisible();

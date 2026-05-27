@@ -1,10 +1,12 @@
-import { Divider, Paper, Stack, Typography } from '@linode/ui';
+import { Stack, Typography } from '@linode/ui';
 import { useNavigate } from '@tanstack/react-router';
 import React from 'react';
 
 import { useFlags } from 'src/hooks/useFlags';
 
 import { ACCESS_CONTROLS_IN_SETTINGS_TEXT } from '../../constants';
+import { Divider } from '../../shared/Divider/Divider';
+import { Paper } from '../../shared/Paper/Paper';
 import AccessControls from '../AccessControls';
 import { useDatabaseDetailContext } from '../DatabaseDetailContext';
 import { DatabaseConnectionPools } from './DatabaseConnectionPools';
@@ -35,8 +37,8 @@ export const DatabaseNetworking = () => {
   }
 
   return (
-    <Paper sx={{ marginTop: 2 }}>
-      <Stack divider={<Divider spacingBottom={0} spacingTop={0} />} spacing={3}>
+    <Paper>
+      <Stack divider={<Divider marginBottom={0} marginTop={0} />} spacing={3}>
         <AccessControls
           database={database}
           description={accessControlCopy}

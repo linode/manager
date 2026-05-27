@@ -148,9 +148,9 @@ describe('Alert Listing Reusable Table for contextual view', () => {
     const alert = alerts[0];
     const row = await findByTestId(alert.id);
 
-    const checkbox = await within(row).findByRole('checkbox');
+    const switchElement = await within(row).findByRole('switch');
 
-    expect(checkbox).toHaveProperty('checked');
+    expect(switchElement).toHaveProperty('checked');
   });
 
   it('Should show confirm dialog on save button click when changes are made', async () => {
@@ -165,7 +165,7 @@ describe('Alert Listing Reusable Table for contextual view', () => {
     // First toggle an alert to make changes
     const alert = alerts[0];
     const row = await screen.findByTestId(alert.id);
-    const toggle = await within(row).findByRole('checkbox');
+    const toggle = await within(row).findByRole('switch');
     await userEvent.click(toggle);
 
     // Now the save button should be enabled
@@ -185,7 +185,7 @@ describe('Alert Listing Reusable Table for contextual view', () => {
     // First toggle an alert to make changes
     const alert = alerts[0];
     const row = await screen.findByTestId(alert.id);
-    const toggle = await within(row).findByRole('checkbox');
+    const toggle = await within(row).findByRole('switch');
     await userEvent.click(toggle);
 
     // Now the save button should be enabled
@@ -217,7 +217,7 @@ describe('Alert Listing Reusable Table for contextual view', () => {
 
     // Toggle entity-level user alert with ID 2 to enable it
     const userAlertRow = await screen.findByTestId('9');
-    await userEvent.click(await within(userAlertRow).findByRole('checkbox'));
+    await userEvent.click(await within(userAlertRow).findByRole('switch'));
 
     const saveButton = screen.getByTestId('save-alerts');
     expect(saveButton).not.toBeDisabled();
@@ -247,7 +247,7 @@ describe('Alert Listing Reusable Table for contextual view', () => {
 
     // Toggle entity-level user alert id 9 to enable it
     const userAlertRow = await screen.findByTestId('9');
-    await userEvent.click(within(userAlertRow).getByRole('checkbox'));
+    await userEvent.click(within(userAlertRow).getByRole('switch'));
 
     // Raw payload passed to service owner: system_alerts unchanged, user_alerts with the newly toggled alert id 9,
     // and hasUnsavedChanges is true

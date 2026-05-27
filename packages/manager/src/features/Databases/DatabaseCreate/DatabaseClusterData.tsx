@@ -1,6 +1,7 @@
+import { Spacing } from '@akamai/cds-tokens';
 import { useRegionsQuery } from '@linode/queries';
 import { useIsGeckoEnabled } from '@linode/shared';
-import { Divider, Typography } from '@linode/ui';
+import { Typography } from '@linode/ui';
 import { getCapabilityFromPlanType } from '@linode/utilities';
 import Box from '@mui/material/Box';
 import React from 'react';
@@ -15,6 +16,8 @@ import {
 import { DatabaseEngineSelect } from 'src/features/Databases/DatabaseCreate/DatabaseEngineSelect';
 import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
+
+import { Divider } from '../shared/Divider/Divider';
 
 import type { DatabaseCreateValues } from './DatabaseCreate';
 import type { PlanSelectionWithDatabaseType } from 'src/features/components/PlansPanel/types';
@@ -103,7 +106,7 @@ export const DatabaseClusterData = (props: Props) => {
           )}
         />
       </Box>
-      <Divider spacingBottom={12} spacingTop={38} />
+      <Divider marginBottom={Spacing.S12} marginTop={Spacing.S32} />
       <Box>
         <Typography variant="h2">Select Engine and Region</Typography>
         <DatabaseEngineSelect />

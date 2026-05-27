@@ -72,6 +72,7 @@ export const triggerConditionSchema = triggerConditionValidation.concat(
 
 export const alertDefinitionFormSchema = createAlertDefinitionSchema.concat(
   object({
+    group_by: array().of(string().defined()).optional(),
     hasAPIError: mixed<boolean>().optional(),
     entity_ids: array().of(string().defined()).optional(),
     entity_type: mixed<AssociatedEntityType>()

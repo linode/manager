@@ -1,4 +1,4 @@
-import actionCreatorFactory from 'typescript-fsa';
+import { actionCreatorFactory } from 'typescript-fsa';
 
 import type { LongviewClient } from '@linode/api-v4/lib/longview';
 import type { APIError, Filter, Params } from '@linode/api-v4/lib/types';

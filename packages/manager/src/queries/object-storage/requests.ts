@@ -1,7 +1,6 @@
 import {
   getBuckets,
   getBucketsInRegion,
-  getClusters,
   getObjectStorageEndpoints,
   getObjectStorageTypes,
 } from '@linode/api-v4';
@@ -10,17 +9,10 @@ import { getAll } from '@linode/utilities';
 import type {
   APIError,
   ObjectStorageBucket,
-  ObjectStorageCluster,
   ObjectStorageEndpoint,
   PriceType,
   Region,
 } from '@linode/api-v4';
-
-/**
- * @deprecated This will be replaced with `getAllObjectStorageEndpoints` when OBJ Gen2 is in GA.
- */
-export const getAllObjectStorageClusters = () =>
-  getAll<ObjectStorageCluster>(() => getClusters())().then((data) => data.data);
 
 export const getAllObjectStorageBuckets = () =>
   getAll<ObjectStorageBucket>(() => getBuckets())().then((data) => data.data);
@@ -116,10 +108,12 @@ export const getAllBucketsFromRegions = async (
 /**
  * We had to change the signature of things slightly since we're using the `object-storage/endpoints`
  * endpoint. Note that the server response always includes information for all regions.
+ * @param rawErrorNeeded is used to determine whether we want to throw a generic error when all calls fail or if we want to return the raw error information for each endpoint. This is needed because in some cases, like in CloudPulse, we have custom error handling.
  * @note This will be the preferred way to get all buckets once fetching by clusters is deprecated and Gen2 is in GA.
  */
 export const getAllBucketsFromEndpoints = async (
-  endpoints: ObjectStorageEndpoint[] | undefined
+  endpoints: ObjectStorageEndpoint[] | undefined,
+  rawErrorNeeded = false
 ): Promise<BucketsResponseGen2> => {
   if (!endpoints?.length) {
     return { buckets: [], errors: [] };
@@ -165,7 +159,7 @@ export const getAllBucketsFromEndpoints = async (
     }
   });
 
-  if (errors.length === endpoints.length) {
+  if (errors.length === endpoints.length && !rawErrorNeeded) {
     throw new Error('Unable to get Object Storage buckets.');
   }
 

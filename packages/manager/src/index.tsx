@@ -1,3 +1,4 @@
+import { computeUiCoreApi } from '@akamai/compute-ui-core/api';
 import { queryClientFactory } from '@linode/queries';
 import CssBaseline from '@mui/material/CssBaseline';
 import { QueryClientProvider } from '@tanstack/react-query';
@@ -8,18 +9,33 @@ import { Provider as ReduxStoreProvider } from 'react-redux';
 import { CookieWarning } from 'src/components/CookieWarning';
 import 'src/exceptionReporting';
 import { SplashScreen } from 'src/components/SplashScreen';
+import { oauthClient } from 'src/OAuth/oauthClient';
 import { setupInterceptors } from 'src/request';
 import { storeFactory } from 'src/store';
+import { getEnvLocalStorageOverrides, storage } from 'src/utilities/storage';
+
+import '@akamai/cds-tokens/tokens.css';
+import '@akamai/cds-tokens/themes/dark/tokens.css';
 
 import './index.css';
 import { App } from './App';
-import { ENABLE_DEV_TOOLS } from './constants';
+import { API_ROOT, ENABLE_DEV_TOOLS } from './constants';
 import { LinodeThemeWrapper } from './LinodeThemeWrapper';
 
 const queryClient = queryClientFactory('longLived');
 const store = storeFactory();
 
 setupInterceptors(store);
+
+if (import.meta.env.REACT_APP_ACCESS_TOKEN) {
+  storage.authentication.token.set(import.meta.env.REACT_APP_ACCESS_TOKEN);
+}
+
+computeUiCoreApi.configure({
+  prefixUrl: getEnvLocalStorageOverrides()?.apiRoot ?? API_ROOT,
+  requestMiddleware: (request) => oauthClient.requestMiddleware(request),
+  responseMiddleware: (response) => oauthClient.responseMiddleware(response),
+});
 
 const Main = () => {
   if (!navigator.cookieEnabled) {

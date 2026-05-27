@@ -9,9 +9,7 @@ import { Link } from 'src/components/Link';
 import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { useObjectStorageClusters } from 'src/queries/object-storage/queries';
 
-import { useIsObjMultiClusterEnabled } from '../hooks/useIsObjectStorageGen2Enabled';
 import { BucketActionMenu } from './BucketActionMenu';
 import {
   StyledBucketObjectsCell,
@@ -28,7 +26,6 @@ export interface BucketTableRowProps extends ObjectStorageBucket {
 
 export const BucketTableRow = (props: BucketTableRowProps) => {
   const {
-    cluster,
     created,
     endpoint_type,
     hostname,
@@ -42,15 +39,6 @@ export const BucketTableRow = (props: BucketTableRowProps) => {
 
   const { data: regions } = useRegionsQuery();
 
-  const { isObjMultiClusterEnabled } = useIsObjMultiClusterEnabled();
-
-  const { data: clusters } = useObjectStorageClusters(
-    !isObjMultiClusterEnabled
-  );
-
-  const actualCluster = clusters?.find((c) => c.id === cluster);
-  const clusterRegion = regions?.find((r) => r.id === actualCluster?.region);
-
   const regionsLookup = regions && getRegionsByRegionId(regions);
 
   const isLegacy = endpoint_type === 'E0';
@@ -61,11 +49,7 @@ export const BucketTableRow = (props: BucketTableRowProps) => {
       <TableCell>
         <MaskableText isToggleable text={hostname}>
           <Stack>
-            <Link
-              to={`/object-storage/buckets/${
-                isObjMultiClusterEnabled ? region : cluster
-              }/${label}`}
-            >
+            <Link to={`/object-storage/buckets/${region}/${label}`}>
               {label}
             </Link>
             {hostname}
@@ -75,9 +59,7 @@ export const BucketTableRow = (props: BucketTableRowProps) => {
       <Hidden smDown>
         <StyledBucketRegionCell>
           <Typography data-qa-region variant="body1">
-            {isObjMultiClusterEnabled && regionsLookup && region
-              ? regionsLookup[region].label
-              : (clusterRegion?.label ?? cluster)}
+            {regionsLookup?.[region]?.label}
           </Typography>
         </StyledBucketRegionCell>
       </Hidden>
@@ -111,7 +93,6 @@ export const BucketTableRow = (props: BucketTableRowProps) => {
 
       <TableCell sx={{ paddingRight: 0 }}>
         <BucketActionMenu
-          cluster={cluster}
           data-qa-action-menu
           label={label}
           onDetails={onDetails}

@@ -1,9 +1,10 @@
+import { NotificationBanner } from '@akamai/cds-components/react';
+import { Spacing } from '@akamai/cds-tokens';
 import { useDatabaseEnginesQuery, useDatabaseMutation } from '@linode/queries';
 import {
   ActionsPanel,
   Autocomplete,
   FormControl,
-  Notice,
   Typography,
 } from '@linode/ui';
 import { useTheme } from '@mui/material';
@@ -134,19 +135,19 @@ export const DatabaseSettingsUpgradeVersionDialog = (props: Props) => {
       </FormControl>
 
       {loading && (
-        <Notice variant="info">
+        <NotificationBanner style={{ marginBottom: Spacing.S16 }} type="info">
           <Typography style={{ fontSize: '0.875rem' }}>
             Checking version upgrade compatibility, then will start upgrade
           </Typography>
           {/* Then the text changes to "Starting to upgrade." then closes after 1 second */}
-        </Notice>
+        </NotificationBanner>
       )}
-      <Notice variant="warning">
+      <NotificationBanner style={{ marginBottom: Spacing.S16 }} type="warning">
         <Typography style={{ fontSize: '0.875rem' }}>
           Reverting back to the prior version is not possible once the upgrade
           has been started
         </Typography>
-      </Notice>
+      </NotificationBanner>
     </ConfirmationDialog>
   );
 };

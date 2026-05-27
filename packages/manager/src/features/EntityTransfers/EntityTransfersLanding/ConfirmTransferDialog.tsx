@@ -1,3 +1,5 @@
+import { formatDate, parseAPIDate } from '@akamai/compute-ui-core/datetime';
+import { capitalize, pluralize } from '@akamai/compute-ui-core/formatting';
 import { acceptServiceTransfer } from '@linode/api-v4';
 import {
   entityTransfersQueryKey,
@@ -6,16 +8,13 @@ import {
   useTransferQuery,
 } from '@linode/queries';
 import { Checkbox, CircleProgress, ErrorState, Notice } from '@linode/ui';
-import { capitalize, pluralize } from '@linode/utilities';
 import { useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { sendEntityTransferReceiveEvent } from 'src/utilities/analytics/customEventAnalytics';
-import { parseAPIDate } from 'src/utilities/date';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { formatDate } from 'src/utilities/formatDate';
 
 import { countByEntity } from '../utilities';
 import {

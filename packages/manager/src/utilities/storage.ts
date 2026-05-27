@@ -1,53 +1,27 @@
+import {
+  clearStorage,
+  CODE_VERIFIER,
+  EXPIRE,
+  getStorage,
+  INFINITE_PAGE_SIZE,
+  NONCE,
+  PAGE_SIZE,
+  REGION_FILTER,
+  SCOPES,
+  setStorage,
+  TOKEN,
+} from '@akamai/compute-ui-core/browser';
+
 import { ENABLE_DEV_TOOLS } from 'src/constants';
 
-import type { RegionSite } from '@linode/api-v4';
+import type {
+  AuthGetAndSet,
+  RegionFilter,
+} from '@akamai/compute-ui-core/browser';
 import type { StackScriptPayload } from '@linode/api-v4/lib/stackscripts/types';
 import type { SupportTicketFormFields } from 'src/features/Support/SupportTickets/SupportTicketDialog';
 
-const localStorageCache: Record<string, any> = {};
 const sessionStorageCache: Record<string, any> = {};
-
-export const getStorage = (key: string, fallback?: any) => {
-  if (localStorageCache[key]) {
-    return localStorageCache[key];
-  }
-
-  const item = window.localStorage.getItem(key);
-  /*
-   * Basically, if localstorage doesn't exist,
-   * return whatever we set as a fallback
-   */
-  if ((item === null || item === undefined) && !!fallback) {
-    return fallback;
-  }
-
-  try {
-    // Try to parse as JSON first. This will turn "true" (string) into `true` (boolean).
-    const parsedItem = JSON.parse(item as any);
-    localStorageCache[key] = parsedItem;
-    return parsedItem;
-  } catch (e) {
-    // It's okay if we can't parse as JSON -- just use the raw value instead.
-    localStorageCache[key] = item;
-    return item;
-  }
-};
-
-export const setStorage = (key: string, value: string) => {
-  try {
-    // Store parsed JSON if possible.
-    localStorageCache[key] = JSON.parse(value);
-  } catch {
-    // Otherwise just use the raw value.
-    localStorageCache[key] = value;
-  }
-  return window.localStorage.setItem(key, value);
-};
-
-export const clearStorage = (key: string) => {
-  delete localStorageCache[key];
-  window.localStorage.removeItem(key);
-};
 
 export const getSessionStorage = (key: string): string | undefined => {
   if (key in sessionStorageCache) {
@@ -68,28 +42,13 @@ export const clearSessionStorage = (key: string) => {
   window.sessionStorage.removeItem(key);
 };
 
-const PAGE_SIZE = 'PAGE_SIZE';
-const INFINITE_PAGE_SIZE = 'INFINITE_PAGE_SIZE';
-const TOKEN = 'authentication/token';
-const NONCE = 'authentication/nonce';
-const CODE_VERIFIER = 'authentication/code-verifier';
-const SCOPES = 'authentication/scopes';
-const EXPIRE = 'authentication/expire';
 const SUPPORT = 'support';
 const TICKET = 'ticket';
 const STACKSCRIPT = 'stackscript';
 const DEV_TOOLS_ENV = 'devTools/env';
-const REGION_FILTER = 'regionFilter';
 const NODE_POOLS_EXPANDED = 'nodePoolsExpanded';
 
 export type PageSize = number;
-export type RegionFilter = 'all' | RegionSite;
-
-interface AuthGetAndSet {
-  clear: () => void;
-  get: () => string | undefined;
-  set: (value: string) => void;
-}
 
 interface TicketReply {
   text: string;
@@ -113,7 +72,7 @@ export const supportTicketStorageDefaults: SupportTicketFormFields = {
   description: '',
   entityId: '',
   entityInputValue: '',
-  entityType: 'general',
+  entityType: 'none',
   selectedSeverity: undefined,
   summary: '',
   ticketType: 'general',

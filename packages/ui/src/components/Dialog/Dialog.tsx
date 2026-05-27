@@ -21,6 +21,10 @@ export interface DialogProps extends _DialogProps {
    */
   className?: string;
   /**
+   * The pendo ID to be applied to the dialog's close icon button, if provided
+   */
+  closeIconPendoId?: string;
+  /**
    * Whether the dialog should close when the backdrop is clicked.
    *
    * @default false
@@ -82,6 +86,7 @@ export const Dialog = React.forwardRef(
     const {
       children,
       className,
+      closeIconPendoId,
       enableCloseOnBackdropClick = false,
       error,
       fullHeight,
@@ -146,6 +151,7 @@ export const Dialog = React.forwardRef(
             id={titleID}
             isFetching={isFetching}
             onClose={() => onClose?.({}, 'escapeKeyDown')}
+            pendoId={closeIconPendoId}
             subtitle={subtitle}
             title={lastTitleRef.current}
             titleSuffix={titleSuffix}

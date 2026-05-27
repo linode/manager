@@ -1,3 +1,4 @@
+import { getStorage } from '@akamai/compute-ui-core/browser';
 import {
   useChildAccountsInfiniteQuery,
   useMyDelegatedChildAccountsQuery,
@@ -22,7 +23,7 @@ import { useSwitchToParentAccount } from 'src/features/Account/SwitchAccounts/us
 import { setTokenInLocalStorage } from 'src/features/Account/SwitchAccounts/utils';
 import { useIsIAMDelegationEnabled } from 'src/features/IAM/hooks/useIsIAMEnabled';
 import { sendSwitchToParentAccountEvent } from 'src/utilities/analytics/customEventAnalytics';
-import { getStorage, storage } from 'src/utilities/storage';
+import { storage } from 'src/utilities/storage';
 
 import { ChildAccountList } from './SwitchAccounts/ChildAccountList';
 import { ChildAccountsTable } from './SwitchAccounts/ChildAccountsTable';

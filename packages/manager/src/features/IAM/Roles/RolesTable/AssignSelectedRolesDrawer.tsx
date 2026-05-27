@@ -1,17 +1,11 @@
+import { Button, NotificationBanner } from '@akamai/cds-components/react';
 import {
   useAccountRoles,
   useAccountUsersInfiniteQuery,
   useUserRoles,
   useUserRolesMutation,
 } from '@linode/queries';
-import {
-  ActionsPanel,
-  Autocomplete,
-  Drawer,
-  LinkButton,
-  Notice,
-  Typography,
-} from '@linode/ui';
+import { ActionsPanel, Autocomplete, Drawer, Typography } from '@linode/ui';
 import { useDebouncedValue } from '@linode/utilities';
 import { Stack, useTheme } from '@mui/material';
 import Grid from '@mui/material/Grid';
@@ -19,8 +13,6 @@ import { enqueueSnackbar } from 'notistack';
 import React, { useCallback, useState } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 
-import { Link } from 'src/components/Link';
-import { StyledLinkButtonBox } from 'src/components/SelectFirewallPanel/SelectFirewallPanel';
 import { AssignSingleSelectedRole } from 'src/features/IAM/Roles/RolesTable/AssignSingleSelectedRole';
 
 import { usePermissions } from '../../hooks/usePermissions';
@@ -29,6 +21,7 @@ import {
   INTERNAL_ERROR_NO_CHANGES_SAVED,
 } from '../../Shared/constants';
 import { DelegateUserChip } from '../../Shared/DelegateUserChip';
+import { Link } from '../../Shared/Link/Link';
 import { mergeAssignedRolesIntoExistingRoles } from '../../Shared/utilities';
 
 import type { AssignNewRoleFormValues } from '../../Shared/utilities';
@@ -175,7 +168,10 @@ export const AssignSelectedRolesDrawer = ({
       <FormProvider {...form}>
         <form onSubmit={handleSubmit(onSubmit)}>
           {formState.errors.root?.message && (
-            <Notice text={formState.errors.root?.message} variant="error" />
+            <NotificationBanner
+              text={formState.errors.root?.message}
+              type="error"
+            />
           )}
           <Typography sx={{ marginBottom: 2.5 }}>
             Select the user you want to assign selected roles to. Some roles
@@ -270,13 +266,12 @@ export const AssignSelectedRolesDrawer = ({
               {selectedRoles.length > 1 ? `s` : ``}
             </Typography>
             {selectedRoles.length > 0 && (
-              <StyledLinkButtonBox sx={{ marginTop: 0 }}>
-                <LinkButton
-                  onClick={() => setAreDetailsHidden(!areDetailsHidden)}
-                >
-                  {areDetailsHidden ? 'Show' : 'Hide'} details
-                </LinkButton>
-              </StyledLinkButtonBox>
+              <Button
+                onClick={() => setAreDetailsHidden(!areDetailsHidden)}
+                variant="link"
+              >
+                {areDetailsHidden ? 'Show' : 'Hide'} details
+              </Button>
             )}
           </Grid>
 

@@ -34,7 +34,7 @@ export const UnreserveIPDialog = (props: Props) => {
 
   const handleSubmit = async () => {
     try {
-      await mutateAsync();
+      await mutateAsync({ linode_id: ipAddress.linode_id });
       enqueueSnackbar(`${ipAddress.address} has been unreserved.`, {
         variant: 'success',
       });

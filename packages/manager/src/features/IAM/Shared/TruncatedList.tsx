@@ -1,6 +1,7 @@
-import { Box, LinkButton } from '@linode/ui';
-import React, { useLayoutEffect, useRef } from 'react';
-import { useCallback } from 'react';
+import { Button } from '@akamai/cds-components/react';
+import { Spacing } from '@akamai/cds-tokens';
+import { Box } from '@linode/ui';
+import React, { useCallback, useLayoutEffect, useRef } from 'react';
 import { debounce } from 'throttle-debounce';
 
 import { StyledTruncatedList } from './TruncatedList.styles';
@@ -60,15 +61,16 @@ export const TruncatedList = (props: TruncatedListProps) => {
     }
 
     return (
-      <LinkButton
+      <Button
         onClick={onClick}
-        sx={(theme) => ({
-          font: theme.tokens.alias.Typography.Label.Semibold.Xs,
-          paddingLeft: theme.tokens.spacing.S6,
-        })}
+        size="small"
+        style={{
+          paddingLeft: Spacing.S6,
+        }}
+        variant="link"
       >
         {buttonCopy} {!showAll && `(+${hiddenItemsCount})`}
-      </LinkButton>
+      </Button>
     );
   });
 

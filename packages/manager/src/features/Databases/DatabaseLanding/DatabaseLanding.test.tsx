@@ -1,9 +1,6 @@
-import { capitalize } from '@linode/utilities';
-import {
-  fireEvent,
-  screen,
-  waitForElementToBeRemoved,
-} from '@testing-library/react';
+import { formatDate } from '@akamai/compute-ui-core/datetime';
+import { capitalize } from '@akamai/compute-ui-core/formatting';
+import { screen, waitForElementToBeRemoved } from '@testing-library/react';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 
@@ -12,12 +9,13 @@ import { DatabaseLanding } from 'src/features/Databases/DatabaseLanding/Database
 import DatabaseRow from 'src/features/Databases/DatabaseLanding/DatabaseRow';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
-import { formatDate } from 'src/utilities/formatDate';
 import {
   mockMatchMedia,
   renderWithTheme,
   wrapWithTableBody,
 } from 'src/utilities/testHelpers';
+
+import { openActionMenu } from '../shared/utilities/testHelpers';
 
 const queryMocks = vi.hoisted(() => ({
   useProfile: vi.fn().mockReturnValue({ data: { restricted: false } }),
@@ -44,26 +42,21 @@ const managedDBCapability = 'Managed Databases';
 describe('Database Table Row', () => {
   it('should render a database row', async () => {
     const database = databaseInstanceFactory.build();
-
     const { getByText } = renderWithTheme(
       wrapWithTableBody(<DatabaseRow database={database} />)
     );
-
     // Check to see if the row rendered some data
     getByText(database.label);
     getByText(formatDate(database.created));
     getByText(capitalize(database.status));
   });
-
   it('should render a relative time in the created column if the database was created in the last 3 days', async () => {
     const database = databaseInstanceFactory.build({
       created: DateTime.local().minus({ days: 1 }).toISO(),
     });
-
     const { getByText } = renderWithTheme(
       wrapWithTableBody(<DatabaseRow database={database} />)
     );
-
     // Check to see if the row rendered the relative date
     getByText('1 day ago');
   });
@@ -86,33 +79,26 @@ describe('Database Table', () => {
         return HttpResponse.json(makeResourcePage(databases));
       })
     );
-
     const { getAllByText, getByTestId, queryAllByText, queryByText } =
       renderWithTheme(<DatabaseLanding />, {
         flags: defaultFlags,
       });
-
     // Loading state should render
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
-
     await waitForElementToBeRemoved(getByTestId(loadingTestId), {
       timeout: 30000,
     });
-
     // Static text and table column headers
     getAllByText('Cluster Label');
     getAllByText('Status');
     getAllByText('Engine');
     getAllByText('Region');
     getAllByText('Created');
-
     // Check to see if the mocked API data rendered in the table
     queryAllByText('Active');
-
     // Check that logo renders
     queryByText('Powered by');
   });
-
   it('should render database landing with empty state', async () => {
     const mockAccount = accountFactory.build({
       capabilities: [managedDBCapability],
@@ -130,9 +116,7 @@ describe('Database Table', () => {
     const { getByTestId, getByText } = renderWithTheme(<DatabaseLanding />, {
       flags: defaultFlags,
     });
-
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
-
     expect(
       getByText(
         "Deploy popular database engines such as MySQL and PostgreSQL using Linode's performant, reliable, and fully managed database solution."
@@ -205,7 +189,7 @@ describe('Database Landing', () => {
     expect(actionMenu).toBeInTheDocument();
   });
 
-  it('should open an action menu ', async () => {
+  it('should open an action menu', async () => {
     const databases = databaseInstanceFactory.buildList(5, {
       platform: 'rdbms-default',
       status: 'active',
@@ -216,7 +200,7 @@ describe('Database Landing', () => {
       })
     );
 
-    const { getByLabelText, getByTestId, getByText } = renderWithTheme(
+    const { getByTestId, getAllByTestId } = renderWithTheme(
       <DatabaseLanding />,
       {
         flags: defaultFlags,
@@ -227,15 +211,19 @@ describe('Database Landing', () => {
 
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
-    const actionMenu = getByLabelText(
-      `Action menu for Database ${databases[0].label}`
-    );
+    const menu = getAllByTestId('database-action-menu')[0];
 
-    await fireEvent.click(actionMenu);
+    await openActionMenu(menu);
 
-    getByText('Manage Access Controls');
-    getByText('Reset Root Password');
-    getByText('Resize');
-    getByText('Delete');
+    // Search for menu items and check that they're displayed in the document.
+    const manageAccessMenuItem = getAllByTestId('Manage Access Controls')[0];
+    const resetPasswordMenuItem = getAllByTestId('Reset Root Password')[0];
+    const resizeMenuItem = getAllByTestId('Resize')[0];
+    const deleteMenuItem = getAllByTestId('Delete')[0];
+
+    expect(manageAccessMenuItem).toBeInTheDocument();
+    expect(resetPasswordMenuItem).toBeInTheDocument();
+    expect(resizeMenuItem).toBeInTheDocument();
+    expect(deleteMenuItem).toBeInTheDocument();
   });
 });

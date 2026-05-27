@@ -1,11 +1,10 @@
 /* eslint-disable no-console */
-import { formatDuration } from '@akamai/compute-ui-core/datetime';
+import { formatDuration, parseAPIDate } from '@akamai/compute-ui-core/datetime';
 import { Duration } from 'luxon';
 import type { JSX } from 'react';
 
 import { ACTIONS_TO_INCLUDE_AS_PROGRESS_EVENTS } from 'src/features/Events/constants';
 import { isInProgressEvent } from 'src/queries/events/event.helpers';
-import { parseAPIDate } from 'src/utilities/date';
 
 import { ACTIONS_WITHOUT_USERNAMES } from './constants';
 import { eventMessages } from './factory';

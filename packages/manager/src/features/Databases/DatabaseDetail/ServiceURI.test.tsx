@@ -4,11 +4,20 @@ import * as React from 'react';
 import { describe, it } from 'vitest';
 
 import { databaseFactory } from 'src/factories/databases';
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import {
+  getShadowRootElement,
+  renderWithTheme,
+} from 'src/utilities/testHelpers';
 
 import { ServiceURI } from './ServiceURI';
 
 import type { DatabaseStatus, Engine } from '@linode/api-v4';
+
+const copyToClipboardMock = vi.hoisted(() => vi.fn());
+
+vi.mock('copy-to-clipboard', () => ({
+  default: copyToClipboardMock,
+}));
 
 const mockCredentials = {
   password: 'password123',
@@ -164,6 +173,17 @@ vi.mock('@linode/queries', async () => {
   };
 });
 
+const getServiceUriRevealButton = async (container: HTMLElement) => {
+  // eslint-disable-next-line testing-library/no-node-access -- cds-button Web Component host
+  const host = container.querySelector(
+    '[data-testid="service-uri"] cds-button'
+  );
+  expect(host).not.toBeNull();
+  const btn = await getShadowRootElement(host as HTMLElement, 'button');
+  expect(btn).not.toBeNull();
+  return btn!;
+};
+
 describe('ServiceURI', () => {
   queryMocks.useDatabaseCredentialsQuery.mockReturnValue({
     data: mockCredentials,
@@ -175,14 +195,12 @@ describe('ServiceURI', () => {
       <ServiceURI database={databaseWithNoVPC} />
     );
 
-    const revealPasswordBtn = screen.getByRole('button', {
-      name: '{click to reveal password}',
-    });
+    const revealPasswordBtn = await getServiceUriRevealButton(container);
     const serviceURIText = screen.getByTestId('service-uri').textContent;
 
     expect(revealPasswordBtn).toBeInTheDocument();
     expect(serviceURIText).toBe(
-      `postgres://{click to reveal password}@${PRIMARY_PUBLIC_CONNECTION_POOL}:15848/{connection pool label}?sslmode=require`
+      `postgres://{Click To Reveal Password}@${PRIMARY_PUBLIC_CONNECTION_POOL}:15848/{connection pool label}?sslmode=require`
     );
 
     // eslint-disable-next-line testing-library/no-container
@@ -191,11 +209,11 @@ describe('ServiceURI', () => {
   });
 
   it('should reveal password after clicking reveal button', async () => {
-    renderWithTheme(<ServiceURI database={databaseWithNoVPC} />);
+    const { container } = renderWithTheme(
+      <ServiceURI database={databaseWithNoVPC} />
+    );
 
-    const revealPasswordBtn = screen.getByRole('button', {
-      name: '{click to reveal password}',
-    });
+    const revealPasswordBtn = await getServiceUriRevealButton(container);
     await userEvent.click(revealPasswordBtn);
 
     const serviceURIText = screen.getByTestId('service-uri').textContent;
@@ -205,48 +223,44 @@ describe('ServiceURI', () => {
     );
   });
 
-  it('should render general service URI if isGeneralServiceURI is true', () => {
-    renderWithTheme(
+  it('should render general service URI if isGeneralServiceURI is true', async () => {
+    const { container } = renderWithTheme(
       <ServiceURI database={databaseWithNoVPC} isGeneralServiceURI />
     );
 
-    const revealPasswordBtn = screen.getByRole('button', {
-      name: '{click to reveal password}',
-    });
+    const revealPasswordBtn = await getServiceUriRevealButton(container);
     const serviceURIText = screen.getByTestId('service-uri').textContent;
 
     expect(revealPasswordBtn).toBeInTheDocument();
     expect(serviceURIText).toBe(
-      `postgres://{click to reveal password}@${DEFAULT_PRIMARY}:3306/defaultdb?sslmode=require`
+      `postgres://{Click To Reveal Password}@${DEFAULT_PRIMARY}:3306/defaultdb?sslmode=require`
     );
   });
 
-  it('should render general service URI with ssl-mode=REQUIRED if isGeneralServiceURI is true and the engine is mysql', () => {
+  it('should render general service URI with ssl-mode=REQUIRED if isGeneralServiceURI is true and the engine is mysql', async () => {
     const mockDb = {
       ...databaseWithNoVPC,
       engine: 'mysql' as Engine,
     };
-    renderWithTheme(<ServiceURI database={mockDb} isGeneralServiceURI />);
+    const { container } = renderWithTheme(
+      <ServiceURI database={mockDb} isGeneralServiceURI />
+    );
 
-    const revealPasswordBtn = screen.getByRole('button', {
-      name: '{click to reveal password}',
-    });
+    const revealPasswordBtn = await getServiceUriRevealButton(container);
     const serviceURIText = screen.getByTestId('service-uri').textContent;
 
     expect(revealPasswordBtn).toBeInTheDocument();
     expect(serviceURIText).toBe(
-      `mysql://{click to reveal password}@${DEFAULT_PRIMARY}:3306/defaultdb?ssl-mode=REQUIRED`
+      `mysql://{Click To Reveal Password}@${DEFAULT_PRIMARY}:3306/defaultdb?ssl-mode=REQUIRED`
     );
   });
 
   it('should reveal general service URI password after clicking reveal button', async () => {
-    renderWithTheme(
+    const { container } = renderWithTheme(
       <ServiceURI database={databaseWithNoVPC} isGeneralServiceURI />
     );
 
-    const revealPasswordBtn = screen.getByRole('button', {
-      name: '{click to reveal password}',
-    });
+    const revealPasswordBtn = await getServiceUriRevealButton(container);
     await userEvent.click(revealPasswordBtn);
 
     const serviceURIText = screen.getByTestId('service-uri').textContent;
@@ -257,67 +271,63 @@ describe('ServiceURI', () => {
   });
 
   it('should render private service URI component if there is a private-only VPC', async () => {
-    renderWithTheme(<ServiceURI database={databaseWithPrivateVPC} />);
+    const { container } = renderWithTheme(
+      <ServiceURI database={databaseWithPrivateVPC} />
+    );
 
-    const revealPasswordBtn = screen.getByRole('button', {
-      name: '{click to reveal password}',
-    });
+    const revealPasswordBtn = await getServiceUriRevealButton(container);
     const serviceURIText = screen.getByTestId('service-uri').textContent;
 
     expect(revealPasswordBtn).toBeInTheDocument();
     expect(serviceURIText).toBe(
-      `postgres://{click to reveal password}@${PRIMARY_PRIVATE_CONNECTION_POOL}:15848/{connection pool label}?sslmode=require`
+      `postgres://{Click To Reveal Password}@${PRIMARY_PRIVATE_CONNECTION_POOL}:15848/{connection pool label}?sslmode=require`
     );
   });
 
   it('should render private general service URI component if there is a private-only VPC', async () => {
-    renderWithTheme(
+    const { container } = renderWithTheme(
       <ServiceURI database={databaseWithPrivateVPC} isGeneralServiceURI />
     );
 
-    const revealPasswordBtn = screen.getByRole('button', {
-      name: '{click to reveal password}',
-    });
+    const revealPasswordBtn = await getServiceUriRevealButton(container);
     const serviceURIText = screen.getByTestId('service-uri').textContent;
 
     expect(revealPasswordBtn).toBeInTheDocument();
     expect(serviceURIText).toBe(
-      `postgres://{click to reveal password}@${PRIVATE_PRIMARY}:3306/defaultdb?sslmode=require`
+      `postgres://{Click To Reveal Password}@${PRIVATE_PRIMARY}:3306/defaultdb?sslmode=require`
     );
   });
 
   it('should render public service URI component if there is a VPC with public access', async () => {
-    renderWithTheme(<ServiceURI database={databaseWithPublicVPC} />);
+    const { container } = renderWithTheme(
+      <ServiceURI database={databaseWithPublicVPC} />
+    );
 
-    const revealPasswordBtn = screen.getByRole('button', {
-      name: '{click to reveal password}',
-    });
+    const revealPasswordBtn = await getServiceUriRevealButton(container);
     const serviceURIText = screen.getByTestId('service-uri').textContent;
 
     expect(revealPasswordBtn).toBeInTheDocument();
     expect(serviceURIText).toBe(
-      `postgres://{click to reveal password}@${PRIMARY_PUBLIC_CONNECTION_POOL}:15848/{connection pool label}?sslmode=require`
+      `postgres://{Click To Reveal Password}@${PRIMARY_PUBLIC_CONNECTION_POOL}:15848/{connection pool label}?sslmode=require`
     );
   });
 
   it('should render private service URI component if there is a VPC with public access and showPrivateVPC is true', async () => {
-    renderWithTheme(
+    const { container } = renderWithTheme(
       <ServiceURI database={databaseWithPublicVPC} showPrivateVPC />
     );
 
-    const revealPasswordBtn = screen.getByRole('button', {
-      name: '{click to reveal password}',
-    });
+    const revealPasswordBtn = await getServiceUriRevealButton(container);
     const serviceURIText = screen.getByTestId('service-uri').textContent;
 
     expect(revealPasswordBtn).toBeInTheDocument();
     expect(serviceURIText).toBe(
-      `postgres://{click to reveal password}@${PRIMARY_PRIVATE_CONNECTION_POOL}:15848/{connection pool label}?sslmode=require`
+      `postgres://{Click To Reveal Password}@${PRIMARY_PRIVATE_CONNECTION_POOL}:15848/{connection pool label}?sslmode=require`
     );
   });
 
-  it('should render general private service URI if there is a VPC with public access, isGeneralServiceURI is true, and showPrivateVPC is true', () => {
-    renderWithTheme(
+  it('should render general private service URI if there is a VPC with public access, isGeneralServiceURI is true, and showPrivateVPC is true', async () => {
+    const { container } = renderWithTheme(
       <ServiceURI
         database={databaseWithPublicVPC}
         isGeneralServiceURI
@@ -325,14 +335,12 @@ describe('ServiceURI', () => {
       />
     );
 
-    const revealPasswordBtn = screen.getByRole('button', {
-      name: '{click to reveal password}',
-    });
+    const revealPasswordBtn = await getServiceUriRevealButton(container);
     const serviceURIText = screen.getByTestId('service-uri').textContent;
 
     expect(revealPasswordBtn).toBeInTheDocument();
     expect(serviceURIText).toBe(
-      `postgres://{click to reveal password}@${PRIVATE_PRIMARY}:3306/defaultdb?sslmode=require`
+      `postgres://{Click To Reveal Password}@${PRIVATE_PRIMARY}:3306/defaultdb?sslmode=require`
     );
   });
 
@@ -352,7 +360,9 @@ describe('ServiceURI', () => {
     );
   });
 
-  it('should disable the reveal password and copy icon if the Database is suspended', async () => {
+  it('should disable password reveal and prevent copy when the Database is suspended', async () => {
+    copyToClipboardMock.mockClear();
+
     const mockDatabase = {
       ...databaseWithNoVPC,
       status: 'suspended' as DatabaseStatus,
@@ -362,12 +372,18 @@ describe('ServiceURI', () => {
       <ServiceURI database={mockDatabase} />
     );
 
-    const revealPasswordBtn = screen.getByRole('button', {
-      name: '{click to reveal password}',
-    });
+    const revealPasswordBtn = await getServiceUriRevealButton(container);
     // eslint-disable-next-line testing-library/no-container
-    const copyButton = container.querySelector('[data-qa-copy-btn]');
+    const copyButton = container.querySelector(
+      '[data-qa-copy-btn]'
+    ) as HTMLButtonElement | null;
+
     expect(revealPasswordBtn).toBeDisabled();
-    expect(copyButton).toBeDisabled();
+    // Copy stays focusable so the CDS tooltip can explain why copy is unavailable.
+    expect(copyButton).not.toBeDisabled();
+
+    await userEvent.click(copyButton!);
+
+    expect(copyToClipboardMock).not.toHaveBeenCalled();
   });
 });

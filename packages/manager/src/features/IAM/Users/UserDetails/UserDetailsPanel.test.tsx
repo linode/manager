@@ -1,3 +1,5 @@
+import { profileFactory } from '@linode/utilities';
+import { fireEvent, screen, within } from '@testing-library/react';
 import React from 'react';
 
 import { accountUserFactory } from 'src/factories';
@@ -7,20 +9,49 @@ import { UserDetailsPanel } from './UserDetailsPanel';
 
 import type { IamUserRoles } from '@linode/api-v4';
 
+const queryMocks = vi.hoisted(() => ({
+  useProfile: vi.fn().mockReturnValue({}),
+}));
+
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
+  return {
+    ...actual,
+    useProfile: queryMocks.useProfile,
+  };
+});
+
+const mockPermissions = {
+  delete_user: true,
+  list_user_permissions: true,
+  update_user: true,
+  view_user: true,
+};
+
 describe('UserDetailsPanel', () => {
   it("renders the user's username and email", async () => {
     const user = accountUserFactory.build();
     const assignedRoles = { account_access: [], entity_access: [] };
 
-    const { getByText } = renderWithTheme(
-      <UserDetailsPanel activeUser={user} assignedRoles={assignedRoles} />
+    renderWithTheme(
+      <UserDetailsPanel
+        activeUser={user}
+        assignedRoles={assignedRoles}
+        permissions={mockPermissions}
+      />
     );
 
-    expect(getByText(/Username/)).toBeVisible();
-    expect(getByText(user.username)).toBeVisible();
+    const usernameField = screen.getByText(/Username/).parentElement;
+    expect(usernameField).not.toBeNull();
+    expect(
+      within(usernameField as HTMLElement).getByText(user.username)
+    ).toBeVisible();
 
-    expect(getByText(/Email/)).toBeVisible();
-    expect(getByText(user.email)).toBeVisible();
+    const emailField = screen.getByText(/E-mail/).parentElement;
+    expect(emailField).not.toBeNull();
+    expect(
+      within(emailField as HTMLElement).getByText(user.email)
+    ).toBeVisible();
   });
 
   it("renders '0' if the user doesn't have the assigned roles", async () => {
@@ -28,10 +59,14 @@ describe('UserDetailsPanel', () => {
     const assignedRoles = { account_access: [], entity_access: [] };
 
     const { getAllByText, getByText } = renderWithTheme(
-      <UserDetailsPanel activeUser={user} assignedRoles={assignedRoles} />
+      <UserDetailsPanel
+        activeUser={user}
+        assignedRoles={assignedRoles}
+        permissions={mockPermissions}
+      />
     );
 
-    expect(getByText(/Assigned Roles/)).toBeVisible();
+    expect(getByText(/Assigned roles/i)).toBeVisible();
     expect(getAllByText('0')[0]).toBeVisible();
   });
 
@@ -58,10 +93,14 @@ describe('UserDetailsPanel', () => {
     };
 
     const { getByText } = renderWithTheme(
-      <UserDetailsPanel activeUser={user} assignedRoles={assignedRoles} />
+      <UserDetailsPanel
+        activeUser={user}
+        assignedRoles={assignedRoles}
+        permissions={mockPermissions}
+      />
     );
 
-    expect(getByText(/Assigned Roles/)).toBeVisible();
+    expect(getByText(/Assigned roles/i)).toBeVisible();
     expect(getByText('7')).toBeVisible();
   });
 
@@ -79,10 +118,14 @@ describe('UserDetailsPanel', () => {
     };
 
     const { getByText } = renderWithTheme(
-      <UserDetailsPanel activeUser={user} assignedRoles={assignedRoles} />
+      <UserDetailsPanel
+        activeUser={user}
+        assignedRoles={assignedRoles}
+        permissions={mockPermissions}
+      />
     );
 
-    expect(getByText(/Assigned Roles/)).toBeVisible();
+    expect(getByText(/Assigned roles/i)).toBeVisible();
     expect(getByText('4')).toBeVisible();
   });
 
@@ -93,7 +136,11 @@ describe('UserDetailsPanel', () => {
     const assignedRoles = { account_access: [], entity_access: [] };
 
     const { getByText } = renderWithTheme(
-      <UserDetailsPanel activeUser={user} assignedRoles={assignedRoles} />
+      <UserDetailsPanel
+        activeUser={user}
+        assignedRoles={assignedRoles}
+        permissions={mockPermissions}
+      />
     );
 
     expect(getByText(/Verified number/)).toBeVisible();
@@ -105,10 +152,141 @@ describe('UserDetailsPanel', () => {
     const assignedRoles = { account_access: [], entity_access: [] };
 
     const { getByText } = renderWithTheme(
-      <UserDetailsPanel activeUser={user} assignedRoles={assignedRoles} />
+      <UserDetailsPanel
+        activeUser={user}
+        assignedRoles={assignedRoles}
+        permissions={mockPermissions}
+      />
     );
 
-    expect(getByText(/2FA/)).toBeVisible();
+    expect(getByText(/Two-factor authentication/)).toBeVisible();
     expect(getByText('Enabled')).toBeVisible();
+  });
+});
+
+describe('UserDetailsPanel – Delete User button', () => {
+  const assignedRoles = { account_access: [], entity_access: [] };
+  const getDeleteUserButton = (container: HTMLElement) => {
+    const buttons = container.querySelectorAll('cds-tooltip > cds-button');
+    return Array.from(buttons).find((btn) =>
+      btn.textContent?.includes('Delete User')
+    );
+  };
+
+  it('disables the Delete User button for proxy users', () => {
+    queryMocks.useProfile.mockReturnValue({
+      data: profileFactory.build({ username: 'current_user' }),
+    });
+
+    const user = accountUserFactory.build({
+      user_type: 'proxy',
+      username: 'proxy_user',
+    });
+
+    const { container } = renderWithTheme(
+      <UserDetailsPanel
+        activeUser={user}
+        assignedRoles={assignedRoles}
+        permissions={mockPermissions}
+      />
+    );
+
+    expect(
+      getDeleteUserButton(container)?.querySelector('cds-icon')
+    ).toBeTruthy();
+    expect(getDeleteUserButton(container)).toHaveProperty('disabled', true);
+  });
+
+  it('disables the Delete User button when viewing your own account', () => {
+    queryMocks.useProfile.mockReturnValue({
+      data: profileFactory.build({ username: 'current_user' }),
+    });
+
+    const user = accountUserFactory.build({
+      user_type: 'default',
+      username: 'current_user',
+    });
+
+    const { container } = renderWithTheme(
+      <UserDetailsPanel
+        activeUser={user}
+        assignedRoles={assignedRoles}
+        permissions={mockPermissions}
+      />
+    );
+
+    expect(
+      getDeleteUserButton(container)?.querySelector('cds-icon')
+    ).toBeTruthy();
+    expect(getDeleteUserButton(container)).toHaveProperty('disabled', true);
+  });
+
+  it('enables the Delete User button for other deletable users', () => {
+    queryMocks.useProfile.mockReturnValue({
+      data: profileFactory.build({ username: 'current_user' }),
+    });
+
+    const user = accountUserFactory.build({
+      user_type: 'default',
+      username: 'other_user',
+    });
+
+    const { container } = renderWithTheme(
+      <UserDetailsPanel
+        activeUser={user}
+        assignedRoles={assignedRoles}
+        permissions={mockPermissions}
+      />
+    );
+
+    expect(getDeleteUserButton(container)).not.toHaveAttribute('disabled');
+    expect(
+      getDeleteUserButton(container)?.querySelector('cds-icon')
+    ).toBeNull();
+  });
+
+  it('opens the delete confirmation dialog when the Delete User button is clicked', () => {
+    queryMocks.useProfile.mockReturnValue({
+      data: profileFactory.build({ username: 'current_user' }),
+    });
+
+    const user = accountUserFactory.build({
+      user_type: 'default',
+      username: 'other_user',
+    });
+
+    const { container } = renderWithTheme(
+      <UserDetailsPanel
+        activeUser={user}
+        assignedRoles={assignedRoles}
+        permissions={mockPermissions}
+      />
+    );
+
+    fireEvent.click(getDeleteUserButton(container)!);
+
+    expect(
+      screen.getByText('Delete user?').closest('cds-modal')
+    ).toHaveTextContent(
+      "Deleting other_user is permanent and can't be undone."
+    );
+  });
+
+  it('disables the Delete User button when delete_user permission is false', () => {
+    queryMocks.useProfile.mockReturnValue({
+      data: profileFactory.build({ username: 'current_user' }),
+    });
+
+    const user = accountUserFactory.build({ username: 'other_user' });
+
+    const { container } = renderWithTheme(
+      <UserDetailsPanel
+        activeUser={user}
+        assignedRoles={assignedRoles}
+        permissions={{ ...mockPermissions, delete_user: false }}
+      />
+    );
+
+    expect(getDeleteUserButton(container)).toHaveProperty('disabled', true);
   });
 });

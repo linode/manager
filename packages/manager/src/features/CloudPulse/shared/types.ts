@@ -3,6 +3,7 @@ export type TransformKey =
   | 'capitalize'
   | 'lowercase'
   | 'original'
+  | 'responseType'
   | 'uppercase';
 
 export type TransformFunction = (value: string) => string;

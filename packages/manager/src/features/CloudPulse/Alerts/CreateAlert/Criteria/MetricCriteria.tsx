@@ -13,6 +13,7 @@ import { useGetCloudPulseMetricDefinitionsByServiceType } from 'src/queries/clou
 import { MULTILINE_ERROR_SEPARATOR } from '../../constants';
 import { AlertListNoticeMessages } from '../../Utils/AlertListNoticeMessages';
 import { convertToSeconds } from '../utilities';
+import { CloudPulseAlertsGroupBy } from './GroupBy/CloudPulseAlertsGroupBy';
 import { Metric } from './Metric';
 
 import type { CreateAlertDefinitionForm, MetricCriteriaForm } from '../types';
@@ -93,6 +94,12 @@ export const MetricCriteriaField = (props: MetricCriteriaProps) => {
               />
             )}
           <Stack spacing={2}>
+            <CloudPulseAlertsGroupBy
+              metricDefinitions={
+                metricDefinitions ? metricDefinitions.data : []
+              }
+              name="group_by"
+            />
             {fields !== null &&
               fields.length !== 0 &&
               fields.map((field, index) => {

@@ -49,7 +49,7 @@ vi.mock('@linode/queries', async () => {
 });
 
 vi.mock('../ReservedIps/IPAddressSelection/IPAddressSelection', () => ({
-  IPAddressSelection: ({ onIPModeChange, onReservedIPSelect }: any) => (
+  IPAddressSelection: ({ error, onIPModeChange, onReservedIPSelect }: any) => (
     <div>
       <button onClick={() => onIPModeChange?.('reserved')}>
         Switch to Reserved IP
@@ -63,6 +63,7 @@ vi.mock('../ReservedIps/IPAddressSelection/IPAddressSelection', () => ({
       >
         Select Reserved IP
       </button>
+      {error ? <div>{error}</div> : null}
     </div>
   ),
 }));
@@ -187,6 +188,19 @@ describe('NodeBalancerCreate', () => {
         ipv4: '192.0.2.123',
       })
     );
+  });
+
+  it('does not submit when reserved mode is selected without selecting a reserved IP', async () => {
+    const { findByText, getByText } = renderWithTheme(<NodeBalancerCreate />);
+
+    await userEvent.click(getByText('Switch to Reserved IP'));
+    await userEvent.click(getByText('Create NodeBalancer'));
+
+    expect(createNodeBalancerMock).not.toHaveBeenCalled();
+    expect(createNodeBalancerBetaMock).not.toHaveBeenCalled();
+    expect(
+      await findByText('Please select a reserved IP address.')
+    ).toBeVisible();
   });
 
   it('does not include ipv4 in the create payload when reserve IP feature is enabled and mode remains auto', async () => {

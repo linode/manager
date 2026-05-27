@@ -1,10 +1,10 @@
-import { Select } from '@akamai/cds-components/react';
+import { Button, Icon, Select, Tooltip } from '@akamai/cds-components/react';
 import {
   useAccountRoles,
   useGetDefaultDelegationAccessQuery,
   useUserRoles,
 } from '@linode/queries';
-import { Button, Typography } from '@linode/ui';
+import { Typography } from '@linode/ui';
 import { useTheme } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import { useNavigate, useParams, useSearch } from '@tanstack/react-router';
@@ -12,7 +12,6 @@ import React from 'react';
 
 import { CollapsibleTable } from 'src/components/CollapsibleTable/CollapsibleTable';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
-import { Link } from 'src/components/Link';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { PAGE_SIZES } from 'src/components/PaginationFooter/PaginationFooter.constants';
 import { TableCell } from 'src/components/TableCell';
@@ -32,6 +31,7 @@ import {
   IAM_ROLES_PENDO_IDS,
   ROLES_LEARN_MORE_LINK,
 } from '../constants';
+import { Link } from '../Link/Link';
 import { Permissions } from '../Permissions/Permissions';
 import { RemoveAssignmentConfirmationDialog } from '../RemoveAssignmentConfirmationDialog/RemoveAssignmentConfirmationDialog';
 import {
@@ -474,25 +474,31 @@ export const AssignedRolesTable = () => {
           />
         </Grid>
         <Grid sx={{ alignSelf: 'flex-start' }}>
-          <Button
-            buttonType="primary"
-            data-pendo-id={
-              isDefaultDelegationRolesForChildAccount
-                ? IAM_ROLES_PENDO_IDS.addNewDefaultRoles
-                : undefined
-            }
-            disabled={!permissionToCheck}
-            onClick={() => setIsAssignNewRoleDrawerOpen(true)}
+          <Tooltip
+            disabled={permissionToCheck}
+            tooltipPlacement="bottom"
             tooltipText={
               !permissionToCheck
                 ? 'You do not have permission to assign roles.'
                 : undefined
             }
           >
-            {isDefaultDelegationRolesForChildAccount
-              ? 'Add New Default Roles'
-              : 'Assign New Roles'}
-          </Button>
+            <Button
+              data-pendo-id={
+                isDefaultDelegationRolesForChildAccount
+                  ? IAM_ROLES_PENDO_IDS.addNewDefaultRoles
+                  : undefined
+              }
+              disabled={!permissionToCheck}
+              onClick={() => setIsAssignNewRoleDrawerOpen(true)}
+              variant="primary"
+            >
+              {isDefaultDelegationRolesForChildAccount
+                ? 'Add New Default Roles'
+                : 'Assign New Roles'}
+              {!permissionToCheck && <Icon icon="info-outline" size="m" />}
+            </Button>
+          </Tooltip>
         </Grid>
       </Grid>
       <CollapsibleTable

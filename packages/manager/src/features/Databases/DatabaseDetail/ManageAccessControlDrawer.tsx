@@ -1,5 +1,7 @@
+import { NotificationBanner } from '@akamai/cds-components/react';
+import { Spacing } from '@akamai/cds-tokens';
 import { useDatabaseMutation } from '@linode/queries';
-import { ActionsPanel, Drawer, Notice, Typography } from '@linode/ui';
+import { ActionsPanel, Drawer, Typography } from '@linode/ui';
 import * as React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 
@@ -124,13 +126,20 @@ export const ManageAccessControlDrawer = (props: Props) => {
 
   return (
     <Drawer onClose={onClose} open={open} title="Manage Access">
-      {errors.root && <Notice text={errors.root.message} variant="error" />}
+      {errors.root && (
+        <NotificationBanner
+          style={{ marginBottom: Spacing.S16 }}
+          text={errors.root.message}
+          type="error"
+        />
+      )}
       {allowListErrors &&
         allowListErrors.map((allowListError) => (
-          <Notice
+          <NotificationBanner
             key={allowListError.reason}
+            style={{ marginBottom: Spacing.S16 }}
             text={allowListError.reason}
-            variant="error"
+            type="error"
           />
         ))}
       <Typography marginBottom={4} variant="body1">

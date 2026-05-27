@@ -1,3 +1,4 @@
+import { formatDate } from '@akamai/compute-ui-core/datetime';
 import {
   useNotificationsQuery,
   useProfile,
@@ -12,7 +13,6 @@ import { Link } from 'src/components/Link';
 import { complianceUpdateContext } from 'src/context/complianceUpdateContext';
 import { reportException } from 'src/exceptionReporting';
 import { useDismissibleNotifications } from 'src/hooks/useDismissibleNotifications';
-import { formatDate } from 'src/utilities/formatDate';
 
 import { notificationCenterContext as _notificationContext } from './NotificationCenterContext';
 import { NotificationCenterNotificationMessage } from './Notifications/NotificationCenterNotificationMessage';

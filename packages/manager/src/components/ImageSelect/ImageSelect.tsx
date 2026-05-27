@@ -1,3 +1,4 @@
+import { formatDate } from '@akamai/compute-ui-core/datetime';
 import { useAllImagesQuery } from '@linode/queries';
 import {
   Autocomplete,
@@ -11,7 +12,6 @@ import { DateTime } from 'luxon';
 import React, { useMemo } from 'react';
 
 import { imageFactory } from 'src/factories/images';
-import { formatDate } from 'src/utilities/formatDate';
 
 import { OSIcon } from '../OSIcon';
 import { ImageOption } from './ImageOption';

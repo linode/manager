@@ -22,8 +22,8 @@ describe('TypeToConfirm', () => {
     const { getByRole, getByText } = renderWithTheme(<TypeToConfirm />);
 
     await waitFor(() => {
-      expect(getByRole('checkbox')).toBeEnabled();
-      expect(getByRole('checkbox')).toBeChecked();
+      expect(getByRole('switch')).toBeEnabled();
+      expect(getByRole('switch')).toBeChecked();
     });
 
     expect(getByText('Type-to-confirm is enabled')).toBeVisible();
@@ -39,8 +39,8 @@ describe('TypeToConfirm', () => {
     const { getByRole, getByText } = renderWithTheme(<TypeToConfirm />);
 
     await waitFor(() => {
-      expect(getByRole('checkbox')).toBeEnabled();
-      expect(getByRole('checkbox')).toBeChecked();
+      expect(getByRole('switch')).toBeEnabled();
+      expect(getByRole('switch')).toBeChecked();
     });
 
     expect(getByText('Type-to-confirm is enabled')).toBeVisible();
@@ -56,10 +56,10 @@ describe('TypeToConfirm', () => {
     const { getByRole, getByText } = renderWithTheme(<TypeToConfirm />);
 
     await waitFor(() => {
-      expect(getByRole('checkbox')).toBeEnabled();
+      expect(getByRole('switch')).toBeEnabled();
     });
 
-    expect(getByRole('checkbox')).not.toBeChecked();
+    expect(getByRole('switch')).not.toBeChecked();
     expect(getByText('Type-to-confirm is disabled')).toBeVisible();
   });
 });

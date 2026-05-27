@@ -1,14 +1,15 @@
+import { formatDate } from '@akamai/compute-ui-core/datetime';
+import { pluralize } from '@akamai/compute-ui-core/formatting';
 import { useProfile } from '@linode/queries';
 import { LinkButton, Stack, TooltipIcon } from '@linode/ui';
 import { Hidden } from '@linode/ui';
-import { convertStorageUnit, pluralize } from '@linode/utilities';
+import { convertStorageUnit } from '@linode/utilities';
 import React from 'react';
 
 import CloudInitIcon from 'src/assets/icons/cloud-init.svg';
 import UnlockIcon from 'src/assets/icons/unlock.svg';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { formatDate } from 'src/utilities/formatDate';
 
 import { ImagesActionMenu } from './ImagesActionMenu';
 import { ImageStatus } from './ImageStatus';

@@ -1,10 +1,12 @@
+import { Checkbox, NotificationBanner } from '@akamai/cds-components/react';
+import { Spacing } from '@akamai/cds-tokens';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useUpdateDatabaseConnectionPoolMutation } from '@linode/queries';
 import {
   ActionsPanel,
   Autocomplete,
   Drawer,
-  Notice,
+  FormControlLabel,
   Stack,
   TextField,
 } from '@linode/ui';
@@ -13,12 +15,7 @@ import { enqueueSnackbar } from 'notistack';
 import * as React from 'react';
 import { Controller, useForm, useWatch } from 'react-hook-form';
 
-import {
-  databaseNamesOptions,
-  defaultUsername,
-  poolModeOptions,
-  usernameOptions,
-} from 'src/features/Databases/constants';
+import { poolModeOptions } from 'src/features/Databases/constants';
 
 import type { ConnectionPool } from '@linode/api-v4';
 interface Props {
@@ -26,6 +23,10 @@ interface Props {
   onClose: () => void;
   open: boolean;
   pool: ConnectionPool;
+}
+
+interface EditConnectionPool extends Omit<ConnectionPool, 'label'> {
+  label?: string;
 }
 
 export const DatabaseEditConnectionPoolDrawer = (props: Props) => {
@@ -43,10 +44,10 @@ export const DatabaseEditConnectionPoolDrawer = (props: Props) => {
     handleSubmit,
     reset,
     setError,
-  } = useForm<Partial<ConnectionPool>>({
+    clearErrors,
+  } = useForm<EditConnectionPool>({
     defaultValues: {
       ...pool,
-      username: pool.username === null ? defaultUsername : pool.username,
     },
     mode: 'onBlur',
     resolver: yupResolver(updateDatabaseConnectionPoolSchema),
@@ -62,8 +63,7 @@ export const DatabaseEditConnectionPoolDrawer = (props: Props) => {
     const { label, ...values } = _values; // remove label since it is not editable
     const payload = {
       ...values,
-      username: values.username === defaultUsername ? null : values.username,
-    }; // Provide inbound user as null in the API
+    };
 
     try {
       await updateDatabaseConnectionPool(payload);
@@ -78,15 +78,19 @@ export const DatabaseEditConnectionPoolDrawer = (props: Props) => {
     }
   };
 
-  const [mode, database, username] = useWatch({
+  const [mode] = useWatch({
     control,
-    name: ['mode', 'database', 'username'],
+    name: ['mode'],
   });
 
   return (
     <Drawer onClose={handleOnClose} open={open} title="Edit Connection Pool">
       {errors.root?.message && (
-        <Notice text={errors.root.message} variant="error" />
+        <NotificationBanner
+          style={{ marginBottom: Spacing.S16 }}
+          text={errors.root.message}
+          type="error"
+        />
       )}
       <form onSubmit={handleSubmit(onSubmit)}>
         <Stack>
@@ -108,21 +112,16 @@ export const DatabaseEditConnectionPoolDrawer = (props: Props) => {
             control={control}
             name="database"
             render={({ field, fieldState }) => (
-              <Autocomplete
-                autoHighlight
-                label="Database Name"
+              <TextField
                 {...field}
-                data-testid="database-name-select"
-                disableClearable={true}
                 errorText={fieldState.error?.message}
                 id="databaseName"
-                onChange={(e, option) => {
-                  field.onChange(option.value);
+                label="Database Name"
+                onChange={(e) => {
+                  field.onChange(e.target.value);
                 }}
-                options={databaseNamesOptions}
-                value={databaseNamesOptions.find(
-                  (option) => option.value === database
-                )}
+                onClear={() => field.onChange('')}
+                placeholder="defaultdb"
               />
             )}
           />
@@ -173,22 +172,43 @@ export const DatabaseEditConnectionPoolDrawer = (props: Props) => {
             control={control}
             name="username"
             render={({ field, fieldState }) => (
-              <Autocomplete
-                autoHighlight
-                label="Username"
-                {...field}
-                data-testid="username-select"
-                disableClearable={true}
-                errorText={fieldState.error?.message}
-                id="username"
-                onChange={(e, option) => {
-                  field.onChange(option.value);
-                }}
-                options={usernameOptions}
-                value={usernameOptions.find(
-                  (option) => option.value === username
-                )}
-              />
+              <>
+                <TextField
+                  {...field}
+                  disabled={field.value === null}
+                  errorText={fieldState.error?.message}
+                  id="username"
+                  label="Username"
+                  onChange={(e) => {
+                    field.onChange(e.target.value);
+                  }}
+                  onClear={() => field.onChange('')}
+                  placeholder={field.value === null ? '' : 'akmadmin'}
+                  value={field.value === null ? '' : field.value}
+                />
+                <FormControlLabel
+                  checked={field.value === null}
+                  control={
+                    <Checkbox
+                      data-testid="database-reuse-inbound-user-checkbox"
+                      name="username"
+                      onChange={() => {
+                        if (field.value === null) {
+                          field.onChange('');
+                        } else {
+                          field.onChange(null);
+                          clearErrors('username');
+                        }
+                      }}
+                    />
+                  }
+                  data-qa-checkbox="reuseInboundUser"
+                  label="Reuse inbound user"
+                  sx={{
+                    margin: '8px 0',
+                  }}
+                />
+              </>
             )}
           />
         </Stack>

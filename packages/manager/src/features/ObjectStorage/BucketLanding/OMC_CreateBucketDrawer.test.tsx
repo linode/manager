@@ -24,7 +24,6 @@ describe('CreateBucketDrawer', () => {
         component: <CreateBucketDrawer {...props} />,
         options: {
           flags: {
-            objMultiCluster: true,
             objectStorageGen2: { enabled: true },
           },
         },
@@ -59,7 +58,6 @@ describe('CreateBucketDrawer', () => {
         component: <CreateBucketDrawer {...props} />,
         options: {
           flags: {
-            objMultiCluster: true,
             objectStorageGen2: { enabled: true },
           },
         },

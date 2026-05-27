@@ -9,10 +9,7 @@ import { TableRow } from 'src/components/TableRow';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 
-import {
-  getUniqueLinodesFromSubnets,
-  getUniqueResourcesFromSubnets,
-} from '../utils';
+import { getUniqueResourcesFromSubnets } from '../utils';
 
 import type { VPC } from '@linode/api-v4/lib/vpcs/types';
 
@@ -20,14 +17,12 @@ interface Props {
   displayVPCDBaaSResources: boolean;
   handleDeleteVPC: () => void;
   handleEditVPC: () => void;
-  isNodebalancerVPCEnabled: boolean;
   vpc: VPC;
 }
 
 export const VPCRow = ({
   handleDeleteVPC,
   handleEditVPC,
-  isNodebalancerVPCEnabled,
   displayVPCDBaaSResources,
   vpc,
 }: Props) => {
@@ -37,9 +32,10 @@ export const VPCRow = ({
   const [isOpen, setIsOpen] = React.useState<boolean>(false);
 
   const regionLabel = regions?.find((r) => r.id === vpc.region)?.label ?? '';
-  const numResources = isNodebalancerVPCEnabled
-    ? getUniqueResourcesFromSubnets(vpc.subnets, displayVPCDBaaSResources)
-    : getUniqueLinodesFromSubnets(vpc.subnets);
+  const numResources = getUniqueResourcesFromSubnets(
+    vpc.subnets,
+    displayVPCDBaaSResources
+  );
 
   const { data: permissions, isLoading } = usePermissions(
     'vpc',

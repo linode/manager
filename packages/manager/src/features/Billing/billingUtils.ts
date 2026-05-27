@@ -1,3 +1,4 @@
+import { parseAPIDate } from '@akamai/compute-ui-core/datetime';
 import { DateTime } from 'luxon';
 
 import {
@@ -6,7 +7,6 @@ import {
   PAYMENT_MIN,
   PAYMENT_SOFT_MAX,
 } from 'src/constants';
-import { parseAPIDate } from 'src/utilities/date';
 
 import type { TaxDetail } from 'src/featureFlags';
 

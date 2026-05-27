@@ -1,10 +1,15 @@
+import { Badge } from '@akamai/cds-components/react/Badge';
 import { TableCell, TableRow } from '@akamai/cds-components/react/Table';
+import {
+  formatDate,
+  isWithinDays,
+  parseAPIDate,
+} from '@akamai/compute-ui-core/datetime';
 import {
   useDatabaseTypesQuery,
   useProfile,
   useRegionsQuery,
 } from '@linode/queries';
-import { Chip, Hidden } from '@linode/ui';
 import { formatStorageUnits } from '@linode/utilities';
 import * as React from 'react';
 
@@ -12,12 +17,11 @@ import { Link } from 'src/components/Link';
 import { DatabaseStatusDisplay } from 'src/features/Databases/DatabaseDetail/DatabaseStatusDisplay';
 import { DatabaseEngineVersion } from 'src/features/Databases/DatabaseEngineVersion';
 import { DatabaseActionMenu } from 'src/features/Databases/DatabaseLanding/DatabaseActionMenu';
+import { useBreakpoint } from 'src/features/Databases/hooks/useBreakpoint';
 import {
   getIsLinkInactive,
   useIsDatabasesEnabled,
 } from 'src/features/Databases/utilities';
-import { isWithinDays, parseAPIDate } from 'src/utilities/date';
-import { formatDate } from 'src/utilities/formatDate';
 
 import { StyledActionMenuWrapper } from '../shared.styles';
 
@@ -68,6 +72,9 @@ export const DatabaseRow = ({
   const formattedPlan = plan && formatStorageUnits(plan.label);
   const actualRegion = regions?.find((r) => r.id === region);
   const { isDatabasesV2GA } = useIsDatabasesEnabled();
+  const showFromSmUp = useBreakpoint('up', 'sm');
+  const showFromMdUp = useBreakpoint('up', 'md');
+  const showFromLgUp = useBreakpoint('up', 'lg');
 
   const configuration =
     cluster_size === 1 ? (
@@ -75,12 +82,7 @@ export const DatabaseRow = ({
     ) : (
       <>
         {`Primary +${cluster_size - 1}`}
-        <Chip
-          label="HA"
-          size="small"
-          sx={(theme) => ({ borderColor: theme.color.green, mx: 0, my: 0 })}
-          variant="outlined"
-        />
+        <Badge color="green">HA</Badge>
       </>
     );
   return (
@@ -105,9 +107,7 @@ export const DatabaseRow = ({
         <DatabaseStatusDisplay database={database} events={events} />
       </TableCell>
       {isNewDatabase && <TableCell>{formattedPlan}</TableCell>}
-      <Hidden smDown>
-        <TableCell>{configuration}</TableCell>
-      </Hidden>
+      {showFromSmUp && <TableCell>{configuration}</TableCell>}
       <TableCell>
         <DatabaseEngineVersion
           databaseEngine={engine}
@@ -117,10 +117,8 @@ export const DatabaseRow = ({
           databaseVersion={version}
         />
       </TableCell>
-      <Hidden mdDown>
-        <TableCell>{actualRegion?.label ?? region}</TableCell>
-      </Hidden>
-      <Hidden lgDown>
+      {showFromMdUp && <TableCell>{actualRegion?.label ?? region}</TableCell>}
+      {showFromLgUp && (
         <TableCell>
           {isWithinDays(3, created)
             ? parseAPIDate(created).toRelative()
@@ -128,7 +126,7 @@ export const DatabaseRow = ({
                 timezone: profile?.timezone,
               })}
         </TableCell>
-      </Hidden>
+      )}
       {isDatabasesV2GA && isNewDatabase && (
         <StyledActionMenuWrapper>
           <DatabaseActionMenu

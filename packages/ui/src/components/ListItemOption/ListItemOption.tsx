@@ -113,7 +113,7 @@ export const ListItemOption = <T,>({
       }}
     >
       {children}
-      {isOptionDisabled && <Box sx={visuallyHidden}>{disabledReason}</Box>}
+      {isOptionDisabled && <Box style={visuallyHidden}>{disabledReason}</Box>}
       <Box flexGrow={1} />
       {selected && <SelectedIcon visible />}
     </ListItem>

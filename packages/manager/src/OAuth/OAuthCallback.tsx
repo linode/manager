@@ -1,11 +1,10 @@
 import * as Sentry from '@sentry/react';
 import { useNavigate } from '@tanstack/react-router';
-import { useSearch } from '@tanstack/react-router';
 import React from 'react';
 
 import { SplashScreen } from 'src/components/SplashScreen';
 
-import { clearStorageAndRedirectToLogout, handleOAuthCallback } from './oauth';
+import { oauthClient } from './oauthClient';
 
 import type { LinkProps } from '@tanstack/react-router';
 
@@ -17,9 +16,6 @@ import type { LinkProps } from '@tanstack/react-router';
  */
 export const OAuthCallback = () => {
   const navigate = useNavigate();
-  const search = useSearch({
-    from: '/oauth/callback',
-  });
 
   const hasStartedAuth = React.useRef(false);
   const isAuthenticating = React.useRef(false);
@@ -35,8 +31,8 @@ export const OAuthCallback = () => {
 
     const authenticate = async () => {
       try {
-        const { returnTo } = await handleOAuthCallback({
-          params: search,
+        const { returnTo } = await oauthClient.handleOAuthCallback({
+          params: window.location.search,
         });
 
         // None of these paths are valid return destinations
@@ -60,14 +56,14 @@ export const OAuthCallback = () => {
         // eslint-disable-next-line no-console
         console.error(error);
         Sentry.captureException(error);
-        clearStorageAndRedirectToLogout();
+        oauthClient.logout();
       } finally {
         isAuthenticating.current = false;
       }
     };
 
     authenticate();
-  }, [navigate, search]);
+  }, [navigate]);
 
   return <SplashScreen />;
 };

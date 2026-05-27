@@ -1,5 +1,5 @@
+import { downloadFile } from '@akamai/compute-ui-core/browser';
 import { Box, CircleProgress, LinkButton, Stack, Typography } from '@linode/ui';
-import { downloadFile } from '@linode/utilities';
 import copy from 'copy-to-clipboard';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';

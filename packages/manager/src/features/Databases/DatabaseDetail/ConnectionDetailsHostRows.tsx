@@ -1,13 +1,14 @@
-import { TooltipIcon, Typography } from '@linode/ui';
+import { Icon, Tooltip } from '@akamai/cds-components/react';
+import { Spacing } from '@akamai/cds-tokens';
+import { Typography } from '@linode/ui';
 import * as React from 'react';
-
-import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 
 import {
   SUMMARY_HOST_TOOLTIP_COPY,
   SUMMARY_PRIVATE_HOST_COPY,
   SUMMARY_PRIVATE_HOST_LEGACY_COPY,
 } from '../constants';
+import { CopyTooltip } from '../shared/CopyTooltip/CopyTooltip';
 import {
   convertPrivateToPublicHostname,
   getReadOnlyHost,
@@ -36,19 +37,6 @@ export const ConnectionDetailsHostRows = (
   const { database, isSummaryTab } = props;
   const { classes } = useStyles();
 
-  const sxTooltipIcon = {
-    marginLeft: '4px',
-    padding: '0px',
-  };
-
-  const hostTooltipComponentProps = {
-    tooltip: {
-      style: {
-        minWidth: 285,
-      },
-    },
-  };
-
   const isLegacy = isLegacyDatabase(database); // TODO (UIE-8214) POST GA - Remove legacy check and legacy content as it is no longer necessary
   const hasVPC = Boolean(database?.private_network?.vpc_id);
   const hasPublicVPC = hasVPC && database?.private_network?.public_access;
@@ -69,16 +57,20 @@ export const ConnectionDetailsHostRows = (
             text={primaryHostName}
           />
           {!isLegacy && (
-            <TooltipIcon
-              componentsProps={hostTooltipComponentProps}
-              status="info"
-              sxTooltipIcon={sxTooltipIcon}
-              text={
+            <Tooltip
+              tooltipPlacement="bottom"
+              tooltipText={
                 mode === 'private'
                   ? SUMMARY_PRIVATE_HOST_COPY
                   : SUMMARY_HOST_TOOLTIP_COPY
               }
-            />
+            >
+              <Icon
+                icon="info-outline"
+                size="m"
+                style={{ marginLeft: Spacing.S4 }}
+              />
+            </Tooltip>
           )}
         </>
       );
@@ -111,23 +103,29 @@ export const ConnectionDetailsHostRows = (
           />
         )}
         {isLegacy && (
-          <TooltipIcon
-            status="info"
-            sxTooltipIcon={sxTooltipIcon}
-            text={SUMMARY_PRIVATE_HOST_LEGACY_COPY}
-          />
+          <Tooltip
+            tooltipPlacement="bottom"
+            tooltipText={SUMMARY_PRIVATE_HOST_LEGACY_COPY}
+          >
+            <Icon
+              icon="info-outline"
+              size="m"
+              style={{ marginLeft: Spacing.S4 }}
+            />
+          </Tooltip>
         )}
         {!isLegacy && hasHost && (
-          <TooltipIcon
-            componentsProps={hostTooltipComponentProps}
-            status="info"
-            sxTooltipIcon={sxTooltipIcon}
-            text={
+          <Tooltip
+            style={{ marginLeft: Spacing.S4 }}
+            tooltipPlacement="bottom"
+            tooltipText={
               mode === 'private'
                 ? SUMMARY_PRIVATE_HOST_COPY
                 : SUMMARY_HOST_TOOLTIP_COPY
             }
-          />
+          >
+            <Icon icon="info-outline" size="m" />
+          </Tooltip>
         )}
       </>
     );

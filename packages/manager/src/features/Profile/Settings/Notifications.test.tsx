@@ -24,8 +24,8 @@ describe('Notifications', () => {
     const { getByRole, getByText } = renderWithTheme(<Notifications />);
 
     await waitFor(() => {
-      expect(getByRole('checkbox')).toBeEnabled();
-      expect(getByRole('checkbox')).toBeChecked();
+      expect(getByRole('switch')).toBeEnabled();
+      expect(getByRole('switch')).toBeChecked();
     });
 
     expect(
@@ -43,10 +43,10 @@ describe('Notifications', () => {
     const { getByRole, getByText } = renderWithTheme(<Notifications />);
 
     await waitFor(() => {
-      expect(getByRole('checkbox')).toBeEnabled();
+      expect(getByRole('switch')).toBeEnabled();
     });
 
-    expect(getByRole('checkbox')).not.toBeChecked();
+    expect(getByRole('switch')).not.toBeChecked();
     expect(
       getByText('Email alerts for account activity are disabled')
     ).toBeVisible();

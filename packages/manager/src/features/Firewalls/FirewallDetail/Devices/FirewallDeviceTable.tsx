@@ -13,7 +13,6 @@ import { useGetAllUserEntitiesByPermission } from 'src/features/IAM/hooks/useGet
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
 import { formattedTypes } from './constants';
 import { FirewallDeviceRow } from './FirewallDeviceRow';
@@ -39,8 +38,6 @@ export const FirewallDeviceTable = React.memo(
       handleRemoveDevice,
       type,
     } = props;
-
-    const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
 
     const {
       data: allDevices,
@@ -70,7 +67,7 @@ export const FirewallDeviceTable = React.memo(
 
     const devices =
       allDevices?.filter((device) =>
-        type === 'linode' && isLinodeInterfacesEnabled
+        type === 'linode'
           ? device.entity.type !== 'nodebalancer' // include entities with type 'linode_interface' in Linode table
           : device.entity.type === type
       ) || [];
@@ -163,7 +160,7 @@ export const FirewallDeviceTable = React.memo(
               >
                 {formattedTypes[deviceType]}
               </TableSortCell>
-              {isLinodeInterfacesEnabled && isLinodeRelatedDevice && (
+              {isLinodeRelatedDevice && (
                 <TableCell>Network Interface</TableCell>
               )}
               <TableCell />

@@ -1,6 +1,14 @@
+import {
+  FormError,
+  FormField,
+  FormLabel,
+  NotificationBanner,
+  TextField,
+} from '@akamai/cds-components/react';
+import { Alias, Spacing } from '@akamai/cds-tokens';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useCreateUserMutation } from '@linode/queries';
-import { ActionsPanel, Box, Drawer, Notice, TextField } from '@linode/ui';
+import { ActionsPanel, Box, Drawer } from '@linode/ui';
 import { CreateUserSchema } from '@linode/validation';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -59,49 +67,93 @@ export const CreateUserDrawer = (props: Props) => {
   return (
     <Drawer onClose={handleClose} open={open} title="Add a User">
       {errors.root?.message && (
-        <Notice text={errors.root?.message} variant="error" />
+        <NotificationBanner text={errors.root?.message} type="error" />
       )}
       <form noValidate onSubmit={handleSubmit(onSubmit)}>
         <Controller
           control={control}
           name="username"
           render={({ field, fieldState }) => (
-            <TextField
-              data-qa-create-username
-              errorText={fieldState.error?.message}
-              label="Username"
-              onBlur={field.onBlur}
-              onChange={field.onChange}
-              required
-              trimmed
-              value={field.value}
-            />
+            <FormField
+              error={Boolean(fieldState.error?.message)}
+              labelPosition="top"
+              style={{ padding: Spacing.S0 }}
+            >
+              <FormLabel
+                htmlFor="username"
+                slot="label"
+                style={{
+                  textAlign: 'left',
+                  padding: Spacing.S0,
+                  marginBottom: Spacing.S8,
+                  marginTop: Spacing.S16,
+                }}
+              >
+                Username{' '}
+                <span style={{ font: Alias.Typography.Body.Regular }}>
+                  (required)
+                </span>
+              </FormLabel>
+              <TextField
+                data-qa-create-username
+                error={Boolean(fieldState.error?.message)}
+                id="username"
+                onBlurred={() => field.onBlur()}
+                onChange={(e) => field.onChange(e.detail)}
+                required
+                value={field.value}
+              />
+              {Boolean(fieldState.error?.message) && (
+                <FormError slot="error">{fieldState.error?.message}</FormError>
+              )}
+            </FormField>
           )}
-          rules={{ required: 'Username is required' }}
         />
 
         <Controller
           control={control}
           name="email"
           render={({ field, fieldState }) => (
-            <TextField
-              data-qa-create-email
-              errorText={fieldState.error?.message}
-              label="Email"
-              onBlur={field.onBlur}
-              onChange={field.onChange}
-              required
-              trimmed
-              type="email"
-              value={field.value}
-            />
+            <FormField
+              error={Boolean(fieldState.error?.message)}
+              labelPosition="top"
+              style={{ padding: Spacing.S0 }}
+            >
+              <FormLabel
+                htmlFor="email"
+                slot="label"
+                style={{
+                  textAlign: 'left',
+                  padding: Spacing.S0,
+                  marginBottom: Spacing.S8,
+                  marginTop: Spacing.S16,
+                }}
+              >
+                Email{' '}
+                <span style={{ font: Alias.Typography.Body.Regular }}>
+                  (required)
+                </span>
+              </FormLabel>
+              <TextField
+                data-qa-create-email
+                error={Boolean(fieldState.error?.message)}
+                id="email"
+                onBlurred={() => field.onBlur()}
+                onChange={(e) => field.onChange(e.detail)}
+                required
+                value={field.value}
+              />
+              {Boolean(fieldState.error?.message) && (
+                <FormError slot="error">{fieldState.error?.message}</FormError>
+              )}
+            </FormField>
           )}
         />
 
         <Box sx={{ marginTop: 2 }}>
-          <Notice
+          <NotificationBanner
             text="The user will be sent an email to set their password."
-            variant="warning"
+            type="warning"
           />
         </Box>
         <ActionsPanel

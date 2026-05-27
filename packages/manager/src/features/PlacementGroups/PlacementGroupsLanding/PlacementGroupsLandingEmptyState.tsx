@@ -1,8 +1,8 @@
+import { sendEvent } from '@akamai/compute-ui-core/analytics';
 import * as React from 'react';
 
 import ComputeIcon from 'src/assets/icons/entityIcons/compute.svg';
 import { ResourcesSection } from 'src/components/EmptyLandingPageResources/ResourcesSection';
-import { sendEvent } from 'src/utilities/analytics/utils';
 
 import {
   gettingStartedGuides,

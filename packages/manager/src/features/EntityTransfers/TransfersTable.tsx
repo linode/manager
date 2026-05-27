@@ -1,7 +1,7 @@
+import { capitalize } from '@akamai/compute-ui-core/formatting';
 import { type PermissionType } from '@linode/api-v4';
 import { Accordion } from '@linode/ui';
 import { Hidden } from '@linode/ui';
-import { capitalize } from '@linode/utilities';
 import * as React from 'react';
 
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';

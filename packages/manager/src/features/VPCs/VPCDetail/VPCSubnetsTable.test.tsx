@@ -54,52 +54,6 @@ describe('VPC Subnets table', () => {
     });
   });
 
-  it('should display filter input, subnet label, id, ip range, number of linodes, and action menu', async () => {
-    const subnet = subnetFactory.build({
-      id: 27,
-      linodes: [
-        subnetAssignedLinodeDataFactory.build({ id: 1 }),
-        subnetAssignedLinodeDataFactory.build({ id: 2 }),
-        subnetAssignedLinodeDataFactory.build({ id: 3 }),
-      ],
-    });
-    queryMocks.useSubnetsQuery.mockReturnValue({
-      data: {
-        data: [subnet],
-      },
-    });
-
-    const { getByLabelText, getByPlaceholderText, getByText } = renderWithTheme(
-      <VPCSubnetsTable
-        isVPCLKEEnterpriseCluster={false}
-        vpcId={1}
-        vpcRegion=""
-      />
-    );
-
-    expect(getByPlaceholderText('Filter Subnets by label or id')).toBeVisible();
-    expect(getByText('Subnet')).toBeVisible();
-    expect(getByText(subnet.label)).toBeVisible();
-    expect(getByText('Subnet ID')).toBeVisible();
-    expect(getByText(subnet.id)).toBeVisible();
-
-    expect(getByText('Subnet IP Range')).toBeVisible();
-    expect(getByText(subnet.ipv4!)).toBeVisible();
-
-    expect(getByText('Linodes')).toBeVisible();
-    expect(getByText(subnet.linodes.length)).toBeVisible();
-
-    const actionMenuButton = getByLabelText(
-      `Action menu for Subnet ${subnet.label}`
-    );
-    await userEvent.click(actionMenuButton);
-
-    expect(getByText('Assign Linodes')).toBeVisible();
-    expect(getByText('Unassign Linodes')).toBeVisible();
-    expect(getByText('Edit')).toBeVisible();
-    expect(getByText('Delete')).toBeVisible();
-  });
-
   it('should display filter input, subnet label, id, ip range, number of resources, and action menu', async () => {
     const subnet = subnetFactory.build({
       id: 39,

@@ -1,10 +1,13 @@
-import { screen } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 import { describe, it } from 'vitest';
 
 import { databaseConnectionPoolFactory } from 'src/factories';
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import {
+  getShadowRootElement,
+  renderWithTheme,
+} from 'src/utilities/testHelpers';
 
 import { DatabaseEditConnectionPoolDrawer } from './DatabaseEditConnectionPoolDrawer';
 
@@ -47,7 +50,7 @@ describe('DatabaseEditConnectionPoolDrawer Component', () => {
     });
   });
 
-  it('Should render the drawer title, prefilled inputs, and actions', () => {
+  it('Should render the drawer title, prefilled inputs, and actions', async () => {
     renderWithTheme(<DatabaseEditConnectionPoolDrawer {...mockProps} />);
 
     const drawerTitle = screen.getByText('Edit Connection Pool');
@@ -63,6 +66,13 @@ describe('DatabaseEditConnectionPoolDrawer Component', () => {
     const poolModeInput = screen.getByLabelText('Pool Mode');
     const poolSizeInput = screen.getByLabelText('Pool Size');
     const usernameInput = screen.getByLabelText('Username');
+    const reuseInboundUserCheckboxHost = screen.getByTestId(
+      'database-reuse-inbound-user-checkbox'
+    );
+    const reuseInboundUserCheckbox = await getShadowRootElement(
+      reuseInboundUserCheckboxHost as HTMLElement,
+      'input'
+    );
 
     expect(databaseNameInput).toBeVisible();
     expect(databaseNameInput).toHaveValue('defaultdb');
@@ -75,6 +85,8 @@ describe('DatabaseEditConnectionPoolDrawer Component', () => {
 
     expect(usernameInput).toBeVisible();
     expect(usernameInput).toHaveValue('akmadmin');
+
+    expect(reuseInboundUserCheckbox).not.toBeChecked();
 
     const saveBtn = screen.getByText('Save');
     const cancelBtn = screen.getByText('Cancel');
@@ -101,9 +113,11 @@ describe('DatabaseEditConnectionPoolDrawer Component', () => {
     const saveBtn = screen.getByText('Save');
     await userEvent.click(saveBtn);
 
-    // Check that the error notice is displayed
-    const errorNotice = screen.getByText(mockErrorMessage);
-    expect(errorNotice).toBeInTheDocument();
+    // CDS NotificationBanner renders copy inside shadow DOM (not visible to getByText)
+    await waitFor(() => {
+      const banner = document.querySelector('cds-notification-banner');
+      expect(banner?.shadowRoot?.textContent ?? '').toContain(mockErrorMessage);
+    });
   });
 
   it('Should display inline errors', async () => {
@@ -136,5 +150,40 @@ describe('DatabaseEditConnectionPoolDrawer Component', () => {
     expect(modeError).toBeVisible();
     expect(databaseError).toBeVisible();
     expect(usernameError).toBeVisible();
+  });
+
+  it('Should enable the Username input if the Reuse Inbound User checkbox is not checked', async () => {
+    renderWithTheme(<DatabaseEditConnectionPoolDrawer {...mockProps} />);
+
+    const usernameInput = screen.getByLabelText('Username');
+
+    const reuseInboundUserCheckboxHost = screen.getByTestId(
+      'database-reuse-inbound-user-checkbox'
+    );
+    const reuseInboundUserCheckbox = await getShadowRootElement(
+      reuseInboundUserCheckboxHost as HTMLElement,
+      'input'
+    );
+
+    expect(usernameInput).toBeEnabled();
+    expect(reuseInboundUserCheckbox).not.toBeChecked();
+  });
+
+  it('Should disable the Username input if the Reuse Inbound User checkbox is checked', async () => {
+    renderWithTheme(<DatabaseEditConnectionPoolDrawer {...mockProps} />);
+
+    const usernameInput = screen.getByLabelText('Username');
+    const reuseInboundUserCheckboxHost = screen.getByTestId(
+      'database-reuse-inbound-user-checkbox'
+    );
+    const reuseInboundUserCheckbox = await getShadowRootElement(
+      reuseInboundUserCheckboxHost as HTMLElement,
+      'input'
+    );
+
+    await userEvent.click(reuseInboundUserCheckbox!);
+
+    expect(usernameInput).toBeDisabled();
+    expect(reuseInboundUserCheckbox).toBeChecked();
   });
 });

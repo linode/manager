@@ -1,6 +1,9 @@
-import { sendEvent } from './utils';
+import {
+  generateTimeOfDay,
+  sendEvent,
+} from '@akamai/compute-ui-core/analytics';
 
-import type { CustomAnalyticsData } from './types';
+import type { CustomAnalyticsData } from '@akamai/compute-ui-core/analytics';
 
 /**
  * Custom Events
@@ -199,24 +202,6 @@ export const sendMigrationInitiatedEvent = (
     category: 'Inter-DC Migration Requested',
     label: `${sourceRegionLabel} to ${destRegionLabel}`,
   });
-};
-
-export const generateTimeOfDay = (currentHour: number): string => {
-  let currentTimeOfDay = 'Other';
-
-  if (currentHour >= 0 && currentHour < 5) {
-    currentTimeOfDay = 'Early Morning';
-  } else if (currentHour >= 5 && currentHour < 12) {
-    currentTimeOfDay = 'Morning';
-  } else if (currentHour >= 12 && currentHour < 17) {
-    currentTimeOfDay = 'Midday';
-  } else if (currentHour >= 17 && currentHour < 20) {
-    currentTimeOfDay = 'Evening';
-  } else if (currentHour >= 20 && currentHour <= 24) {
-    currentTimeOfDay = 'Night';
-  }
-
-  return currentTimeOfDay;
 };
 
 // DisableDomainDialog.tsx

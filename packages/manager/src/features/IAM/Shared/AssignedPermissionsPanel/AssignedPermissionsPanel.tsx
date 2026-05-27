@@ -1,20 +1,19 @@
+import { Spacing } from '@akamai/cds-tokens';
 import * as React from 'react';
-
-import { Link } from 'src/components/Link';
 
 import { ROLES_LEARN_MORE_LINK } from '../constants';
 import { EntitiesSelect } from '../Entities/EntitiesSelect';
+import { Link } from '../Link/Link';
+import { Paper } from '../Paper/Paper';
 import { Permissions } from '../Permissions/Permissions';
 import { type ExtendedRole, getFacadeRoleDescription } from '../utilities';
 import {
   StyledDescription,
   StyledEntityBox,
-  StyledPaper,
   StyledTitle,
 } from './AssignedPermissionsPanel.style';
 
 import type { DrawerModes, EntitiesOption, ExtendedRoleView } from '../types';
-import type { SxProps, Theme } from '@linode/ui';
 
 interface Props {
   errorText?: string;
@@ -23,7 +22,7 @@ interface Props {
   onChange?: (value: EntitiesOption[]) => void;
   role: ExtendedRole | ExtendedRoleView;
   showName?: boolean;
-  sx?: SxProps<Theme>;
+  sx?: React.CSSProperties;
   value?: EntitiesOption[];
 }
 
@@ -38,7 +37,14 @@ export const AssignedPermissionsPanel = ({
   value,
 }: Props) => {
   return (
-    <StyledPaper sx={{ ...sx }}>
+    <Paper
+      marginTop={Spacing.S8}
+      padding={Spacing.S12}
+      sx={{
+        ...sx,
+        backgroundColor: `var(--token-alias-background-neutral, light-dark(#f7f7fa, #343438))`,
+      }}
+    >
       {hideDetails && showName && (
         <StyledTitle showName={showName}>{role.name}</StyledTitle>
       )}
@@ -72,6 +78,6 @@ export const AssignedPermissionsPanel = ({
           />
         </StyledEntityBox>
       )}
-    </StyledPaper>
+    </Paper>
   );
 };

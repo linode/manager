@@ -1,10 +1,9 @@
+import { formatDate } from '@akamai/compute-ui-core/datetime';
+import { capitalize } from '@akamai/compute-ui-core/formatting';
 import { useProfile } from '@linode/queries';
 import { Typography } from '@linode/ui';
-import { capitalize } from '@linode/utilities';
 import { Grid } from '@mui/material';
 import React from 'react';
-
-import { formatDate } from 'src/utilities/formatDate';
 
 import { AlertDetailRow } from '../../AlertsDetail/AlertDetailRow';
 

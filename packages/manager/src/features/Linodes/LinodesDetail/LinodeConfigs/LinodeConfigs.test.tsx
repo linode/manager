@@ -71,10 +71,6 @@ describe('LinodeConfigs', () => {
       data: linode,
     });
 
-    queryMocks.useFlags.mockReturnValue({
-      linodeInterfaces: { enabled: true },
-    });
-
     const { queryByText } = renderWithTheme(<LinodeConfigs />);
 
     expect(queryByText('Network Interfaces')).not.toBeInTheDocument();

@@ -17,6 +17,7 @@ import {
 
 import { queryPresets } from '../base';
 import { firewallQueries } from '../firewalls';
+import { networkingQueries } from '../networking/networking';
 import { profileQueries } from '../profile';
 import { vpcQueries } from '../vpcs';
 import { nodebalancerQueries } from './keys';
@@ -85,6 +86,16 @@ export const useNodebalancerDeleteMutation = (id: number) => {
       queryClient.invalidateQueries({
         queryKey: nodebalancerQueries.nodebalancers.queryKey,
       });
+
+      // Invalidate Reserved IPs queries (so IPs show as Unassigned)
+      queryClient.invalidateQueries({
+        queryKey: networkingQueries.reservedIPs.queryKey,
+      });
+
+      // Invalidate networking IPs list
+      queryClient.invalidateQueries({
+        queryKey: networkingQueries.ips._def,
+      });
     },
   });
 };
@@ -121,6 +132,16 @@ export const useNodebalancerCreateMutation = () => {
           queryKey: firewallQueries.firewall(variables.firewall_id).queryKey,
         });
       }
+
+      // Invalidate Reserved IPs queries so the table reflects the newly assigned resource
+      queryClient.invalidateQueries({
+        queryKey: networkingQueries.reservedIPs.queryKey,
+      });
+
+      // Invalidate networking IPs list
+      queryClient.invalidateQueries({
+        queryKey: networkingQueries.ips._def,
+      });
     },
   });
 };
@@ -167,6 +188,16 @@ export const useNodebalancerCreateBetaMutation = () => {
         // Invalidating all vpc related queries since we don't have the specific vpc_id
         queryClient.invalidateQueries({ queryKey: vpcQueries._def });
       }
+
+      // Invalidate Reserved IPs queries so the table reflects the newly assigned resource
+      queryClient.invalidateQueries({
+        queryKey: networkingQueries.reservedIPs.queryKey,
+      });
+
+      // Invalidate networking IPs list
+      queryClient.invalidateQueries({
+        queryKey: networkingQueries.ips._def,
+      });
     },
   });
 };

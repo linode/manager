@@ -3,3 +3,6 @@ export const RESERVE_IP_DESCRIPTION =
 
 export const RESERVED_IPS_DOCS_LINK =
   'https://techdocs.akamai.com/cloud-computing/docs/reserved-ips';
+
+export const RESERVE_AN_IP_DOC_LINK =
+  'https://techdocs.akamai.com/cloud-computing/docs/reserve-an-ip';

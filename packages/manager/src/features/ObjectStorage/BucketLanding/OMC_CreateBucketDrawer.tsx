@@ -301,7 +301,7 @@ export const CreateBucketDrawer = (props: Props) => {
           name="label"
           render={({ field }) => (
             <TextField
-              data-qa-cluster-label
+              data-qa-bucket-label
               data-testid="label"
               disabled={isRestrictedUser}
               errorText={errors.label?.message}

@@ -25,6 +25,8 @@ import { filterProducts } from './utils';
 import type { Category, Product, Type } from '../shared';
 import type { AutocompleteRenderOptionState } from '@mui/material';
 
+const PRIORITY_CATEGORIES: Category[] = ['AI', 'Compute', 'Kubernetes'];
+
 export const MarketplaceLanding = () => {
   const navigate = useNavigate();
   const CATALOG_ROUTE = '/cloud-marketplace/catalog';
@@ -51,11 +53,18 @@ export const MarketplaceLanding = () => {
     return Array.from(uniqueTypes);
   }, []);
 
-  // Category dropdown options (sorted alphabetically)
+  // Category dropdown options (AI, Compute, Kubernetes first; then alphabetical)
   const categoryOptions = React.useMemo(
     () =>
       [...categoriesWithProducts]
-        .sort((a, b) => a.localeCompare(b))
+        .sort((a, b) => {
+          const aIdx = PRIORITY_CATEGORIES.indexOf(a);
+          const bIdx = PRIORITY_CATEGORIES.indexOf(b);
+          if (aIdx !== bIdx) {
+            return (aIdx === -1 ? 99 : aIdx) - (bIdx === -1 ? 99 : bIdx);
+          }
+          return a.localeCompare(b);
+        })
         .map((cat) => ({ label: cat })),
     [categoriesWithProducts]
   );

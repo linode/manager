@@ -12,7 +12,7 @@ import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
-import { useIsACLPLogsEnabled } from 'src/features/Delivery/deliveryUtils';
+import { useIsACLPLogsNew } from 'src/features/Delivery/deliveryUtils';
 import { useTabs } from 'src/hooks/useTabs';
 
 const Destinations = React.lazy(() =>
@@ -28,7 +28,7 @@ const Streams = React.lazy(() =>
 );
 
 export const DeliveryLanding = React.memo(() => {
-  const { isACLPLogsNew } = useIsACLPLogsEnabled();
+  const isACLPLogsNew = useIsACLPLogsNew();
 
   const landingHeaderProps: LandingHeaderProps = {
     breadcrumbProps: {

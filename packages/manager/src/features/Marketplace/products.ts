@@ -151,7 +151,7 @@ export const PRODUCTS: Product[] = [
   {
     categories: [
       'Data Analytics',
-      'Database Management',
+
       'Data Sources',
       'Enterprise',
       'Kubernetes',
@@ -195,12 +195,7 @@ export const PRODUCTS: Product[] = [
     },
   },
   {
-    categories: [
-      'Development Tools',
-      'Enterprise',
-      'Kubernetes',
-      'Other Software and APIs',
-    ],
+    categories: ['Enterprise', 'Kubernetes', 'Other Software and APIs'],
     id: 'portainer',
     name: 'Portainer',
     partner: {
@@ -379,13 +374,11 @@ export const PRODUCTS: Product[] = [
   {
     categories: [
       'Data Analytics',
-      'Database Management',
       'Data Sources',
       'Networking',
       'Compute',
       'Storage',
       'Kubernetes',
-      'Development Tools',
       'Enterprise',
       'CDN Affiliated',
       'Other Software and APIs',
@@ -435,7 +428,6 @@ export const PRODUCTS: Product[] = [
       'Compute',
       'Storage',
       'Kubernetes',
-      'Development Tools',
       'Enterprise',
       'CDN Affiliated',
       'Media & Entertainment, Gaming',
@@ -464,7 +456,6 @@ export const PRODUCTS: Product[] = [
       'Compute',
       'Storage',
       'Kubernetes',
-      'Development Tools',
       'Enterprise',
       'CDN Affiliated',
       'Media & Entertainment, Gaming',
@@ -493,7 +484,6 @@ export const PRODUCTS: Product[] = [
       'Compute',
       'Storage',
       'Kubernetes',
-      'Development Tools',
       'Enterprise',
       'CDN Affiliated',
       'Media & Entertainment, Gaming',

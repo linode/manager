@@ -60,6 +60,7 @@ export interface Account {
 export type BillingSource = 'akamai' | 'linode';
 
 export const accountCapabilities = [
+  'AI',
   'Akamai Cloud Load Balancer',
   'Akamai Cloud Pulse',
   'Akamai Cloud Pulse Logs',
@@ -89,6 +90,7 @@ export const accountCapabilities = [
   'Object Storage',
   'Placement Group',
   'SMTP Enabled',
+  'Support Live Chat',
   'Support Ticket Severity',
   'Vlans',
   'VPCs',

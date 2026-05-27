@@ -27,6 +27,7 @@ const mockBuckets = [
     hostname: 'bucket-with-hostname.us-east-1.linodeobjects.com',
     label: 'bucket-with-hostname',
     region: 'us-east',
+    s3_endpoint: 'us-east-1.linodeobjects.com',
   }),
   objectStorageBucketFactory.build({
     hostname: 'bucket-with-s3-endpoint.eu-central-1.linodeobjects.com',
@@ -182,9 +183,9 @@ describe('DestinationEdit', () => {
         expect(bucketAutocomplete).toHaveValue('bucket-with-hostname');
       });
 
-      // Endpoint should be auto-filled with the bucket's hostname
+      // Endpoint should be auto-filled with the bucket's endpoint
       expect(screen.getByLabelText('Endpoint')).toHaveValue(
-        'bucket-with-hostname.us-east-1.linodeobjects.com'
+        'us-east-1.linodeobjects.com'
       );
     });
 

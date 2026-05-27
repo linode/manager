@@ -1,4 +1,4 @@
-import { roundTo } from '@linode/utilities';
+import { roundTo } from '@akamai/compute-ui-core/formatting';
 import { DateTime } from 'luxon';
 
 import type { DataSet } from './AreaChart';

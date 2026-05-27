@@ -1,6 +1,9 @@
+import { getStorage, setStorage } from '@akamai/compute-ui-core/browser';
+import { parseAPIDate } from '@akamai/compute-ui-core/datetime';
+import { pluralize } from '@akamai/compute-ui-core/formatting';
 import { useAccount } from '@linode/queries';
 import { ActionsPanel, Typography } from '@linode/ui';
-import { pluralize, useInterval } from '@linode/utilities';
+import { useInterval } from '@linode/utilities';
 import { useNavigate } from '@tanstack/react-router';
 import React, { useEffect } from 'react';
 
@@ -10,8 +13,6 @@ import { useParentChildAuthentication } from 'src/features/Account/SwitchAccount
 import { setTokenInLocalStorage } from 'src/features/Account/SwitchAccounts/utils';
 import { useDelegationRole } from 'src/features/IAM/hooks/useDelegationRole';
 import { useIsIAMDelegationEnabled } from 'src/features/IAM/hooks/useIsIAMEnabled';
-import { parseAPIDate } from 'src/utilities/date';
-import { getStorage, setStorage } from 'src/utilities/storage';
 
 interface SessionExpirationDialogProps {
   isOpen: boolean;

@@ -1,5 +1,7 @@
+import { NotificationBanner } from '@akamai/cds-components/react';
+import { Spacing } from '@akamai/cds-tokens';
 import { useDeleteDatabaseConnectionPoolMutation } from '@linode/queries';
-import { ActionsPanel, Notice } from '@linode/ui';
+import { ActionsPanel } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
@@ -56,10 +58,10 @@ export const DatabaseConnectionPoolDeleteDialog = (props: Props) => {
       open={open}
       title={`Delete Connection Pool ${poolLabel}?`}
     >
-      <Notice variant="warning">
+      <NotificationBanner style={{ marginBottom: Spacing.S16 }} type="warning">
         <strong>Warning:</strong> Deletion will break the service URI for any
         clients using this pool.
-      </Notice>
+      </NotificationBanner>
     </ConfirmationDialog>
   );
 };

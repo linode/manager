@@ -6,7 +6,6 @@ import {
   TableHeaderCell,
   TableRow,
 } from '@akamai/cds-components/react/Table';
-import { Hidden } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import React from 'react';
 
@@ -18,6 +17,7 @@ import DatabaseSettingsResetPasswordDialog from 'src/features/Databases/Database
 import { ManageAccessControlDrawer } from 'src/features/Databases/DatabaseDetail/ManageAccessControlDrawer';
 import DatabaseLogo from 'src/features/Databases/DatabaseLanding/DatabaseLogo';
 import DatabaseRow from 'src/features/Databases/DatabaseLanding/DatabaseRow';
+import { useBreakpoint } from 'src/features/Databases/hooks/useBreakpoint';
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { useInProgressEvents } from 'src/queries/events/events';
@@ -46,6 +46,9 @@ const DatabaseLandingTable = ({
   results,
 }: Props) => {
   const theme = useTheme();
+  const showFromSmUp = useBreakpoint('up', 'sm');
+  const showFromMdUp = useBreakpoint('up', 'md');
+  const showFromLgUp = useBreakpoint('up', 'lg');
   const { data: events } = useInProgressEvents();
   const { isDatabasesV2GA } = useIsDatabasesEnabled();
 
@@ -148,7 +151,7 @@ const DatabaseLandingTable = ({
                   Plan
                 </TableHeaderCell>
               )}
-              <Hidden smDown>
+              {showFromSmUp && (
                 <TableHeaderCell
                   onSort={() =>
                     handleOrderChange(
@@ -161,7 +164,7 @@ const DatabaseLandingTable = ({
                 >
                   {isNewDatabase ? 'Nodes' : 'Configuration'}
                 </TableHeaderCell>
-              </Hidden>
+              )}
               <TableHeaderCell
                 onSort={() =>
                   handleOrderChange('engine', order === 'asc' ? 'desc' : 'asc')
@@ -171,7 +174,7 @@ const DatabaseLandingTable = ({
               >
                 Engine
               </TableHeaderCell>
-              <Hidden mdDown>
+              {showFromMdUp && (
                 <TableHeaderCell
                   onSort={() =>
                     handleOrderChange(
@@ -184,8 +187,8 @@ const DatabaseLandingTable = ({
                 >
                   Region
                 </TableHeaderCell>
-              </Hidden>
-              <Hidden lgDown>
+              )}
+              {showFromLgUp && (
                 <TableHeaderCell
                   onSort={() =>
                     handleOrderChange(
@@ -198,7 +201,7 @@ const DatabaseLandingTable = ({
                 >
                   Created
                 </TableHeaderCell>
-              </Hidden>
+              )}
               {isDatabasesV2GA && isNewDatabase && (
                 <TableHeaderCell style={{ maxWidth: 40 }} />
               )}

@@ -1,4 +1,4 @@
-import { splitAt } from '@linode/utilities';
+import { splitAt } from '@akamai/compute-ui-core/formatting';
 import * as React from 'react';
 
 import { ShowMore } from 'src/components/ShowMore/ShowMore';

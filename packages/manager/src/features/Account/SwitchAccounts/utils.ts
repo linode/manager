@@ -1,4 +1,4 @@
-import { getStorage, setStorage } from 'src/utilities/storage';
+import { getStorage, setStorage } from '@akamai/compute-ui-core/browser';
 
 import type { Token, UserType } from '@linode/api-v4';
 

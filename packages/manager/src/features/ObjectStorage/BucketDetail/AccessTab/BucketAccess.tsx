@@ -14,20 +14,20 @@ export const StyledRootContainer = styled(Paper, {
 
 interface Props {
   bucketName: string;
-  clusterId: string;
   endpointType?: ObjectStorageEndpointTypes;
+  regionId: string;
 }
 
 export const BucketAccess = React.memo((props: Props) => {
-  const { bucketName, clusterId, endpointType } = props;
+  const { bucketName, regionId, endpointType } = props;
 
   return (
     <StyledRootContainer>
       <Typography variant="h2">Bucket Access</Typography>
       <AccessSelect
-        clusterOrRegion={clusterId}
         endpointType={endpointType}
         name={bucketName}
+        regionId={regionId}
         variant="bucket"
       />
     </StyledRootContainer>

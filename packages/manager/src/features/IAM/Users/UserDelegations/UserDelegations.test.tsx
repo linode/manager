@@ -3,6 +3,7 @@ import { screen } from '@testing-library/react';
 import React from 'react';
 
 import { accountRolesFactory } from 'src/factories/accountRoles';
+import { expectNotificationBannerText } from 'src/features/IAM/utilities/testHelpers';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { NO_ACCOUNT_DELEGATIONS_TEXT } from '../../Shared/constants';
@@ -115,10 +116,9 @@ describe('UserDelegations', () => {
         },
       },
     });
-    expect(
-      screen.queryByText(
-        `You do not have permission to view this user's account delegations.`
-      )
-    ).toBeVisible();
+
+    return expectNotificationBannerText(
+      `You do not have permission to view this user's account delegations.`
+    );
   });
 });

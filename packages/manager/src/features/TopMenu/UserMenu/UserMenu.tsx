@@ -1,3 +1,5 @@
+import { getStorage, setStorage } from '@akamai/compute-ui-core/browser';
+import { truncateEnd } from '@akamai/compute-ui-core/formatting';
 import { useAccount, useProfile } from '@linode/queries';
 import {
   Button,
@@ -8,7 +10,6 @@ import {
   Tooltip,
   Typography,
 } from '@linode/ui';
-import { truncateEnd } from '@linode/utilities';
 import { styled, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
@@ -19,7 +20,6 @@ import { AvatarForDelegateUser } from 'src/components/AvatarForDelegateUser';
 import { TruncatedUsername } from 'src/components/TruncatedUsername';
 import { SwitchAccountDrawer } from 'src/features/Account/SwitchAccountDrawer';
 import { useDelegationRole } from 'src/features/IAM/hooks/useDelegationRole';
-import { getStorage, setStorage } from 'src/utilities/storage';
 
 import { UserMenuPopover } from './UserMenuPopover';
 import { getCompanyNameOrEmail } from './utils';

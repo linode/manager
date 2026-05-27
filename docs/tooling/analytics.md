@@ -70,7 +70,7 @@ When tracking a new form flow, work with UX to:
 
 - Determine a `formName` to use across the flow
 - Determine what elements of the form to track
-- Follow our naming conventions (use our util: `getFormattedStringFromFormEventOptions`)
+- Follow our naming conventions (use our util: `getFormattedStringFromFormEventOptions` from `@akamai/compute-ui-core/analytics`)
 
 These are the form events we use:
 

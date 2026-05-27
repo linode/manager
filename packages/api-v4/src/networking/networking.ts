@@ -25,6 +25,7 @@ import type {
   IPRangeInformation,
   IPSharingPayload,
   ReserveIPPayload,
+  UpdateIPPayload,
 } from './types';
 
 /**
@@ -60,21 +61,18 @@ export const getIP = (address: string) =>
  * An Ephemeral IP is an IP that’s assigned to a Linode but not reserved.
  *
  * @param address { string } The address to operate on.
- * @param rdns { string } The reverse DNS assigned to this address. For public
+ * @param payload.rdns { string } The reverse DNS assigned to this address. For public
  * IPv4 addresses, this will be set to a default value provided by Linode if not
- * explicitly set.
- * @param reserved { boolean } Whether to reserve the IP address.
+ * explicitly set(Optional for reserve IP use case).
+ * @param payload.reserved { boolean } Whether to reserve the IP address(Optional while setting rdns).
  */
-export const updateIP = (
-  address: string,
-  rdns: null | string = null,
-  reserved?: boolean,
-) =>
-  Request<IPAddress>(
+export const updateIP = (address: string, payload: UpdateIPPayload) => {
+  return Request<IPAddress>(
     setURL(`${API_ROOT}/networking/ips/${encodeURIComponent(address)}`),
-    setData({ rdns, reserved }, updateIPSchema),
+    setData(payload, updateIPSchema),
     setMethod('PUT'),
   );
+};
 
 /**
  * Allocates a new IPv4 Address on your Account. The Linode must be configured

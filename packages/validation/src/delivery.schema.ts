@@ -14,6 +14,27 @@ import type { InferType, MixedSchema, Schema } from 'yup';
 const maxLength = 255;
 const maxLengthMessage = 'Length must be 255 characters or less.';
 
+const isValidUrl = (input: string, checkProtocol = true): boolean => {
+  if (/\s/.test(input)) {
+    return false;
+  }
+
+  try {
+    const urlToCheck =
+      checkProtocol || input.startsWith('http') ? input : `https://${input}`;
+
+    const { protocol, hostname } = new URL(urlToCheck);
+
+    return (
+      ['http:', 'https:'].includes(protocol) &&
+      !['127.0.0.1', '[::1]', 'localhost'].includes(hostname) &&
+      (hostname.includes('.') || hostname.includes(':'))
+    );
+  } catch {
+    return false;
+  }
+};
+
 // Logs Delivery Destination
 
 const authenticationDetailsSchema = object({
@@ -49,7 +70,13 @@ const hasValue = (value: unknown) =>
   typeof value === 'string' && value.trim().length > 0;
 
 const clientCertificateDetailsSchema = object({
-  tls_hostname: string().max(maxLength, maxLengthMessage),
+  tls_hostname: string()
+    .max(maxLength, maxLengthMessage)
+    .test(
+      'is-valid-url',
+      'TLS hostname must be a valid URL.',
+      (value) => !!(value && isValidUrl(value)),
+    ),
   client_ca_certificate: string(),
   client_certificate: string(),
   client_private_key: string(),
@@ -142,8 +169,6 @@ const customHeaderSchema = object({
     ),
 });
 
-const urlRgx = /^(https?:\/\/)?([\w-]+(\.[\w-]+)+)(\/\S*)?$/;
-
 const customHTTPSDetailsSchema = object({
   authentication: authenticationSchema.required(),
   client_certificate_details: clientCertificateDetailsSchema.optional(),
@@ -192,7 +217,7 @@ const customHTTPSDetailsSchema = object({
     .max(maxLength, maxLengthMessage)
     .required('Endpoint URL is required.')
     .test('is-valid-url', 'Endpoint URL must be a valid URL.', (value) =>
-      urlRgx.test(value),
+      isValidUrl(value),
     ),
 });
 
@@ -204,6 +229,9 @@ const akamaiObjectStorageDetailsBaseSchema = object({
   host: string()
     .max(maxLength, maxLengthMessage)
     .required('Endpoint is required.')
+    .test('is-valid-url', 'Endpoint must be a valid URL.', (value) =>
+      isValidUrl(value, false),
+    )
     .test(
       'host-must-match-with-bucket-name-if-provided',
       'Bucket name in the endpoint must match the name in the Bucket field.',

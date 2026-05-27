@@ -1,9 +1,9 @@
+import { formatDate } from '@akamai/compute-ui-core/datetime';
 import axios from 'axios';
 import jsPDF from 'jspdf';
 import { splitEvery } from 'ramda';
 
 import { reportException } from 'src/exceptionReporting';
-import { formatDate } from 'src/utilities/formatDate';
 
 import { getShouldUseAkamaiBilling } from '../billingUtils';
 import AkamaiLogo from './akamai-logo.png';

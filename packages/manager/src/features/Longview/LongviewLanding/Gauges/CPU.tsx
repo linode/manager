@@ -1,5 +1,5 @@
+import { pluralize } from '@akamai/compute-ui-core/formatting';
 import { clamp, Typography } from '@linode/ui';
-import { pluralize } from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 

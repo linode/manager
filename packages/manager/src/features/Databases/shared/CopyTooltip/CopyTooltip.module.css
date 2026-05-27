@@ -1,0 +1,27 @@
+.button {
+  align-items: center;
+  background-color: transparent;
+  border: none;
+  border-radius: 4px;
+  color: var(--copy-icon-color, #888);
+  cursor: pointer;
+  display: inline-flex;
+  justify-content: center;
+  padding: 4px;
+  transition: background-color 0.2s;
+}
+
+.button:hover .icon {
+  color: var(--copy-icon-hover-color, currentColor);
+}
+
+.button:disabled {
+  color: var(--copy-icon-disabled-color, #bbb);
+  cursor: default;
+}
+
+.icon {
+  height: 20px;
+  transition: color 0.2s;
+  width: 20px;
+}

@@ -1,6 +1,6 @@
 {
   "name": "@linode/utilities",
-  "version": "0.17.0",
+  "version": "0.18.0",
   "description": "Linode Utility functions library",
   "main": "src/index.ts",
   "module": "src/index.ts",
@@ -31,15 +31,16 @@
     ]
   },
   "dependencies": {
+    "@akamai/compute-ui-core": "^0.0.4",
     "@linode/api-v4": "workspace:*",
     "luxon": "3.4.4",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0"
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5"
   },
   "devDependencies": {
     "@linode/tsconfig": "workspace:*",
     "@testing-library/dom": "^10.1.0",
-    "@testing-library/jest-dom": "~6.4.2",
+    "@testing-library/jest-dom": "~6.9.1",
     "@testing-library/react": "~16.0.0",
     "@types/luxon": "3.4.2",
     "@types/react": "^19.1.6",

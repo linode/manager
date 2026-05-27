@@ -1,4 +1,4 @@
-import { splitAt } from '@linode/utilities';
+import { splitAt } from '@akamai/compute-ui-core/formatting';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useNavigate } from '@tanstack/react-router';

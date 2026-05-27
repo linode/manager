@@ -8,7 +8,6 @@ import Grid from '@mui/material/Grid';
 import { useNavigate, useSearch } from '@tanstack/react-router';
 import React from 'react';
 
-import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { PAGE_SIZES } from 'src/components/PaginationFooter/PaginationFooter.constants';
@@ -38,12 +37,12 @@ import {
   groupAccountEntitiesByType,
   mapEntityTypesForSelect,
 } from '../utilities';
+import { AssignedEntitiesActionMenu } from './AssignedEntitiesActionMenu';
 import { ChangeRoleForEntityDrawer } from './ChangeRoleForEntityDrawer';
 
 import type { DrawerModes, EntitiesRole } from '../types';
 import type { EntityType } from '@linode/api-v4';
 import type { SelectOption } from '@linode/ui';
-import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 const ALL_ENTITIES_OPTION: SelectOption = {
   label: 'All Entities',
@@ -154,10 +153,6 @@ export const AssignedEntitiesTable = ({ username }: Props) => {
     ? delegateDefaultRolesLoading
     : assignedUserRolesLoading;
 
-  const permissionToCheck = isDefaultDelegationRolesForChildAccount
-    ? permissions?.update_default_delegate_access
-    : permissions?.is_account_admin;
-
   const { filterableOptions, roles } = React.useMemo(() => {
     if (!assignedRoles || !entities) {
       return { filterableOptions: [], roles: [] };
@@ -182,10 +177,10 @@ export const AssignedEntitiesTable = ({ username }: Props) => {
     );
   }, [filterableOptions, entityTypeParam]);
 
-  const handleChangeRole = (role: EntitiesRole, mode: DrawerModes) => {
+  const handleChangeRole = (role: EntitiesRole) => {
     setIsChangeRoleForEntityDrawerOpen(true);
     setSelectedRole(role);
-    setDrawerMode(mode);
+    setDrawerMode('change-role-for-entity');
   };
   const [isRemoveAssignmentDialogOpen, setIsRemoveAssignmentDialogOpen] =
     React.useState<boolean>(false);
@@ -263,31 +258,6 @@ export const AssignedEntitiesTable = ({ username }: Props) => {
       return (
         <>
           {pagination.paginatedData.map((el: EntitiesRole) => {
-            const actions: Action[] = [
-              {
-                disabled: !permissionToCheck,
-                onClick: () => {
-                  handleChangeRole(el, 'change-role-for-entity');
-                },
-                title: 'Change Role',
-                tooltip: !permissionToCheck
-                  ? 'You do not have permission to change this role.'
-                  : undefined,
-              },
-              {
-                disabled: !permissionToCheck,
-                onClick: () => {
-                  handleRemoveAssignment(el);
-                },
-                title: isDefaultDelegationRolesForChildAccount
-                  ? 'Remove'
-                  : 'Remove Assignment',
-                tooltip: !permissionToCheck
-                  ? 'You do not have permission to remove this assignment.'
-                  : undefined,
-              },
-            ];
-
             return (
               <TableRow key={el.id}>
                 <TableCell>
@@ -302,9 +272,11 @@ export const AssignedEntitiesTable = ({ username }: Props) => {
                   <Typography>{el.role_name}</Typography>
                 </TableCell>
                 <TableCell actionCell>
-                  <ActionMenu
-                    actionsList={actions}
-                    ariaLabel={`Action menu for entity ${el.entity_name}`}
+                  <AssignedEntitiesActionMenu
+                    assignment={el}
+                    handleChangeRole={handleChangeRole}
+                    handleRemoveAssignment={handleRemoveAssignment}
+                    permissions={permissions}
                   />
                 </TableCell>
               </TableRow>

@@ -1,10 +1,12 @@
+import { Checkbox, NotificationBanner } from '@akamai/cds-components/react';
+import { Spacing } from '@akamai/cds-tokens';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useCreateDatabaseConnectionPoolMutation } from '@linode/queries';
 import {
   ActionsPanel,
   Autocomplete,
   Drawer,
-  Notice,
+  FormControlLabel,
   Stack,
   TextField,
   Typography,
@@ -15,12 +17,7 @@ import * as React from 'react';
 import { Controller, useForm, useWatch } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
-import {
-  databaseNamesOptions,
-  defaultUsername,
-  poolModeOptions,
-  usernameOptions,
-} from 'src/features/Databases/constants';
+import { poolModeOptions } from 'src/features/Databases/constants';
 
 import { MANAGE_CONNECTION_POOLS_LEARN_MORE_LINK } from '../../constants';
 
@@ -47,6 +44,7 @@ export const DatabaseAddConnectionPoolDrawer = (props: Props) => {
     formState: { errors },
     handleSubmit,
     reset,
+    clearErrors,
     setError,
   } = useForm<ConnectionPool>({
     defaultValues: {
@@ -54,15 +52,15 @@ export const DatabaseAddConnectionPoolDrawer = (props: Props) => {
       label: '',
       mode: 'transaction',
       size: 10,
-      username: defaultUsername,
+      username: null,
     },
     mode: 'onBlur',
     resolver: yupResolver(createDatabaseConnectionPoolSchema),
   });
 
-  const [mode, database, username] = useWatch({
+  const [mode] = useWatch({
     control,
-    name: ['mode', 'database', 'username'],
+    name: ['mode'],
   });
 
   const handleOnClose = () => {
@@ -74,8 +72,8 @@ export const DatabaseAddConnectionPoolDrawer = (props: Props) => {
   const onSubmit = async (values: ConnectionPool) => {
     const payload = {
       ...values,
-      username: values.username === defaultUsername ? null : values.username,
-    }; // Provide inbound user as null in the API
+      username: values.username,
+    };
 
     try {
       await createDatabaseConnectionPool(payload);
@@ -97,7 +95,11 @@ export const DatabaseAddConnectionPoolDrawer = (props: Props) => {
       title="Add a New Connection Pool"
     >
       {errors.root?.message && (
-        <Notice text={errors.root.message} variant="error" />
+        <NotificationBanner
+          style={{ marginBottom: Spacing.S16 }}
+          text={errors.root.message}
+          type="error"
+        />
       )}
       <Typography>
         Add a PgBouncer connection pool to minimize the use of your server
@@ -129,21 +131,16 @@ export const DatabaseAddConnectionPoolDrawer = (props: Props) => {
             control={control}
             name="database"
             render={({ field, fieldState }) => (
-              <Autocomplete
-                autoHighlight
-                label="Database Name"
+              <TextField
                 {...field}
-                data-testid="database-name-select"
-                disableClearable={true}
                 errorText={fieldState.error?.message}
                 id="databaseName"
-                onChange={(e, option) => {
-                  field.onChange(option.value);
+                label="Database Name"
+                onChange={(e) => {
+                  field.onChange(e.target.value);
                 }}
-                options={databaseNamesOptions}
-                value={databaseNamesOptions.find(
-                  (option) => option.value === database
-                )}
+                onClear={() => field.onChange('')}
+                placeholder="defaultdb"
               />
             )}
           />
@@ -197,22 +194,43 @@ export const DatabaseAddConnectionPoolDrawer = (props: Props) => {
             control={control}
             name="username"
             render={({ field, fieldState }) => (
-              <Autocomplete
-                autoHighlight
-                label="Username"
-                {...field}
-                data-testid="username-select"
-                disableClearable={true}
-                errorText={fieldState.error?.message}
-                id="username"
-                onChange={(e, option) => {
-                  field.onChange(option.value);
-                }}
-                options={usernameOptions}
-                value={usernameOptions.find(
-                  (option) => option.value === username
-                )}
-              />
+              <>
+                <TextField
+                  {...field}
+                  disabled={field.value === null}
+                  errorText={fieldState.error?.message}
+                  id="username"
+                  label="Username"
+                  onChange={(e) => {
+                    field.onChange(e.target.value);
+                  }}
+                  onClear={() => field.onChange('')}
+                  placeholder={field.value === null ? '' : 'akmadmin'}
+                  value={field.value === null ? '' : field.value}
+                />
+                <FormControlLabel
+                  checked={field.value === null}
+                  control={
+                    <Checkbox
+                      data-testid="database-reuse-inbound-user-checkbox"
+                      name="username"
+                      onChange={() => {
+                        if (field.value === null) {
+                          field.onChange('');
+                        } else {
+                          field.onChange(null);
+                          clearErrors('username');
+                        }
+                      }}
+                    />
+                  }
+                  data-qa-checkbox="reuseInboundUser"
+                  label="Reuse inbound user"
+                  sx={{
+                    margin: '8px 0',
+                  }}
+                />
+              </>
             )}
           />
         </Stack>

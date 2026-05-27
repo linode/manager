@@ -1,9 +1,12 @@
-import { screen, waitFor } from '@testing-library/react';
+import { fireEvent, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
 import { accountRolesFactory } from 'src/factories/accountRoles';
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import {
+  getShadowRootElement,
+  renderWithTheme,
+} from 'src/utilities/testHelpers';
 
 import { AssignNewRoleDrawer } from './AssignNewRoleDrawer';
 
@@ -69,6 +72,7 @@ vi.mock('@linode/api-v4', async () => {
 
 describe('AssignNewRoleDrawer', () => {
   beforeEach(() => {
+    Element.prototype.scrollIntoView ??= vi.fn();
     queryMocks.useParams.mockReturnValue({
       username: 'test_user',
     });
@@ -90,22 +94,56 @@ describe('AssignNewRoleDrawer', () => {
   it('should render the role select', async () => {
     renderWithTheme(<AssignNewRoleDrawer {...props} />);
 
-    expect(screen.getByPlaceholderText('Select a Role')).toBeVisible();
+    const cdsSelect = document.querySelector('cds-select');
+    expect(cdsSelect).toBeVisible();
+
+    const inputSelect = await getShadowRootElement<HTMLInputElement>(
+      cdsSelect as HTMLElement,
+      'input[role="combobox"]'
+    );
+    expect(inputSelect).toHaveAttribute('placeholder', 'Select a Role');
   });
 
   it('should allow changing role', async () => {
     renderWithTheme(<AssignNewRoleDrawer {...props} />);
 
-    const autocomplete = screen.getByRole('combobox');
-    await userEvent.click(autocomplete);
+    const cdsSelect = document.querySelector('cds-select');
+    expect(cdsSelect).not.toBeNull();
 
-    await userEvent.type(autocomplete, 'account_billing_admin');
+    const inputSelect = await getShadowRootElement<HTMLInputElement>(
+      cdsSelect as HTMLElement,
+      'input[role="combobox"]'
+    );
 
-    const newRole = await screen.findByText('account_billing_admin');
+    expect(inputSelect).not.toBeNull();
+
+    await userEvent.click(inputSelect!);
+
+    await waitFor(() => {
+      expect(inputSelect).toHaveAttribute('aria-expanded', 'true');
+    });
+
+    fireEvent.input(inputSelect!, {
+      target: { value: 'account_billing_admin' },
+    });
+
+    const newRole = await waitFor(() => {
+      const options = Array.from(
+        cdsSelect!.shadowRoot?.querySelectorAll<HTMLElement>(
+          'li[role="option"]'
+        ) ?? []
+      );
+      const option = options.find(
+        (item) => item.textContent?.trim() === 'account_billing_admin'
+      );
+
+      expect(option).toBeDefined();
+      return option!;
+    });
     await userEvent.click(newRole);
 
     await waitFor(() => {
-      expect(autocomplete).toHaveValue('account_billing_admin');
+      expect(inputSelect).toHaveValue('account_billing_admin');
     });
 
     await userEvent.click(screen.getByText('Assign'));
@@ -121,12 +159,24 @@ describe('AssignNewRoleDrawer', () => {
   it('should not list a role the user already has', async () => {
     renderWithTheme(<AssignNewRoleDrawer {...props} />);
 
-    const autocomplete = screen.getByRole('combobox');
+    const cdsSelect = document.querySelector('cds-select');
+    expect(cdsSelect).not.toBeNull();
 
-    await userEvent.click(autocomplete);
+    const inputSelect = await getShadowRootElement<HTMLInputElement>(
+      cdsSelect as HTMLElement,
+      'input[role="combobox"]'
+    );
+
+    expect(inputSelect).not.toBeNull();
+
+    await userEvent.click(inputSelect!);
 
     // expect select not to a any of the roles the user already has
-    const options = screen.getAllByRole('option');
+    const options = Array.from(
+      cdsSelect!.shadowRoot?.querySelectorAll<HTMLElement>(
+        'li[role="option"]'
+      ) ?? []
+    );
     expect(options.map((option) => option.textContent)).not.toContain(
       mockAccountAccessRole.name
     );

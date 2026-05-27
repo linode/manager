@@ -35,7 +35,6 @@ describe('VPC Table Row', () => {
           displayVPCDBaaSResources
           handleDeleteVPC={vi.fn()}
           handleEditVPC={vi.fn()}
-          isNodebalancerVPCEnabled
           vpc={vpc}
         />
       )
@@ -61,7 +60,6 @@ describe('VPC Table Row', () => {
           displayVPCDBaaSResources
           handleDeleteVPC={handleDelete}
           handleEditVPC={vi.fn()}
-          isNodebalancerVPCEnabled
           vpc={vpc}
         />
       )
@@ -83,7 +81,6 @@ describe('VPC Table Row', () => {
           displayVPCDBaaSResources
           handleDeleteVPC={vi.fn()}
           handleEditVPC={handleEdit}
-          isNodebalancerVPCEnabled
           vpc={vpc}
         />
       )
@@ -111,7 +108,6 @@ describe('VPC Table Row', () => {
           displayVPCDBaaSResources
           handleDeleteVPC={vi.fn()}
           handleEditVPC={handleEdit}
-          isNodebalancerVPCEnabled
           vpc={vpc}
         />
       )
@@ -139,7 +135,6 @@ describe('VPC Table Row', () => {
           displayVPCDBaaSResources
           handleDeleteVPC={vi.fn()}
           handleEditVPC={handleEdit}
-          isNodebalancerVPCEnabled
           vpc={vpc}
         />
       )

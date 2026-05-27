@@ -1,28 +1,19 @@
-import {
-  Autocomplete,
-  CloseIcon,
-  IconButton,
-  Notice,
-  Paper,
-  Stack,
-  Typography,
-} from '@linode/ui';
-import { useTheme } from '@mui/material';
+import { NotificationBanner } from '@akamai/cds-components/react';
+import { Spacing } from '@akamai/cds-tokens';
+import { Notice, Typography, useTheme } from '@linode/ui';
+import { useDebouncedValue } from '@linode/utilities';
 import React from 'react';
 
 import { FormLabel } from 'src/components/FormLabel';
-import { Link } from 'src/components/Link';
 import { useAllAccountEntities } from 'src/queries/entities/entities';
 
+import { Link } from '../Link/Link';
+import { SelectionPanel } from '../SelectionPanel/SelectionPanel';
 import { getFormattedEntityType } from '../utilities';
-import {
-  getCreateLinkForEntityType,
-  getEntitiesByType,
-  getPlaceholder,
-  mapEntitiesToOptions,
-} from './utils';
+import { getCreateLinkForEntityType, getPlaceholder } from './utils';
 
 import type { DrawerModes, EntitiesOption } from '../types';
+import type { AccountEntity } from '@linode/api-v4';
 import type { AccessType, IamAccessType } from '@linode/api-v4/lib/iam/types';
 
 interface Props {
@@ -34,8 +25,7 @@ interface Props {
   value: EntitiesOption[];
 }
 
-// For large entity lists, we want to display the initial 100 results and then load more as the user scrolls.
-const INITIAL_DISPLAY_COUNT = 100;
+const MIN_PAGE_SIZE = 10;
 
 export const EntitiesSelect = ({
   access,
@@ -45,44 +35,112 @@ export const EntitiesSelect = ({
   type,
   value,
 }: Props) => {
-  const { data: entities, isLoading } = useAllAccountEntities({});
   const theme = useTheme();
+  const [filterText, setFilterText] = React.useState('');
+  const [showSelectedOnlyState, setShowSelectedOnlyState] =
+    React.useState(false);
+  const debouncedFilterText = useDebouncedValue(filterText);
+  const [page, setPage] = React.useState(1);
+  const [pageSize, setPageSize] = React.useState(MIN_PAGE_SIZE);
 
-  const [displayCount, setDisplayCount] = React.useState(INITIAL_DISPLAY_COUNT);
-  const [inputValue, setInputValue] = React.useState('');
+  const {
+    data: allEntities,
+    error: fetchError,
+    isFetching,
+  } = useAllAccountEntities({});
 
-  const memoizedEntities = React.useMemo(() => {
-    if (access !== 'entity_access' || !entities) {
+  const entityOptions = React.useMemo(() => {
+    if (access !== 'entity_access' || !allEntities) {
       return [];
     }
-    const typeEntities = getEntitiesByType(type, entities);
+    return (allEntities as unknown as AccountEntity[])
+      .filter((e) => e.type === type)
+      .map((e) => ({ label: e.label, value: e.id }));
+  }, [allEntities, access, type]);
 
-    return typeEntities ? mapEntitiesToOptions(typeEntities) : [];
-  }, [entities, access, type]);
+  const totalEntityCount = entityOptions.length;
 
-  const filteredEntities = React.useMemo(() => {
-    if (!inputValue) {
-      return memoizedEntities;
+  const isSearching =
+    filterText.length > 0 && debouncedFilterText !== filterText;
+  const isLoading = isFetching || isSearching;
+
+  const isReadOnly = mode === 'change-role';
+  const showSelectedOnly = isReadOnly || showSelectedOnlyState;
+
+  const filteredRows = React.useMemo(() => {
+    const matchesFilter = (opt: EntitiesOption) =>
+      !debouncedFilterText ||
+      opt.label.toLowerCase().includes(debouncedFilterText.toLowerCase());
+    const source = showSelectedOnly ? value : entityOptions;
+    return source.filter(matchesFilter).map((opt, idx) => ({
+      rank: idx,
+      name: opt.label,
+      option: opt,
+    }));
+  }, [entityOptions, debouncedFilterText, showSelectedOnly, value]);
+
+  const totalCount = filteredRows.length;
+  const effectivePage = Math.min(
+    page,
+    Math.max(1, Math.ceil(totalCount / pageSize))
+  );
+
+  const paginatedRows = React.useMemo(() => {
+    const start = (effectivePage - 1) * pageSize;
+    return filteredRows.slice(start, start + pageSize);
+  }, [filteredRows, effectivePage, pageSize]);
+
+  const showNoEntitiesText =
+    !isFetching &&
+    !isSearching &&
+    !fetchError &&
+    paginatedRows.length === 0 &&
+    entityOptions.length > 0;
+
+  const selectionMap = React.useMemo(() => {
+    const map: Record<number, boolean> = {};
+    filteredRows.forEach((p) => {
+      if (value.some((v) => v.value === p.option.value)) {
+        map[p.rank] = true;
+      }
+    });
+    return map;
+  }, [filteredRows, value]);
+
+  const clearDisabled = !filteredRows.some((p) =>
+    value.some((v) => v.value === p.option.value)
+  );
+
+  const handleClear = () => {
+    const visibleValues = new Set(filteredRows.map((p) => p.option.value));
+    const remaining = value.filter((v) => !visibleValues.has(v.value));
+    onChange(remaining);
+    if (remaining.length === 0 && showSelectedOnly) {
+      setShowSelectedOnlyState(false);
     }
+  };
 
-    return memoizedEntities.filter((option) =>
-      option.label.toLowerCase().includes(inputValue.toLowerCase())
-    );
-  }, [memoizedEntities, inputValue]);
+  const handleSelectAll = () => {
+    const allCurrentOptionsSelected =
+      totalEntityCount > 0 && value.length >= totalEntityCount;
+    if (allCurrentOptionsSelected) {
+      onChange([]);
+    } else {
+      onChange(entityOptions);
+    }
+  };
 
-  const visibleOptions = React.useMemo(() => {
-    const slice = filteredEntities.slice(0, displayCount);
-
-    const selectedNotVisible = value.filter(
-      (selected) => !slice.some((opt) => opt.value === selected.value)
-    );
-
-    return [...slice, ...selectedNotVisible];
-  }, [filteredEntities, displayCount, value]);
-
-  React.useEffect(() => {
-    setDisplayCount(INITIAL_DISPLAY_COUNT);
-  }, [filteredEntities]);
+  const toggleEntity = (rank: number, checked: boolean) => {
+    const p = filteredRows.find((item) => item.rank === rank);
+    if (!p) return;
+    if (checked) {
+      if (!value.some((v) => v.value === p.option.value)) {
+        onChange([...value, p.option]);
+      }
+    } else {
+      onChange(value.filter((v) => v.value !== p.option.value));
+    }
+  };
 
   if (access === 'account_access') {
     return (
@@ -108,93 +166,86 @@ export const EntitiesSelect = ({
 
   return (
     <>
-      <Autocomplete
-        disableClearable={true}
-        disabled={!memoizedEntities.length}
-        errorText={errorText}
-        getOptionLabel={(option) => option.label}
-        isOptionEqualToValue={(option, value) => option.value === value.value}
-        label="Entities"
-        loading={isLoading}
-        multiple
-        noMarginTop
-        onChange={(_, newValue, reason) => {
-          if (
-            reason === 'selectOption' &&
-            newValue.length === displayCount &&
-            filteredEntities.length > displayCount
-          ) {
-            onChange(filteredEntities);
-          } else {
-            onChange(newValue || []);
+      {errorText && (
+        <Notice spacingBottom={8} variant="error">
+          <Typography fontSize="inherit">{errorText}</Typography>
+        </Notice>
+      )}
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          width: '100%',
+        }}
+      >
+        <p
+          style={{
+            font: theme.tokens.alias.Typography.Label.Bold.S,
+            margin: 0,
+          }}
+        >
+          Entities
+        </p>
+        <SelectionPanel
+          effectivePage={effectivePage}
+          errorText={
+            fetchError
+              ? ((fetchError as { reason?: string })?.reason ??
+                'Failed to load entities')
+              : undefined
           }
-        }}
-        onInputChange={(_, value) => {
-          setInputValue(value);
-        }}
-        options={visibleOptions}
-        readOnly={mode === 'change-role'}
-        renderTags={() => null}
-        slotProps={{
-          listbox: {
-            onScroll: (e) => {
-              const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
-              if (scrollHeight - scrollTop <= clientHeight * 1.5) {
-                setDisplayCount((prev) =>
-                  Math.min(prev + 200, filteredEntities.length)
-                );
-              }
-            },
-          },
-        }}
-        textFieldProps={{
-          placeholder: getPlaceholder(
+          filterPlaceholder={getPlaceholder(
             type,
             value.length,
-            filteredEntities.length
-          ),
-        }}
-        value={value || []}
-      />
-      {memoizedEntities.length > 0 && !isLoading && (
-        <>
-          <Typography sx={{ mb: 1, mt: 2 }}>
-            Selected entities ({value.length}):
-          </Typography>
-          <Paper
-            sx={(theme) => ({
-              backgroundColor: isLoading
-                ? theme.tokens.alias.Interaction.Background.Disabled
-                : theme.palette.background.paper,
-              maxHeight: 370,
-              overflowY: 'auto',
-              p: 2,
-              py: 1,
-            })}
-            variant="outlined"
-          >
-            <Stack spacing={1}>
-              {value.length === 0 && (
-                <Typography py={1} textAlign="center">
-                  No entities selected
-                </Typography>
-              )}
-              {value.map((entity) => (
-                <EntityRow
-                  disabled={mode === 'change-role'}
-                  key={entity.value}
-                  label={entity.label}
-                  onRemove={() =>
-                    onChange(value.filter((v) => v.value !== entity.value))
-                  }
-                />
-              ))}
-            </Stack>
-          </Paper>
-        </>
-      )}
-      {!memoizedEntities.length && !isLoading && (
-        <Notice spacingBottom={0} spacingTop={8} variant="warning">
+            totalEntityCount
+          )}
+          filterText={filterText}
+          isClearDisabled={clearDisabled || isReadOnly}
+          isDisabled={isReadOnly}
+          isFilterDisabled={entityOptions.length === 0 || isReadOnly}
+          isFilterLoading={isLoading}
+          isLoading={isLoading}
+          isSelectAllDisabled={
+            isReadOnly ||
+            (totalEntityCount > 0 && value.length >= totalEntityCount)
+          }
+          isShowSelectedOnlyDisabled={value.length === 0 || isReadOnly}
+          minPageSize={MIN_PAGE_SIZE}
+          noItemsText="No entities found"
+          onClear={handleClear}
+          onFilterTextChange={(text) => {
+            setFilterText(text);
+            setPage(1);
+          }}
+          onPageChange={(newPage) => setPage(newPage)}
+          onPageSizeChange={(newSize) => {
+            setPageSize(newSize);
+            setPage(1);
+          }}
+          onSelectAll={handleSelectAll}
+          onShowSelectedOnlyChange={(show) => {
+            setShowSelectedOnlyState(show);
+            setPage(1);
+          }}
+          onToggle={toggleEntity}
+          pageSize={pageSize}
+          pageSizes={[10, 20, 50]}
+          paginatedRows={paginatedRows}
+          selectedCount={value.length}
+          selectionLabel="Selected:"
+          selectionMap={selectionMap}
+          showEmptyState={showNoEntitiesText}
+          showSelectedOnly={showSelectedOnly}
+          showToolbar={totalEntityCount > 0}
+          totalCount={totalCount}
+        />
+      </div>
+
+      {totalEntityCount === 0 && !isFetching && (
+        <NotificationBanner
+          style={{ marginBottom: 0, marginTop: Spacing.S8 }}
+          type="warning"
+        >
           <Typography fontSize="inherit">
             <Link to={getCreateLinkForEntityType(type)}>
               Create {type === 'image' ? `an` : `a`}{' '}
@@ -202,31 +253,8 @@ export const EntitiesSelect = ({
             </Link>{' '}
             first or choose a different role to continue assignment.
           </Typography>
-        </Notice>
+        </NotificationBanner>
       )}
     </>
-  );
-};
-
-interface EntityRowProps {
-  disabled?: boolean;
-  label: string;
-  onRemove: () => void;
-}
-
-const EntityRow = ({ disabled, label, onRemove }: EntityRowProps) => {
-  return (
-    <Stack alignItems="center" direction="row" justifyContent="space-between">
-      <Typography>{label}</Typography>
-      {!disabled && (
-        <IconButton
-          aria-label={`Remove ${label}`}
-          onClick={onRemove}
-          sx={{ p: 0.75 }}
-        >
-          <CloseIcon />
-        </IconButton>
-      )}
-    </Stack>
   );
 };

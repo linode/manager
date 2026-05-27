@@ -55,7 +55,7 @@ export interface ObjectStorageKeyBucketAccess {
   bucket_name: string;
   cluster: string;
   permissions: ObjectStorageKeyBucketAccessPermissions;
-  region?: string; // @TODO OBJ Multicluster: Remove optional indicator when API changes get released to prod
+  region: string;
 }
 
 export interface CreateObjectStorageKeyPayload {
@@ -71,31 +71,22 @@ export interface UpdateObjectStorageKeyPayload {
 
 export interface CreateObjectStorageBucketPayload {
   acl?: 'authenticated-read' | 'private' | 'public-read' | 'public-read-write';
-  cluster?: string;
   cors_enabled?: boolean;
   /**
    * To explicitly create a bucket on a specific endpoint type.
    */
   endpoint_type?: ObjectStorageEndpointTypes;
   label: string;
-  region?: string;
+  region: string;
   /**
    * Used to create a bucket on a specific already-assigned S3 endpoint.
    */
   s3_endpoint?: string;
-  /*
-   @TODO OBJ Multicluster: 'region' will become required, and the 'cluster' field will be deprecated
-   once the feature is fully rolled out in production as part of the process of cleaning up the 'objMultiCluster'
-   feature flag.
-
-   Until then, the API will accept either cluster or region, or both (provided they are the same value).
-   The payload requires at least one of them though, which will be enforced via validation.
-  */
 }
 
 export interface DeleteObjectStorageBucketPayload {
-  cluster: string;
-  label: string;
+  bucketName: string;
+  regionId: string;
 }
 
 export interface ObjectStorageBucket {
@@ -151,25 +142,10 @@ export interface CreateObjectStorageObjectURLPayload {
   expires_in?: number;
 }
 
-// Enum containing IDs for each Cluster
-export type ObjectStorageClusterID =
-  | 'ap-south-1'
-  | 'eu-central-1'
-  | 'us-east-1'
-  | 'us-southeast-1';
-
-export interface ObjectStorageCluster {
-  domain: string;
-  id: ObjectStorageClusterID;
-  region: string;
-  static_site_domain: string;
-  status: string; // @todo: should be enum
-}
-
 export interface GetObjectStorageObjectListPayload {
-  bucket: string;
-  clusterId: string;
+  bucketName: string;
   params?: ObjectStorageObjectListParams;
+  regionId: string;
 }
 
 interface ObjectStorageObjectListParams {
@@ -201,11 +177,11 @@ export interface UpdateObjectStorageBucketAccessPayload {
 }
 
 export interface GetObjectStorageACLPayload {
-  bucket: string;
-  clusterId: string;
+  bucketName: string;
   params: {
-    name: string;
+    objectName: string;
   };
+  regionId: string;
 }
 
 // Gen2 endpoints ('E2', 'E3') are not supported and will return null.

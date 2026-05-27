@@ -1,14 +1,14 @@
+import { Badge, NotificationBanner } from '@akamai/cds-components/react';
+import { Spacing } from '@akamai/cds-tokens';
 import {
   FormControl,
   FormControlLabel,
-  Notice,
   Radio,
   RadioGroup,
   Typography,
 } from '@linode/ui';
 import React from 'react';
 
-import { StyledChip } from 'src/features/components/PlansPanel/PlanSelection.styles';
 import { determineInitialPlanCategoryTab } from 'src/features/components/PlansPanel/utils';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 
@@ -84,10 +84,14 @@ export const DatabaseNodeSelector = (props: Props) => {
     const hasPremium = displayTypes.some((type) => type.class === 'premium');
 
     const currentChip = currentClusterSize && initialTab === selectedTab && (
-      <StyledChip
+      <Badge
         aria-label="This is your current number of nodes"
-        label="Current"
-      />
+        color="green"
+        style={{ marginLeft: Spacing.S8 }}
+        variant="solid"
+      >
+        CURRENT
+      </Badge>
     );
 
     const options = [
@@ -171,7 +175,13 @@ export const DatabaseNodeSelector = (props: Props) => {
           handleNodeChange(+e.target.value as ClusterSize);
         }}
       >
-        {error ? <Notice text={error} variant="error" /> : null}
+        {error ? (
+          <NotificationBanner
+            style={{ marginBottom: Spacing.S16 }}
+            text={error}
+            type="error"
+          />
+        ) : null}
         <RadioGroup
           aria-disabled={isRestricted || disabled}
           data-testid="database-nodes"

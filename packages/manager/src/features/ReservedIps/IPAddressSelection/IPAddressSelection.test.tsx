@@ -40,7 +40,7 @@ describe('IPAddressSelection', () => {
       await userEvent.hover(tooltipIcons[0]);
       expect(
         await findByText(
-          "A public IPv4 address automatically assigned to your Linode. Use this for standard web traffic that doesn't require a permanent, static IP."
+          "A public IPv4 address automatically assigned to your Linode. Use this for standard web traffic that doesn't require a permanent, static IP. This address is included at no additional cost but may change if the Linode is deleted."
         )
       ).toBeInTheDocument();
       await userEvent.unhover(tooltipIcons[0]);

@@ -1,5 +1,7 @@
+import { Icon, Tooltip } from '@akamai/cds-components/react';
+import { Spacing } from '@akamai/cds-tokens';
 import { useDatabaseTypesQuery, useRegionsQuery } from '@linode/queries';
-import { TooltipIcon, Typography } from '@linode/ui';
+import { Typography } from '@linode/ui';
 import { convertMegabytesTo, formatStorageUnits } from '@linode/utilities';
 import Grid from '@mui/material/Grid';
 import * as React from 'react';
@@ -57,11 +59,6 @@ export const DatabaseSummaryClusterConfiguration = (props: Props) => {
       : database.cluster_size > 2
         ? `Primary (+${database.cluster_size - 1} Nodes)`
         : `Primary (+${database.cluster_size - 1} Node)`;
-
-  const sxTooltipIcon = {
-    marginLeft: '4px',
-    padding: '0px',
-  };
 
   const STORAGE_COPY =
     'The total disk size is smaller than the selected plan capacity due to overhead from the OS.';
@@ -177,11 +174,20 @@ export const DatabaseSummaryClusterConfiguration = (props: Props) => {
           {database.total_disk_size_gb ? (
             <>
               {database.total_disk_size_gb} GB
-              <TooltipIcon
-                status="info"
-                sxTooltipIcon={sxTooltipIcon}
-                text={STORAGE_COPY}
-              />
+              <Tooltip
+                style={{ marginLeft: Spacing.S4 }}
+                tooltipPlacement="bottom"
+                tooltipText={STORAGE_COPY}
+              >
+                <Icon
+                  icon="info-outline"
+                  size="m"
+                  style={{
+                    position: 'relative',
+                    top: -1,
+                  }}
+                />
+              </Tooltip>
             </>
           ) : (
             convertMegabytesTo(type.disk, true)

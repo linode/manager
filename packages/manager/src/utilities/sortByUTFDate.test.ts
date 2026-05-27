@@ -1,11 +1,10 @@
+import { parseAPIDate } from '@akamai/compute-ui-core/datetime';
 import { DateTime } from 'luxon';
 import { describe, expect, it } from 'vitest';
 
-import { parseAPIDate } from './date';
 import { sortByUTFDate } from './sortByUTFDate';
 
-vi.mock('./date', () => ({
-  ...vi.importActual('./date'),
+vi.mock('@akamai/compute-ui-core/datetime', () => ({
   parseAPIDate: vi.fn(),
 }));
 

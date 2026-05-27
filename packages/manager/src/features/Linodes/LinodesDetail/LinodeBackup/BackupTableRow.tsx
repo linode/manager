@@ -1,4 +1,4 @@
-import { formatDuration } from '@akamai/compute-ui-core/datetime';
+import { formatDuration, parseAPIDate } from '@akamai/compute-ui-core/datetime';
 import { DateTime, Duration } from 'luxon';
 import * as React from 'react';
 
@@ -6,7 +6,6 @@ import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { parseAPIDate } from 'src/utilities/date';
 
 import { LinodeBackupActionMenu } from './LinodeBackupActionMenu';
 

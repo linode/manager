@@ -20,6 +20,8 @@ export * from './iam';
 
 export * from './images';
 
+export * from './inferencePlatform';
+
 export * from './kubernetes';
 
 export * from './linodes';

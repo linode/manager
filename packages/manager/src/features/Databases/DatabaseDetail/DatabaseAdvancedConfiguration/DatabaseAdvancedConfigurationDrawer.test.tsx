@@ -3,7 +3,10 @@ import userEvent from '@testing-library/user-event';
 import React from 'react';
 
 import { databaseInstanceFactory, postgresConfigResponse } from 'src/factories';
-import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
+import {
+  getShadowRootElement,
+  renderWithThemeAndHookFormContext,
+} from 'src/utilities/testHelpers';
 
 import { DatabaseAdvancedConfigurationDrawer } from './DatabaseAdvancedConfigurationDrawer';
 import { convertExistingConfigsToArray } from './utilities';
@@ -129,15 +132,24 @@ describe('DatabaseAdvancedConfigurationDrawer', () => {
       },
     });
 
-    const restartBadge = screen.getByText('restarts service');
+    const restartBadge = screen.getByText('RESTARTS SERVICE');
     expect(restartBadge).toBeVisible();
 
-    const toggle = screen.getByRole('checkbox');
-    expect(toggle).toBeEnabled();
-    expect(toggle).toBeChecked();
+    // eslint-disable-next-line testing-library/no-node-access -- cds-switch Web Component host for shadow root
+    const switchHost = document.querySelector(
+      '[data-testid="drawer"] cds-switch'
+    );
+    expect(switchHost).not.toBeNull();
+    const switchControl = await getShadowRootElement<HTMLButtonElement>(
+      switchHost as HTMLElement,
+      'button[role="switch"]'
+    );
+    expect(switchControl).not.toBeNull();
+    expect(switchControl).not.toBeDisabled();
+    expect(switchControl).toHaveAttribute('aria-checked', 'true');
 
-    await userEvent.click(toggle);
-    expect(toggle).not.toBeChecked();
+    await userEvent.click(switchControl!);
+    expect(switchControl).toHaveAttribute('aria-checked', 'false');
 
     const saveAndRestartBtn = screen.getByRole('button', {
       name: 'Save and Restart Service',

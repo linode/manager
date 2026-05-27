@@ -1,21 +1,17 @@
-import { Pagination } from '@akamai/cds-components/react/Pagination';
 import {
+  Button,
+  Icon,
+  Pagination,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableHeaderCell,
   TableRow,
-} from '@akamai/cds-components/react/Table';
+  Tooltip,
+} from '@akamai/cds-components/react';
 import { useDatabaseConnectionPoolsQuery } from '@linode/queries';
-import {
-  Button,
-  CircleProgress,
-  ErrorState,
-  Hidden,
-  Stack,
-  Typography,
-} from '@linode/ui';
+import { Stack, Typography } from '@linode/ui';
 import Grid from '@mui/material/Grid';
 import { useTheme } from '@mui/material/styles';
 import React from 'react';
@@ -32,10 +28,13 @@ import {
   StyledLabelTypography,
   StyledValueGrid,
 } from 'src/features/Databases/DatabaseDetail/DatabaseSummary/DatabaseSummaryClusterConfiguration.style';
+import { useBreakpoint } from 'src/features/Databases/hooks/useBreakpoint';
 import { useFlags } from 'src/hooks/useFlags';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
 import { makeSettingsItemStyles } from '../../shared.styles';
+import { CircleProgress } from '../../shared/CircleProgress/CircleProgress';
+import { ErrorState } from '../../shared/ErrorState/ErrorState';
 import { ServiceURI } from '../ServiceURI';
 import { DatabaseAddConnectionPoolDrawer } from './DatabaseAddConnectionPoolDrawer';
 import { DatabaseConnectionPoolDeleteDialog } from './DatabaseConnectionPoolDeleteDialog';
@@ -52,6 +51,7 @@ interface Props {
 export const DatabaseConnectionPools = ({ database }: Props) => {
   const { classes } = makeSettingsItemStyles();
   const theme = useTheme();
+  const showFromSmUp = useBreakpoint('up', 'sm');
   const flags = useFlags();
   const isDatabaseInactive = database.status !== 'active';
 
@@ -94,20 +94,19 @@ export const DatabaseConnectionPools = ({ database }: Props) => {
             </Link>
           </Typography>
         </Stack>
-        <Button
-          buttonType="outlined"
-          className={classes.actionBtn}
-          disabled={isDatabaseInactive}
-          onClick={() => setIsAddPoolDrawerOpen(true)}
-          TooltipProps={{ placement: 'top' }}
-          tooltipText={
-            isDatabaseInactive
-              ? 'You can only add connection pools to active database clusters.'
-              : ''
-          }
+        <Tooltip
+          disabled={!isDatabaseInactive}
+          tooltipText="You can only add connection pools to active database clusters."
         >
-          Add Pool
-        </Button>
+          <Button
+            className={classes.actionBtn}
+            disabled={isDatabaseInactive}
+            onClick={() => setIsAddPoolDrawerOpen(true)}
+          >
+            Add Pool
+            {isDatabaseInactive ? <Icon icon="info-outline" size="m" /> : null}
+          </Button>
+        </Tooltip>
       </div>
       {flags?.hostnameEndpoints &&
         connectionPools &&
@@ -167,15 +166,9 @@ export const DatabaseConnectionPools = ({ database }: Props) => {
               <TableHeaderCell style={CONNECTION_POOL_LABEL_CELL_STYLES}>
                 Pool Label
               </TableHeaderCell>
-              <Hidden smDown>
-                <TableHeaderCell>Pool Mode</TableHeaderCell>
-              </Hidden>
-              <Hidden smDown>
-                <TableHeaderCell>Pool Size</TableHeaderCell>
-              </Hidden>
-              <Hidden smDown>
-                <TableHeaderCell>Username</TableHeaderCell>
-              </Hidden>
+              {showFromSmUp && <TableHeaderCell>Pool Mode</TableHeaderCell>}
+              {showFromSmUp && <TableHeaderCell>Pool Size</TableHeaderCell>}
+              {showFromSmUp && <TableHeaderCell>Username</TableHeaderCell>}
               <TableHeaderCell style={{ maxWidth: 40 }} />
             </TableRow>
           </TableHead>

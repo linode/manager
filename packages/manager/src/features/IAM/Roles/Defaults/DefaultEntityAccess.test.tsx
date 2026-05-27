@@ -1,6 +1,7 @@
 import { screen } from '@testing-library/react';
 import React from 'react';
 
+import { expectNotificationBannerText } from 'src/features/IAM/utilities/testHelpers';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import {
@@ -122,10 +123,8 @@ describe('DefaultEntityAccess', () => {
 
     renderWithTheme(<DefaultEntityAccess />);
 
-    expect(
-      screen.queryByText(
-        'You do not have permission to view default entity access for delegate users.'
-      )
-    ).toBeVisible();
+    return expectNotificationBannerText(
+      'You do not have permission to view default entity access for delegate users.'
+    );
   });
 });

@@ -1,23 +1,26 @@
 import { TableCell, TableRow } from '@akamai/cds-components/react/Table';
+import { formatDate } from '@akamai/compute-ui-core/datetime';
+import { truncateEnd } from '@akamai/compute-ui-core/formatting';
 import { usePreferences, useProfile } from '@linode/queries';
-import { Hidden, LinkButton, Tooltip } from '@linode/ui';
-import { truncateEnd } from '@linode/utilities';
+import { Hidden, Tooltip } from '@linode/ui';
 import React from 'react';
 
+import { Link } from 'src/components/Link';
 import { getIsTableStripingEnabled } from 'src/features/Profile/Settings/TableStriping.utils';
-import { formatDate } from 'src/utilities/formatDate';
 
 import { ShareGroupActionMenu } from './ShareGroupActionMenu';
 import { StyledActionMenuWrapper } from './ShareGroupTable.styles';
 
+import type { Handlers } from './ShareGroupActionMenu';
 import type { Sharegroup } from '@linode/api-v4';
 
 interface Props {
+  handlers?: Handlers;
   shareGroup: Sharegroup;
 }
 
 export const ShareGroupRow = (props: Props) => {
-  const { shareGroup } = props;
+  const { shareGroup, handlers } = props;
   const { data: profile } = useProfile();
 
   const {
@@ -46,29 +49,31 @@ export const ShareGroupRow = (props: Props) => {
       style={{ padding: 0 }}
       zebra={isTableStripingEnabled}
     >
-      <Tooltip title={label.length > 32 ? label : ''}>
-        <TableCell
-          className="group-column"
-          data-pendo-id={`Images Groups Owned-Group name`}
-        >
-          <LinkButton
-            onClick={() => {}}
-            sx={{
-              textOverflow: 'ellipsis',
-              whiteSpace: 'nowrap',
-              overflow: 'hidden',
-              display: 'block',
-            }}
-          >
-            {truncateEnd(label, 32)}
-          </LinkButton>
-        </TableCell>
-      </Tooltip>
-      <Tooltip title={description.length > 50 ? description : ''}>
-        <TableCell className="description-column">
-          {truncateEnd(description, 50)}
-        </TableCell>
-      </Tooltip>
+      <TableCell
+        className="group-column"
+        data-pendo-id={`Images Groups Owned-Group name`}
+      >
+        <Tooltip title={label.length > 32 ? label : ''}>
+          <span>
+            <Link
+              style={{
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                display: 'block',
+              }}
+              to={`/images/share-groups/owned-groups/${id}`}
+            >
+              {truncateEnd(label, 32)}
+            </Link>
+          </span>
+        </Tooltip>
+      </TableCell>
+      <TableCell className="description-column">
+        <Tooltip title={description.length > 50 ? description : ''}>
+          <span>{truncateEnd(description, 50)}</span>
+        </Tooltip>
+      </TableCell>
       <TableCell className="membersCount-column">{members_count}</TableCell>
       <Hidden smDown>
         <TableCell className="imagesCount-column">{images_count}</TableCell>
@@ -89,7 +94,11 @@ export const ShareGroupRow = (props: Props) => {
         </TableCell>
       </Hidden>
       <StyledActionMenuWrapper>
-        <ShareGroupActionMenu deleteButtonDisabled={!!members_count} />
+        <ShareGroupActionMenu
+          deleteButtonDisabled={!!members_count}
+          handlers={handlers}
+          shareGroup={shareGroup}
+        />
       </StyledActionMenuWrapper>
     </TableRow>
   );

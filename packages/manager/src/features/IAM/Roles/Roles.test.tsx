@@ -2,6 +2,7 @@ import { screen } from '@testing-library/react';
 import React from 'react';
 
 import { accountRolesFactory } from 'src/factories/accountRoles';
+import { expectNotificationBannerText } from 'src/features/IAM/utilities/testHelpers';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { RolesLanding } from './Roles';
@@ -80,9 +81,10 @@ describe('RolesLanding', () => {
     });
 
     renderWithTheme(<RolesLanding />);
-    expect(
-      screen.getByText('You do not have permission to view roles.')
-    ).toBeInTheDocument();
+
+    return expectNotificationBannerText(
+      'You do not have permission to view roles.'
+    );
   });
 
   it('should not show the default roles panel for non-child accounts', () => {

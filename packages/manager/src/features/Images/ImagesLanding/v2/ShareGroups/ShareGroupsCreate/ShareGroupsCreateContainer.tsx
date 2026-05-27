@@ -12,6 +12,23 @@ export const ShareGroupsCreateContainer = () => {
     <>
       <DocumentTitleSegment segment="Create a Share Group" />
       <LandingHeader
+        breadcrumbProps={{
+          crumbOverrides: [
+            {
+              position: 1,
+              label: 'Images',
+            },
+            {
+              position: 2,
+              label: 'Share Groups',
+            },
+            {
+              position: 3,
+              label: 'Owned Groups',
+            },
+          ],
+          pathname: `/images/share-groups/owned-groups/create`,
+        }}
         docsLabel="Docs"
         docsLink="https://techdocs.akamai.com/cloud-computing/docs/image-sharing"
         pendoId={CREATE_SHARE_GROUP_PENDO_IDS.landingHeader}

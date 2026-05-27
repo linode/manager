@@ -1,5 +1,5 @@
+import { capitalize } from '@akamai/compute-ui-core/formatting';
 import { useAllFirewallDevicesQuery } from '@linode/queries';
-import { capitalize } from '@linode/utilities';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';

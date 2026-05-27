@@ -30,7 +30,7 @@ describe('filterProducts', () => {
         url: '',
       },
       type: { name: 'SaaS & APIs' },
-      categories: ['Development Tools'],
+      categories: ['Other Software and APIs'],
     },
     {
       id: 'spinkube',
@@ -119,7 +119,7 @@ describe('filterProducts', () => {
 
   it('filters by category and type: category first, then type', () => {
     const filtered = filterProducts(products, {
-      selectedCategory: 'Development Tools',
+      selectedCategory: 'Other Software and APIs',
       selectedType: 'SaaS & APIs',
     });
     expect(filtered).toHaveLength(1);
@@ -128,8 +128,8 @@ describe('filterProducts', () => {
 
   it('filters by category and type: returns empty when type does not match category products', () => {
     const filtered = filterProducts(products, {
-      selectedCategory: 'Development Tools',
-      selectedType: 'Virtual Machines', // No VM products in Development Tools
+      selectedCategory: 'Other Software and APIs',
+      selectedType: 'Virtual Machines', // No VM products in Other Software and APIs category
     });
     expect(filtered).toHaveLength(0);
   });

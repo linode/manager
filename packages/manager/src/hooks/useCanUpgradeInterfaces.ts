@@ -1,7 +1,5 @@
 import { useAccountSettings, useRegionQuery } from '@linode/queries';
 
-import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
-
 import type { InterfaceGenerationType } from '@linode/api-v4';
 
 export type CannotUpgradeInterfaceReasons =
@@ -23,7 +21,6 @@ export const useCanUpgradeInterfaces = (
   linodeRegion: string | undefined,
   interfaceType: InterfaceGenerationType | undefined
 ) => {
-  const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
   const { data: region } = useRegionQuery(linodeRegion ?? '');
   const { data: accountSettings } = useAccountSettings();
 
@@ -37,7 +34,6 @@ export const useCanUpgradeInterfaces = (
     // show the Upgrade Interfaces button if our Linode is not part of an LKE cluster, is
     // using Legacy config profile interfaces in a region that supports the new Interfaces
     // and our account can have Linodes using new interfaces
-    isLinodeInterfacesEnabled &&
     interfaceType !== 'linode' &&
     !linodeLkeId &&
     !isLegacyConfigOnlyAccount &&

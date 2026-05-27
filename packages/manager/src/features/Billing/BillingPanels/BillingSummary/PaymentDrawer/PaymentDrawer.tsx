@@ -1,3 +1,4 @@
+import { isCreditCardExpired } from '@akamai/compute-ui-core/datetime';
 import { makePayment } from '@linode/api-v4/lib/account';
 import { accountQueries, useAccount } from '@linode/queries';
 import {
@@ -24,7 +25,6 @@ import { SupportLink } from 'src/components/SupportLink';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useDelegationRole } from 'src/features/IAM/hooks/useDelegationRole';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { isCreditCardExpired } from 'src/utilities/creditCard';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { PayPalErrorBoundary } from '../../PaymentInfoPanel/PayPalErrorBoundary';

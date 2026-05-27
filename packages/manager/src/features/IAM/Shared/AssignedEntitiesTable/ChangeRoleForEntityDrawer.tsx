@@ -1,3 +1,4 @@
+import { NotificationBanner, Select } from '@akamai/cds-components/react';
 import {
   useAccountRoles,
   useGetDefaultDelegationAccessQuery,
@@ -5,19 +6,11 @@ import {
   useUserRoles,
   useUserRolesMutation,
 } from '@linode/queries';
-import {
-  ActionsPanel,
-  Autocomplete,
-  Drawer,
-  Notice,
-  Typography,
-} from '@linode/ui';
+import { ActionsPanel, Drawer, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
-
-import { Link } from 'src/components/Link';
 
 import { useIsDefaultDelegationRolesForChildAccount } from '../../hooks/useDelegationRole';
 import { AssignedPermissionsPanel } from '../AssignedPermissionsPanel/AssignedPermissionsPanel';
@@ -25,6 +18,7 @@ import {
   INTERNAL_ERROR_NO_CHANGES_SAVED,
   ROLES_LEARN_MORE_LINK,
 } from '../constants';
+import { Link } from '../Link/Link';
 import {
   changeRoleForEntity,
   getAllRoles,
@@ -177,7 +171,7 @@ export const ChangeRoleForEntityDrawer = ({
   return (
     <Drawer onClose={handleClose} open={open} title="Change Role">
       {errors.root?.message && (
-        <Notice text={errors.root?.message} variant="error" />
+        <NotificationBanner text={errors.root?.message} type="error" />
       )}
       <form onSubmit={handleSubmit(onSubmit)}>
         <Typography sx={{ marginBottom: 2.5 }}>
@@ -197,16 +191,23 @@ export const ChangeRoleForEntityDrawer = ({
           control={control}
           name="roleName"
           render={({ field, fieldState }) => (
-            <Autocomplete
-              errorText={fieldState.error?.message}
-              label="Assign New Roles"
-              loading={accountPermissionsLoading}
-              onChange={(_, value) => field.onChange(value)}
-              options={allRoles}
+            <Select
+              autocomplete
+              clearable
+              error={Boolean(fieldState.error?.message)}
+              errorMessage={fieldState.error?.message ?? ''}
+              isLoading={accountPermissionsLoading}
+              items={allRoles}
+              noItemsLabel="You have no options to choose from"
+              onChange={(event) => {
+                const newValue =
+                  event.detail as unknown as ExtendedEntityRole | null;
+                field.onChange(newValue);
+              }}
               placeholder="Select a Role"
-              sx={{ marginBottom: theme.spacingFunction(16) }}
-              textFieldProps={{ hideLabel: true, noMarginTop: true }}
-              value={field.value || null}
+              selected={field.value || null}
+              style={{ marginBottom: theme.tokens.spacing.S16 }}
+              valueFn={(item) => (item as ExtendedEntityRole).label}
             />
           )}
           rules={{ required: 'Role is required.' }}

@@ -211,3 +211,16 @@ export const getEntitiesByAlertId = (
     setParams(params),
     setXFilter(filters),
   );
+
+export const cloneAlertDefinition = (
+  data: CreateAlertDefinitionPayload,
+  serviceType: string,
+  alertId: number,
+) =>
+  Request<Alert>(
+    setURL(
+      `${API_ROOT}/monitor/services/${encodeURIComponent(serviceType)}/alert-definitions/${encodeURIComponent(alertId)}/clone`,
+    ),
+    setMethod('POST'),
+    setData(data, createAlertDefinitionSchema),
+  );

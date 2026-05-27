@@ -1,14 +1,14 @@
+import { formatDate, parseAPIDate } from '@akamai/compute-ui-core/datetime';
+import { capitalize, pluralize } from '@akamai/compute-ui-core/formatting';
 import { scheduleOrQueueMigration } from '@linode/api-v4/lib/linodes';
 import { useProfile } from '@linode/queries';
 import { ActionsPanel, LinkButton, Notice, Typography } from '@linode/ui';
-import { capitalize, pluralize, useDialog } from '@linode/utilities';
+import { useDialog } from '@linode/utilities';
 import { DateTime } from 'luxon';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { parseAPIDate } from 'src/utilities/date';
-import { formatDate } from 'src/utilities/formatDate';
 
 import type { NotificationType } from '@linode/api-v4/lib/account';
 

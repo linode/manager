@@ -7,6 +7,7 @@ import { Box } from '@linode/ui';
 import { useLocation } from '@tanstack/react-router';
 import * as React from 'react';
 
+import AI from 'src/assets/icons/entityIcons/ai.svg';
 import Compute from 'src/assets/icons/entityIcons/compute.svg';
 import CoreUser from 'src/assets/icons/entityIcons/coreuser.svg';
 import Database from 'src/assets/icons/entityIcons/database.svg';
@@ -20,8 +21,9 @@ import {
 } from 'src/components/PrimaryNav/constants';
 import { useIsACLPEnabled } from 'src/features/CloudPulse/Utils/utils';
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
-import { useIsACLPLogsEnabled } from 'src/features/Delivery/deliveryUtils';
+import { useIsACLPLogsNew } from 'src/features/Delivery/deliveryUtils';
 import { useIsIAMEnabled } from 'src/features/IAM/hooks/useIsIAMEnabled';
+import { useIsInferencePlatformEnabled } from 'src/features/InferencePlatform/utils';
 import { useIsMarketplaceV2Enabled } from 'src/features/Marketplace/shared';
 import { useIsNetworkLoadBalancerEnabled } from 'src/features/NetworkLoadBalancers/utils';
 import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils';
@@ -49,6 +51,7 @@ export type NavEntity =
   | 'Help & Support'
   | 'Identity & Access'
   | 'Images'
+  | 'Inference Platform'
   | 'Kubernetes'
   | 'Linodes'
   | 'Login History'
@@ -75,6 +78,7 @@ export type NavEntity =
 
 export type ProductFamily =
   | 'Administration'
+  | 'AI'
   | 'Compute'
   | 'Databases'
   | 'Monitor'
@@ -122,8 +126,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
   const isManaged = accountSettings?.managed ?? false;
 
   const { isACLPEnabled } = useIsACLPEnabled();
-  const { isACLPLogsEnabled, isACLPLogsBeta, isACLPLogsNew } =
-    useIsACLPLogsEnabled();
+  const isACLPLogsNew = useIsACLPLogsNew();
 
   const isAlertsEnabled =
     isACLPEnabled &&
@@ -137,6 +140,8 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
   const { isDatabasesEnabled, isDatabasesV2Beta } = useIsDatabasesEnabled();
 
   const { isIAMEnabled } = useIsIAMEnabled();
+
+  const { isInferencePlatformEnabled } = useIsInferencePlatformEnabled();
 
   const { isNetworkLoadBalancerEnabled } = useIsNetworkLoadBalancerEnabled();
 
@@ -255,6 +260,17 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
             name: 'Networking',
           },
           {
+            icon: <AI />,
+            links: [
+              {
+                display: 'Inference Platform',
+                hide: !isInferencePlatformEnabled,
+                to: '/inference-platform',
+              },
+            ],
+            name: 'AI',
+          },
+          {
             icon: <Database />,
             links: [
               {
@@ -285,10 +301,8 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
               },
               {
                 display: 'Logs',
-                hide: !isACLPLogsEnabled,
                 to: '/logs/delivery',
-                isBeta: isACLPLogsBeta,
-                isNew: !isACLPLogsBeta && isACLPLogsNew,
+                isNew: isACLPLogsNew,
               },
               {
                 display: 'Longview',
@@ -365,13 +379,12 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
         isManaged,
         isPlacementGroupsEnabled,
         isACLPEnabled,
-        isACLPLogsBeta,
         isACLPLogsNew,
-        isACLPLogsEnabled,
         isIAMEnabled,
         isMarketplaceV2FeatureEnabled,
         isNetworkLoadBalancerEnabled,
         isReserveIpEnabled,
+        isInferencePlatformEnabled,
         limitsEvolution,
       ]
     );

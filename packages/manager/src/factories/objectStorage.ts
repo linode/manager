@@ -1,79 +1,70 @@
 import { Factory } from '@linode/utilities';
 
 import type {
-  CreateObjectStorageBucketPayload,
   ObjectStorageBucket,
-  ObjectStorageCluster,
   ObjectStorageEndpoint,
   ObjectStorageKey,
   ObjectStorageObject,
 } from '@linode/api-v4/lib/object-storage/types';
 
-export const objectStorageBucketFactory =
+type ObjectStorageBucketFactoryOptions = Pick<
+  Required<ObjectStorageBucket>,
+  'endpoint_type' | 'objects' | 'region' | 'size'
+> & {
+  actualCluster: string;
+  returnedCluster?: string;
+};
+
+const makeStorageBucketFactory = (options: ObjectStorageBucketFactoryOptions) =>
   Factory.Sync.makeFactory<ObjectStorageBucket>({
-    cluster: 'us-east-1',
-    created: '2019-12-12T00:00:00',
     hostname: Factory.each(
-      (i) => `obj-bucket-${i}.us-east-1.linodeobjects.com`
+      (i) => `obj-bucket-${i}.${options.actualCluster}.linodeobjects.com`
     ),
     label: Factory.each((i) => `obj-bucket-${i}`),
-    objects: 103,
-    region: 'us-east',
-    size: 999999,
+    created: '2019-12-12T00:00:00',
+    region: options.region,
+    cluster: options.returnedCluster ?? options.actualCluster,
+    endpoint_type: options.endpoint_type,
+    s3_endpoint: `${options.actualCluster}.linodeobjects.com`,
+    objects: options.objects,
+    size: options.size,
   });
+
+export const objectStorageBucketFactory = makeStorageBucketFactory({
+  actualCluster: 'us-east-1',
+  endpoint_type: 'E1',
+  region: 'us-east',
+  objects: 103,
+  size: 999999,
+});
 
 // TODO: OBJ Gen2 - Once we eliminate legacy and Gen1 support, we can rename this to `objectStorageBucketFactory` and set it as the default.
-export const objectStorageBucketFactoryGen2 =
-  Factory.Sync.makeFactory<ObjectStorageBucket>({
-    cluster: 'us-iad-12',
-    created: '2019-12-12T00:00:00',
-    endpoint_type: 'E3',
-    hostname: Factory.each(
-      (i) => `obj-bucket-${i}.us-iad-12.linodeobjects.com`
-    ),
-    label: Factory.each((i) => `obj-bucket-${i}`),
-    objects: 103,
-    region: 'us-iad',
-    s3_endpoint: 'us-iad-12.linodeobjects.com',
-    size: 999999,
-  });
+export const objectStorageBucketFactoryGen2 = makeStorageBucketFactory({
+  actualCluster: 'us-iad-12',
+  returnedCluster: '',
+  endpoint_type: 'E3',
+  region: 'us-iad',
+  objects: 103,
+  size: 999999,
+});
 
-export const createObjectStorageBucketFactoryLegacy =
-  Factory.Sync.makeFactory<CreateObjectStorageBucketPayload>({
-    acl: 'private',
-    cluster: 'us-east-1',
-    cors_enabled: true,
-    label: Factory.each((i) => `obj-bucket-${i}`),
-  });
-
-export const createObjectStorageBucketFactoryGen1 =
-  Factory.Sync.makeFactory<CreateObjectStorageBucketPayload>({
-    acl: 'private',
-    cors_enabled: true,
-    label: Factory.each((i) => `obj-bucket-${i}`),
-    region: 'us-east-1',
-  });
+export const createObjectStorageBucketFactoryGen1 = makeStorageBucketFactory({
+  actualCluster: 'us-east-1',
+  endpoint_type: 'E1',
+  region: 'us-east',
+  objects: 0,
+  size: 0,
+});
 
 // TODO: OBJ Gen2 - Once we eliminate legacy and Gen1 support, we can rename this to `createObjectStorageBucketFactory` and set it as the default.
-export const createObjectStorageBucketFactoryGen2 =
-  Factory.Sync.makeFactory<CreateObjectStorageBucketPayload>({
-    acl: 'private',
-    cors_enabled: false,
-    endpoint_type: 'E1',
-    label: Factory.each((i) => `obj-bucket-${i}`),
-    region: 'us-east',
-  });
-
-export const objectStorageClusterFactory =
-  Factory.Sync.makeFactory<ObjectStorageCluster>({
-    domain: Factory.each((id) => `cluster-${id}.linodeobjects.com`),
-    id: Factory.each((id) => `cluster-${id}`) as any,
-    region: 'us-east',
-    static_site_domain: Factory.each(
-      (id) => `website-cluster-${id}.linodeobjects.com`
-    ),
-    status: 'available',
-  });
+export const createObjectStorageBucketFactoryGen2 = makeStorageBucketFactory({
+  actualCluster: 'us-iad-12',
+  returnedCluster: '',
+  endpoint_type: 'E3',
+  region: 'us-iad',
+  objects: 0,
+  size: 0,
+});
 
 export const objectStorageObjectFactory =
   Factory.Sync.makeFactory<ObjectStorageObject>({

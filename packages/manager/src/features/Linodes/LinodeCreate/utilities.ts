@@ -110,19 +110,40 @@ export const getLinodeCreatePayload = (
     const shouldUseNewInterfaces = values.interface_generation === 'linode';
 
     if (shouldUseNewInterfaces) {
-      values.interfaces = formValues.linodeInterfaces.map(
+      values.interfaces = (formValues.linodeInterfaces ?? []).map(
         getLinodeInterfacePayload
       );
       values.firewall_id = undefined;
+      values.private_ip = undefined;
     } else {
+      // Preserve private_ip when using legacy interfaces in the new networking UI.
+      values.private_ip = Boolean(formValues.private_ip);
+
       values.interfaces = formValues.backup_id
         ? undefined
-        : formValues.linodeInterfaces.map((linodeInterface) =>
+        : (formValues.linodeInterfaces ?? []).map((linodeInterface) =>
             getLegacyInterfaceFromLinodeInterface(
               linodeInterface,
               isDualStackEnabled
             )
           );
+
+      // For legacy mode with reserved IP: add root-level ipv4 field
+      const publicInterfaceWithReservedIP = (
+        formValues.linodeInterfaces ?? []
+      ).find(
+        (iface) =>
+          iface.purpose === 'public' &&
+          iface.public?.ipv4?.addresses?.[0]?.address &&
+          iface.public.ipv4.addresses[0].address !== 'auto'
+      );
+
+      const reservedIPAddress =
+        publicInterfaceWithReservedIP?.public?.ipv4?.addresses?.[0]?.address;
+
+      if (reservedIPAddress) {
+        values.ipv4 = [reservedIPAddress];
+      }
     }
   } else {
     values.interfaces = getInterfacesPayload(
@@ -274,15 +295,16 @@ export interface LinodeCreateFormValues extends CreateLinodeRequest {
 
 export interface LinodeCreateFormContext {
   /**
-   * Is the form using the new Interfaces UI?
-   */
-  isLinodeInterfacesEnabled: boolean;
-  /**
    * Is passwordLess Linode creation enabled?
    * When true, root_pass is optional if authorized_users are provided.
    * When false, root_pass is required.
    */
   isPasswordLessLinodesEnabled: boolean;
+  /**
+   * Is the Reserved IP feature enabled?
+   * When true, users can select a reserved IP address for their Linode.
+   */
+  isReserveIpEnabled: boolean;
   /**
    * Profile data is used in the Linode Create resolver because
    * restricted users are subject to different validation.
@@ -305,7 +327,6 @@ export const defaultValues = async (
   params: LinodeCreateSearchParams,
   queryClient: QueryClient,
   flags: {
-    isLinodeInterfacesEnabled: boolean;
     isVMHostMaintenanceEnabled: boolean;
   }
 ): Promise<LinodeCreateFormValues> => {
@@ -343,40 +364,36 @@ export const defaultValues = async (
     undefined;
   let defaultMaintenancePolicy: MaintenancePolicySlug | undefined = undefined;
 
-  // Fetch account settings for interface generation if enabled
-  if (flags.isLinodeInterfacesEnabled || flags.isVMHostMaintenanceEnabled) {
-    try {
-      const accountSettings = await queryClient.ensureQueryData(
-        accountQueries.settings
+  // Fetch account settings for interface generation and maintenance policy
+  try {
+    const accountSettings = await queryClient.ensureQueryData(
+      accountQueries.settings
+    );
+
+    // Don't set the interface generation when cloning. The API can figure that out
+    if (createType !== 'Clone Linode') {
+      interfaceGeneration = getDefaultInterfaceGenerationFromAccountSetting(
+        accountSettings.interfaces_for_new_linodes
       );
-
-      // Don't set the interface generation when cloning. The API can figure that out
-      if (flags.isLinodeInterfacesEnabled && createType !== 'Clone Linode') {
-        interfaceGeneration = getDefaultInterfaceGenerationFromAccountSetting(
-          accountSettings.interfaces_for_new_linodes
-        );
-      }
-
-      // If the Maintenance Policy feature is enabled, use the user's account setting
-      if (flags.isVMHostMaintenanceEnabled) {
-        defaultMaintenancePolicy = accountSettings.maintenance_policy;
-      }
-    } catch (error) {
-      // silently fail because the user may be a restricted user that can't access this endpoint
     }
+
+    // If the Maintenance Policy feature is enabled, use the user's account setting
+    if (flags.isVMHostMaintenanceEnabled) {
+      defaultMaintenancePolicy = accountSettings.maintenance_policy;
+    }
+  } catch (error) {
+    // silently fail because the user may be a restricted user that can't access this endpoint
   }
 
   let firewallSettings: FirewallSettings | null = null;
 
   // Fetch firewall settings separately since it's a different endpoint
-  if (flags.isLinodeInterfacesEnabled) {
-    try {
-      firewallSettings = await queryClient.ensureQueryData(
-        firewallQueries.settings
-      );
-    } catch {
-      // We can silently fail. Worst case, a user's default firewall won't be pre-populated.
-    }
+  try {
+    firewallSettings = await queryClient.ensureQueryData(
+      firewallQueries.settings
+    );
+  } catch {
+    // We can silently fail. Worst case, a user's default firewall won't be pre-populated.
   }
 
   const privateIp =

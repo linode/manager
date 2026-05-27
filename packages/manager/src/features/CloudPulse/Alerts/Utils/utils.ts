@@ -14,7 +14,11 @@ import type { FieldPath, FieldValues, UseFormSetError } from 'react-hook-form';
 import { array, object, string } from 'yup';
 
 import { filterFirewallResources } from '../../Utils/utils';
-import { aggregationTypeMap, metricOperatorTypeMap } from '../constants';
+import {
+  aggregationTypeMap,
+  CLONE_ALERT_NAME_SUFFIX,
+  metricOperatorTypeMap,
+} from '../constants';
 
 import type { CloudPulseResources } from '../../shared/CloudPulseResourcesSelect';
 import type { AssociatedEntityType } from '../../shared/types';
@@ -331,6 +335,7 @@ export const convertAlertDefinitionValues = (
     tags,
     trigger_conditions,
     regions,
+    group_by,
   }: Alert,
   serviceType: CloudPulseServiceType
 ): EditAlertPayloadWithService => {
@@ -352,6 +357,7 @@ export const convertAlertDefinitionValues = (
     tags,
     trigger_conditions,
     regions,
+    group_by,
   };
 };
 
@@ -643,4 +649,12 @@ export const filterLinodeResources = (linodes: Linode[]): Linode[] => {
       (linode.alerts.system_alerts?.length ?? 0) > 0 ||
       (linode.alerts.user_alerts?.length ?? 0) > 0
   );
+};
+
+/**
+ * @param the label(name) of the alert
+ * @returns the suffix added label of the alert name for the clone
+ */
+export const getClonedAlertLabel = (label: string) => {
+  return `${label}${CLONE_ALERT_NAME_SUFFIX}`;
 };

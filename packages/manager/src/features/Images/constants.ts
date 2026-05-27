@@ -48,3 +48,20 @@ export const SHARE_GROUPS_OWNED_TAB_PENDO_IDS = {
   imageSharingDocsLink: 'Images Groups Owned-Image sharing docs',
   searchShareGroupsBar: 'Images Groups Owned-Search',
 };
+
+export const SHARE_GROUPS_JOINED_TAB_PENDO_IDS = {
+  imageSharingDocsLink: 'Images Groups Joined-Image sharing docs',
+  joinedGroupName: 'Images Groups Joined-Group name',
+  leaveGroupButton: 'Images Groups Joined-Leave group',
+  searchShareGroupsBar: 'Images Groups Joined-Search',
+};
+
+export const SHARE_GROUPS_MEMBERSHIP_REQUESTS_TAB_PENDO_IDS = {
+  imageSharingDocsLink: 'Images Groups Membership Requests-Image sharing docs',
+  requestMembershipButton:
+    'Images Groups Membership Requests-Request membership',
+  searchShareGroupsBar: 'Images Groups Membership Requests-Search',
+  shareGroupUuid: 'Images Groups Membership Requests-Share Group UUID copy',
+  tokenUuid: 'Images Groups Membership Requests-Token UUID copy',
+  cancelRequestButton: 'Images Groups Membership Requests-Cancel',
+};

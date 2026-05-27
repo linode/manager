@@ -1,3 +1,4 @@
+import { sendEvent } from '@akamai/compute-ui-core/analytics';
 import { useAllLinodeDisksQuery, useLinodeQuery } from '@linode/queries';
 import { Box, Button, Paper, Stack, Typography } from '@linode/ui';
 import { Hidden } from '@linode/ui';
@@ -19,7 +20,6 @@ import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading'
 import { TableSortCell } from 'src/components/TableSortCell';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
-import { sendEvent } from 'src/utilities/analytics/utils';
 
 import { addUsedDiskSpace } from '../utilities';
 import { CreateDiskDrawer } from './CreateDiskDrawer';

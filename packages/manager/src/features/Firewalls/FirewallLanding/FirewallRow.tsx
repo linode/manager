@@ -1,6 +1,6 @@
+import { capitalize } from '@akamai/compute-ui-core/formatting';
 import { Box } from '@linode/ui';
 import { Hidden } from '@linode/ui';
-import { capitalize } from '@linode/utilities';
 import React from 'react';
 
 import { Link } from 'src/components/Link';
@@ -8,7 +8,6 @@ import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { useDefaultFirewallChipInformation } from 'src/hooks/useDefaultFirewallChipInformation';
-import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
 import { DefaultFirewallChip } from '../components/DefaultFirewallChip';
 import { FirewallActionMenu } from './FirewallActionMenu';
@@ -20,8 +19,6 @@ export interface FirewallRowProps extends Firewall, ActionHandlers {}
 
 export const FirewallRow = React.memo((props: FirewallRowProps) => {
   const { entities, id, label, rules, status, ...actionHandlers } = props;
-
-  const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
 
   const { defaultNumEntities, isDefault, tooltipText } =
     useDefaultFirewallChipInformation(id);
@@ -39,7 +36,7 @@ export const FirewallRow = React.memo((props: FirewallRowProps) => {
           }}
         >
           <Link to={`/firewalls/${id}`}>{label}</Link>
-          {isLinodeInterfacesEnabled && isDefault && (
+          {isDefault && (
             <DefaultFirewallChip
               chipProps={{ sx: { marginLeft: 1 } }}
               defaultNumEntities={defaultNumEntities}
@@ -54,12 +51,7 @@ export const FirewallRow = React.memo((props: FirewallRowProps) => {
       </TableCell>
       <Hidden smDown>
         <TableCell>{getRuleString(count)}</TableCell>
-        <TableCell>
-          {getDevicesCellString({
-            entities,
-            isLinodeInterfacesEnabled,
-          })}
-        </TableCell>
+        <TableCell>{getDevicesCellString({ entities })}</TableCell>
       </Hidden>
       <TableCell
         sx={{ paddingRight: 0, textAlign: 'end', whiteSpace: 'nowrap' }}
@@ -107,26 +99,18 @@ export const getCountOfRules = (rules: Firewall['rules']): [number, number] => {
 
 interface DeviceLinkInputs {
   entities: FirewallDeviceEntity[];
-  isLinodeInterfacesEnabled: boolean;
 }
 const getDevicesCellString = (inputs: DeviceLinkInputs) => {
-  const { entities, isLinodeInterfacesEnabled } = inputs;
-  const filteredEntities = isLinodeInterfacesEnabled
-    ? entities
-    : entities.filter((entity) => entity.type !== 'linode_interface');
+  const { entities } = inputs;
 
-  if (filteredEntities.length === 0) {
+  if (entities.length === 0) {
     return 'None assigned';
   }
 
-  return getDeviceLinks({
-    entities: filteredEntities,
-  });
+  return getDeviceLinks({ entities });
 };
 
-export const getDeviceLinks = (
-  inputs: Omit<DeviceLinkInputs, 'isLinodeInterfacesEnabled'>
-) => {
+export const getDeviceLinks = (inputs: DeviceLinkInputs) => {
   const { entities } = inputs;
   const firstThree = entities.slice(0, 3);
 

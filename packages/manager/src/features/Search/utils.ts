@@ -26,6 +26,7 @@ export const emptyResults: SearchResultsByEntity = {
   stackscript: [],
   stream: [],
   volume: [],
+  reservedIp: [],
 };
 
 export const emptyErrors: Record<SearchableEntityType, null | string> = {
@@ -41,6 +42,7 @@ export const emptyErrors: Record<SearchableEntityType, null | string> = {
   stackscript: null,
   stream: null,
   volume: null,
+  reservedIp: null,
 };
 
 export const searchableEntityIconMap: Record<
@@ -59,6 +61,7 @@ export const searchableEntityIconMap: Record<
   stackscript: Compute,
   stream: Monitor,
   volume: Storage,
+  reservedIp: Networking,
 };
 
 export const searchableEntityDisplayNameMap: Record<
@@ -77,6 +80,7 @@ export const searchableEntityDisplayNameMap: Record<
   stackscript: 'StackScripts',
   stream: 'Stream',
   volume: 'Volumes',
+  reservedIp: 'Reserved IPs',
 };
 
 export const getErrorsFromErrorMap = (
@@ -111,6 +115,7 @@ export const separateResultsByEntity = (
     stackscript: [],
     stream: [],
     volume: [],
+    reservedIp: [],
   };
 
   for (const result of searchResults) {

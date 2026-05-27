@@ -1,13 +1,12 @@
-import { TooltipIcon } from '@linode/ui';
-import { styled } from '@mui/material/styles';
+import { Icon, Tooltip } from '@akamai/cds-components/react';
+import { Spacing } from '@akamai/cds-tokens';
 import * as React from 'react';
-
-import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 
 import {
   SUMMARY_HOST_TOOLTIP_COPY,
   SUMMARY_PRIVATE_HOST_COPY,
 } from '../constants';
+import { CopyTooltip } from '../shared/CopyTooltip/CopyTooltip';
 
 import type { HostEndpoint } from '@linode/api-v4/lib/databases/types';
 
@@ -23,40 +22,18 @@ export const ConnectionDetailsHostDisplay = (
   return (
     <>
       {host?.address}
-      <StyledCopyTooltip text={host.address} />
-      <TooltipIcon
-        componentsProps={{
-          tooltip: {
-            style: {
-              minWidth: 285,
-            },
-          },
-        }}
-        status="info"
-        sxTooltipIcon={{
-          marginLeft: '4px',
-          padding: '0px',
-        }}
-        text={
+      <CopyTooltip text={host.address} />
+      <Tooltip
+        style={{ marginLeft: Spacing.S4 }}
+        tooltipPlacement="bottom"
+        tooltipText={
           !host?.public_access
             ? SUMMARY_PRIVATE_HOST_COPY
             : SUMMARY_HOST_TOOLTIP_COPY
         }
-      />
+      >
+        <Icon icon="info-outline" size="m" />
+      </Tooltip>
     </>
   );
 };
-
-export const StyledCopyTooltip = styled(CopyTooltip, {
-  label: 'StyledCopyTooltip',
-})(({ theme }) => ({
-  '& svg': {
-    height: theme.spacingFunction(16),
-    width: theme.spacingFunction(16),
-  },
-  '&:hover': {
-    backgroundColor: 'transparent',
-  },
-  display: 'inline-flex',
-  marginLeft: theme.spacingFunction(4),
-}));

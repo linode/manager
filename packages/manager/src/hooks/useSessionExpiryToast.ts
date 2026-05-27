@@ -2,7 +2,7 @@ import { isNumeric } from '@linode/utilities';
 import { useSnackbar } from 'notistack';
 import { useEffect } from 'react';
 
-import { getIsAdminToken } from 'src/OAuth/oauth';
+import { getIsAdminToken } from 'src/OAuth/oauthClient';
 import { storage } from 'src/utilities/storage';
 
 export const useSessionExpiryToast = () => {

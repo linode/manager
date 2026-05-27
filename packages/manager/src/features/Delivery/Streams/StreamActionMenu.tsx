@@ -44,6 +44,9 @@ export const StreamActionMenu = (props: StreamActionMenuProps) => {
       },
       title: 'Delete',
       pendoId: 'Logs Delivery Streams-Delete',
+      disabled:
+        status === streamStatus.Deactivating ||
+        status === streamStatus.Provisioning,
     },
   ];
 

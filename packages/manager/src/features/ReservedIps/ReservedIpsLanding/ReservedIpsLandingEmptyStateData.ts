@@ -17,15 +17,19 @@ export const gettingStartedGuides: ResourcesLinkSection = {
   links: [
     {
       text: 'Overview of Reserved IPs',
-      to: 'https://www.linode.com/docs/', // To be updated with actual Reserved IPs documentation link once available
+      to: 'https://techdocs.akamai.com/cloud-computing/docs/reserved-ips',
     },
     {
       text: 'Getting Started with Reserved IPs',
-      to: 'https://www.linode.com/docs/', // To be updated with actual Reserved IPs documentation link once available
+      to: 'https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-reserved-ips',
+    },
+    {
+      text: 'Reserve an IP Address',
+      to: 'https://techdocs.akamai.com/cloud-computing/docs/reserve-an-ip',
     },
     {
       text: 'Managing and Assigning Reserved IPs',
-      to: 'https://www.linode.com/docs/', // To be updated with actual Reserved IPs documentation link once available
+      to: 'https://techdocs.akamai.com/cloud-computing/update/docs/managing-reserved-ips',
     },
   ],
   moreInfo: {

@@ -3,7 +3,6 @@ import { useState } from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
-import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
 import {
   DEFAULT_FIREWALL_TOOLTIP_TEXT,
@@ -28,7 +27,6 @@ interface Props extends ActionHandlers {
 }
 
 export const FirewallActionMenu = React.memo((props: Props) => {
-  const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const {
@@ -49,7 +47,7 @@ export const FirewallActionMenu = React.memo((props: Props) => {
   );
 
   const disabledProps = (hasPermission: boolean) =>
-    !hasPermission || (isLinodeInterfacesEnabled && isDefaultFirewall)
+    !hasPermission || isDefaultFirewall
       ? {
           disabled: true,
           tooltip: isDefaultFirewall

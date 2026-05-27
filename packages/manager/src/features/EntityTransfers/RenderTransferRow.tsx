@@ -1,6 +1,6 @@
+import { capitalize, pluralize } from '@akamai/compute-ui-core/formatting';
 import { LinkButton } from '@linode/ui';
 import { Hidden } from '@linode/ui';
-import { capitalize, pluralize } from '@linode/utilities';
 import * as React from 'react';
 
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';

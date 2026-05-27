@@ -230,14 +230,14 @@ export const ProductDetails = () => {
                 ))}
               </TagsContainer>
 
-              {/* Contact Sales Button */}
+              {/* Contact Partner Button */}
               <Box marginTop={1}>
                 <Button
                   buttonType="primary"
-                  data-pendo-id={`Cloud Marketplace ${product.name}-Contact Sales`}
+                  data-pendo-id={`Cloud Marketplace ${product.name}-Contact Partner`}
                   onClick={handleContactSales}
                 >
-                  Contact Sales
+                  Contact Partner
                 </Button>
               </Box>
             </ProductDetailsSection>

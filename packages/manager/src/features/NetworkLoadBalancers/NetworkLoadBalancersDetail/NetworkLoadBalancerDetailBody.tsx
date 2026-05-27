@@ -1,3 +1,4 @@
+import { formatDate } from '@akamai/compute-ui-core/datetime';
 import { useProfile, useRegionQuery } from '@linode/queries';
 import { Box, Stack, Typography } from '@linode/ui';
 import { Grid, styled } from '@mui/material';
@@ -6,7 +7,6 @@ import * as React from 'react';
 import { Link } from 'src/components/Link';
 import { AccessTable } from 'src/features/Linodes/AccessTable';
 import { StyledBodyGrid } from 'src/features/Linodes/LinodeEntityDetail.styles';
-import { formatDate } from 'src/utilities/formatDate';
 
 import type { LKEClusterInfo } from '@linode/api-v4';
 

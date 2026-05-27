@@ -86,6 +86,7 @@ export const createAlertDefinitionSchema = object({
   entity_ids: array().of(string().defined()).optional(),
   regions: array().of(string().defined()).optional(),
   scope: string().oneOf(['entity', 'region', 'account']).nullable().optional(),
+  group_by: array().of(string().defined()).optional(),
 });
 
 export const editAlertDefinitionSchema = object({
@@ -144,6 +145,7 @@ export const editAlertDefinitionSchema = object({
     .optional(),
   scope: string().oneOf(['entity', 'region', 'account']).nullable().optional(),
   regions: array().of(string().defined()).optional(),
+  group_by: array().of(string().defined()).optional(),
 });
 
 export const createNotificationChannelPayloadSchema = object({

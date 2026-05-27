@@ -1,3 +1,22 @@
+## [2026-05-27] - v0.86.0
+
+
+### Changed:
+
+- Update `createDatabaseConnectionPoolSchema` username error message and fix `updateDatabaseConnectionPoolSchema` validation (#93)
+
+### Fixed:
+
+- Validation in URL fields in Logs Destination Form ([#214](https://github.com/linode/manager/pull/214))
+
+### Tech Stories:
+
+
+### Upcoming Features:
+
+- Private Image Sharing: Add validation for the Share group label ([#187](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/187/overview))
+- Add optional validation for the group_by field in Create and Edit Alert Definition validation schema ([#246](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/246/overview))
+
 ## [2026-04-30] - v0.85.0
 
 

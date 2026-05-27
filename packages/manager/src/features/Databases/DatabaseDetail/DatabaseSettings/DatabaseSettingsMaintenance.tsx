@@ -1,6 +1,7 @@
-import { Button } from '@akamai/cds-components/react';
+import { Button, Icon, Tooltip } from '@akamai/cds-components/react';
+import { Spacing } from '@akamai/cds-tokens';
 import { useDatabaseEnginesQuery } from '@linode/queries';
-import { TooltipIcon, Typography } from '@linode/ui';
+import { Typography } from '@linode/ui';
 import { GridLegacy, styled } from '@mui/material';
 import * as React from 'react';
 
@@ -48,19 +49,17 @@ export const DatabaseSettingsMaintenance = (props: Props) => {
           Upgrade Version
         </Button>
         {hasUpdates && (
-          <TooltipIcon
-            status="info"
-            sxTooltipIcon={{
-              padding: '0px 8px',
-            }}
-            text={
-              <Typography>
-                Upgrades are disabled due to pending maintenance updates. To
-                enable the upgrade, apply available updates now or wait until
-                the next maintenance window.
-              </Typography>
-            }
-          />
+          <Tooltip
+            style={{ marginLeft: Spacing.S4 }}
+            tooltipPlacement="bottom"
+            tooltipText="Upgrades are disabled due to pending maintenance updates. To enable the upgrade, apply available updates now or wait until the next maintenance window."
+          >
+            <Icon
+              icon="info-outline"
+              size="m"
+              style={{ position: 'relative', top: -1 }}
+            />
+          </Tooltip>
         )}
       </GridLegacy>
       {/*

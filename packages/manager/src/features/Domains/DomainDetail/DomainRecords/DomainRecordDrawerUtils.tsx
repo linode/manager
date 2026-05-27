@@ -1,4 +1,4 @@
-import { maybeCastToNumber } from '@linode/utilities';
+import { maybeCastToNumber } from '@akamai/compute-ui-core/formatting';
 import produce from 'immer';
 
 import { getInitialIPs } from '../../domainUtils';

@@ -6,25 +6,19 @@ import { useCreateObjectUrlMutation } from 'src/queries/object-storage/queries';
 
 interface Props {
   bucketName: string;
-  clusterId: string;
   maybeAddObjectToTable: (path: string, sizeInBytes: number) => void;
   onClose: () => void;
   open: boolean;
   prefix: string;
+  regionId: string;
 }
 
 export const CreateFolderDrawer = (props: Props) => {
-  const {
-    bucketName,
-    clusterId,
-    maybeAddObjectToTable,
-    onClose,
-    open,
-    prefix,
-  } = props;
+  const { bucketName, regionId, maybeAddObjectToTable, onClose, open, prefix } =
+    props;
 
   const { error, isPending, mutateAsync } = useCreateObjectUrlMutation(
-    clusterId,
+    regionId,
     bucketName
   );
 
@@ -37,7 +31,7 @@ export const CreateFolderDrawer = (props: Props) => {
 
       const { exists, url } = await mutateAsync({
         method: 'PUT',
-        name: newObjectAbsolutePath,
+        objectName: newObjectAbsolutePath,
         options: {
           content_type: 'application/octet-stream',
         },

@@ -1,5 +1,5 @@
+import { pluralize } from '@akamai/compute-ui-core/formatting';
 import { LinkButton } from '@linode/ui';
-import { pluralize } from '@linode/utilities';
 import { styled } from '@mui/material/styles';
 import React from 'react';
 

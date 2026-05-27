@@ -1,3 +1,18 @@
+## [2026-05-27] - v0.18.0
+
+
+### Added:
+
+- Partition utility function (formerly located in the IAM directory in the manager package) ([#161](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/161))
+
+### Tech Stories:
+
+- Bump `@testing-library/jest-dom` from `6.4.2` to `6.9.1` ([#189](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/189/overview))
+
+### Upcoming Features:
+
+- Private Image Sharing: Remove disk_id from the update Share group payload ([#187](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/187/overview))
+
 ## [2026-04-30] - v0.17.0
 
 

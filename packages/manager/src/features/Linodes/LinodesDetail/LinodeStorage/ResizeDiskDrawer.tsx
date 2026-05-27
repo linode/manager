@@ -1,3 +1,4 @@
+import { sendEvent } from '@akamai/compute-ui-core/analytics';
 import {
   useAllLinodeDisksQuery,
   useLinodeDiskResizeMutation,
@@ -21,7 +22,6 @@ import { Code } from 'src/components/Code/Code';
 import { Link } from 'src/components/Link';
 import { TextTooltip } from 'src/components/TextTooltip';
 import { useEventsPollingActions } from 'src/queries/events/events';
-import { sendEvent } from 'src/utilities/analytics/utils';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
 
 import { calculateDiskFree } from './CreateDiskDrawer';

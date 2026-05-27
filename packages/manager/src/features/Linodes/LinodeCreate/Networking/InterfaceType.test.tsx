@@ -92,4 +92,36 @@ describe('InterfaceType', () => {
     expect(getByDisplayValue('vpc')).toBeChecked();
     expect(getByDisplayValue('public')).not.toBeChecked();
   });
+
+  it('retains firewall selection when switching between Public and VPC', async () => {
+    const { getByDisplayValue } = renderWithThemeAndHookFormContext({
+      component: <InterfaceType disabled={false} index={0} />,
+      useFormOptions: {
+        defaultValues: {
+          ...defaultFormValues,
+          linodeInterfaces: [
+            {
+              purpose: 'public',
+              firewall_id: 100,
+              vpc: null,
+              public: null,
+              vlan: null,
+              default_route: null,
+            },
+          ],
+        },
+      },
+    });
+
+    // Public should be selected with firewall_id 100
+    expect(getByDisplayValue('public')).toBeChecked();
+
+    // Switch to VPC - this should NOT immediately change firewall (depends on VPC specific logic)
+    await userEvent.click(getByDisplayValue('vpc'));
+    expect(getByDisplayValue('vpc')).toBeChecked();
+
+    // Switch back to Public - firewall_id for public should be retained (100)
+    await userEvent.click(getByDisplayValue('public'));
+    expect(getByDisplayValue('public')).toBeChecked();
+  });
 });

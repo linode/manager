@@ -1,5 +1,5 @@
+import { roundTo } from '@akamai/compute-ui-core/formatting';
 import { Button, CircleProgress, ErrorState, Typography } from '@linode/ui';
-import { roundTo } from '@linode/utilities';
 import { Box, useMediaQuery, useTheme } from '@mui/material';
 import * as React from 'react';
 

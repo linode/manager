@@ -1,6 +1,6 @@
+import { downloadFile } from '@akamai/compute-ui-core/browser';
 import { getKubeConfig } from '@linode/api-v4/lib/kubernetes';
 import { Hidden } from '@linode/ui';
-import { downloadFile } from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useSnackbar } from 'notistack';

@@ -1,5 +1,7 @@
-import { isNumber } from '@linode/utilities';
+import { isNumber } from '@akamai/compute-ui-core/formatting';
 import * as React from 'react';
+
+import { getAdaptiveDecimalPlacesCount } from 'src/utilities/pricing/priceInterval';
 
 interface CurrencyFormatterProps {
   /**
@@ -8,6 +10,7 @@ interface CurrencyFormatterProps {
   dataAttrs?: Record<string, any>;
   /**
    * The number of decimal places to display.
+   * Defaults to 2 when not provided.
    */
   decimalPlaces?: number;
   /**
@@ -15,21 +18,40 @@ interface CurrencyFormatterProps {
    */
   quantity: '--.--' | number;
   /**
+   * When true, displays the value using its actual precision — integers show
+   * without decimals ($10), non-integers use at least 2 decimal places and
+   * expand for higher precision values ($10.50, $0.0159).
+   * Has no effect when `decimalPlaces` is also provided.
+   */
+  useAdaptivePrecision?: boolean;
+  /**
    * A boolean used to wrap the currency in parenthesis. This is normally done to indicate a negative amount or balance.
    */
   wrapInParentheses?: boolean;
 }
 
 export const Currency = (props: CurrencyFormatterProps) => {
-  const { dataAttrs, decimalPlaces, quantity, wrapInParentheses } = props;
+  const {
+    dataAttrs,
+    decimalPlaces,
+    quantity,
+    useAdaptivePrecision,
+    wrapInParentheses,
+  } = props;
 
-  // Use the default value (2) when decimalPlaces is negative or undefined.
-  const minimumFractionDigits =
-    decimalPlaces !== undefined && decimalPlaces >= 0 ? decimalPlaces : 2;
+  const getMinimumFractionDigits = () => {
+    if (decimalPlaces !== undefined && decimalPlaces >= 0) {
+      return decimalPlaces;
+    }
+    if (useAdaptivePrecision && isNumber(quantity)) {
+      return getAdaptiveDecimalPlacesCount(quantity);
+    }
+    return 2;
+  };
 
   const formatter = new Intl.NumberFormat('en-US', {
     currency: 'USD',
-    minimumFractionDigits,
+    minimumFractionDigits: getMinimumFractionDigits(),
     style: 'currency',
   });
 

@@ -1,12 +1,7 @@
+import { Badge, Button, Icon, Tooltip } from '@akamai/cds-components/react';
+import { Spacing } from '@akamai/cds-tokens';
 import { useAllVPCsQuery } from '@linode/queries';
-import {
-  BetaChip,
-  Button,
-  CircleProgress,
-  ErrorState,
-  Stack,
-  Typography,
-} from '@linode/ui';
+import { Stack, Typography } from '@linode/ui';
 import React from 'react';
 
 import { Link } from 'src/components/Link';
@@ -14,6 +9,8 @@ import { useFlags } from 'src/hooks/useFlags';
 
 import { MANAGE_NETWORKING_LEARN_MORE_LINK } from '../../constants';
 import { makeSettingsItemStyles } from '../../shared.styles';
+import { CircleProgress } from '../../shared/CircleProgress/CircleProgress';
+import { ErrorState } from '../../shared/ErrorState/ErrorState';
 import { ConnectionDetailsHostRows } from '../ConnectionDetailsHostRows';
 import { ConnectionDetailsHostRows2 } from '../ConnectionDetailsHostRows2';
 import { ConnectionDetailsRow } from '../ConnectionDetailsRow';
@@ -66,7 +63,7 @@ export const DatabaseManageNetworking = ({ database }: Props) => {
   };
 
   if (isLoading) {
-    return <CircleProgress />;
+    return <CircleProgress style={{ marginTop: Spacing.S32 }} />;
   }
 
   if (error || (hasVPCConfigured && !currentVPC)) {
@@ -81,7 +78,15 @@ export const DatabaseManageNetworking = ({ database }: Props) => {
         <Stack spacing={0.5}>
           <div style={{ display: 'flex' }}>
             <Typography variant="h3">Manage Networking</Typography>
-            {flags.databaseVpcBeta && <BetaChip />}
+            {flags.databaseVpcBeta && (
+              <Badge
+                color="neutral"
+                style={{ marginLeft: Spacing.S8 }}
+                variant="solid"
+              >
+                BETA
+              </Badge>
+            )}
           </div>
           <Typography sx={{ maxWidth: '500px' }}>
             Update access settings or the VPC assignment.{' '}
@@ -96,16 +101,19 @@ export const DatabaseManageNetworking = ({ database }: Props) => {
             in progress.
           </Typography>
         </Stack>
-        <Button
-          buttonType="outlined"
-          className={classes.actionBtn}
-          disabled={!hasVPCs}
-          onClick={onManageAccess}
-          TooltipProps={{ placement: 'top' }}
+        <Tooltip
+          disabled={hasVPCs}
           tooltipText="To manage networking, you need to have a VPC in the same region as the database cluster."
         >
-          Manage Networking
-        </Button>
+          <Button
+            className={classes.actionBtn}
+            disabled={!hasVPCs}
+            onClick={onManageAccess}
+          >
+            Manage Networking
+            {!hasVPCs ? <Icon icon="info-outline" size="m" /> : null}
+          </Button>
+        </Tooltip>
       </div>
 
       <StyledGridContainer container size={gridContainerSize} spacing={0}>

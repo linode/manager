@@ -1,4 +1,4 @@
-import { parseAPIDate } from 'src/utilities/date';
+import { parseAPIDate } from '@akamai/compute-ui-core/datetime';
 
 /**
  * @returns true if "time" is within in ]timeToCompare - 24H ; timeToCompare]

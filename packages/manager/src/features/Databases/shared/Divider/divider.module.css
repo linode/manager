@@ -1,0 +1,11 @@
+.divider {
+  display: block;
+  margin-top: var(--divider-margin-top, 8px);
+  margin-bottom: var(--divider-margin-bottom, 8px);
+  margin-left: 0;
+  margin-right: 0;
+  width: 100%;
+  border-width: 0 0 thin;
+  border-style: solid;
+  border-color: #e0e0e0;
+}

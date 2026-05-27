@@ -1,33 +1,30 @@
+import { NotificationBanner } from '@akamai/cds-components/react';
+import { Spacing } from '@akamai/cds-tokens';
 import {
-  useAccountUsersInfiniteQuery,
+  useAccountUsers,
   useAllAccountUsersQuery,
   useUpdateChildAccountDelegatesQuery,
 } from '@linode/queries';
-import {
-  ActionsPanel,
-  Autocomplete,
-  CloseIcon,
-  IconButton,
-  Notice,
-  Paper,
-  Stack,
-  Typography,
-} from '@linode/ui';
+import { ActionsPanel, Typography } from '@linode/ui';
 import { useDebouncedValue } from '@linode/utilities';
-import { useTheme } from '@mui/material';
 import { enqueueSnackbar } from 'notistack';
-import * as React from 'react';
-import { Controller, FormProvider, useForm } from 'react-hook-form';
+import React, { useState } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
 
 import { usePermissions } from '../hooks/usePermissions';
-import { IAM_PARENT_USERS_PENDO_IDS } from '../Shared/constants';
-import { INTERNAL_ERROR_NO_CHANGES_SAVED } from '../Shared/constants';
+import {
+  IAM_PARENT_USERS_PENDO_IDS,
+  INTERNAL_ERROR_NO_CHANGES_SAVED,
+} from '../Shared/constants';
 import { getPlaceholder } from '../Shared/Entities/utils';
+import { SelectionPanel } from '../Shared/SelectionPanel/SelectionPanel';
 
 import type {
   ChildAccount,
   ChildAccountWithDelegates,
   Filter,
+  ResourcePage,
+  User,
 } from '@linode/api-v4';
 
 interface UpdateDelegationsFormValues {
@@ -45,15 +42,18 @@ interface DelegationsFormProps {
   onClose: () => void;
 }
 
+const MIN_PAGE_SIZE = 25;
+
 export const UpdateDelegationForm = ({
   delegation,
   formattedCurrentUsers,
   onClose,
 }: DelegationsFormProps) => {
-  const theme = useTheme();
-  const [inputValue, setInputValue] = React.useState<string>('');
-  const [allUserSelected, setAllUserSelected] = React.useState<boolean>(false);
-  const debouncedInputValue = useDebouncedValue(inputValue);
+  const [filterText, setFilterText] = React.useState<string>('');
+  const [showSelectedOnly, setShowSelectedOnly] = React.useState(false);
+  const debouncedFilterText = useDebouncedValue(filterText);
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(MIN_PAGE_SIZE);
 
   const { data: permissions } = usePermissions('account', [
     'update_delegate_users',
@@ -61,23 +61,26 @@ export const UpdateDelegationForm = ({
 
   const apiFilter: Filter = {
     user_type: 'parent',
-    username: { '+contains': debouncedInputValue },
+    username: { '+contains': debouncedFilterText },
   };
 
-  const { data, error, fetchNextPage, hasNextPage, isFetching } =
-    useAccountUsersInfiniteQuery(apiFilter);
-
-  const totalUserCount = data?.pages[0]?.results ?? 0;
-
   const {
-    data: allUsers,
-    isFetching: isFetchingAllUsers,
-    refetch: refetchAllUsers,
-  } = useAllAccountUsersQuery(allUserSelected, {
-    user_type: 'parent',
+    data: paginatedUsers,
+    error: fetchError,
+    isFetching,
+  } = useAccountUsers({
+    enabled: !showSelectedOnly,
+    filters: apiFilter,
+    params: { page, page_size: pageSize },
   });
 
-  const isSelectAllFetching = allUserSelected && isFetchingAllUsers;
+  const totalUserCount =
+    (paginatedUsers as unknown as ResourcePage<User> | undefined)?.results ?? 0;
+
+  // Fetch all users without pagination to support "Select all" functionality.
+  // It is only used when the user clicks "Select all", so it won't impact the initial load performance.
+  const { isFetching: isFetchingAllUsers, refetch: refetchAllUsers } =
+    useAllAccountUsersQuery(false, apiFilter);
 
   const { mutateAsync: updateDelegates } =
     useUpdateChildAccountDelegatesQuery();
@@ -89,7 +92,6 @@ export const UpdateDelegationForm = ({
   });
 
   const {
-    control,
     formState: { errors, isSubmitting },
     handleSubmit,
     reset,
@@ -100,29 +102,12 @@ export const UpdateDelegationForm = ({
 
   const selectedUsers = watch('users');
 
-  const users =
-    allUserSelected && allUsers
-      ? allUsers.map((user) => ({
-          label: user.username,
-          value: user.username,
-        }))
-      : !inputValue &&
-          totalUserCount > 0 &&
-          selectedUsers.length >= totalUserCount
-        ? selectedUsers
-        : (data?.pages.flatMap((page) => {
-            return page.data.map((user) => ({
-              label: user.username,
-              value: user.username,
-            }));
-          }) ?? []);
-
-  const isSearching =
-    inputValue.length > 0 && debouncedInputValue !== inputValue;
-
-  const isLoadingOptions = isFetching || isFetchingAllUsers;
-
-  const showNoOptionsText = !isLoadingOptions && !isSearching;
+  const totalCount = showSelectedOnly ? selectedUsers.length : totalUserCount;
+  // Ensure the current page is valid given the total count and page size.
+  const effectivePage = Math.min(
+    page,
+    Math.max(1, Math.ceil(totalCount / pageSize))
+  );
 
   const onSubmit = async (values: UpdateDelegationsFormValues) => {
     const usersList = values.users.map((user) => user.value);
@@ -144,7 +129,6 @@ export const UpdateDelegationForm = ({
   };
 
   const onSelectAllClick = async () => {
-    setAllUserSelected(true);
     const { data } = await refetchAllUsers();
     if (data) {
       setValue(
@@ -157,17 +141,117 @@ export const UpdateDelegationForm = ({
   const handleClose = () => {
     reset();
     onClose();
-    setAllUserSelected(false);
+    setShowSelectedOnly(false);
+  };
+
+  const currentPageData = (
+    paginatedUsers as unknown as ResourcePage<User> | undefined
+  )?.data;
+
+  const displayedUserRows = React.useMemo((): Array<{
+    name: string;
+    option: UserOption;
+    rank: number;
+  }> => {
+    const normalizedFilter = debouncedFilterText.trim().toLowerCase();
+    const matchesFilter = (u: UserOption) =>
+      !normalizedFilter || u.label.toLowerCase().includes(normalizedFilter);
+    const source: UserOption[] = showSelectedOnly
+      ? selectedUsers.filter(matchesFilter)
+      : (currentPageData ?? []).map((u) => ({
+          label: u.username,
+          value: u.username,
+        }));
+    return source.map((u, idx) => ({ rank: idx, name: u.label, option: u }));
+  }, [currentPageData, debouncedFilterText, selectedUsers, showSelectedOnly]);
+
+  const isSearching =
+    filterText.length > 0 && debouncedFilterText !== filterText;
+
+  const isLoading =
+    isFetching || isFetchingAllUsers || isSearching || isSubmitting;
+
+  const showNoUsersText =
+    !isFetching &&
+    !isFetchingAllUsers &&
+    !isSearching &&
+    !fetchError &&
+    displayedUserRows.length === 0;
+
+  const paginatedDisplayedUserRows = React.useMemo(() => {
+    if (showSelectedOnly) {
+      const start = (effectivePage - 1) * pageSize;
+      return displayedUserRows.slice(start, start + pageSize);
+    }
+    return displayedUserRows;
+  }, [displayedUserRows, showSelectedOnly, effectivePage, pageSize]);
+
+  const selectedUserMap = React.useMemo(() => {
+    const map: Record<number, boolean> = {};
+    displayedUserRows.forEach((p) => {
+      if (selectedUsers.some((u) => u.value === p.option.value)) {
+        map[p.rank] = true;
+      }
+    });
+    return map;
+  }, [displayedUserRows, selectedUsers]);
+
+  const displayedSelectedUsers = React.useMemo(() => {
+    const normalizedFilter = debouncedFilterText.trim().toLowerCase();
+    if (!normalizedFilter) {
+      return selectedUsers;
+    }
+    return selectedUsers.filter((user) =>
+      user.label.toLowerCase().includes(normalizedFilter)
+    );
+  }, [debouncedFilterText, selectedUsers]);
+
+  const clearDisabled = displayedSelectedUsers.length === 0;
+
+  const clearDisplayedUsers = () => {
+    const visibleValues = new Set(
+      displayedSelectedUsers.map((user) => user.value)
+    );
+    const remaining = selectedUsers.filter((u) => !visibleValues.has(u.value));
+    setValue('users', remaining);
+    if (remaining.length === 0 && showSelectedOnly) {
+      setShowSelectedOnly(false);
+    }
+  };
+
+  const handleSelectAll = () => {
+    const allCurrentOptionsSelected =
+      totalUserCount > 0 && displayedSelectedUsers.length >= totalUserCount;
+    if (allCurrentOptionsSelected) {
+      setValue('users', []);
+    } else {
+      onSelectAllClick();
+    }
+  };
+
+  const toggleUserSelection = (rank: number, checked: boolean) => {
+    const p = displayedUserRows.find((item) => item.rank === rank);
+    if (!p) return;
+    if (checked) {
+      if (!selectedUsers.some((u) => u.value === p.option.value)) {
+        setValue('users', [...selectedUsers, p.option]);
+      }
+    } else {
+      setValue(
+        'users',
+        selectedUsers.filter((u) => u.value !== p.option.value)
+      );
+    }
   };
 
   return (
     <>
       {errors.root?.message && (
-        <Notice text={errors.root?.message} variant="error" />
+        <NotificationBanner text={errors.root?.message} type="error" />
       )}
       <FormProvider {...form}>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <Typography sx={{ marginBottom: theme.tokens.spacing.S16 }}>
+          <Typography sx={{ marginBottom: Spacing.S16 }}>
             Add or remove users who should have access to the child account.
             Users removed from this list will lose the role assignment on the
             child account and they won&apos;t be visible in the user list on the
@@ -176,7 +260,6 @@ export const UpdateDelegationForm = ({
 
           <Typography
             sx={{
-              marginBottom: theme.tokens.spacing.S8,
               overflow: 'hidden',
               textOverflow: 'ellipsis',
               whiteSpace: 'nowrap',
@@ -185,113 +268,59 @@ export const UpdateDelegationForm = ({
             Update delegation for <strong>{delegation.company}:</strong>
           </Typography>
 
-          <Controller
-            control={control}
-            name="users"
-            render={({ field, fieldState }) => (
-              <Autocomplete
-                autoHighlight
-                clearOnBlur
-                data-testid="delegates-autocomplete"
-                disableClearable={true}
-                disabled={isFetchingAllUsers || isSubmitting}
-                errorText={fieldState.error?.message ?? error?.[0].reason}
-                isOptionEqualToValue={(option, value) =>
-                  option.value === value.value
-                }
-                label="Delegate Users"
-                loading={isFetching || isFetchingAllUsers}
-                multiple
-                noMarginTop
-                noOptionsText={showNoOptionsText ? 'No users found' : ' '}
-                onChange={(_, newValue) => {
-                  field.onChange(newValue || []);
-                }}
-                onInputChange={(_, value) => {
-                  setInputValue(value);
-                }}
-                onSelectAllClick={(_event) => {
-                  const allCurrentOptionsSelected =
-                    totalUserCount > 0 &&
-                    selectedUsers.length >= totalUserCount;
-                  if (allCurrentOptionsSelected) {
-                    setValue('users', []);
-                    setAllUserSelected(false);
-                  } else {
-                    onSelectAllClick();
-                  }
-                }}
-                options={users}
-                renderTags={() => null}
-                slotProps={{
-                  listbox: {
-                    onScroll: (event: React.SyntheticEvent) => {
-                      const listboxNode = event.currentTarget;
-                      if (
-                        listboxNode.scrollTop + listboxNode.clientHeight >=
-                          listboxNode.scrollHeight &&
-                        hasNextPage
-                      ) {
-                        fetchNextPage();
-                      }
-                    },
-                  },
-                }}
-                textFieldProps={{
-                  hideLabel: true,
-                  helperText: isSelectAllFetching
-                    ? 'Fetching all users...'
-                    : undefined,
-                  InputProps: isSelectAllFetching
-                    ? { startAdornment: null }
-                    : undefined,
-                  placeholder: getPlaceholder(
-                    'delegates',
-                    selectedUsers.length,
-                    totalUserCount
-                  ),
-                }}
-                value={field.value}
-              />
+          <SelectionPanel
+            effectivePage={effectivePage}
+            errorText={
+              fetchError
+                ? (fetchError[0]?.reason ?? 'Failed to load users')
+                : undefined
+            }
+            filterPlaceholder={getPlaceholder(
+              'delegates',
+              selectedUsers.length,
+              totalUserCount
             )}
+            filterText={filterText}
+            isClearDisabled={clearDisabled || isSubmitting}
+            isDisabled={isSubmitting}
+            isFilterDisabled={isFetchingAllUsers || isSubmitting}
+            isFilterLoading={isFetchingAllUsers || isSearching}
+            isLoading={isLoading}
+            isSelectAllDisabled={
+              totalUserCount > 0 &&
+              displayedSelectedUsers.length >= totalUserCount
+            }
+            isShowSelectedOnlyDisabled={selectedUsers.length === 0}
+            loadingLabel={isFetchingAllUsers ? 'Fetching all users...' : ''}
+            minPageSize={MIN_PAGE_SIZE}
+            noItemsText="No users found"
+            onClear={clearDisplayedUsers}
+            onFilterTextChange={(text) => {
+              setFilterText(text);
+              setPage(1);
+            }}
+            onPageChange={(newPage) => setPage(newPage)}
+            onPageSizeChange={(newSize) => {
+              setPageSize(newSize);
+              setPage(1);
+            }}
+            onSelectAll={handleSelectAll}
+            onShowSelectedOnlyChange={(show) => {
+              setShowSelectedOnly(show);
+              setPage(1);
+            }}
+            onToggle={toggleUserSelection}
+            pageSize={pageSize}
+            pageSizes={[25, 50, 75, 100]}
+            paginatedRows={paginatedDisplayedUserRows}
+            selectedCount={selectedUsers.length}
+            selectionLabel="Users selected:"
+            selectionMap={selectedUserMap}
+            showEmptyState={showNoUsersText}
+            showPagination={totalCount > MIN_PAGE_SIZE && !isFetchingAllUsers}
+            showSelectedOnly={showSelectedOnly}
+            totalCount={totalCount}
           />
-          <Typography sx={{ mb: 1, mt: 2 }}>
-            Users in the account delegation
-            {isFetchingAllUsers ? '' : ` (${selectedUsers.length})`}:
-          </Typography>
-          <Paper
-            sx={(theme) => ({
-              backgroundColor: isFetchingAllUsers
-                ? theme.tokens.alias.Interaction.Background.Disabled
-                : theme.palette.background.paper,
-              maxHeight: 370,
-              overflowY: 'auto',
-              p: 2,
-              py: 1,
-            })}
-            variant="outlined"
-          >
-            <Stack spacing={1}>
-              {selectedUsers.length === 0 && (
-                <Typography py={1} textAlign="center">
-                  No users selected
-                </Typography>
-              )}
-              {selectedUsers.map((user) => (
-                <DelegationUserRow
-                  isSubmitting={isSubmitting}
-                  key={user.value}
-                  onRemove={() =>
-                    setValue(
-                      'users',
-                      selectedUsers.filter((u) => u.value !== user.value)
-                    )
-                  }
-                  username={user.label}
-                />
-              ))}
-            </Stack>
-          </Paper>
 
           <ActionsPanel
             primaryButtonProps={{
@@ -314,31 +343,5 @@ export const UpdateDelegationForm = ({
         </form>
       </FormProvider>
     </>
-  );
-};
-
-interface DelegationUserRowProps {
-  isSubmitting: boolean;
-  onRemove: () => void;
-  username: string;
-}
-
-const DelegationUserRow = ({
-  onRemove,
-  username,
-  isSubmitting,
-}: DelegationUserRowProps) => {
-  return (
-    <Stack alignItems="center" direction="row" justifyContent="space-between">
-      <Typography>{username}</Typography>
-      <IconButton
-        aria-label={`Remove ${username}`}
-        disabled={isSubmitting}
-        onClick={onRemove}
-        sx={{ p: 0.75 }}
-      >
-        <CloseIcon />
-      </IconButton>
-    </Stack>
   );
 };

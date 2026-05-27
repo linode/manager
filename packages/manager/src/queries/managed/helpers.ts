@@ -1,7 +1,6 @@
+import { parseAPIDate } from '@akamai/compute-ui-core/datetime';
 import { getTicket } from '@linode/api-v4';
 import { DateTime } from 'luxon';
-
-import { parseAPIDate } from 'src/utilities/date';
 
 import type { ExtendedIssue } from './types';
 import type { ManagedIssue } from '@linode/api-v4';

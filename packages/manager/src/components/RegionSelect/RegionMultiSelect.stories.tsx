@@ -1,5 +1,6 @@
+import { sortByString } from '@akamai/compute-ui-core/formatting';
 import { Box } from '@linode/ui';
-import { regions, sortByString } from '@linode/utilities';
+import { regions } from '@linode/utilities';
 import React, { useState } from 'react';
 
 // @todo: modularization - Move `SelectedRegionsList` to the `/data` directory in the `@linode/shared` package.

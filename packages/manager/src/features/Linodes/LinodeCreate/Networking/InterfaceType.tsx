@@ -51,8 +51,12 @@ export const InterfaceType = ({ disabled, index }: Props) => {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const { control, getFieldState, setValue } =
+  const { control, getFieldState, getValues, setValue, resetField } =
     useFormContext<LinodeCreateFormValues>();
+  // Store the firewall selection for each purpose, including null for "no firewall".
+  const firewallsByPurpose = React.useRef<
+    Partial<Record<InterfacePurpose, null | number>>
+  >({});
 
   const { field } = useController({
     control,
@@ -60,18 +64,46 @@ export const InterfaceType = ({ disabled, index }: Props) => {
   });
 
   const onChange = async (value: InterfacePurpose) => {
+    const firewallFieldName = `linodeInterfaces.${index}.firewall_id` as const;
+    const previousPurpose = field.value;
+    const currentFirewallId = getValues(firewallFieldName);
+
+    // Save the firewall selection for the previous purpose (including null for no firewall selected)
+    // Firewall will be saved individually for each purpose, so switching back and forth between purposes
+    // will restore the last selected firewall for that purpose.
+    if (previousPurpose && previousPurpose !== 'vlan') {
+      firewallsByPurpose.current[previousPurpose] =
+        typeof currentFirewallId === 'number' ? currentFirewallId : null;
+    }
+
     // Change the interface purpose (Public, VPC, VLAN)
     field.onChange(value);
 
     // VLAN interfaces do not support Firewalls, so set
     // the Firewall ID to `-1` to be safe and early return.
     if (value === 'vlan') {
-      setValue(`linodeInterfaces.${index}.firewall_id`, -1);
+      setValue(firewallFieldName, -1);
       return;
     }
 
+    // Restore a previously selected firewall for this purpose, if available.
+    if (
+      Object.prototype.hasOwnProperty.call(firewallsByPurpose.current, value)
+    ) {
+      const saved = firewallsByPurpose.current[value];
+      if (typeof saved === 'number') {
+        setValue(firewallFieldName, saved);
+      } else {
+        resetField(firewallFieldName);
+      }
+      return;
+    }
+    // No saved value exists for this purpose yet. Reset so values from another
+    // purpose are not carried over.
+    resetField(firewallFieldName);
+
     // If the user has not touched the Firewall field...
-    if (!getFieldState(`linodeInterfaces.${index}.firewall_id`).isTouched) {
+    if (!getFieldState(firewallFieldName).isTouched) {
       try {
         const firewallSettings = await queryClient.ensureQueryData(
           firewallQueries.settings
@@ -84,10 +116,9 @@ export const InterfaceType = ({ disabled, index }: Props) => {
 
         // If this Interface type has a default firewall, set it
         if (defaultFirewall) {
-          setValue(`linodeInterfaces.${index}.firewall_id`, defaultFirewall);
+          setValue(firewallFieldName, defaultFirewall);
         }
-        // eslint-disable-next-line sonarjs/no-ignored-exceptions
-      } catch (error) {
+      } catch {
         // The fetch to get Firewall Settings will fail for restricted users.
         enqueueSnackbar('Unable to retrieve default Firewall.', {
           variant: 'warning',

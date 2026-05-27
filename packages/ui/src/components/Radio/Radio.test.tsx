@@ -24,7 +24,7 @@ describe('Radio', () => {
 
   it('can render a disabled radio', () => {
     const screen = renderWithTheme(<Radio disabled={true} />);
-    const disabled = screen.container.querySelector('[aria-disabled="true"]');
-    expect(disabled).toBeInTheDocument();
+    const radio = screen.getByRole('radio');
+    expect(radio).toBeDisabled();
   });
 });

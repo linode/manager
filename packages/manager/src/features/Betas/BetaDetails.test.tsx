@@ -1,7 +1,7 @@
+import { formatDate } from '@akamai/compute-ui-core/datetime';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 
-import { formatDate } from 'src/utilities/formatDate';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import BetaDetails from './BetaDetails';

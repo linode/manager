@@ -1,5 +1,5 @@
+import { capitalize } from '@akamai/compute-ui-core/formatting';
 import { Drawer, Notice, Radio, Typography } from '@linode/ui';
-import { capitalize } from '@linode/utilities';
 import { Grid } from '@mui/material';
 import { Formik } from 'formik';
 import * as React from 'react';

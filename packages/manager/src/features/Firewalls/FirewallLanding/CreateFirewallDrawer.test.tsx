@@ -93,10 +93,7 @@ describe('Create Firewall Drawer', () => {
     });
 
     const { getByLabelText, findByTestId } = renderWithTheme(
-      <CreateFirewallDrawer {...props} />,
-      {
-        flags: { linodeInterfaces: { enabled: true } },
-      }
+      <CreateFirewallDrawer {...props} />
     );
 
     const createFirewallForm = await findByTestId(
@@ -108,20 +105,6 @@ describe('Create Firewall Drawer', () => {
     const templateRadio = getByLabelText('From a Template');
     await userEvent.click(templateRadio);
     expect(getByLabelText('Firewall Template')).toBeVisible();
-  });
-
-  it('should not show the custom firewall radio group if Linode Interfaces flag is not enabled', () => {
-    const { queryByLabelText, queryByTestId } = renderWithTheme(
-      <CreateFirewallDrawer {...props} />,
-      {
-        flags: { linodeInterfaces: { enabled: false } },
-      }
-    );
-
-    expect(
-      queryByTestId('create-firewall-from-radio-group')
-    ).not.toBeInTheDocument();
-    expect(queryByLabelText('Firewall Template')).not.toBeInTheDocument();
   });
 
   it('enables the submit button if the user has create_firewall permission', () => {

@@ -1,4 +1,7 @@
-import { getFormattedStringFromFormEventOptions, sendFormEvent } from './utils';
+import {
+  getFormattedStringFromFormEventOptions,
+  sendFormEvent,
+} from '@akamai/compute-ui-core/analytics';
 
 import type {
   BasicFormEvent,
@@ -6,7 +9,7 @@ import type {
   FormInputEvent,
   FormStepEvent,
   LinodeCreateFormEventOptions,
-} from './types';
+} from '@akamai/compute-ui-core/analytics';
 import type { LinodeCreateType } from '@linode/utilities';
 
 /**

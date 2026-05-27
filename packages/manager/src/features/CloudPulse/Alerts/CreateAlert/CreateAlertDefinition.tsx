@@ -68,6 +68,7 @@ const initialValues: CreateAlertDefinitionForm = {
   severity: null,
   tags: [''],
   trigger_conditions: triggerConditionInitialValues,
+  group_by: [],
 };
 
 const overrides: CrumbOverridesProps[] = [
@@ -124,7 +125,9 @@ export const CreateAlertDefinition = () => {
 
   const onSubmit = handleSubmit(async (values) => {
     try {
-      await createAlert(filterFormValues(values));
+      await createAlert(
+        filterFormValues(values, flags.aclpAlerting?.enableGroupBy)
+      );
       enqueueSnackbar(CREATE_ALERT_SUCCESS_MESSAGE, {
         variant: 'success',
       });
@@ -166,6 +169,7 @@ export const CreateAlertDefinition = () => {
     resetField('scope', { defaultValue: null });
     resetField('entity_type', { defaultValue: 'linode' });
     resetField('channel_ids', { defaultValue: [] });
+    resetField('group_by', { defaultValue: [] });
   }, [resetField]);
 
   const handleEntityTypeChange = React.useCallback(() => {

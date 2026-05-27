@@ -3,10 +3,35 @@ import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { ShareGroupsTabs } from './ShareGroupsLanding';
+import { ShareGroupsTabs } from './ShareGroupsTabs';
 
 vi.mock('./ShareGroupsView', () => ({
-  ShareGroupsView: () => <div>Mock Share Groups View</div>,
+  ShareGroupsView: ({
+    handlers,
+  }: {
+    handlers?: { onDelete?: (shareGroupId: string) => void };
+  }) => (
+    <div>
+      <div>Mock Share Groups View</div>
+      <button onClick={() => handlers?.onDelete?.('123')} type="button">
+        Trigger delete
+      </button>
+    </div>
+  ),
+}));
+
+vi.mock('./DeleteShareGroupDialog', () => ({
+  DeleteShareGroupDialog: ({
+    open,
+    shareGroupId,
+  }: {
+    open: boolean;
+    shareGroupId?: string;
+  }) => (
+    <div data-testid="delete-share-group-dialog">
+      {JSON.stringify({ open, shareGroupId })}
+    </div>
+  ),
 }));
 
 const queryMocks = vi.hoisted(() => ({
@@ -104,5 +129,51 @@ describe('ShareGroupsTabs', () => {
         shareGroupsType: 'membership-requests',
       },
     });
+  });
+
+  it('should navigate to the delete action route when delete is triggered', async () => {
+    queryMocks.useParams.mockImplementation(({ from }: { from: string }) => {
+      if (from === '/images/share-groups/owned-groups/$shareGroupId/$action') {
+        return undefined;
+      }
+
+      return { shareGroupsType: 'owned-groups' };
+    });
+
+    const mockNavigate = vi.fn();
+    queryMocks.useNavigate.mockReturnValue(mockNavigate);
+
+    const { getByText } = renderWithTheme(<ShareGroupsTabs />, {
+      initialRoute: '/images/share-groups/owned-groups',
+    });
+
+    await userEvent.click(getByText('Trigger delete'));
+
+    expect(mockNavigate).toHaveBeenCalledWith({
+      params: {
+        action: 'delete',
+        shareGroupId: '123',
+      },
+      search: expect.any(Function),
+      to: '/images/share-groups/owned-groups/$shareGroupId/$action',
+    });
+  });
+
+  it('should open the delete dialog when the delete action route is active', async () => {
+    queryMocks.useParams.mockImplementation(({ from }: { from: string }) => {
+      if (from === '/images/share-groups/owned-groups/$shareGroupId/$action') {
+        return { action: 'delete', shareGroupId: '123' };
+      }
+
+      return { shareGroupsType: 'owned-groups' };
+    });
+
+    const { getByTestId } = renderWithTheme(<ShareGroupsTabs />, {
+      initialRoute: '/images/share-groups/owned-groups/123/delete',
+    });
+
+    expect(getByTestId('delete-share-group-dialog')).toHaveTextContent(
+      JSON.stringify({ open: true, shareGroupId: '123' })
+    );
   });
 });

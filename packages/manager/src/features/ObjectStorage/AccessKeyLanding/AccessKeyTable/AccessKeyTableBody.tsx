@@ -12,22 +12,14 @@ interface Props {
   data: ObjectStorageKey[] | undefined;
   error: APIError[] | null | undefined;
   isLoading: boolean;
-  isObjMultiClusterEnabled: boolean;
   isRestrictedUser: boolean;
   openRevokeDialog: (objectStorageKey: ObjectStorageKey) => void;
 }
 
 export const AccessKeyTableBody = (props: Props) => {
-  const {
-    data,
-    error,
-    isLoading,
-    isObjMultiClusterEnabled,
-    isRestrictedUser,
-    openRevokeDialog,
-  } = props;
+  const { data, error, isLoading, isRestrictedUser, openRevokeDialog } = props;
 
-  const cols = isObjMultiClusterEnabled ? 4 : 3;
+  const cols = 4;
 
   if (isRestrictedUser) {
     return <TableRowEmpty colSpan={cols} />;
@@ -35,10 +27,7 @@ export const AccessKeyTableBody = (props: Props) => {
 
   if (isLoading) {
     return (
-      <TableRowLoading
-        columns={cols}
-        responsive={isObjMultiClusterEnabled ? { 2: { smDown: true } } : {}}
-      />
+      <TableRowLoading columns={cols} responsive={{ 2: { smDown: true } }} />
     );
   }
 

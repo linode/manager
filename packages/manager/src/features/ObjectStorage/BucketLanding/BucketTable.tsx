@@ -60,11 +60,11 @@ export const BucketTable = (props: Props) => {
                 </TableSortCell>
                 <Hidden smDown>
                   <TableSortCell
-                    active={orderBy === 'cluster'}
+                    active={orderBy === 'region'}
                     data-qa-region
                     direction={order}
                     handleClick={handleOrderChange}
-                    label="cluster"
+                    label="region"
                   >
                     Region
                   </TableSortCell>
@@ -155,7 +155,7 @@ const RenderData: React.FC<RenderDataProps> = (props) => {
       {data.map((bucket, index) => (
         <BucketTableRow
           {...bucket}
-          key={`${bucket.label}-${index}-${bucket.region ?? bucket.cluster}`}
+          key={`${bucket.label}-${index}-${bucket.region}`}
           onDetails={() => onDetails(bucket)}
           onRemove={() => onRemove(bucket)}
         />

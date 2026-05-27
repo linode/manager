@@ -4,7 +4,7 @@ import * as React from 'react';
 
 import { FormLabel } from 'src/components/FormLabel';
 
-import type { RegionFilter } from 'src/utilities/storage';
+import type { RegionFilter } from '@akamai/compute-ui-core/browser';
 
 interface RegionFilterOption {
   label: string;

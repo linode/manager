@@ -122,6 +122,7 @@ export const QuotasTableRow = (props: QuotasTableRowProps) => {
               limit={quota.quota_limit}
               resourceMetric={quota.resource_metric}
               usage={quotaWithUsage.usage}
+              variant="quotas"
             />
           ) : quotaWithUsage.hasUsage ? (
             <Typography>Data not available</Typography>

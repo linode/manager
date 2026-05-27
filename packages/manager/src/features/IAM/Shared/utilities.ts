@@ -1,4 +1,9 @@
-import { capitalize, capitalizeAllWords } from '@linode/utilities';
+import {
+  capitalize,
+  capitalizeAllWords,
+} from '@akamai/compute-ui-core/formatting';
+import { partition } from '@linode/utilities';
+import type { CSSProperties } from 'react';
 
 import {
   INTERNAL_ERROR_NO_CHANGES_SAVED,
@@ -449,30 +454,6 @@ export const getFormattedEntityType = (entityType: string): string => {
 };
 
 /**
- * Partitions an array into two results based on a predicate function.
- *
- * @param predicate - A function that takes an element and returns a boolean.
- * @param array - The array to partition.
- */
-export const partition = <T>(
-  array: T[],
-  predicate: (value: T) => boolean
-): [T[], T[]] => {
-  const pass: T[] = [];
-  const fail: T[] = [];
-
-  array.forEach((value) => {
-    if (predicate(value)) {
-      pass.push(value);
-    } else {
-      fail.push(value);
-    }
-  });
-
-  return [pass, fail];
-};
-
-/**
  * Gets a list of roles selected from the UI, and merges them into the existing IAM roles that are
  * also passed in.  Returns the merged roles in IAM (back end) format.
  * Note: The UI format used here is role-centric - the user picks a role and associates it with
@@ -548,3 +529,29 @@ export const getErrorMessage = (error: APIError[] | null) => {
 
   return error ? errorMessage : undefined;
 };
+
+/** CSS custom property name (e.g. `--divider-margin-top`). */
+export type CssCustomPropertyName = `--${string}`;
+
+/**
+ * Builds a `style` object of CSS custom properties from a values object and a
+ * fixed prop-key → variable-name map. Omits keys whose values are `undefined`.
+ * Returns `undefined` when nothing would be set (no `style` attribute needed).
+ */
+export function cssPropertyVariablesFromMapping<
+  const TMapping extends Record<string, CssCustomPropertyName>,
+>(
+  values: Partial<{ [K in keyof TMapping]: number | string | undefined }>,
+  mapping: TMapping
+): CSSProperties | undefined {
+  const out: Record<string, number | string> = {};
+
+  for (const key of Object.keys(mapping) as (keyof TMapping)[]) {
+    const value = values[key];
+    if (value !== undefined) {
+      out[mapping[key]] = value;
+    }
+  }
+
+  return Object.keys(out).length > 0 ? (out as CSSProperties) : undefined;
+}

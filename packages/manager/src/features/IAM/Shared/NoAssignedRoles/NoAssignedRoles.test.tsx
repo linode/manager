@@ -36,8 +36,8 @@ describe('NoAssignedRoles', () => {
     expect(screen.getByText('This list is empty')).toBeVisible();
     expect(screen.getByText(NO_ASSIGNED_ROLES_TEXT)).toBeVisible();
     expect(
-      screen.getByRole('button', { name: 'Assign New Roles' })
-    ).toBeVisible();
+      screen.getByText('Assign New Roles').closest('cds-button')
+    ).toBeDefined();
   });
 
   it('renders with correct text for the Assigned Entities tab', async () => {

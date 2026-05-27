@@ -1,5 +1,5 @@
+import { downloadFile } from '@akamai/compute-ui-core/browser';
 import { Tooltip, Typography } from '@linode/ui';
-import { downloadFile } from '@linode/utilities';
 import * as React from 'react';
 
 import FileDownload from 'src/assets/icons/download.svg';

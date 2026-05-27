@@ -130,6 +130,7 @@ export const KubernetesPlansPanel = (props: Props) => {
 
       return {
         disabled: false,
+        disabledMessage: '',
         render: () => {
           return (
             <>
@@ -195,6 +196,7 @@ export const KubernetesPlansPanel = (props: Props) => {
   ) {
     tabs.push({
       disabled: true,
+      disabledMessage: 'Premium CPUs are now called G7 Dedicated plans.',
       render: () => <div />,
       title: planTabInfoContent.premium?.title,
     });
@@ -202,6 +204,7 @@ export const KubernetesPlansPanel = (props: Props) => {
     tabs.forEach((tab) => {
       if (tab.title === planTabInfoContent.premium?.title) {
         tab.disabled = true;
+        tab.disabledMessage = 'Premium CPUs are now called G7 Dedicated plans.';
       }
     });
   }
@@ -215,11 +218,6 @@ export const KubernetesPlansPanel = (props: Props) => {
       initTab={initialTab >= 0 ? initialTab : 0}
       notice={notice}
       sx={{ padding: 0 }}
-      tabDisabledMessage={
-        shouldDisablePremiumPlansTab
-          ? 'Premium CPUs are now called G7 Dedicated plans.'
-          : undefined
-      }
       tabs={tabs}
     />
   );

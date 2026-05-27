@@ -34,12 +34,12 @@ import { RegionTypeFilter } from './RegionTypeFilter';
 import TableWrapper from './TableWrapper';
 
 import type { RenderLinodesProps } from './DisplayLinodes';
+import type { RegionFilter } from '@akamai/compute-ui-core/browser';
 import type { Config, LockType } from '@linode/api-v4/lib/linodes';
 import type { OrderByProps } from 'src/components/OrderBy';
 import type { Action } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
 import type { DialogType } from 'src/features/Linodes/types';
 import type { LinodeWithMaintenance } from 'src/utilities/linodes';
-import type { RegionFilter } from 'src/utilities/storage';
 
 interface DisplayGroupedLinodesProps
   extends OrderByProps<LinodeWithMaintenance> {

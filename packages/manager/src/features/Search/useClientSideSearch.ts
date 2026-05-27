@@ -9,9 +9,10 @@ import {
   useAllNodeBalancersQuery,
   useAllStreamsQuery,
   useAllVolumesQuery,
+  useReservedIPsQuery,
 } from '@linode/queries';
 
-import { useIsACLPLogsEnabled } from 'src/features/Delivery/deliveryUtils';
+import { useIsReserveIpEnabled } from 'src/features/ReservedIps/utils';
 import { useAllKubernetesClustersQuery } from 'src/queries/kubernetes';
 import { useObjectStorageBuckets } from 'src/queries/object-storage/queries';
 import {
@@ -24,6 +25,7 @@ import {
   kubernetesClusterToSearchableItem,
   linodeToSearchableItem,
   nodeBalToSearchableItem,
+  reservedIpToSearchableItem,
   stackscriptToSearchableItem,
   streamToSearchableItem,
   volumeToSearchableItem,
@@ -45,7 +47,7 @@ interface Props {
  */
 export const useClientSideSearch = ({ enabled, query }: Props) => {
   const { isPrivateImageSharingEnabled } = useIsPrivateImageSharingEnabled();
-  const { isACLPLogsEnabled } = useIsACLPLogsEnabled();
+  const { isReserveIpEnabled } = useIsReserveIpEnabled();
 
   const {
     data: domains,
@@ -98,12 +100,18 @@ export const useClientSideSearch = ({ enabled, query }: Props) => {
     data: streams,
     error: streamsError,
     isLoading: streamsLoading,
-  } = useAllStreamsQuery({}, {}, enabled && isACLPLogsEnabled);
+  } = useAllStreamsQuery({}, {}, enabled);
   const {
     data: destinations,
     error: destinationsError,
     isLoading: destinationsLoading,
-  } = useAllDestinationsQuery({}, {}, enabled && isACLPLogsEnabled);
+  } = useAllDestinationsQuery({}, {}, enabled);
+
+  const {
+    data: reservedIps,
+    error: reservedIpsError,
+    isLoading: reservedIpsLoading,
+  } = useReservedIPsQuery({}, {}, enabled && isReserveIpEnabled);
 
   const searchableDomains = domains?.map(domainToSearchableItem) ?? [];
   const searchableVolumes = volumes?.map(volumeToSearchableItem) ?? [];
@@ -124,6 +132,8 @@ export const useClientSideSearch = ({ enabled, query }: Props) => {
   const searchableStreams = streams?.map(streamToSearchableItem) ?? [];
   const searchableDestinations =
     destinations?.map(destinationToSearchableItem) ?? [];
+  const searchableReservedIps =
+    reservedIps?.data.map(reservedIpToSearchableItem) ?? [];
 
   const searchableItems = [
     ...searchableLinodes,
@@ -138,6 +148,7 @@ export const useClientSideSearch = ({ enabled, query }: Props) => {
     ...searchableStackScripts,
     ...searchableStreams,
     ...searchableDestinations,
+    ...searchableReservedIps,
   ];
 
   const isLoading =
@@ -151,7 +162,8 @@ export const useClientSideSearch = ({ enabled, query }: Props) => {
     firewallsLoading ||
     stackscriptsLoading ||
     streamsLoading ||
-    destinationsLoading;
+    destinationsLoading ||
+    reservedIpsLoading;
 
   const entityErrors: Record<SearchableEntityType, null | string> = {
     bucket: bucketsError?.message ?? null,
@@ -166,6 +178,7 @@ export const useClientSideSearch = ({ enabled, query }: Props) => {
     stackscript: stackscriptsError?.[0].reason ?? null,
     stream: streamsError?.[0].reason ?? null,
     volume: volumesError?.[0].reason ?? null,
+    reservedIp: reservedIpsError?.[0]?.reason ?? null,
   };
 
   const { combinedResults, searchResultsByEntity } = search(

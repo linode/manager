@@ -3,7 +3,7 @@ import React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
-import { SuspenseLoader } from 'src/components/SuspenseLoader';
+import { SuspenseLoader } from 'src/features/IAM/Shared/SuspenseLoader/SuspenseLoader';
 
 export const IAMRoute = () => {
   return (

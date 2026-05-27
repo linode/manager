@@ -1,5 +1,5 @@
+import { downloadFile } from '@akamai/compute-ui-core/browser';
 import { Box, Drawer, IconButton, Typography } from '@linode/ui';
-import { downloadFile } from '@linode/utilities';
 import React from 'react';
 
 import Download from 'src/assets/icons/download.svg';

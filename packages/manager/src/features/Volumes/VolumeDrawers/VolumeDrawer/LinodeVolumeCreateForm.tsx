@@ -1,3 +1,4 @@
+import { maybeCastToNumber } from '@akamai/compute-ui-core/formatting';
 import {
   useCreateVolumeMutation,
   useRegionsQuery,
@@ -5,7 +6,6 @@ import {
 } from '@linode/queries';
 import { ActionsPanel, Box, Notice, TextField, Typography } from '@linode/ui';
 import { doesRegionSupportFeature } from '@linode/utilities';
-import { maybeCastToNumber } from '@linode/utilities';
 import { CreateVolumeSchema } from '@linode/validation/lib/volumes.schema';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';

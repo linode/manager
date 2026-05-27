@@ -1,4 +1,4 @@
-import { isNilOrEmpty } from '@linode/utilities';
+import { isNilOrEmpty } from '@akamai/compute-ui-core/formatting';
 
 import { getAPIErrorOrDefault } from './errorUtils';
 

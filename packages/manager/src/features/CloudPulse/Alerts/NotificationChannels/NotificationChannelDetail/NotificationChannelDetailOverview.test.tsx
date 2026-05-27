@@ -1,8 +1,8 @@
+import { formatDate } from '@akamai/compute-ui-core/datetime';
 import { profileFactory } from '@linode/utilities';
 import React from 'react';
 
 import { notificationChannelFactory } from 'src/factories/cloudpulse/channels';
-import { formatDate } from 'src/utilities/formatDate';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { NotificationChannelDetailOverview } from './NotificationChannelDetailOverview';

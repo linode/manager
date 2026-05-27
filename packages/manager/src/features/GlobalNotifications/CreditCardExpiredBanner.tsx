@@ -1,10 +1,10 @@
+import { isCreditCardExpired } from '@akamai/compute-ui-core/datetime';
 import { useAccount } from '@linode/queries';
 import { Button, Typography } from '@linode/ui';
 import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
-import { isCreditCardExpired } from 'src/utilities/creditCard';
 
 export const CreditCardExpiredBanner = () => {
   const navigate = useNavigate();

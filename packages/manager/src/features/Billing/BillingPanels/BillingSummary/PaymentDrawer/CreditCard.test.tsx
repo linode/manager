@@ -1,4 +1,3 @@
-import { Settings } from 'luxon';
 import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
@@ -22,12 +21,10 @@ it('Displays credit card type and last four digits', () => {
 });
 
 it('Displays formatted expiration date for cards with expiration', () => {
-  // Mock that the current date is in 2023 so that the card is not expired.
-  Settings.now = () => new Date(2023, 11, 7).valueOf();
-
+  // Use a far-future expiry date so the card is never considered expired
   const creditCardData: CreditCardData = {
     card_type: 'Visa',
-    expiry: '12/2023',
+    expiry: '12/2099',
     last_four: '1111',
   };
 
@@ -35,7 +32,7 @@ it('Displays formatted expiration date for cards with expiration', () => {
     <CreditCard creditCard={creditCardData} />
   );
 
-  expect(getByText('Expires 12/23')).toBeVisible();
+  expect(getByText('Expires 12/99')).toBeVisible();
 });
 
 it('Displays "expired" notice for cards that are expired', () => {

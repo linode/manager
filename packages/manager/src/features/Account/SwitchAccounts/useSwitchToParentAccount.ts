@@ -1,7 +1,7 @@
+import { setStorage } from '@akamai/compute-ui-core/browser';
 import React from 'react';
 
 import { PARENT_USER_SESSION_EXPIRED } from 'src/features/Account/constants';
-import { setStorage } from 'src/utilities/storage';
 
 import { useParentChildAuthentication } from './useParentChildAuthentication';
 

@@ -1,3 +1,4 @@
+import { sendEvent } from '@akamai/compute-ui-core/analytics';
 import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
@@ -13,7 +14,6 @@ import {
 import DatabaseLogo from 'src/features/Databases/DatabaseLanding/DatabaseLogo';
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { sendEvent } from 'src/utilities/analytics/utils';
 
 export const DatabaseEmptyState = () => {
   const navigate = useNavigate();

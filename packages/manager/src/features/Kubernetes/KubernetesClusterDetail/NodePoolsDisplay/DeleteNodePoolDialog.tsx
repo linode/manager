@@ -1,5 +1,5 @@
+import { pluralize } from '@akamai/compute-ui-core/formatting';
 import { ActionsPanel, Typography } from '@linode/ui';
-import { pluralize } from '@linode/utilities';
 import * as React from 'react';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';

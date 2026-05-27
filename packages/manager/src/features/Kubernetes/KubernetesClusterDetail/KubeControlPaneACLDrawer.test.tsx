@@ -156,7 +156,7 @@ describe('KubeControlPaneACLDrawer', () => {
       getByText(ACL_DRAWER_ENTERPRISE_TIER_ACTIVATION_STATUS_COPY)
     ).toBeVisible();
     // Confirm ACL is checked by default and edits are disabled.
-    const toggle = getByRole('checkbox', { name: 'Enable Control Plane ACL' });
+    const toggle = getByRole('switch', { name: 'Enable Control Plane ACL' });
     expect(toggle).toBeChecked();
     expect(toggle).toBeDisabled();
   });

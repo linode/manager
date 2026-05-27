@@ -1,8 +1,8 @@
+import * as DatabasesAPIModule from '@linode/api-v4/lib/databases';
 import { waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
-import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { DatabaseSettingsSuspendClusterDialog } from './DatabaseSettingsSuspendClusterDialog';
@@ -20,6 +20,11 @@ const props: SuspendDialogProps = {
   open: true,
 };
 
+const getCdsCheckboxInput = (host: HTMLElement) =>
+  (host as unknown as { input?: HTMLInputElement }).input ??
+  host.shadowRoot?.querySelector<HTMLInputElement>('input') ??
+  null;
+
 describe('DatabaseSettingsSuspendClusterDialog', () => {
   it('renders the dialog with text', async () => {
     const { getByTestId, getByText } = renderWithTheme(
@@ -31,45 +36,67 @@ describe('DatabaseSettingsSuspendClusterDialog', () => {
   });
 
   it('should initialize with unchecked checkbox and disabled submit button', async () => {
-    const { getByRole, getByText } = renderWithTheme(
+    const { getByTestId, getByText } = renderWithTheme(
       <DatabaseSettingsSuspendClusterDialog {...props} />
     );
-    const confirmationCheckbox = getByRole('checkbox') as HTMLInputElement;
+    const confirmationHost = getByTestId(
+      'database-suspend-confirmation-checkbox'
+    );
     const suspendButton = getByText(/Suspend Cluster/i).closest('button');
-    expect(confirmationCheckbox.checked).toBeFalsy();
+    await customElements.whenDefined('cds-checkbox');
+    await waitFor(() => {
+      expect(confirmationHost).toHaveProperty('checked', false);
+    });
     expect(suspendButton).toHaveAttribute('aria-disabled', 'true');
   });
 
   it('should enable submit button when checkbox is checked', async () => {
-    const { getByRole, getByText } = renderWithTheme(
+    const { getByTestId, getByText } = renderWithTheme(
       <DatabaseSettingsSuspendClusterDialog {...props} />
     );
-    const confirmationCheckbox = getByRole('checkbox') as HTMLInputElement;
+    const confirmationHost = getByTestId(
+      'database-suspend-confirmation-checkbox'
+    );
     const suspendButton = getByText(/Suspend Cluster/i).closest('button');
-    await userEvent.click(confirmationCheckbox);
-    expect(confirmationCheckbox.checked).toBeTruthy();
+    await customElements.whenDefined('cds-checkbox');
+    await waitFor(() => {
+      expect(getCdsCheckboxInput(confirmationHost)).toBeTruthy();
+    });
+    const confirmationInput = getCdsCheckboxInput(confirmationHost);
+    expect(confirmationInput).toBeTruthy();
+    await userEvent.click(confirmationInput!);
+    expect(confirmationInput!.checked).toBeTruthy();
     expect(suspendButton).toHaveAttribute('aria-disabled', 'false');
   });
 
   it('should call onClose after suspend call is successful', async () => {
-    server.use(
-      http.post(`*/databases/${encodeURIComponent(mockEngine)}/suspend`, () => {
-        return HttpResponse.json({});
-      })
-    );
-    const { getByText, getByRole } = renderWithTheme(
+    const suspendSpy = vi
+      .spyOn(DatabasesAPIModule, 'suspendDatabase')
+      .mockResolvedValue({});
+
+    const { getByText, getByTestId } = renderWithTheme(
       <DatabaseSettingsSuspendClusterDialog {...props} />
     );
-    const confirmationCheckbox = getByRole('checkbox') as HTMLInputElement;
+    const confirmationHost = getByTestId(
+      'database-suspend-confirmation-checkbox'
+    );
     const suspendButton = getByText(/Suspend Cluster/i).closest(
       'button'
     ) as HTMLButtonElement;
 
-    await userEvent.click(confirmationCheckbox);
+    await customElements.whenDefined('cds-checkbox');
+    await waitFor(() => {
+      expect(getCdsCheckboxInput(confirmationHost)).toBeTruthy();
+    });
+    const confirmationInput = getCdsCheckboxInput(confirmationHost);
+    expect(confirmationInput).toBeTruthy();
+    await userEvent.click(confirmationInput!);
     await userEvent.click(suspendButton);
     await waitFor(() => {
       expect(props.onClose).toBeCalled();
     });
+    expect(suspendSpy).toHaveBeenCalledWith(mockEngine, props.databaseId);
+    suspendSpy.mockRestore();
   });
 
   it('closes the confirmaton dialog if the X button is clicked', async () => {

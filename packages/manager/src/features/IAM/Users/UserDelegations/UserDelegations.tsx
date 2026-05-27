@@ -1,5 +1,5 @@
+import { NotificationBanner } from '@akamai/cds-components/react/NotificationBanner';
 import { useGetDelegatedChildAccountsForUserQuery } from '@linode/queries';
-import { Notice } from '@linode/ui';
 import { useParams } from '@tanstack/react-router';
 import React from 'react';
 
@@ -39,9 +39,10 @@ export const UserDelegations = () => {
 
   if (!permissions?.list_user_delegate_accounts) {
     return (
-      <Notice variant="error">
-        You do not have permission to view this user&apos;s account delegations.
-      </Notice>
+      <NotificationBanner
+        text="You do not have permission to view this user's account delegations."
+        type="error"
+      />
     );
   }
 

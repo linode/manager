@@ -1,5 +1,5 @@
+import { truncate } from '@akamai/compute-ui-core/formatting';
 import { IconButton } from '@linode/ui';
-import { truncate } from '@linode/utilities';
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import Grid from '@mui/material/Grid';
 import * as React from 'react';

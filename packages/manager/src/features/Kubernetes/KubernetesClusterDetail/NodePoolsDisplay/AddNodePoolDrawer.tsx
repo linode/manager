@@ -1,3 +1,4 @@
+import { isNumber, pluralize } from '@akamai/compute-ui-core/formatting';
 import {
   type CreateNodePoolData,
   type KubernetesTier,
@@ -5,12 +6,7 @@ import {
 } from '@linode/api-v4';
 import { useAllTypes, useRegionsQuery } from '@linode/queries';
 import { Box, Button, Drawer, Notice, Stack, Typography } from '@linode/ui';
-import {
-  isNumber,
-  plansNoticesUtils,
-  pluralize,
-  scrollErrorIntoView,
-} from '@linode/utilities';
+import { plansNoticesUtils, scrollErrorIntoView } from '@linode/utilities';
 import React from 'react';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
 

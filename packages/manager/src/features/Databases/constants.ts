@@ -41,6 +41,9 @@ export const RESIZE_DISABLED_DEDICATED_SHARED_PLAN_TABS_TEXT =
 export const RESIZE_DISABLED_NON_G7_DEDICATED_SHARED_PLAN_TABS_TEXT =
   'Resizing to a Shared CPU or a non-G7 Dedicated CPU plan is not available for database clusters on a Premium CPU plan.';
 
+export const PREMIUM_CPU_PLANS_RENAME =
+  'Premium CPUs are now called G7 Dedicated plans.';
+
 export const BACKUPS_MAX_TIME_EXCEEDED_VALIDATON_TEXT =
   'Select a time from the past.';
 
@@ -88,19 +91,11 @@ export const CONNECTION_POOL_LABEL_CELL_STYLES = {
   flex: '.5 1 20.5%',
 };
 
-export const defaultUsername = 'Reuse inbound user'; // Represented as null in the API
 export const poolModeOptions = [
   { label: 'Transaction', value: 'transaction' },
   { label: 'Session', value: 'session' },
   { label: 'Statement', value: 'statement' },
 ];
-export const databaseNamesOptions = [
-  { label: 'defaultdb', value: 'defaultdb' },
-]; // Currently the only option for the database name field, but more may be introduced later.
-export const usernameOptions = [
-  { label: defaultUsername, value: defaultUsername },
-  { label: 'akmadmin', value: 'akmadmin' },
-]; // Currently the only options for the username field
 
 export const DEFAULT_PAGE_SIZES = [25, 50, 75, 100];
 export const DISABLE_CREDENTIAL_STATES = [
@@ -109,3 +104,7 @@ export const DISABLE_CREDENTIAL_STATES = [
   'suspending',
   'suspended',
 ];
+
+export const ERROR_STATE_TITLE = 'An unexpected error occurred.';
+
+export const ERROR_STATE_TEXT = 'Refresh the page or try again later.';

@@ -27,7 +27,6 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { PowerActionsDialog } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
-import { useIsNodebalancerVPCEnabled } from 'src/features/NodeBalancers/utils';
 import { SubnetActionMenu } from 'src/features/VPCs/VPCDetail/SubnetActionMenu';
 import { useFlags } from 'src/hooks/useFlags';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
@@ -36,6 +35,7 @@ import { useVPCDualStack } from 'src/hooks/useVPCDualStack';
 
 import { SUBNET_ACTION_PATH } from '../constants';
 import { VPC_DETAILS_ROUTE } from '../constants';
+import { getUniqueResourcesFromSubnet } from '../utils';
 import { SubnetAssignLinodesDrawer } from './SubnetAssignLinodesDrawer';
 import { SubnetCreateDrawer } from './SubnetCreateDrawer';
 import { SubnetDatabasesTable } from './SubnetDatabasesTable';
@@ -90,7 +90,6 @@ export const VPCSubnetsTable = (props: Props) => {
   });
   const { query } = search;
 
-  const { isNodebalancerVPCEnabled } = useIsNodebalancerVPCEnabled();
   const { isDualStackEnabled } = useVPCDualStack();
   const flags = useFlags();
 
@@ -308,9 +307,7 @@ export const VPCSubnetsTable = (props: Props) => {
       </TableCell>
       {isDualStackEnabled && <TableCell>Subnet IPv6 Range</TableCell>}
       <Hidden smDown>
-        <TableCell
-          sx={{ width: '10%' }}
-        >{`${isNodebalancerVPCEnabled ? 'Resources' : 'Linodes'}`}</TableCell>
+        <TableCell sx={{ width: '10%' }}>Resources</TableCell>
       </Hidden>
       <TableCell />
     </TableRow>
@@ -318,11 +315,9 @@ export const VPCSubnetsTable = (props: Props) => {
 
   const getTableItems = (): TableItem[] => {
     return subnets.data.map((subnet) => {
-      // NodeBalancers can have same VPC subnet as its frontend and backend configuration.
-      // and this can create duplicate entries in the resources count and also in the list of nodebalancers assigned to a subnet.
-      // To avoid this, we are creating a unique list of nodebalancers based on their id.
-      const uniqueNodebalancers = Array.from(
-        new Map(subnet.nodebalancers.map((nb) => [nb.id, nb])).values()
+      const uniqueResourcesFromSubnet = getUniqueResourcesFromSubnet(
+        subnet,
+        Boolean(flags.vpcDbaasResources)
       );
 
       const OuterTableCells = (
@@ -336,7 +331,7 @@ export const VPCSubnetsTable = (props: Props) => {
           )}
           <Hidden smDown>
             <TableCell>
-              {`${isNodebalancerVPCEnabled ? subnet.linodes.length + uniqueNodebalancers.length + (flags.vpcDbaasResources ? subnet.databases.length : 0) : subnet.linodes.length}`}
+              {uniqueResourcesFromSubnet.numUniqueResources}
             </TableCell>
           </Hidden>
           <TableCell actionCell>
@@ -345,8 +340,7 @@ export const VPCSubnetsTable = (props: Props) => {
               handleDelete={handleSubnetDelete}
               handleEdit={handleSubnetEdit}
               handleUnassignLinodes={handleSubnetUnassignLinodes}
-              numLinodes={subnet.linodes.length}
-              numNodebalancers={uniqueNodebalancers.length}
+              numUniqueResources={uniqueResourcesFromSubnet.numUniqueResources}
               subnet={subnet}
               vpcId={vpcId}
             />
@@ -365,8 +359,8 @@ export const VPCSubnetsTable = (props: Props) => {
               {SubnetLinodeTableRowHead(isDualStackEnabled)}
             </TableHead>
             <TableBody>
-              {subnet.linodes.length > 0 ? (
-                subnet.linodes.map((linodeInfo) => (
+              {uniqueResourcesFromSubnet.linodes.length > 0 ? (
+                uniqueResourcesFromSubnet.linodes.map((linodeInfo) => (
                   <SubnetLinodeRow
                     handlePowerActionsLinode={handlePowerActionsLinode}
                     handleUnassignLinode={handleSubnetUnassignLinode}
@@ -386,7 +380,7 @@ export const VPCSubnetsTable = (props: Props) => {
               )}
             </TableBody>
           </Table>
-          {isNodebalancerVPCEnabled && uniqueNodebalancers.length > 0 && (
+          {uniqueResourcesFromSubnet.nodeBalancers.length > 0 && (
             <Table aria-label="NodeBalancers" size="small" striped={false}>
               <TableHead
                 style={{
@@ -396,7 +390,7 @@ export const VPCSubnetsTable = (props: Props) => {
                 {SubnetNodebalancerTableRowHead}
               </TableHead>
               <TableBody>
-                {uniqueNodebalancers.map((nb) => (
+                {uniqueResourcesFromSubnet.nodeBalancers.map((nb) => (
                   <SubnetNodeBalancerRow
                     key={nb.id}
                     nodeBalancerId={nb.id}

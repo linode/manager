@@ -1,12 +1,13 @@
+import { Button, Icon, Tooltip } from '@akamai/cds-components/react';
+import { Spacing } from '@akamai/cds-tokens';
 import { useDatabaseCredentialsQuery } from '@linode/queries';
-import { Button, TooltipIcon, Typography } from '@linode/ui';
-import { Grid, styled } from '@mui/material';
+import { Typography } from '@linode/ui';
+import { Box, Grid, styled } from '@mui/material';
 import copy from 'copy-to-clipboard';
 import { enqueueSnackbar } from 'notistack';
 import React, { useState } from 'react';
 
 import { Code } from 'src/components/Code/Code';
-import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import {
   CLUSTER_PROVISIONING_TEXT,
   CREDENTIALS_ERROR_TEXT,
@@ -14,6 +15,8 @@ import {
   DISABLED_PASSWORD_BUTTON_TEXT,
 } from 'src/features/Databases/constants';
 import { StyledValueGrid } from 'src/features/Databases/DatabaseDetail/DatabaseSummary/DatabaseSummaryClusterConfiguration.style';
+
+import { CopyTooltip } from '../shared/CopyTooltip/CopyTooltip';
 
 import type { Database, DatabaseCredentials } from '@linode/api-v4';
 
@@ -117,23 +120,33 @@ export const ServiceURI = (props: ServiceURIProps) => {
   const renderPassword = () => {
     if (hidePassword || credentialsError || !credentials) {
       return (
-        <Button
-          disabled={disablePasswordBtn}
-          loading={showBtnLoading}
-          onClick={() => {
-            getDatabaseCredentials();
-            setHidePassword(false);
-          }}
-          sx={{
-            p: 0,
-            '& .MuiButton-icon': {
-              margin: 0,
-            },
-          }}
-          tooltipText={disablePasswordBtn ? disabledPasswordTooltipText : ''}
+        <Tooltip
+          disabled={!disablePasswordBtn}
+          style={{ whiteSpace: 'normal' }}
+          tooltipText={disabledPasswordTooltipText}
         >
-          {`{click to reveal password}`}
-        </Button>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Button
+              disabled={disablePasswordBtn}
+              onClick={() => {
+                getDatabaseCredentials();
+                setHidePassword(false);
+              }}
+              processing={showBtnLoading}
+              style={{
+                padding: 0,
+                position: 'relative',
+                display: 'flex',
+              }}
+              variant="link"
+            >
+              {`{Click To Reveal Password}`}
+              {disablePasswordBtn ? (
+                <Icon icon="info-outline" size="m" />
+              ) : null}
+            </Button>
+          </Box>
+        </Tooltip>
       );
     }
 
@@ -166,15 +179,13 @@ export const ServiceURI = (props: ServiceURIProps) => {
 
   return (
     <Grid display="contents">
-      <StyledValueGrid
+      <Box
         data-testid="service-uri"
-        size="grow"
         sx={{
-          overflowX: 'auto',
-          overflowY: 'hidden',
-          p: '0',
+          display: 'inline',
+          overflowX: 'scroll',
+          whiteSpace: 'nowrap',
         }}
-        whiteSpace="pre"
       >
         {engine}://
         {renderPassword()}
@@ -191,14 +202,21 @@ export const ServiceURI = (props: ServiceURIProps) => {
             ?sslmode=require
           </>
         )}
-      </StyledValueGrid>
+      </Box>
       {isCopying ? (
-        <Button loading sx={{ paddingLeft: 2 }}>
-          {' '}
-        </Button>
+        <Box
+          sx={(theme) => ({
+            paddingX: theme.spacingFunction(8),
+            position: 'relative',
+            top: theme.spacingFunction(),
+            backgroundColor: theme.palette.background.paper,
+          })}
+        >
+          <Icon icon="spinner-gradient" size="s" />
+        </Box>
       ) : (
         <Grid alignContent="center" size="auto">
-          <StyledCopyTooltip
+          <CopyTooltip
             disabled={disablePasswordBtn}
             disabledReason={disabledPasswordTooltipText}
             onClickCallback={handleCopy}
@@ -208,16 +226,13 @@ export const ServiceURI = (props: ServiceURIProps) => {
       )}
       {hasPublicVPC && showPrivateVPC && (
         <Grid>
-          <TooltipIcon
-            status="info"
-            sxTooltipIcon={{
-              marginLeft: '2px',
-              padding: '0px',
-            }}
-            text={
-              'Private endpoints are resolvable only for resources within the VPC Subnet. Public endpoints are resolvable outside the VPC.'
-            }
-          />
+          <Tooltip
+            style={{ marginLeft: Spacing.S4 }}
+            tooltipPlacement="bottom"
+            tooltipText="Private endpoints are resolvable only for resources within the VPC Subnet. Public endpoints are resolvable outside the VPC."
+          >
+            <Icon icon="info-outline" size="m" />
+          </Tooltip>
         </Grid>
       )}
     </Grid>
@@ -228,19 +243,4 @@ export const StyledCode = styled(Code, {
   label: 'StyledCode',
 })(() => ({
   margin: 0,
-}));
-
-const StyledCopyTooltip = styled(CopyTooltip, {
-  label: 'StyledCopyTooltip',
-})(({ theme }) => ({
-  alignSelf: 'center',
-  '& svg': {
-    height: theme.spacingFunction(16),
-    width: theme.spacingFunction(16),
-  },
-  '&:hover': {
-    backgroundColor: 'transparent',
-  },
-  display: 'flex',
-  margin: `0 ${theme.spacingFunction(4)}`,
 }));

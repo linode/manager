@@ -1,6 +1,6 @@
+import { capitalize } from '@akamai/compute-ui-core/formatting';
 import { useAllFirewallPrefixListsQuery } from '@linode/queries';
 import { Box, Button, Drawer, Stack, TooltipIcon } from '@linode/ui';
-import { capitalize } from '@linode/utilities';
 import * as React from 'react';
 
 import ArrowLeftIcon from 'src/assets/icons/arrow-left.svg';

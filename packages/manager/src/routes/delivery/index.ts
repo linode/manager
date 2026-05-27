@@ -84,15 +84,6 @@ const streamSummaryRoute = createRoute({
 );
 
 const streamMetricsRoute = createRoute({
-  beforeLoad: ({ params, context }) => {
-    if (!context?.flags?.aclpLogs?.metricsEnabled) {
-      throw redirect({
-        to: '/logs/delivery/streams/$streamId/summary',
-        params: { streamId: params.streamId },
-        replace: true,
-      });
-    }
-  },
   getParentRoute: () => streamRoute,
   path: 'metrics',
 }).lazy(() =>

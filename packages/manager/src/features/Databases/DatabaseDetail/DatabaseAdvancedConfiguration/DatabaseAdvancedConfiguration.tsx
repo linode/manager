@@ -1,5 +1,6 @@
 import { Button } from '@akamai/cds-components/react';
-import { Box, Paper, Typography } from '@linode/ui';
+import { Spacing } from '@akamai/cds-tokens';
+import { Box, Typography } from '@linode/ui';
 import Grid from '@mui/material/Grid';
 import { useNavigate } from '@tanstack/react-router';
 import React from 'react';
@@ -7,6 +8,7 @@ import React from 'react';
 import { Link } from 'src/components/Link';
 
 import { ADVANCED_CONFIG_LEARN_MORE_LINK } from '../../constants';
+import { Paper } from '../../shared/Paper/Paper';
 import { useDatabaseDetailContext } from '../DatabaseDetailContext';
 import {
   StyledGridContainer,
@@ -37,7 +39,7 @@ export const DatabaseAdvancedConfiguration = () => {
   }
 
   return (
-    <Paper sx={{ marginTop: 2, pb: 5 }}>
+    <Paper paddingBottom={Spacing.S40}>
       <Grid container justifyContent={'space-between'}>
         <Grid size={10}>
           <Typography variant="h2">Advanced Configuration</Typography>

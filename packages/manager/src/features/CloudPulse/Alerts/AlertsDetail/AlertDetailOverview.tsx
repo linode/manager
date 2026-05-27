@@ -1,3 +1,4 @@
+import { formatDate } from '@akamai/compute-ui-core/datetime';
 import { useProfile } from '@linode/queries';
 import { CircleProgress, Typography } from '@linode/ui';
 import { Grid } from '@mui/material';
@@ -5,7 +6,6 @@ import React from 'react';
 
 import { useFlags } from 'src/hooks/useFlags';
 import { useCloudPulseServiceTypes } from 'src/queries/cloudpulse/services';
-import { formatDate } from 'src/utilities/formatDate';
 
 import { convertStringToCamelCasesWithSpaces } from '../../Utils/utils';
 import {

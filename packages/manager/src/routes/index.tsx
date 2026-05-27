@@ -23,6 +23,7 @@ import { eventsRouteTree } from './events';
 import { firewallsRouteTree } from './firewalls';
 import { iamRouteTree } from './IAM';
 import { imagesRouteTree } from './images';
+import { inferencePlatformRouteTree } from './inferencePlatform';
 import { kubernetesRouteTree } from './kubernetes';
 import { linodesRouteTree } from './linodes';
 import { loginHistoryRouteTree } from './loginHistory/';
@@ -76,6 +77,7 @@ export const routeTree = rootRoute.addChildren([
   iamRouteTree,
   firewallsRouteTree,
   imagesRouteTree,
+  inferencePlatformRouteTree,
   kubernetesRouteTree,
   linodesRouteTree,
   loginHistoryRouteTree,

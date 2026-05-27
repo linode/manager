@@ -1,3 +1,4 @@
+import { sendEvent } from '@akamai/compute-ui-core/analytics';
 import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
@@ -10,7 +11,6 @@ import { ResourcesMoreLink } from 'src/components/EmptyLandingPageResources/Reso
 import { ResourcesSection } from 'src/components/EmptyLandingPageResources/ResourcesSection';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
-import { sendEvent } from 'src/utilities/analytics/utils';
 import { getLinkOnClick } from 'src/utilities/emptyStateLandingUtils';
 
 import { AppsSection } from './AppsSection';

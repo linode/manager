@@ -1,5 +1,5 @@
+import { capitalize } from '@akamai/compute-ui-core/formatting';
 import { Box, Button, Stack, Typography } from '@linode/ui';
-import { capitalize } from '@linode/utilities';
 import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import type { FieldPathByValue } from 'react-hook-form';

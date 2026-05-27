@@ -11,7 +11,8 @@ import {
   TooltipIcon,
   Typography,
 } from '@linode/ui';
-import React, { ChangeEvent } from 'react';
+import React from 'react';
+import type { ChangeEvent } from 'react';
 
 import { FormLabel } from 'src/components/FormLabel';
 import { StyledLinkButtonBox } from 'src/components/SelectFirewallPanel/SelectFirewallPanel';
@@ -25,7 +26,17 @@ type IPAddressMode = 'auto' | 'reserved';
 type IPAddressOption = IPAddress & { label: string };
 
 export interface IPAddressSelectionProps {
-  // Header label for the selection component
+  /**
+   * Whether the component should be disabled. Used when region is not selected in parent form.
+   */
+  disabled?: boolean;
+  /**
+   * Error message to display below the Autocomplete field
+   */
+  error?: string;
+  /**
+   * Header label for the selection component
+   */
   label?: {
     fontSize?: string;
     text: string;
@@ -68,6 +79,8 @@ export interface IPAddressSelectionProps {
  * that supports reserved IPs.
  */
 export const IPAddressSelection = ({
+  disabled = false,
+  error,
   label = { fontSize: '14px', text: 'IP Address' },
   mode = 'auto',
   onIPModeChange,
@@ -76,7 +89,8 @@ export const IPAddressSelection = ({
   selectedIP = null,
   tooltipText = {
     auto: "A public IPv4 address automatically assigned to your Linode. \
-      Use this for standard web traffic that doesn't require a permanent, static IP.",
+      Use this for standard web traffic that doesn't require a permanent, static IP. \
+      This address is included at no additional cost but may change if the Linode is deleted.",
     reserved:
       "A reserved IPv4 address is a static public IP that can be assigned to \
       Linodes in the same region. Use it for services that require a consistent IP address. \
@@ -125,6 +139,7 @@ export const IPAddressSelection = ({
         <FormControlLabel
           control={<Radio />}
           data-qa-ip-mode-option="auto"
+          disabled={disabled}
           key="auto"
           label={
             <Stack direction="row" mt={1.25} spacing={0.5}>
@@ -143,6 +158,7 @@ export const IPAddressSelection = ({
         <FormControlLabel
           control={<Radio />}
           data-qa-ip-mode-option="reserved"
+          disabled={disabled}
           key="reserved"
           label={
             <Stack direction="row" mt={1.25} spacing={0.5}>
@@ -163,6 +179,7 @@ export const IPAddressSelection = ({
         <Box ml={3}>
           <Autocomplete
             disabled={!regionId}
+            errorText={error}
             getOptionLabel={(option: IPAddressOption) => option.address}
             helperText={
               !regionId

@@ -40,7 +40,7 @@ export const useLinodeIPMutation = () => {
     APIError[],
     { address: string; rdns?: null | string }
   >({
-    mutationFn: ({ address, rdns }) => updateIP(address, rdns),
+    mutationFn: ({ address, rdns }) => updateIP(address, { rdns }),
     onSuccess() {
       invalidateIPsForAllLinodes(queryClient);
     },

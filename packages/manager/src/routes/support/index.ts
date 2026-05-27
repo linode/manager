@@ -3,7 +3,7 @@ import { createRoute, redirect } from '@tanstack/react-router';
 import { SupportSearchLandingWrapper } from 'src/features/Help/SupportSearchLanding/SupportSearchLandingWrapper';
 
 import { rootRoute } from '../root';
-import { SupportTicketsRoute } from './SupportRoute';
+import { SupportRoute } from './SupportRoute';
 
 import type { AttachmentError } from 'src/features/Support/SupportTicketDetail/SupportTicketDetail';
 import type { SupportTicketFormFields } from 'src/features/Support/SupportTickets/SupportTicketDialog';
@@ -18,7 +18,7 @@ export interface SupportState {
 }
 
 const supportRoute = createRoute({
-  component: SupportTicketsRoute,
+  component: SupportRoute,
   getParentRoute: () => rootRoute,
   path: 'support',
 });

@@ -4,6 +4,7 @@ export type AlertSeverityType = 0 | 1 | 2 | 3;
 export type MetricAggregationType = 'avg' | 'count' | 'max' | 'min' | 'sum';
 export type MetricOperatorType = 'eq' | 'gt' | 'gte' | 'lt' | 'lte';
 export type CloudPulseServiceType =
+  | 'ai'
   | 'blockstorage'
   | 'dbaas'
   | 'firewall'
@@ -190,7 +191,7 @@ export interface CloudPulseMetricsResponseData {
 
 export interface CloudPulseMetricsList {
   metric: { [resourceName: string]: string };
-  values: [number, string][];
+  values: [number, null | string][];
 }
 
 export interface ServiceAlert {
@@ -214,6 +215,7 @@ export interface CreateAlertDefinitionPayload {
   channel_ids: number[];
   description?: string;
   entity_ids?: string[];
+  group_by?: string[];
   label: string;
   regions?: string[];
   rule_criteria: {
@@ -269,6 +271,7 @@ export interface Alert {
     has_more_resources: boolean;
     url: string;
   };
+  group_by: string[];
   id: number;
   label: string;
   regions?: string[];
@@ -362,6 +365,7 @@ export interface EditAlertDefinitionPayload {
   channel_ids?: number[];
   description?: string;
   entity_ids?: string[];
+  group_by?: string[];
   label?: string;
   regions?: string[];
   rule_criteria?: {
@@ -404,6 +408,7 @@ export const capabilityServiceTypeMapping: Record<
   lke: 'Kubernetes',
   netloadbalancer: 'Network LoadBalancer',
   logs: 'Akamai Cloud Pulse Logs',
+  ai: 'AI',
 };
 
 /**
@@ -486,4 +491,10 @@ export interface Entities {
   label: string;
   type: string;
   url: string;
+}
+
+export interface CloneAlertPayloadWithService
+  extends CreateAlertDefinitionPayload {
+  originalAlertId: number;
+  serviceType: CloudPulseServiceType;
 }

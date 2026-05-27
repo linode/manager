@@ -425,62 +425,7 @@ describe('PrimaryNav', () => {
     expect(betaChip).toBeVisible();
   });
 
-  it('should show Logs menu item if user has capability and aclpLogs flag is enabled', async () => {
-    const account = accountFactory.build({
-      capabilities: ['Akamai Cloud Pulse Logs'],
-    });
-
-    queryMocks.useAccount.mockReturnValue({
-      data: account,
-      isLoading: false,
-      error: null,
-    });
-
-    const flags = {
-      aclpLogs: {
-        enabled: true,
-        beta: false,
-        bypassAccountCapabilities: false,
-      },
-    };
-
-    const { findByTestId, queryByTestId } = renderWithTheme(
-      <PrimaryNav {...props} />,
-      { flags }
-    );
-
-    const logsNavItem = await findByTestId('menu-item-Logs');
-    expect(logsNavItem).toBeVisible();
-    expect(queryByTestId('betaChip')).toBeNull();
-  });
-
-  it('should not show Logs menu item if aclpLogs flag is not enabled', async () => {
-    const account = accountFactory.build({
-      capabilities: ['Akamai Cloud Pulse Logs'],
-    });
-
-    queryMocks.useAccount.mockReturnValue({
-      data: account,
-      isLoading: false,
-      error: null,
-    });
-
-    const flags = {
-      aclpLogs: {
-        enabled: false,
-        beta: false,
-        bypassAccountCapabilities: true,
-      },
-    };
-
-    const { queryByTestId } = renderWithTheme(<PrimaryNav {...props} />, {
-      flags,
-    });
-
-    expect(queryByTestId('menu-item-Logs')).toBeNull();
-  });
-
-  it('should show Logs menu item if user lacks capability, bypassAccountCapabilities is true and aclpLogs flag is enabled', async () => {
+  it('should show Logs menu item', async () => {
     const account = accountFactory.build({
       capabilities: [],
     });
@@ -491,48 +436,10 @@ describe('PrimaryNav', () => {
       error: null,
     });
 
-    const flags = {
-      aclpLogs: {
-        enabled: true,
-        beta: true,
-        bypassAccountCapabilities: true,
-      },
-    };
-
-    const { findByTestId } = renderWithTheme(<PrimaryNav {...props} />, {
-      flags,
-    });
+    const { findByTestId } = renderWithTheme(<PrimaryNav {...props} />, {});
 
     const logsNavItem = await findByTestId('menu-item-Logs');
     expect(logsNavItem).toBeVisible();
-    const betaChip = await findByTestId('betaChip');
-    expect(betaChip).toBeVisible();
-  });
-
-  it('should not show Logs menu item if user lacks capability, bypassAccountCapabilities is false and aclpLogs flag is enabled', async () => {
-    const account = accountFactory.build({
-      capabilities: [],
-    });
-
-    queryMocks.useAccount.mockReturnValue({
-      data: account,
-      isLoading: false,
-      error: null,
-    });
-
-    const flags = {
-      aclpLogs: {
-        enabled: true,
-        beta: false,
-        bypassAccountCapabilities: false,
-      },
-    };
-
-    const { queryByTestId } = renderWithTheme(<PrimaryNav {...props} />, {
-      flags,
-    });
-
-    expect(queryByTestId('menu-item-Logs')).toBeNull();
   });
 
   it('should show Administration links', async () => {

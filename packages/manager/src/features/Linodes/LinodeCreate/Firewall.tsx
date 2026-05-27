@@ -17,8 +17,8 @@ import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEven
 import { WARNING_MESSAGE_FOR_NO_FIREWALL_OPTION } from '../constants';
 import { useGetLinodeCreateType } from './Tabs/utils/useGetLinodeCreateType';
 
+import type { LinodeCreateFormEventOptions } from '@akamai/compute-ui-core/analytics';
 import type { CreateLinodeRequest } from '@linode/api-v4';
-import type { LinodeCreateFormEventOptions } from 'src/utilities/analytics/types';
 
 export const Firewall = () => {
   const { field, fieldState } = useController<

@@ -2,8 +2,8 @@ import { useCreateShareGroupMutation } from '@linode/queries';
 import {
   Box,
   Button,
+  Checkbox,
   Divider,
-  Notice,
   Paper,
   Stack,
   TextField,
@@ -11,14 +11,28 @@ import {
 } from '@linode/ui';
 import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
-import { Controller, useController, useForm } from 'react-hook-form';
+import { Controller, useFieldArray, useForm } from 'react-hook-form';
 
 import { IMAGE_SELECT_TABLE_SHARE_GROUP_CREATE_PENDO_IDS } from 'src/components/ImageSelect/constants';
 import { ImageSelectTable } from 'src/components/ImageSelect/ImageSelectTable';
 
 import { CREATE_SHARE_GROUP_PENDO_IDS } from '../../constants';
 
-import type { CreateSharegroupPayload, Image } from '@linode/api-v4';
+import type {
+  CreateSharegroupPayload,
+  Image,
+  SharegroupImagePayload,
+} from '@linode/api-v4';
+
+interface ShareGroupFormImage extends SharegroupImagePayload {
+  imageId: string;
+  useOriginalImageFields: boolean;
+}
+
+interface ShareGroupFormPayload
+  extends Omit<CreateSharegroupPayload, 'images'> {
+  images?: ShareGroupFormImage[];
+}
 
 export const ShareGroupsCreate = () => {
   const navigate = useNavigate();
@@ -30,16 +44,39 @@ export const ShareGroupsCreate = () => {
     handleSubmit,
     setError,
     formState: { isSubmitting },
-  } = useForm<CreateSharegroupPayload>();
+  } = useForm<ShareGroupFormPayload>();
 
-  const { field: imagesController, fieldState } = useController({
+  const { append, fields, remove, update } = useFieldArray({
     control,
     name: 'images',
   });
 
+  const [selectedImages, setSelectedImages] = React.useState<
+    ShareGroupFormImage[]
+  >([]);
+
   const onSubmit = handleSubmit(async (values) => {
     try {
-      await createShareGroup(values);
+      const payload: CreateSharegroupPayload = {
+        ...values,
+        images: values.images?.map(
+          ({ imageId, label, description, useOriginalImageFields }, index) => {
+            return useOriginalImageFields
+              ? {
+                  id: selectedImages[index].imageId,
+                  label: selectedImages[index].label,
+                  description: selectedImages[index].description,
+                }
+              : {
+                  id: imageId,
+                  label,
+                  description,
+                };
+          }
+        ),
+      };
+
+      await createShareGroup(payload);
 
       navigate({
         search: () => ({}),
@@ -56,17 +93,41 @@ export const ShareGroupsCreate = () => {
     }
   });
 
-  const onChange = (image: Image) => {
-    const selectedImages = imagesController.value ?? [];
-
+  const handleImagesTableSelect = (image: Image) => {
     const { id, label, description } = image;
-    const imagePayload = { id, label, ...(description && { description }) };
+    const imagePayload = {
+      id,
+      label,
+      ...(description && { description }),
+      imageId: id,
+      useOriginalImageFields: true,
+    };
 
-    if (!selectedImages.some((img) => img.id === id)) {
-      imagesController.onChange([...selectedImages, imagePayload]);
+    const index = selectedImages.findIndex((img) => img.imageId === id);
+    if (index !== -1) {
+      setSelectedImages(selectedImages.filter((img) => img.imageId !== id));
+      remove(index);
     } else {
-      imagesController.onChange(selectedImages.filter((img) => img.id !== id));
+      setSelectedImages([...selectedImages, imagePayload]);
+      append({
+        ...imagePayload,
+      });
     }
+  };
+
+  const toggleSelectedImageCheckbox = (index: number = 0) => {
+    update(index, {
+      ...fields[index],
+      useOriginalImageFields: !fields[index].useOriginalImageFields,
+    });
+  };
+
+  const shareGroupImagesFilter = (image: Image) => {
+    return (
+      image.status === 'available' &&
+      image.is_public === false &&
+      image.created_by !== null
+    );
   };
 
   return (
@@ -83,18 +144,13 @@ export const ShareGroupsCreate = () => {
             name="label"
             render={({ field, fieldState }) => (
               <TextField
+                data-testid="share-group-label"
                 label="Label"
                 noMarginTop
                 required
                 {...field}
                 data-pendo-id={CREATE_SHARE_GROUP_PENDO_IDS.label}
                 errorText={fieldState.error?.message}
-                onChange={(e) =>
-                  field.onChange(
-                    e.target.value === '' ? undefined : e.target.value
-                  )
-                }
-                value={field.value ?? ''}
               />
             )}
           />
@@ -103,19 +159,14 @@ export const ShareGroupsCreate = () => {
             name="description"
             render={({ field, fieldState }) => (
               <TextField
+                data-testid="share-group-description"
                 errorText={fieldState.error?.message}
                 label="Description"
                 multiline
                 noMarginTop
                 {...field}
                 data-pendo-id={CREATE_SHARE_GROUP_PENDO_IDS.description}
-                onChange={(e) =>
-                  field.onChange(
-                    e.target.value === '' ? undefined : e.target.value
-                  )
-                }
                 rows={1}
-                value={field.value ?? ''}
               />
             )}
           />
@@ -125,21 +176,77 @@ export const ShareGroupsCreate = () => {
           <Typography variant="h2">Images</Typography>
           <ImageSelectTable
             currentRoute="/images/share-groups/create"
-            errorText={fieldState.error?.message}
-            onSelect={onChange}
+            filter={shareGroupImagesFilter}
+            onSelect={handleImagesTableSelect}
             pendoIDs={IMAGE_SELECT_TABLE_SHARE_GROUP_CREATE_PENDO_IDS}
-            selectedImageIds={
-              imagesController.value?.map((img) => img.id) ?? []
-            }
+            selectedImageIds={selectedImages.map((img) => img.id) ?? []}
             selectionMode="multi"
           />
         </Stack>
         <Divider sx={{ marginTop: 4, marginBottom: 4 }} />
         <Stack spacing={2}>
           <Typography variant="h2">
-            Selected images ({imagesController.value?.length ?? 0})
+            Selected images ({selectedImages.length ?? 0})
           </Typography>
-          <Notice variant="info">Selected images is coming soon...</Notice>
+          {fields.map((image, index) => (
+            <Stack key={image.id} mb={4}>
+              <Stack alignItems="baseline" direction="row" spacing={2}>
+                <Typography variant="body1">
+                  <b>{index + 1}. Original image: </b>
+                </Typography>
+                <Typography variant="body1">
+                  {selectedImages[index].label}
+                </Typography>
+              </Stack>
+              <Controller
+                control={control}
+                name={`images.${index}`}
+                render={() => (
+                  <Box>
+                    <Checkbox
+                      checked={image.useOriginalImageFields}
+                      onChange={() => toggleSelectedImageCheckbox(index)}
+                      text="Use original label and description"
+                      toolTipText="You can keep the original label and description or set new ones for the shared image. If the original image fields change later, the shared image won't update."
+                    />
+                  </Box>
+                )}
+              />
+
+              {!image.useOriginalImageFields && (
+                <Stack spacing={2}>
+                  <Controller
+                    control={control}
+                    name={`images.${index}.label`}
+                    render={({ field, fieldState }) => (
+                      <TextField
+                        data-testid={`selected-image-${index}-label`}
+                        errorText={fieldState.error?.message}
+                        label="Label"
+                        noMarginTop
+                        {...field}
+                      />
+                    )}
+                  />
+                  <Controller
+                    control={control}
+                    name={`images.${index}.description`}
+                    render={({ field, fieldState }) => (
+                      <TextField
+                        data-testid={`selected-image-${index}-description`}
+                        errorText={fieldState.error?.message}
+                        label="Description"
+                        multiline
+                        noMarginTop
+                        {...field}
+                        rows={1}
+                      />
+                    )}
+                  />
+                </Stack>
+              )}
+            </Stack>
+          ))}
         </Stack>
       </Paper>
       <Box display="flex" flexWrap="wrap" justifyContent="flex-end" mt={2}>

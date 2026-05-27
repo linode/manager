@@ -1,3 +1,4 @@
+import { getStorage } from '@akamai/compute-ui-core/browser';
 import {
   deletePersonalAccessToken,
   getPersonalAccessTokens,
@@ -15,7 +16,7 @@ import {
   updateCurrentTokenBasedOnUserType,
 } from 'src/features/Account/SwitchAccounts/utils';
 import { useIsIAMDelegationEnabled } from 'src/features/IAM/hooks/useIsIAMEnabled';
-import { getStorage, storage } from 'src/utilities/storage';
+import { storage } from 'src/utilities/storage';
 
 import type { Token, UserType } from '@linode/api-v4';
 

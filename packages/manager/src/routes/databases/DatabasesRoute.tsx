@@ -4,7 +4,7 @@ import React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
-import { SuspenseLoader } from 'src/components/SuspenseLoader';
+import { SuspenseLoader } from 'src/features/Databases/shared/SuspenseLoader/SuspenseLoader';
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
 
 export const DatabasesRoute = () => {

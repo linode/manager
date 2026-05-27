@@ -1,0 +1,33 @@
+.wrapper {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  height: 20px;
+  justify-content: flex-start;
+}
+
+.maskedText {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.toggleButton {
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  display: flex;
+  margin-left: var(--maskable-toggle-margin-left);
+  min-height: auto;
+  min-width: auto;
+  outline: none;
+  padding: 0;
+}
+
+.icon {
+  color: var(--maskable-icon-color);
+  display: flex;
+}
+
+.toggleButton:hover .icon {
+  color: var(--maskable-icon-hover-color);
+}

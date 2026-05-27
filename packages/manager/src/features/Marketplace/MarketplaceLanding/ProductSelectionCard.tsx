@@ -1,5 +1,5 @@
+import { truncate } from '@akamai/compute-ui-core/formatting';
 import { Box, Chip, Typography } from '@linode/ui';
-import { truncate } from '@linode/utilities';
 import { styled } from '@mui/material/styles';
 import React from 'react';
 

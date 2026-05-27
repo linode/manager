@@ -1,5 +1,6 @@
 import {
   addEntityToAlert,
+  cloneAlertDefinition,
   createAlertDefinition,
   createNotificationChannel,
   deleteAlertDefinition,
@@ -26,6 +27,7 @@ import { invalidateAclpAlerts } from './useAlertsMutation';
 
 import type {
   Alert,
+  CloneAlertPayloadWithService,
   CloudPulseAlertsPayload,
   CreateAlertDefinitionPayload,
   CreateNotificationChannelPayload,
@@ -480,4 +482,46 @@ export const useAllEntitiesByAlertsQuery = (
     () => getAllEntitiesByAlerts(results, alerts),
     [results, alerts]
   );
+};
+
+export const useCloneAlertDefinition = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation<Alert, APIError[], CloneAlertPayloadWithService>({
+    mutationFn: ({ originalAlertId, serviceType, ...data }) =>
+      cloneAlertDefinition(data, serviceType, originalAlertId),
+    onSuccess: async (newAlert) => {
+      const allAlertsKey = queryFactory.alerts._ctx.all().queryKey;
+      const oldAlerts = queryClient.getQueryData<Alert[]>(allAlertsKey);
+
+      if (oldAlerts) {
+        queryClient.setQueryData<Alert[]>(allAlertsKey, [
+          ...oldAlerts,
+          newAlert,
+        ]);
+      }
+
+      queryClient.setQueryData(
+        queryFactory.alerts._ctx.alertByServiceTypeAndId(
+          newAlert.service_type,
+          String(newAlert.id)
+        ).queryKey,
+        newAlert
+      );
+
+      queryClient.invalidateQueries({
+        queryKey: queryFactory.alerts._ctx.alertsByServiceType(
+          newAlert.service_type
+        ).queryKey,
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: queryFactory.notificationChannels._ctx.all().queryKey,
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: queryFactory.notificationChannelAlerts._def,
+      });
+    },
+  });
 };

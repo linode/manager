@@ -1,3 +1,4 @@
+import { getUserTimezone } from '@akamai/compute-ui-core/datetime';
 import {
   useLinodeQuery,
   useLinodeUpdateMutation,
@@ -12,7 +13,7 @@ import {
   Paper,
   Typography,
 } from '@linode/ui';
-import { getUserTimezone, initWindows } from '@linode/utilities';
+import { initWindows } from '@linode/utilities';
 import { styled } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';

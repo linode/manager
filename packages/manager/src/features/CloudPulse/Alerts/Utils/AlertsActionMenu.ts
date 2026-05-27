@@ -5,19 +5,54 @@ import type { AlertDefinitionType, AlertStatusType } from '@linode/api-v4';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 /**
- * @param onClickHandlers The list of handlers required to be called on click of an action
- * @returns The actions based on the type of the alert
+ * Parameters required to generate the actions list for alert types.
  */
-export const getAlertTypeToActionsList = (
-  {
+interface GetAlertTypeToActionsListParams {
+  /**
+   * Current status of the alert definition.
+   * Used to determine action availability and status change labels.
+   */
+  alertStatus: AlertStatusType;
+
+  /**
+   * Whether the Clone action should be included in the actions list.
+   *
+   * @default false
+   */
+  cloneEnabled?: boolean;
+
+  /**
+   * List of alert statuses for which edit-related actions
+   * such as Edit, Delete, or Clone should be disabled.
+   *
+   * @default []
+   */
+  editDisableStatuses?: AlertStatusType[];
+
+  /**
+   * Collection of action handlers invoked by the action menu items.
+   */
+  handlers: ActionHandlers;
+}
+
+/**
+ * Returns the available actions for each alert definition type.
+ *
+ * @param params Configuration used to build the actions list.
+ * @returns Mapping of alert definition type to action items.
+ */
+export const getAlertTypeToActionsList = ({
+  alertStatus,
+  cloneEnabled = false,
+  editDisableStatuses = [],
+  handlers: {
+    handleClone,
     handleDelete,
     handleDetails,
     handleEdit,
     handleStatusChange,
-  }: ActionHandlers,
-  alertStatus: AlertStatusType,
-  editDisableStatuses: AlertStatusType[] = []
-): Record<AlertDefinitionType, Action[]> => ({
+  },
+}: GetAlertTypeToActionsListParams): Record<AlertDefinitionType, Action[]> => ({
   // for now there is system and user alert types, in future more alert types can be added and action items will differ according to alert types
   system: [
     {
@@ -28,6 +63,15 @@ export const getAlertTypeToActionsList = (
       onClick: handleEdit,
       title: 'Edit',
     },
+    ...(cloneEnabled
+      ? [
+          {
+            disabled: editDisableStatuses.includes(alertStatus),
+            onClick: handleClone,
+            title: 'Clone',
+          },
+        ]
+      : []),
   ],
   user: [
     {
@@ -53,6 +97,15 @@ export const getAlertTypeToActionsList = (
       onClick: handleDelete,
       title: 'Delete',
     },
+    ...(cloneEnabled
+      ? [
+          {
+            disabled: editDisableStatuses.includes(alertStatus),
+            onClick: handleClone,
+            title: 'Clone',
+          },
+        ]
+      : []),
   ],
 });
 

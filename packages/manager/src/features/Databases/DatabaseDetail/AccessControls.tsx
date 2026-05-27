@@ -1,16 +1,18 @@
-import { Button } from '@akamai/cds-components/react';
+import { Button, NotificationBanner } from '@akamai/cds-components/react';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableRow,
+} from '@akamai/cds-components/react/Table';
+import { Spacing } from '@akamai/cds-tokens';
 import { useDatabaseMutation } from '@linode/queries';
-import { ActionsPanel, Notice, Typography } from '@linode/ui';
+import { ActionsPanel, Typography } from '@linode/ui';
 import * as React from 'react';
 import type { JSX } from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
-import { Table } from 'src/components/Table';
-import { TableBody } from 'src/components/TableBody';
-import { TableCell } from 'src/components/TableCell';
-import { TableRow } from 'src/components/TableRow';
 
 import { ManageAccessControlDrawer } from './ManageAccessControlDrawer';
 
@@ -27,12 +29,9 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
   cell: {
     alignItems: 'center',
-    borderBottom: `solid 1px ${theme.borderColors.borderTable}`,
     display: 'flex',
     justifyContent: 'space-between',
-  },
-  removeButton: {
-    float: 'right',
+    paddingLeft: 0,
   },
   restrictWarning: {
     width: '50%',
@@ -132,18 +131,30 @@ export const AccessControls = (props: Props) => {
       <Table className={classes.table} data-qa-access-controls>
         <TableBody>
           {accessControlsList.map((accessControl) => (
-            <TableRow className={classes.row} key={`${accessControl}-row`}>
+            <TableRow
+              className={classes.row}
+              hoverable
+              key={`${accessControl}-row`}
+              zebra
+            >
               <TableCell
                 className={classes.cell}
                 key={`${accessControl}-tablecell`}
               >
                 {accessControl}
-                <InlineMenuAction
-                  actionText="Remove"
-                  className={classes.removeButton}
-                  disabled={disabled}
-                  onClick={() => handleClickRemove(accessControl)}
-                />
+                {disabled ? (
+                  <Button disabled={disabled} size="large" variant="primary">
+                    Remove
+                  </Button>
+                ) : (
+                  <Button
+                    onClick={() => handleClickRemove(accessControl)}
+                    size="large"
+                    variant="link"
+                  >
+                    Remove
+                  </Button>
+                )}
               </TableCell>
             </TableRow>
           ))}
@@ -189,7 +200,13 @@ export const AccessControls = (props: Props) => {
         open={isDialogOpen}
         title={`Remove IP Address ${accessControlToBeRemoved}`}
       >
-        {error ? <Notice text={error} variant="error" /> : null}
+        {error ? (
+          <NotificationBanner
+            style={{ marginBottom: Spacing.S16 }}
+            text={error}
+            type="error"
+          />
+        ) : null}
         <Typography data-testid="ip-removal-confirmation-warning">
           IP {accessControlToBeRemoved} will lose all access to the data on this
           database cluster. This action cannot be undone, but you can re-enable

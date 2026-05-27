@@ -1,5 +1,4 @@
 import { useDatabasesQuery, useDatabaseTypesQuery } from '@linode/queries';
-import { CircleProgress, ErrorState } from '@linode/ui';
 import { Box } from '@mui/material';
 import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
@@ -12,7 +11,9 @@ import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+
+import { CircleProgress } from '../shared/CircleProgress/CircleProgress';
+import { ErrorState } from '../shared/ErrorState/ErrorState';
 
 const preferenceKey = 'databases';
 
@@ -73,16 +74,7 @@ export const DatabaseLanding = () => {
   );
 
   if (databasesError) {
-    return (
-      <ErrorState
-        errorText={
-          getAPIErrorOrDefault(
-            databasesError,
-            'Error loading your databases.'
-          )[0].reason
-        }
-      />
-    );
+    return <ErrorState errorText={databasesError[0]?.reason} />;
   }
 
   if (databasesIsLoading || isTypesLoading) {

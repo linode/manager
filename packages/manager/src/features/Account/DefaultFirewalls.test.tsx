@@ -1,10 +1,6 @@
 import * as React from 'react';
 
-import {
-  accountFactory,
-  firewallFactory,
-  firewallSettingsFactory,
-} from 'src/factories';
+import { firewallFactory, firewallSettingsFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
@@ -24,12 +20,7 @@ vi.mock('src/features/IAM/hooks/usePermissions', () => ({
 
 describe('NetworkInterfaces', () => {
   it('renders the NetworkInterfaces section', async () => {
-    const account = accountFactory.build({
-      capabilities: ['Linode Interfaces'],
-    });
-
     server.use(
-      http.get('*/v4*/account', () => HttpResponse.json(account)),
       http.get('*/v4beta/networking/firewalls/settings', () =>
         HttpResponse.json(firewallSettingsFactory.build())
       ),
@@ -38,40 +29,33 @@ describe('NetworkInterfaces', () => {
       )
     );
 
-    const { findByText, getByText } = renderWithTheme(<DefaultFirewalls />, {
-      flags: { linodeInterfaces: { enabled: true } },
-    });
+    const { findByText } = renderWithTheme(<DefaultFirewalls />);
 
     const title = await findByText('Default Firewalls');
 
     expect(title).toBeVisible();
-
-    expect(getByText('Default Firewalls')).toBeVisible();
-    expect(getByText('Linodes')).toBeVisible();
+    expect(await findByText('Default Firewalls')).toBeVisible();
+    expect(await findByText('Linodes')).toBeVisible();
     expect(
-      getByText('Configuration Profile Interfaces Firewall')
+      await findByText('Configuration Profile Interfaces Firewall')
     ).toBeVisible();
     expect(
-      getByText('Linode Interfaces - Public Interface Firewall')
+      await findByText('Linode Interfaces - Public Interface Firewall')
     ).toBeVisible();
     expect(
-      getByText('Linode Interfaces - VPC Interface Firewall')
+      await findByText('Linode Interfaces - VPC Interface Firewall')
     ).toBeVisible();
-    expect(getByText('NodeBalancers')).toBeVisible();
-    expect(getByText('NodeBalancers Firewall')).toBeVisible();
-    expect(getByText('Save')).toBeVisible();
+    expect(await findByText('NodeBalancers')).toBeVisible();
+    expect(await findByText('NodeBalancers Firewall')).toBeVisible();
+    expect(await findByText('Save')).toBeVisible();
   });
 
   it('should disable Save button and all select boxes if the user does not have "update_account_settings" permissions', async () => {
     queryMocks.userPermissions.mockReturnValue({
       data: { update_account_settings: false },
     });
-    const account = accountFactory.build({
-      capabilities: ['Linode Interfaces'],
-    });
 
     server.use(
-      http.get('*/v4*/account', () => HttpResponse.json(account)),
       http.get('*/v4beta/networking/firewalls/settings', () =>
         HttpResponse.json(firewallSettingsFactory.build())
       ),
@@ -80,31 +64,31 @@ describe('NetworkInterfaces', () => {
       )
     );
 
-    const { getByLabelText, getByText } = renderWithTheme(
-      <DefaultFirewalls />,
-      {
-        flags: { linodeInterfaces: { enabled: true } },
-      }
+    const { findByLabelText, findByText } = renderWithTheme(
+      <DefaultFirewalls />
     );
 
-    const configurationSelect = getByLabelText(
+    await findByText('Default Firewalls');
+
+    const configurationSelect = await findByLabelText(
       'Configuration Profile Interfaces Firewall'
     );
     expect(configurationSelect).toHaveAttribute('disabled');
 
-    const linodePublicSelect = getByLabelText(
+    const linodePublicSelect = await findByLabelText(
       'Linode Interfaces - Public Interface Firewall'
     );
     expect(linodePublicSelect).toHaveAttribute('disabled');
 
-    const linodeVPCSelect = getByLabelText(
+    const linodeVPCSelect = await findByLabelText(
       'Linode Interfaces - VPC Interface Firewall'
     );
     expect(linodeVPCSelect).toHaveAttribute('disabled');
 
-    const nodeBalancerSelect = getByLabelText('NodeBalancers Firewall');
+    const nodeBalancerSelect = await findByLabelText('NodeBalancers Firewall');
     expect(nodeBalancerSelect).toHaveAttribute('disabled');
 
-    expect(getByText('Save')).toHaveAttribute('aria-disabled', 'true');
+    const saveButton = await findByText('Save');
+    expect(saveButton).toHaveAttribute('aria-disabled', 'true');
   });
 });

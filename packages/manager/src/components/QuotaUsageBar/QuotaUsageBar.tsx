@@ -10,10 +10,18 @@ interface Props {
   limit: number;
   resourceMetric: Quota['resource_metric'];
   usage: number;
+  variant: 'obj-summary' | 'quotas';
 }
 
-export const QuotaUsageBar = ({ limit, usage, resourceMetric }: Props) => {
+export const QuotaUsageBar = ({
+  limit,
+  usage,
+  resourceMetric,
+  variant,
+}: Props) => {
   const theme = useTheme();
+
+  const isSummary = variant === 'obj-summary';
 
   const { convertedUsage, convertedLimit, convertedResourceMetric } =
     convertResourceMetric({
@@ -48,16 +56,33 @@ export const QuotaUsageBar = ({ limit, usage, resourceMetric }: Props) => {
             percentage: 61,
           },
           {
-            color: theme.tokens.color.Brand[80],
+            color: isSummary
+              ? theme.tokens.color.Gradient.Default
+              : theme.tokens.color.Brand[80],
             percentage: 1,
           },
         ]}
         max={limit}
-        rounded
-        sx={{ mb: 1, mt: 2, padding: '3px' }}
+        rounded={isSummary ? false : true}
+        sx={{
+          mb: 0.5,
+          mt: isSummary ? 0.5 : 2,
+          padding: isSummary ? '4px' : '3px',
+          margin: 0,
+        }}
         value={usage}
       />
-      <Typography sx={{ mb: 1, mt: -0.5 }}>{getUsageText()}</Typography>
+      <Typography
+        sx={(theme) => ({
+          mt: theme.spacingFunction(8),
+          font: isSummary
+            ? theme.tokens.alias.Typography.Label.Bold.S
+            : theme.tokens.alias.Typography.Label.Regular.S,
+        })}
+        variant={'subtitle2'}
+      >
+        {getUsageText()}
+      </Typography>
     </>
   );
 };

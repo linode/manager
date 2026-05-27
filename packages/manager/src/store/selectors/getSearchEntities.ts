@@ -1,4 +1,4 @@
-import { pluralize } from '@linode/utilities';
+import { pluralize } from '@akamai/compute-ui-core/formatting';
 import { readableBytes } from '@linode/utilities';
 
 import { getDatabasesDescription } from 'src/features/Databases/utilities';
@@ -9,6 +9,7 @@ import {
 import { getFirewallDescription } from 'src/features/Firewalls/shared';
 import { getImageTypeToImageLibraryType } from 'src/features/Images/utils';
 import { getDescriptionForCluster } from 'src/features/Kubernetes/kubeUtils';
+import { getReservedIPDescription } from 'src/features/ReservedIps/utils';
 
 import type {
   DatabaseInstance,
@@ -16,6 +17,7 @@ import type {
   Domain,
   Firewall,
   Image,
+  IPAddress,
   KubernetesCluster,
   Linode,
   NodeBalancer,
@@ -234,3 +236,20 @@ export const destinationToSearchableItem = (
   label: destination.label,
   value: destination.id,
 });
+
+export const reservedIpToSearchableItem = (
+  reservedIp: IPAddress
+): SearchableItem => {
+  return {
+    data: {
+      description: getReservedIPDescription(reservedIp),
+      ips: [reservedIp.address],
+      path: `/reserved-ips`,
+      region: reservedIp.region,
+      tags: reservedIp.tags,
+    },
+    entityType: 'reservedIp',
+    label: reservedIp.address,
+    value: reservedIp.address,
+  };
+};

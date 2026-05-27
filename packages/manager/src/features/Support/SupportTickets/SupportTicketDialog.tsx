@@ -1,11 +1,11 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { uploadAttachment } from '@linode/api-v4/lib/support';
+import { getLiveChatToken, uploadAttachment } from '@linode/api-v4/lib/support';
 import { useCreateSupportTicketMutation } from '@linode/queries';
 import {
   Accordion,
-  ActionsPanel,
   Autocomplete,
   Box,
+  Button,
   Dialog,
   Notice,
   TextField,
@@ -18,6 +18,7 @@ import type { JSX } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { debounce } from 'throttle-debounce';
 
+import { teardownLiveChat } from 'src/hooks/useLiveChatBootstrap';
 import { sendSupportTicketExitEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import { storage, supportTicketStorageDefaults } from 'src/utilities/storage';
@@ -34,10 +35,20 @@ import {
   TICKET_SEVERITY_TOOLTIP_TEXT,
   TICKET_TYPE_MAP,
 } from './constants';
+import {
+  LIVE_CHAT_ENABLE_EVENT,
+  LIVE_CHAT_FAILED_EVENT,
+  LIVE_CHAT_READY_EVENT,
+  SUPPORT_TOPIC_GENERAL,
+} from './liveChatConstants';
 import { SupportTicketAccountLimitFields } from './SupportTicketAccountLimitFields';
 import { SupportTicketProductSelectionFields } from './SupportTicketProductSelectionFields';
 import { SupportTicketSMTPFields } from './SupportTicketSMTPFields';
-import { formatDescription, useTicketSeverityCapability } from './ticketUtils';
+import {
+  formatDescription,
+  useLiveChatCapability,
+  useTicketSeverityCapability,
+} from './ticketUtils';
 
 import type { FileAttachment } from '../index';
 import type { AttachmentError } from '../SupportTicketDetail/SupportTicketDetail';
@@ -59,6 +70,32 @@ interface AttachmentWithTarget {
   file: FormData;
   ticketId: number;
 }
+
+interface ErrorWithOptionalResponseStatus {
+  response?: {
+    status?: number;
+  };
+}
+
+const isErrorWithOptionalResponseStatus = (
+  error: unknown
+): error is ErrorWithOptionalResponseStatus => {
+  if (typeof error !== 'object' || error === null) {
+    return false;
+  }
+
+  const maybeResponse = (error as { response?: unknown }).response;
+
+  if (typeof maybeResponse !== 'object' || maybeResponse === null) {
+    return false;
+  }
+
+  const maybeStatus = (maybeResponse as { status?: unknown }).status;
+  return typeof maybeStatus === 'number' || typeof maybeStatus === 'undefined';
+};
+
+const LIVE_CHAT_TICKET_FALLBACK_MESSAGE =
+  'Live chat is not available right now. Please open a support ticket instead.';
 
 export type EntityType =
   | 'bucket'
@@ -118,7 +155,10 @@ export interface SupportTicketFormFields {
 export interface SupportTicketLocationState {
   description?: SupportTicketDialogProps['prefilledDescription'];
   entity?: SupportTicketDialogProps['prefilledEntity'];
+  entityInputValue?: SupportTicketFormFields['entityInputValue'];
+  entityType?: SupportTicketFormFields['entityType'];
   formPayloadValues?: SupportTicketFormFields['formPayloadValues'];
+  liveChatDisabled?: boolean;
   ticketType?: SupportTicketDialogProps['prefilledTicketType'];
   title?: SupportTicketDialogProps['prefilledTitle'];
 }
@@ -150,6 +190,8 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
 
   const location = useLocation();
   const locationState = location.state as SupportTicketLocationState;
+  const liveChatEnabled = useLiveChatCapability();
+  const showLiveChatFallbackWarning = Boolean(locationState?.liveChatDisabled);
 
   // Collect prefilled data from props or Link parameters.
   const _prefilledDescription: string | undefined =
@@ -160,6 +202,10 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     prefilledTitle ?? locationState?.title ?? undefined;
   const prefilledFormPayloadValues: FormPayloadValues | undefined =
     locationState?.formPayloadValues ?? undefined;
+  const prefilledEntityType: EntityType | undefined =
+    locationState?.entityType ?? undefined;
+  const prefilledEntityInputValue: string | undefined =
+    locationState?.entityInputValue ?? undefined;
   const _prefilledTicketType: TicketType | undefined =
     prefilledTicketType ?? locationState?.ticketType ?? undefined;
 
@@ -184,8 +230,13 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
         valuesFromStorage.description
       ),
       entityId: _prefilledEntity?.id ? String(_prefilledEntity.id) : '',
-      entityInputValue: '',
-      entityType: _prefilledEntity?.type ?? 'general',
+      entityInputValue: prefilledEntityInputValue ?? '',
+      entityType:
+        _prefilledEntity?.type ??
+        prefilledEntityType ??
+        (valuesFromStorage.entityType === 'general'
+          ? 'none'
+          : (valuesFromStorage.entityType ?? 'none')),
       summary: getInitialValue(newPrefilledTitle, valuesFromStorage.summary),
       ticketType: _prefilledTicketType ?? 'general',
     },
@@ -195,17 +246,41 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
   const {
     description,
     entityId,
+    entityInputValue,
     entityType,
     selectedSeverity,
     summary,
     ticketType,
   } = form.watch();
 
+  const [liveChatFailed, setLiveChatFailed] = React.useState(false);
+  const [showChatTimeoutWarning, setShowChatTimeoutWarning] =
+    React.useState(false);
+  const [switchedToTicket, setSwitchedToTicket] = React.useState(false);
+
+  const isAccountBillingTopic =
+    entityType === SUPPORT_TOPIC_GENERAL &&
+    entityInputValue !== SUPPORT_TOPIC_GENERAL;
+
+  const isLiveChatAvailable =
+    liveChatEnabled && !liveChatFailed && !locationState?.liveChatDisabled;
+
+  const isEligibleForLiveChat = isAccountBillingTopic && isLiveChatAvailable;
+
   const { mutateAsync: createSupportTicket } = useCreateSupportTicketMutation();
 
   const [files, setFiles] = React.useState<FileAttachment[]>([]);
 
   const [submitting, setSubmitting] = React.useState<boolean>(false);
+  const liveChatCleanupRef = React.useRef<(() => void) | null>(null);
+
+  // Clean up pending live chat listeners/timeouts if the dialog unmounts.
+  React.useEffect(() => {
+    return () => {
+      liveChatCleanupRef.current?.();
+      liveChatCleanupRef.current = null;
+    };
+  }, []);
 
   React.useEffect(() => {
     if (!open) {
@@ -229,7 +304,14 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
   React.useEffect(() => {
     // Store in-progress work to localStorage
     debouncedSave(form.getValues());
-  }, [summary, description, entityId, entityType, selectedSeverity]);
+  }, [
+    summary,
+    description,
+    entityId,
+    entityInputValue,
+    entityType,
+    selectedSeverity,
+  ]);
 
   /**
    * Clear the dialog completely if clearValues is passed (when canceling out of the dialog or successfully submitting)
@@ -241,7 +323,11 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
       description: clearValues ? '' : valuesFromStorage.description,
       entityId: clearValues ? '' : valuesFromStorage.entityId,
       entityInputValue: clearValues ? '' : valuesFromStorage.entityInputValue,
-      entityType: clearValues ? 'general' : valuesFromStorage.entityType,
+      entityType: clearValues
+        ? 'none'
+        : valuesFromStorage.entityType === 'general'
+          ? 'none'
+          : valuesFromStorage.entityType,
       selectedSeverity: clearValues
         ? undefined
         : valuesFromStorage.selectedSeverity,
@@ -251,12 +337,13 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
   };
 
   const resetDialog = (clearValues: boolean = false) => {
-    resetTicket(clearValues);
-    setFiles([]);
-
     if (clearValues) {
+      debouncedSave.cancel();
       saveFormData(supportTicketStorageDefaults);
     }
+
+    resetTicket(clearValues);
+    setFiles([]);
   };
 
   const handleClose = () => {
@@ -275,6 +362,131 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
 
   const updateFiles = (newFiles: FileAttachment[]) => {
     setFiles(newFiles);
+  };
+
+  const handleStartLiveChat = async () => {
+    if (!summary.trim()) {
+      form.setError('summary', {
+        message: 'A title is required to start a live chat session.',
+      });
+      return;
+    }
+
+    setSubmitting(true);
+    setShowChatTimeoutWarning(false);
+    form.clearErrors('root');
+
+    try {
+      const { chat_token } = await getLiveChatToken();
+
+      if (!chat_token) {
+        form.setError('root', {
+          message:
+            'Unable to start live chat because no chat token was returned.',
+        });
+        return;
+      }
+
+      window.sessionStorage.setItem('LiveChatToken', chat_token);
+      window.sessionStorage.setItem('LiveChatSubject', summary);
+      window.sessionStorage.setItem('LiveChatDescription', description);
+      window.sessionStorage.setItem('EnableLiveChat', 'true');
+
+      window.dispatchEvent(new Event(LIVE_CHAT_ENABLE_EVENT));
+
+      const liveChatOutcome = await new Promise<
+        'cancelled' | 'failed' | 'ready' | 'timeout'
+      >((resolve) => {
+        let settled = false;
+
+        const cleanup = () => {
+          window.clearTimeout(warningTimeout);
+          window.clearTimeout(responseTimeout);
+          window.removeEventListener(LIVE_CHAT_READY_EVENT, handleReady);
+          window.removeEventListener(LIVE_CHAT_FAILED_EVENT, handleFailed);
+          liveChatCleanupRef.current = null;
+        };
+
+        const settle = (
+          outcome: 'cancelled' | 'failed' | 'ready' | 'timeout'
+        ) => {
+          if (settled) return;
+          settled = true;
+          cleanup();
+          resolve(outcome);
+        };
+
+        const handleReady = () => settle('ready');
+        const handleFailed = () => settle('failed');
+
+        const warningTimeout = window.setTimeout(() => {
+          setShowChatTimeoutWarning(true);
+        }, 15000);
+
+        const responseTimeout = window.setTimeout(
+          () => settle('timeout'),
+          45000
+        );
+
+        // Store cancel so the user (or unmount) can abort the wait.
+        liveChatCleanupRef.current = () => settle('cancelled');
+
+        window.addEventListener(LIVE_CHAT_READY_EVENT, handleReady, {
+          once: true,
+        });
+        window.addEventListener(LIVE_CHAT_FAILED_EVENT, handleFailed, {
+          once: true,
+        });
+      });
+
+      if (liveChatOutcome === 'cancelled') {
+        // User chose to open a ticket instead — no error needed.
+        return;
+      }
+
+      if (liveChatOutcome === 'failed') {
+        form.setError('root', {
+          message: 'Unable to start live chat. Please try again.',
+        });
+        return;
+      }
+
+      if (liveChatOutcome === 'timeout') {
+        teardownLiveChat();
+        setSwitchedToTicket(true);
+        setLiveChatFailed(true);
+        form.setError('root', {
+          message: LIVE_CHAT_TICKET_FALLBACK_MESSAGE,
+        });
+        return;
+      }
+
+      props.onClose();
+      window.setTimeout(() => resetDialog(true), 500);
+    } catch (err: unknown) {
+      const status = isErrorWithOptionalResponseStatus(err)
+        ? err.response?.status
+        : undefined;
+      if (status === 500) {
+        setLiveChatFailed(true);
+      } else {
+        form.setError('root', {
+          message: 'Unable to start live chat. Please try again.',
+        });
+      }
+    } finally {
+      setShowChatTimeoutWarning(false);
+      setSubmitting(false);
+    }
+  };
+
+  const handleSwitchToTicket = () => {
+    teardownLiveChat();
+    liveChatCleanupRef.current?.();
+    setSwitchedToTicket(true);
+    setLiveChatFailed(true);
+    setShowChatTimeoutWarning(false);
+    setSubmitting(false);
   };
 
   /* Reducer passed into reduceAsync (previously Bluebird.reduce) below.
@@ -348,6 +560,18 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
 
   const handleSubmit = form.handleSubmit(async (values) => {
     const { onSuccess } = props;
+
+    if (values.entityType === 'none') {
+      form.setError('entityType', {
+        message: 'Please select a topic.',
+      });
+      return;
+    }
+
+    if (isEligibleForLiveChat) {
+      await handleStartLiveChat();
+      return;
+    }
 
     const _description = formatDescription(values, ticketType);
 
@@ -452,14 +676,25 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
                     errorText={fieldState.error?.message}
                     inputProps={{ maxLength: 64 }}
                     label="Title"
-                    onChange={field.onChange}
+                    onBlur={(event) => {
+                      field.onBlur();
+                      if (event.target.value.trim()) {
+                        form.clearErrors('summary');
+                      }
+                    }}
+                    onChange={(event) => {
+                      field.onChange(event);
+                      if (event.target.value.trim()) {
+                        form.clearErrors('summary');
+                      }
+                    }}
                     placeholder="Enter a title for your ticket."
                     required
                     value={summary}
                   />
                 )}
               />
-              {hasSeverityCapability && (
+              {hasSeverityCapability && !isEligibleForLiveChat && (
                 <Controller
                   control={form.control}
                   name="selectedSeverity"
@@ -494,59 +729,107 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
           )}
           {(!ticketType || ticketType === 'general') && (
             <>
-              {props.hideProductSelection ? null : (
-                <SupportTicketProductSelectionFields />
-              )}
-              <Box mt={1}>
-                <Controller
-                  control={form.control}
-                  name="description"
-                  render={({ field, fieldState }) => (
-                    <TabbedReply
-                      error={fieldState.error?.message}
-                      handleChange={field.onChange}
-                      placeholder={
-                        'Tell us more about the trouble you’re having and any steps you’ve already taken to resolve it.'
-                      }
-                      required
-                      value={description}
-                    />
-                  )}
+              {showLiveChatFallbackWarning && !switchedToTicket && (
+                <Notice
+                  spacingTop={16}
+                  text="Live Chat is not available at this time. Please open a support ticket below."
+                  variant="info"
                 />
-              </Box>
-              <Accordion
-                detailProps={{ sx: { p: 0.25 } }}
-                heading="Formatting Tips"
-                summaryProps={{ sx: { paddingX: 0.25 } }}
-                sx={(theme) => ({ mt: `${theme.spacing(0.5)} !important` })} // forcefully disable margin when accordion is expanded
-              >
-                <MarkdownReference />
-              </Accordion>
-              <AttachFileForm files={files} updateFiles={updateFiles} />
-              {form.formState.errors.root && (
+              )}
+              {props.hideProductSelection ? null : (
+                <SupportTicketProductSelectionFields
+                  liveChat={isLiveChatAvailable}
+                />
+              )}
+              {!isEligibleForLiveChat && entityType !== 'none' && (
+                <>
+                  <Box mt={1}>
+                    <Controller
+                      control={form.control}
+                      name="description"
+                      render={({ field, fieldState }) => (
+                        <TabbedReply
+                          error={fieldState.error?.message}
+                          handleChange={field.onChange}
+                          placeholder={
+                            "Tell us more about the trouble you're having and any steps you've already taken to resolve it."
+                          }
+                          required
+                          value={description}
+                        />
+                      )}
+                    />
+                  </Box>
+                  <Accordion
+                    detailProps={{ sx: { p: 0.25 } }}
+                    heading="Formatting Tips"
+                    summaryProps={{ sx: { paddingX: 0.25 } }}
+                    sx={(theme) => ({ mt: `${theme.spacing(0.5)} !important` })} // forcefully disable margin when accordion is expanded
+                  >
+                    <MarkdownReference />
+                  </Accordion>
+                  <AttachFileForm files={files} updateFiles={updateFiles} />
+                </>
+              )}
+              {showChatTimeoutWarning && isEligibleForLiveChat && (
+                <Notice
+                  data-qa-notice
+                  spacingTop={16}
+                  text="Chat is taking longer than expected to connect. You can continue waiting or open a ticket directly."
+                  variant="info"
+                />
+              )}
+              {form.formState.errors.root && !showLiveChatFallbackWarning && (
                 <Notice
                   data-qa-notice
                   spacingTop={16}
                   text={form.formState.errors.root.message}
-                  variant="error"
+                  variant={
+                    form.formState.errors.root.message ===
+                    LIVE_CHAT_TICKET_FALLBACK_MESSAGE
+                      ? 'info'
+                      : 'error'
+                  }
                 />
               )}
             </>
           )}
-          <ActionsPanel
-            primaryButtonProps={{
-              'data-testid': 'submit',
-              label: 'Open Ticket',
-              loading: submitting,
-              onClick: handleSubmit,
+          <Box
+            sx={{
+              display: 'flex',
+              gap: 1,
+              justifyContent: 'flex-end',
+              mt: 2,
+              pb: 1,
             }}
-            secondaryButtonProps={{
-              'data-testid': 'cancel',
-              label: 'Cancel',
-              onClick: handleCancel,
-            }}
-            sx={{ display: 'flex', justifyContent: 'flex-end' }}
-          />
+          >
+            <Button
+              buttonType="secondary"
+              data-testid="cancel"
+              onClick={handleCancel}
+            >
+              Cancel
+            </Button>
+            {showChatTimeoutWarning && isEligibleForLiveChat && (
+              <Button
+                buttonType="outlined"
+                data-testid="switch-to-ticket"
+                onClick={handleSwitchToTicket}
+              >
+                Open Ticket
+              </Button>
+            )}
+            <Button
+              buttonType="primary"
+              data-testid="submit"
+              loading={submitting}
+              onClick={
+                isEligibleForLiveChat ? handleStartLiveChat : handleSubmit
+              }
+            >
+              {isEligibleForLiveChat ? 'Start a Live Chat' : 'Open Ticket'}
+            </Button>
+          </Box>
         </Dialog>
       </form>
     </FormProvider>

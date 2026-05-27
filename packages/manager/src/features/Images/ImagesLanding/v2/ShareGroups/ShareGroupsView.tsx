@@ -1,6 +1,11 @@
-import { useProfile, useShareGroupsQuery } from '@linode/queries';
+import {
+  useProfile,
+  useShareGroupsQuery,
+  useShareGroupTokensQuery,
+} from '@linode/queries';
 import { getAPIFilterFromQuery } from '@linode/search';
 import { CircleProgress, ErrorState } from '@linode/ui';
+import { partition } from '@linode/utilities';
 import { useNavigate, useSearch } from '@tanstack/react-router';
 import React from 'react';
 
@@ -12,37 +17,44 @@ import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { ShareGroupsTable } from './ShareGroupsTable';
 import { SHAREGROUPS_CONFIG } from './shareGroupsTabsConfig';
 
-import type { Filter } from '@linode/api-v4';
+import type { Handlers as ShareGroupHandlers } from './ShareGroupActionMenu';
+import type { Filter, SharegroupToken } from '@linode/api-v4';
 import type { ShareGroupsType } from 'src/features/Images/utils';
-
 interface Props {
+  handlers?: ShareGroupHandlers;
   type: ShareGroupsType;
 }
 
 export const ShareGroupsView = (props: Props) => {
-  const { type } = props;
+  const { handlers, type } = props;
   const config = SHAREGROUPS_CONFIG[type];
+
+  const isJoinedGroups = type === 'joined-groups';
+  const isMembershipRequests = type === 'membership-requests';
+
+  const shareGroupsTypeRoute = '/images/share-groups/$shareGroupsType';
   const navigate = useNavigate();
-  const search = useSearch({ from: '/images/share-groups' });
+  const search = useSearch({
+    from: '/images/share-groups/$shareGroupsType',
+    shouldThrow: false,
+  });
+  const query = search?.query;
 
   const { data: profile } = useProfile();
   const isRestrictedUser = profile?.restricted;
 
   const pagination = usePaginationV2({
-    currentRoute: '/images/share-groups/$shareGroupsType',
+    currentRoute: shareGroupsTypeRoute,
     preferenceKey: config.preferenceKey,
     searchParams: (prev) => ({
       ...prev,
-      query: search.query,
+      query,
     }),
   });
 
-  const { error: searchParseError, filter } = getAPIFilterFromQuery(
-    search.query,
-    {
-      searchableFieldsWithoutOperator: ['label'],
-    }
-  );
+  const { error: searchParseError, filter } = getAPIFilterFromQuery(query, {
+    searchableFieldsWithoutOperator: ['label'],
+  });
 
   const {
     handleOrderChange: handleShareGroupsOrderChange,
@@ -54,7 +66,7 @@ export const ShareGroupsView = (props: Props) => {
         order: config.orderDefault,
         orderBy: config.orderByDefault,
       },
-      from: '/images/share-groups/$shareGroupsType',
+      from: shareGroupsTypeRoute,
     },
     preferenceKey: config.preferenceKey,
   });
@@ -65,6 +77,7 @@ export const ShareGroupsView = (props: Props) => {
     ...filter,
   };
 
+  // Owned Groups
   const {
     data: shareGroups,
     error: shareGroupsError,
@@ -77,6 +90,35 @@ export const ShareGroupsView = (props: Props) => {
     }
   );
 
+  // Joined/Requested Groups
+  const {
+    data: shareGroupTokens,
+    error: shareGroupTokensError,
+    isFetching: shareGroupTokensIsFetching,
+    isLoading: shareGroupTokensLoading,
+  } = useShareGroupTokensQuery(
+    { page: pagination.page, page_size: pagination.pageSize },
+    { ...shareGroupsFilter },
+    isJoinedGroups || isMembershipRequests
+  );
+
+  const isFetching =
+    isJoinedGroups || isMembershipRequests
+      ? shareGroupTokensIsFetching
+      : shareGroupsIsFetching;
+
+  const error =
+    isJoinedGroups || isMembershipRequests
+      ? shareGroupTokensError
+      : shareGroupsError;
+
+  const [joinedGroups, requestedGroups] = React.useMemo(() => {
+    return partition(
+      shareGroupTokens?.data ?? [],
+      (token: SharegroupToken) => token.sharegroup_uuid !== null
+    );
+  }, [shareGroupTokens]);
+
   const onSearch = (query: string) => {
     navigate({
       search: (prev) => ({
@@ -84,16 +126,19 @@ export const ShareGroupsView = (props: Props) => {
         page: undefined,
         query: query || undefined,
       }),
-      to: '/images/share-groups/$shareGroupsType',
+      to: shareGroupsTypeRoute,
       params: { shareGroupsType: type },
     });
   };
 
-  if (shareGroupsLoading) {
+  if (
+    ((isJoinedGroups || isMembershipRequests) && shareGroupTokensLoading) ||
+    shareGroupsLoading
+  ) {
     return <CircleProgress />;
   }
 
-  if (!search.query && shareGroupsError) {
+  if (!query && error) {
     return (
       <>
         <DocumentTitleSegment segment="Share groups" />
@@ -118,7 +163,6 @@ export const ShareGroupsView = (props: Props) => {
           buttonText: config.buttonProps.buttonText,
           onButtonClick: () =>
             navigate({
-              /* TODO: Implement OnButtonClick logic with follow-up ticket UIE-9410 */
               search: () => ({}),
               to: config.buttonProps?.navigateTo ?? '/',
             }),
@@ -144,30 +188,40 @@ export const ShareGroupsView = (props: Props) => {
         }}
         errorText={searchParseError?.message}
         hideLabel
-        isSearching={shareGroupsIsFetching}
+        isSearching={isFetching}
         label="Search"
         onSearch={onSearch}
         pendoId={config.searchFieldPendoId}
         placeholder="Search share groups"
-        value={search.query ?? ''}
+        value={query ?? ''}
       />
       <ShareGroupsTable
         columns={config.columns}
         emptyMessage={config.emptyMessage}
-        error={shareGroupsError}
+        error={error}
         handleOrderChange={handleShareGroupsOrderChange}
+        handlers={handlers}
         headerProps={tableHeaderProps}
         order={shareGroupsOrder}
         orderBy={shareGroupsOrderBy}
         pagination={{
           page: pagination.page,
           pageSize: pagination.pageSize,
-          count: shareGroups?.results ?? 0,
+          count:
+            isJoinedGroups || isMembershipRequests
+              ? (shareGroupTokens?.results ?? 0)
+              : (shareGroups?.results ?? 0),
           onPageChange: handlePageChange,
           onPageSizeChange: handlePageSizeChange,
         }}
-        query={search.query}
-        shareGroups={shareGroups?.data ?? []}
+        query={query}
+        shareGroups={
+          isJoinedGroups
+            ? joinedGroups
+            : isMembershipRequests
+              ? requestedGroups
+              : (shareGroups?.data ?? [])
+        }
       />
     </>
   );

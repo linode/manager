@@ -1,13 +1,12 @@
+import { Icon, Menu, MenuItem, Tooltip } from '@akamai/cds-components/react';
+import { Spacing } from '@akamai/cds-tokens';
 import React from 'react';
-
-import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 
 import { useIsDefaultDelegationRolesForChildAccount } from '../../hooks/useDelegationRole';
 import { IAM_ROLES_PENDO_IDS } from '../constants';
 
 import type { ExtendedRoleView } from '../types';
 import type { PickPermissions } from '@linode/api-v4';
-import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 type RolesActionsPermissions = PickPermissions<
   'is_account_admin' | 'update_default_delegate_access'
@@ -19,6 +18,16 @@ interface Props {
   handleViewEntities: (role: string) => void;
   permissions: Record<RolesActionsPermissions, boolean>;
   role: ExtendedRoleView;
+}
+
+interface Action {
+  disabled?: boolean;
+  hidden?: boolean;
+  id?: string;
+  onClick: () => void;
+  pendoId?: string;
+  title: string;
+  tooltip?: string;
 }
 
 export const AssignedRolesActionMenu = ({
@@ -105,16 +114,61 @@ export const AssignedRolesActionMenu = ({
   ];
 
   const actions = role.access === 'account_access' ? accountMenu : entitiesMenu;
+  const visibleActions = actions.filter((action) => !action.hidden);
+
+  if (!visibleActions || visibleActions.length === 0) {
+    return null;
+  }
+
+  const pendoId = isDefaultDelegationRolesForChildAccount
+    ? IAM_ROLES_PENDO_IDS.delegateUsersActionMenu
+    : undefined;
 
   return (
-    <ActionMenu
-      actionsList={actions}
-      ariaLabel={`Action menu for role ${role.name}`}
-      pendoId={
-        isDefaultDelegationRolesForChildAccount
-          ? IAM_ROLES_PENDO_IDS.delegateUsersActionMenu
-          : undefined
-      }
-    />
+    <Menu
+      aria-label={`Action menu for role ${role.name}`}
+      data-pendo-id={pendoId}
+      data-testid="user-action-menu"
+      icon="actions"
+      position="bottom-right"
+      style={{ paddingRight: Spacing.S12 }}
+    >
+      {visibleActions.map((action) => (
+        <MenuItem
+          data-testid={action.title}
+          disabled={Boolean(action.disabled)}
+          key={action.title}
+          onSelect={action.onClick}
+          style={{
+            minWidth: '210px',
+            paddingRight: Spacing.S4,
+          }}
+          value={action.title}
+        >
+          <span
+            style={{
+              alignItems: 'center',
+              display: 'flex',
+              justifyContent: 'space-between',
+              minWidth: '210px',
+            }}
+          >
+            {action.title}
+            {action.disabled ? (
+              <Tooltip
+                disabled={!action.disabled}
+                key={action.title}
+                noArrow={true}
+                style={{ textAlign: 'left', whiteSpace: 'normal' }}
+                tooltipPlacement="left"
+                tooltipText={action.tooltip}
+              >
+                <Icon icon="info-outline" size="m" />
+              </Tooltip>
+            ) : null}
+          </span>
+        </MenuItem>
+      ))}
+    </Menu>
   );
 };

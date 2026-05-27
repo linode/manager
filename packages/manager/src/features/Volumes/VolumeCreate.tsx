@@ -1,4 +1,8 @@
 import {
+  isNilOrEmpty,
+  maybeCastToNumber,
+} from '@akamai/compute-ui-core/formatting';
+import {
   useAccountAgreements,
   useCreateVolumeMutation,
   useLinodeQuery,
@@ -18,7 +22,6 @@ import {
   TooltipIcon,
   Typography,
 } from '@linode/ui';
-import { isNilOrEmpty, maybeCastToNumber } from '@linode/utilities';
 import { doesRegionSupportFeature } from '@linode/utilities';
 import { CreateVolumeSchema } from '@linode/validation/lib/volumes.schema';
 import { useTheme } from '@mui/material/styles';

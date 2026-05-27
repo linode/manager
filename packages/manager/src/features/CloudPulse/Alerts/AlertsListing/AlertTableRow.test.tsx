@@ -1,4 +1,4 @@
-import { capitalize } from '@linode/utilities';
+import { capitalize } from '@akamai/compute-ui-core/formatting';
 import userEvent from '@testing-library/user-event';
 import { createMemoryHistory } from 'history';
 import * as React from 'react';
@@ -22,18 +22,21 @@ const mockServices: Item<string, CloudPulseServiceType>[] = [
   },
 ];
 
+const defaultHandlers = () => ({
+  handleClone: vi.fn(),
+  handleDelete: vi.fn(),
+  handleDetails: vi.fn(),
+  handleEdit: vi.fn(),
+  handleStatusChange: vi.fn(),
+});
+
 describe('Alert Row', () => {
   it('should render an alert row', async () => {
     const alert = alertFactory.build();
     const renderedAlert = (
       <AlertTableRow
         alert={alert}
-        handlers={{
-          handleDelete: vi.fn(),
-          handleDetails: vi.fn(),
-          handleEdit: vi.fn(),
-          handleStatusChange: vi.fn(),
-        }}
+        handlers={defaultHandlers()}
         services={mockServices}
       />
     );
@@ -46,12 +49,7 @@ describe('Alert Row', () => {
     const renderedAlert = (
       <AlertTableRow
         alert={alert}
-        handlers={{
-          handleDelete: vi.fn(),
-          handleDetails: vi.fn(),
-          handleEdit: vi.fn(),
-          handleStatusChange: vi.fn(),
-        }}
+        handlers={defaultHandlers()}
         services={mockServices}
       />
     );
@@ -73,12 +71,7 @@ describe('Alert Row', () => {
     const renderedAlert = (
       <AlertTableRow
         alert={alert}
-        handlers={{
-          handleDelete: vi.fn(),
-          handleDetails: vi.fn(),
-          handleEdit: vi.fn(),
-          handleStatusChange: vi.fn(),
-        }}
+        handlers={defaultHandlers()}
         services={mockServices}
       />
     );
@@ -93,12 +86,7 @@ describe('Alert Row', () => {
     const { getAllByLabelText, getByTestId } = renderWithTheme(
       <AlertTableRow
         alert={alert}
-        handlers={{
-          handleDelete: vi.fn(),
-          handleDetails: vi.fn(),
-          handleEdit: vi.fn(),
-          handleStatusChange: vi.fn(),
-        }}
+        handlers={defaultHandlers()}
         services={mockServices}
       />
     );
@@ -114,12 +102,7 @@ describe('Alert Row', () => {
     const { getByLabelText, getByText } = renderWithTheme(
       <AlertTableRow
         alert={alert}
-        handlers={{
-          handleDelete: vi.fn(),
-          handleDetails: vi.fn(),
-          handleEdit: vi.fn(),
-          handleStatusChange: vi.fn(),
-        }}
+        handlers={defaultHandlers()}
         services={mockServices}
       />
     );
@@ -133,12 +116,7 @@ describe('Alert Row', () => {
     const { getByLabelText, getByText } = renderWithTheme(
       <AlertTableRow
         alert={alert}
-        handlers={{
-          handleDelete: vi.fn(),
-          handleDetails: vi.fn(),
-          handleEdit: vi.fn(),
-          handleStatusChange: vi.fn(),
-        }}
+        handlers={defaultHandlers()}
         services={mockServices}
       />
     );
@@ -152,12 +130,7 @@ describe('Alert Row', () => {
     const { getByLabelText, getByText } = renderWithTheme(
       <AlertTableRow
         alert={alert}
-        handlers={{
-          handleDelete: vi.fn(),
-          handleDetails: vi.fn(),
-          handleEdit: vi.fn(),
-          handleStatusChange: vi.fn(),
-        }}
+        handlers={defaultHandlers()}
         services={mockServices}
       />
     );
@@ -176,17 +149,13 @@ describe('Alert Row', () => {
     const { getByLabelText, getByText } = renderWithTheme(
       <AlertTableRow
         alert={alert}
-        handlers={{
-          handleDelete: vi.fn(),
-          handleDetails: vi.fn(),
-          handleEdit: vi.fn(),
-          handleStatusChange: vi.fn(),
-        }}
+        handlers={defaultHandlers()}
         services={mockServices}
       />,
       {
         flags: {
           aclpAlerting: {
+            cloneAlertDefinition: true,
             editDisabledStatuses: ['failed', 'disabling'],
             accountAlertLimit: 10,
             accountMetricLimit: 100,
@@ -205,5 +174,67 @@ describe('Alert Row', () => {
       'aria-disabled',
       'true'
     );
+  });
+
+  it('should show clone action item when the clone feature flag is enabled', async () => {
+    const alert = alertFactory.build({ type: 'system' });
+
+    const { getByLabelText, getByText } = renderWithTheme(
+      <AlertTableRow
+        alert={alert}
+        handlers={defaultHandlers()}
+        services={mockServices}
+      />,
+      {
+        flags: {
+          aclpAlerting: {
+            cloneAlertDefinition: true,
+            editDisabledStatuses: ['failed', 'disabling'],
+            accountAlertLimit: 10,
+            accountMetricLimit: 100,
+            beta: true,
+            alertDefinitions: true,
+            notificationChannels: false,
+            recentActivity: false,
+          },
+        },
+      }
+    );
+
+    const actionMenu = getByLabelText(`Action menu for Alert ${alert.label}`);
+    await userEvent.click(actionMenu);
+
+    expect(getByText('Clone')).toBeInTheDocument();
+  });
+
+  it('should hide clone action item when the clone feature flag is disabled', async () => {
+    const alert = alertFactory.build({ type: 'user' });
+
+    const { getByLabelText, queryByText } = renderWithTheme(
+      <AlertTableRow
+        alert={alert}
+        handlers={defaultHandlers()}
+        services={mockServices}
+      />,
+      {
+        flags: {
+          aclpAlerting: {
+            cloneAlertDefinition: false,
+            editDisabledStatuses: ['failed', 'disabling'],
+            accountAlertLimit: 10,
+            accountMetricLimit: 100,
+            beta: true,
+            alertDefinitions: true,
+            notificationChannels: false,
+            recentActivity: false,
+          },
+        },
+      }
+    );
+
+    const actionMenu = getByLabelText(`Action menu for Alert ${alert.label}`);
+    await userEvent.click(actionMenu);
+
+    expect(queryByText('Clone')).not.toBeInTheDocument();
   });
 });

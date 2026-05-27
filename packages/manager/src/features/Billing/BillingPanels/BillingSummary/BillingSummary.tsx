@@ -1,3 +1,4 @@
+import { isWithinDays } from '@akamai/compute-ui-core/datetime';
 import { useAccount, useGrants, useNotificationsQuery } from '@linode/queries';
 import { Box, Button, Divider, TooltipIcon, Typography } from '@linode/ui';
 import Grid from '@mui/material/Grid';
@@ -7,7 +8,6 @@ import * as React from 'react';
 
 import { Currency } from 'src/components/Currency';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
-import { isWithinDays } from 'src/utilities/date';
 
 import { BillingPaper } from '../../BillingDetail';
 import PaymentDrawer from './PaymentDrawer';

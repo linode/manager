@@ -6,7 +6,7 @@ import { ObjectUploader } from './ObjectUploader';
 
 const props = {
   bucketName: 'my-bucket',
-  clusterId: 'us-east',
+  regionId: 'us-east',
   maybeAddObjectToTable: vi.fn(),
   prefix: '/',
 };

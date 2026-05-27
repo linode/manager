@@ -26,6 +26,11 @@ export interface ImageCreateUploadSearchParams {
   imageLabel?: string;
 }
 
+export interface ShareGroupDetailsSearchParams extends TableSearchParams {
+  imagesQuery?: string;
+  membersQuery?: string;
+}
+
 type ImageActionRouteParams = {
   action: ImageAction;
   imageId: string;
@@ -38,6 +43,13 @@ type ImageLibraryTypeRouteParams = {
 type ShareGroupsTypeRouteParams = {
   shareGroupsType: ShareGroupsType;
 };
+type ShareGroupDetailsRouteParams = {
+  shareGroupId: string;
+};
+
+interface ShareGroupActionRouteParams extends ShareGroupDetailsRouteParams {
+  action: ShareGroupAction;
+}
 
 const imageActions = {
   delete: 'delete',
@@ -48,7 +60,16 @@ const imageActions = {
   view: 'view',
 } as const;
 
+const shareGroupActions = {
+  'add-images': 'add-images',
+  'add-members': 'add-members',
+  delete: 'delete',
+  edit: 'edit',
+} as const;
+
 export type ImageAction = (typeof imageActions)[keyof typeof imageActions];
+export type ShareGroupAction =
+  (typeof shareGroupActions)[keyof typeof shareGroupActions];
 
 const imagesRoute = createRoute({
   component: ImagesRoute,
@@ -325,6 +346,52 @@ const shareGroupsCreateRoute = createRoute({
   ).then((m) => m.shareGroupsCreateLazyRoute)
 );
 
+const shareGroupActionRoute = createRoute({
+  beforeLoad: async ({ params }) => {
+    if (!(params.action in shareGroupActions)) {
+      throw redirect({
+        search: () => ({}),
+        to: '/images/share-groups',
+      });
+    }
+  },
+  getParentRoute: () => imagesRoute,
+  params: {
+    parse: ({ action, shareGroupId }: ShareGroupActionRouteParams) => ({
+      action,
+      shareGroupId,
+    }),
+    stringify: ({ action, shareGroupId }: ShareGroupActionRouteParams) => ({
+      action,
+      shareGroupId,
+    }),
+  },
+  path: 'share-groups/owned-groups/$shareGroupId/$action',
+  validateSearch: (search: ShareGroupDetailsSearchParams) => search,
+}).lazy(() =>
+  import(
+    'src/features/Images/ImagesLanding/v2/ShareGroups/shareGroupsTabsLazyRoute'
+  ).then((m) => m.shareGroupsTabsLazyRoute)
+);
+
+const shareGroupDetailsRoute = createRoute({
+  getParentRoute: () => imagesRoute,
+  params: {
+    parse: ({ shareGroupId }: ShareGroupDetailsRouteParams) => ({
+      shareGroupId,
+    }),
+    stringify: ({ shareGroupId }: ShareGroupDetailsRouteParams) => ({
+      shareGroupId,
+    }),
+  },
+  path: 'share-groups/owned-groups/$shareGroupId',
+  validateSearch: (search: ShareGroupDetailsSearchParams) => search,
+}).lazy(() =>
+  import(
+    'src/features/Images/ImagesLanding/v2/ShareGroups/ShareGroupsDetails/ShareGroupDetailsLazyRoute'
+  ).then((m) => m.shareGroupDetailsLazyRoute)
+);
+
 export const imagesRouteTree = imagesRoute.addChildren([
   imagesIndexRoute.addChildren([imageActionRoute]),
   imageLibraryLandingRoute.addChildren([
@@ -335,6 +402,8 @@ export const imagesRouteTree = imagesRoute.addChildren([
   shareGroupsLandingRoute.addChildren([
     shareGroupsIndexRoute.addChildren([shareGroupsTypeRoute]),
     shareGroupsCreateRoute,
+    shareGroupActionRoute,
+    shareGroupDetailsRoute,
   ]),
   imagesCreateRoute.addChildren([
     imagesCreateIndexRoute,

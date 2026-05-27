@@ -1,19 +1,8 @@
-import { Button } from '@akamai/cds-components/react';
-import {
-  Autocomplete,
-  CloseIcon,
-  FormControlLabel,
-  TextField,
-  Toggle,
-  Typography,
-} from '@linode/ui';
+import { Badge, Button, FormField, Switch } from '@akamai/cds-components/react';
+import { Autocomplete, CloseIcon, TextField, Typography } from '@linode/ui';
 import React from 'react';
 
-import {
-  StyledBox,
-  StyledChip,
-  StyledWrapper,
-} from './DatabaseConfigurationItem.style';
+import { StyledBox, StyledWrapper } from './DatabaseConfigurationItem.style';
 import {
   formatConfigValue,
   isConfigBoolean,
@@ -38,15 +27,14 @@ export const DatabaseConfigurationItem = (props: Props) => {
   const renderInputField = () => {
     if (configItem && isConfigBoolean(configItem)) {
       return (
-        <FormControlLabel
-          control={
-            <Toggle
-              checked={Boolean(configItem.value)}
-              onChange={(e) => onChange(e.target.checked)}
-            />
-          }
-          label={formatConfigValue(String(configItem.value))}
-        />
+        <FormField>
+          <Switch
+            checked={Boolean(configItem.value)}
+            onChange={(e) => onChange(e.detail)}
+          >
+            {formatConfigValue(String(configItem.value))}
+          </Switch>
+        </FormField>
       );
     }
     if (configItem && isConfigStringWithEnum(configItem)) {
@@ -147,7 +135,7 @@ export const DatabaseConfigurationItem = (props: Props) => {
             : `${configItem?.category}.${configLabel}`}
         </Typography>
         {configItem?.requires_restart && (
-          <StyledChip color="warning" label="restarts service" size="small" />
+          <Badge color="amber">RESTARTS SERVICE</Badge>
         )}
         {configItem?.description && (
           <Typography mt={0.5}>{configItem?.description}</Typography>
