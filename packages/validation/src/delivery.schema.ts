@@ -75,7 +75,7 @@ const clientCertificateDetailsSchema = object({
     .test(
       'is-valid-url',
       'TLS hostname must be a valid URL.',
-      (value) => !!(value && isValidUrl(value)),
+      (value) => !value || isValidUrl(value),
     ),
   client_ca_certificate: string(),
   client_certificate: string(),

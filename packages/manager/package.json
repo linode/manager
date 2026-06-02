@@ -2,7 +2,7 @@
   "name": "@linode/cloud-manager",
   "author": "Linode",
   "description": "The Linode Manager website",
-  "version": "1.163.0",
+  "version": "1.163.1",
   "private": false,
   "type": "module",
   "files": [

@@ -1,3 +1,11 @@
+## [2026-06-03] - v0.86.1
+
+
+### Fixed:
+
+- Validation in TLS Hostname field in Destination Form ([#319](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/319))
+
+
 ## [2026-05-27] - v0.86.0
 
 
