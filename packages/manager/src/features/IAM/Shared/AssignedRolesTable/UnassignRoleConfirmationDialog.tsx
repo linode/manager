@@ -1,3 +1,4 @@
+import { toast } from '@akamai/cds-components/notification-toast';
 import {
   Button,
   Modal,
@@ -10,9 +11,7 @@ import {
   useUserRoles,
   useUserRolesMutation,
 } from '@linode/queries';
-import { Typography } from '@linode/ui';
 import { useParams } from '@tanstack/react-router';
-import { useSnackbar } from 'notistack';
 import React from 'react';
 
 import { useIsDefaultDelegationRolesForChildAccount } from '../../hooks/useDelegationRole';
@@ -31,7 +30,6 @@ interface Props {
 
 export const UnassignRoleConfirmationDialog = (props: Props) => {
   const { onClose: _onClose, onSuccess, open, role } = props;
-  const { enqueueSnackbar } = useSnackbar();
   const { username } = useParams({ strict: false });
   const { isDefaultDelegationRolesForChildAccount } =
     useIsDefaultDelegationRolesForChildAccount();
@@ -81,8 +79,9 @@ export const UnassignRoleConfirmationDialog = (props: Props) => {
     try {
       await mutationFn(updatedUserRoles);
 
-      enqueueSnackbar(`Role ${role?.name} has been deleted successfully.`, {
-        variant: 'success',
+      toast.open({
+        text: `Role ${role?.name} has been deleted successfully.`,
+        type: 'success',
       });
       if (onSuccess) {
         onSuccess();
@@ -114,16 +113,16 @@ export const UnassignRoleConfirmationDialog = (props: Props) => {
       <div slot="body">
         <NotificationBanner type="warning">
           {isDefaultDelegationRolesForChildAccount ? (
-            <Typography>
+            <p style={{ marginBottom: Spacing.S0 }}>
               The <strong>{role?.name}</strong> role won’t be added to delegate
               users by default.
-            </Typography>
+            </p>
           ) : (
-            <Typography>
+            <p style={{ marginBottom: Spacing.S0 }}>
               You’re about to remove the <strong>{role?.name}</strong> role from{' '}
               <strong>{username}</strong>. The change will be applied
               immediately.
-            </Typography>
+            </p>
           )}
         </NotificationBanner>
         {error && <ErrorState errorText={getErrorMessage(error)} />}

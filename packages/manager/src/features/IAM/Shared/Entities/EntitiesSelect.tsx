@@ -1,12 +1,10 @@
 import { NotificationBanner } from '@akamai/cds-components/react';
-import { Spacing } from '@akamai/cds-tokens';
-import { Notice, Typography, useTheme } from '@linode/ui';
-import { useDebouncedValue } from '@linode/utilities';
+import { Font, Spacing } from '@akamai/cds-tokens';
 import React from 'react';
 
-import { FormLabel } from 'src/components/FormLabel';
 import { useAllAccountEntities } from 'src/queries/entities/entities';
 
+import { useDebouncedValue } from '../../hooks/useDebouncedValue';
 import { Link } from '../Link/Link';
 import { SelectionPanel } from '../SelectionPanel/SelectionPanel';
 import { getFormattedEntityType } from '../utilities';
@@ -35,7 +33,6 @@ export const EntitiesSelect = ({
   type,
   value,
 }: Props) => {
-  const theme = useTheme();
   const [filterText, setFilterText] = React.useState('');
   const [showSelectedOnlyState, setShowSelectedOnlyState] =
     React.useState(false);
@@ -111,6 +108,19 @@ export const EntitiesSelect = ({
     value.some((v) => v.value === p.option.value)
   );
 
+  const scopedOptions = React.useMemo(
+    () => filteredRows.map((row) => row.option),
+    [filteredRows]
+  );
+
+  const selectedScopedCount = React.useMemo(
+    () =>
+      scopedOptions.filter((opt) =>
+        value.some((selected) => selected.value === opt.value)
+      ).length,
+    [scopedOptions, value]
+  );
+
   const handleClear = () => {
     const visibleValues = new Set(filteredRows.map((p) => p.option.value));
     const remaining = value.filter((v) => !visibleValues.has(v.value));
@@ -122,11 +132,11 @@ export const EntitiesSelect = ({
 
   const handleSelectAll = () => {
     const allCurrentOptionsSelected =
-      totalEntityCount > 0 && value.length >= totalEntityCount;
+      scopedOptions.length > 0 && selectedScopedCount >= scopedOptions.length;
     if (allCurrentOptionsSelected) {
       onChange([]);
     } else {
-      onChange(entityOptions);
+      onChange(scopedOptions);
     }
   };
 
@@ -145,21 +155,20 @@ export const EntitiesSelect = ({
   if (access === 'account_access') {
     return (
       <>
-        <FormLabel>
-          <Typography
-            sx={{
-              marginBottom: theme.tokens.spacing.S8,
-              font: theme.tokens.alias.Typography.Label.Bold.S,
-            }}
-          >
-            Entities
-          </Typography>
-        </FormLabel>
-        <Typography>
+        <p
+          style={{
+            // eslint-disable-next-line @linode/cloud-manager/no-custom-fontWeight
+            fontWeight: Font.FontWeight.Bold,
+            marginBottom: Spacing.S8,
+          }}
+        >
+          Entities
+        </p>
+        <p>
           {type === 'account'
             ? 'All entities'
             : `All ${getFormattedEntityType(type)}s`}
-        </Typography>
+        </p>
       </>
     );
   }
@@ -167,9 +176,9 @@ export const EntitiesSelect = ({
   return (
     <>
       {errorText && (
-        <Notice spacingBottom={8} variant="error">
-          <Typography fontSize="inherit">{errorText}</Typography>
-        </Notice>
+        <NotificationBanner style={{ marginBottom: Spacing.S8 }} type="error">
+          {errorText}
+        </NotificationBanner>
       )}
       <div
         style={{
@@ -180,8 +189,9 @@ export const EntitiesSelect = ({
       >
         <p
           style={{
-            font: theme.tokens.alias.Typography.Label.Bold.S,
-            margin: 0,
+            fontSize: Font.FontSize.S,
+            // eslint-disable-next-line @linode/cloud-manager/no-custom-fontWeight
+            fontWeight: Font.FontWeight.Bold,
           }}
         >
           Entities
@@ -207,7 +217,8 @@ export const EntitiesSelect = ({
           isLoading={isLoading}
           isSelectAllDisabled={
             isReadOnly ||
-            (totalEntityCount > 0 && value.length >= totalEntityCount)
+            scopedOptions.length === 0 ||
+            selectedScopedCount >= scopedOptions.length
           }
           isShowSelectedOnlyDisabled={value.length === 0 || isReadOnly}
           minPageSize={MIN_PAGE_SIZE}
@@ -246,13 +257,13 @@ export const EntitiesSelect = ({
           style={{ marginBottom: 0, marginTop: Spacing.S8 }}
           type="warning"
         >
-          <Typography fontSize="inherit">
+          <p>
             <Link to={getCreateLinkForEntityType(type)}>
               Create {type === 'image' ? `an` : `a`}{' '}
               {getFormattedEntityType(type)} Entity{' '}
             </Link>{' '}
             first or choose a different role to continue assignment.
-          </Typography>
+          </p>
         </NotificationBanner>
       )}
     </>

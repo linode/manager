@@ -90,9 +90,9 @@ describe('Close Account Settings', () => {
     expect(button).toHaveAttribute('aria-disabled', 'true');
   });
 
-  it('should render a disabled Close Account button with tooltip for a proxy account user', async () => {
+  it('should render a disabled Close Account button with tooltip for a delegate account user', async () => {
     queryMocks.useProfile.mockReturnValue({
-      data: profileFactory.build({ user_type: 'proxy' }),
+      data: profileFactory.build({ user_type: 'delegate' }),
     });
 
     const { getByRole, getByTestId, getByText } = renderWithTheme(

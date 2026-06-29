@@ -26,9 +26,9 @@ describe('EmailForm', () => {
     await findByDisplayValue(profile.email);
   });
 
-  it('disables the input if the user is a proxy user', async () => {
+  it('disables the input if the user is a delegate user', async () => {
     const profile = profileFactory.build({
-      user_type: 'proxy',
+      user_type: 'delegate',
     });
 
     server.use(http.get('*/v4/profile', () => HttpResponse.json(profile)));

@@ -1,3 +1,4 @@
+import { getAPIErrorOrDefault } from '@akamai/compute-ui-core/api';
 import { useFirewallsQuery } from '@linode/queries';
 import {
   Button,
@@ -26,7 +27,6 @@ import { useFlags } from 'src/hooks/useFlags';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { useSecureVMNoticesEnabled } from 'src/hooks/useSecureVMNoticesEnabled';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { useIsFirewallRulesetsPrefixlistsEnabled } from '../shared';
 import { CreateFirewallDrawer } from './CreateFirewallDrawer';

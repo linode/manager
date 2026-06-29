@@ -111,6 +111,7 @@ export type MockPresetExtraId =
   | 'account:managed-enabled'
   | 'api:response-time'
   | 'events:custom'
+  | 'inferencePlatform:api-keys'
   | 'inferencePlatform:chat-completions'
   | 'limits:linode-limits'
   | 'limits:lke-limits'

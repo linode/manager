@@ -17,7 +17,7 @@ import type { Profile } from '@linode/api-v4';
 type Values = Pick<Profile, 'username'>;
 
 export const UsernameForm = () => {
-  const { profile, isProxyOrDelegateUserType } = useDelegationRole();
+  const { profile, isDelegateUserType } = useDelegationRole();
   const { mutateAsync: updateUser } = useUpdateUserMutation(
     profile?.username ?? ''
   );
@@ -40,7 +40,7 @@ export const UsernameForm = () => {
 
   const tooltipForDisabledUsernameField = !permissions.is_account_admin
     ? 'Restricted users cannot update their username. Please contact an account administrator.'
-    : isProxyOrDelegateUserType
+    : isDelegateUserType
       ? RESTRICTED_FIELD_TOOLTIP
       : undefined;
 

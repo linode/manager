@@ -1,0 +1,12 @@
+.itemsGrid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(var(--items-grid-columns, 1), 1fr);
+}
+
+.itemBox > p:nth-of-type(2) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  align-items: center;
+  margin: 0px;
+}

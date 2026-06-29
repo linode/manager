@@ -8,17 +8,22 @@ import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
+import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
+import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
 
 import { BucketTableRow } from './BucketTableRow';
 
 import type { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
 
+const BASE_COLUMN_COUNT = 6;
+
 interface Props {
   data: ObjectStorageBucket[];
   handleClickDetails: (bucket: ObjectStorageBucket) => void;
   handleClickRemove: (bucket: ObjectStorageBucket) => void;
   handleOrderChange: (orderBy: string, order?: 'asc' | 'desc') => void;
+  loading: boolean;
   order: 'asc' | 'desc';
   orderBy: string;
 }
@@ -26,6 +31,7 @@ interface Props {
 export const BucketTable = (props: Props) => {
   const {
     data,
+    loading,
     handleClickDetails,
     handleClickRemove,
     handleOrderChange,
@@ -121,6 +127,8 @@ export const BucketTable = (props: Props) => {
             <TableBody>
               <RenderData
                 data={paginatedData}
+                isEndpointTypeAvailable={isEndpointTypeAvailable}
+                loading={loading}
                 onDetails={handleClickDetails}
                 onRemove={handleClickRemove}
               />
@@ -143,12 +151,32 @@ export const BucketTable = (props: Props) => {
 
 interface RenderDataProps {
   data: ObjectStorageBucket[];
+  isEndpointTypeAvailable: boolean;
+  loading: boolean;
   onDetails: (bucket: ObjectStorageBucket) => void;
   onRemove: (bucket: ObjectStorageBucket) => void;
 }
 
 const RenderData: React.FC<RenderDataProps> = (props) => {
-  const { data, onDetails, onRemove } = props;
+  const { data, loading, isEndpointTypeAvailable, onDetails, onRemove } = props;
+
+  const numberOfColumns = BASE_COLUMN_COUNT + (isEndpointTypeAvailable ? 1 : 0);
+  if (loading) {
+    return (
+      <TableRowLoading
+        columns={numberOfColumns}
+        rows={data.length > 0 ? data.length : 1}
+      />
+    );
+  }
+  if (data.length === 0) {
+    return (
+      <TableRowEmpty
+        colSpan={numberOfColumns}
+        message="No buckets to display."
+      />
+    );
+  }
 
   return (
     <>

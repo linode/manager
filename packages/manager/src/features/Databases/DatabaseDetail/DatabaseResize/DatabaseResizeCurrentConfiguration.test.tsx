@@ -23,7 +23,7 @@ describe('database current configuration section', () => {
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
   });
 
-  it('should display number of status, version, nodes, region, RAM, CPUs and total disk size', async () => {
+  it('should display number of status, version, nodes, region, RAM, CPUs and usable disk size', async () => {
     // Mock database types
     const standardTypes = [
       databaseTypeFactory.build({
@@ -65,7 +65,7 @@ describe('database current configuration section', () => {
     getByText('CPUs');
     getByText('2');
 
-    getByText('Total Disk Size');
+    getByText('Usable Disk Size');
     getByText('15 GB');
   });
 });

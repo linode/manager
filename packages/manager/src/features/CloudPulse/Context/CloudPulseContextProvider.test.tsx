@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react';
+import { act, renderHook } from '@testing-library/react';
 import React from 'react';
 
 import { dashboardFactory } from 'src/factories';
@@ -117,5 +117,35 @@ describe('CloudPulseContextProvider', () => {
 
     const retrievedGroupBy = result.current.getGlobalGroupBy();
     expect(retrievedGroupBy).toEqual([]);
+  });
+  it('should return true if any widget is loading', () => {
+    const { result } = renderHook(() => React.useContext(CloudPulseContext), {
+      wrapper: CloudPulseContextProvider,
+    });
+
+    // Simulate setting a widget as loading
+    act(() => {
+      result.current.setWidgetLoading('widget-1', true);
+    });
+    expect(result.current.isWidgetLoading).toBe(true);
+  });
+  it('should return false if no widget is loading', () => {
+    const { result } = renderHook(() => React.useContext(CloudPulseContext), {
+      wrapper: CloudPulseContextProvider,
+    });
+
+    // default state should be false
+    expect(result.current.isWidgetLoading).toBe(false);
+
+    // Simulate setting a widget as loading
+    act(() => {
+      result.current.setWidgetLoading('widget-1', true);
+    });
+    expect(result.current.isWidgetLoading).toBe(true);
+    // remove the loading state
+    act(() => {
+      result.current.setWidgetLoading('widget-1', false);
+    });
+    expect(result.current.isWidgetLoading).toBe(false);
   });
 });

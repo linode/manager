@@ -5,6 +5,7 @@ import {
   Tabs,
 } from '@akamai/cds-components/react';
 import { Spacing } from '@akamai/cds-tokens';
+import { getAPIErrorOrDefault } from '@akamai/compute-ui-core/api';
 import {
   useDatabaseMutation,
   useDatabaseQuery,
@@ -25,7 +26,6 @@ import { DatabaseDetailContext } from 'src/features/Databases/DatabaseDetail/Dat
 import DatabaseLogo from 'src/features/Databases/DatabaseLanding/DatabaseLogo';
 import { useFlags } from 'src/hooks/useFlags';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { CircleProgress } from '../shared/CircleProgress/CircleProgress';
 import { ErrorState } from '../shared/ErrorState/ErrorState';

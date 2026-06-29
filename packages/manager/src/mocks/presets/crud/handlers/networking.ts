@@ -9,7 +9,8 @@ import {
   makeResponse,
 } from 'src/mocks/utilities/response';
 
-import type { IPAddress, PriceType } from '@linode/api-v4';
+import type { PriceType } from '@akamai/compute-ui-core/api';
+import type { IPAddress } from '@linode/api-v4';
 import type { StrictResponse } from 'msw';
 import type { MockState } from 'src/mocks/types';
 import type {

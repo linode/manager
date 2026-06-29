@@ -1,3 +1,4 @@
+import { getAPIErrorOrDefault } from '@akamai/compute-ui-core/api';
 import { useAllFirewallDevicesQuery } from '@linode/queries';
 import * as React from 'react';
 
@@ -12,7 +13,6 @@ import { TableSortCell } from 'src/components/TableSortCell';
 import { useGetAllUserEntitiesByPermission } from 'src/features/IAM/hooks/useGetAllUserEntitiesByPermission';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { formattedTypes } from './constants';
 import { FirewallDeviceRow } from './FirewallDeviceRow';

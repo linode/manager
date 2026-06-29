@@ -86,6 +86,7 @@ export interface Widgets {
   aggregate_function: string;
   chart_type: 'area' | 'line';
   color: string;
+  description: string;
   entity_ids: string[];
   filters: Filters[];
   group_by?: string[];

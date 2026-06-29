@@ -4,6 +4,110 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2026-06-29] - v1.164.0
+
+
+### Added:
+
+- Adds support for selecting bucket filters via URL query parameters and improves performance of fetching buckets ([#287](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/287))
+- Adds segmented view to BarPrecent and modifies QuotaUsageBar to use it ([#311](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/311))
+- Loading state to bucket details drawer ([#367](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/367))
+- Preserve endpoint selection on the summary view ([#395](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/395))
+- Loading state to the access key regions / s3 hostnames drawer ([#398](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/398))
+- `isInternalUser` flag to FeatureFlagContext ([#429](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/429))
+- Error state to the access key permissions drawer ([#437](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/437))
+- Crewai, Langflow, Hermes Quick Deploy Apps ([#438](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/438))
+- Toggle to enable or disable log generation for kubernetes cluster in Stream Form ([#469](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/469))
+
+### Changed:
+
+- Replaces the Not applicable text in the Object Storage ingress/egress throughput quota Usage cells with links to the metrics page ([#197](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/197))
+- Make ProductDetails tabs scrollable within fixed window size ([#272](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/272))
+- Loading state for the object storage summary row ([#279](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/279))
+- Object storage summary page description ([#280](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/280))
+- Add gap in dimension filter format for objectstorage 403 and 503 mappings in `cloudpulse metrics` ([#307](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/307))
+- Logs Destination - bucket credentials labels renamed ([#310](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/310))
+- Sort Database Engine versions by descending order ([#456](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/456))
+
+### Fixed:
+
+- Compute Pricing: Plans selection card to show only hourly pricing for hourly-scoped plans when Hourly Billing is enabled. ([#271](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/271))
+- Restrict image upload and replication from unsupported regions ([#308](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/308))
+- Cloud Manager EU Policy Banner and Notification not showing ([#316](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/316))
+- Private Image Sharing: Add missing scrollback on Create Share Group validation error ([#336](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/336))
+- Missing Interfaces section on Linode Details for legacy config Interfaces ([#340](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/340))
+- Order of query parameters in the show buckets link ([#342](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/342))
+- Endpoint filter sorting ([#343](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/343))
+- Object storage summary page pagination ([#344](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/344))
+- Console error in `CloudPulseDashboardSelect` component, by passing the key prop directly instead of spreading it with rest of the props ([#356](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/356))
+- Remove unnecessary fields from destination test connection and edit requests ([#365](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/365))
+- Fix the default interface_generation value and surface API validation errors related to interface_generation for restricted users ([#369](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/369))
+- Summary page dim text ([#370](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/370))
+- Text colors on the object storage summary page ([#381](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/381))
+- Marketplace: Linode empty landing page text update (Marketplace apps -> Quick Deploy Apps) ([#408](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/408))
+- Services API not being called in Contextual View for ACLP-Metrics CloudPulseDashboardSelect component ([#430](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/430))
+- The Snackbar notification for Clone Alert failure to include API Error messages in CloneAlertDefinition.tsx ([#443](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/443))
+- Storybook preview not loading locally ([#480](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/480))
+- Fix a bug where the Object Storage Buckets were refetched on deselecting bucket filters if the corresponding bucket region loading failed ([#483](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/483))
+
+### Tech Stories:
+
+- Upgrade recharts version 2.15.4 to 3.8.1 and vite version 8.0.11 to 8.0.16 ([#239](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/239))
+- Replace notistack toast notification with CDS toast notification in Databases ([#348](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/348))
+- Replace MUI Drawer with CDS Drawer in Databases ([#351](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/351))
+- Replace ActionsPanel with CDS equivalent in Databases ([#382](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/382))
+- Bump dompurify to 3.4.9 and concurrently to 10.0.3 to fix security vulnerabilities. ([#447](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/447))
+- Bump launchdarkly-react-client-sdk from 3.9.1 to 3.9.2 and storybook from 10.3.3 to 10.4.6 ([#468](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/468))
+- Update axios@1.18.0 to resolve a vulnerability in form-data 4.0.5 ([#471](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/471))
+
+### Upcoming Features:
+
+- Private Image Sharing: Implement Joined Group detail page ([#221](https://github.com/linode/manager/pull/221))
+- Private Image Sharing: Implement Leave Group & Cancel Membership Request dialogs ([#247](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/247))
+- Model Playground: Add streaming inference support and light theme styling ([#248](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/248))
+- Private Image Sharing: Implement the Remove Image dialog ([#256](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/256/overview))
+- Private Image Sharing: Implement the Edit Image Details drawer from Share Group details ([#257](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/257))
+- An initial version of the AI Inference Platform's Model Library ([#267](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/267))
+- Private Image Sharing: Implement Membership Request drawer ([#269](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/269))
+- Compute Pricing IPv4-related changes ([#278](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/278))
+- Update the entities exceeded message for ACLP-Alerts ([#284](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/284))
+- Update the ACLP-Metrics dashboard label format to Service name - Dashboard name ([#286](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/286))
+- Add feature chip to the Alerts landing page ([#306](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/306))
+- Add data pendo id for reset zoom button in cloudpulse metrics widgets ([#309](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/309))
+- Private Image Sharing: Implement the Add Images Page ([#327](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/327/overview))
+- Private Image Sharing: Fix formatting issues in Membership Requests and ImageSelectTable ([#338](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/338))
+- Add tooltip message for widget descriptions in ACLP-Metrics ([#347](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/347))
+- Add API Key Management UI for Inference Platform ([#349](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/349))
+- Compute Pricing Changes: Databases ([#359](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/359))
+- Private Image Sharing: consistent search behavior across Share Group tabs ([#364](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/364))
+- Handle Unauthorized error message state for cloudpulse alerts Entities component ([#373](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/373))
+- Private Image Sharing: Implement the shared Image icon in ImageRow and ImageSelectTableRow ([#374](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/374))
+- Database copy updates for Valkey ([#375](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/375))
+- Dynamically adjust tooltip hover position in graphs for cloudpulse metrics ([#378](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/378))
+- Private Image Sharing: Update the Share Groups Create flow to redirect to the details page ([#383](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/383))
+- Compute Pricing Changes: LKE & LKE-E ([#384](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/384))
+- Code skeletal and utility setup for PDF download in cloudpulse metrics dashboard ([#387](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/387))
+- Private Image Sharing: Implement differentiated font sizes for top-level and nested tab titles ([#389](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/389))
+- AI Model Playground: Add hyperparameter controls sidebar with sliders for Temperature, Max Output Tokens, Top P, Top K, Min P, Presence Penalty, Frequency Penalty, Thinking Effort, Stop Sequences, Seed, and Stream toggle ([#390](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/390))
+- Add Support for Premium Nodebalancer feature flag ([#393](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/393))
+- Compute Pricing: Add Transfer column tooltip for hourly-eligible plans ([#397](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/397))
+- Add support for Valkey advanced config backup items ([#405](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/405))
+- Pendo integration for all Reserved IP flows ([#406](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/406))
+- Store PDF Data in Cloudpulse Context along with loading state of the widget and add a pdf wrapper graph in Cloudpulse metrics ([#412](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/412))
+- Add ability to publish hidden keys from Areachart and Legend util setup for PDF download feature in CloudPulse metrics ([#412](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/412))
+- Private Image Sharing: Add zebra striping to ImageSelectTable ([#415](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/415))
+- Private Image Sharing: Implement the Image Share Groups dialog ([#427](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/427))
+- Marketplace updates for June release ([#428](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/428))
+- Integration changes for PDF Download feature in cloudpulse metrics dashboard ([#434](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/434))
+- Add 'New' badge and Pendo ID for Reserved IPs in primary navigation([#444](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/444))
+- Private Image Sharing: Fix notification banner bug on form resubmission ([#455](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/455))
+- Render group_by values in the Alert Show Details overview section ([#459](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/459))
+- Private Image Sharing: Truncate overflowing text in the Sharegroup table ([#464](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/464))
+- Private Image Sharing: Filter out images already in Share Group from Add Images table ([#465](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/465))
+- Private Image Sharing: Clear the Add Members form after successful submission ([#474](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/474))
+- Replace action menu in Reserved Ips Landing page with cds menu web component ([#491](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/491))
+- Private Image Sharing: Update title casing for consistency in Share Group components ([#362](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/362))
+
 ## [2026-05-27] - v1.163.0
 
 

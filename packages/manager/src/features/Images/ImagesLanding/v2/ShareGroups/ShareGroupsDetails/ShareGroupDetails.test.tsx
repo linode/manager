@@ -8,6 +8,11 @@ import { ShareGroupDetails } from './ShareGroupDetails';
 
 const queryMocks = vi.hoisted(() => ({
   deleteSharegroupMember: vi.fn(),
+  deleteShareGroupImageMutation: {
+    error: undefined,
+    isPending: false,
+    mutateAsync: vi.fn(),
+  },
   getAPIFilterFromQuery: vi.fn(),
   navigate: vi.fn(),
   enqueueSnackbar: vi.fn(),
@@ -28,6 +33,7 @@ const queryMocks = vi.hoisted(() => ({
   useParams: vi.fn(),
   usePreferences: vi.fn(),
   useProfile: vi.fn(),
+  useDeleteShareGroupImageMutation: vi.fn(),
   useSearch: vi.fn(),
   useDeleteShareGroupMemberMutation: vi.fn(),
   useShareGroupQuery: vi.fn(),
@@ -39,6 +45,8 @@ vi.mock('@linode/queries', async () => {
   const actual = await vi.importActual('@linode/queries');
   return {
     ...actual,
+    useDeleteShareGroupImageMutation:
+      queryMocks.useDeleteShareGroupImageMutation,
     usePreferences: queryMocks.usePreferences,
     useProfile: queryMocks.useProfile,
     useDeleteShareGroupMemberMutation:
@@ -142,6 +150,12 @@ describe('ShareGroupDetails', () => {
   beforeEach(() => {
     vi.clearAllMocks();
 
+    queryMocks.deleteShareGroupImageMutation = {
+      error: undefined,
+      isPending: false,
+      mutateAsync: vi.fn().mockResolvedValue(undefined),
+    };
+
     queryMocks.search = {
       imagesQuery: undefined,
       membersQuery: undefined,
@@ -158,6 +172,9 @@ describe('ShareGroupDetails', () => {
       isPending: false,
     });
     queryMocks.deleteSharegroupMember.mockResolvedValue({});
+    queryMocks.useDeleteShareGroupImageMutation.mockImplementation(
+      () => queryMocks.deleteShareGroupImageMutation
+    );
 
     queryMocks.getAPIFilterFromQuery.mockReturnValue({
       error: undefined,
@@ -295,6 +312,45 @@ describe('ShareGroupDetails', () => {
 
     expect(await findByText('Edit Details')).toBeVisible();
     expect(await findByText('Remove from the Group')).toBeVisible();
+  });
+
+  it('opens the remove image confirmation dialog from image action menu', async () => {
+    const user = userEvent.setup();
+    const { findByLabelText, findByText } = renderWithTheme(
+      <ShareGroupDetails />
+    );
+
+    const actionMenu = await findByLabelText('Action menu for shared images');
+    await user.click(actionMenu);
+    await user.click(await findByText('Remove from the Group'));
+
+    expect(
+      await findByText('Remove Ubuntu-22.04 from Dev Team Share Group')
+    ).toBeVisible();
+    expect(
+      await findByText(
+        'Are you sure you want to remove this image from this share group?'
+      )
+    ).toBeVisible();
+  });
+
+  it('removes image from group when confirmed in dialog', async () => {
+    const user = userEvent.setup();
+    const { findByLabelText, findByRole, findByText } = renderWithTheme(
+      <ShareGroupDetails />
+    );
+
+    const actionMenu = await findByLabelText('Action menu for shared images');
+    await user.click(actionMenu);
+    await user.click(await findByText('Remove from the Group'));
+    await user.click(await findByRole('button', { name: 'Remove Image' }));
+
+    expect(
+      queryMocks.deleteShareGroupImageMutation.mutateAsync
+    ).toHaveBeenCalledWith({
+      imageId: 'private/1001',
+      shareGroupId: 'share-group-123',
+    });
   });
 
   it('shows zero state in members table when there are no members', () => {

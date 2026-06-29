@@ -1,4 +1,3 @@
-export const UNKNOWN_PRICE = '--.--';
 export const PRICE_ERROR_TOOLTIP_TEXT = 'There was an error loading the price.';
 export const PRICES_RELOAD_ERROR_NOTICE_TEXT =
   'There was an error retrieving prices. Please reload and try again.';
@@ -22,4 +21,10 @@ export const DOCS_LINK_LABEL_APL_APPLICATIONS = 'Available Applications';
 export const LKE_ADDITIONAL_PRICING =
   'Additional services added to the cluster may incur charges.';
 export const MONTHLY_COLUMN_HOURLY_ONLY_TOOLTIP_TEXT =
-  'The monthly rate you pay after reaching the monthly cap. N/A means that a Linode plan has an hourly rate only.';
+  'The monthly rate you pay after reaching the monthly cap. N/A means that a plan has an hourly rate only.';
+
+/**
+ * Number of hours in a billing month used to estimate MAX monthly cost
+ * from an hourly rate for plans that have no monthly price (hourly-only plans).
+ */
+export const HOURS_IN_MONTH = 744; // 24 hours * 31 days

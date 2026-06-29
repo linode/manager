@@ -1,3 +1,4 @@
+import { isPrivateIP, removePrefixLength } from '@akamai/compute-ui-core/api';
 import {
   ActionsPanel,
   Drawer,
@@ -18,7 +19,6 @@ import {
   handleFieldErrors,
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
-import { isPrivateIP, removePrefixLength } from 'src/utilities/ipUtils';
 
 import { DEFAULTS } from './common';
 

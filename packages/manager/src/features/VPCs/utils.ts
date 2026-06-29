@@ -1,5 +1,6 @@
 import { getPrimaryInterfaceIndex } from '../Linodes/LinodesDetail/LinodeConfigs/utilities';
 
+import type { ExtendedIP } from '@akamai/compute-ui-core/api';
 import type {
   APIError,
   Config,
@@ -12,7 +13,6 @@ import type {
   Subnet,
   VPC,
 } from '@linode/api-v4';
-import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 export const getUniqueResourcesFromSubnets = (
   subnets: Subnet[],

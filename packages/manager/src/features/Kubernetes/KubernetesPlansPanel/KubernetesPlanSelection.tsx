@@ -1,6 +1,10 @@
+import {
+  convertMegabytesTo,
+  getLinodeRegionPrice,
+  UNKNOWN_PRICE,
+} from '@akamai/compute-ui-core/api';
 import { Box, Button, Chip } from '@linode/ui';
 import { Hidden } from '@linode/ui';
-import { convertMegabytesTo } from '@linode/utilities';
 import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
@@ -10,17 +14,14 @@ import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { DisabledPlanSelectionTooltip } from 'src/features/components/PlansPanel/DisabledPlanSelectionTooltip';
+import { getMonthlyPriceCellContent } from 'src/features/components/PlansPanel/shared';
 import { getDisabledPlanReasonCopy } from 'src/features/components/PlansPanel/utils';
 import {
   MAX_NODES_PER_POOL_ENTERPRISE_TIER,
   MAX_NODES_PER_POOL_STANDARD_TIER,
 } from 'src/features/Kubernetes/constants';
-import {
-  PRICE_ERROR_TOOLTIP_TEXT,
-  UNKNOWN_PRICE,
-} from 'src/utilities/pricing/constants';
-import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/dynamicPricing';
-import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
+import { PRICE_ERROR_TOOLTIP_TEXT } from 'src/utilities/pricing/constants';
+import { useComputePricing } from 'src/utilities/pricing/useComputePricing';
 
 import { useIsLkeEnterpriseEnabled } from '../kubeUtils';
 
@@ -81,6 +82,7 @@ export const KubernetesPlanSelection = (
   );
 
   const { isLkeEnterprisePostLAFeatureEnabled } = useIsLkeEnterpriseEnabled();
+  const { billing, getPriceSubheading } = useComputePricing(plan.id);
 
   // Show the Configure Pool button in the Create flow plans table, but not in the Add Node Pool drawer flow.
   const shouldShowConfigurePoolButton =
@@ -111,10 +113,10 @@ export const KubernetesPlanSelection = (
       planResizeNotSupported);
 
   // We don't want flat-rate pricing or network information for LKE so we select only the second type element.
+  // Hourly-scoped plans show only the hourly price (no monthly commitment) - $Y/hr.
+  // Monthly-scoped plans show the monthly price with the hourly price in parentheses - $X/mo ($Y/hr).
   const subHeadings = [
-    `$${renderMonthlyPriceToCorrectDecimalPlace(price?.monthly)}/mo ($${
-      price?.hourly
-    }/hr)`,
+    getPriceSubheading(price, { format: 'short' }),
     plan.subHeadings[1],
   ];
 
@@ -189,10 +191,16 @@ export const KubernetesPlanSelection = (
           </TableCell>
           <TableCell
             data-qa-monthly
-            errorCell={typeof price?.monthly !== 'number'}
-            errorText={!price?.monthly ? PRICE_ERROR_TOOLTIP_TEXT : undefined}
+            errorCell={
+              billing === 'monthly' && typeof price?.monthly !== 'number'
+            }
+            errorText={
+              billing === 'monthly' && !price?.monthly
+                ? PRICE_ERROR_TOOLTIP_TEXT
+                : undefined
+            }
           >
-            ${renderMonthlyPriceToCorrectDecimalPlace(price?.monthly)}
+            {getMonthlyPriceCellContent(billing, price)}
           </TableCell>
           <TableCell
             data-qa-hourly
@@ -201,13 +209,19 @@ export const KubernetesPlanSelection = (
           >
             ${price?.hourly ?? UNKNOWN_PRICE}
           </TableCell>
-          <TableCell center data-qa-ram>
+          <TableCell
+            data-qa-ram
+            sx={{ whiteSpace: 'nowrap', textAlign: 'center' }}
+          >
             {convertMegabytesTo(plan.memory, true)}
           </TableCell>
           <TableCell center data-qa-cpu>
             {plan.vcpus}
           </TableCell>
-          <TableCell center data-qa-storage>
+          <TableCell
+            data-qa-storage
+            sx={{ whiteSpace: 'nowrap', textAlign: 'center' }}
+          >
             {convertMegabytesTo(plan.disk, true)}
           </TableCell>
           <TableCell>

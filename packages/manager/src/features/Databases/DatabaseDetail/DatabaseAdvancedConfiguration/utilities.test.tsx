@@ -78,58 +78,81 @@ describe('findConfigItem', () => {
 });
 
 describe('convertExistingConfigsToArray', () => {
-  const mockConfigs: DatabaseEngineConfig =
-    databaseEngineConfigFactory.build(0);
-
-  const existingConfigs: DatabaseInstanceAdvancedConfig = {
-    advanced: {
-      connect_timeout: 10,
-      default_time_zone: '+03:00',
-    },
-    binlog_retention_period: 600,
-  };
-
-  const expectedOptions: ConfigurationOption[] = [
-    {
-      category: 'mysql',
-      description:
-        'The number of seconds that the mysqld server waits for a connect packet before responding with Bad handshake',
-      example: 10,
-      label: 'connect_timeout',
-      maximum: 3600,
-      minimum: 2,
-      requires_restart: false,
-      type: 'integer',
-      value: 10,
-    },
-    {
-      category: 'mysql',
-      description:
-        "Default server time zone as an offset from UTC (from -12:00 to +12:00), a time zone name, or 'SYSTEM' to use the MySQL server default.",
-      example: '+03:00',
-      label: 'default_time_zone',
-      maxLength: 100,
-      minLength: 2,
-      pattern: '^([-+][\\d:]*|[\\w/]*)$',
-      requires_restart: false,
-      type: 'string',
-      value: '+03:00',
-    },
-    {
-      category: 'other',
-      description:
-        'The minimum amount of time in seconds to keep binlog entries before deletion. This may be extended for services that require binlog entries for longer than the default for example if using the MySQL Debezium Kafka connector.',
-      example: 600,
-      label: 'binlog_retention_period',
-      maximum: 86400,
-      minimum: 600,
-      requires_restart: false,
-      type: 'integer',
-      value: 600,
-    },
-  ];
-
   it('should convert configs to array of ConfigurationOptions with label and current value', () => {
+    const mockConfigs: DatabaseEngineConfig =
+      databaseEngineConfigFactory.build(0);
+
+    const existingConfigs: DatabaseInstanceAdvancedConfig = {
+      advanced: {
+        connect_timeout: 10,
+        default_time_zone: '+03:00',
+      },
+      binlog_retention_period: 600,
+    };
+
+    const expectedOptions: ConfigurationOption[] = [
+      {
+        category: 'mysql',
+        description:
+          'The number of seconds that the mysqld server waits for a connect packet before responding with Bad handshake',
+        example: 10,
+        label: 'connect_timeout',
+        maximum: 3600,
+        minimum: 2,
+        requires_restart: false,
+        type: 'integer',
+        value: 10,
+      },
+      {
+        category: 'mysql',
+        description:
+          "Default server time zone as an offset from UTC (from -12:00 to +12:00), a time zone name, or 'SYSTEM' to use the MySQL server default.",
+        example: '+03:00',
+        label: 'default_time_zone',
+        maxLength: 100,
+        minLength: 2,
+        pattern: '^([-+][\\d:]*|[\\w/]*)$',
+        requires_restart: false,
+        type: 'string',
+        value: '+03:00',
+      },
+      {
+        category: 'other',
+        description:
+          'The minimum amount of time in seconds to keep binlog entries before deletion. This may be extended for services that require binlog entries for longer than the default for example if using the MySQL Debezium Kafka connector.',
+        example: 600,
+        label: 'binlog_retention_period',
+        maximum: 86400,
+        minimum: 600,
+        requires_restart: false,
+        type: 'integer',
+        value: 600,
+      },
+    ];
+    const result = convertExistingConfigsToArray(existingConfigs, mockConfigs);
+    expect(result).toEqual(expectedOptions);
+  });
+
+  it('should convert valkey configs to array of ConfigurationOptions with label and current value', () => {
+    const mockConfigs: DatabaseEngineConfig =
+      databaseEngineConfigFactory.build(2);
+
+    const existingConfigs: DatabaseInstanceAdvancedConfig = {
+      valkey_acl_channels_default: 'allchannels',
+    };
+
+    const expectedOptions: ConfigurationOption[] = [
+      {
+        category: 'valkey',
+        description:
+          "Determines default pub/sub channels' ACL for new users if ACL is not supplied. When this option is not defined, all_channels is assumed to keep backward compatibility. This option doesn't affect Valkey configuration acl-pubsub-default.",
+        enum: ['allchannels', 'resetchannels'],
+        label: 'valkey_acl_channels_default',
+        requires_restart: false,
+        type: 'string',
+        value: 'allchannels',
+      },
+    ];
     const result = convertExistingConfigsToArray(existingConfigs, mockConfigs);
     expect(result).toEqual(expectedOptions);
   });
@@ -140,6 +163,12 @@ describe('convertEngineConfigToOptions', () => {
     const configs = {
       binlog_retention_period: { type: 'integer' },
       service_log: { type: ['boolean', 'null'] },
+      valkey_acl_channels_default: {
+        type: 'string',
+      },
+      backup_hour: {
+        type: ['integer', 'null'],
+      },
     };
     const expectedConfigOptions = [
       {
@@ -153,6 +182,18 @@ describe('convertEngineConfigToOptions', () => {
         enum: [],
         label: 'service_log',
         type: ['boolean', 'null'],
+      },
+      {
+        category: 'valkey',
+        enum: [],
+        label: 'valkey_acl_channels_default',
+        type: 'string',
+      },
+      {
+        category: 'other',
+        enum: [],
+        label: 'backup_hour',
+        type: ['integer', 'null'],
       },
     ];
     expect(convertEngineConfigToOptions(configs)).toEqual(

@@ -1,8 +1,8 @@
+import { getErrorMap } from '@akamai/compute-ui-core/api';
 import { isNullOrUndefined } from '@linode/utilities';
 import { filter } from 'ramda';
 
 import { useFlags } from 'src/hooks/useFlags';
-import { getErrorMap } from 'src/utilities/errorUtils';
 
 import {
   ALGORITHM_OPTIONS,

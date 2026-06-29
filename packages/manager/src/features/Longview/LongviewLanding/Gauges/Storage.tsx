@@ -1,5 +1,5 @@
+import { readableBytes } from '@akamai/compute-ui-core/api';
 import { Typography } from '@linode/ui';
-import { readableBytes } from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 

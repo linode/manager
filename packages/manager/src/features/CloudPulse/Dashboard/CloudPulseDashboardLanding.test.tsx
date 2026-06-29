@@ -9,6 +9,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { CloudPulseDashboardLanding } from './CloudPulseDashboardLanding';
 
 const dashboardLabel = 'Factory Dashboard-1';
+const selectedDashboardLabel = 'Linodes - Factory Dashboard-1';
 const selectDashboardLabel = 'Select a Dashboard';
 const queryMocks = vi.hoisted(() => ({
   useCloudPulseDashboardsQuery: vi.fn().mockReturnValue({}),
@@ -117,7 +118,7 @@ describe('CloudPulseDashboardFilterBuilder component tests', () => {
     expect(screen.getByPlaceholderText(selectDashboardLabel)).toHaveAttribute(
       // check if dashboard is selected already
       'value',
-      dashboardLabel
+      selectedDashboardLabel
     );
     const messageComponent = screen.getByText(message);
     expect(messageComponent).toBeDefined();

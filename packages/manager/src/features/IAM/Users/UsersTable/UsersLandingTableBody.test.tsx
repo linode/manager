@@ -1,24 +1,50 @@
 import React from 'react';
 
-import { accountUserFactory } from 'src/factories/accountUsers';
-import { renderWithTheme } from 'src/utilities/testHelpers';
-
+import { createUserList } from '../../factories';
+import { renderWithProviders } from '../../utilities/testHelpers';
 import { UsersLandingTableBody } from './UsersLandingTableBody';
 
 import type { APIError } from '@linode/api-v4';
 
 const mockOnDelete = vi.fn();
-const numCols = 3;
+
+const queryMocks = vi.hoisted(() => ({
+  useProfile: vi.fn().mockReturnValue({ data: { restricted: false } }),
+}));
+
+vi.mock('src/OAuth/oauthClient', () => ({
+  getIsAdminToken: vi.fn(),
+  oauthClient: {},
+}));
+
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
+  return {
+    ...actual,
+    useProfile: queryMocks.useProfile,
+  };
+});
+
+vi.mock('./UserRow', () => ({
+  UserRow: ({ user }: { user: { username: string } }) => (
+    <tr data-testid={`user-row-${user.username}`}>
+      <td>{user.username}</td>
+    </tr>
+  ),
+}));
 
 describe('UsersLandingTableBody', () => {
+  beforeEach(() => {
+    queryMocks.useProfile.mockReturnValue({ data: { restricted: false } });
+  });
+
   it('renders loading state', async () => {
-    const { getByTestId } = renderWithTheme(
+    const { getByTestId } = renderWithProviders(
       <table>
         <tbody>
           <UsersLandingTableBody
             error={null}
             isLoading={true}
-            numCols={numCols}
             onDelete={mockOnDelete}
             users={undefined}
           />
@@ -27,7 +53,7 @@ describe('UsersLandingTableBody', () => {
     );
 
     const loadingRow = getByTestId('table-row-loading');
-    expect(loadingRow).toBeInTheDocument();
+    expect(loadingRow).toBeVisible();
     expect(loadingRow).toHaveAttribute(
       'aria-label',
       'Table content is loading'
@@ -37,13 +63,12 @@ describe('UsersLandingTableBody', () => {
   it('renders error state', async () => {
     const error: APIError[] = [{ reason: 'Something went wrong' }];
 
-    const { getByTestId } = renderWithTheme(
+    const { getByTestId } = renderWithProviders(
       <table>
         <tbody>
           <UsersLandingTableBody
             error={error}
             isLoading={false}
-            numCols={numCols}
             onDelete={mockOnDelete}
             users={undefined}
           />
@@ -52,17 +77,16 @@ describe('UsersLandingTableBody', () => {
     );
 
     const errorRow = getByTestId('table-row-error');
-    expect(errorRow).toBeInTheDocument();
+    expect(errorRow).toBeVisible();
   });
 
   it('renders empty state', async () => {
-    const { getByTestId } = renderWithTheme(
+    const { getByText } = renderWithProviders(
       <table>
         <tbody>
           <UsersLandingTableBody
             error={null}
             isLoading={false}
-            numCols={numCols}
             onDelete={mockOnDelete}
             users={[]}
           />
@@ -70,20 +94,39 @@ describe('UsersLandingTableBody', () => {
       </table>
     );
 
-    const emptyRow = getByTestId('table-row-empty');
-    expect(emptyRow).toBeInTheDocument();
+    expect(getByText('No users found')).toBeInTheDocument();
   });
 
-  it('renders user rows', async () => {
-    const users = accountUserFactory.buildList(3);
+  it('renders restricted empty state', async () => {
+    queryMocks.useProfile.mockReturnValue({ data: { restricted: true } });
 
-    const { getByText } = renderWithTheme(
+    const { getByText } = renderWithProviders(
       <table>
         <tbody>
           <UsersLandingTableBody
             error={null}
             isLoading={false}
-            numCols={numCols}
+            onDelete={mockOnDelete}
+            users={[]}
+          />
+        </tbody>
+      </table>
+    );
+
+    expect(
+      getByText(/You do not have permission to list users/)
+    ).toBeInTheDocument();
+  });
+
+  it('renders user rows', async () => {
+    const users = createUserList(3);
+
+    const { getByTestId } = renderWithProviders(
+      <table>
+        <tbody>
+          <UsersLandingTableBody
+            error={null}
+            isLoading={false}
             onDelete={mockOnDelete}
             users={users}
           />
@@ -91,7 +134,8 @@ describe('UsersLandingTableBody', () => {
       </table>
     );
 
-    expect(getByText('user-7')).toBeInTheDocument();
-    expect(getByText('user-6')).toBeInTheDocument();
+    users.forEach((user) => {
+      expect(getByTestId(`user-row-${user.username}`)).toBeVisible();
+    });
   });
 });

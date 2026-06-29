@@ -26,9 +26,7 @@ export const UserRow = ({ onDelete, user }: Props) => {
   const { data: grants } = useAccountUserGrants(user.username, user.restricted);
   const { data: profile } = useProfile();
 
-  const isProxyOrDelegateUser = Boolean(
-    user.user_type === 'proxy' || user.user_type === 'delegate'
-  );
+  const isDelegateUser = user.user_type === 'delegate';
   const showChildAccountAccessCol = profile?.user_type === 'parent';
 
   return (
@@ -64,7 +62,7 @@ export const UserRow = ({ onDelete, user }: Props) => {
           </TableCell>
         </Hidden>
       )}
-      {!isProxyOrDelegateUser && (
+      {!isDelegateUser && (
         <Hidden lgDown>
           <TableCell>
             <LastLogin last_login={user.last_login} />
@@ -73,7 +71,7 @@ export const UserRow = ({ onDelete, user }: Props) => {
       )}
       <TableCell actionCell>
         <UsersActionMenu
-          isProxyOrDelegateUser={isProxyOrDelegateUser}
+          isDelegateUser={isDelegateUser}
           onDelete={onDelete}
           username={user.username}
         />

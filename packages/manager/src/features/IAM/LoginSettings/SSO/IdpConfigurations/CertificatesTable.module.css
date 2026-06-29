@@ -1,0 +1,60 @@
+.certCellLanding {
+  min-width: 522px;
+}
+.tableError {
+  border: 1px solid var(--token-alias-border-negative, light-dark(#d63c42, #eb9091));
+}
+.certCell {
+  min-width: 246px;
+  box-sizing: border-box;
+  padding-left: 0;
+}
+.expirationHeaderCell {
+  min-width: 180px;
+  box-sizing: border-box;
+  padding: 0;
+}
+.expirationCell {
+  min-width: 180px;
+  box-sizing: border-box;
+  padding: 0;
+}
+.actionButton {
+  min-width: 70px;
+  display: flex;
+  justify-content: flex-start;
+}
+.deletedCell {
+  color: var(--alias-content-text-primary-disabled, light-dark(#a3a3ab, #83838c));
+}
+.deletedOpacity {
+  opacity: 0.5;
+}
+.tableErrorMessage {
+  margin-top: var(--token-global-spacing-s12, 12px);
+}
+
+.emptyStateCellContent {
+  padding: var(--token-global-spacing-s24, 24px) 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+@media (max-width: 1280px) {
+  .certCellLanding {
+    min-width: 220px;
+  }
+}
+@media (max-width: 600px) {
+  .certCellLanding {
+    min-width: 180px;
+  }
+  .certCell {
+    min-width: 120px;
+  }
+  .expirationCell {
+    min-width: 140px;
+  }
+}

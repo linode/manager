@@ -1,14 +1,14 @@
 import { convertResourceMetric, pluralizeMetric } from './utils';
 
 const queryMocks = vi.hoisted(() => ({
-  useObjectStorageEndpoints: vi.fn().mockReturnValue({}),
+  useObjectStorageEndpointsQuery: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('src/queries/object-storage/queries', () => {
   const actual = vi.importActual('src/queries/object-storage/queries');
   return {
     ...actual,
-    useObjectStorageEndpoints: queryMocks.useObjectStorageEndpoints,
+    useObjectStorageEndpointsQuery: queryMocks.useObjectStorageEndpointsQuery,
   };
 });
 

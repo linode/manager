@@ -1,3 +1,4 @@
+import { toast } from '@akamai/cds-components/notification-toast';
 import {
   Button,
   Modal,
@@ -10,8 +11,6 @@ import {
   useUserRoles,
   useUserRolesMutation,
 } from '@linode/queries';
-import { Typography } from '@linode/ui';
-import { useSnackbar } from 'notistack';
 import React from 'react';
 
 import { useIsDefaultDelegationRolesForChildAccount } from '../../hooks/useDelegationRole';
@@ -34,8 +33,6 @@ export const RemoveAssignmentConfirmationDialog = (props: Props) => {
 
   const { isDefaultDelegationRolesForChildAccount } =
     useIsDefaultDelegationRolesForChildAccount();
-
-  const { enqueueSnackbar } = useSnackbar();
 
   const {
     error: userRolesError,
@@ -91,8 +88,9 @@ export const RemoveAssignmentConfirmationDialog = (props: Props) => {
         entity_access: updatedUserEntityRoles,
       });
 
-      enqueueSnackbar(`Entity access removed`, {
-        variant: 'success',
+      toast.open({
+        text: 'Entity access removed',
+        type: 'success',
       });
 
       onSuccess?.();
@@ -121,18 +119,24 @@ export const RemoveAssignmentConfirmationDialog = (props: Props) => {
       <div slot="body">
         <NotificationBanner type="warning">
           {isDefaultDelegationRolesForChildAccount ? (
-            <Typography>
+            <p style={{ marginBottom: Spacing.S0 }}>
               Delegate users won’t get the <strong>{role?.role_name}</strong>{' '}
-              access on the <strong>{role?.entity_name}</strong> entity by
-              default.
-            </Typography>
+              access on the{' '}
+              <strong style={{ wordBreak: 'break-word' }}>
+                {role?.entity_name}
+              </strong>{' '}
+              entity by default.
+            </p>
           ) : (
-            <Typography>
-              You’re about to remove the <strong>{role?.entity_name}</strong>{' '}
+            <p style={{ marginBottom: Spacing.S0 }}>
+              You’re about to remove the{' '}
+              <strong style={{ wordBreak: 'break-word' }}>
+                {role?.entity_name}
+              </strong>{' '}
               entity from the <strong>{role?.role_name}</strong> role for{' '}
               <strong>{username}</strong>. This change will be applied
               immediately.
-            </Typography>
+            </p>
           )}
         </NotificationBanner>
         {error && <ErrorState errorText={getErrorMessage(error)} />}

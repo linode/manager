@@ -1,6 +1,7 @@
 import { Badge } from '@akamai/cds-components/react/Badge';
+import { Spacing } from '@akamai/cds-tokens';
 import { useDatabaseEnginesQuery } from '@linode/queries';
-import { Autocomplete, Box, InputAdornment, Stack } from '@linode/ui';
+import { Autocomplete, InputAdornment } from '@linode/ui';
 import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
@@ -8,6 +9,9 @@ import { getEngineOptions } from 'src/features/Databases/DatabaseCreate/utilitie
 import { DATABASE_ENGINE_MAP } from 'src/features/Databases/utilities';
 import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
+
+import { Stack } from '../shared/Stack/Stack';
+import styles from './DatabaseEngineSelect.module.css';
 
 import type { DatabaseCreateValues } from './DatabaseCreate';
 
@@ -57,7 +61,7 @@ export const DatabaseEngineSelect = () => {
             const { key, ...rest } = props;
             return (
               <li {...rest} data-testid="db-engine-option" key={key}>
-                <Stack direction="row" spacing={2} width="100%">
+                <Stack direction="row" spacing={Spacing.S16} width="100%">
                   {option.flag}
                   <Stack flexGrow={1}>{option.label}</Stack>
                   {option.engine === 'valkey' &&
@@ -75,9 +79,9 @@ export const DatabaseEngineSelect = () => {
             InputProps: {
               startAdornment: (
                 <InputAdornment position="start">
-                  <Box sx={{ pt: 0.7, svg: { height: '20px', width: '20px' } }}>
+                  <div className={styles.engineIconWrapper}>
                     {selectedEngine?.flag}
-                  </Box>
+                  </div>
                 </InputAdornment>
               ),
               endAdornment: selectedEngine?.engine === 'valkey' &&

@@ -1,19 +1,19 @@
+import { toast } from '@akamai/cds-components/notification-toast';
 import { NotificationBanner } from '@akamai/cds-components/react';
 import { Button } from '@akamai/cds-components/react/Button';
 import { Spacing } from '@akamai/cds-tokens';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useDatabaseMutation } from '@linode/queries';
-import { Box, Drawer } from '@linode/ui';
 import { updatePrivateNetworkSchema } from '@linode/validation';
 import { useNavigate } from '@tanstack/react-router';
-import { enqueueSnackbar } from 'notistack';
 import * as React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import { DatabaseDetailVPC } from 'src/features/Databases/DatabaseDetail/DatabaseNetworking/DatabaseDetailVPC';
 
+import { Drawer } from '../../shared/Drawer';
+
 import type { Database, UpdateDatabasePayload, VPC } from '@linode/api-v4';
-import type { Theme } from '@linode/ui';
 
 interface Props {
   database: Database;
@@ -59,8 +59,9 @@ const DatabaseManageNetworkingDrawer = (props: Props) => {
   const onSubmit = async (values: ManageNetworkingFormValues) => {
     try {
       await updateDatabase(values);
-      enqueueSnackbar('Changes are being applied.', {
-        variant: 'info',
+      toast.open({
+        text: 'Changes are being applied.',
+        type: 'info',
       });
 
       navigate({
@@ -112,7 +113,8 @@ const DatabaseManageNetworkingDrawer = (props: Props) => {
   };
 
   return (
-    <Drawer onClose={handleOnClose} open={open} title="Manage Networking">
+    <Drawer onClose={handleOnClose} open={open}>
+      <span slot="header">Manage Networking</span>
       {errors.root?.message && (
         <NotificationBanner
           style={{ marginBottom: Spacing.S16 }}
@@ -130,14 +132,14 @@ const DatabaseManageNetworkingDrawer = (props: Props) => {
       <FormProvider {...form}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <DatabaseDetailVPC region={database?.region ?? ''} />
-          <Box
-            sx={(theme: Theme) => ({
-              marginTop: theme.spacingFunction(50),
-              paddingTop: theme.spacingFunction(8),
-              paddingBottom: theme.spacingFunction(8),
+          <div
+            style={{
+              marginTop: Spacing.S48,
+              paddingTop: Spacing.S8,
+              paddingBottom: Spacing.S8,
               display: 'flex',
               justifyContent: hasVPCConfigured ? 'space-between' : 'flex-end',
-            })}
+            }}
           >
             {hasVPCConfigured && (
               <Button
@@ -148,7 +150,7 @@ const DatabaseManageNetworkingDrawer = (props: Props) => {
                 Unassign VPC
               </Button>
             )}
-            <Box>
+            <div>
               <Button onClick={handleOnClose} variant="link">
                 Cancel
               </Button>
@@ -162,8 +164,8 @@ const DatabaseManageNetworkingDrawer = (props: Props) => {
               >
                 Save
               </Button>
-            </Box>
-          </Box>
+            </div>
+          </div>
         </form>
       </FormProvider>
     </Drawer>

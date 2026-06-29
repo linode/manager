@@ -1,3 +1,4 @@
+import { getAPIErrorOrDefault } from '@akamai/compute-ui-core/api';
 import { formatDate } from '@akamai/compute-ui-core/datetime';
 import { useLinodeUpdateMutation, useProfile } from '@linode/queries';
 import Grid from '@mui/material/Grid';
@@ -6,7 +7,6 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { TagCell } from 'src/components/TagCell/TagCell';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { usePermissions } from '../IAM/hooks/usePermissions';
 import {

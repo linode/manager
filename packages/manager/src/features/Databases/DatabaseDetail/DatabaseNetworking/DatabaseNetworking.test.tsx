@@ -46,6 +46,9 @@ describe('DatabaseNetworking Component', () => {
       data: [vpcFactory.build({ region: mockDatabase.region })],
       isLoading: false,
     });
+    queryMocks.useRegionQuery.mockReturnValue({
+      data: undefined,
+    });
   });
 
   it('Should render both the Manage Access and Manage Networking sections when all VPCs query response is successful', () => {

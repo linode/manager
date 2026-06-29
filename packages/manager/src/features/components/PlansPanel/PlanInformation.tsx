@@ -16,7 +16,6 @@ import {
   SHARED_COMPUTE_INSTANCES_LINK,
   TRANSFER_COSTS_LINK,
 } from './constants';
-import { MetalNotice } from './MetalNotice';
 import { PlansAvailabilityNotice } from './PlansAvailabilityNotice';
 import { PlanNoticeTypography } from './PlansAvailabilityNotice.styles';
 import { getIsPlanDisabled, planTabInfoContent } from './utils';
@@ -33,7 +32,6 @@ interface ExtendedPlanType {
 
 export interface PlanInformationProps extends ExtendedPlanType {
   additionalBanners?: React.ReactNode[];
-  disabledClasses?: LinodeTypeClass[];
   flow: 'database' | 'kubernetes' | 'linode';
   hasMajorityOfPlansDisabled: boolean;
   hasSelectedRegion: boolean;
@@ -51,7 +49,6 @@ export interface PlanInformationProps extends ExtendedPlanType {
 export const PlanInformation = (props: PlanInformationProps) => {
   const {
     additionalBanners,
-    disabledClasses,
     flow,
     hasMajorityOfPlansDisabled,
     hasSelectedRegion,
@@ -63,9 +60,6 @@ export const PlanInformation = (props: PlanInformationProps) => {
     planType,
     regionsData,
   } = props;
-  const getDisabledClass = (thisClass: LinodeTypeClass) => {
-    return Boolean(disabledClasses?.includes(thisClass));
-  };
   const showGPUEgressBanner = Boolean(useFlags().gpuv2?.egressBanner);
   const showTransferBanner = Boolean(useFlags().gpuv2?.transferBanner);
 
@@ -167,12 +161,6 @@ export const PlanInformation = (props: PlanInformationProps) => {
           />
         </>
       )}
-      {planType === 'metal' ? (
-        <MetalNotice
-          dataTestId="metal-notice"
-          hasDisabledClass={getDisabledClass('metal')}
-        />
-      ) : null}
       {planType === 'shared' && isAPLEnabled ? (
         <APLNotice dataTestId="apl-notice" />
       ) : null}

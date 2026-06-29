@@ -1,10 +1,11 @@
+import { getAPIErrorOrDefault } from '@akamai/compute-ui-core/api';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { destinationType } from '@linode/api-v4';
 import {
   useDestinationQuery,
   useUpdateDestinationMutation,
 } from '@linode/queries';
-import { Box, CircleProgress, ErrorState, omitProps } from '@linode/ui';
+import { Box, CircleProgress, ErrorState } from '@linode/ui';
 import { destinationFormSchema } from '@linode/validation';
 import { useNavigate, useParams } from '@tanstack/react-router';
 import { enqueueSnackbar } from 'notistack';
@@ -16,7 +17,6 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { getDestinationPayloadDetails } from 'src/features/Delivery/deliveryUtils';
 import { DestinationForm } from 'src/features/Delivery/Destinations/DestinationForm/DestinationForm';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import type { UpdateDestinationPayloadWithId } from '@linode/api-v4';
 import type { LandingHeaderProps } from 'src/components/LandingHeader';
@@ -65,15 +65,15 @@ export const DestinationEdit = () => {
   useEffect(() => {
     if (destination) {
       form.reset({
-        ...destination,
-        ...('path' in destination.details
-          ? {
-              details: {
+        label: destination.label,
+        type: destination.type,
+        details:
+          'path' in destination.details
+            ? {
                 ...destination.details,
                 path: destination.details.path || '',
-              },
-            }
-          : {}),
+              }
+            : destination.details,
       });
     }
   }, [destination, form]);
@@ -82,7 +82,7 @@ export const DestinationEdit = () => {
     const formValues = form.getValues();
     const destination: UpdateDestinationPayloadWithId = {
       id: destinationId,
-      ...omitProps(formValues, ['type']),
+      label: formValues.label,
       details: getDestinationPayloadDetails(
         formValues.details,
         formValues.type

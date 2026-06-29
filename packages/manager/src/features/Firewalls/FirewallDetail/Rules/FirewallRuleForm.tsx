@@ -1,3 +1,4 @@
+import { ipFieldPlaceholder } from '@akamai/compute-ui-core/api';
 import { capitalize } from '@akamai/compute-ui-core/formatting';
 import {
   ActionsPanel,
@@ -21,18 +22,17 @@ import {
   useAddressOptions,
   useIsFirewallRulesetsPrefixlistsEnabled,
 } from 'src/features/Firewalls/shared';
-import { ipFieldPlaceholder } from 'src/utilities/ipUtils';
 
 import { enforceIPMasks } from './FirewallRuleDrawer.utils';
 import { MultiplePrefixListSelect } from './MultiplePrefixListSelect';
 import { PORT_PRESETS, PORT_PRESETS_ITEMS } from './shared';
 
 import type { FirewallRuleFormProps } from './FirewallRuleDrawer.types';
+import type { ExtendedIP, ExtendedPL } from '@akamai/compute-ui-core/api';
 import type {
   FirewallOptionItem,
   FirewallPreset,
 } from 'src/features/Firewalls/shared';
-import type { ExtendedIP, ExtendedPL } from 'src/utilities/ipUtils';
 
 const ipNetmaskTooltipText =
   'If you do not specify a mask, /32 will be assumed for IPv4 addresses and /128 will be assumed for IPv6 addresses.';

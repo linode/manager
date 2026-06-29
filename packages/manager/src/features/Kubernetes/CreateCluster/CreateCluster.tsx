@@ -1,4 +1,12 @@
 import {
+  getAPIErrorOrDefault,
+  getDCSpecificPriceByType,
+  getErrorMap,
+  stringToExtendedIP,
+  UNKNOWN_PRICE,
+  validateIPs,
+} from '@akamai/compute-ui-core/api';
+import {
   useAccountSettings,
   useAllTypes,
   useMutateAccountAgreements,
@@ -49,15 +57,9 @@ import {
   useKubernetesTieredVersionsQuery,
   useKubernetesTypesQuery,
 } from 'src/queries/kubernetes';
-import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { extendType } from 'src/utilities/extendType';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
-import { stringToExtendedIP, validateIPs } from 'src/utilities/ipUtils';
-import {
-  DOCS_LINK_LABEL_DC_PRICING,
-  UNKNOWN_PRICE,
-} from 'src/utilities/pricing/constants';
-import { getDCSpecificPriceByType } from 'src/utilities/pricing/dynamicPricing';
+import { DOCS_LINK_LABEL_DC_PRICING } from 'src/utilities/pricing/constants';
 import { reportAgreementSigningError } from 'src/utilities/reportAgreementSigningError';
 
 import {
@@ -79,6 +81,7 @@ import { HAControlPlane } from './HAControlPlane';
 import { NodePoolPanel } from './NodePoolPanel';
 
 import type { NodePoolConfigDrawerMode } from '../KubernetesPlansPanel/NodePoolConfigDrawer';
+import type { ExtendedIP } from '@akamai/compute-ui-core/api';
 import type {
   APIError,
   CreateKubeClusterPayload,
@@ -87,7 +90,6 @@ import type {
   KubernetesTier,
   Region,
 } from '@linode/api-v4';
-import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 export interface CreateClusterFormValues {
   nodePools: CreateNodePoolData[];

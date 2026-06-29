@@ -1,12 +1,14 @@
+import {
+  TableHead,
+  TableHeaderCell,
+  TableRow,
+} from '@akamai/cds-components/react';
 import React from 'react';
 
-import { TableCell } from 'src/components/TableCell';
-import { TableHead } from 'src/components/TableHead';
-import { TableRow } from 'src/components/TableRow/TableRow';
-import { TableSortCell } from 'src/components/TableSortCell';
-
-import { useDelegationRole } from '../../hooks/useDelegationRole';
-import { useIsIAMDelegationEnabled } from '../../hooks/useIsIAMEnabled';
+import {
+  getUsersTableCellStyle,
+  useUsersTableColumns,
+} from './usersTableColumnsUtils';
 
 export type SortOrder = 'asc' | 'desc';
 
@@ -21,55 +23,64 @@ interface Props {
 }
 
 export const UsersLandingTableHead = ({ order }: Props) => {
-  const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
-  const { isChildUserType, isDelegateUserType } = useDelegationRole();
-
-  // Determine if the current user is a child or delegate profile with isIAMDelegationEnabled enabled
-  // If so, we need to show the 'User Type' column in the table
-  const isChildOrDelegateWithDelegationEnabled =
-    isIAMDelegationEnabled && (isChildUserType || isDelegateUserType);
+  const { columnWidths, showEmail, showLastLogin, showUserType } =
+    useUsersTableColumns();
 
   return (
     <TableHead
-      sx={{
+      style={{
         whiteSpace: 'nowrap',
       }}
     >
-      <TableRow>
-        <TableSortCell
-          active={order.orderBy === 'username'}
-          direction={order.order}
-          handleClick={order.handleOrderChange}
-          label="username"
-          style={{ width: '30%' }}
+      <TableRow
+        headerbackground={
+          'var(--token-component-table-header-nested-background)'
+        }
+        headerborder
+      >
+        <TableHeaderCell
+          onSort={() =>
+            order.handleOrderChange(
+              'username',
+              order.order === 'asc' ? 'desc' : 'asc'
+            )
+          }
+          sortable
+          sorted={order.orderBy === 'username' ? order.order : undefined}
+          style={getUsersTableCellStyle(columnWidths.username)}
         >
           Username
-        </TableSortCell>
-        {isChildOrDelegateWithDelegationEnabled && (
-          <TableCell
-            style={{ width: '20%' }}
-            sx={{ display: { lg: 'table-cell', xs: 'none' } }}
+        </TableHeaderCell>
+        {showUserType && (
+          <TableHeaderCell
+            style={getUsersTableCellStyle(columnWidths.userType)}
           >
             User Type
-          </TableCell>
+          </TableHeaderCell>
         )}
-        <TableSortCell
-          active={order.orderBy === 'email'}
-          direction={order.order}
-          handleClick={order.handleOrderChange}
-          label="email"
-          style={{ width: '20%' }}
-          sx={{ display: { sm: 'table-cell', xs: 'none' } }}
-        >
-          Email Address
-        </TableSortCell>
-        <TableCell
-          style={{ width: '15%' }}
-          sx={{ display: { lg: 'table-cell', xs: 'none' } }}
-        >
-          Last Login
-        </TableCell>
-        <TableCell style={{ width: '10%' }} />
+        {showEmail ? (
+          <TableHeaderCell
+            onSort={() =>
+              order.handleOrderChange(
+                'email',
+                order.order === 'asc' ? 'desc' : 'asc'
+              )
+            }
+            sortable
+            sorted={order.orderBy === 'email' ? order.order : undefined}
+            style={getUsersTableCellStyle(columnWidths.email)}
+          >
+            Email Address
+          </TableHeaderCell>
+        ) : null}
+        {showLastLogin ? (
+          <TableHeaderCell
+            style={getUsersTableCellStyle(columnWidths.lastLogin)}
+          >
+            Last Login
+          </TableHeaderCell>
+        ) : null}
+        <TableHeaderCell style={getUsersTableCellStyle(columnWidths.actions)} />
       </TableRow>
     </TableHead>
   );

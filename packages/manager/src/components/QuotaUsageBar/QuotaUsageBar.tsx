@@ -1,4 +1,4 @@
-import { Typography, useTheme } from '@linode/ui';
+import { Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { BarPercent } from 'src/components/BarPercent';
@@ -7,21 +7,19 @@ import { convertResourceMetric } from 'src/features/Account/Quotas/utils';
 import type { Quota } from '@linode/api-v4';
 
 interface Props {
+  layout: 'slim' | 'wide';
   limit: number;
   resourceMetric: Quota['resource_metric'];
   usage: number;
-  variant: 'obj-summary' | 'quotas';
 }
 
 export const QuotaUsageBar = ({
   limit,
   usage,
   resourceMetric,
-  variant,
+  layout,
 }: Props) => {
-  const theme = useTheme();
-
-  const isSummary = variant === 'obj-summary';
+  const isWide = layout === 'wide';
 
   const { convertedUsage, convertedLimit, convertedResourceMetric } =
     convertResourceMetric({
@@ -46,28 +44,12 @@ export const QuotaUsageBar = ({
   return (
     <>
       <BarPercent
-        customColors={[
-          {
-            color: theme.tokens.color.Red[80],
-            percentage: 81,
-          },
-          {
-            color: theme.tokens.color.Orange[80],
-            percentage: 61,
-          },
-          {
-            color: isSummary
-              ? theme.tokens.color.Gradient.Default
-              : theme.tokens.color.Brand[80],
-            percentage: 1,
-          },
-        ]}
         max={limit}
-        rounded={isSummary ? false : true}
+        segmented={true}
         sx={{
           mb: 0.5,
-          mt: isSummary ? 0.5 : 2,
-          padding: isSummary ? '4px' : '3px',
+          mt: isWide ? 0.5 : 2,
+          padding: isWide ? '4px' : '3px',
           margin: 0,
         }}
         value={usage}
@@ -75,7 +57,7 @@ export const QuotaUsageBar = ({
       <Typography
         sx={(theme) => ({
           mt: theme.spacingFunction(8),
-          font: isSummary
+          font: isWide
             ? theme.tokens.alias.Typography.Label.Bold.S
             : theme.tokens.alias.Typography.Label.Regular.S,
         })}

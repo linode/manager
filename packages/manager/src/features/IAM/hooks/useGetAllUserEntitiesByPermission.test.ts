@@ -1,7 +1,6 @@
 import { renderHook, waitFor } from '@testing-library/react';
 
-import { wrapWithTheme } from 'src/utilities/testHelpers';
-
+import { wrapWithProviders } from '../utilities/testHelpers';
 import { useGetAllUserEntitiesByPermission } from './useGetAllUserEntitiesByPermission';
 
 import type { Grants, Linode, Profile } from '@linode/api-v4';
@@ -127,7 +126,7 @@ describe('useGetAllUserEntitiesByPermission', () => {
               permission: 'view_linode',
             }),
           {
-            wrapper: (ui) => wrapWithTheme(ui, { flags }),
+            wrapper: (ui) => wrapWithProviders(ui, { flags }),
           }
         );
 
@@ -157,7 +156,7 @@ describe('useGetAllUserEntitiesByPermission', () => {
               permission: 'view_linode',
             }),
           {
-            wrapper: (ui) => wrapWithTheme(ui, { flags }),
+            wrapper: (ui) => wrapWithProviders(ui, { flags }),
           }
         );
 
@@ -184,7 +183,7 @@ describe('useGetAllUserEntitiesByPermission', () => {
               permission: 'view_linode',
             }),
           {
-            wrapper: (ui) => wrapWithTheme(ui, { flags }),
+            wrapper: (ui) => wrapWithProviders(ui, { flags }),
           }
         );
 
@@ -223,7 +222,7 @@ describe('useGetAllUserEntitiesByPermission', () => {
               permission: 'view_linode',
             }),
           {
-            wrapper: (ui) => wrapWithTheme(ui, { flags }),
+            wrapper: (ui) => wrapWithProviders(ui, { flags }),
           }
         );
 
@@ -250,7 +249,7 @@ describe('useGetAllUserEntitiesByPermission', () => {
               permission: 'view_linode',
             }),
           {
-            wrapper: (ui) => wrapWithTheme(ui, { flags }),
+            wrapper: (ui) => wrapWithProviders(ui, { flags }),
           }
         );
 
@@ -303,7 +302,7 @@ describe('useGetAllUserEntitiesByPermission', () => {
               permission: 'view_linode',
             }),
           {
-            wrapper: (ui) => wrapWithTheme(ui, { flags }),
+            wrapper: (ui) => wrapWithProviders(ui, { flags }),
           }
         );
 
@@ -342,7 +341,7 @@ describe('useGetAllUserEntitiesByPermission', () => {
               permission: 'view_linode',
             }),
           {
-            wrapper: (ui) => wrapWithTheme(ui, { flags }),
+            wrapper: (ui) => wrapWithProviders(ui, { flags }),
           }
         );
 
@@ -396,7 +395,7 @@ describe('useGetAllUserEntitiesByPermission', () => {
               permission: 'view_linode',
             }),
           {
-            wrapper: (ui) => wrapWithTheme(ui, { flags }),
+            wrapper: (ui) => wrapWithProviders(ui, { flags }),
           }
         );
 
@@ -436,7 +435,7 @@ describe('useGetAllUserEntitiesByPermission', () => {
               permission: 'view_linode',
             }),
           {
-            wrapper: (ui) => wrapWithTheme(ui, { flags }),
+            wrapper: (ui) => wrapWithProviders(ui, { flags }),
           }
         );
 
@@ -463,7 +462,7 @@ describe('useGetAllUserEntitiesByPermission', () => {
               permission: 'view_linode',
             }),
           {
-            wrapper: (ui) => wrapWithTheme(ui, { flags }),
+            wrapper: (ui) => wrapWithProviders(ui, { flags }),
           }
         );
 
@@ -487,7 +486,7 @@ describe('useGetAllUserEntitiesByPermission', () => {
               permission: 'view_linode',
             }),
           {
-            wrapper: (ui) => wrapWithTheme(ui, { flags }),
+            wrapper: (ui) => wrapWithProviders(ui, { flags }),
           }
         );
 
@@ -529,7 +528,7 @@ describe('useGetAllUserEntitiesByPermission', () => {
               permission: 'view_linode',
             }),
           {
-            wrapper: (ui) => wrapWithTheme(ui, { flags }),
+            wrapper: (ui) => wrapWithProviders(ui, { flags }),
           }
         );
 
@@ -554,7 +553,7 @@ describe('useGetAllUserEntitiesByPermission', () => {
               permission: 'view_linode',
             }),
           {
-            wrapper: (ui) => wrapWithTheme(ui, { flags }),
+            wrapper: (ui) => wrapWithProviders(ui, { flags }),
           }
         );
 
@@ -593,7 +592,7 @@ describe('useGetAllUserEntitiesByPermission', () => {
             permission: 'view_linode',
           }),
         {
-          wrapper: (ui) => wrapWithTheme(ui, { flags }),
+          wrapper: (ui) => wrapWithProviders(ui, { flags }),
         }
       );
 
@@ -627,7 +626,7 @@ describe('useGetAllUserEntitiesByPermission', () => {
             permission: 'view_linode',
           }),
         {
-          wrapper: (ui) => wrapWithTheme(ui, { flags }),
+          wrapper: (ui) => wrapWithProviders(ui, { flags }),
         }
       );
 
@@ -662,7 +661,7 @@ describe('useGetAllUserEntitiesByPermission', () => {
             permission: 'view_linode',
           }),
         {
-          wrapper: (ui) => wrapWithTheme(ui, { flags }),
+          wrapper: (ui) => wrapWithProviders(ui, { flags }),
         }
       );
 
@@ -701,7 +700,7 @@ describe('useGetAllUserEntitiesByPermission', () => {
             permission: 'view_linode',
           }),
         {
-          wrapper: (ui) => wrapWithTheme(ui, { flags }),
+          wrapper: (ui) => wrapWithProviders(ui, { flags }),
         }
       );
 
@@ -735,7 +734,7 @@ describe('useGetAllUserEntitiesByPermission', () => {
             params: customParams,
           }),
         {
-          wrapper: (ui) => wrapWithTheme(ui, { flags }),
+          wrapper: (ui) => wrapWithProviders(ui, { flags }),
         }
       );
 

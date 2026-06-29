@@ -1,28 +1,40 @@
+import { toast } from '@akamai/cds-components/notification-toast';
 import {
   Button,
   Checkbox,
   FormError,
+  Icon,
   NotificationBanner,
+  Tooltip,
 } from '@akamai/cds-components/react';
 import { Spacing } from '@akamai/cds-tokens';
 import {
   useGetIdpConfigQuery,
   useGetIdpConfigsQuery,
+  useGetIdpConfigUsersExcludedQuery,
+  useGetIdpConfigUsersIncludedQuery,
   useUpdateIdpConfigMutation,
+  useUpdateIdpConfigUsersExcludedMutation,
+  useUpdateIdpConfigUsersIncludedMutation,
 } from '@linode/queries';
-import { enqueueSnackbar } from 'notistack';
 import * as React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { CircleProgress } from 'src/features/IAM/Shared/CircleProgress/CircleProgress';
 import { Divider } from 'src/features/IAM/Shared/Divider/Divider';
 import { ErrorState } from 'src/features/IAM/Shared/ErrorState/ErrorState';
 import { Paper } from 'src/features/IAM/Shared/Paper/Paper';
 
-import { hasNoValidCertificates } from '../utilities';
+import { Box } from '../../../Shared/Box/Box';
+import { IAM_SSO_ENFORCE_PENDO_IDS } from '../../constants';
+import { getSummaryStatus, hasNoValidCertificates } from '../utilities';
 import { ActivationStatus } from './ActivationStatus';
+import { ExcludedUsersPanel } from './ExcludedUsersPanel';
+import { IncludedUsersPanel } from './IncludedUsersPanel';
 
-import type { APIError } from '@linode/api-v4/lib/types';
+import type { SummaryStatusConfig } from '../utilities';
+import type { APIError, IdpUser } from '@linode/api-v4/lib/types';
 
 export interface EnforcementSettingsFormValues {
   excludedUsers: string[];
@@ -32,10 +44,11 @@ export interface EnforcementSettingsFormValues {
   ssoEnforced: boolean;
 }
 
-// TODO: Implement Enforcement Settings tab
-// - Included users list management (users forced to use SSO when enforcement is disabled)
-// - Excluded users list management (break-glass users that bypass SSO)
 export const EnforcementSettings = () => {
+  const { data: permissions, error: permissionsError } = usePermissions(
+    'account',
+    ['update_idp_config']
+  );
   // TODO: check whether we need to fetch all IDP configs to find the relevant one
   // or if we can get the euuid from IDP configuration tab and pass it down
   const {
@@ -57,17 +70,52 @@ export const EnforcementSettings = () => {
   // If sso is enabled, no action needed.
   const isConfigInvalid = idpConfig ? hasNoValidCertificates(idpConfig) : false;
 
-  const { mutateAsync: updateActivationStatus } = useUpdateIdpConfigMutation(
-    euuid ?? ''
-  );
+  const {
+    mutateAsync: updateActivationStatus,
+    isPending: isActivationStatusPending,
+  } = useUpdateIdpConfigMutation(euuid ?? '');
+
+  const {
+    mutateAsync: updateIncludedUsers,
+    isPending: isIncludedUsersPending,
+  } = useUpdateIdpConfigUsersIncludedMutation(euuid ?? '');
+
+  const {
+    mutateAsync: updateExcludedUsers,
+    isPending: isExcludedUsersPending,
+  } = useUpdateIdpConfigUsersExcludedMutation(euuid ?? '');
+
+  const {
+    data: includedUsers,
+    error: includedUsersError,
+    isLoading: includedUsersLoading,
+  } = useGetIdpConfigUsersIncludedQuery({
+    euuid: euuid ?? '',
+  });
+
+  const includedUsersOptions = React.useMemo(() => {
+    return includedUsers?.data.map((user: IdpUser) => user.label);
+  }, [includedUsers]);
+
+  const {
+    data: excludedUsers,
+    error: excludedUsersError,
+    isLoading: excludedUsersLoading,
+  } = useGetIdpConfigUsersExcludedQuery({
+    euuid: euuid ?? '',
+  });
+
+  const excludedUsersOptions = React.useMemo(() => {
+    return excludedUsers?.data.map((user: IdpUser) => user.label);
+  }, [excludedUsers]);
 
   const form = useForm<EnforcementSettingsFormValues>({
     values: {
       ssoEnabled: idpConfig?.enabled ?? false,
       ssoEnforced: idpConfig?.enforce ?? false,
       isAcknowledged: false,
-      includedUsers: [],
-      excludedUsers: [],
+      includedUsers: includedUsersOptions ?? [],
+      excludedUsers: excludedUsersOptions ?? [],
     },
   });
 
@@ -78,13 +126,29 @@ export const EnforcementSettings = () => {
     reset,
     setError,
     getValues,
+    watch,
   } = form;
+
+  const formSummaryConfig: SummaryStatusConfig = {
+    enabled: watch('ssoEnabled'),
+    enforce: watch('ssoEnforced'),
+    included_users_count: watch('includedUsers').length,
+    excluded_users_count: watch('excludedUsers').length,
+  };
 
   // Determine if Activation Status has been modified to conditionally
   // require acknowledgment and call the right endpoint on submit
   const isActivationStatusDirty = !!(
     dirtyFields.ssoEnabled || dirtyFields.ssoEnforced
   );
+
+  // Determine if Included Users has been modified to conditionally
+  // call the right endpoint on submit
+  const isIncludedUsersDirty = !!dirtyFields.includedUsers;
+
+  // Determine if Excluded Users has been modified to conditionally
+  // call the right endpoint on submit
+  const isExcludedUsersDirty = !!dirtyFields.excludedUsers;
 
   const onSubmit = async (values: EnforcementSettingsFormValues) => {
     const mutations: Promise<unknown>[] = [];
@@ -99,10 +163,21 @@ export const EnforcementSettings = () => {
       );
     }
 
+    // Only update included users if it has been modified
+    if (isIncludedUsersDirty) {
+      mutations.push(updateIncludedUsers({ usernames: values.includedUsers }));
+    }
+
+    // Only update excluded users if it has been modified
+    if (isExcludedUsersDirty) {
+      mutations.push(updateExcludedUsers({ usernames: values.excludedUsers }));
+    }
+
     try {
       await Promise.all(mutations);
-      enqueueSnackbar(`SSO settings updated successfully.`, {
-        variant: 'success',
+      toast.open({
+        text: 'SSO settings updated successfully.',
+        type: 'success',
       });
       reset({ ...getValues(), isAcknowledged: false }, { keepDirty: false });
     } catch (errors) {
@@ -111,11 +186,22 @@ export const EnforcementSettings = () => {
     }
   };
 
-  if (isLoading || idpConfigsLoading) {
+  if (
+    isLoading ||
+    idpConfigsLoading ||
+    includedUsersLoading ||
+    excludedUsersLoading
+  ) {
     return <CircleProgress />;
   }
 
-  if (error || idpConfigsError) {
+  if (
+    error ||
+    idpConfigsError ||
+    includedUsersError ||
+    excludedUsersError ||
+    permissionsError
+  ) {
     return <ErrorState />;
   }
 
@@ -128,15 +214,31 @@ export const EnforcementSettings = () => {
           type="error"
         />
       )}
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Paper
-          marginBottom={Spacing.S16}
-          padding={Spacing.S24}
-          paddingTop={Spacing.S24}
-        >
+      {!permissions?.update_idp_config && (
+        <NotificationBanner
+          style={{ marginBottom: Spacing.S16 }}
+          text="You do not have permissions to update SSO enforcement settings."
+          type="warning"
+        />
+      )}
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        style={{ gap: Spacing.S24, display: 'flex', flexDirection: 'column' }}
+      >
+        <Paper padding={Spacing.S24} paddingTop={Spacing.S24}>
           <ActivationStatus isConfigInvalid={isConfigInvalid} />
-          <Divider spacingBottom={Spacing.S16} spacingTop={Spacing.S16} />
+          <Divider spacingBottom={Spacing.S20} spacingTop={Spacing.S20} />
+          <IncludedUsersPanel includedUsers={includedUsersOptions} />
+          <Divider spacingBottom={Spacing.S20} spacingTop={Spacing.S20} />
+          <ExcludedUsersPanel excludedUsers={excludedUsersOptions} />
         </Paper>
+
+        <NotificationBanner type="info">
+          <>
+            <strong>Summary:</strong>{' '}
+            {getSummaryStatus(formSummaryConfig, true)}
+          </>
+        </NotificationBanner>
 
         {isActivationStatusDirty && (
           <Controller
@@ -146,11 +248,12 @@ export const EnforcementSettings = () => {
               <div>
                 <Checkbox
                   checked={field.value}
+                  data-pendo-id={IAM_SSO_ENFORCE_PENDO_IDS.consentChecked}
                   onChange={(e) => field.onChange(e.detail as boolean)}
                   required
                 >
                   I understand that my changes will be applied immediately and
-                  will restrict standard login for all SSO-enforced users.
+                  may affect the way users log in.
                 </Checkbox>
                 {Boolean(fieldState.error?.message) && (
                   <FormError slot="error" style={{ paddingLeft: Spacing.S32 }}>
@@ -167,16 +270,31 @@ export const EnforcementSettings = () => {
           />
         )}
 
-        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <Button
-            disabled={!isDirty}
-            processing={isSubmitting}
-            type="submit"
-            variant="primary"
+        <Box direction="row" style={{ justifyContent: 'flex-end' }}>
+          <Tooltip
+            disabled={permissions?.update_idp_config}
+            tooltipPlacement="bottom"
+            tooltipText="You do not have permissions to update SSO enforcement settings."
           >
-            Update SSO Enforcement
-          </Button>
-        </div>
+            <Button
+              data-pendo-id={IAM_SSO_ENFORCE_PENDO_IDS.updateSSOEnforcement}
+              disabled={!isDirty || !permissions?.update_idp_config}
+              processing={
+                isSubmitting ||
+                isActivationStatusPending ||
+                isIncludedUsersPending ||
+                isExcludedUsersPending
+              }
+              type="submit"
+              variant="primary"
+            >
+              Save Changes
+              {!permissions?.update_idp_config && (
+                <Icon icon="info-outline" size="s" />
+              )}
+            </Button>
+          </Tooltip>
+        </Box>
       </form>
     </FormProvider>
   );

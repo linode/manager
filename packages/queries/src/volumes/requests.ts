@@ -1,7 +1,8 @@
 import { getVolumes, getVolumeTypes } from '@linode/api-v4';
 import { getAll } from '@linode/utilities';
 
-import type { Filter, Params, PriceType, Volume } from '@linode/api-v4';
+import type { PriceType } from '@akamai/compute-ui-core/api';
+import type { Filter, Params, Volume } from '@linode/api-v4';
 
 export const getAllVolumeTypes = () =>
   getAll<PriceType>((params) => getVolumeTypes(params))().then(

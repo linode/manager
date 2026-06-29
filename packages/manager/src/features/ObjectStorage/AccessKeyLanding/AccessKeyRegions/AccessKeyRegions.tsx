@@ -2,8 +2,8 @@ import { sortByString } from '@akamai/compute-ui-core/formatting';
 import { useIsGeckoEnabled } from '@linode/shared';
 import * as React from 'react';
 
-import { RegionMultiSelect } from 'src/components/RegionSelect/RegionMultiSelect';
 import { useObjectStorageRegions } from 'src/features/ObjectStorage/hooks/useObjectStorageRegions';
+import { RegionMultiSelect } from 'src/features/ObjectStorage/Partials/RegionMultiSelect';
 import { useFlags } from 'src/hooks/useFlags';
 
 import type { Region } from '@linode/api-v4';
@@ -29,11 +29,11 @@ export const AccessKeyRegions = (props: Props) => {
     flags.gecko2?.enabled,
     flags.gecko2?.la
   );
-  const { allRegionsError, availableStorageRegions } =
+  const { errors: regionListFetchErrors, objectStorageRegions } =
     useObjectStorageRegions();
 
   // Error could be: 1. General Regions error, 2. Field error, 3. Nothing
-  const errorText = error || allRegionsError?.[0]?.reason;
+  const errorText = error || regionListFetchErrors?.[0]?.reason;
 
   return (
     <RegionMultiSelect
@@ -47,7 +47,7 @@ export const AccessKeyRegions = (props: Props) => {
       placeholder={
         selectedRegion.length > 0 ? '' : 'Select regions or type to search'
       }
-      regions={availableStorageRegions ?? []}
+      regions={objectStorageRegions ?? []}
       required={required}
       selectedIds={selectedRegion}
       sortRegionOptions={sortRegionOptions}

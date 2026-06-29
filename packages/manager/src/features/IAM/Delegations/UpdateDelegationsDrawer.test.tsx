@@ -1,9 +1,8 @@
-import { screen } from '@testing-library/react';
+import { screen, within } from '@testing-library/react';
 import React from 'react';
 import { vi } from 'vitest';
 
-import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
-
+import { mockMatchMedia, renderWithProviders } from '../utilities/testHelpers';
 import { UpdateDelegationsDrawer } from './UpdateDelegationsDrawer';
 
 import type { ChildAccountWithDelegates, User } from '@linode/api-v4';
@@ -84,10 +83,10 @@ describe('UpdateDelegationsDrawer', () => {
   });
 
   it('renders the drawer with current delegates', () => {
-    renderWithTheme(<UpdateDelegationsDrawer {...defaultProps} />);
+    renderWithProviders(<UpdateDelegationsDrawer {...defaultProps} />);
 
     expect(
-      screen.getByRole('heading', { name: /update delegation/i })
+      within(screen.getByTestId('drawer')).getByText('Update Delegation')
     ).toBeInTheDocument();
     expect(screen.getByText(/test company/i)).toBeInTheDocument();
     // user1 is returned by the mocked API and appears as a table row

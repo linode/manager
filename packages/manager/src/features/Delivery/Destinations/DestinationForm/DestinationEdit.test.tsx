@@ -27,7 +27,7 @@ const mockBuckets = [
     hostname: 'bucket-with-hostname.us-east-1.linodeobjects.com',
     label: 'bucket-with-hostname',
     region: 'us-east',
-    s3_endpoint: 'us-east-1.linodeobjects.com',
+    s3_endpoint: undefined,
   }),
   objectStorageBucketFactory.build({
     hostname: 'bucket-with-s3-endpoint.eu-central-1.linodeobjects.com',
@@ -45,13 +45,18 @@ const queryMocks = vi.hoisted(() => ({
   }),
 }));
 
-vi.mock('src/queries/object-storage/queries', async () => {
-  const actual = await vi.importActual('src/queries/object-storage/queries');
-  return {
-    ...actual,
-    useObjectStorageBuckets: queryMocks.useObjectStorageBuckets,
-  };
-});
+vi.mock(
+  'src/features/ObjectStorage/hooks/useObjectStorageBuckets',
+  async () => {
+    const actual = await vi.importActual(
+      'src/features/ObjectStorage/hooks/useObjectStorageBuckets'
+    );
+    return {
+      ...actual,
+      useObjectStorageBuckets: queryMocks.useObjectStorageBuckets,
+    };
+  }
+);
 
 vi.mock('@tanstack/react-router', async () => {
   const actual = await vi.importActual('@tanstack/react-router');
@@ -64,7 +69,7 @@ vi.mock('@tanstack/react-router', async () => {
 describe('DestinationEdit', () => {
   beforeEach(() => {
     queryMocks.useObjectStorageBuckets.mockReturnValue({
-      data: { buckets: mockBuckets },
+      data: mockBuckets,
       error: null,
       isPending: false,
     });
@@ -94,8 +99,8 @@ describe('DestinationEdit', () => {
     });
     assertInputHasValue('Endpoint', 'destinations-bucket-name.host.com');
     assertInputHasValue('Bucket', 'destinations-bucket-name');
-    assertInputHasValue('Access Key ID', 'Access Id');
-    assertInputHasValue('Secret Access Key', '');
+    assertInputHasValue('Access Key', 'Access Id');
+    assertInputHasValue('Secret Key', '');
     assertInputHasValue('Log Path Prefix (optional)', 'file');
   });
 
@@ -185,7 +190,7 @@ describe('DestinationEdit', () => {
 
       // Endpoint should be auto-filled with the bucket's endpoint
       expect(screen.getByLabelText('Endpoint')).toHaveValue(
-        'us-east-1.linodeobjects.com'
+        'bucket-with-hostname.us-east-1.linodeobjects.com'
       );
     });
 
@@ -223,20 +228,44 @@ describe('DestinationEdit', () => {
     const editDestinationSpy = vi.fn();
     const verifyDestinationSpy = vi.fn();
 
+    const expectedEditPayload = {
+      label: 'Destination 123',
+      details: {
+        access_key_id: 'Access Id',
+        access_key_secret: 'Test',
+        bucket_name: 'destinations-bucket-name',
+        host: 'destinations-bucket-name.host.com',
+        path: 'file',
+      },
+    };
+
+    const expectedVerifyPayload = {
+      ...expectedEditPayload,
+      type: 'akamai_object_storage',
+    };
+
     describe('when Test Connection button clicked and connection verified positively', () => {
       it("should enable Save Changes button and perform proper call when it's clicked", async () => {
         server.use(
           http.get(`*/monitor/streams/destinations/${destinationId}`, () => {
             return HttpResponse.json(mockDestination);
           }),
-          http.post('*/monitor/streams/destinations/verify', () => {
-            verifyDestinationSpy();
-            return HttpResponse.json({});
-          }),
-          http.put(`*/monitor/streams/destinations/${destinationId}`, () => {
-            editDestinationSpy();
-            return HttpResponse.json({});
-          })
+          http.post(
+            '*/monitor/streams/destinations/verify',
+            async ({ request }) => {
+              const body = await request.json();
+              verifyDestinationSpy(body);
+              return HttpResponse.json({});
+            }
+          ),
+          http.put(
+            `*/monitor/streams/destinations/${destinationId}`,
+            async ({ request }) => {
+              const body = await request.json();
+              editDestinationSpy(body);
+              return HttpResponse.json({});
+            }
+          )
         );
 
         renderWithThemeAndHookFormContext({
@@ -252,13 +281,15 @@ describe('DestinationEdit', () => {
           name: saveDestinationButtonText,
         });
 
-        // Enter Secret Access Key
-        const secretAccessKeyInput = screen.getByLabelText('Secret Access Key');
+        // Enter Secret Key
+        const secretAccessKeyInput = screen.getByLabelText('Secret Key');
         await userEvent.type(secretAccessKeyInput, 'Test');
 
         expect(saveDestinationButton).toBeDisabled();
         await userEvent.click(testConnectionButton);
         expect(verifyDestinationSpy).toHaveBeenCalled();
+        const verifyPayload = verifyDestinationSpy.mock.calls[0][0];
+        expect(verifyPayload).toEqual(expectedVerifyPayload);
 
         await waitFor(() => {
           expect(saveDestinationButton).toBeEnabled();
@@ -266,6 +297,8 @@ describe('DestinationEdit', () => {
 
         await userEvent.click(saveDestinationButton);
         expect(editDestinationSpy).toHaveBeenCalled();
+        const editPayload = editDestinationSpy.mock.calls[0][0];
+        expect(editPayload).toEqual(expectedEditPayload);
       });
     });
 
@@ -275,10 +308,14 @@ describe('DestinationEdit', () => {
           http.get(`*/monitor/streams/destinations/${destinationId}`, () => {
             return HttpResponse.json(mockDestination);
           }),
-          http.post('*/monitor/streams/destinations/verify', () => {
-            verifyDestinationSpy();
-            return HttpResponse.error();
-          })
+          http.post(
+            '*/monitor/streams/destinations/verify',
+            async ({ request }) => {
+              const body = await request.json();
+              verifyDestinationSpy(body);
+              return HttpResponse.error();
+            }
+          )
         );
 
         renderWithThemeAndHookFormContext({
@@ -294,13 +331,15 @@ describe('DestinationEdit', () => {
           name: saveDestinationButtonText,
         });
 
-        // Enter Secret Access Key
-        const secretAccessKeyInput = screen.getByLabelText('Secret Access Key');
+        // Enter Secret Key
+        const secretAccessKeyInput = screen.getByLabelText('Secret Key');
         await userEvent.type(secretAccessKeyInput, 'Test');
 
         expect(saveDestinationButton).toBeDisabled();
         await userEvent.click(testConnectionButton);
         expect(verifyDestinationSpy).toHaveBeenCalled();
+        const verifyPayload = verifyDestinationSpy.mock.calls[0][0];
+        expect(verifyPayload).toEqual(expectedVerifyPayload);
 
         await waitFor(() => {
           expect(saveDestinationButton).toBeDisabled();

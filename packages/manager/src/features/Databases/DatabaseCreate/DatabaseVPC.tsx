@@ -6,8 +6,9 @@ import {
   Tooltip,
 } from '@akamai/cds-components/react';
 import { Spacing } from '@akamai/cds-tokens';
+import { getAPIErrorOrDefault } from '@akamai/compute-ui-core/api';
 import { useAllVPCsQuery, useRegionQuery } from '@linode/queries';
-import { Autocomplete, Box, FormHelperText, Typography } from '@linode/ui';
+import { Autocomplete, FormHelperText } from '@linode/ui';
 import * as React from 'react';
 import type { Control, UseFormSetValue, UseFormTrigger } from 'react-hook-form';
 import { Controller } from 'react-hook-form';
@@ -15,10 +16,8 @@ import { Controller } from 'react-hook-form';
 import { Link } from 'src/components/Link';
 import { MANAGE_NETWORKING_LEARN_MORE_LINK } from 'src/features/Databases/constants';
 import { useFlags } from 'src/hooks/useFlags';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import type { PrivateNetwork, VPC } from '@linode/api-v4';
-import type { Theme } from '@mui/material/styles';
 
 interface NetworkValues {
   private_network?: null | PrivateNetwork;
@@ -80,14 +79,14 @@ export const DatabaseVPC = (props: DatabaseVPCProps) => {
 
   return (
     <>
-      <Box
-        sx={(theme: Theme) => ({
+      <div
+        style={{
           display: 'flex',
-          marginTop: theme.spacingFunction(20),
-          marginBottom: theme.spacingFunction(4),
-        })}
+          marginTop: Spacing.S20,
+          marginBottom: Spacing.S4,
+        }}
       >
-        <Typography variant="h3">Assign a VPC</Typography>
+        <h4 style={{ margin: 0 }}>Assign a VPC</h4>
         {flags.databaseVpcBeta && (
           <Badge
             color="neutral"
@@ -97,16 +96,16 @@ export const DatabaseVPC = (props: DatabaseVPCProps) => {
             BETA
           </Badge>
         )}
-      </Box>
-      <Typography>
+      </div>
+      <p style={{ margin: 0 }}>
         Assign this cluster to an existing VPC.{' '}
         <Link
           to={`${MANAGE_NETWORKING_LEARN_MORE_LINK + (flags.databaseVpcBeta ? '-beta' : '')}`}
         >
           Learn more.
         </Link>
-      </Typography>
-      <Box display="flex">
+      </p>
+      <div style={{ display: 'flex' }}>
         <Controller
           control={control}
           name="private_network.vpc_id"
@@ -115,6 +114,7 @@ export const DatabaseVPC = (props: DatabaseVPCProps) => {
               autoHighlight
               data-testid="database-vpc-selector"
               disabled={disableVPCSelectors}
+              disablePortal={false} // Portal must be enabled for the popper to open in a CDS Drawer
               errorText={vpcErrorMessage || fieldState.error?.message}
               helperText={disableVPCSelectors ? vpcHelperTextCopy : undefined}
               label="VPC"
@@ -140,7 +140,7 @@ export const DatabaseVPC = (props: DatabaseVPCProps) => {
             />
           )}
         />
-      </Box>
+      </div>
       {selectedVPC ? (
         <>
           <Controller
@@ -151,6 +151,7 @@ export const DatabaseVPC = (props: DatabaseVPCProps) => {
                 autoHighlight
                 data-testid="database-subnet-selector"
                 disabled={disableVPCSelectors}
+                disablePortal={false} // Portal must be enabled for the popper to open in a CDS Drawer
                 errorText={fieldState.error?.message}
                 getOptionLabel={(subnet) => `${subnet.label} (${subnet.ipv4})`}
                 label="Subnet"
@@ -164,11 +165,7 @@ export const DatabaseVPC = (props: DatabaseVPCProps) => {
               />
             )}
           />
-          <Box
-            sx={(theme: Theme) => ({
-              marginTop: theme.spacingFunction(20),
-            })}
-          >
+          <div style={{ marginTop: Spacing.S20 }}>
             <Controller
               control={control}
               name="private_network.public_access"
@@ -203,7 +200,7 @@ export const DatabaseVPC = (props: DatabaseVPCProps) => {
                 </>
               )}
             />
-          </Box>
+          </div>
         </>
       ) : (
         mode === 'create' && (

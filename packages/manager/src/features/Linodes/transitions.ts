@@ -1,8 +1,8 @@
-import { getFormattedStatus } from '@linode/utilities';
+import { getFormattedStatus } from '@akamai/compute-ui-core/api';
 
+import { isInProgressEvent } from 'src/queries/events/event.helpers';
 import {
   isEventRelevantToLinode,
-  isInProgressEvent,
   isPrimaryEntity,
   isSecondaryEntity,
 } from 'src/queries/events/event.helpers';

@@ -14,6 +14,7 @@ import {
 } from './ViewImageDrawer.styles';
 
 import type { VIEW_SHARED_IMAGE_DETAILS_DRAWER_PENDO_IDS } from '../constants';
+import type { JOINED_GROUP_DETAILS_PENDO_IDS } from '../constants';
 import type { APIError, Image } from '@linode/api-v4';
 
 interface Props {
@@ -23,7 +24,9 @@ interface Props {
   isSharedImage?: boolean;
   onClose: () => void;
   open: boolean;
-  pendoIDs: typeof VIEW_SHARED_IMAGE_DETAILS_DRAWER_PENDO_IDS;
+  pendoIDs:
+    | typeof JOINED_GROUP_DETAILS_PENDO_IDS.viewDetails
+    | typeof VIEW_SHARED_IMAGE_DETAILS_DRAWER_PENDO_IDS;
 }
 
 export const ViewImageDrawer = (props: Props) => {
@@ -41,11 +44,11 @@ export const ViewImageDrawer = (props: Props) => {
 
   return (
     <Drawer
+      closeButtonPendoId={pendoIDs.xButton}
       error={imageError}
       isFetching={isFetching}
       onClose={onClose}
       open={open}
-      pendoId={pendoIDs.xButton}
       title={`View ${isSharedImage ? 'shared ' : ''}image details`}
     >
       <Stack spacing={2}>

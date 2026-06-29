@@ -1,11 +1,9 @@
-import { childAccountFactory } from '@linode/utilities';
-import { screen, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { fireEvent, screen, waitFor } from '@testing-library/react';
 import React from 'react';
 
-import { accountRolesFactory } from 'src/factories/accountRoles';
-import { renderWithTheme } from 'src/utilities/testHelpers';
-
+import { createAccountRoles, createChildAccountList } from '../../factories';
+import { getCdsTableRows } from '../../utilities/testHelpers';
+import { renderWithProviders } from '../../utilities/testHelpers';
 import { UserDelegationsTable } from './UserDelegationsTable';
 
 const mockChildAccounts = {
@@ -23,6 +21,7 @@ const mockChildAccounts = {
 
 const queryMocks = vi.hoisted(() => ({
   useGetDelegatedChildAccountsForUserQuery: vi.fn().mockReturnValue({}),
+  useNavigate: vi.fn(),
   useParams: vi.fn().mockReturnValue({}),
   useSearch: vi.fn().mockReturnValue({}),
   useAccountRoles: vi.fn().mockReturnValue({}),
@@ -42,13 +41,18 @@ vi.mock('@tanstack/react-router', async () => {
   const actual = await vi.importActual('@tanstack/react-router');
   return {
     ...actual,
+    useNavigate: queryMocks.useNavigate,
     useParams: queryMocks.useParams,
     useSearch: queryMocks.useSearch,
   };
 });
 
 describe('UserDelegationsTable', () => {
+  const navigate = vi.fn();
+
   beforeEach(() => {
+    queryMocks.useNavigate.mockReturnValue(navigate);
+    navigate.mockReset();
     queryMocks.useParams.mockReturnValue({
       username: 'test-user',
     });
@@ -57,22 +61,19 @@ describe('UserDelegationsTable', () => {
       isLoading: false,
     });
     queryMocks.useSearch.mockReturnValue({
-      query: '',
+      company: '',
     });
     // Ensure IAM is considered enabled
     queryMocks.useAccountRoles.mockReturnValue({
-      data: accountRolesFactory.build(),
+      data: createAccountRoles(),
       isLoading: false,
     });
   });
 
   it('renders the correct number of child accounts', () => {
-    renderWithTheme(<UserDelegationsTable />, {
+    renderWithProviders(<UserDelegationsTable />, {
       flags: {
         iam: { enabled: true },
-        iamDelegation: {
-          enabled: true,
-        },
       },
     });
 
@@ -80,63 +81,51 @@ describe('UserDelegationsTable', () => {
     screen.getByText('Test Account 2');
   });
 
-  it('shows pagination when there are more than 25 child accounts', () => {
+  it('shows pagination when there are more than 25 child accounts', async () => {
     queryMocks.useGetDelegatedChildAccountsForUserQuery.mockReturnValue({
-      data: { data: childAccountFactory.buildList(30), results: 30 },
+      data: { data: createChildAccountList(30), results: 30 },
       isLoading: false,
     });
 
-    renderWithTheme(<UserDelegationsTable />, {
+    const { container } = renderWithProviders(<UserDelegationsTable />, {
       flags: {
         iam: { enabled: true },
-        iamDelegation: {
-          enabled: true,
-        },
       },
     });
 
-    const tabelRows = screen.getAllByRole('row');
-    const paginationRow = screen.getByRole('navigation', {
-      name: 'pagination navigation',
-    });
-    expect(tabelRows).toHaveLength(32); // 30 rows + header row + pagination row
-    expect(paginationRow).toBeInTheDocument();
+    const tableRows = await getCdsTableRows(container);
+    const pagination = screen.getByTestId('user-delegations-table-pagination');
+    expect(tableRows).toHaveLength(31); // 30 data rows + header row
+    expect(pagination).toBeInTheDocument();
   });
 
   it('filters child accounts by search', async () => {
     queryMocks.useGetDelegatedChildAccountsForUserQuery.mockReturnValue({
-      data: { data: childAccountFactory.buildList(30), results: 30 },
+      data: { data: createChildAccountList(30), results: 30 },
       isLoading: false,
     });
 
-    renderWithTheme(<UserDelegationsTable />, {
+    const { container } = renderWithProviders(<UserDelegationsTable />, {
       flags: {
         iam: { enabled: true },
-        iamDelegation: {
-          enabled: true,
-        },
       },
     });
 
-    const paginationRow = screen.getByRole('navigation', {
-      name: 'pagination navigation',
-    });
-
-    screen.getByText('child-account-31');
-    screen.getByText('child-account-32');
-
-    expect(paginationRow).toBeInTheDocument();
-
-    const searchInput = screen.getByPlaceholderText('Search');
-    await userEvent.type(searchInput, 'child-account-31');
-
-    screen.getByText('child-account-31');
+    const searchField = container.querySelector('cds-search-field');
+    fireEvent(
+      searchField!,
+      new CustomEvent('change', {
+        bubbles: true,
+        detail: { value: 'child-account-31' },
+      })
+    );
 
     await waitFor(() => {
-      expect(screen.queryByText('Child Account 32')).not.toBeInTheDocument();
-    });
-    await waitFor(() => {
-      expect(paginationRow).not.toBeInTheDocument();
+      expect(navigate).toHaveBeenCalledWith(
+        expect.objectContaining({
+          search: { company: 'child-account-31' },
+        })
+      );
     });
   });
 });

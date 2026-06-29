@@ -1,3 +1,4 @@
+import { getAPIErrorOrDefault } from '@akamai/compute-ui-core/api';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useCreatePartnerReferralMutation, useProfile } from '@linode/queries';
 import {
@@ -29,7 +30,6 @@ import { Link } from 'src/components/Link';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
 import { countries } from 'src/features/Profile/AuthenticationSettings/PhoneVerification/countries';
 import { getCountryName } from 'src/features/Profile/AuthenticationSettings/PhoneVerification/helpers';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import type {
   Country,

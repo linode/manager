@@ -1,12 +1,13 @@
-import { childAccountFactory } from '@linode/utilities';
 import { screen } from '@testing-library/react';
 import React from 'react';
 
-import { accountRolesFactory } from 'src/factories/accountRoles';
-import { expectNotificationBannerText } from 'src/features/IAM/utilities/testHelpers';
-import { renderWithTheme } from 'src/utilities/testHelpers';
-
+import { createAccountRoles, createChildAccountList } from '../../factories';
 import { NO_ACCOUNT_DELEGATIONS_TEXT } from '../../Shared/constants';
+import { expectNotificationBannerText } from '../../utilities/testHelpers';
+import {
+  mockMatchMedia,
+  renderWithProviders,
+} from '../../utilities/testHelpers';
 import { UserDelegations } from './UserDelegations';
 
 const queryMocks = vi.hoisted(() => ({
@@ -47,6 +48,8 @@ vi.mock('@tanstack/react-router', async () => {
 });
 
 describe('UserDelegations', () => {
+  beforeAll(() => mockMatchMedia());
+
   beforeEach(() => {
     queryMocks.useParams.mockReturnValue({
       username: 'test-user',
@@ -55,7 +58,7 @@ describe('UserDelegations', () => {
     queryMocks.useNavigate.mockReturnValue(vi.fn());
     // Ensure IAM is considered enabled
     queryMocks.useAccountRoles.mockReturnValue({
-      data: accountRolesFactory.build(),
+      data: createAccountRoles(),
       isLoading: false,
     });
     queryMocks.usePermissions.mockReturnValue({
@@ -66,16 +69,13 @@ describe('UserDelegations', () => {
 
   it('should display no roles text if no roles are assigned to user', async () => {
     queryMocks.useGetDelegatedChildAccountsForUserQuery.mockReturnValue({
-      data: { data: childAccountFactory.buildList(0), results: 0 },
+      data: { data: createChildAccountList(0), results: 0 },
       isLoading: false,
     });
 
-    renderWithTheme(<UserDelegations />, {
+    renderWithProviders(<UserDelegations />, {
       flags: {
         iam: { enabled: true },
-        iamDelegation: {
-          enabled: true,
-        },
       },
     });
     expect(screen.getByText('This list is empty')).toBeVisible();
@@ -84,17 +84,14 @@ describe('UserDelegations', () => {
 
   it('should display table if user has delegations', async () => {
     queryMocks.useGetDelegatedChildAccountsForUserQuery.mockReturnValue({
-      data: { data: childAccountFactory.buildList(2), results: 2 },
+      data: { data: createChildAccountList(2), results: 2 },
 
       isLoading: false,
     });
 
-    renderWithTheme(<UserDelegations />, {
+    renderWithProviders(<UserDelegations />, {
       flags: {
         iam: { enabled: true },
-        iamDelegation: {
-          enabled: true,
-        },
       },
     });
 
@@ -108,12 +105,9 @@ describe('UserDelegations', () => {
       },
     });
 
-    renderWithTheme(<UserDelegations />, {
+    renderWithProviders(<UserDelegations />, {
       flags: {
         iam: { enabled: true },
-        iamDelegation: {
-          enabled: true,
-        },
       },
     });
 

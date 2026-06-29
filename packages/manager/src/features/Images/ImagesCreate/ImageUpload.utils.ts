@@ -1,4 +1,4 @@
-import { readableBytes } from '@linode/utilities';
+import { readableBytes } from '@akamai/compute-ui-core/api';
 import { uploadImageSchema } from '@linode/validation';
 import { mixed } from 'yup';
 

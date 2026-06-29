@@ -1,15 +1,14 @@
-import { CONTINENT_CODE_TO_CONTINENT } from '@linode/api-v4';
-
-// @todo: modularization - Move `getRegionCountryGroup` utility to `@linode/shared` package
-// as it imports GLOBAL_QUOTA_VALUE from RegionSelect's constants.ts and update the import.
-import { getRegionCountryGroup } from 'src/utilities/formatRegion';
+import {
+  CONTINENT_CODE_TO_CONTINENT,
+  getRegionCountryGroup,
+} from '@akamai/compute-ui-core/api';
 
 import type {
   GetRegionOptionAvailability,
   RegionFilterValue,
 } from './RegionSelect.types';
+import type { LinodeCreateType } from '@akamai/compute-ui-core/api';
 import type { AccountAvailability, Capabilities, Region } from '@linode/api-v4';
-import type { LinodeCreateType } from '@linode/utilities';
 
 const NORTH_AMERICA = CONTINENT_CODE_TO_CONTINENT.NA;
 

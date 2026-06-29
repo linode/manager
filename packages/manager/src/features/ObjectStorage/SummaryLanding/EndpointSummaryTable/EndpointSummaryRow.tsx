@@ -1,7 +1,8 @@
-import { Box, CircleProgress, ErrorState, Typography } from '@linode/ui';
+import { Box, ErrorState, Typography } from '@linode/ui';
 import { Grid } from '@mui/material';
 import * as React from 'react';
 
+import { LinearProgress } from 'src/components/LinearProgress';
 import { Link } from 'src/components/Link';
 import { QuotaUsageBar } from 'src/components/QuotaUsageBar/QuotaUsageBar';
 import { useQuotasWithUsageQuery } from 'src/features/Account/Quotas/hooks/useQuotasWithUsageQuery';
@@ -33,21 +34,9 @@ export const EndpointSummaryRow = ({ endpoint }: Props) => {
     enabled: Boolean(endpoint),
   });
 
-  if (
+  const isLoading =
     isFetchingQuotas ||
-    quotasWithUsage?.some((quotaWithUsage) => quotaWithUsage.isFetchingUsage)
-  ) {
-    return (
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-        }}
-      >
-        <CircleProgress size="md" />
-      </Box>
-    );
-  }
+    quotasWithUsage?.some((quotaWithUsage) => quotaWithUsage.isFetchingUsage);
 
   if (isError) {
     return (
@@ -76,6 +65,32 @@ export const EndpointSummaryRow = ({ endpoint }: Props) => {
     { label: 'Buckets', type: 'obj-buckets' },
   ];
 
+  function getUsageBar(quotaWithUsage: QuotaWithUsage) {
+    if (isLoading) {
+      return (
+        <LinearProgress
+          sx={(theme) => ({
+            padding: '4px',
+            marginBottom: theme.spacingFunction(24),
+          })}
+        />
+      );
+    }
+
+    if (quotaWithUsage && !quotaWithUsage.fetchingUsageFailed) {
+      return (
+        <QuotaUsageBar
+          layout="wide"
+          limit={quotaWithUsage.quota.quota_limit}
+          resourceMetric={quotaWithUsage.quota.resource_metric}
+          usage={quotaWithUsage.usage ?? 0}
+        />
+      );
+    }
+
+    return <Typography>Data not available</Typography>;
+  }
+
   return (
     <Box>
       <Box
@@ -95,7 +110,7 @@ export const EndpointSummaryRow = ({ endpoint }: Props) => {
 
         {objectStorageSummaryPageLinks && (
           <Link
-            to={`/object-storage/buckets?endpoints=${endpoint.s3_endpoint}&regions=${endpoint.region}`}
+            to={`/object-storage/buckets?regions=${endpoint.region}&endpoints=${endpoint.s3_endpoint}`}
           >
             Show buckets
           </Link>
@@ -111,23 +126,17 @@ export const EndpointSummaryRow = ({ endpoint }: Props) => {
               <Typography
                 sx={(theme) => ({
                   font: theme.tokens.alias.Typography.Label.Regular.S,
-                  color: theme.tokens.color.Neutrals[70],
+                  color:
+                    theme.palette.mode === 'light'
+                      ? theme.tokens.color.Neutrals[70]
+                      : theme.tokens.color.Neutrals[5],
                   paddingY: theme.spacingFunction(2),
                 })}
               >
                 {label}
               </Typography>
 
-              {quotaWithUsage && !quotaWithUsage.fetchingUsageFailed ? (
-                <QuotaUsageBar
-                  limit={quotaWithUsage.quota.quota_limit}
-                  resourceMetric={quotaWithUsage.quota.resource_metric}
-                  usage={quotaWithUsage.usage ?? 0}
-                  variant="obj-summary"
-                />
-              ) : (
-                <Typography>Data not available</Typography>
-              )}
+              {getUsageBar(quotaWithUsage)}
             </Grid>
           );
         })}

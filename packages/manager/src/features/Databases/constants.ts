@@ -108,3 +108,12 @@ export const DISABLE_CREDENTIAL_STATES = [
 export const ERROR_STATE_TITLE = 'An unexpected error occurred.';
 
 export const ERROR_STATE_TEXT = 'Refresh the page or try again later.';
+
+export const STORAGE_PLAN_COPY =
+  'Usable storage is smaller than the actual plan storage due to the overhead from the database platform.';
+
+export const STORAGE_COPY =
+  'The usable disk size is smaller than the selected plan capacity due to overhead from the OS.';
+
+export const VALKEY_STORAGE_TOOLTIP_COPY =
+  'Valkey is an in-memory data store constrained entirely by RAM.';

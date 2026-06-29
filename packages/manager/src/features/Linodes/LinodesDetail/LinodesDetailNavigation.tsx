@@ -1,4 +1,4 @@
-import { useLinodeQuery, usePreferences, useTypeQuery } from '@linode/queries';
+import { useLinodeQuery, usePreferences } from '@linode/queries';
 import { getFeatureChip } from '@linode/shared';
 import { CircleProgress, ErrorState } from '@linode/ui';
 import Grid from '@mui/material/Grid';
@@ -31,14 +31,6 @@ const LinodesDetailNavigation = () => {
   const { data: linode, error } = useLinodeQuery(id);
   const { aclpServices, aclp } = useFlags();
 
-  const { data: type } = useTypeQuery(
-    linode?.type ?? '',
-    Boolean(linode?.type)
-  );
-
-  // Bare metal Linodes have a very different detail view
-  const isBareMetalInstance = type?.class === 'metal';
-
   const isAclpMetricsSupportedRegionLinode = useIsAclpSupportedRegion({
     capability: 'Linodes',
     regionId: linode?.region,
@@ -67,17 +59,14 @@ const LinodesDetailNavigation = () => {
       title: 'Network',
     },
     {
-      hide: isBareMetalInstance,
       to: '/linodes/$linodeId/storage',
       title: 'Storage',
     },
     {
-      hide: isBareMetalInstance,
       to: '/linodes/$linodeId/configurations',
       title: 'Configurations',
     },
     {
-      hide: isBareMetalInstance,
       to: '/linodes/$linodeId/backup',
       title: 'Backups',
     },
@@ -114,7 +103,7 @@ const LinodesDetailNavigation = () => {
   return (
     <LinodesDetailContext.Provider
       value={{
-        isBareMetalInstance,
+        isBareMetalInstance: false,
       }}
     >
       <DocumentTitleSegment

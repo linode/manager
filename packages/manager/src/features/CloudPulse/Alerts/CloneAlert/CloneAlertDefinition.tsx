@@ -17,7 +17,6 @@ import {
 import { useCloudPulseServiceByServiceType } from 'src/queries/cloudpulse/services';
 
 import {
-  CLONE_ALERT_FAILED_MESSAGE,
   CLONE_ALERT_SUCCESS_MESSAGE,
   CREATE_ALERT_ERROR_FIELD_MAP,
   entityLabelMap,
@@ -158,7 +157,7 @@ export const CloneAlertDefinition = ({
 
       const rootError = errors.find((error: APIError) => !error.field);
       if (rootError) {
-        enqueueSnackbar(CLONE_ALERT_FAILED_MESSAGE, {
+        enqueueSnackbar(`Cloning alert failed: ${rootError.reason}`, {
           variant: 'error',
         });
       }

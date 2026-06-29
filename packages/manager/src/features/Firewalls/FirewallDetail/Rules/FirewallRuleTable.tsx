@@ -59,12 +59,10 @@ import { sortPortString } from './shared';
 import type { FirewallRuleDrawerMode } from './FirewallRuleDrawer.types';
 import type { ExtendedFirewallRule, RuleStatus } from './firewallRuleEditor';
 import type { Category, FirewallRuleError } from './shared';
+import type { PrefixListRuleReference } from '@akamai/compute-ui-core/api';
 import type { DragEndEvent } from '@dnd-kit/core';
 import type { FirewallPolicyType } from '@linode/api-v4/lib/firewalls/types';
-import type {
-  FirewallOptionItem,
-  PrefixListRuleReference,
-} from 'src/features/Firewalls/shared';
+import type { FirewallOptionItem } from 'src/features/Firewalls/shared';
 
 interface RuleRow {
   action?: null | string;

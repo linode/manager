@@ -1,3 +1,4 @@
+import { getAPIErrorOrDefault } from '@akamai/compute-ui-core/api';
 import { useProfile } from '@linode/queries';
 import { CircleProgress, Notice, Paper, Typography } from '@linode/ui';
 import Grid from '@mui/material/Grid';
@@ -9,7 +10,6 @@ import Step3 from 'src/assets/referrals/step-3.svg';
 import { CopyableTextField } from 'src/components/CopyableTextField/CopyableTextField';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Link } from 'src/components/Link';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import {
   StyledEarnedGrid,

@@ -5,8 +5,11 @@ export const ProductDetailsContainer = styled(Box)(({ theme }) => ({
   alignItems: 'flex-start',
   alignSelf: 'stretch',
   display: 'flex',
+  flex: 1,
   flexDirection: 'column',
   gap: theme.spacingFunction(32),
+  minHeight: 0,
+  overflow: 'hidden',
 }));
 
 export const InfoBanner = styled(Notice)(() => ({

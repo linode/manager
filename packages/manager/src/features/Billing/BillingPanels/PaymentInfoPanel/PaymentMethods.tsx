@@ -1,9 +1,9 @@
+import { getAPIErrorOrDefault } from '@akamai/compute-ui-core/api';
 import { CircleProgress, Typography } from '@linode/ui';
 import Grid from '@mui/material/Grid';
 import * as React from 'react';
 
 import { PaymentMethodRow } from 'src/components/PaymentMethodRow/PaymentMethodRow';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import type { PaymentMethod } from '@linode/api-v4/lib/account/types';
 import type { APIError } from '@linode/api-v4/lib/types';

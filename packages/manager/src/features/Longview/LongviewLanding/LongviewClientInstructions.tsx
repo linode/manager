@@ -1,10 +1,10 @@
+import { getAPIErrorOrDefault } from '@akamai/compute-ui-core/api';
 import { Paper } from '@linode/ui';
 import Grid from '@mui/material/Grid';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { EditableEntityLabel } from 'src/components/EditableEntityLabel/EditableEntityLabel';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { InstallationInstructions } from '../shared/InstallationInstructions';
 import { LongviewActionMenu } from './LongviewActionMenu';

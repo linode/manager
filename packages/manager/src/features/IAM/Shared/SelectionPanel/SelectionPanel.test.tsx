@@ -2,9 +2,11 @@ import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
-import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
-
 import { getCdsButtonByText } from '../../utilities/testHelpers';
+import {
+  mockMatchMedia,
+  renderWithProviders,
+} from '../../utilities/testHelpers';
 import { SelectionPanel } from './SelectionPanel';
 
 import type { SelectableRow } from './SelectionPanel';
@@ -52,7 +54,7 @@ const defaultProps = {
 describe('SelectionPanel', () => {
   describe('rows', () => {
     it('renders all provided rows', () => {
-      renderWithTheme(<SelectionPanel {...defaultProps} />);
+      renderWithProviders(<SelectionPanel {...defaultProps} />);
 
       expect(screen.getByText('alice')).toBeVisible();
       expect(screen.getByText('bob')).toBeVisible();
@@ -61,7 +63,7 @@ describe('SelectionPanel', () => {
 
     it('calls onToggle with rank and true when an unchecked row is clicked', async () => {
       const onToggle = vi.fn();
-      renderWithTheme(
+      renderWithProviders(
         <SelectionPanel
           {...defaultProps}
           onToggle={onToggle}
@@ -76,7 +78,7 @@ describe('SelectionPanel', () => {
 
     it('calls onToggle with rank and false when a checked row is clicked', async () => {
       const onToggle = vi.fn();
-      renderWithTheme(
+      renderWithProviders(
         <SelectionPanel
           {...defaultProps}
           onToggle={onToggle}
@@ -91,7 +93,7 @@ describe('SelectionPanel', () => {
 
     it('does not call onToggle when isDisabled is true', async () => {
       const onToggle = vi.fn();
-      renderWithTheme(
+      renderWithProviders(
         <SelectionPanel {...defaultProps} isDisabled onToggle={onToggle} />
       );
 
@@ -103,7 +105,7 @@ describe('SelectionPanel', () => {
 
   describe('loading state', () => {
     it('shows a loading spinner when isLoading is true', () => {
-      const { container } = renderWithTheme(
+      const { container } = renderWithProviders(
         <SelectionPanel {...defaultProps} isLoading paginatedRows={[]} />
       );
 
@@ -114,7 +116,7 @@ describe('SelectionPanel', () => {
     });
 
     it('shows a custom loading label', () => {
-      const { container } = renderWithTheme(
+      const { container } = renderWithProviders(
         <SelectionPanel
           {...defaultProps}
           isLoading
@@ -133,7 +135,7 @@ describe('SelectionPanel', () => {
 
   describe('empty state', () => {
     it('shows the default empty text when showEmptyState is true', () => {
-      renderWithTheme(
+      renderWithProviders(
         <SelectionPanel {...defaultProps} paginatedRows={[]} showEmptyState />
       );
 
@@ -141,7 +143,7 @@ describe('SelectionPanel', () => {
     });
 
     it('shows a custom noItemsText', () => {
-      renderWithTheme(
+      renderWithProviders(
         <SelectionPanel
           {...defaultProps}
           noItemsText="No users found"
@@ -156,7 +158,7 @@ describe('SelectionPanel', () => {
 
   describe('error state', () => {
     it('shows the error message when errorText is provided', () => {
-      renderWithTheme(
+      renderWithProviders(
         <SelectionPanel
           {...defaultProps}
           errorText="Failed to load users"
@@ -170,7 +172,7 @@ describe('SelectionPanel', () => {
 
   describe('toolbar', () => {
     it('renders the toolbar by default', () => {
-      renderWithTheme(<SelectionPanel {...defaultProps} />);
+      renderWithProviders(<SelectionPanel {...defaultProps} />);
 
       expect(screen.getByText('Select all')).toBeVisible();
       expect(screen.getByText('Clear all')).toBeVisible();
@@ -178,7 +180,9 @@ describe('SelectionPanel', () => {
     });
 
     it('hides the toolbar when showToolbar is false', () => {
-      renderWithTheme(<SelectionPanel {...defaultProps} showToolbar={false} />);
+      renderWithProviders(
+        <SelectionPanel {...defaultProps} showToolbar={false} />
+      );
 
       expect(screen.queryByText('Select all')).not.toBeInTheDocument();
       expect(screen.queryByText('Clear all')).not.toBeInTheDocument();
@@ -186,7 +190,7 @@ describe('SelectionPanel', () => {
     });
 
     it('displays the default selectionLabel and count', () => {
-      renderWithTheme(
+      renderWithProviders(
         <SelectionPanel {...defaultProps} selectedCount={1} totalCount={3} />
       );
 
@@ -195,7 +199,7 @@ describe('SelectionPanel', () => {
     });
 
     it('displays a custom selectionLabel', () => {
-      renderWithTheme(
+      renderWithProviders(
         <SelectionPanel {...defaultProps} selectionLabel="Users selected:" />
       );
 
@@ -203,7 +207,7 @@ describe('SelectionPanel', () => {
     });
 
     it('shows selectedCount/selectedCount when showSelectedOnly is true', () => {
-      renderWithTheme(
+      renderWithProviders(
         <SelectionPanel
           {...defaultProps}
           selectedCount={2}
@@ -217,7 +221,7 @@ describe('SelectionPanel', () => {
 
     it('calls onSelectAll when "Select all" is clicked', async () => {
       const onSelectAll = vi.fn();
-      renderWithTheme(
+      renderWithProviders(
         <SelectionPanel {...defaultProps} onSelectAll={onSelectAll} />
       );
 
@@ -228,7 +232,9 @@ describe('SelectionPanel', () => {
 
     it('calls onClear when "Clear all" is clicked', async () => {
       const onClear = vi.fn();
-      renderWithTheme(<SelectionPanel {...defaultProps} onClear={onClear} />);
+      renderWithProviders(
+        <SelectionPanel {...defaultProps} onClear={onClear} />
+      );
 
       await userEvent.click(screen.getByText('Clear all'));
 
@@ -236,7 +242,7 @@ describe('SelectionPanel', () => {
     });
 
     it('"Select all" is disabled when isSelectAllDisabled is true', async () => {
-      const { container } = renderWithTheme(
+      const { container } = renderWithProviders(
         <SelectionPanel {...defaultProps} isSelectAllDisabled />
       );
 
@@ -245,7 +251,7 @@ describe('SelectionPanel', () => {
     });
 
     it('"Clear all" is disabled when isClearDisabled is true', async () => {
-      const { container } = renderWithTheme(
+      const { container } = renderWithProviders(
         <SelectionPanel {...defaultProps} isClearDisabled />
       );
 
@@ -254,7 +260,7 @@ describe('SelectionPanel', () => {
     });
 
     it('reflects showSelectedOnly state on the checkbox host element', () => {
-      const { container } = renderWithTheme(
+      const { container } = renderWithProviders(
         <SelectionPanel {...defaultProps} showSelectedOnly />
       );
 
@@ -266,7 +272,7 @@ describe('SelectionPanel', () => {
     });
 
     it('does not mark the checkbox as checked when showSelectedOnly is false', () => {
-      const { container } = renderWithTheme(
+      const { container } = renderWithProviders(
         <SelectionPanel {...defaultProps} showSelectedOnly={false} />
       );
 
@@ -278,7 +284,7 @@ describe('SelectionPanel', () => {
 
   describe('filter / search field', () => {
     it('reflects filterText on the search field', () => {
-      const { container } = renderWithTheme(
+      const { container } = renderWithProviders(
         <SelectionPanel {...defaultProps} filterText="ali" />
       );
 
@@ -287,7 +293,7 @@ describe('SelectionPanel', () => {
     });
 
     it('renders the filter placeholder', () => {
-      const { container } = renderWithTheme(
+      const { container } = renderWithProviders(
         <SelectionPanel {...defaultProps} filterPlaceholder="Search users..." />
       );
 
@@ -296,7 +302,7 @@ describe('SelectionPanel', () => {
     });
 
     it('disables the search field when isFilterDisabled is true', () => {
-      const { container } = renderWithTheme(
+      const { container } = renderWithProviders(
         <SelectionPanel {...defaultProps} isFilterDisabled />
       );
 
@@ -310,7 +316,7 @@ describe('SelectionPanel', () => {
 
   describe('pagination', () => {
     it('does not render pagination when totalCount <= minPageSize', () => {
-      renderWithTheme(
+      renderWithProviders(
         <SelectionPanel {...defaultProps} minPageSize={25} totalCount={3} />
       );
 
@@ -318,7 +324,7 @@ describe('SelectionPanel', () => {
     });
 
     it('renders pagination when totalCount > minPageSize', () => {
-      const { container } = renderWithTheme(
+      const { container } = renderWithProviders(
         <SelectionPanel
           {...defaultProps}
           minPageSize={25}
@@ -331,7 +337,7 @@ describe('SelectionPanel', () => {
     });
 
     it('hides pagination when showPagination is explicitly false', () => {
-      const { container } = renderWithTheme(
+      const { container } = renderWithProviders(
         <SelectionPanel
           {...defaultProps}
           minPageSize={25}
@@ -344,7 +350,7 @@ describe('SelectionPanel', () => {
     });
 
     it('shows pagination when showPagination is explicitly true even if count <= minPageSize', () => {
-      const { container } = renderWithTheme(
+      const { container } = renderWithProviders(
         <SelectionPanel
           {...defaultProps}
           minPageSize={25}

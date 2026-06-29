@@ -40,12 +40,6 @@ describe('PlanInformation', () => {
     expect(element).toBeInTheDocument();
   });
 
-  it('should render MetalNotice when planType is "metal"', () => {
-    renderWithTheme(<PlanInformation {...mockProps} planType="metal" />);
-    const element = screen.getByTestId('metal-notice');
-    expect(element).toBeInTheDocument();
-  });
-
   it('should inform the user about Dedicated plans having limited availability when appropriate', () => {
     renderWithTheme(
       <PlanInformation

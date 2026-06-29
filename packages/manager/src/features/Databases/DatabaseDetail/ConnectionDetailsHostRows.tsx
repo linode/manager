@@ -1,6 +1,5 @@
 import { Icon, Tooltip } from '@akamai/cds-components/react';
 import { Spacing } from '@akamai/cds-tokens';
-import { Typography } from '@linode/ui';
 import * as React from 'react';
 
 import {
@@ -77,11 +76,9 @@ export const ConnectionDetailsHostRows = (
     }
 
     return (
-      <Typography>
-        <span className={classes.provisioningText}>
-          Your hostname will appear here once it is available.
-        </span>
-      </Typography>
+      <span className={classes.provisioningText}>
+        Your hostname will appear here once it is available.
+      </span>
     );
   };
 

@@ -23,6 +23,7 @@ import {
   Notice,
   Stack,
   TooltipIcon,
+  Typography,
   useTheme,
 } from '@linode/ui';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -32,6 +33,7 @@ import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextFiel
 import { SHARE_GROUP_COLUMN_HEADER_TOOLTIP } from 'src/features/Images/constants';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
+import { Link } from '../Link';
 import {
   DEFAULT_CLIENT_SIDE_PAGE_SIZE,
   IMAGE_SELECT_TABLE_PREFERENCE_KEY,
@@ -39,15 +41,21 @@ import {
 } from './constants';
 import { ImageSelectTableRow } from './ImageSelectTableRow';
 
-import type {
-  IMAGE_SELECT_TABLE_LINODE_CREATE_PENDO_IDS,
-  IMAGE_SELECT_TABLE_LINODE_REBUILD_PENDO_IDS,
-} from './constants';
 import type { Filter, Image } from '@linode/api-v4';
 import type { LinkProps } from '@tanstack/react-router';
-import type { IMAGE_SELECT_TABLE_SHARE_GROUP_CREATE_PENDO_IDS } from 'src/components/ImageSelect/constants';
 
 type SelectionMode = 'multi' | 'single';
+
+type ImageSelectPendoIDs = {
+  createImageLink?: string;
+  metadataSupportedIcon: string;
+  regionFilterSelect: string;
+  replicatedRegionPopover: string;
+  searchImagesBar: string;
+  shareGroupInfoIcon: string;
+  tagFilterSelect: string;
+  uploadImageLink?: string;
+};
 
 interface Props {
   /**
@@ -71,10 +79,8 @@ interface Props {
   /**
    * An object containing Pendo IDs for elements in this component.
    */
-  pendoIDs:
-    | typeof IMAGE_SELECT_TABLE_LINODE_CREATE_PENDO_IDS
-    | typeof IMAGE_SELECT_TABLE_LINODE_REBUILD_PENDO_IDS
-    | typeof IMAGE_SELECT_TABLE_SHARE_GROUP_CREATE_PENDO_IDS;
+  pendoIDs: ImageSelectPendoIDs;
+
   queryParamsPrefix?: string;
   /**
    * The IDs of the currently selected images, when using multi-select mode with checkboxes.
@@ -85,6 +91,10 @@ interface Props {
    * The default is single select.
    */
   selectionMode: SelectionMode;
+  /**
+   * Whether to show the subtitle text above the table.
+   */
+  showSubtitle?: boolean;
 }
 
 type OptionType = { label: string; value: string };
@@ -99,6 +109,7 @@ export const ImageSelectTable = (props: Props) => {
     queryParamsPrefix,
     selectionMode,
     selectedImageIds,
+    showSubtitle,
   } = props;
 
   const theme = useTheme();
@@ -183,6 +194,20 @@ export const ImageSelectTable = (props: Props) => {
   return (
     <Stack pt={1} spacing={2}>
       {errorText && <Notice text={errorText} variant="error" />}
+      {showSubtitle && (
+        <Typography>
+          Select the images you want to share with group members from the list
+          of your custom images. If needed,{' '}
+          <Link pendoId={pendoIDs.createImageLink} to="/images/create/disk">
+            Create an Image
+          </Link>{' '}
+          or{' '}
+          <Link pendoId={pendoIDs.uploadImageLink} to="/images/create/upload">
+            Upload an Image
+          </Link>{' '}
+          first.
+        </Typography>
+      )}
       <Stack
         alignItems={matchesMdDown ? 'stretch' : 'center'}
         direction={matchesMdDown ? 'column' : 'row'}
@@ -344,14 +369,16 @@ export const ImageSelectTable = (props: Props) => {
               ))}
           </TableBody>
         </Table>
-        <Pagination
-          count={imagesData?.length ?? 0}
-          onPageChange={handlePageChange}
-          onPageSizeChange={handlePageSizeChange}
-          page={pagination.page}
-          pageSize={pagination.pageSize}
-          style={{ border: 0 }}
-        />
+        {(imagesData?.length ?? 0) > DEFAULT_CLIENT_SIDE_PAGE_SIZE && (
+          <Pagination
+            count={imagesData?.length ?? 0}
+            onPageChange={handlePageChange}
+            onPageSizeChange={handlePageSizeChange}
+            page={pagination.page}
+            pageSize={pagination.pageSize}
+            style={{ border: 0 }}
+          />
+        )}
       </Box>
     </Stack>
   );

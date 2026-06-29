@@ -17,12 +17,12 @@ import { VPCPanel } from 'src/features/Linodes/LinodesDetail/LinodeSettings/VPCP
 import { useVPCDualStack } from 'src/hooks/useVPCDualStack';
 import { sendLinodeCreateDocsEvent } from 'src/utilities/analytics/customEventAnalytics';
 
+import type { ExtendedIP } from '@akamai/compute-ui-core/api';
 import type {
   InterfacePayload,
   InterfacePurpose,
 } from '@linode/api-v4/lib/linodes/types';
 import type { SelectOption } from '@linode/ui';
-import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 interface InterfaceErrors extends VPCInterfaceErrors, OtherInterfaceErrors {}
 

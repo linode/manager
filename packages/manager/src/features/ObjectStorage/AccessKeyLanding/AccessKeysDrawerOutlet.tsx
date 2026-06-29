@@ -37,8 +37,8 @@ export const AccessKeysDrawerOutlet = () => {
       />
 
       <HostNamesDrawer
+        accessKeyId={drawer?.accessKeyId}
         isOpen={drawer?.type === 'access-key-hostnames'}
-        objectStorageKey={objectStorageKey}
         onClose={closeDrawer}
       />
     </>

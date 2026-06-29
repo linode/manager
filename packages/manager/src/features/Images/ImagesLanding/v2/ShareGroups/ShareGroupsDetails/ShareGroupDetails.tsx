@@ -164,8 +164,18 @@ export const ShareGroupDetails = () => {
               )}
             </Paper>
             <SharedImagesTable
+              handleAddImagesClick={() => {
+                navigate({
+                  params: {
+                    shareGroupId,
+                  },
+                  search: (prev) => prev,
+                  to: '/images/share-groups/owned-groups/$shareGroupId/add-images',
+                });
+              }}
               isTableStripingEnabled={isTableStripingEnabled}
               shareGroupId={shareGroupId}
+              shareGroupLabel={label}
             />
             <GroupMembersTable
               handleAddMembersClick={() => {

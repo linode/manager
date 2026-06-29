@@ -1,5 +1,5 @@
+import { convertMegabytesTo } from '@akamai/compute-ui-core/api';
 import {
-  convertMegabytesTo,
   nodeBalancerConfigFactory,
   nodeBalancerFactory,
 } from '@linode/utilities';

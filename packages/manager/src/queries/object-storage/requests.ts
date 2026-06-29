@@ -1,21 +1,16 @@
 import {
-  getBuckets,
   getBucketsInRegion,
   getObjectStorageEndpoints,
   getObjectStorageTypes,
 } from '@linode/api-v4';
 import { getAll } from '@linode/utilities';
 
+import type { PriceType } from '@akamai/compute-ui-core/api';
 import type {
   APIError,
   ObjectStorageBucket,
   ObjectStorageEndpoint,
-  PriceType,
-  Region,
 } from '@linode/api-v4';
-
-export const getAllObjectStorageBuckets = () =>
-  getAll<ObjectStorageBucket>(() => getBuckets())().then((data) => data.data);
 
 export const getAllObjectStorageTypes = () =>
   getAll<PriceType>((params) => getObjectStorageTypes(params))().then(
@@ -27,141 +22,58 @@ export const getAllObjectStorageEndpoints = () =>
     getObjectStorageEndpoints({ filter, params })
   )().then((data) => data.data);
 
-/**
- * @deprecated This type will be deprecated and removed when OBJ Gen2 is in GA.
- */
-export interface BucketError {
-  error: APIError[];
-  region: Region;
-}
+export const getAllBucketsInRegion = (
+  regionId: string
+): Promise<ObjectStorageBucket[]> =>
+  getAll<ObjectStorageBucket>((params, filter) =>
+    getBucketsInRegion(regionId, params, filter)
+  )().then((data) => data.data);
 
-/**
- * @deprecated This type will be deprecated and removed when OBJ Gen2 is in GA.
- */
 export interface BucketsResponse {
   buckets: ObjectStorageBucket[];
-  errors: BucketError[];
+  errors: APIError[];
 }
-
-// TODO: OBJGen2 - Remove the `Gen2` suffix when Gen2 is in GA.
-export interface BucketsResponseGen2 {
-  buckets: ObjectStorageBucket[];
-  errors: BucketErrorGen2[];
-}
-
-// TODO: OBJGen2 - Remove the `Gen2` suffix when Gen2 is in GA.
-export interface BucketErrorGen2 {
-  endpoint: ObjectStorageEndpoint;
-  error: APIError[];
-}
-
-// TODO: OBJGen2 - Only needed during interim period when Gen2 is in beta.
-export type BucketsResponseType<T> = T extends true
-  ? BucketsResponseGen2
-  : BucketsResponse;
-
-// TODO: OBJGen2 - Only needed during interim period when Gen2 is in beta.
-export function isBucketError(
-  error: BucketError | BucketErrorGen2
-): error is BucketError {
-  return (error as BucketError).region !== undefined;
-}
-
-/**
- * @deprecated This function is deprecated and will be removed in the future.
- */
-export const getAllBucketsFromRegions = async (
-  regions: Region[] | undefined
-) => {
-  if (regions === undefined) {
-    return { buckets: [], errors: [] } as BucketsResponse;
-  }
-
-  const promises = regions.map((region) =>
-    getAll<ObjectStorageBucket>((params) =>
-      getBucketsInRegion(region.id, params)
-    )()
-      .then((data) => data.data)
-      .catch((error) => ({
-        error,
-        region,
-      }))
-  );
-
-  const data = await Promise.all(promises);
-
-  const bucketsPerRegion = data.filter((item) =>
-    Array.isArray(item)
-  ) as ObjectStorageBucket[][];
-
-  const buckets = bucketsPerRegion.reduce((acc, val) => acc.concat(val), []);
-
-  const errors = data.filter((item) => !Array.isArray(item)) as BucketError[];
-
-  if (errors.length === regions.length) {
-    throw new Error('Unable to get Object Storage buckets.');
-  }
-
-  return { buckets, errors } as BucketsResponse;
-};
 
 /**
  * We had to change the signature of things slightly since we're using the `object-storage/endpoints`
  * endpoint. Note that the server response always includes information for all regions.
- * @param rawErrorNeeded is used to determine whether we want to throw a generic error when all calls fail or if we want to return the raw error information for each endpoint. This is needed because in some cases, like in CloudPulse, we have custom error handling.
+ * @param endpoints - The list of Object Storage endpoints to fetch buckets for.
  * @note This will be the preferred way to get all buckets once fetching by clusters is deprecated and Gen2 is in GA.
+ * @deprecated This function is deprecated and will be removed in the future. Please use `useObjectStorageBuckets`
+ * hook or `useObjectStorageBucketsByRegions` hook instead to fetch bucket list
  */
 export const getAllBucketsFromEndpoints = async (
-  endpoints: ObjectStorageEndpoint[] | undefined,
-  rawErrorNeeded = false
-): Promise<BucketsResponseGen2> => {
+  endpoints: ObjectStorageEndpoint[] | undefined
+): Promise<BucketsResponse> => {
   if (!endpoints?.length) {
     return { buckets: [], errors: [] };
   }
 
-  // Initialize a Map to group endpoints by region for better error handling and flexibility.
-  const endpointsByRegion = new Map<string, ObjectStorageEndpoint[]>();
-
-  for (const endpoint of endpoints) {
-    const existingEndpoint = endpointsByRegion.get(endpoint.region) || [];
-
-    // Update the Map with the current endpoint, maintaining all endpoints per region.
-    endpointsByRegion.set(endpoint.region, [...existingEndpoint, endpoint]);
-  }
-
-  const results = await Promise.all(
-    Array.from(endpointsByRegion.entries()).map(([region, regionEndpoints]) =>
+  const regionIds = Array.from(
+    new Set(
+      endpoints
+        .filter((endpoint) => endpoint.s3_endpoint !== null)
+        .map((e) => e.region)
+    )
+  );
+  const results: BucketsResponse[] = await Promise.all(
+    regionIds.map((regionId) =>
       getAll<ObjectStorageBucket>((params) =>
-        getBucketsInRegion(region, params)
+        getBucketsInRegion(regionId, params)
       )()
         .then((data) => ({
           buckets: data.data,
-          endpoints: regionEndpoints,
+          errors: [],
         }))
-        .catch((error) => ({
-          endpoints: regionEndpoints,
-          error,
+        .catch((errors: APIError[]) => ({
+          buckets: [],
+          errors,
         }))
     )
   );
 
-  const buckets: ObjectStorageBucket[] = [];
-  const errors: BucketErrorGen2[] = [];
-
-  results.forEach((result) => {
-    if ('buckets' in result) {
-      buckets.push(...result.buckets);
-    } else {
-      // For each endpoint in the region, log the error to provide detailed error information.
-      result.endpoints.forEach((endpoint) => {
-        errors.push({ endpoint, error: result.error });
-      });
-    }
-  });
-
-  if (errors.length === endpoints.length && !rawErrorNeeded) {
-    throw new Error('Unable to get Object Storage buckets.');
-  }
+  const buckets = results.flatMap((result) => result.buckets);
+  const errors = results.flatMap((result) => result.errors);
 
   return { buckets, errors };
 };

@@ -2,12 +2,16 @@ import { fireEvent, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
-import { accountRolesFactory } from 'src/factories/accountRoles';
+import { createAccountRoles } from '../../factories';
+import {
+  mockScrollIntoView,
+  submitCdsDrawerForm,
+} from '../../utilities/testHelpers';
 import {
   getShadowRootElement,
-  renderWithTheme,
-} from 'src/utilities/testHelpers';
-
+  mockMatchMedia,
+  renderWithProviders,
+} from '../../utilities/testHelpers';
 import { AssignNewRoleDrawer } from './AssignNewRoleDrawer';
 
 import type { ExtendedRoleView } from '../../Shared/types';
@@ -70,19 +74,22 @@ vi.mock('@linode/api-v4', async () => {
   };
 });
 
+beforeAll(() => mockMatchMedia());
+
 describe('AssignNewRoleDrawer', () => {
   beforeEach(() => {
-    Element.prototype.scrollIntoView ??= vi.fn();
+    mockScrollIntoView();
+
     queryMocks.useParams.mockReturnValue({
       username: 'test_user',
     });
     queryMocks.useAccountRoles.mockReturnValue({
-      data: accountRolesFactory.build(),
+      data: createAccountRoles(),
     });
   });
 
   it('should render', async () => {
-    renderWithTheme(<AssignNewRoleDrawer {...props} />);
+    renderWithProviders(<AssignNewRoleDrawer {...props} />);
 
     expect(
       screen.getByText(
@@ -92,7 +99,7 @@ describe('AssignNewRoleDrawer', () => {
   });
 
   it('should render the role select', async () => {
-    renderWithTheme(<AssignNewRoleDrawer {...props} />);
+    renderWithProviders(<AssignNewRoleDrawer {...props} />);
 
     const cdsSelect = document.querySelector('cds-select');
     expect(cdsSelect).toBeVisible();
@@ -105,7 +112,7 @@ describe('AssignNewRoleDrawer', () => {
   });
 
   it('should allow changing role', async () => {
-    renderWithTheme(<AssignNewRoleDrawer {...props} />);
+    renderWithProviders(<AssignNewRoleDrawer {...props} />);
 
     const cdsSelect = document.querySelector('cds-select');
     expect(cdsSelect).not.toBeNull();
@@ -146,7 +153,7 @@ describe('AssignNewRoleDrawer', () => {
       expect(inputSelect).toHaveValue('account_billing_admin');
     });
 
-    await userEvent.click(screen.getByText('Assign'));
+    submitCdsDrawerForm();
 
     await waitFor(() => {
       expect(mockUpdateUserRole).toHaveBeenCalledWith({
@@ -157,7 +164,7 @@ describe('AssignNewRoleDrawer', () => {
   });
 
   it('should not list a role the user already has', async () => {
-    renderWithTheme(<AssignNewRoleDrawer {...props} />);
+    renderWithProviders(<AssignNewRoleDrawer {...props} />);
 
     const cdsSelect = document.querySelector('cds-select');
     expect(cdsSelect).not.toBeNull();

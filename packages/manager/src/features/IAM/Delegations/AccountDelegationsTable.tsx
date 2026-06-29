@@ -1,17 +1,22 @@
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeaderCell,
+  TableRow,
+} from '@akamai/cds-components/react';
 import React from 'react';
 
-import { Table } from 'src/components/Table';
-import { TableBody } from 'src/components/TableBody';
-import { TableCell } from 'src/components/TableCell';
-import { TableHead } from 'src/components/TableHead';
-import { TableRow } from 'src/components/TableRow/TableRow';
-import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
-import { TableRowError } from 'src/components/TableRowError/TableRowError';
-import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
-import { TableSortCell } from 'src/components/TableSortCell';
-
+import { CircleProgress } from '../Shared/CircleProgress/CircleProgress';
 import { NO_ITEMS_TO_DISPLAY_TEXT } from '../Shared/constants';
+import { ErrorState } from '../Shared/ErrorState/ErrorState';
+import {
+  getAccountDelegationsTableCellStyle,
+  useAccountDelegationsTableColumns,
+} from './accountDelegationsTableColumnsUtils';
 import { AccountDelegationsTableRow } from './AccountDelegationsTableRow';
+import { UpdateDelegationsDrawer } from './UpdateDelegationsDrawer';
 
 import type {
   APIError,
@@ -24,7 +29,6 @@ interface Props {
   error: APIError[] | null;
   handleOrderChange: (key: string, order?: 'asc' | 'desc') => void;
   isLoading: boolean;
-  numCols: number;
   order: 'asc' | 'desc';
   orderBy: string;
 }
@@ -34,56 +38,103 @@ export const AccountDelegationsTable = ({
   error,
   handleOrderChange,
   isLoading,
-  numCols,
   order,
   orderBy,
 }: Props) => {
+  const { columnWidths, showUsers } = useAccountDelegationsTableColumns();
+  const [isUpdateDelegationDrawerOpen, setIsUpdateDelegationDrawerOpen] =
+    React.useState(false);
+  const [updateDelegationID, setUpdateDelegationID] = React.useState<
+    null | string
+  >(null);
+
+  const updateDelegation = updateDelegationID
+    ? delegations?.find((delegation) => delegation.euuid === updateDelegationID)
+    : null;
   return (
-    <Table aria-label="List of Account Delegations">
-      <TableHead
-        sx={{
-          whiteSpace: 'nowrap',
-        }}
-      >
-        <TableRow>
-          <TableSortCell
-            active={orderBy === 'company'}
-            direction={order}
-            handleClick={handleOrderChange}
-            label="company"
-            style={{ width: '27%' }}
+    <>
+      <Table aria-label="List of Account Delegations">
+        <TableHead
+          style={{
+            whiteSpace: 'nowrap',
+          }}
+        >
+          <TableRow
+            headerbackground="var(--token-component-table-header-nested-background)"
+            headerborder
           >
-            Account
-          </TableSortCell>
-          <TableCell
-            style={{ width: '59%' }}
-            sx={{ display: { sm: 'table-cell', xs: 'none' } }}
-          >
-            Users
-          </TableCell>
-          <TableCell style={{ width: '14%' }} />
-        </TableRow>
-      </TableHead>
-      <TableBody>
-        {isLoading && <TableRowLoading columns={numCols} rows={1} />}
-        {error && (
-          <TableRowError colSpan={numCols} message={error[0]?.reason} />
-        )}
-        {!isLoading && !error && (!delegations || delegations.length === 0) && (
-          <TableRowEmpty colSpan={numCols} message={NO_ITEMS_TO_DISPLAY_TEXT} />
-        )}
-        {!isLoading &&
-          !error &&
-          delegations &&
-          delegations.length > 0 &&
-          delegations.map((delegation, index) => (
-            <AccountDelegationsTableRow
-              delegation={delegation}
-              index={index}
-              key={`delegation-${delegation.euuid}-${index}`}
+            <TableHeaderCell
+              onSort={() =>
+                handleOrderChange('company', order === 'asc' ? 'desc' : 'asc')
+              }
+              sortable
+              sorted={orderBy === 'company' ? order : undefined}
+              style={getAccountDelegationsTableCellStyle(columnWidths.account)}
+            >
+              Account
+            </TableHeaderCell>
+            {showUsers ? (
+              <TableHeaderCell
+                style={getAccountDelegationsTableCellStyle(columnWidths.users, {
+                  shrinkable: true,
+                })}
+              >
+                Users
+              </TableHeaderCell>
+            ) : null}
+            <TableHeaderCell
+              style={getAccountDelegationsTableCellStyle(columnWidths.actions)}
             />
-          ))}
-      </TableBody>
-    </Table>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {isLoading && (
+            <TableRow>
+              <TableCell style={{ height: 100 }}>
+                <CircleProgress size="large" />
+              </TableCell>
+            </TableRow>
+          )}
+          {error && (
+            <TableRow>
+              <TableCell style={{ justifyContent: 'center' }}>
+                <ErrorState errorText={error[0]?.reason} />
+              </TableCell>
+            </TableRow>
+          )}
+          {!isLoading &&
+            !error &&
+            (!delegations || delegations.length === 0) && (
+              <TableRow>
+                <TableCell>
+                  <p style={{ textAlign: 'center', width: '100%' }}>
+                    {NO_ITEMS_TO_DISPLAY_TEXT}
+                  </p>
+                </TableCell>
+              </TableRow>
+            )}
+          {!isLoading &&
+            !error &&
+            delegations &&
+            delegations.length > 0 &&
+            delegations.map((delegation, index) => (
+              <AccountDelegationsTableRow
+                delegation={delegation}
+                index={index}
+                key={`delegation-${delegation.euuid}-${index}`}
+                onUpdateDelegations={(delegation) => {
+                  setUpdateDelegationID(delegation.euuid);
+                  setIsUpdateDelegationDrawerOpen(true);
+                }}
+              />
+            ))}
+        </TableBody>
+      </Table>
+      <UpdateDelegationsDrawer
+        delegation={updateDelegation ?? null}
+        onClose={() => setIsUpdateDelegationDrawerOpen(false)}
+        open={isUpdateDelegationDrawerOpen}
+      />
+    </>
   );
 };

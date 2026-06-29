@@ -1,4 +1,8 @@
 import {
+  getGDPRDetails,
+  getLinodeRegionPrice,
+} from '@akamai/compute-ui-core/api';
+import {
   useAccountAgreements,
   useProfile,
   useSpecificTypes,
@@ -9,6 +13,7 @@ import {
   Divider,
   Notice,
   Stack,
+  TooltipIcon,
   Typography,
 } from '@linode/ui';
 import * as React from 'react';
@@ -19,16 +24,13 @@ import { Link } from 'src/components/Link';
 import { RenderGuard } from 'src/components/RenderGuard';
 import { EUAgreementCheckbox } from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import { extendTypesQueryResult } from 'src/utilities/extendType';
-import { getGDPRDetails } from 'src/utilities/formatRegion';
 import {
   LKE_ADDITIONAL_PRICING,
   LKE_CREATE_CLUSTER_CHECKOUT_MESSAGE,
   LKE_ENTERPRISE_CREATE_CLUSTER_CHECKOUT_MESSAGE,
 } from 'src/utilities/pricing/constants';
-import {
-  getKubernetesMonthlyPrice,
-  getTotalClusterPrice,
-} from 'src/utilities/pricing/kubernetes';
+import { getTotalClusterPrice } from 'src/utilities/pricing/kubernetes';
+import { useComputePricing } from 'src/utilities/pricing/useComputePricing';
 
 import { nodeWarning } from '../constants';
 import { NodePoolSummaryItem } from './NodePoolSummaryItem';
@@ -66,6 +68,8 @@ export const KubeCheckoutBar = (props: Props) => {
     submitting,
     toggleHasAgreed,
   } = props;
+
+  const { getBillingForPlanType } = useComputePricing();
 
   const { control } = useFormContext();
   const { update, remove } = useFieldArray({
@@ -108,9 +112,26 @@ export const KubeCheckoutBar = (props: Props) => {
     return <CircleProgress />;
   }
 
+  const hasHourlyPoolInCluster = pools.some(
+    (pool) => getBillingForPlanType(pool.type) === 'hourly'
+  );
+
+  const maxMonthlyCostLabel = hasHourlyPoolInCluster ? (
+    <Box alignItems="center" display="flex">
+      <Typography>Max monthly cost</Typography>
+      <TooltipIcon
+        status="info"
+        sxTooltipIcon={{ padding: 0, paddingLeft: 0.5 }}
+        text="A monthly cluster price for a full 31-day month."
+        tooltipPosition="right"
+      />
+    </Box>
+  ) : undefined;
+
   const price = region
     ? getTotalClusterPrice({
         enterprisePrice: enterprisePrice ?? undefined,
+        getBillingForPlanType,
         highAvailabilityPrice:
           highAvailability && !enterprisePrice
             ? Number(highAvailabilityPrice)
@@ -134,6 +155,7 @@ export const KubeCheckoutBar = (props: Props) => {
       heading="Cluster Summary"
       isMakingRequest={submitting}
       onDeploy={createCluster}
+      priceHeading={maxMonthlyCostLabel}
       priceSelectionText={
         enterprisePrice
           ? LKE_ENTERPRISE_CREATE_CLUSTER_CHECKOUT_MESSAGE
@@ -147,13 +169,13 @@ export const KubeCheckoutBar = (props: Props) => {
             <Typography variant="h3">
               High Availability (HA) Control Plane
             </Typography>
-            <Typography>{`$${highAvailabilityPrice}/month`}</Typography>
+            <Typography>{`$${highAvailabilityPrice}/mo`}</Typography>
           </Stack>
         )}
         {enterprisePrice && (
           <Stack spacing={1}>
             <Typography variant="h3">LKE Enterprise</Typography>
-            <Typography>{`$${enterprisePrice?.toFixed(2)}/month`}</Typography>
+            <Typography>{`$${enterprisePrice?.toFixed(2)}/mo`}</Typography>
           </Stack>
         )}
         {pools.map((thisPool, idx) => (
@@ -162,20 +184,18 @@ export const KubeCheckoutBar = (props: Props) => {
             handleConfigurePool={handleConfigurePool}
             key={idx}
             nodeCount={thisPool.count}
+            nodePriceObject={
+              region
+                ? getLinodeRegionPrice(
+                    types?.find((t) => t.id === thisPool.type),
+                    region
+                  )
+                : undefined
+            }
             onRemove={() => remove(idx)}
             poolIndex={idx}
             poolType={
               types?.find((thisType) => thisType.id === thisPool.type) || null
-            }
-            price={
-              region
-                ? getKubernetesMonthlyPrice({
-                    count: thisPool.count,
-                    region,
-                    type: thisPool.type,
-                    types: types ?? [],
-                  })
-                : undefined
             }
             updateNodeCount={(updatedCount: number) =>
               update(idx, { ...thisPool, count: updatedCount })

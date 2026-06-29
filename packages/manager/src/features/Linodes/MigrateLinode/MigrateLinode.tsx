@@ -1,3 +1,7 @@
+import {
+  formatStorageUnits,
+  getGDPRDetails,
+} from '@akamai/compute-ui-core/api';
 import { formatDate } from '@akamai/compute-ui-core/datetime';
 import {
   useAccountAgreements,
@@ -18,11 +22,7 @@ import {
   TooltipIcon,
   Typography,
 } from '@linode/ui';
-import {
-  formatStorageUnits,
-  regionSupportsMetadata,
-  scrollErrorIntoView,
-} from '@linode/utilities';
+import { regionSupportsMetadata, scrollErrorIntoView } from '@linode/utilities';
 import { styled, useTheme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -39,7 +39,6 @@ import {
   useInProgressEvents,
 } from 'src/queries/events/events';
 import { sendMigrationInitiatedEvent } from 'src/utilities/analytics/customEventAnalytics';
-import { getGDPRDetails } from 'src/utilities/formatRegion';
 import { getLinodeDescription } from 'src/utilities/getLinodeDescription';
 import { reportAgreementSigningError } from 'src/utilities/reportAgreementSigningError';
 

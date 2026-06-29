@@ -1,4 +1,5 @@
-import { useRegionsQuery } from '@linode/queries';
+import { streamStatus, streamType } from '@linode/api-v4';
+import { useAllStreamsQuery, useRegionsQuery } from '@linode/queries';
 import { useIsGeckoEnabled } from '@linode/shared';
 import {
   Autocomplete,
@@ -19,7 +20,6 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
-import { Link } from 'src/components/Link';
 import { sortData } from 'src/components/OrderBy';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { MIN_PAGE_SIZE } from 'src/components/PaginationFooter/PaginationFooter.constants';
@@ -32,6 +32,7 @@ import {
 import { StreamFormClusterTableContent } from 'src/features/Delivery/Streams/StreamForm/Clusters/StreamFormClustersTableContent';
 import { useAllKubernetesClustersQuery } from 'src/queries/kubernetes';
 
+import type { Stream } from '@linode/api-v4';
 import type {
   AutocompleteBooleanOption,
   FormMode,
@@ -50,6 +51,7 @@ const controlPaths = {
 
 interface StreamFormClustersProps {
   mode: FormMode;
+  streamId?: number;
 }
 
 const logGenerationOptions: AutocompleteBooleanOption[] = [
@@ -57,8 +59,12 @@ const logGenerationOptions: AutocompleteBooleanOption[] = [
   { label: 'Disabled', value: false },
 ];
 
+const lkeStreamsFilter = {
+  '+and': [{ type: streamType.LKEAuditLogs }],
+};
+
 export const StreamFormClusters = (props: StreamFormClustersProps) => {
-  const { mode } = props;
+  const { mode, streamId } = props;
   const { control, setValue, formState, trigger } =
     useFormContext<StreamAndDestinationFormType>();
 
@@ -68,9 +74,14 @@ export const StreamFormClusters = (props: StreamFormClustersProps) => {
   const { data: regions = [] } = useRegionsQuery();
   const {
     data: clusters = [],
-    isLoading,
-    error,
+    isLoading: isLoadingClusters,
+    error: errorClusters,
   } = useAllKubernetesClustersQuery({ enabled: true });
+  const {
+    data: lkeStreams = [],
+    isLoading: isLoadingStreams,
+    error: errorStreams,
+  } = useAllStreamsQuery({}, lkeStreamsFilter);
 
   const [order, setOrder] = useState<'asc' | 'desc'>('asc');
   const [orderBy, setOrderBy] = useState<OrderByKeys>('label');
@@ -140,7 +151,7 @@ export const StreamFormClusters = (props: StreamFormClustersProps) => {
 
   // Check for clusters that no longer have log generation enabled and remove them from cluster_ids
   useEffect(() => {
-    if (!isLoading) {
+    if (!isLoadingClusters) {
       const selectedClusterIds = clusterIds ?? [];
       const filteredClusterIds = selectedClusterIds.filter((id) =>
         clusterIdsWithLogsEnabled.includes(id)
@@ -165,12 +176,30 @@ export const StreamFormClusters = (props: StreamFormClustersProps) => {
       }
     }
   }, [
-    isLoading,
+    isLoadingClusters,
     clusterIds,
     isAutoAddAllClustersEnabled,
     setValue,
     clusterIdsWithLogsEnabled,
   ]);
+
+  const lkeStreamsByClusterId = useMemo(() => {
+    const map = new Map<number, Stream[]>();
+
+    lkeStreams
+      .filter(({ status }) => status !== streamStatus.Failed)
+      .filter(({ id }) => id !== streamId)
+      .forEach((stream) => {
+        stream.details?.cluster_ids?.forEach((clusterId) => {
+          if (!map.has(clusterId)) {
+            map.set(clusterId, []);
+          }
+          map.get(clusterId)!.push(stream);
+        });
+      });
+
+    return map;
+  }, [lkeStreams, streamId]);
 
   const handleOrderChange = (newOrderBy: OrderByKeys) => {
     if (orderBy === newOrderBy) {
@@ -238,27 +267,22 @@ export const StreamFormClusters = (props: StreamFormClustersProps) => {
   return (
     <Paper>
       <Typography variant="h2">Clusters</Typography>
-      {isLoading ? (
+      {isLoadingClusters || isLoadingStreams ? (
         <CircleProgress
           size="md"
           style={{ display: 'block', margin: 'auto' }}
         />
-      ) : error ? (
-        <ErrorState errorText="There was an error loading your Kubernetes clusters." />
+      ) : errorClusters ? (
+        <ErrorState errorText="There was an error retrieving your Kubernetes clusters. Please reload and try again." />
+      ) : errorStreams ? (
+        <ErrorState errorText="There was an error retrieving streams. Please reload and try again." />
       ) : (
         <>
           <Typography sx={{ mt: 2 }}>
-            Select the LKE clusters that will send audit logs to the configured
-            destination. Logging must be enabled for a cluster before it can be
-            selected. To enable logging for a cluster, use the Linode API to{' '}
-            <Link
-              external
-              hideIcon
-              to="https://techdocs.akamai.com/linode-api/reference/put-lke-cluster"
-            >
-              update the cluster
-            </Link>{' '}
-            to set <i>audit_logs_enabled</i> to <i>true</i>.
+            Select the LKE clusters to send audit logs to the configured
+            destination. Logging must be enabled before a cluster can be
+            selected. Use the toggle in the <b>Logging Status</b> column to
+            enable or disable logging.
           </Typography>
           <div hidden={true}>
             <Controller
@@ -374,6 +398,7 @@ export const StreamFormClusters = (props: StreamFormClustersProps) => {
                     onOrderChange={handleOrderChange}
                     order={order}
                     orderBy={orderBy}
+                    streamsByClusterId={lkeStreamsByClusterId}
                   />
                 )}
               />

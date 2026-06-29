@@ -3,8 +3,6 @@ import { Spacing } from '@akamai/cds-tokens';
 import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
-import { useIsIAMDelegationEnabled } from 'src/features/IAM/hooks/useIsIAMEnabled';
-
 import { useDelegationRole } from '../../hooks/useDelegationRole';
 import {
   IAM_CHILD_USERS_PENDO_IDS,
@@ -36,7 +34,6 @@ interface Action {
 
 export const UsersActionMenu = (props: Props) => {
   const { onDelete, permissions, username, userType } = props;
-  const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
 
   const navigate = useNavigate();
   const {
@@ -51,12 +48,9 @@ export const UsersActionMenu = (props: Props) => {
   const canDeleteUser = isAccountAdmin || permissions.delete_user;
   const isDelegateUser = userType === 'delegate';
 
-  // Determine if the current account is a child or delegate account with isIAMDelegationEnabled enabled
-  // If so, we need to hide 'View User Details', 'Delete User', 'View Account Delegations' in the menu
+  // For child/delegate profiles viewing a delegate user, hide details-oriented menu actions
   const shouldHideForChildDelegate =
-    isIAMDelegationEnabled &&
-    (isChildUserType || isDelegateUserType) &&
-    isDelegateUser;
+    (isChildUserType || isDelegateUserType) && isDelegateUser;
 
   const actions: Action[] = [
     {
@@ -101,7 +95,7 @@ export const UsersActionMenu = (props: Props) => {
     },
     {
       disabled: false,
-      hidden: !isIAMDelegationEnabled || !isParentUserType,
+      hidden: !isParentUserType,
       onClick: () => {
         navigate({
           to: '/iam/users/$username/delegations',

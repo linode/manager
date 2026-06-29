@@ -1,7 +1,6 @@
 import { Badge, Button, Icon, Tooltip } from '@akamai/cds-components/react';
 import { Spacing } from '@akamai/cds-tokens';
 import { useAllVPCsQuery } from '@linode/queries';
-import { Stack, Typography } from '@linode/ui';
 import React from 'react';
 
 import { Link } from 'src/components/Link';
@@ -11,10 +10,10 @@ import { MANAGE_NETWORKING_LEARN_MORE_LINK } from '../../constants';
 import { makeSettingsItemStyles } from '../../shared.styles';
 import { CircleProgress } from '../../shared/CircleProgress/CircleProgress';
 import { ErrorState } from '../../shared/ErrorState/ErrorState';
+import { Stack } from '../../shared/Stack/Stack';
 import { ConnectionDetailsHostRows } from '../ConnectionDetailsHostRows';
 import { ConnectionDetailsHostRows2 } from '../ConnectionDetailsHostRows2';
 import { ConnectionDetailsRow } from '../ConnectionDetailsRow';
-import { StyledGridContainer } from '../DatabaseSummary/DatabaseSummaryClusterConfiguration.style';
 import DatabaseManageNetworkingDrawer from './DatabaseManageNetworkingDrawer';
 import { DatabaseNetworkingUnassignVPCDialog } from './DatabaseNetworkingUnassignVPCDialog';
 
@@ -35,7 +34,6 @@ export const DatabaseManageNetworking = ({ database }: Props) => {
 
   const vpcId = Number(database.private_network?.vpc_id);
   const hasVPCConfigured = Boolean(vpcId);
-  const gridContainerSize = { lg: 7, md: 10 };
 
   const {
     data: vpcs,
@@ -75,9 +73,9 @@ export const DatabaseManageNetworking = ({ database }: Props) => {
   return (
     <>
       <div className={classes.topSection}>
-        <Stack spacing={0.5}>
+        <Stack spacing={Spacing.S4}>
           <div style={{ display: 'flex' }}>
-            <Typography variant="h3">Manage Networking</Typography>
+            <h3 style={{ margin: 0 }}>Manage Networking</h3>
             {flags.databaseVpcBeta && (
               <Badge
                 color="neutral"
@@ -88,7 +86,7 @@ export const DatabaseManageNetworking = ({ database }: Props) => {
               </Badge>
             )}
           </div>
-          <Typography sx={{ maxWidth: '500px' }}>
+          <p style={{ maxWidth: '500px', margin: 0 }}>
             Update access settings or the VPC assignment.{' '}
             <Link
               to={`${MANAGE_NETWORKING_LEARN_MORE_LINK + (flags.databaseVpcBeta ? '-beta' : '')}`}
@@ -99,7 +97,7 @@ export const DatabaseManageNetworking = ({ database }: Props) => {
             Note that a change of VPC assignment settings can disrupt service
             availability. Avoid writing data to the database while a change is
             in progress.
-          </Typography>
+          </p>
         </Stack>
         <Tooltip
           disabled={hasVPCs}
@@ -116,7 +114,7 @@ export const DatabaseManageNetworking = ({ database }: Props) => {
         </Tooltip>
       </div>
 
-      <StyledGridContainer container size={gridContainerSize} spacing={0}>
+      <div style={{ maxWidth: 700 }}>
         <ConnectionDetailsRow label="Connection Type">
           {hasVPCConfigured ? 'VPC' : 'Public'}
         </ConnectionDetailsRow>
@@ -141,7 +139,7 @@ export const DatabaseManageNetworking = ({ database }: Props) => {
             {database?.private_network?.public_access ? 'Yes' : 'No'}
           </ConnectionDetailsRow>
         )}
-      </StyledGridContainer>
+      </div>
 
       <DatabaseManageNetworkingDrawer
         database={database}

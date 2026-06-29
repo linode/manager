@@ -1,3 +1,4 @@
+import { getAPIErrorOrDefault } from '@akamai/compute-ui-core/api';
 import {
   useAddFirewallDeviceMutation,
   useAllFirewallsQuery,
@@ -13,7 +14,6 @@ import { SupportLink } from 'src/components/SupportLink';
 import { FIREWALL_LIMITS_CONSIDERATIONS_LINK } from 'src/constants';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { NodeBalancerSelect } from 'src/features/NodeBalancers/NodeBalancerSelect';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
 
 import type { NodeBalancer } from '@linode/api-v4';

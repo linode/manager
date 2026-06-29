@@ -28,6 +28,7 @@ import {
   getAllReservedIPsTypes,
 } from './requests';
 
+import type { PriceType } from '@akamai/compute-ui-core/api';
 import type {
   APIError,
   CreateIPv6RangePayload,
@@ -36,7 +37,6 @@ import type {
   IPRange,
   IPRangeInformation,
   Params,
-  PriceType,
   ReserveIPPayload,
   ResourcePage,
 } from '@linode/api-v4';

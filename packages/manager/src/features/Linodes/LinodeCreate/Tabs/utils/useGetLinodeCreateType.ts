@@ -1,6 +1,6 @@
 import { useLocation } from '@tanstack/react-router';
 
-import type { LinodeCreateType } from '@linode/utilities';
+import type { LinodeCreateType } from '@akamai/compute-ui-core/api';
 import type { LinkProps } from '@tanstack/react-router';
 
 type LinodeCreatePathSegments =

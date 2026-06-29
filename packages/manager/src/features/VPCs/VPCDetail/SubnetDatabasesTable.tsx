@@ -1,3 +1,4 @@
+import { getAPIErrorOrDefault } from '@akamai/compute-ui-core/api';
 import { useDatabasesQuery } from '@linode/queries';
 import { CircleProgress } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
@@ -11,7 +12,6 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import {
   SubnetDatabaseRow,

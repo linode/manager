@@ -8,6 +8,7 @@ import { Link } from 'src/components/Link';
 import { useFlags } from 'src/hooks/useFlags';
 
 import type { PORT_PRESETS } from './FirewallDetail/Rules/shared';
+import type { PrefixListRuleReference } from '@akamai/compute-ui-core/api';
 import type {
   Firewall,
   FirewallRuleProtocol,
@@ -267,10 +268,6 @@ export const generateAddressesLabel = (
   return 'None';
 };
 
-export type PrefixListRuleReference = {
-  inIPv4Rule: boolean;
-  inIPv6Rule: boolean;
-};
 export type PrefixListReferenceMap = Record<string, PrefixListRuleReference>;
 
 const isPrefixList = (ip: string) => ip.startsWith('pl:');

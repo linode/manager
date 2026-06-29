@@ -1,5 +1,3 @@
-import { determinePower } from '@linode/utilities';
-
 import {
   generate12HourTicks,
   getAccessibleTimestamp,
@@ -9,7 +7,6 @@ import {
 } from './utils';
 
 import type { DataSet } from './AreaChart';
-import type { StorageSymbol } from '@linode/utilities';
 
 const timestamp = 1704204000000;
 
@@ -45,32 +42,6 @@ describe('humanizeLargeData', () => {
     expect(humanizeLargeData(1010000)).toBe('1M');
     expect(humanizeLargeData(12345678900)).toBe('12.3B');
     expect(humanizeLargeData(1543212345678)).toBe('1.5T');
-  });
-});
-
-describe('determinePower', () => {
-  it('should return the correct power', () => {
-    const storageUnits: StorageSymbol[] = ['bytes', 'KB', 'MB', 'GB', 'TB'];
-    expect(
-      determinePower(5187703696998400, storageUnits, {
-        maxUnit: 'TB',
-      })
-    ).toBe(4);
-    expect(
-      determinePower(95509904120.832, storageUnits, {
-        maxUnit: 'TB',
-      })
-    ).toBe(3);
-    expect(
-      determinePower(64823296, storageUnits, {
-        maxUnit: 'TB',
-      })
-    ).toBe(2);
-    expect(
-      determinePower(1024, storageUnits, {
-        maxUnit: 'TB',
-      })
-    ).toBe(1);
   });
 });
 

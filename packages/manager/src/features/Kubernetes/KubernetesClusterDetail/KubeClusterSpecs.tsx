@@ -1,3 +1,7 @@
+import {
+  getDCSpecificPriceByType,
+  UNKNOWN_PRICE,
+} from '@akamai/compute-ui-core/api';
 import { pluralize } from '@akamai/compute-ui-core/formatting';
 import { useRegionsQuery, useSpecificTypes } from '@linode/queries';
 import { CircleProgress, TooltipIcon, Typography } from '@linode/ui';
@@ -12,12 +16,9 @@ import {
   useKubernetesTypesQuery,
 } from 'src/queries/kubernetes';
 import { extendTypesQueryResult } from 'src/utilities/extendType';
-import {
-  HA_PRICE_ERROR_MESSAGE,
-  UNKNOWN_PRICE,
-} from 'src/utilities/pricing/constants';
-import { getDCSpecificPriceByType } from 'src/utilities/pricing/dynamicPricing';
+import { HA_PRICE_ERROR_MESSAGE } from 'src/utilities/pricing/constants';
 import { getTotalClusterPrice } from 'src/utilities/pricing/kubernetes';
+import { useComputePricing } from 'src/utilities/pricing/useComputePricing';
 
 import { getTotalClusterMemoryCPUAndStorage } from '../kubeUtils';
 
@@ -62,6 +63,8 @@ export const KubeClusterSpecs = React.memo((props: Props) => {
     pools ?? [],
     types ?? []
   );
+
+  const { getBillingForPlanType } = useComputePricing();
 
   const {
     data: kubernetesHighAvailabilityTypesData,
@@ -115,6 +118,7 @@ export const KubeClusterSpecs = React.memo((props: Props) => {
     ) : (
       `$${getTotalClusterPrice({
         enterprisePrice,
+        getBillingForPlanType,
         highAvailabilityPrice: highAvailabilityPrice
           ? Number(highAvailabilityPrice)
           : undefined,

@@ -1,32 +1,38 @@
-import { Button, NotificationBanner } from '@akamai/cds-components/react';
+import { toast } from '@akamai/cds-components/notification-toast';
+import {
+  Button,
+  NotificationBanner,
+  Select,
+} from '@akamai/cds-components/react';
+import { Spacing, Typography } from '@akamai/cds-tokens';
 import {
   useAccountRoles,
-  useAccountUsersInfiniteQuery,
+  useAccountUsers,
+  useAllAccountUsersQuery,
   useUserRoles,
   useUserRolesMutation,
 } from '@linode/queries';
-import { ActionsPanel, Autocomplete, Drawer, Typography } from '@linode/ui';
-import { useDebouncedValue } from '@linode/utilities';
-import { Stack, useTheme } from '@mui/material';
-import Grid from '@mui/material/Grid';
-import { enqueueSnackbar } from 'notistack';
-import React, { useCallback, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 
-import { AssignSingleSelectedRole } from 'src/features/IAM/Roles/RolesTable/AssignSingleSelectedRole';
-
+import { useBreakpoint } from '../../hooks/useBreakpoint';
+import { useDebouncedValue } from '../../hooks/useDebouncedValue';
 import { usePermissions } from '../../hooks/usePermissions';
+import { Box } from '../../Shared/Box/Box';
 import {
   IAM_ROLES_PENDO_IDS,
   INTERNAL_ERROR_NO_CHANGES_SAVED,
 } from '../../Shared/constants';
 import { DelegateUserChip } from '../../Shared/DelegateUserChip';
-import { Link } from '../../Shared/Link/Link';
+import { Drawer, DrawerInlineActions } from '../../Shared/Drawer';
+import styles from '../../Shared/global.module.css';
 import { mergeAssignedRolesIntoExistingRoles } from '../../Shared/utilities';
+import { AssignSingleSelectedRole } from './AssignSingleSelectedRole';
 
+import type { RoleView } from '../../Shared/types';
+import type { SelectOption } from '../../Shared/types';
 import type { AssignNewRoleFormValues } from '../../Shared/utilities';
 import type { User } from '@linode/api-v4';
-import type { RoleView } from 'src/features/IAM/Shared/types';
 
 interface Props {
   onClose: () => void;
@@ -35,13 +41,29 @@ interface Props {
   selectedRoles: RoleView[];
 }
 
+interface UserOption extends SelectOption {
+  userType: User['user_type'];
+}
+
+const getUserOptionPendoId = (userType: User['user_type']) => {
+  if (userType === 'parent') {
+    return IAM_ROLES_PENDO_IDS.assignSelectedRoleToUserParent;
+  }
+
+  if (userType === 'child') {
+    return IAM_ROLES_PENDO_IDS.assignSelectedRoleToUserChild;
+  }
+
+  return IAM_ROLES_PENDO_IDS.assignSelectedRoleToUserDelegate;
+};
+
 export const AssignSelectedRolesDrawer = ({
   onClose,
   onSuccess,
   open,
   selectedRoles,
 }: Props) => {
-  const theme = useTheme();
+  const isSMUp = useBreakpoint('up', 'sm');
 
   const values = {
     roles: selectedRoles.map((r) => ({
@@ -62,9 +84,14 @@ export const AssignSelectedRolesDrawer = ({
   });
 
   const [usernameInput, setUsernameInput] = useState<string>('');
+  const [hasEngagedUserSelect, setHasEngagedUserSelect] = useState(false);
   const debouncedUsernameInput = useDebouncedValue(usernameInput);
   const username = form.watch('username');
-  const userSearchFilter = debouncedUsernameInput
+  const isSearching = debouncedUsernameInput.length > 0;
+  const isPendingSearch =
+    usernameInput.length > 0 && debouncedUsernameInput !== usernameInput;
+
+  const userSearchFilter = isSearching
     ? {
         ['+or']: [
           { username: { ['+contains']: debouncedUsernameInput } },
@@ -75,28 +102,41 @@ export const AssignSelectedRolesDrawer = ({
 
   const { data: permissions } = usePermissions('account', ['view_user']);
 
-  const {
-    data: accountUsers,
-    fetchNextPage,
-    hasNextPage,
-    isFetching: isFetchingAccountUsers,
-    isLoading: isLoadingAccountUsers,
-  } = useAccountUsersInfiniteQuery(
-    {
-      ...userSearchFilter,
+  const canFetchUsers = open && permissions?.view_user && hasEngagedUserSelect;
+
+  // TODO - CDS - UIE-11455: replace with useAccountUsersInfiniteQuery when tag input supports infinite loading
+  const { data: browseUsers, isLoading: isLoadingBrowseUsers } =
+    useAllAccountUsersQuery(canFetchUsers && !isSearching, {
       '+order': 'asc',
       '+order_by': 'username',
-    },
-    permissions?.view_user
-  );
+    });
 
-  const getUserOptions = useCallback(() => {
-    const users = accountUsers?.pages.flatMap((page) => page.data);
-    return users?.map((user: User) => ({
-      label: user.username,
-      value: user.username,
-      userType: user.user_type,
-    }));
+  const {
+    data: searchResults,
+    isFetching: isFetchingSearchUsers,
+    isLoading: isLoadingSearchUsers,
+  } = useAccountUsers({
+    enabled: canFetchUsers && isSearching,
+    filters: userSearchFilter,
+    params: { page: 1, page_size: 100 },
+  });
+
+  const accountUsers: undefined | User[] = isSearching
+    ? searchResults?.data
+    : browseUsers;
+
+  const isLoadingAccountUsers = isSearching
+    ? isLoadingSearchUsers || isFetchingSearchUsers || isPendingSearch
+    : isLoadingBrowseUsers;
+
+  const userOptions = useMemo<UserOption[]>(() => {
+    return (
+      accountUsers?.map((user) => ({
+        label: user.username,
+        userType: user.user_type,
+        value: user.username,
+      })) ?? []
+    );
   }, [accountUsers]);
 
   const { handleSubmit, reset, control, formState, setError } = form;
@@ -119,15 +159,9 @@ export const AssignSelectedRolesDrawer = ({
       );
 
       await updateUserRoles(mergedRoles);
-      const successMessage = (
-        <Typography>
-          Roles assigned. See user&apos;s{' '}
-          {<Link to={`/iam/users/${username}/roles`}>Assigned Roles</Link>} to
-          review them.
-        </Typography>
-      );
-      enqueueSnackbar(successMessage, {
-        variant: 'success',
+      toast.open({
+        text: "Roles successfully assigned. See the user's Assigned Roles page to review them.",
+        type: 'success',
       });
       onSuccess();
 
@@ -141,130 +175,118 @@ export const AssignSelectedRolesDrawer = ({
 
   const handleClose = () => {
     reset();
-
+    setUsernameInput('');
+    setHasEngagedUserSelect(false);
     onClose();
   };
 
-  const handleScroll = (event: React.SyntheticEvent) => {
-    const listboxNode = event.currentTarget;
-    const isAtBottom =
-      Math.abs(
-        listboxNode.scrollHeight -
-          listboxNode.clientHeight -
-          listboxNode.scrollTop
-      ) < 1;
-
-    if (isAtBottom && hasNextPage) {
-      fetchNextPage();
-    }
-  };
+  const drawerTitle = `Assign Selected Role${selectedRoles.length > 1 ? `s` : ``} to a User`;
 
   return (
     <Drawer
+      aria-label={drawerTitle}
+      className={styles.noMargin}
       onClose={handleClose}
       open={open}
-      title={`Assign Selected Role${selectedRoles.length > 1 ? `s` : ``} to a User`}
+      width={isSMUp ? '600px' : '100%'}
     >
+      <div slot="header">{drawerTitle}</div>
       <FormProvider {...form}>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit)} slot="body">
           {formState.errors.root?.message && (
             <NotificationBanner
               text={formState.errors.root?.message}
               type="error"
             />
           )}
-          <Typography sx={{ marginBottom: 2.5 }}>
+          <p style={{ marginBottom: Spacing.S20 }}>
             Select the user you want to assign selected roles to. Some roles
             require selecting entities they should apply to.
-          </Typography>
-          <Grid
-            container
+          </p>
+          <Box
             direction="column"
-            sx={() => ({
+            style={{
               justifyContent: 'space-between',
-              marginBottom: theme.spacingFunction(20),
-            })}
+              marginBottom: Spacing.S20,
+            }}
           >
-            <Typography mb={theme.spacingFunction(8)} variant="h3">
+            <h3
+              style={{
+                marginBottom: Spacing.S8,
+                marginTop: Spacing.S0,
+                font: Typography.Heading.S,
+              }}
+            >
               User
-            </Typography>
+            </h3>
 
             <Controller
               control={control}
               name={`username`}
-              render={({ field: { onChange }, fieldState }) => (
-                <Autocomplete
+              render={({ field: { onChange, value }, fieldState }) => (
+                <Select<UserOption>
+                  autocomplete
+                  clearable
                   data-pendo-id={
                     IAM_ROLES_PENDO_IDS.assignSelectedRolesToUserOpen
                   }
-                  errorText={fieldState.error?.message}
-                  getOptionLabel={(option) => option.label}
-                  label="Select a User"
-                  loading={isLoadingAccountUsers || isFetchingAccountUsers}
-                  noMarginTop
-                  onChange={(_, option) => {
-                    onChange(option?.label || null);
-                    // Form now has the username, so we can clear the input
-                    // This will prevent refetching all users with an existing user as a filter
+                  error={Boolean(fieldState.error?.message)}
+                  errorMessage={fieldState.error?.message ?? ''}
+                  filterFn={() => true}
+                  isLoading={isLoadingAccountUsers}
+                  items={userOptions}
+                  itemTemplateFn={(option) => (
+                    <Box
+                      data-pendo-id={getUserOptionPendoId(option.userType)}
+                      direction="row"
+                      style={{ alignItems: 'center', gap: Spacing.S8 }}
+                      wrap="nowrap"
+                    >
+                      <p>{option.label}</p>
+                      {option.userType === 'delegate' && <DelegateUserChip />}
+                    </Box>
+                  )}
+                  loadingLabel={
+                    isSearching ? 'Searching users...' : 'Fetching users...'
+                  }
+                  noItemsLabel={
+                    hasEngagedUserSelect
+                      ? 'No users found'
+                      : 'Search by username or email'
+                  }
+                  onChange={(event) => {
+                    const selected =
+                      event.detail as unknown as null | UserOption;
+                    onChange(selected?.value ?? null);
                     setUsernameInput('');
                   }}
-                  onInputChange={(_, value) => {
-                    // We set an input state separately for when we query the API
-                    setUsernameInput(value);
+                  onFocus={() => setHasEngagedUserSelect(true)}
+                  onSearchChange={(event) => {
+                    setHasEngagedUserSelect(true);
+                    setUsernameInput(event.detail as unknown as string);
                   }}
-                  options={getUserOptions() || []}
-                  placeholder="Select a User"
-                  renderOption={(props, option) => (
-                    <li
-                      {...props}
-                      data-pendo-id={
-                        option.userType === 'parent'
-                          ? IAM_ROLES_PENDO_IDS.assignSelectedRoleToUserParent
-                          : option.userType === 'child'
-                            ? IAM_ROLES_PENDO_IDS.assignSelectedRoleToUserChild
-                            : IAM_ROLES_PENDO_IDS.assignSelectedRoleToUserDelegate
-                      }
-                      key={option.value}
-                    >
-                      <Stack alignItems="center" direction="row" spacing={1}>
-                        <Typography>{option.label}</Typography>
-                        {option.userType === 'delegate' && <DelegateUserChip />}
-                      </Stack>
-                    </li>
-                  )}
-                  slotProps={{
-                    listbox: {
-                      onScroll: handleScroll,
-                    },
-                  }}
-                  textFieldProps={{
-                    hideLabel: true,
-                    sx: {
-                      '& .MuiInputBase-input': {
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap',
-                      },
-                    },
-                  }}
+                  placeholder="Search by username or email"
+                  selected={
+                    userOptions.find((option) => option.value === value) ??
+                    (value ? { label: value, userType: 'parent', value } : null)
+                  }
+                  valueFn={(item) => (item as UserOption).label}
                 />
               )}
               rules={{ required: 'Select a user.' }}
             />
-          </Grid>
+          </Box>
 
-          <Grid
-            container
+          <Box
             direction="row"
-            spacing={2}
-            sx={() => ({
+            style={{
               justifyContent: 'space-between',
-            })}
+            }}
           >
-            <Typography variant={'h3'}>
+            <h3 style={{ font: Typography.Heading.S }}>
               Role
               {selectedRoles.length > 1 ? `s` : ``}
-            </Typography>
+            </h3>
             {selectedRoles.length > 0 && (
               <Button
                 onClick={() => setAreDetailsHidden(!areDetailsHidden)}
@@ -273,7 +295,7 @@ export const AssignSelectedRolesDrawer = ({
                 {areDetailsHidden ? 'Show' : 'Hide'} details
               </Button>
             )}
-          </Grid>
+          </Box>
 
           {!!accountRoles &&
             selectedRoles.map((role, index) => (
@@ -284,22 +306,24 @@ export const AssignSelectedRolesDrawer = ({
                 role={role}
               />
             ))}
-
-          <ActionsPanel
-            primaryButtonProps={{
-              'data-testid': 'submit',
-              label: 'Assign',
-              'data-pendo-id':
-                IAM_ROLES_PENDO_IDS.assignSelectedRoleToUserAssign,
-              type: 'submit',
-              loading: isPending || formState.isSubmitting,
-            }}
-            secondaryButtonProps={{
-              'data-testid': 'cancel',
-              label: 'Cancel',
-              onClick: handleClose,
-            }}
-          />
+          <DrawerInlineActions>
+            <Button
+              data-testid="cancel"
+              onClick={handleClose}
+              variant="secondary"
+            >
+              Cancel
+            </Button>
+            <Button
+              data-pendo-id={IAM_ROLES_PENDO_IDS.assignSelectedRoleToUserAssign}
+              data-testid="submit"
+              processing={isPending || formState.isSubmitting}
+              type="submit"
+              variant="primary"
+            >
+              Assign
+            </Button>
+          </DrawerInlineActions>
         </form>
       </FormProvider>
     </Drawer>

@@ -1,7 +1,8 @@
 import { API_ROOT } from '../constants';
 import Request, { setMethod, setParams, setURL } from '../request';
 
-import type { Params, PriceType, ResourcePage } from 'src/types';
+import type { PriceType } from '@akamai/compute-ui-core/api';
+import type { Params, ResourcePage } from 'src/types';
 
 /**
  * getObjectStorageTypes

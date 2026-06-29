@@ -1,4 +1,5 @@
 import {
+  Button,
   FormError,
   FormField,
   FormLabel,
@@ -8,7 +9,6 @@ import {
 import { Alias, Spacing } from '@akamai/cds-tokens';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useCreateUserMutation } from '@linode/queries';
-import { ActionsPanel, Box, Drawer } from '@linode/ui';
 import { CreateUserSchema } from '@linode/validation';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -19,6 +19,7 @@ import {
   IAM_DELEGATE_USERS_PENDO_IDS,
   IAM_PARENT_USERS_PENDO_IDS,
 } from '../../Shared/constants';
+import { Drawer, DrawerInlineActions } from '../../Shared/Drawer';
 
 interface Props {
   onClose: () => void;
@@ -65,11 +66,12 @@ export const CreateUserDrawer = (props: Props) => {
   };
 
   return (
-    <Drawer onClose={handleClose} open={open} title="Add a User">
-      {errors.root?.message && (
-        <NotificationBanner text={errors.root?.message} type="error" />
-      )}
-      <form noValidate onSubmit={handleSubmit(onSubmit)}>
+    <Drawer aria-label="Add a User" onClose={handleClose} open={open}>
+      <div slot="header">Add a User</div>
+      <form noValidate onSubmit={handleSubmit(onSubmit)} slot="body">
+        {errors.root?.message && (
+          <NotificationBanner text={errors.root?.message} type="error" />
+        )}
         <Controller
           control={control}
           name="username"
@@ -150,30 +152,35 @@ export const CreateUserDrawer = (props: Props) => {
           )}
         />
 
-        <Box sx={{ marginTop: 2 }}>
-          <NotificationBanner
-            text="The user will be sent an email to set their password."
-            type="warning"
-          />
-        </Box>
-        <ActionsPanel
-          primaryButtonProps={{
-            'data-testid': 'submit',
-            label: 'Add User',
-            loading: isSubmitting,
-            'data-pendo-id': isDelegateUserType
-              ? IAM_DELEGATE_USERS_PENDO_IDS.addUserDrawerSubmit
-              : isParentUserType
-                ? IAM_PARENT_USERS_PENDO_IDS.addUserDrawerSubmit
-                : IAM_CHILD_USERS_PENDO_IDS.addUserDrawerSubmit,
-            type: 'submit',
-          }}
-          secondaryButtonProps={{
-            'data-testid': 'cancel',
-            label: 'Cancel',
-            onClick: handleClose,
-          }}
+        <NotificationBanner
+          style={{ marginTop: Spacing.S16 }}
+          text="The user will be sent an email to set their password."
+          type="warning"
         />
+        <DrawerInlineActions>
+          <Button
+            data-testid="cancel"
+            onClick={handleClose}
+            variant="secondary"
+          >
+            Cancel
+          </Button>
+          <Button
+            data-pendo-id={
+              isDelegateUserType
+                ? IAM_DELEGATE_USERS_PENDO_IDS.addUserDrawerSubmit
+                : isParentUserType
+                  ? IAM_PARENT_USERS_PENDO_IDS.addUserDrawerSubmit
+                  : IAM_CHILD_USERS_PENDO_IDS.addUserDrawerSubmit
+            }
+            data-testid="submit"
+            processing={isSubmitting}
+            type="submit"
+            variant="primary"
+          >
+            Add User
+          </Button>
+        </DrawerInlineActions>
       </form>
     </Drawer>
   );

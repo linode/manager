@@ -1,6 +1,4 @@
-import { accountRolesFactory } from 'src/factories/accountRoles';
-import { userRolesFactory } from 'src/factories/userRoles';
-
+import { createAccountRoles, createUserRoles } from '../factories';
 import {
   INTERNAL_ERROR_NO_CHANGES_SAVED,
   LAST_ACCOUNT_ADMIN_ERROR,
@@ -27,7 +25,7 @@ import type { EntityAccess, IamUserRoles } from '@linode/api-v4';
 const accountAccess = 'account_access';
 const entityAccess = 'entity_access';
 
-const accountPermissions = accountRolesFactory.build({
+const accountPermissions = createAccountRoles({
   account_access: [
     {
       roles: [
@@ -66,7 +64,7 @@ const accountPermissions = accountRolesFactory.build({
   ],
 });
 
-const userPermissions = userRolesFactory.build({
+const userPermissions = createUserRoles({
   account_access: ['account_linode_admin', 'account_linode_creator'],
   entity_access: [
     {
@@ -331,7 +329,16 @@ describe('deleteUserRole', () => {
   it('should return an object of updated users roles with resource access', () => {
     const initialRole = 'linode_contributor';
 
-    const userPermissions = userRolesFactory.build();
+    const userPermissions = createUserRoles({
+      entity_access: [
+        {
+          id: 10,
+          roles: ['linode_contributor', 'linode_viewer'],
+          type: 'linode',
+        },
+        { id: 1, roles: ['firewall_admin'], type: 'firewall' },
+      ],
+    });
 
     const expectedRoles = {
       account_access: [
@@ -432,7 +439,7 @@ describe('changeRoleForEntity', () => {
   });
 
   it('should return an object of updated users roles with entity access when changing role from "linode_contributor" to "linode_viewer"', () => {
-    const userPermissions = userRolesFactory.build({
+    const userPermissions = createUserRoles({
       account_access: ['account_linode_admin', 'account_linode_creator'],
       entity_access: [
         {
@@ -476,7 +483,7 @@ describe('changeRoleForEntity', () => {
   });
 
   it('should return an object of updated users roles with entity access', () => {
-    const userPermissions = userRolesFactory.build({
+    const userPermissions = createUserRoles({
       account_access: ['account_linode_admin', 'account_linode_creator'],
       entity_access: [
         {

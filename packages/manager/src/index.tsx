@@ -20,6 +20,7 @@ import '@akamai/cds-tokens/themes/dark/tokens.css';
 import './index.css';
 import { App } from './App';
 import { API_ROOT, ENABLE_DEV_TOOLS } from './constants';
+import { FeatureFlagProvider } from './featureFlags';
 import { LinodeThemeWrapper } from './LinodeThemeWrapper';
 
 const queryClient = queryClientFactory('longLived');
@@ -45,12 +46,14 @@ const Main = () => {
   return (
     <ReduxStoreProvider store={store}>
       <QueryClientProvider client={queryClient}>
-        <LinodeThemeWrapper>
-          <CssBaseline enableColorScheme />
-          <React.Suspense fallback={<SplashScreen />}>
-            <App />
-          </React.Suspense>
-        </LinodeThemeWrapper>
+        <FeatureFlagProvider>
+          <LinodeThemeWrapper>
+            <CssBaseline enableColorScheme />
+            <React.Suspense fallback={<SplashScreen />}>
+              <App />
+            </React.Suspense>
+          </LinodeThemeWrapper>
+        </FeatureFlagProvider>
       </QueryClientProvider>
     </ReduxStoreProvider>
   );

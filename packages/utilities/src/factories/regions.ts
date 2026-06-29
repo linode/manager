@@ -19,12 +19,17 @@ export const regionFactory = Factory.Sync.makeFactory<Region>({
   id: Factory.each((id) => `us-${id}`),
   label: Factory.each((id) => `${id}, NJ`),
   placement_group_limits: {
+    maximum_linodes_per_flexible_pg: 5,
     maximum_linodes_per_pg: 10,
     maximum_pgs_per_customer: 5,
   },
   resolvers: resolverFactory.build(),
   site_type: 'core',
   status: 'ok',
+  monitors: {
+    alerts: [],
+    metrics: [],
+  },
 });
 
 export const regionWithDynamicPricingFactory = Factory.Sync.makeFactory<Region>(
@@ -44,6 +49,7 @@ export const regionWithDynamicPricingFactory = Factory.Sync.makeFactory<Region>(
     id: 'id-cgk',
     label: 'Jakarta, ID',
     placement_group_limits: {
+      maximum_linodes_per_flexible_pg: 5,
       maximum_linodes_per_pg: 10,
       maximum_pgs_per_customer: 5,
     },

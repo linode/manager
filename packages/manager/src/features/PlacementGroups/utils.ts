@@ -38,7 +38,11 @@ export const hasPlacementGroupReachedCapacity = ({
   placementGroup,
   region,
 }: HasPlacementGroupReachedCapacityOptions): boolean => {
-  if (!placementGroup || !region) {
+  if (
+    !placementGroup ||
+    !region ||
+    region.placement_group_limits.maximum_linodes_per_pg === null
+  ) {
     return false;
   }
 

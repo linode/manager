@@ -1,47 +1,45 @@
-import { Button, Icon, Select, Tooltip } from '@akamai/cds-components/react';
+import {
+  Button,
+  FormField,
+  FormLabel,
+  Icon,
+  Pagination,
+  Select,
+  Table,
+  TableBody,
+  Tooltip,
+} from '@akamai/cds-components/react';
+import { Spacing } from '@akamai/cds-tokens';
 import {
   useAccountRoles,
   useGetDefaultDelegationAccessQuery,
   useUserRoles,
 } from '@linode/queries';
-import { Typography } from '@linode/ui';
-import { useTheme } from '@mui/material';
-import Grid from '@mui/material/Grid';
 import { useNavigate, useParams, useSearch } from '@tanstack/react-router';
 import React from 'react';
 
-import { CollapsibleTable } from 'src/components/CollapsibleTable/CollapsibleTable';
-import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
-import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import { PAGE_SIZES } from 'src/components/PaginationFooter/PaginationFooter.constants';
-import { TableCell } from 'src/components/TableCell';
-import { TableRow } from 'src/components/TableRow';
-import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
-import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
-import { usePaginationV2 } from 'src/hooks/usePaginationV2';
+import { DebouncedSearchField } from 'src/features/IAM/Shared/DebouncedSearchField/DebouncedSearchField';
+import globalStyles from 'src/features/IAM/Shared/global.module.css';
 import { useAllAccountEntities } from 'src/queries/entities/entities';
 
 import { useIsDefaultDelegationRolesForChildAccount } from '../../hooks/useDelegationRole';
+import { usePagination } from '../../hooks/usePagination';
 import { usePermissions } from '../../hooks/usePermissions';
-import { AssignedEntities } from '../../Users/UserRoles/AssignedEntities';
 import { AssignNewRoleDrawer } from '../../Users/UserRoles/AssignNewRoleDrawer';
+import { Box } from '../Box/Box';
 import { CircleProgress } from '../CircleProgress/CircleProgress';
 import {
   ASSIGNED_ROLES_TABLE_PREFERENCE_KEY,
   IAM_ROLES_PENDO_IDS,
-  ROLES_LEARN_MORE_LINK,
 } from '../constants';
-import { Link } from '../Link/Link';
-import { Permissions } from '../Permissions/Permissions';
 import { RemoveAssignmentConfirmationDialog } from '../RemoveAssignmentConfirmationDialog/RemoveAssignmentConfirmationDialog';
 import {
-  getFacadeRoleDescription,
   getFilteredRoles,
-  getFormattedEntityType,
   groupAccountEntitiesByType,
   mapEntityTypesForSelect,
 } from '../utilities';
-import { AssignedRolesActionMenu } from './AssignedRolesActionMenu';
+import { AssignedRolesTableBody } from './AssignedRolesTableBody';
+import { AssignedRolesTableHead } from './AssignedRolesTableHead';
 import { ChangeRoleDrawer } from './ChangeRoleDrawer';
 import { UnassignRoleConfirmationDialog } from './UnassignRoleConfirmationDialog';
 import { UpdateEntitiesDrawer } from './UpdateEntitiesDrawer';
@@ -58,14 +56,13 @@ import type {
   EntitiesRole,
   ExtendedRoleView,
   RoleView,
+  SelectOption,
 } from '../types';
 import type {
   AccessType,
   AccountRoleType,
   EntityRoleType,
 } from '@linode/api-v4';
-import type { SelectOption } from '@linode/ui';
-import type { TableItem } from 'src/components/CollapsibleTable/CollapsibleTable';
 
 type OrderByKeys = 'name';
 
@@ -76,11 +73,11 @@ const ALL_ROLES_OPTION: SelectOption = {
 
 const DEFAULTS_ROLES_URL = '/iam/roles/defaults/roles';
 const USER_ROLES_URL = '/iam/users/$username/roles';
+const MIN_PAGE_SIZE = 25;
 
 export const AssignedRolesTable = () => {
   const { username } = useParams({ strict: false });
   const navigate = useNavigate();
-  const theme = useTheme();
 
   const { isDefaultDelegationRolesForChildAccount } =
     useIsDefaultDelegationRolesForChildAccount();
@@ -184,11 +181,6 @@ export const AssignedRolesTable = () => {
     setSelectedRole(role);
   };
 
-  /**
-   * Closes the appropriate assignment-related dialog and adjusts pagination if needed.
-   *
-   * @param drawerMode Optional mode indicating which dialog should be closed.
-   */
   const handleDialogClose = (drawerMode?: DrawerModes) => {
     if (drawerMode && drawerMode === 'change-role') {
       setIsChangeRoleDrawerOpen(false);
@@ -233,13 +225,12 @@ export const AssignedRolesTable = () => {
   }, [filterableOptions, roleTypeParam]);
 
   const handleViewEntities = (roleName: AccountRoleType | EntityRoleType) => {
-    const selectedRole = roleName;
     navigate({
       to: isDefaultDelegationRolesForChildAccount
         ? '/iam/roles/defaults/entity-access'
         : '/iam/users/$username/entities',
       params: { username: username || '' },
-      search: { selectedRole },
+      search: { selectedRole: roleName },
     });
   };
 
@@ -251,14 +242,6 @@ export const AssignedRolesTable = () => {
       roles,
     }) as RoleView[];
 
-    // Sorting logic:
-    // 1. During the initial load (isInitialLoad is true):
-    //    - Account Access Roles are placed at the top.
-    //    - Entity Access Roles are placed at the bottom.
-    //    - Within each group, roles are sorted alphabetically by Role name.
-    // 2. After the first user interaction with sorting (isInitialLoad is set to false):
-    //    - Roles are sorted alphabetically by the selected column (orderBy) and direction (order).
-    //    - The special prioritization of roles’ access is no longer applied.
     return [...rolesToFilter].sort((a, b) => {
       if (isInitialLoad && a.access !== b.access) {
         return a.access === 'account_access' ? -1 : 1;
@@ -274,7 +257,7 @@ export const AssignedRolesTable = () => {
     });
   }, [roles, queryParam, roleTypeParam, order, orderBy, isInitialLoad]);
 
-  const pagination = usePaginationV2({
+  const pagination = usePagination({
     currentRoute: isDefaultDelegationRolesForChildAccount
       ? DEFAULTS_ROLES_URL
       : USER_ROLES_URL,
@@ -283,169 +266,80 @@ export const AssignedRolesTable = () => {
     clientSidePaginationData: filteredAndSortedRoles,
   });
 
-  const filteredAndSortedRolesCount = React.useMemo(() => {
-    return filteredAndSortedRoles.length;
-  }, [filteredAndSortedRoles]);
+  const filteredAndSortedRolesCount = filteredAndSortedRoles.length;
 
-  const memoizedTableItems: TableItem[] = React.useMemo(() => {
-    return pagination.paginatedData?.map((role: ExtendedRoleView) => {
-      const OuterTableCells = (
-        <>
-          {role.access === 'account_access' ? (
-            <TableCell sx={{ display: { sm: 'table-cell', xs: 'none' } }}>
-              <Typography>
-                {role.entity_type === 'account'
-                  ? 'All Entities'
-                  : `All ${getFormattedEntityType(role.entity_type)}s`}
-              </Typography>
-            </TableCell>
-          ) : (
-            <TableCell sx={{ display: { sm: 'table-cell', xs: 'none' } }}>
-              <AssignedEntities
-                disabled={!permissions.is_account_admin}
-                onButtonClick={handleViewEntities}
-                onRemoveAssignment={handleRemoveAssignment}
-                role={role}
-              />
-            </TableCell>
-          )}
-          <TableCell actionCell>
-            <AssignedRolesActionMenu
-              handleChangeRole={handleChangeRole}
-              handleUnassignRole={handleUnassignRole}
-              handleUpdateEntities={handleUpdateEntities}
-              handleViewEntities={handleViewEntities}
-              permissions={permissions}
-              role={role}
-            />
-          </TableCell>
-        </>
-      );
-
-      const InnerTable = (
-        <Grid
-          sx={{
-            padding: `${theme.tokens.spacing.S0} ${theme.tokens.spacing.S16}`,
-          }}
-        >
-          <Typography
-            sx={{
-              font: theme.tokens.alias.Typography.Label.Bold.S,
-              marginBottom: theme.tokens.spacing.S4,
-            }}
-          >
-            Description
-          </Typography>
-          <Typography
-            sx={{
-              marginBottom: theme.tokens.spacing.S8,
-            }}
-          >
-            {role.permissions.length ? (
-              role.description
-            ) : (
-              <>
-                {getFacadeRoleDescription(role)}{' '}
-                <Link to={ROLES_LEARN_MORE_LINK}>Learn more</Link>.
-              </>
-            )}
-          </Typography>
-          <Permissions permissions={role.permissions} />
-        </Grid>
-      );
-
-      return {
-        InnerTable,
-        OuterTableCells,
-        id: role.id,
-        label: role.name,
-      };
-    });
-  }, [filteredAndSortedRoles, pagination]);
+  const onSearch = React.useCallback(
+    (value: string) => {
+      navigate({
+        to: isDefaultDelegationRolesForChildAccount
+          ? DEFAULTS_ROLES_URL
+          : USER_ROLES_URL,
+        params:
+          isDefaultDelegationRolesForChildAccount && !username
+            ? undefined
+            : username,
+        search: (prev) => ({
+          ...prev,
+          page: 1,
+          query: value !== '' ? value : undefined,
+        }),
+      });
+    },
+    [navigate, isDefaultDelegationRolesForChildAccount, username]
+  );
 
   if (accountPermissionsLoading || entitiesLoading || assignedRolesLoading) {
     return <CircleProgress />;
   }
 
-  const RoleTableRowHead = (
-    <TableRow>
-      <TableSortCell
-        active={orderBy === 'name'}
-        direction={order}
-        handleClick={() => handleOrderChange('name')}
-        label="role"
-        style={{ width: '20%' }}
-      >
-        Role
-      </TableSortCell>
-      <TableCell
-        style={{ width: '75%' }}
-        sx={{ display: { sm: 'table-cell', xs: 'none' } }}
-      >
-        Entities
-      </TableCell>
-      <TableCell />
-    </TableRow>
-  );
-
-  // used to pass the selected role and entity to the RemoveAssignmentConfirmationDialog
-  let selectedRoleDetails: EntitiesRole | undefined = undefined;
+  let selectedRoleDetails: EntitiesRole | undefined;
 
   if (selectedRole && selectedEntity) {
     selectedRoleDetails = {
-      entity_type: selectedRole.entity_type,
-      id: selectedRole.id,
+      access: 'entity_access',
       entity_id: selectedEntity.id,
       entity_name: selectedEntity.name,
+      entity_type: selectedRole.entity_type,
+      id: selectedRole.id,
       role_name: selectedRole.name as EntityRoleType,
-      access: 'entity_access',
     };
   }
 
+  const rolesPermissions = {
+    is_account_admin: permissions?.is_account_admin ?? false,
+    update_default_delegate_access:
+      permissions?.update_default_delegate_access ?? false,
+  };
+
   return (
-    <Grid>
-      <Grid
-        container
+    <>
+      <Box
         direction="row"
-        rowSpacing={1}
-        sx={{
-          alignItems: 'center',
+        spacing={1}
+        style={{
           justifyContent: 'space-between',
-          marginBottom: theme.tokens.spacing.S12,
-          minHeight: theme.spacingFunction(40),
+          marginBottom: Spacing.S12,
         }}
       >
-        <Grid container direction="row" rowSpacing={1}>
-          <DebouncedSearchTextField
-            clearable
-            containerProps={{
-              sx: {
-                marginRight: { md: 2, xs: 0 },
-                width: { md: '416px', xs: '100%' },
-                height: 34,
-              },
-            }}
-            hideLabel
-            label="Filter"
-            onSearch={(value) => {
-              navigate({
-                to: isDefaultDelegationRolesForChildAccount
-                  ? DEFAULTS_ROLES_URL
-                  : USER_ROLES_URL,
-                params:
-                  isDefaultDelegationRolesForChildAccount && !username
-                    ? undefined
-                    : username,
-                search: (prev) => ({
-                  ...prev,
-                  page: 1,
-                  query: value !== '' ? value : undefined,
-                }),
-              });
-            }}
-            placeholder="Search"
-            value={queryParam ?? ''}
-          />
+        <Box direction="row" spacing={1}>
+          <FormField
+            labelPosition="top"
+            style={{ padding: 0, marginRight: Spacing.S16 }}
+          >
+            <FormLabel
+              className={globalStyles.visuallyHidden}
+              htmlFor="filter-roles"
+              slot="label"
+            >
+              Search Roles
+            </FormLabel>
+            <DebouncedSearchField
+              id="filter-roles"
+              onSearch={onSearch}
+              placeholder="Search"
+              value={queryParam ?? ''}
+            />
+          </FormField>
           <Select
             items={filterableOptions}
             onChange={(event) => {
@@ -469,45 +363,54 @@ export const AssignedRolesTable = () => {
             }}
             placeholder="All Assigned Roles"
             selected={selectedEntityTypeOption}
-            style={{ minWidth: 250 }}
+            style={{ minWidth: 250, maxWidth: 362 }}
             valueFn={(item) => (item as SelectOption).label}
           />
-        </Grid>
-        <Grid sx={{ alignSelf: 'flex-start' }}>
-          <Tooltip
-            disabled={permissionToCheck}
-            tooltipPlacement="bottom"
-            tooltipText={
-              !permissionToCheck
-                ? 'You do not have permission to assign roles.'
+        </Box>
+        <Tooltip
+          disabled={permissionToCheck}
+          tooltipPlacement="bottom"
+          tooltipText={
+            !permissionToCheck
+              ? 'You do not have permission to assign roles.'
+              : undefined
+          }
+        >
+          <Button
+            data-pendo-id={
+              isDefaultDelegationRolesForChildAccount
+                ? IAM_ROLES_PENDO_IDS.addNewDefaultRoles
                 : undefined
             }
+            disabled={!permissionToCheck}
+            onClick={() => setIsAssignNewRoleDrawerOpen(true)}
+            variant="primary"
           >
-            <Button
-              data-pendo-id={
-                isDefaultDelegationRolesForChildAccount
-                  ? IAM_ROLES_PENDO_IDS.addNewDefaultRoles
-                  : undefined
-              }
-              disabled={!permissionToCheck}
-              onClick={() => setIsAssignNewRoleDrawerOpen(true)}
-              variant="primary"
-            >
-              {isDefaultDelegationRolesForChildAccount
-                ? 'Add New Default Roles'
-                : 'Assign New Roles'}
-              {!permissionToCheck && <Icon icon="info-outline" size="m" />}
-            </Button>
-          </Tooltip>
-        </Grid>
-      </Grid>
-      <CollapsibleTable
-        TableItems={memoizedTableItems}
-        TableRowEmpty={
-          <TableRowEmpty colSpan={5} message={'No items to display.'} />
-        }
-        TableRowHead={RoleTableRowHead}
-      />
+            {isDefaultDelegationRolesForChildAccount
+              ? 'Add New Default Roles'
+              : 'Assign New Roles'}
+            {!permissionToCheck && <Icon icon="info-outline" size="m" />}
+          </Button>
+        </Tooltip>
+      </Box>
+      <Table aria-label="collapsible table">
+        <AssignedRolesTableHead
+          handleOrderChange={handleOrderChange}
+          order={order}
+          orderBy={orderBy}
+        />
+        <TableBody>
+          <AssignedRolesTableBody
+            handleChangeRole={handleChangeRole}
+            handleRemoveAssignment={handleRemoveAssignment}
+            handleUnassignRole={handleUnassignRole}
+            handleUpdateEntities={handleUpdateEntities}
+            handleViewEntities={handleViewEntities}
+            paginatedData={pagination.paginatedData}
+            permissions={rolesPermissions}
+          />
+        </TableBody>
+      </Table>
       <AssignNewRoleDrawer
         assignedRoles={assignedRoles}
         onClose={() => setIsAssignNewRoleDrawerOpen(false)}
@@ -535,15 +438,21 @@ export const AssignedRolesTable = () => {
         role={selectedRoleDetails}
         username={username}
       />
-      {filteredAndSortedRolesCount > PAGE_SIZES[0] && (
-        <PaginationFooter
+      {filteredAndSortedRolesCount > MIN_PAGE_SIZE && (
+        <Pagination
           count={filteredAndSortedRolesCount}
-          handlePageChange={pagination.handlePageChange}
-          handleSizeChange={pagination.handlePageSizeChange}
+          onPageChange={(e: CustomEvent<number>) =>
+            pagination.handlePageChange(Number(e.detail))
+          }
+          onPageSizeChange={(
+            e: CustomEvent<{ page: number; pageSize: number }>
+          ) => pagination.handlePageSizeChange(Number(e.detail.pageSize))}
           page={pagination.page}
           pageSize={pagination.pageSize}
+          pageSizes={[MIN_PAGE_SIZE, 50, 75, 100]}
+          style={{ border: 0 }}
         />
       )}
-    </Grid>
+    </>
   );
 };

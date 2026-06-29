@@ -133,6 +133,7 @@ export const ResourcesSection = (props: ResourcesSectionProps) => {
                   linkAnalyticsEvent,
                   gettingStartedGuidesData.moreInfo.text
                 )}
+                pendoId={gettingStartedGuidesData.moreInfo.pendoId}
                 to={gettingStartedGuidesData.moreInfo.to}
                 {...props}
               >

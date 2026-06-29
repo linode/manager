@@ -2253,4 +2253,69 @@ export const oneClickApps: Record<number, OCA> = {
     summary: 'Akamai MCP Gateway Client',
     website: 'https://techdocs.akamai.com/mcp-gateway/docs/welcome',
   },
+  2138475: {
+    alt_description: 'Multi-agent Platform',
+    alt_name: 'Multi-agent platform framework for orchestrating AI agents',
+    categories: ['AI Framework', 'LLM', 'AI Agent', 'AI'],
+    colors: {
+      end: 'FF0000',
+      start: 'FFFFFF',
+    },
+    description:
+      'CrewAI is an open-source framework for building and orchestrating AI agents that work together as a team to accomplish complex tasks. Instead of relying on a single large language model prompt, CrewAI allows developers to create specialized agents with distinct roles, responsibilities, and goals. These agents can collaborate, delegate work, share information, and execute multi-step workflows autonomously.',
+    isNew: true,
+    logo_url: 'crewai.svg',
+    related_guides: [
+      {
+        href: 'https://www.linode.com/docs/marketplace-docs/guides/crewai/',
+        title: 'Deploy CrewAI',
+      },
+    ],
+    summary: 'Multi-agent Platform',
+    website: 'https://crewai.com/open-source',
+  },
+  2141074: {
+    alt_description: 'Self-improving AI agent',
+    alt_name:
+      'Self-improving Open-source autonomous AI agent that runs locally and executes tasks through a persistent Gateway service.',
+    categories: ['AI Framework', 'LLM', 'AI Agent', 'AI'],
+    colors: {
+      end: 'FFE600',
+      start: 'D47A2A',
+    },
+    description:
+      'Hermes Agent is a self-improving open-source autonomous AI agent that runs locally and executes tasks through a persistent Gateway service.',
+    isNew: true,
+    logo_url: 'hermes.svg',
+    related_guides: [
+      {
+        href: 'https://www.linode.com/docs/marketplace-docs/guides/hermes/',
+        title: 'Deploy Hermes',
+      },
+    ],
+    summary: 'AI Agent Platform',
+    website: 'https://hermes-agent.nousresearch.com',
+  },
+    2141983: {
+    alt_description: 'Visual AI App Builder',
+    alt_name:
+      'Open-source visual framework for building AI agents and workflows without writing code.',
+    categories: ['AI Framework', 'AI Agent', 'AI'],
+    colors: {
+      end: 'FF007A',
+      start: '4D00FF',
+    },
+    description:
+      'Langflow is an open-source visual framework for building AI agents and workflows through a drag-and-drop editor, with native support for MCP.',
+    isNew: true,
+    logo_url: 'langflow.svg',
+    related_guides: [
+      {
+        href: 'https://www.linode.com/docs/marketplace-docs/guides/langflow/',
+        title: 'Deploy Langflow',
+      },
+    ],
+    summary: 'Visual AI Agent Framework',
+    website: 'https://www.langflow.org/',
+  },
 };

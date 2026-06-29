@@ -1,3 +1,4 @@
+import { type Stream, streamStatus, streamType } from '@linode/api-v4';
 import { regionFactory } from '@linode/utilities';
 import {
   screen,
@@ -9,7 +10,7 @@ import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { beforeEach, describe, expect, it } from 'vitest';
 
-import { kubernetesClusterFactory } from 'src/factories';
+import { kubernetesClusterFactory, streamFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
@@ -83,13 +84,18 @@ const regions = [
   }),
 ];
 
-const renderComponentWithoutSelectedClusters = async () => {
+const renderComponentWithoutSelectedClusters = async (
+  streams: Stream[] = []
+) => {
   server.use(
     http.get('*/lke/clusters', () => {
       return HttpResponse.json(makeResourcePage(clusters));
     }),
     http.get('*/regions', () => {
       return HttpResponse.json(makeResourcePage(regions));
+    }),
+    http.get('*/monitor/streams', () => {
+      return HttpResponse.json(makeResourcePage(streams));
     })
   );
 
@@ -128,6 +134,12 @@ const getCheckboxByClusterName = (clusterName: string) => {
   return within(
     screen.getByLabelText(`Toggle ${clusterName} cluster`)
   ).getByRole('checkbox');
+};
+
+const getLoggingToggleByClusterName = (clusterName: string) => {
+  return within(
+    screen.getByRole('row', { name: new RegExp(clusterName, 'i') })
+  ).getByRole('switch');
 };
 
 const expectCheckboxStateToBe = (
@@ -249,6 +261,100 @@ describe('StreamFormClusters', () => {
     expect(metricsStreamCheckbox).toBeChecked();
     expect(prodClusterCheckbox).toBeChecked();
     expectCheckboxStateToBe(headerCheckbox, 'checked');
+  });
+
+  it('should ask for confirmation before disabling logging on clusters used by non-failed LKE Audit Logs streams', async () => {
+    let updateRequests = 0;
+    const activeLKEStreamUsingCluster = streamFactory.build({
+      details: { cluster_ids: [2] },
+      status: streamStatus.Active,
+      type: streamType.LKEAuditLogs,
+    });
+
+    server.use(
+      http.put('*/lke/clusters/:id', async ({ params, request }) => {
+        updateRequests += 1;
+        const payload = (await request.json()) as object;
+
+        return HttpResponse.json(
+          kubernetesClusterFactory.build({
+            id: Number(params.id),
+            ...payload,
+          })
+        );
+      })
+    );
+
+    await renderComponentWithoutSelectedClusters([activeLKEStreamUsingCluster]);
+
+    await userEvent.click(
+      getLoggingToggleByClusterName('metrics-stream-cluster')
+    );
+
+    await screen.findByRole('button', { name: 'Disable anyway' });
+    expect(updateRequests).toBe(0);
+
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Disable anyway' })
+    );
+
+    await waitFor(() => {
+      expect(updateRequests).toBe(1);
+    });
+  });
+
+  it('should ask for confirmation when cluster is used by any non-failed LKE Audit Logs stream status', async () => {
+    const streamUsingCluster = streamFactory.build({
+      details: { cluster_ids: [2] },
+      status: streamStatus.Inactive,
+      type: streamType.LKEAuditLogs,
+    });
+
+    await renderComponentWithoutSelectedClusters([streamUsingCluster]);
+
+    await userEvent.click(
+      getLoggingToggleByClusterName('metrics-stream-cluster')
+    );
+
+    expect(
+      screen.getByRole('button', { name: 'Disable anyway' })
+    ).toBeInTheDocument();
+  });
+
+  it('should disable logging immediately when a cluster is only used by failed LKE Audit Logs streams', async () => {
+    let updateRequests = 0;
+    const failedLKEStreamUsingCluster = streamFactory.build({
+      details: { cluster_ids: [2] },
+      status: streamStatus.Failed,
+      type: streamType.LKEAuditLogs,
+    });
+
+    server.use(
+      http.put('*/lke/clusters/:id', async ({ params, request }) => {
+        updateRequests += 1;
+        const payload = (await request.json()) as object;
+
+        return HttpResponse.json(
+          kubernetesClusterFactory.build({
+            id: Number(params.id),
+            ...payload,
+          })
+        );
+      })
+    );
+
+    await renderComponentWithoutSelectedClusters([failedLKEStreamUsingCluster]);
+
+    await userEvent.click(
+      getLoggingToggleByClusterName('metrics-stream-cluster')
+    );
+
+    await waitFor(() => {
+      expect(updateRequests).toBe(1);
+    });
+    expect(
+      screen.queryByRole('button', { name: 'Disable anyway' })
+    ).not.toBeInTheDocument();
   });
 
   it('should select and deselect all clusters with header checkbox', async () => {

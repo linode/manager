@@ -1,3 +1,4 @@
+import { isPrivateIP } from '@akamai/compute-ui-core/api';
 import {
   accountQueries,
   firewallQueries,
@@ -13,7 +14,6 @@ import type { FieldErrors } from 'react-hook-form';
 
 import { sendCreateLinodeEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { sendLinodeCreateFormErrorEvent } from 'src/utilities/analytics/formEventAnalytics';
-import { isPrivateIP } from 'src/utilities/ipUtils';
 
 import {
   getDefaultInterfacePayload,
@@ -23,6 +23,7 @@ import {
 import { getDefaultUDFData } from './Tabs/StackScripts/UserDefinedFields/utilities';
 
 import type { LinodeCreateInterface } from './Networking/utilities';
+import type { LinodeCreateType } from '@akamai/compute-ui-core/api';
 import type {
   AccountSettings,
   APIError,
@@ -36,7 +37,6 @@ import type {
   Profile,
   StackScript,
 } from '@linode/api-v4';
-import type { LinodeCreateType } from '@linode/utilities';
 import type { QueryClient } from '@tanstack/react-query';
 import type { LinodeCreateSearchParams } from 'src/routes/linodes';
 
@@ -44,6 +44,11 @@ import type { LinodeCreateSearchParams } from 'src/routes/linodes';
  * This is the ID of the Image of the default OS.
  */
 const DEFAULT_OS = 'linode/ubuntu24.04';
+
+/**
+ * Fallback interface generation to be used for Linode Creation when there are no defaults on Account Settings API or users can't access account settings.
+ */
+const FALLBACK_INTERFACE_GENERATION: InterfaceGenerationType = 'linode';
 
 /**
  * Empty default value for the ACLP alerts form field.
@@ -372,9 +377,10 @@ export const defaultValues = async (
 
     // Don't set the interface generation when cloning. The API can figure that out
     if (createType !== 'Clone Linode') {
-      interfaceGeneration = getDefaultInterfaceGenerationFromAccountSetting(
-        accountSettings.interfaces_for_new_linodes
-      );
+      interfaceGeneration =
+        getDefaultInterfaceGenerationFromAccountSetting(
+          accountSettings.interfaces_for_new_linodes
+        ) ?? FALLBACK_INTERFACE_GENERATION;
     }
 
     // If the Maintenance Policy feature is enabled, use the user's account setting
@@ -383,6 +389,9 @@ export const defaultValues = async (
     }
   } catch (error) {
     // silently fail because the user may be a restricted user that can't access this endpoint
+    if (createType !== 'Clone Linode') {
+      interfaceGeneration = FALLBACK_INTERFACE_GENERATION;
+    }
   }
 
   let firewallSettings: FirewallSettings | null = null;

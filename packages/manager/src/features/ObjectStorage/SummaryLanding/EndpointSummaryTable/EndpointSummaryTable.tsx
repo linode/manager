@@ -22,6 +22,10 @@ export const EndpointSummaryTable = ({ endpoints }: Props) => {
   useEffect(() => {
     const offset = PAGE_SIZE * (page - 1);
     setPaginatedEndpoints(endpoints.slice(offset, offset + PAGE_SIZE));
+
+    if (endpoints.length <= offset) {
+      setPage(page - 1);
+    }
   }, [endpoints, page]);
 
   return (

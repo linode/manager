@@ -98,34 +98,45 @@ export const useOrderV2 = <T>({
 
   const { order, orderBy } = getOrderValues();
 
-  const handleOrderChange = (newOrderBy: string, newOrder: Order) => {
-    const urlData = prefix
-      ? {
-          [`${prefix}-order`]: newOrder,
-          [`${prefix}-orderBy`]: newOrderBy,
-        }
-      : {
-          order: newOrder,
-          orderBy: newOrderBy,
-        };
+  const handleOrderChange = React.useCallback(
+    (newOrderBy: string, newOrder: Order) => {
+      const urlData = prefix
+        ? {
+            [`${prefix}-order`]: newOrder,
+            [`${prefix}-orderBy`]: newOrderBy,
+          }
+        : {
+            order: newOrder,
+            orderBy: newOrderBy,
+          };
 
-    navigate<RegisteredRouter, string, string>({
-      search: (prev: TableSearchParams) => ({
-        ...prev,
-        ...searchParams,
-        ...urlData,
-      }),
-      to: initialRoute.from,
-    });
+      navigate<RegisteredRouter, string, string>({
+        search: (prev: TableSearchParams) => ({
+          ...prev,
+          ...searchParams,
+          ...urlData,
+        }),
+        to: initialRoute.from,
+      });
 
-    const prefKey = prefix ? `${prefix}-${preferenceKey}` : preferenceKey;
-    updatePreferences({
-      sortKeys: {
-        ...(orderPreferences ?? {}),
-        [prefKey]: { order: newOrder, orderBy: newOrderBy },
-      },
-    });
-  };
+      const prefKey = prefix ? `${prefix}-${preferenceKey}` : preferenceKey;
+      updatePreferences({
+        sortKeys: {
+          ...(orderPreferences ?? {}),
+          [prefKey]: { order: newOrder, orderBy: newOrderBy },
+        },
+      });
+    },
+    [
+      prefix,
+      navigate,
+      initialRoute.from,
+      searchParams,
+      preferenceKey,
+      updatePreferences,
+      orderPreferences,
+    ]
+  );
 
   const sortedData = React.useMemo(
     () => (data ? sortData<T>(orderBy, order)(data) : null),

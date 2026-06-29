@@ -5,7 +5,7 @@ import { Link } from 'src/components/Link';
 
 import { useGetLinodeCreateType } from '../Tabs/utils/useGetLinodeCreateType';
 
-import type { LinodeCreateType } from '@linode/utilities';
+import type { LinodeCreateType } from '@akamai/compute-ui-core/api';
 
 export const UserDataHeading = () => {
   const createType = useGetLinodeCreateType();

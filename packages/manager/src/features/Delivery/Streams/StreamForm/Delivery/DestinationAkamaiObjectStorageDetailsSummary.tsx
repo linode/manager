@@ -15,13 +15,13 @@ export const DestinationAkamaiObjectStorageDetailsSummary = (
       <LabelValue label="Host" value={host} />
       <LabelValue label="Bucket" value={bucket_name} />
       <LabelValue
-        data-testid="access-key-id"
-        label="Access Key ID"
+        data-testid="access-key"
+        label="Access Key"
         value={MASKED_VALUE}
       />
       <LabelValue
-        data-testid="secret-access-key"
-        label="Secret Access Key"
+        data-testid="secret-key"
+        label="Secret Key"
         value={MASKED_VALUE}
       />
       {!!path && <LabelValue label="Log Path" value={path} />}

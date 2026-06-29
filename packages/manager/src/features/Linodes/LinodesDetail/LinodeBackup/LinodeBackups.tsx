@@ -1,3 +1,4 @@
+import { getMonthlyBackupsPrice } from '@akamai/compute-ui-core/api';
 import {
   useLinodeBackupsQuery,
   useLinodeQuery,
@@ -24,7 +25,6 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
-import { getMonthlyBackupsPrice } from 'src/utilities/pricing/backups';
 
 import { useLinodeDetailContext } from '../LinodesDetailContext';
 import { BackupsPlaceholder } from './BackupsPlaceholder';

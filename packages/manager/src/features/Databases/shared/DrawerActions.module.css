@@ -1,0 +1,5 @@
+.drawer-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--token-global-spacing-s12, 12px);
+}

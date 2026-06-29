@@ -236,4 +236,185 @@ describe('useComputePricing', () => {
       expect(result.current.hasHourlyEligiblePlans([])).toBe(false);
     });
   });
+
+  describe('getPriceSubheading', () => {
+    const price: PriceObject = { hourly: 0.09, monthly: 60 };
+
+    describe("when billing is 'monthly'", () => {
+      const options = mockFlagOptions('monthly');
+
+      it('returns monthly with hourly in parentheses (long format by default)', () => {
+        const { result } = renderHook(() => useComputePricing(), {
+          wrapper: (ui) => wrapWithTheme(ui, options),
+        });
+        expect(result.current.getPriceSubheading(price)).toBe(
+          '$60/month ($0.09/hour)'
+        );
+      });
+
+      it("uses abbreviated labels when format option 'short' is provided", () => {
+        const { result } = renderHook(() => useComputePricing(), {
+          wrapper: (ui) => wrapWithTheme(ui, options),
+        });
+        expect(
+          result.current.getPriceSubheading(price, { format: 'short' })
+        ).toBe('$60/mo ($0.09/hr)');
+      });
+
+      it('renders $--.-- for missing prices by default', () => {
+        const { result } = renderHook(() => useComputePricing(), {
+          wrapper: (ui) => wrapWithTheme(ui, options),
+        });
+        expect(result.current.getPriceSubheading(undefined)).toBe(
+          '$--.--/month ($--.--/hour)'
+        );
+        expect(result.current.getPriceSubheading(null)).toBe(
+          '$--.--/month ($--.--/hour)'
+        );
+        expect(
+          result.current.getPriceSubheading({ hourly: null, monthly: null })
+        ).toBe('$--.--/month ($--.--/hour)');
+      });
+
+      it("renders $0 for missing prices when missingPriceFallback option 'zero' is provided", () => {
+        const { result } = renderHook(() => useComputePricing(), {
+          wrapper: (ui) => wrapWithTheme(ui, options),
+        });
+        expect(
+          result.current.getPriceSubheading(undefined, {
+            format: 'short',
+            missingPriceFallback: 'zero',
+          })
+        ).toBe('$0/mo ($0/hr)');
+      });
+    });
+
+    describe("when billing is 'hourly'", () => {
+      const options = mockFlagOptions('hourly');
+
+      it('returns only the hourly price (long format by default)', () => {
+        const { result } = renderHook(() => useComputePricing(), {
+          wrapper: (ui) => wrapWithTheme(ui, options),
+        });
+        expect(result.current.getPriceSubheading(price)).toBe('$0.09/hour');
+      });
+
+      it('hides the monthly price even if the API returns one', () => {
+        // Hourly-scoped plans have no monthly commitment, so it doesn't show the monthly price.
+        const { result } = renderHook(() => useComputePricing(), {
+          wrapper: (ui) => wrapWithTheme(ui, options),
+        });
+        const subheading = result.current.getPriceSubheading(price);
+        expect(subheading).not.toContain('/month');
+        expect(subheading).not.toContain('60');
+      });
+
+      it("uses abbreviated label when format option 'short' is provided", () => {
+        const { result } = renderHook(() => useComputePricing(), {
+          wrapper: (ui) => wrapWithTheme(ui, options),
+        });
+        expect(
+          result.current.getPriceSubheading(price, { format: 'short' })
+        ).toBe('$0.09/hr');
+      });
+
+      it('renders $--.-- when hourly is missing by default', () => {
+        const { result } = renderHook(() => useComputePricing(), {
+          wrapper: (ui) => wrapWithTheme(ui, options),
+        });
+        expect(
+          result.current.getPriceSubheading({ hourly: null, monthly: 60 })
+        ).toBe('$--.--/hour');
+      });
+
+      it("renders $0 when hourly is missing and missingPriceFallback option 'zero' is provided", () => {
+        const { result } = renderHook(() => useComputePricing(), {
+          wrapper: (ui) => wrapWithTheme(ui, options),
+        });
+        expect(
+          result.current.getPriceSubheading(undefined, {
+            missingPriceFallback: 'zero',
+          })
+        ).toBe('$0/hour');
+      });
+    });
+  });
+
+  describe('getBillingForPlanType', () => {
+    it('applies matcher logic correctly', () => {
+      const { result } = renderHook(() => useComputePricing(), {
+        wrapper: (ui) =>
+          wrapWithTheme(ui, mockFlagOptions('hourly', ['g8', 'gpu'])),
+      });
+
+      // matches G8 or gpu matcher -> hourly
+      expect(result.current.getBillingForPlanType(G8_DEDICATED_PLAN_ID)).toBe(
+        'hourly'
+      );
+      expect(result.current.getBillingForPlanType(GPU_PLAN_ID)).toBe('hourly');
+
+      // does not match -> fallback to monthly
+      expect(result.current.getBillingForPlanType(G6_DEDICATED_PLAN_ID)).toBe(
+        'monthly'
+      );
+    });
+
+    it('returns baseBilling when matcher list is empty', () => {
+      const { result } = renderHook(() => useComputePricing(), {
+        wrapper: (ui) => wrapWithTheme(ui, mockFlagOptions('hourly', [])),
+      });
+
+      expect(result.current.getBillingForPlanType(GPU_PLAN_ID)).toBe('hourly');
+      expect(result.current.getBillingForPlanType(G6_DEDICATED_PLAN_ID)).toBe(
+        'hourly'
+      );
+    });
+
+    it('returns baseBilling when planTypeId is undefined', () => {
+      const { result } = renderHook(() => useComputePricing(), {
+        wrapper: (ui) => wrapWithTheme(ui, mockFlagOptions('hourly', ['gpu'])),
+      });
+
+      expect(
+        result.current.getBillingForPlanType(undefined as unknown as string)
+      ).toBe('hourly');
+    });
+
+    it('returns monthly when baseBilling is monthly regardless of matcher match', () => {
+      const { result } = renderHook(() => useComputePricing(), {
+        wrapper: (ui) => wrapWithTheme(ui, mockFlagOptions('monthly', ['gpu'])),
+      });
+
+      expect(result.current.getBillingForPlanType(GPU_PLAN_ID)).toBe('monthly');
+      expect(result.current.getBillingForPlanType(G6_DEDICATED_PLAN_ID)).toBe(
+        'monthly'
+      );
+    });
+
+    it('matches plan ids case-insensitively', () => {
+      const { result } = renderHook(() => useComputePricing(), {
+        // Provide GPU (uppercase) in LD flag matchers to verify case-insensitive matching
+        wrapper: (ui) => wrapWithTheme(ui, mockFlagOptions('hourly', ['GPU'])),
+      });
+
+      expect(result.current.getBillingForPlanType(GPU_PLAN_ID)).toBe('hourly');
+    });
+
+    it('getBillingForPlanType is independent of hook planTypeId', () => {
+      const { result } = renderHook(() => useComputePricing(GPU_PLAN_ID), {
+        wrapper: (ui) =>
+          wrapWithTheme(ui, mockFlagOptions('hourly', ['g8', 'gpu'])),
+      });
+
+      // Even though hook is initialized with GPU_PLAN_ID,
+      // resolution must depend ONLY on function argument.
+      expect(result.current.getBillingForPlanType(G6_DEDICATED_PLAN_ID)).toBe(
+        'monthly'
+      );
+      expect(result.current.getBillingForPlanType(G8_DEDICATED_PLAN_ID)).toBe(
+        'hourly'
+      );
+      expect(result.current.getBillingForPlanType(GPU_PLAN_ID)).toBe('hourly');
+    });
+  });
 });

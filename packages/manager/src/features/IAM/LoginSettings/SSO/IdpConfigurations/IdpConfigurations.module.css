@@ -1,0 +1,43 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: var(--global-spacing-s24, 24px);
+}
+
+h3.sectionHeading {
+  margin-top: var(--global-spacing-s24, 24px);
+  margin-bottom: var(--global-spacing-s12, 12px);
+}
+
+.detailRow {
+  display: flex;
+  align-items: center;
+  gap: var(--global-spacing-s8, 8px);
+  margin-bottom: var(--global-spacing-s8, 8px);
+  flex-wrap: wrap;
+}
+
+.metadataLink{
+  margin-top: 0;
+  margin-bottom: var(--token-global-spacing-s24, 24px);
+}
+.detailLabel {
+  font-weight: var(--token-global-font-font-weight-bold, bold);
+}
+.detailValue {
+  word-break: break-word;
+}
+
+.certsHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: var(--global-spacing-s24, 24px);
+  margin-bottom: var(--global-spacing-s12, 12px);
+}

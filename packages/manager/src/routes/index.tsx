@@ -4,6 +4,7 @@ import { createRoute, createRouter, redirect } from '@tanstack/react-router';
 import React from 'react';
 
 import { ErrorComponent } from 'src/features/ErrorBoundary/ErrorComponent';
+import { iamRouteTree } from 'src/features/IAM/routes';
 
 import { accountRouteTree } from './account';
 import { accountSettingsRouteTree, settingsRouteTree } from './accountSettings';
@@ -21,7 +22,6 @@ import { deliveryRouteTree } from './delivery';
 import { domainsRouteTree } from './domains';
 import { eventsRouteTree } from './events';
 import { firewallsRouteTree } from './firewalls';
-import { iamRouteTree } from './IAM';
 import { imagesRouteTree } from './images';
 import { inferencePlatformRouteTree } from './inferencePlatform';
 import { kubernetesRouteTree } from './kubernetes';

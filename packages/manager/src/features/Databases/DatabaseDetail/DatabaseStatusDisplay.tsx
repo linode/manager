@@ -1,5 +1,4 @@
 import { capitalize } from '@akamai/compute-ui-core/formatting';
-import { Typography } from '@linode/ui';
 import React from 'react';
 
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
@@ -47,9 +46,9 @@ export const DatabaseStatusDisplay = (props: Props) => {
     displayedStatus = (
       <>
         <StatusIcon status="other" />
-        <Typography sx={{ display: 'inline-block' }} variant="body1">
+        <p style={{ margin: 0, display: 'inline-block' }}>
           {`Resizing ${progress ? `(${progress}%)` : '(0%)'}`}
-        </Typography>
+        </p>
       </>
     );
   } else {

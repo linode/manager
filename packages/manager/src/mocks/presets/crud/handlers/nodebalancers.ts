@@ -17,6 +17,7 @@ import {
 
 import { mswDB } from '../../../indexedDB';
 
+import type { PriceType } from '@akamai/compute-ui-core/api';
 import type {
   Firewall,
   FirewallDeviceEntityType,
@@ -25,7 +26,6 @@ import type {
   NodeBalancerConfigNode,
   NodeBalancerStats,
   NodeBalancerVpcConfig,
-  PriceType,
 } from '@linode/api-v4';
 import type { StrictResponse } from 'msw';
 import type { MockState } from 'src/mocks/types';

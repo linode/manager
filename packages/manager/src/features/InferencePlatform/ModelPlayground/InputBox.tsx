@@ -1,26 +1,38 @@
-import { Box, IconButton, InputAdornment, TextField } from '@linode/ui';
+import {
+  Box,
+  IconButton,
+  InputAdornment,
+  TextField,
+  useTheme,
+} from '@linode/ui';
 import ArrowUpward from '@mui/icons-material/ArrowUpward';
+import Stop from '@mui/icons-material/Stop';
 import React, { useContext, useEffect, useRef } from 'react';
 
 import { useInferencePlatform } from '../InferencePlatformContext';
-import { ModelPlaygroundContext } from './ModelPlaygroundContext';
+import {
+  ModelPlaygroundInputContext,
+  ModelPlaygroundModelContext,
+} from './ModelPlaygroundContext';
 
 export const InputBox = () => {
-  const { inputValue, isLoading, onInputChange, onSend } = useContext(
-    ModelPlaygroundContext
+  const { inputValue, isLoading, onCancel, onInputChange, onSend } = useContext(
+    ModelPlaygroundInputContext
   );
+  const { selectedModel } = useContext(ModelPlaygroundModelContext);
   const { isModelsLoading } = useInferencePlatform();
+  const theme = useTheme();
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const isDisabled = isLoading || isModelsLoading;
+  const isDisabled = isLoading || isModelsLoading || !selectedModel;
   const hasInput = Boolean(inputValue.trim());
   const canSend = hasInput && !isDisabled;
 
   useEffect(() => {
-    if (!isModelsLoading) {
+    if (!isModelsLoading && selectedModel) {
       inputRef.current?.focus();
     }
-  }, [isModelsLoading]);
+  }, [isModelsLoading, selectedModel]);
 
   useEffect(() => {
     if (!isLoading) {
@@ -55,36 +67,63 @@ export const InputBox = () => {
           input: {
             endAdornment: (
               <InputAdornment position="end">
-                <IconButton
-                  disabled={!canSend}
-                  onClick={onSend}
-                  size="small"
-                  sx={{
-                    bgcolor: canSend
-                      ? 'primary.main'
-                      : 'action.disabledBackground',
-                    borderRadius: '4px',
-                    color: 'primary.contrastText',
-                    height: 32,
-                    mb: 0.6,
-                    width: 32,
-                    '&:hover': {
-                      bgcolor: canSend ? 'primary.dark' : undefined,
-                    },
-                  }}
-                >
-                  <ArrowUpward style={{ height: 20, width: 20 }} />
-                </IconButton>
+                {isLoading ? (
+                  <IconButton
+                    onClick={onCancel}
+                    size="small"
+                    sx={{
+                      bgcolor: 'background.paper',
+                      border: `1px solid ${theme.palette.text.secondary}`,
+                      borderRadius: '4px',
+                      color: theme.palette.text.secondary,
+                      height: 32,
+                      mb: 0.6,
+                      width: 32,
+                      '&:hover': { color: theme.palette.text.primary },
+                    }}
+                  >
+                    <Stop style={{ height: 20, width: 20 }} />
+                  </IconButton>
+                ) : (
+                  <IconButton
+                    disabled={!canSend}
+                    onClick={onSend}
+                    size="small"
+                    sx={{
+                      bgcolor: 'primary.main',
+                      borderRadius: '4px',
+                      color: 'primary.contrastText',
+                      height: 32,
+                      mb: 0.6,
+                      width: 32,
+                      '&.Mui-disabled': {
+                        bgcolor: 'primary.light',
+                        color: 'primary.contrastText',
+                        opacity: 0.45,
+                      },
+                      '&:hover': {
+                        bgcolor: canSend ? 'primary.dark' : undefined,
+                        color: 'primary.contrastText',
+                      },
+                    }}
+                  >
+                    <ArrowUpward style={{ height: 20, width: 20 }} />
+                  </IconButton>
+                )}
               </InputAdornment>
             ),
-            sx: {
+            sx: (theme) => ({
               alignItems: 'flex-end',
+              border: `1px solid ${theme.borderColors.divider}`,
               borderRadius: '4px',
               height: 'auto',
               maxWidth: 'unset',
               px: 1.5,
               py: 1,
-            },
+              '& .MuiOutlinedInput-notchedOutline': {
+                border: 'none',
+              },
+            }),
           },
         }}
         value={inputValue}

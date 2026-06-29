@@ -1,6 +1,7 @@
 import { Factory } from '@linode/utilities';
 
-import type { LinodeType, PriceType } from '@linode/api-v4';
+import type { PriceType } from '@akamai/compute-ui-core/api';
+import type { LinodeType } from '@linode/api-v4';
 import type {
   PlanSelectionAvailabilityTypes,
   PlanWithAvailability,

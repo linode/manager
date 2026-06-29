@@ -1,10 +1,11 @@
-import { profileFactory } from '@linode/utilities';
 import { waitFor } from '@testing-library/react';
 import React from 'react';
 
-import { accountUserFactory } from 'src/factories/accountUsers';
-import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
-
+import { createProfile, createUser } from '../../factories';
+import {
+  mockMatchMedia,
+  renderWithProviders,
+} from '../../utilities/testHelpers';
 import { UsersLanding } from './Users';
 
 // Because the table row hides certain columns on small viewport sizes,
@@ -17,7 +18,6 @@ const queryMocks = vi.hoisted(() => ({
   useProfile: vi.fn().mockReturnValue({}),
   useAccountUsers: vi.fn().mockReturnValue({}),
   useSearch: vi.fn().mockReturnValue({}),
-  useIsIAMDelegationEnabled: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('@tanstack/react-router', async () => {
@@ -38,25 +38,9 @@ vi.mock('@linode/queries', async () => {
   };
 });
 
-vi.mock('src/features/IAM/hooks/useIsIAMEnabled', async () => {
-  const actual = await vi.importActual(
-    'src/features/IAM/hooks/useIsIAMEnabled'
-  );
-  return {
-    ...actual,
-    useIsIAMDelegationEnabled: queryMocks.useIsIAMDelegationEnabled,
-  };
-});
-
 describe('Users', () => {
-  beforeEach(() => {
-    queryMocks.useIsIAMDelegationEnabled.mockReturnValue({
-      isIAMDelegationEnabled: true,
-    });
-  });
-
   it('renders only table and search filter if profile is not a child', async () => {
-    const user = accountUserFactory.build();
+    const user = createUser();
     queryMocks.useAccountUsers.mockReturnValue({
       data: {
         data: [user],
@@ -66,25 +50,25 @@ describe('Users', () => {
       },
     });
     queryMocks.useProfile.mockReturnValue({
-      data: profileFactory.build({ user_type: 'default' }),
+      data: createProfile({ user_type: 'default' }),
     });
 
-    const { getByText, getByPlaceholderText, queryByPlaceholderText } =
-      renderWithTheme(<UsersLanding />, {
+    const { container, getByText, queryByPlaceholderText } =
+      renderWithProviders(<UsersLanding />, {
         initialRoute: '/iam',
       });
 
     expect(getByText(user.username)).toBeVisible();
     expect(getByText(user.email)).toBeVisible();
-    expect(getByPlaceholderText('Filter')).toBeVisible();
+    expect(container.querySelector('cds-search-field')).toBeVisible();
 
     await waitFor(() => {
       expect(queryByPlaceholderText('All Users Type')).not.toBeInTheDocument();
     });
   });
 
-  it('renders table, select, and search filter if profile is a child and isIAMDelegationEnabled flag is enabled', async () => {
-    const user = accountUserFactory.build();
+  it('renders table, select, and search filter if profile is a child', async () => {
+    const user = createUser();
     queryMocks.useAccountUsers.mockReturnValue({
       data: {
         data: [user],
@@ -94,20 +78,12 @@ describe('Users', () => {
       },
     });
     queryMocks.useProfile.mockReturnValue({
-      data: profileFactory.build({ user_type: 'child' }),
+      data: createProfile({ user_type: 'child' }),
     });
 
-    const { container, getByPlaceholderText } = renderWithTheme(
-      <UsersLanding />,
-      {
-        initialRoute: '/iam',
-        flags: {
-          iamDelegation: { enabled: true },
-        },
-      }
-    );
+    const { container } = renderWithProviders(<UsersLanding />);
 
-    expect(getByPlaceholderText('Filter')).toBeVisible();
+    expect(container.querySelector('cds-search-field')).toBeVisible();
     expect(container.querySelector('cds-select')).toBeVisible();
   });
 });

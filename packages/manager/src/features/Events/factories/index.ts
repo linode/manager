@@ -37,5 +37,6 @@ export * from './tfa';
 export * from './ticket';
 export * from './token';
 export * from './user';
+export * from './vlan';
 export * from './volume';
 export * from './vpc';

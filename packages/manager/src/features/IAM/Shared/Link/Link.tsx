@@ -1,6 +1,5 @@
 import { Icon } from '@akamai/cds-components/react';
 import { sanitizeUrl } from '@braintree/sanitize-url';
-import { omitProps } from '@linode/ui';
 // eslint-disable-next-line no-restricted-imports
 import { Link as RouterLink } from '@tanstack/react-router';
 import * as React from 'react';
@@ -15,6 +14,28 @@ import {
 import type { LinkProps as _LinkProps } from '@tanstack/react-router';
 
 type To = _LinkProps['to'] | (string & {});
+
+// These props are custom to our Link component and must be stripped before
+// spreading onto RouterLink, which would otherwise pass unknown props to the DOM.
+const CUSTOM_LINK_PROPS = [
+  'accessibleAriaLabel',
+  'external',
+  'forceCopyColor',
+  'pendoId',
+  'to',
+] as const;
+
+type CustomLinkPropKey = (typeof CUSTOM_LINK_PROPS)[number];
+
+const omitCustomLinkProps = (
+  props: LinkProps
+): Omit<LinkProps, CustomLinkPropKey> => {
+  return Object.fromEntries(
+    Object.entries(props).filter(
+      ([key]) => !CUSTOM_LINK_PROPS.includes(key as CustomLinkPropKey)
+    )
+  ) as Omit<LinkProps, CustomLinkPropKey>;
+};
 
 export interface LinkProps extends Omit<_LinkProps, 'to'> {
   /**
@@ -130,13 +151,7 @@ export const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(
       );
     }
 
-    const routerLinkProps = omitProps(props, [
-      'accessibleAriaLabel',
-      'external',
-      'forceCopyColor',
-      'to',
-      'pendoId',
-    ]);
+    const routerLinkProps = omitCustomLinkProps(props);
     const linkClassName = [
       styles.root,
       forceCopyColor ? styles.forceCopyColor : '',

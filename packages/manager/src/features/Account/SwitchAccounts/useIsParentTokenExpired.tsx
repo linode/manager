@@ -4,18 +4,18 @@ import { isParentTokenValid } from 'src/features/Account/SwitchAccounts/utils';
 
 // Checks and reacts to the expiration status of parent tokens.
 export const useIsParentTokenExpired = ({
-  isProxyOrDelegateUserType,
+  isDelegateUserType,
 }: {
-  isProxyOrDelegateUserType: boolean;
+  isDelegateUserType: boolean;
 }) => {
   const [isParentTokenExpired, setIsParentTokenExpired] = React.useState(false);
 
   React.useEffect(() => {
-    if (isProxyOrDelegateUserType) {
+    if (isDelegateUserType) {
       const isExpired = !isParentTokenValid();
       setIsParentTokenExpired(isExpired);
     }
-  }, [isProxyOrDelegateUserType]);
+  }, [isDelegateUserType]);
 
   return { isParentTokenExpired };
 };

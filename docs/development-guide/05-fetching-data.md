@@ -90,7 +90,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getProfile } from "@linode/api-v4";
 import type { APIError, Profile } from "@linode/api-v4";
 
-const profileQueries = createQueryKeys('profile', {
+const profileQueries = createQueryKeys("profile", {
   profile: {
     queryFn: getProfile,
     queryKey: null,
@@ -108,7 +108,7 @@ The first time `useProfile()` is called, the data is fetched from the API. On su
 ```ts
 import { queryPresets } from "src/queries/base";
 
-const profileQueries = createQueryKeys('profile', {
+const profileQueries = createQueryKeys("profile", {
   profile: {
     queryFn: getProfile,
     queryKey: null,
@@ -125,7 +125,7 @@ export const useProfile = () =>
 Loading and error states are managed by React Query. The earlier username display example becomes greatly simplified:
 
 ```tsx
-import * as React from 'react';
+import * as React from "react";
 import { useProfile } from "src/queries/profile";
 
 const UsernameDisplay = () => {
@@ -155,7 +155,7 @@ A minimal example of acceptable direct **api-v4** use:
 ```ts
 resetKubeConfig({ id }).then(() => {
   setResetKubeConfigDialogOpen(false);
-  enqueueSnackbar('Successfully reset Kubeconfig');
+  enqueueSnackbar("Successfully reset Kubeconfig");
 });
 ```
 
@@ -166,7 +166,7 @@ Before React Query, Redux was used to store API data, loading, and error states.
 ```tsx
 // ---- OLD PATTERN, DON'T USE ---- //
 
-import * as React from 'react';
+import * as React from "react";
 import profileContainer, {
   Props as ProfileProps,
 } from "src/containers/profile.container";
@@ -203,13 +203,13 @@ We have added an interceptor to our Axios instance that essentially guarantees t
 This makes it easy to work with errors, but the default message is not very situation specific. Often, what we want is to use a real error message from the API if it is available, and use a situation-specific fallback message otherwise. We have a helper in our utilities directory for this called `getAPIErrorOrDefault`.
 
 ```js
-import { getAPIErrorOrDefault } from "src/utilities/errorUtils";
+import { getAPIErrorOrDefault } from '@akamai/compute-ui-core/api';
 
 apiRequest().catch((error) => {
   const apiError = getAPIErrorOrDefault(
     error, // If this is an array of API field errors, it will be returned unchanged.
     "Your Linode is hopelessly broken.", // If no field errors are present, an array consisting of an error with this reason is returned.
-    "linode-id" // Optional. If you want the default field error to have a `field` property, this argument will be used.
+    "linode-id", // Optional. If you want the default field error to have a `field` property, this argument will be used.
   );
 });
 ```
@@ -219,12 +219,12 @@ apiRequest().catch((error) => {
 The usual pattern is to map field errors to the appropriate field, showing a generalError for any errors that don't have a field. For example, a form might have an input for `region`, and that element will display any errors with `{ field: 'region', reason: 'whatever' }` inline. In some cases, however, we either aren't checking for every possible error field, or we aren't entirely sure what all of the possible fields the API is considering are. To make sure that we catch these and show them to the user, use the `getErrorMap` helper:
 
 ```js
-import { getErrorMap } from "src/utilities/errorUtils";
+import { getErrorMap } from "@akamai/compute-ui-core/api";
 
 apiRequest().catch((error) => {
   const errorMap = getErrorMap(
     ["label", "region"], // Fields we want to check for
-    error
+    error,
   );
   const labelError = errorMap.label;
   const regionError = errorMap.region;

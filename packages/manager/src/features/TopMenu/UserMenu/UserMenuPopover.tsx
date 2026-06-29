@@ -20,12 +20,8 @@ import { SwitchAccountButton } from 'src/features/Account/SwitchAccountButton';
 import { useIsParentTokenExpired } from 'src/features/Account/SwitchAccounts/useIsParentTokenExpired';
 import { useSwitchToParentAccount } from 'src/features/Account/SwitchAccounts/useSwitchToParentAccount';
 import { useDelegationRole } from 'src/features/IAM/hooks/useDelegationRole';
-import {
-  useIsIAMDelegationEnabled,
-  useIsIAMEnabled,
-} from 'src/features/IAM/hooks/useIsIAMEnabled';
+import { useIsIAMEnabled } from 'src/features/IAM/hooks/useIsIAMEnabled';
 import { useFlags } from 'src/hooks/useFlags';
-import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import {
   sendSwitchAccountEvent,
   sendSwitchToParentAccountEvent,
@@ -52,19 +48,12 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
   const { anchorEl, isDrawerOpen, onClose, onDrawerOpen } = props;
   const sessionContext = React.useContext(switchAccountSessionContext);
   const { limitsEvolution, iamNewBadge } = useFlags();
-  const {
-    isProxyOrDelegateUserType,
-    isParentUserType,
-    isDelegateUserType,
-    isProxyUserType,
-    profile,
-  } = useDelegationRole();
+  const { isParentUserType, isDelegateUserType, profile } = useDelegationRole();
   const theme = useTheme();
 
   const { handleSwitchToParentAccount, isSubmitting } =
     useSwitchToParentAccount({
       isDelegateUserType,
-      isProxyUserType,
       onClose,
       onTokenExpired: () => {
         sessionContext.updateState({
@@ -76,16 +65,8 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
   const { data: account } = useAccount();
   const { isIAMEnabled } = useIsIAMEnabled();
 
-  const isChildAccountAccessRestricted = useRestrictedGlobalGrantCheck({
-    globalGrantType: 'child_account_access',
-  });
-
-  const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
-
-  const canSwitchBetweenParentOrProxyAccount = isIAMDelegationEnabled
-    ? isParentUserType || isProxyOrDelegateUserType
-    : (isParentUserType && !isChildAccountAccessRestricted) ||
-      isProxyOrDelegateUserType;
+  const canSwitchBetweenParentOrProxyAccount =
+    isParentUserType || isDelegateUserType;
 
   const open = Boolean(anchorEl);
   const id = open ? 'user-menu-popover' : undefined;
@@ -115,7 +96,7 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
   ];
 
   // Used for fetching parent profile and account data by making a request with the parent's token.
-  const proxyHeaders = isProxyOrDelegateUserType
+  const proxyHeaders = isDelegateUserType
     ? {
         Authorization: getStorage(`authentication/parent_token/token`),
       }
@@ -127,10 +108,10 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
   });
   const { data: parentProfile } = useProfile({ headers: proxyHeaders });
   const userName =
-    (isProxyOrDelegateUserType ? parentProfile : profile)?.username ?? '';
+    (isDelegateUserType ? parentProfile : profile)?.username ?? '';
 
   const { isParentTokenExpired } = useIsParentTokenExpired({
-    isProxyOrDelegateUserType,
+    isDelegateUserType,
   });
 
   const accountLinks: MenuLink[] = React.useMemo(

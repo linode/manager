@@ -31,6 +31,31 @@ type EmbeddedMessagingBootstrap = {
   };
 };
 
+const dispatchLiveChatReady = () => {
+  window.dispatchEvent(new CustomEvent(LIVE_CHAT_READY_EVENT));
+};
+
+const clearLiveChatSessionItems = () => {
+  window.sessionStorage.removeItem('LiveChatToken');
+  window.sessionStorage.removeItem('LiveChatSubject');
+  window.sessionStorage.removeItem('LiveChatDescription');
+};
+
+const handleGhostSessionResume = () => {
+  dispatchLiveChatReady();
+  clearLiveChatSessionItems();
+};
+
+const handleConversationOpened = () => {
+  // ConversationOpened also fires for fresh chats. Delay cleanup to avoid
+  // racing prechat token injection in the normal new-chat flow.
+  dispatchLiveChatReady();
+
+  setTimeout(() => {
+    clearLiveChatSessionItems();
+  }, 3000);
+};
+
 const getEmbeddedMessagingBootstrap = () =>
   (
     window as Window & {
@@ -221,9 +246,88 @@ function handleChatClosed() {
   clearSalesforceSessionData();
 }
 
+const handleSalesforceMessage = (event: MessageEvent) => {
+  const allowedOrigins = getAllowedMessageOrigins();
+
+  // Validate that the message origin is from an allowed Salesforce domain
+  if (!allowedOrigins.has(event.origin)) {
+    return;
+  }
+
+  const payload =
+    typeof event.data === 'string'
+      ? (() => {
+          try {
+            return JSON.parse(event.data);
+          } catch {
+            return { action: event.data };
+          }
+        })()
+      : (event.data ?? {});
+
+  const action = payload?.action ?? payload?.type ?? payload?.event;
+
+  if (
+    action === 'prechatLoaded' ||
+    action === 'prechat:loaded' ||
+    action === 'embeddedMessaging:prechatLoaded'
+  ) {
+    const token = window.sessionStorage.getItem('LiveChatToken');
+    const subject = window.sessionStorage.getItem('LiveChatSubject');
+
+    const dataMap = {
+      JWE_Token: token ?? '',
+      Title: subject ?? '',
+    };
+
+    if (event.source && event.origin) {
+      (event.source as WindowProxy).postMessage(
+        { action: 'hiddenParameters', data: dataMap },
+        event.origin
+      );
+    }
+
+    window.sessionStorage.removeItem('LiveChatToken');
+  } else if (action === 'chatInitiationResult') {
+    const subject = window.sessionStorage.getItem('LiveChatSubject');
+    const description = window.sessionStorage.getItem('LiveChatDescription');
+
+    clearLiveChatSessionItems();
+    if (payload?.data?.statusCode === 200) {
+      window.dispatchEvent(new CustomEvent(LIVE_CHAT_READY_EVENT));
+    } else {
+      hasLiveChatInitialized = false;
+      hideEmbeddedMessagingContainer();
+      window.dispatchEvent(
+        new CustomEvent(LIVE_CHAT_FAILED_EVENT, {
+          detail: {
+            description: description ?? '',
+            subject: subject ?? '',
+            errorType: payload?.data?.type,
+            errorDescription: payload?.data?.description,
+          },
+        })
+      );
+    }
+  } else if (action === 'onEmbeddedMessagingWindowClosed') {
+    handleChatClosed();
+  }
+};
+
 function attachEmbeddedMessagingLifecycleListeners() {
   if (chatEventListenersAttached) return;
   chatEventListenersAttached = true;
+
+  window.addEventListener(
+    'onEmbeddedMessagingWindowRestored',
+    handleGhostSessionResume
+  );
+  window.addEventListener(
+    'onEmbeddedMessagingConversationOpened',
+    handleConversationOpened
+  );
+
+  window.addEventListener('message', handleSalesforceMessage);
 
   const closeEvents = ['onEmbeddedMessagingWindowClosed'];
 
@@ -246,76 +350,6 @@ function attachEmbeddedMessagingLifecycleListeners() {
         }
       }, 300);
     });
-  });
-
-  window.addEventListener('message', (event) => {
-    const allowedOrigins = getAllowedMessageOrigins();
-
-    // Validate that the message origin is from an allowed Salesforce domain
-    if (!allowedOrigins.has(event.origin)) {
-      return;
-    }
-
-    const payload =
-      typeof event.data === 'string'
-        ? (() => {
-            try {
-              return JSON.parse(event.data);
-            } catch {
-              return { action: event.data };
-            }
-          })()
-        : (event.data ?? {});
-
-    const action = payload?.action ?? payload?.type ?? payload?.event;
-
-    if (
-      action === 'prechatLoaded' ||
-      action === 'prechat:loaded' ||
-      action === 'embeddedMessaging:prechatLoaded'
-    ) {
-      const token = window.sessionStorage.getItem('LiveChatToken');
-      const subject = window.sessionStorage.getItem('LiveChatSubject');
-
-      const dataMap = {
-        JWE_Token: token ?? '',
-        Title: subject ?? '',
-      };
-
-      if (event.source && event.origin) {
-        (event.source as WindowProxy).postMessage(
-          { action: 'hiddenParameters', data: dataMap },
-          event.origin
-        );
-      }
-
-      window.sessionStorage.removeItem('LiveChatToken');
-    } else if (action === 'chatInitiationResult') {
-      const subject = window.sessionStorage.getItem('LiveChatSubject');
-      const description = window.sessionStorage.getItem('LiveChatDescription');
-
-      window.sessionStorage.removeItem('LiveChatSubject');
-      window.sessionStorage.removeItem('LiveChatDescription');
-
-      if (payload?.data?.statusCode === 200) {
-        window.dispatchEvent(new CustomEvent(LIVE_CHAT_READY_EVENT));
-      } else {
-        hasLiveChatInitialized = false;
-        hideEmbeddedMessagingContainer();
-        window.dispatchEvent(
-          new CustomEvent(LIVE_CHAT_FAILED_EVENT, {
-            detail: {
-              description: description ?? '',
-              subject: subject ?? '',
-              errorType: payload?.data?.type,
-              errorDescription: payload?.data?.description,
-            },
-          })
-        );
-      }
-    } else if (action === 'onEmbeddedMessagingWindowClosed') {
-      handleChatClosed();
-    }
   });
 }
 
@@ -350,7 +384,23 @@ async function openLiveChatOnce() {
   const enableLiveChat =
     window.sessionStorage.getItem('EnableLiveChat') === 'true';
 
-  if (!enableLiveChat || hasLiveChatInitialized) {
+  if (!enableLiveChat) {
+    return;
+  }
+
+  if (hasLiveChatInitialized) {
+    const launchChat = () => {
+      try {
+        getEmbeddedMessagingBootstrap()?.utilAPI?.launchChat?.();
+      } catch {
+        // Ignore failures from optional third-party chat APIs.
+      }
+    };
+
+    launchChat();
+    window.sessionStorage.removeItem('EnableLiveChat');
+    clearLiveChatSessionItems();
+    window.setTimeout(dispatchLiveChatReady, 0);
     return;
   }
 
@@ -464,11 +514,19 @@ export function teardownLiveChat() {
   liveChatTornDown = true;
   hasLiveChatInitialized = false;
   hasEmbeddedMessagingInitialized = false;
+  clearLiveChatSessionItems();
   window.sessionStorage.removeItem('EnableLiveChat');
-  window.sessionStorage.removeItem('LiveChatToken');
-  window.sessionStorage.removeItem('LiveChatSubject');
-  window.sessionStorage.removeItem('LiveChatDescription');
   window.removeEventListener(LIVE_CHAT_ENABLE_EVENT, openLiveChatOnce);
+  window.removeEventListener(
+    'onEmbeddedMessagingWindowRestored',
+    handleGhostSessionResume
+  );
+  window.removeEventListener(
+    'onEmbeddedMessagingConversationOpened',
+    handleConversationOpened
+  );
+  window.removeEventListener('message', handleSalesforceMessage);
+
   clearSalesforceSessionData();
   hideEmbeddedMessagingContainer();
   startTeardownObserver();

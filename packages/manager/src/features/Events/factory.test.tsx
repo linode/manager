@@ -1,4 +1,4 @@
-import { EventActionKeys } from '@linode/api-v4';
+import { EventActionSchema } from '@akamai/compute-ui-core/events';
 
 import { eventMessages } from './factory';
 
@@ -7,8 +7,8 @@ import { eventMessages } from './factory';
  */
 describe('eventMessages', () => {
   it('should have a message for each EventAction', () => {
-    EventActionKeys.forEach((action) => {
-      expect(eventMessages).toHaveProperty(action);
+    EventActionSchema.options.forEach((action) => {
+      expect(Object.keys(eventMessages)).toContain(action);
     });
   });
 });

@@ -1,3 +1,4 @@
+import { getAPIErrorOrDefault } from '@akamai/compute-ui-core/api';
 import { cancelServiceTransfer } from '@linode/api-v4';
 import { entityTransfersQueryKey } from '@linode/queries';
 import { ActionsPanel, Notice, Typography } from '@linode/ui';
@@ -7,7 +8,6 @@ import * as React from 'react';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { sendEntityTransferCancelEvent } from 'src/utilities/analytics/customEventAnalytics';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import type { APIError, TransferEntities } from '@linode/api-v4/lib/types';
 

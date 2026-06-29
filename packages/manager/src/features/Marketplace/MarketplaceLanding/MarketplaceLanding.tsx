@@ -135,17 +135,19 @@ export const MarketplaceLanding = () => {
     [searchQuery, selectedCategory, selectedType]
   );
 
-  // Group filtered products by category
+  // Group filtered products by category, sorted alphabetically by product name
   const filteredProductsByCategory = React.useMemo(() => {
     const map = {} as Record<Category, Product[]>;
-    filteredProducts.forEach((product) => {
-      product.categories.forEach((cat) => {
-        if (!map[cat]) {
-          map[cat] = [];
-        }
-        map[cat].push(product);
+    [...filteredProducts]
+      .sort((a, b) => a.name.localeCompare(b.name))
+      .forEach((product) => {
+        product.categories.forEach((cat) => {
+          if (!map[cat]) {
+            map[cat] = [];
+          }
+          map[cat].push(product);
+        });
       });
-    });
     return map;
   }, [filteredProducts]);
 
@@ -157,7 +159,7 @@ export const MarketplaceLanding = () => {
 
   // Filter categories based on:
   // 1. Selected category from dropdown (if set)
-  // 2. All categories that have filtered products, sorted by product count (if no category selected)
+  // 2. All categories that have filtered products, sorted by by AI, Compute, Kubernetes first; then alphabetical(if no category is selected)
   const filteredCategories = React.useMemo(() => {
     if (selectedCategory) {
       return categoriesWithFilteredProducts.filter(
@@ -165,11 +167,17 @@ export const MarketplaceLanding = () => {
       );
     }
 
-    // Show all categories sorted by product count (highest to lowest)
+    // Show all categories sorted by AI, Compute, Kubernetes first; then alphabetical
     return [...categoriesWithFilteredProducts].sort((a, b) => {
-      const countA = filteredProductsByCategory[a]?.length || 0;
-      const countB = filteredProductsByCategory[b]?.length || 0;
-      return countB - countA;
+      const aIdx = PRIORITY_CATEGORIES.indexOf(a);
+      const bIdx = PRIORITY_CATEGORIES.indexOf(b);
+      if (aIdx !== bIdx) {
+        return (
+          (aIdx === -1 ? Number.MAX_SAFE_INTEGER : aIdx) -
+          (bIdx === -1 ? Number.MAX_SAFE_INTEGER : bIdx)
+        );
+      }
+      return a.localeCompare(b);
     });
   }, [
     selectedCategory,

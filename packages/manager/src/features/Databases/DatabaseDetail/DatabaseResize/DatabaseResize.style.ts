@@ -1,22 +1,7 @@
 import { Button } from '@akamai/cds-components/react';
-import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
 
 import { PlansPanel } from 'src/features/components/PlansPanel/PlansPanel';
-
-export const StyledGrid = styled(Grid, { label: 'StyledGrid' })(
-  ({ theme }) => ({
-    alignItems: 'center',
-    display: 'flex',
-    justifyContent: 'flex-end',
-    marginTop: theme.spacing(2),
-    [theme.breakpoints.down('sm')]: {
-      alignItems: 'flex-end',
-      flexDirection: 'column',
-      marginTop: theme.spacing(),
-    },
-  })
-);
 
 export const StyledResizeButton = styled(Button, {
   label: 'StyledResizeButton',
@@ -32,6 +17,9 @@ export const StyledPlansPanel = styled(PlansPanel, {
 })(() => ({
   margin: 0,
   padding: 0,
+  h2: {
+    fontSize: '1.17em',
+  },
 }));
 
 export const StyledPlanSummarySpan = styled('span', {

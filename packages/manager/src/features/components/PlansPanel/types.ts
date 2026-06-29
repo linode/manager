@@ -7,6 +7,7 @@ export interface PlanSelectionWithDatabaseType extends PlanSelectionType {
 
 export interface PlanSelectionType extends BaseType {
   class: ExtendedType['class'];
+  engines?: ExtendedType['engines'];
   formattedLabel: ExtendedType['formattedLabel'];
   heading: ExtendedType['heading'];
   network_out?: ExtendedType['network_out'];

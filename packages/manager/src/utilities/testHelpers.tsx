@@ -1,3 +1,4 @@
+import { FeatureFlagClient } from '@akamai/compute-ui-core/feature-flags';
 import { queryClientFactory } from '@linode/queries';
 import { CssBaseline } from '@mui/material';
 import { QueryClientProvider } from '@tanstack/react-query';
@@ -10,26 +11,26 @@ import {
 } from '@tanstack/react-router';
 import { render } from '@testing-library/react';
 import mediaQuery from 'css-mediaquery';
-import { LDProvider } from 'launchdarkly-react-client-sdk';
 import { SnackbarProvider } from 'notistack';
 import * as React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import type { FieldValues, UseFormProps } from 'react-hook-form';
 import { Provider } from 'react-redux';
-import configureStore from 'redux-mock-store';
+import { legacy_configureStore as configureStore } from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
+import { FeatureFlagProvider, type FlagSet } from 'src/featureFlags';
 import { LinodeThemeWrapper } from 'src/LinodeThemeWrapper';
 import { setupInterceptors } from 'src/request';
 import { defaultState, storeFactory } from 'src/store';
 
 import { mergeDeepRight } from './mergeDeepRight';
 
+import type { FeatureFlagProvider as FeatureFlagProviderType } from '@akamai/compute-ui-core/feature-flags';
 import type { QueryClient } from '@tanstack/react-query';
 import type { AnyRootRoute, AnyRouter } from '@tanstack/react-router';
 import type { MatcherFunction } from '@testing-library/react';
 import type { DeepPartial } from 'redux';
-import type { FlagSet } from 'src/featureFlags';
 import type { ApplicationState } from 'src/store';
 
 export const mockMatchMedia = (matches: boolean = true) => {
@@ -112,21 +113,37 @@ export const wrapWithTheme = (ui: any, options: Options = {}) => {
       routeTree: rootRoute.addChildren([indexRoute]),
     });
 
+  class MockFlagProvider implements FeatureFlagProviderType<FlagSet, unknown> {
+    constructor() {}
+
+    getFlag(key: keyof FlagSet) {
+      return (options.flags as FlagSet)[key] as any;
+    }
+
+    getFlags() {
+      return options.flags ?? {};
+    }
+    async identify() {}
+    async start() {}
+    subscribe(callback: (flags: any) => void) {
+      return () => {};
+    }
+  }
+
+  const featureFlagClient = new FeatureFlagClient<FlagSet, unknown>({
+    provider: () => new MockFlagProvider(),
+  });
+
   return (
     <Provider store={storeToPass}>
       <QueryClientProvider client={passedQueryClient || queryClient}>
         <LinodeThemeWrapper theme={options.theme}>
-          <LDProvider
-            clientSideID={''}
-            deferInitialization
-            flags={options.flags ?? {}}
-            options={{ bootstrap: options.flags }}
-          >
+          <FeatureFlagProvider client={featureFlagClient}>
             <CssBaseline enableColorScheme />
             <SnackbarProvider>
               <RouterProvider router={router} />
             </SnackbarProvider>
-          </LDProvider>
+          </FeatureFlagProvider>
         </LinodeThemeWrapper>
       </QueryClientProvider>
     </Provider>

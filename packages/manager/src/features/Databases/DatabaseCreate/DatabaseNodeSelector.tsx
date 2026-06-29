@@ -1,16 +1,15 @@
-import { Badge, NotificationBanner } from '@akamai/cds-components/react';
-import { Spacing } from '@akamai/cds-tokens';
 import {
-  FormControl,
-  FormControlLabel,
-  Radio,
+  Badge,
+  NotificationBanner,
+  RadioButton,
   RadioGroup,
-  Typography,
-} from '@linode/ui';
+} from '@akamai/cds-components/react';
+import { Spacing } from '@akamai/cds-tokens';
 import React from 'react';
 
 import { determineInitialPlanCategoryTab } from 'src/features/components/PlansPanel/utils';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
+import { useComputePricing } from 'src/utilities/pricing/useComputePricing';
 
 import type {
   ClusterSize,
@@ -59,6 +58,23 @@ export const DatabaseNodeSelector = (props: Props) => {
     globalGrantType: 'add_databases',
   });
 
+  // Pricing scoped to the selected plan via the `computePricing` LD flag.
+  // `getPriceSubheading` returns either `$X/mo ($Y/hr)` or just `$Y/hr` based
+  // on the active billing mode.
+  const { getPriceSubheading } = useComputePricing(selectedPlan?.id);
+
+  const formatNodePrice = React.useCallback(
+    (price: DatabasePriceObject | undefined): string => {
+      // Use short labels and fall back to `$0` for Databases feature when
+      // no plan is selected (instead of the default `--.--` unknown-price placeholder).
+      return getPriceSubheading(price, {
+        format: 'short',
+        missingPriceFallback: 'zero',
+      });
+    },
+    [getPriceSubheading]
+  );
+
   const nodePricing = {
     double: selectedPlan?.engines[selectedEngine]?.find(
       (cluster: DatabaseClusterSizeObject) => cluster.quantity === 2
@@ -97,16 +113,14 @@ export const DatabaseNodeSelector = (props: Props) => {
     const options = [
       {
         label: (
-          <Typography component="div">
+          <div>
             <span>1 Node {` `}</span>
             {currentClusterSize === 1 && currentChip}
             <br />
             <span style={{ fontSize: '12px' }}>
-              {`$${nodePricing?.single?.monthly || 0}/month $${
-                nodePricing?.single?.hourly || 0
-              }/hr`}
+              {formatNodePrice(nodePricing?.single)}
             </span>
-          </Typography>
+          </div>
         ),
         value: 1,
       },
@@ -120,16 +134,14 @@ export const DatabaseNodeSelector = (props: Props) => {
     if (displayTwoNodesOption) {
       options.push({
         label: (
-          <Typography component="div">
+          <div>
             <span>2 Nodes - High Availability</span>
             {currentClusterSize === 2 && currentChip}
             <br />
             <span style={{ fontSize: '12px' }}>
-              {`$${nodePricing?.double?.monthly || 0}/month $${
-                nodePricing?.double?.hourly || 0
-              }/hr`}
+              {formatNodePrice(nodePricing?.double)}
             </span>
-          </Typography>
+          </div>
         ),
         value: 2,
       });
@@ -137,16 +149,14 @@ export const DatabaseNodeSelector = (props: Props) => {
 
     options.push({
       label: (
-        <Typography component="div">
+        <div>
           <span>3 Nodes - High Availability (recommended)</span>
           {currentClusterSize === 3 && currentChip}
           <br />
           <span style={{ fontSize: '12px' }}>
-            {`$${nodePricing?.multi?.monthly || 0}/month $${
-              nodePricing?.multi?.hourly || 0
-            }/hr`}
+            {formatNodePrice(nodePricing?.multi)}
           </span>
-        </Typography>
+        </div>
       ),
       value: 3,
     });
@@ -158,23 +168,17 @@ export const DatabaseNodeSelector = (props: Props) => {
     displayTypes,
     currentClusterSize,
     selectedClusterSize,
+    formatNodePrice,
   ]);
 
   return (
     <>
-      <Typography style={{ marginBottom: 4 }} variant="h2">
-        Set Number of Nodes
-      </Typography>
-      <Typography style={{ marginBottom: 8 }}>
+      <h3 style={{ marginBottom: 0 }}>Set Number of Nodes</h3>
+      <p style={{ marginTop: 0, marginBottom: Spacing.S16 }}>
         We recommend 3 nodes in a database cluster to avoid downtime during
         upgrades and maintenance.
-      </Typography>
-      <FormControl
-        disabled={isRestricted || disabled}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-          handleNodeChange(+e.target.value as ClusterSize);
-        }}
-      >
+      </p>
+      <>
         {error ? (
           <NotificationBanner
             style={{ marginBottom: Spacing.S16 }}
@@ -185,22 +189,34 @@ export const DatabaseNodeSelector = (props: Props) => {
         <RadioGroup
           aria-disabled={isRestricted || disabled}
           data-testid="database-nodes"
+          onChange={(e: CustomEvent) => {
+            handleNodeChange(+e.detail.value as ClusterSize);
+          }}
           style={{ marginBottom: 0, marginTop: 0 }}
-          value={selectedClusterSize ?? ''}
+          value={selectedClusterSize?.toString() || ''}
         >
           {nodeOptions.map((nodeOption) => (
-            <FormControlLabel
-              control={<Radio />}
-              data-qa-radio={nodeOption.label}
-              data-testid={`database-node-${nodeOption.value}`}
+            <div
               key={nodeOption.value}
-              label={nodeOption.label}
-              sx={(theme) => ({ marginBottom: theme.spacing() })}
-              value={nodeOption.value}
-            />
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginBottom: Spacing.S8,
+              }}
+            >
+              <RadioButton
+                checked={selectedClusterSize === nodeOption.value}
+                data-qa-dbaas-radio={nodeOption.label}
+                data-testid={`database-node-${nodeOption.value}`}
+                disabled={isRestricted || disabled}
+                value={nodeOption.value.toString()}
+              />
+              <label>{nodeOption.label}</label>
+            </div>
           ))}
         </RadioGroup>
-      </FormControl>
+      </>
     </>
   );
 };

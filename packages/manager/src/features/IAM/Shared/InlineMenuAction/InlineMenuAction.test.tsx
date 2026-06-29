@@ -2,13 +2,12 @@ import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
-import { renderWithTheme } from 'src/utilities/testHelpers';
-
+import { renderWithProviders } from '../../utilities/testHelpers';
 import { InlineMenuAction } from './InlineMenuAction';
 
 describe('InlineMenuAction', () => {
   it('renders an enabled action button', () => {
-    renderWithTheme(
+    renderWithProviders(
       <InlineMenuAction
         isActionDisabled={false}
         label="Assign Role"
@@ -24,7 +23,7 @@ describe('InlineMenuAction', () => {
   });
 
   it('renders a disabled action with tooltip and icon', () => {
-    renderWithTheme(
+    renderWithProviders(
       <InlineMenuAction
         isActionDisabled={true}
         label="Assign Role"
@@ -44,7 +43,7 @@ describe('InlineMenuAction', () => {
   it('calls onClick when the action is enabled', async () => {
     const onClick = vi.fn();
 
-    renderWithTheme(
+    renderWithProviders(
       <InlineMenuAction
         isActionDisabled={false}
         label="Assign Role"

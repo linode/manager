@@ -7,6 +7,11 @@ export interface ObjectStorageDetailSearchParams {
   prefix?: string;
 }
 
+export interface ObjectStorageBucketsFilters {
+  endpoints?: string;
+  regions?: string;
+}
+
 export const objectStorageRoute = createRoute({
   component: ObjectStorageRoute,
   getParentRoute: () => rootRoute,
@@ -31,9 +36,19 @@ const objectStorageSummaryLandingRoute = createRoute({
   )
 );
 
-const objectStorageBucketsLandingRoute = createRoute({
+const objectStorageBucketsRoute = createRoute({
   getParentRoute: () => objectStorageRoute,
   path: 'buckets',
+  validateSearch: (search: ObjectStorageBucketsFilters) => search,
+}).lazy(() =>
+  import('src/features/ObjectStorage/objectStorageLandingLazyRoute').then(
+    (m) => m.objectStorageLandingLazyRoute
+  )
+);
+
+const objectStorageBucketsLandingRoute = createRoute({
+  getParentRoute: () => objectStorageBucketsRoute,
+  path: '/',
 }).lazy(() =>
   import('src/features/ObjectStorage/objectStorageLandingLazyRoute').then(
     (m) => m.objectStorageLandingLazyRoute
@@ -41,8 +56,8 @@ const objectStorageBucketsLandingRoute = createRoute({
 );
 
 const objectStorageBucketCreateRoute = createRoute({
-  getParentRoute: () => objectStorageRoute,
-  path: 'buckets/create',
+  getParentRoute: () => objectStorageBucketsRoute,
+  path: 'create',
 }).lazy(() =>
   import('src/features/ObjectStorage/objectStorageLandingLazyRoute').then(
     (m) => m.objectStorageLandingLazyRoute
@@ -50,8 +65,8 @@ const objectStorageBucketCreateRoute = createRoute({
 );
 
 const objectStorageBucketDetailsRoute = createRoute({
-  getParentRoute: () => objectStorageRoute,
-  path: 'buckets/$regionId/$bucketName/details',
+  getParentRoute: () => objectStorageBucketsRoute,
+  path: '$regionId/$bucketName/details',
 }).lazy(() =>
   import('src/features/ObjectStorage/objectStorageLandingLazyRoute').then(
     (m) => m.objectStorageLandingLazyRoute
@@ -161,9 +176,11 @@ const objectStorageBucketMetricsRoute = createRoute({
 export const objectStorageRouteTree = objectStorageRoute.addChildren([
   objectStorageIndexRoute.addChildren([
     objectStorageSummaryLandingRoute,
-    objectStorageBucketsLandingRoute,
-    objectStorageBucketCreateRoute,
-    objectStorageBucketDetailsRoute,
+    objectStorageBucketsRoute.addChildren([
+      objectStorageBucketsLandingRoute,
+      objectStorageBucketCreateRoute,
+      objectStorageBucketDetailsRoute,
+    ]),
     objectStorageAccessKeysLandingRoute,
     objectStorageAccessKeyCreateRoute,
     objectStorageAccessKeyEditRoute,

@@ -27,12 +27,12 @@ describe('DestinationAkamaiObjectStorageDetailsSummary', () => {
     // Log Path:
     expect(screen.getByText('test/path')).toBeVisible();
     expect(screen.queryByTestId('tooltip-info-icon')).not.toBeInTheDocument();
-    // Access Key ID:
-    expect(screen.getByTestId('access-key-id')).toHaveTextContent(
+    // Access Key:
+    expect(screen.getByTestId('access-key')).toHaveTextContent(
       '*****************'
     );
-    // Secret Access Key:
-    expect(screen.getByTestId('secret-access-key')).toHaveTextContent(
+    // Secret Key:
+    expect(screen.getByTestId('secret-key')).toHaveTextContent(
       '*****************'
     );
   });

@@ -1,0 +1,29 @@
+.button {
+  align-items: center;
+  background-color: transparent;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  display: inline-flex;
+  justify-content: center;
+  padding: 0;
+  transition: background-color 0.2s;
+}
+
+.button:hover .icon {
+  color: var(--token-alias-content-icon-primary-hover, light-dark(#009cde, #96cff0));
+}
+
+.button:disabled {
+  color: var(--token-alias-content-icon-secondary-disabled, light-dark(#a3a3ab, #83838c));
+  cursor: default;
+}
+
+.icon {
+  transition: color 0.2s;
+  color: var(--token-alias-content-icon-secondary-default, light-dark(#696970, #a3a3ab));
+}
+
+.tooltip {
+  display: flex;;
+}

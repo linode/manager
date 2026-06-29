@@ -2,9 +2,8 @@ import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
-import { renderWithTheme } from 'src/utilities/testHelpers';
-
 import { openActionMenu } from '../../utilities/testHelpers';
+import { renderWithProviders } from '../../utilities/testHelpers';
 import { AssignedEntitiesActionMenu } from './AssignedEntitiesActionMenu';
 
 import type { EntitiesRole } from '../types';
@@ -23,7 +22,7 @@ const mockAssignment: EntitiesRole = {
 
 describe('AssignedEntitiesActionMenu', () => {
   it('should render actions correctly', async () => {
-    renderWithTheme(
+    renderWithProviders(
       <AssignedEntitiesActionMenu
         assignment={mockAssignment}
         handleChangeRole={mockOnChangeRole}
@@ -42,7 +41,7 @@ describe('AssignedEntitiesActionMenu', () => {
   });
 
   it('should call handlers when actions are selected', async () => {
-    renderWithTheme(
+    renderWithProviders(
       <AssignedEntitiesActionMenu
         assignment={mockAssignment}
         handleChangeRole={mockOnChangeRole}

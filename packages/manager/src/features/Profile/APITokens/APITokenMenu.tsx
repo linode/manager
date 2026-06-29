@@ -11,7 +11,7 @@ import type { Theme } from '@mui/material/styles';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
-  isProxyOrDelegateUserType: boolean;
+  isDelegateUserType: boolean;
   isThirdPartyAccessToken: boolean;
   openEditDrawer: (token: Token) => void;
   openRevokeDialog: (token: Token, type: string) => void;
@@ -25,7 +25,7 @@ export const APITokenMenu = (props: Props) => {
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
   const {
-    isProxyOrDelegateUserType,
+    isDelegateUserType,
     isThirdPartyAccessToken,
     openEditDrawer,
     openRevokeDialog,
@@ -43,12 +43,12 @@ export const APITokenMenu = (props: Props) => {
     },
     !isThirdPartyAccessToken
       ? {
-          disabled: isProxyOrDelegateUserType,
+          disabled: isDelegateUserType,
           onClick: () => {
             openEditDrawer(token);
           },
           title: 'Rename',
-          tooltip: isProxyOrDelegateUserType
+          tooltip: isDelegateUserType
             ? DELEGATE_USER_RESTRICTED_TOOLTIP_TEXT
             : undefined,
         }

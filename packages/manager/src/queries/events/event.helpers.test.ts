@@ -1,31 +1,15 @@
 import { entityFactory, eventFactory } from 'src/factories/events';
 
 import {
-  doesEventMatchAPIFilter,
   generateInFilter,
   generateNeqFilter,
   generatePollingFilter,
   getExistingEventDataForPollingFilterGenerator,
   isEventRelevantToLinode,
   isEventRelevantToLinodeAsSecondaryEntity,
-  isInProgressEvent,
   isPrimaryEntity,
   isSecondaryEntity,
 } from './event.helpers';
-
-describe('isInProgressEvent', () => {
-  it('should return true', () => {
-    const event = eventFactory.build({ percent_complete: 60 });
-    const result = isInProgressEvent(event);
-    expect(result).toBeTruthy();
-  });
-
-  it('should return false', () => {
-    const event = eventFactory.build({ percent_complete: 100 });
-    const result = isInProgressEvent(event);
-    expect(result).toBeFalsy();
-  });
-});
 
 describe('isEventRelevantToLinode', () => {
   const event0 = eventFactory.build({
@@ -87,53 +71,6 @@ describe('isEventRelevantToLinodeAsSecondaryEntity', () => {
     expect(isEventRelevantToLinodeAsSecondaryEntity(linodeCloneEvent)).toBe(
       true
     );
-  });
-});
-
-describe('doesEventMatchAPIFilter', () => {
-  it('should return false if the API filter filters out profile_update events', () => {
-    const event = eventFactory.build({ action: 'profile_update' });
-    const filter = { action: { '+neq': 'profile_update' } };
-
-    expect(doesEventMatchAPIFilter(event, filter)).toBe(false);
-  });
-
-  it('should return false because this event does not meet the API filter criteria', () => {
-    const event = eventFactory.build({
-      action: 'profile_update',
-      entity: null,
-    });
-    const filter = { 'entity.id': 2, 'entity.type': 'linode' };
-
-    expect(doesEventMatchAPIFilter(event, filter)).toBe(false);
-  });
-
-  it('should return true because linode_boot would be allowed by this event', () => {
-    const event = eventFactory.build({ action: 'linode_boot' });
-    const filter = { action: { '+neq': 'profile_update' } };
-
-    expect(doesEventMatchAPIFilter(event, filter)).toBe(true);
-  });
-
-  it('should return true because the incoming entity matches the API filter', () => {
-    const event = eventFactory.build({ entity: { id: 1, type: 'linode' } });
-    const filter = { 'entity.id': 1, 'entity.type': 'linode' };
-
-    expect(doesEventMatchAPIFilter(event, filter)).toBe(true);
-  });
-
-  it('should return false because the incoming event does not match the API filter', () => {
-    const event = eventFactory.build({ entity: { id: 1, type: 'linode' } });
-    const filter = { 'entity.id': 2, 'entity.type': 'linode' };
-
-    expect(doesEventMatchAPIFilter(event, filter)).toBe(false);
-  });
-
-  it('should return false because the incoming event does not match the API filter', () => {
-    const event = eventFactory.build({ entity: null });
-    const filter = { 'entity.id': 2, 'entity.type': 'linode' };
-
-    expect(doesEventMatchAPIFilter(event, filter)).toBe(false);
   });
 });
 

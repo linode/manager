@@ -1,19 +1,20 @@
-import { NotificationBanner } from '@akamai/cds-components/react';
-import { Spacing } from '@akamai/cds-tokens';
+import { toast } from '@akamai/cds-components/notification-toast';
+import { Button, NotificationBanner } from '@akamai/cds-components/react';
+import { Font, Spacing } from '@akamai/cds-tokens';
 import {
   useGetDefaultDelegationAccessQuery,
   useUpdateDefaultDelegationAccessQuery,
   useUserRoles,
   useUserRolesMutation,
 } from '@linode/queries';
-import { ActionsPanel, Drawer, Typography } from '@linode/ui';
-import { useTheme } from '@mui/material';
 import { useParams } from '@tanstack/react-router';
-import { enqueueSnackbar } from 'notistack';
 import React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 
+import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { useIsDefaultDelegationRolesForChildAccount } from '../../hooks/useDelegationRole';
+import { Drawer, DrawerInlineActions } from '../../Shared/Drawer';
+import styles from '../../Shared/global.module.css';
 import { AssignedPermissionsPanel } from '../AssignedPermissionsPanel/AssignedPermissionsPanel';
 import { INTERNAL_ERROR_NO_CHANGES_SAVED } from '../constants';
 import { toEntityAccess } from '../utilities';
@@ -29,13 +30,13 @@ interface Props {
 }
 
 export const UpdateEntitiesDrawer = ({ onClose, open, role }: Props) => {
-  const theme = useTheme();
   const { username } = useParams({ strict: false });
   const { isDefaultDelegationRolesForChildAccount } =
     useIsDefaultDelegationRolesForChildAccount();
   const { data: defaultRolesData } = useGetDefaultDelegationAccessQuery({
     enabled: isDefaultDelegationRolesForChildAccount,
   });
+  const isSMUp = useBreakpoint('up', 'sm');
 
   const { data: userRolesData } = useUserRoles(
     username,
@@ -116,7 +117,10 @@ export const UpdateEntitiesDrawer = ({ onClose, open, role }: Props) => {
         entity_access: entityAccess,
       });
 
-      enqueueSnackbar(`List of entities updated.`, { variant: 'success' });
+      toast.open({
+        text: 'List of entities updated.',
+        type: 'success',
+      });
 
       handleClose();
     } catch (errors) {
@@ -135,36 +139,33 @@ export const UpdateEntitiesDrawer = ({ onClose, open, role }: Props) => {
 
   return (
     <Drawer
+      className={styles.noMargin}
       onClose={handleClose}
       open={open}
-      slotProps={{
-        paper: {
-          sx: {
-            maxWidth: { xs: '100% !important', sm: '600px !important' },
-          },
-        },
-      }}
-      title="Update List of Entities"
-      wide
+      title="Update Entities"
+      width={isSMUp ? '600px' : '100%'}
     >
-      {errors.root?.message && (
-        <NotificationBanner text={errors.root?.message} type="error" />
-      )}
+      <div slot="header">Update Entities</div>
       <FormProvider {...form}>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <Typography sx={{ marginBottom: theme.tokens.spacing.S16 }}>
+        <form onSubmit={handleSubmit(onSubmit)} slot="body">
+          {errors.root?.message && (
+            <NotificationBanner text={errors.root?.message} type="error" />
+          )}
+          <p style={{ marginBottom: Spacing.S16 }}>
             Add or remove entities attached to the role.
-          </Typography>
+          </p>
 
           {role && (
-            <Typography
-              sx={{
-                font: theme.tokens.alias.Typography.Heading.S,
-                marginBottom: theme.tokens.spacing.S8,
+            <p
+              style={{
+                fontSize: Font.FontSize.S,
+                // eslint-disable-next-line @linode/cloud-manager/no-custom-fontWeight
+                fontWeight: Font.FontWeight.Bold,
+                marginBottom: Spacing.S8,
               }}
             >
               {role.name}
-            </Typography>
+            </p>
           )}
 
           <Controller
@@ -176,26 +177,29 @@ export const UpdateEntitiesDrawer = ({ onClose, open, role }: Props) => {
                 key={role?.name}
                 onChange={field.onChange}
                 role={role!}
-                sx={{ marginBottom: Spacing.S16 }}
+                style={{ marginBottom: Spacing.S16 }}
                 value={field.value}
               />
             )}
             rules={{ required: 'Select entities.' }}
           />
-
-          <ActionsPanel
-            primaryButtonProps={{
-              'data-testid': 'submit',
-              label: 'Update',
-              loading: isSubmitting,
-              type: 'submit',
-            }}
-            secondaryButtonProps={{
-              'data-testid': 'cancel',
-              label: 'Cancel',
-              onClick: handleClose,
-            }}
-          />
+          <DrawerInlineActions>
+            <Button
+              data-testid="cancel"
+              onClick={handleClose}
+              variant="secondary"
+            >
+              Cancel
+            </Button>
+            <Button
+              data-testid="submit"
+              processing={isSubmitting}
+              type="submit"
+              variant="primary"
+            >
+              Update
+            </Button>
+          </DrawerInlineActions>
         </form>
       </FormProvider>
     </Drawer>

@@ -68,12 +68,14 @@ const createValidator = (key: string, field: any) => {
   switch (true) {
     case fieldTypes.includes('integer'):
       return number()
+        .typeError(`${key} must be a whole number`)
         .transform((val, originalVal) => (originalVal === '' ? undefined : val))
         .integer(`${key} must be a whole number`)
         .required(`${key} is required`);
 
     case fieldTypes.includes('number'):
       return number()
+        .typeError(`${key} must be a number`)
         .transform((val, originalVal) => (originalVal === '' ? undefined : val))
         .required(`${key} is required`);
 
@@ -135,7 +137,9 @@ const applyConstraints = (validator: any, key: string, field: any) => {
     } else {
       validator = validator.matches(
         new RegExp(pattern),
-        `Please ensure that ${key} follows the format ${field.example}`,
+        field.example
+          ? `Please ensure that ${key} follows the format ${field.example}`
+          : `${key} must be a valid format`,
       );
     }
   }

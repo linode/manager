@@ -1,4 +1,4 @@
-import { Typography } from '@linode/ui';
+import { Spacing } from '@akamai/cds-tokens';
 import * as React from 'react';
 
 import { DatabaseCreateAccessControls } from './DatabaseCreateAccessControls';
@@ -6,7 +6,6 @@ import { DatabaseCreateVPC } from './DatabaseCreateVPC';
 
 import type { AccessProps } from './DatabaseCreateAccessControls';
 import type { VPC } from '@linode/api-v4';
-import type { Theme } from '@mui/material/styles';
 
 interface NetworkingConfigurationProps {
   accessControlsConfiguration: AccessProps;
@@ -20,14 +19,10 @@ export const DatabaseCreateNetworkingConfiguration = (
 
   return (
     <>
-      <Typography variant="h2">Configure Networking</Typography>
-      <Typography
-        sx={(theme: Theme) => ({
-          marginBottom: theme.spacingFunction(20),
-        })}
-      >
+      <h3 style={{ margin: 0 }}>Configure Networking</h3>
+      <p style={{ marginTop: 0, marginBottom: Spacing.S20 }}>
         Configure networking options for the cluster.
-      </Typography>
+      </p>
 
       <DatabaseCreateAccessControls {...accessControlsConfiguration} />
       <DatabaseCreateVPC onChange={onChange} />

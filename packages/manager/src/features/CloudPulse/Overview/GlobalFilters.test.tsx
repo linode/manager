@@ -11,11 +11,13 @@ const mockHandleDashboardChange = vi.fn();
 const mockHandleTimeDurationChange = vi.fn();
 const mockHandleToggleAppliedFilter = vi.fn();
 const mockHandleGroupByChange = vi.fn();
+const handleDownloadPDF = vi.fn();
 const setup = () => {
   renderWithTheme(
     <GlobalFilters
       handleAnyFilterChange={mockHandleAnyFilterChange}
       handleDashboardChange={mockHandleDashboardChange}
+      handleDownloadPDF={handleDownloadPDF}
       handleGroupByChange={mockHandleGroupByChange}
       handleTimeDurationChange={mockHandleTimeDurationChange}
       handleToggleAppliedFilter={mockHandleToggleAppliedFilter}

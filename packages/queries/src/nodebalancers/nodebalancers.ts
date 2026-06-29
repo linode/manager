@@ -23,6 +23,7 @@ import { vpcQueries } from '../vpcs';
 import { nodebalancerQueries } from './keys';
 
 import type { EventHandlerData } from '../eventHandlers';
+import type { PriceType } from '@akamai/compute-ui-core/api';
 import type {
   APIError,
   CreateNodeBalancerConfig,
@@ -34,7 +35,6 @@ import type {
   NodeBalancerStats,
   NodeBalancerVpcConfig,
   Params,
-  PriceType,
   ResourcePage,
 } from '@linode/api-v4';
 

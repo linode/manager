@@ -1,3 +1,5 @@
+import { getAPIErrorOrDefault } from '@akamai/compute-ui-core/api';
+import { getErrorMap } from '@akamai/compute-ui-core/api';
 import { uploadAttachment } from '@linode/api-v4';
 import { useSupportTicketReplyMutation } from '@linode/queries';
 import { Accordion, Notice } from '@linode/ui';
@@ -6,7 +8,6 @@ import * as React from 'react';
 import { debounce } from 'throttle-debounce';
 import { makeStyles } from 'tss-react/mui';
 
-import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { storage } from 'src/utilities/storage';
 
 import { AttachFileForm } from '../../AttachFileForm';

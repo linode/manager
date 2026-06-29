@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="100%" height="100%">
+  <defs>
+    <linearGradient id="h-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#D47A2A" />
+      <stop offset="100%" stop-color="#FFE600" />
+    </linearGradient>
+    
+    <filter id="drop-shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="6" flood-color="#D47A2A" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+
+  <path 
+    d="M 40,30 
+       H 75 
+       V 85 
+       H 125 
+       V 30 
+       H 160 
+       V 170 
+       H 125 
+       V 115 
+       H 75 
+       V 170 
+       H 40 
+       Z" 
+    fill="url(#h-gradient)" 
+    filter="url(#drop-shadow)"
+  />
+</svg>

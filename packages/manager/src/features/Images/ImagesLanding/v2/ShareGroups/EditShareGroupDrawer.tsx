@@ -64,12 +64,12 @@ export const EditShareGroupDrawer = (props: Props) => {
 
   return (
     <Drawer
+      closeButtonPendoId={EDIT_SHARE_GROUP_PENDO_IDS.xButton}
       error={errors}
       isFetching={isFetching}
       onClose={handleClose}
       open={open}
-      pendoId={EDIT_SHARE_GROUP_PENDO_IDS.xButton}
-      title="Edit group details"
+      title="Edit Group Details"
     >
       <form onSubmit={onSubmit}>
         {!errors && (

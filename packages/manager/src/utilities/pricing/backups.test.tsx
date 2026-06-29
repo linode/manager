@@ -1,57 +1,6 @@
 import { linodeFactory, linodeTypeFactory } from '@linode/utilities';
 
-import { getLinodeBackupPrice, getTotalBackupsPrice } from './backups';
-
-describe('getLinodeBackupPrice', () => {
-  it('gets a linode backup price without a region override', () => {
-    const type = linodeTypeFactory.build({
-      addons: {
-        backups: {
-          price: {
-            hourly: 0.004,
-            monthly: 2.5,
-          },
-          region_prices: [],
-        },
-      },
-    });
-
-    expect(getLinodeBackupPrice(type, 'us-east')).toEqual({
-      hourly: 0.004,
-      monthly: 2.5,
-    });
-  });
-
-  it('gets a linode backup price with a region override', () => {
-    const type = linodeTypeFactory.build({
-      addons: {
-        backups: {
-          price: {
-            hourly: 0.004,
-            monthly: 2.5,
-          },
-          region_prices: [
-            {
-              hourly: 0.0048,
-              id: 'id-cgk',
-              monthly: 3.57,
-            },
-            {
-              hourly: 0.0056,
-              id: 'br-gru',
-              monthly: 4.17,
-            },
-          ],
-        },
-      },
-    });
-
-    expect(getLinodeBackupPrice(type, 'id-cgk')).toEqual({
-      hourly: 0.0048,
-      monthly: 3.57,
-    });
-  });
-});
+import { getTotalBackupsPrice } from './backups';
 
 describe('getTotalBackupsPrice', () => {
   it('correctly calculates the total price for Linode backups', () => {

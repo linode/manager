@@ -1,3 +1,4 @@
+import { getAPIErrorOrDefault } from '@akamai/compute-ui-core/api';
 import { getInvoice, getInvoiceItems } from '@linode/api-v4/lib/account';
 import { useAccount, useRegionsQuery } from '@linode/queries';
 import {
@@ -24,7 +25,6 @@ import { Link } from 'src/components/Link';
 import { printInvoice } from 'src/features/Billing/PdfGenerator/PdfGenerator';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useFlags } from 'src/hooks/useFlags';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { getShouldUseAkamaiBilling } from '../billingUtils';
 import { invoiceCreatedAfterDCPricingLaunch } from '../PdfGenerator/utils';

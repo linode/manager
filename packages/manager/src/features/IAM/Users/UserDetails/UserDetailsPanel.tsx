@@ -1,19 +1,15 @@
 import { Button, Icon, Tooltip } from '@akamai/cds-components/react';
-import {
-  Color,
-  Spacing,
-  Typography as TypographyTokens,
-} from '@akamai/cds-tokens';
-import { Box, Stack, Typography } from '@linode/ui';
-import Grid from '@mui/material/Grid';
+import { Color, Font, Spacing, Typography } from '@akamai/cds-tokens';
 import { useNavigate } from '@tanstack/react-router';
 import React from 'react';
 
-import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { PARENT_USER } from 'src/features/Account/constants';
 
+import { useActiveBreakpointIndex } from '../../hooks/useBreakpoint';
 import { useDelegationRole } from '../../hooks/useDelegationRole';
+import { Box } from '../../Shared/Box/Box';
 import { EMAIL_MAX_LENGTH } from '../../Shared/constants';
+import { DateTimeDisplay } from '../../Shared/DateTimeDisplay/DateTimeDisplay';
 import { Divider } from '../../Shared/Divider/Divider';
 import { MaskableText } from '../../Shared/MaskableText/MaskableText';
 import { Paper } from '../../Shared/Paper/Paper';
@@ -21,9 +17,14 @@ import { StatusIcon } from '../../Shared/StatusIcon/StatusIcon';
 import { truncateEnd } from '../../Shared/truncate';
 import { UserDeleteConfirmation } from '../../Shared/UserDeleteConfirmation';
 import { EditUserDetailsDrawer } from './EditUserDetailsDrawer';
+import styles from './UserDetailsPanel.module.css';
 import { getTotalAssignedRoles } from './utils';
 
 import type { IamUserRoles, User } from '@linode/api-v4';
+
+interface ItemsGridStyle extends React.CSSProperties {
+  '--items-grid-columns': number;
+}
 
 interface Props {
   activeUser: User;
@@ -47,13 +48,24 @@ export const UserDetailsPanel = ({
   const navigate = useNavigate();
   const { profileUserName } = useDelegationRole();
 
-  const isProxyOrDelegateUserType =
-    activeUser.user_type === 'proxy' || activeUser.user_type === 'delegate';
+  const isDelegateUserType = activeUser.user_type === 'delegate';
+
+  const breakpointIndex = useActiveBreakpointIndex();
+  // xs=1 col, sm=2 cols, md+=3 cols
+  let gridColumnsCount = 1;
+  if (breakpointIndex >= 2) {
+    gridColumnsCount = 3;
+  } else if (breakpointIndex >= 1) {
+    gridColumnsCount = 2;
+  }
+  const itemsGridStyle: ItemsGridStyle = {
+    '--items-grid-columns': gridColumnsCount,
+  };
 
   const isDeleteUserDisabled =
     !permissions.delete_user ||
     profileUserName === activeUser.username ||
-    isProxyOrDelegateUserType;
+    isDelegateUserType;
 
   const isEditUserDisabled =
     profileUserName !== activeUser.username ? !permissions.update_user : false;
@@ -65,7 +77,7 @@ export const UserDetailsPanel = ({
     deleteTooltipText = 'You do not have permission to delete this user.';
   } else if (profileUserName === activeUser.username) {
     deleteTooltipText = `You can’t delete the currently active user.`;
-  } else if (isProxyOrDelegateUserType) {
+  } else if (isDelegateUserType) {
     deleteTooltipText = `You can’t delete a ${PARENT_USER}.`;
   }
 
@@ -79,7 +91,7 @@ export const UserDetailsPanel = ({
       value: (
         <MaskableText
           isToggleable
-          styleTypography={{ font: TypographyTokens.Body.Bold }}
+          styleTypography={{ font: Typography.Body.Bold }}
           text={activeUser.username}
         />
       ),
@@ -95,7 +107,7 @@ export const UserDetailsPanel = ({
           <MaskableText
             isToggleable
             styleTypography={{
-              font: TypographyTokens.Body.Bold,
+              font: Typography.Body.Bold,
               margin: Spacing.S0,
             }}
             text={truncateEnd(activeUser.email, EMAIL_MAX_LENGTH)}
@@ -106,15 +118,20 @@ export const UserDetailsPanel = ({
     {
       label: 'Assigned roles',
       value: (
-        <Typography sx={(theme) => ({ font: theme.font.bold })}>
+        <p
+          style={{
+            // eslint-disable-next-line @linode/cloud-manager/no-custom-fontWeight
+            fontWeight: Font.FontWeight.Bold,
+          }}
+        >
           {assignRolesCount}
-        </Typography>
+        </p>
       ),
     },
     {
       label: 'Last login status',
       value: (
-        <Stack direction="row">
+        <Box direction="row">
           {activeUser.last_login && (
             <StatusIcon
               status={
@@ -124,49 +141,74 @@ export const UserDetailsPanel = ({
               }
             />
           )}
-          <Typography
-            sx={(theme) => ({ font: theme.font.bold })}
-            textTransform="capitalize"
+          <p
+            style={{
+              // eslint-disable-next-line @linode/cloud-manager/no-custom-fontWeight
+              fontWeight: Font.FontWeight.Bold,
+              textTransform: 'capitalize',
+            }}
           >
             {activeUser.last_login?.status ?? 'N/A'}
-          </Typography>
-        </Stack>
+          </p>
+        </Box>
       ),
     },
     {
       label: 'Last login',
       value: activeUser.last_login ? (
         <DateTimeDisplay
-          sx={(theme) => ({ font: theme.font.bold })}
+          style={{ font: Typography.Body.Bold }}
           value={activeUser.last_login.login_datetime}
         />
       ) : (
-        <Typography sx={(theme) => ({ font: theme.font.bold })}>N/A</Typography>
+        <p
+          style={{
+            // eslint-disable-next-line @linode/cloud-manager/no-custom-fontWeight
+            fontWeight: Font.FontWeight.Bold,
+          }}
+        >
+          N/A
+        </p>
       ),
     },
     {
       label: 'Password created',
       value: activeUser.password_created ? (
         <DateTimeDisplay
-          sx={(theme) => ({ font: theme.font.bold })}
+          style={{
+            // eslint-disable-next-line @linode/cloud-manager/no-custom-fontWeight
+            fontWeight: Font.FontWeight.Bold,
+          }}
           value={activeUser.password_created}
         />
       ) : (
-        <Typography sx={(theme) => ({ font: theme.font.bold })}>N/A</Typography>
+        <p
+          style={{
+            // eslint-disable-next-line @linode/cloud-manager/no-custom-fontWeight
+            fontWeight: Font.FontWeight.Bold,
+          }}
+        >
+          N/A
+        </p>
       ),
     },
     {
       label: 'Two-factor authentication',
       value: (
-        <Stack direction="row">
+        <Box direction="row">
           <StatusIcon
             status={activeUser.tfa_enabled ? 'active' : 'inactive'}
             style={{ alignSelf: 'center' }}
           />
-          <Typography sx={(theme) => ({ font: theme.font.bold })}>
+          <p
+            style={{
+              // eslint-disable-next-line @linode/cloud-manager/no-custom-fontWeight
+              fontWeight: Font.FontWeight.Bold,
+            }}
+          >
             {activeUser.tfa_enabled ? 'Enabled' : 'Disabled'}
-          </Typography>
-        </Stack>
+          </p>
+        </Box>
       ),
     },
     {
@@ -174,7 +216,7 @@ export const UserDetailsPanel = ({
       value: (
         <MaskableText
           isToggleable
-          styleTypography={{ font: TypographyTokens.Body.Bold }}
+          styleTypography={{ font: Typography.Body.Bold }}
           text={activeUser.verified_phone_number ?? 'None'}
         />
       ),
@@ -203,25 +245,29 @@ export const UserDetailsPanel = ({
             </Tooltip>
           </div>
         ) : (
-          <Typography sx={(theme) => ({ font: theme.font.bold })}>0</Typography>
+          <p
+            style={{
+              // eslint-disable-next-line @linode/cloud-manager/no-custom-fontWeight
+              fontWeight: Font.FontWeight.Bold,
+            }}
+          >
+            0
+          </p>
         ),
     },
   ];
 
   return (
     <Paper>
-      <Box sx={(theme) => ({ py: theme.spacingFunction(8) })}>
+      <div style={{ padding: `${Spacing.S8} ${Spacing.S0}` }}>
         <Box
-          sx={{
-            display: 'flex',
+          direction="row"
+          style={{
             alignItems: 'center',
-            gap: 1,
-            flexWrap: 'wrap',
+            gap: 24,
           }}
         >
-          <Typography sx={{ flex: 1 }} variant="h2">
-            User Details
-          </Typography>
+          <p style={{ flex: 1, font: Typography.Heading.M }}>User Details</p>
           <Tooltip disabled={!isEditUserDisabled} tooltipText={editTooltipText}>
             <Button
               disabled={isEditUserDisabled}
@@ -251,34 +297,15 @@ export const UserDetailsPanel = ({
           </Tooltip>
         </Box>
         <Divider spacingBottom={Spacing.S16} spacingTop={Spacing.S24} />
-      </Box>
-      <Grid columns={{ md: 6, sm: 4, xs: 2 }} container spacing={2}>
+      </div>
+      <div className={styles.itemsGrid} style={itemsGridStyle}>
         {items.map((item) => (
-          <Grid
-            key={item.label}
-            size={{
-              md: 2,
-              sm: 2,
-              xs: 2,
-            }}
-          >
-            <Stack
-              direction="column"
-              spacing={0.25}
-              sx={{
-                '& > p:nth-of-type(2)': {
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  alignItems: 'center',
-                },
-              }}
-            >
-              <Typography>{item.label}</Typography>
-              {item.value}
-            </Stack>
-          </Grid>
+          <Box className={styles.itemBox} key={item.label}>
+            <p>{item.label}</p>
+            {item.value}
+          </Box>
         ))}
-      </Grid>
+      </div>
       <EditUserDetailsDrawer
         activeUser={activeUser}
         canUpdateUser={permissions?.update_user}

@@ -1,47 +1,71 @@
-import { Box, Drawer } from '@linode/ui';
+import { Box, CircleProgress, Drawer } from '@linode/ui';
 import * as React from 'react';
 
 import { CopyableTextField } from 'src/components/CopyableTextField/CopyableTextField';
 import { useObjectStorageRegions } from 'src/features/ObjectStorage/hooks/useObjectStorageRegions';
+import { useObjectStorageAccessKey } from 'src/queries/object-storage/queries';
 
 import { CopyAllHostnames } from './CopyAllHostnames';
 
-import type { ObjectStorageKey } from '@linode/api-v4';
-
 interface Props {
+  accessKeyId?: number;
   isOpen: boolean;
-  objectStorageKey?: ObjectStorageKey;
   onClose: () => void;
 }
 
 export const HostNamesDrawer = (props: Props) => {
-  const { onClose, isOpen, objectStorageKey } = props;
-
-  const { availableStorageRegions, regionsByIdMap } = useObjectStorageRegions();
-
-  const regions = objectStorageKey?.regions || [];
-
-  if (!availableStorageRegions || !regionsByIdMap) {
-    return null;
-  }
+  const { onClose, isOpen, accessKeyId } = props;
 
   return (
     <Drawer onClose={onClose} open={isOpen} title="Regions / S3 Hostnames">
+      <HostNamesDrawerContent accessKeyId={accessKeyId} />
+    </Drawer>
+  );
+};
+
+interface HostNamesDrawerContentProps {
+  accessKeyId?: number;
+}
+
+export const HostNamesDrawerContent = ({
+  accessKeyId,
+}: HostNamesDrawerContentProps) => {
+  const { data: objectStorageKey, isLoading: isAccessKeyLoading } =
+    useObjectStorageAccessKey(
+      accessKeyId ?? -1,
+      accessKeyId !== null && accessKeyId !== undefined
+    );
+  const { regionsByIdMap, isLoading: isStorageEndpointsLoading } =
+    useObjectStorageRegions();
+
+  if (isAccessKeyLoading || isStorageEndpointsLoading) {
+    return <CircleProgress />;
+  }
+
+  if (!regionsByIdMap) {
+    return null;
+  }
+
+  const keyRegions = objectStorageKey?.regions ?? [];
+
+  return (
+    <>
       <Box sx={(theme) => ({ marginTop: theme.spacing(3) })}>
         <CopyAllHostnames
           text={
-            regions
-              .map((region) => {
-                const label = regionsByIdMap[region.id]?.label;
-                const endpointType = region.endpoint_type
-                  ? ` (${region.endpoint_type})`
+            keyRegions
+              .map((keyRegion) => {
+                const label = regionsByIdMap[keyRegion.id]?.label;
+                const endpointType = keyRegion.endpoint_type
+                  ? ` (${keyRegion.endpoint_type})`
                   : '';
-                return `${label}${endpointType}: ${region.s3_endpoint}`;
+                return `${label}${endpointType}: ${keyRegion.s3_endpoint}`;
               })
               .join('\n') ?? ''
           }
         />
       </Box>
+
       <Box
         sx={(theme) => ({
           backgroundColor: theme.bg.main,
@@ -49,7 +73,7 @@ export const HostNamesDrawer = (props: Props) => {
           padding: theme.spacing(1),
         })}
       >
-        {regions.map((region, index) => {
+        {keyRegions.map((region, index) => {
           const endpointTypeLabel = region?.endpoint_type
             ? ` (${region.endpoint_type})`
             : '';
@@ -71,6 +95,6 @@ export const HostNamesDrawer = (props: Props) => {
           );
         })}
       </Box>
-    </Drawer>
+    </>
   );
 };

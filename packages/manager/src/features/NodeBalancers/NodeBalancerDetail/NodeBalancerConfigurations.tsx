@@ -1,3 +1,4 @@
+import { getAPIErrorOrDefault } from '@akamai/compute-ui-core/api';
 import {
   createNodeBalancerConfig,
   createNodeBalancerConfigNode,
@@ -24,7 +25,6 @@ import * as React from 'react';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { NO_PERMISSIONS_TOOLTIP_TEXT } from '../constants';
 import { NodeBalancerConfigPanel } from '../NodeBalancerConfigPanel';

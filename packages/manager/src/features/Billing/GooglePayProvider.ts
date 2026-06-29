@@ -1,3 +1,4 @@
+import { getAPIErrorOrDefault } from '@akamai/compute-ui-core/api';
 import {
   addPaymentMethod,
   makePayment,
@@ -7,7 +8,6 @@ import braintree from 'braintree-web';
 
 import { GPAY_CLIENT_ENV, GPAY_MERCHANT_ID } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import type { APIWarning } from '@linode/api-v4/lib/types';
 import type { QueryClient } from '@tanstack/react-query';

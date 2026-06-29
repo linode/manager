@@ -1,4 +1,9 @@
-import { NotificationBanner, Select } from '@akamai/cds-components/react';
+import { toast } from '@akamai/cds-components/notification-toast';
+import {
+  Button,
+  NotificationBanner,
+  Select,
+} from '@akamai/cds-components/react';
 import { Spacing } from '@akamai/cds-tokens';
 import {
   useAccountRoles,
@@ -7,14 +12,15 @@ import {
   useUserRoles,
   useUserRolesMutation,
 } from '@linode/queries';
-import { ActionsPanel, Drawer, Typography } from '@linode/ui';
-import { useTheme } from '@mui/material/styles';
 import { useParams } from '@tanstack/react-router';
-import { enqueueSnackbar } from 'notistack';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
+import styles from 'src/features/IAM/Shared/global.module.css';
+
+import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { useIsDefaultDelegationRolesForChildAccount } from '../../hooks/useDelegationRole';
+import { Drawer, DrawerInlineActions } from '../../Shared/Drawer';
 import { AssignedPermissionsPanel } from '../AssignedPermissionsPanel/AssignedPermissionsPanel';
 import { ROLES_LEARN_MORE_LINK } from '../constants';
 import { Link } from '../Link/Link';
@@ -38,7 +44,6 @@ interface Props {
 }
 
 export const ChangeRoleDrawer = ({ mode, onClose, open, role }: Props) => {
-  const theme = useTheme();
   const { username } = useParams({ strict: false });
   const { data: accountRoles, isLoading: accountPermissionsLoading } =
     useAccountRoles();
@@ -48,6 +53,7 @@ export const ChangeRoleDrawer = ({ mode, onClose, open, role }: Props) => {
   const { data: defaultRolesData } = useGetDefaultDelegationAccessQuery({
     enabled: isDefaultDelegationRolesForChildAccount,
   });
+  const isSMUp = useBreakpoint('up', 'sm');
 
   const { data: userRolesData } = useUserRoles(
     username ?? '',
@@ -143,7 +149,10 @@ export const ChangeRoleDrawer = ({ mode, onClose, open, role }: Props) => {
 
       await mutationFn(updatedUserRoles);
 
-      enqueueSnackbar(`Role changed.`, { variant: 'success' });
+      toast.open({
+        text: 'Role changed.',
+        type: 'success',
+      });
 
       handleClose();
     } catch (errors) {
@@ -160,23 +169,22 @@ export const ChangeRoleDrawer = ({ mode, onClose, open, role }: Props) => {
 
   return (
     <Drawer
+      className={styles.noMargin}
       onClose={handleClose}
       open={open}
-      slotProps={{
-        paper: {
-          sx: {
-            maxWidth: { xs: '100% !important', sm: '600px !important' },
-          },
-        },
-      }}
       title="Change Role"
-      wide
+      width={isSMUp ? '600px' : '100%'}
     >
-      {errors.root?.message && (
-        <NotificationBanner text={errors.root?.message} type="error" />
-      )}
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Typography sx={{ marginBottom: 2.5 }}>
+      <div slot="header">Change Role</div>
+      <form
+        id="change-role-drawer-form"
+        onSubmit={handleSubmit(onSubmit)}
+        slot="body"
+      >
+        {errors.root?.message && (
+          <NotificationBanner text={errors.root?.message} type="error" />
+        )}
+        <p style={{ marginBottom: Spacing.S20 }}>
           Select a role you want{' '}
           {role?.access === 'account_access'
             ? isDefaultDelegationRolesForChildAccount
@@ -187,11 +195,11 @@ export const ChangeRoleDrawer = ({ mode, onClose, open, role }: Props) => {
             Learn more about roles and permissions
           </Link>
           .
-        </Typography>
+        </p>
 
-        <Typography sx={{ marginBottom: theme.tokens.spacing.S8 }}>
+        <p style={{ marginBottom: Spacing.S8 }}>
           Change the role from <strong>{role?.name}</strong> to:
-        </Typography>
+        </p>
 
         <Controller
           control={control}
@@ -211,7 +219,7 @@ export const ChangeRoleDrawer = ({ mode, onClose, open, role }: Props) => {
               }}
               placeholder="Select a Role"
               selected={field.value || null}
-              style={{ marginBottom: theme.tokens.spacing.S16 }}
+              style={{ marginBottom: Spacing.S16 }}
               valueFn={(item) => (item as RolesType).label}
             />
           )}
@@ -223,24 +231,27 @@ export const ChangeRoleDrawer = ({ mode, onClose, open, role }: Props) => {
             key={selectedRole.name}
             mode={mode}
             role={selectedRole}
-            sx={{ marginBottom: Spacing.S16 }}
+            style={{ marginBottom: Spacing.S16 }}
             value={formattedAssignedEntities ?? []}
           />
         )}
-
-        <ActionsPanel
-          primaryButtonProps={{
-            'data-testid': 'submit',
-            label: 'Save Change',
-            loading: isSubmitting,
-            type: 'submit',
-          }}
-          secondaryButtonProps={{
-            'data-testid': 'cancel',
-            label: 'Cancel',
-            onClick: handleClose,
-          }}
-        />
+        <DrawerInlineActions>
+          <Button
+            data-testid="cancel"
+            onClick={handleClose}
+            variant="secondary"
+          >
+            Cancel
+          </Button>
+          <Button
+            data-testid="submit"
+            processing={isSubmitting}
+            type="submit"
+            variant="primary"
+          >
+            Save
+          </Button>
+        </DrawerInlineActions>
       </form>
     </Drawer>
   );

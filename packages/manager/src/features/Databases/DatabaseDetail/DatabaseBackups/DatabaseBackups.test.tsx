@@ -1,9 +1,8 @@
 import { waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
 
-import { databaseBackupFactory, databaseFactory } from 'src/factories';
-import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { http, HttpResponse, server } from 'src/mocks/testServer';
+import { databaseFactory } from 'src/factories';
 import {
   getShadowRootElement,
   renderWithTheme,
@@ -38,128 +37,6 @@ vi.mock('@tanstack/react-router', async () => {
   };
 });
 
-/**
- * Skipped due to repeated flake issues that we've been unable to fix after a few attempts
- * 1. https://github.com/linode/manager/pull/11130
- * 2. https://github.com/linode/manager/pull/11394
- */
-describe.skip('Database Backups (Legacy)', () => {
-  it('should render a list of backups after loading', async () => {
-    const mockDatabase = databaseFactory.build({
-      platform: 'rdbms-legacy',
-    });
-
-    const backups = databaseBackupFactory.buildList(7);
-
-    server.use(
-      http.get('*/databases/:engine/instances/:id', () => {
-        return HttpResponse.json(mockDatabase);
-      }),
-      http.get('*/databases/:engine/instances/:id/backups', () => {
-        return HttpResponse.json(makeResourcePage(backups));
-      })
-    );
-
-    const { getAllByRole } = renderWithTheme(<DatabaseBackups />);
-
-    await waitFor(() => {
-      // Verify there is a table row for each backup (and a row for the table header)
-      expect(getAllByRole('row')).toHaveLength(backups.length + 1);
-    });
-  });
-
-  it('should render an empty state if there are no backups', async () => {
-    const mockDatabase = databaseFactory.build({
-      platform: 'rdbms-legacy',
-    });
-    // Mock the Database because the Backups Details page requires it to be loaded
-    server.use(
-      http.get('*/databases/:engine/instances/:id', () => {
-        return HttpResponse.json(mockDatabase);
-      })
-    );
-
-    // Mock an empty list of backups
-    server.use(
-      http.get('*/databases/:engine/instances/:id/backups', () => {
-        return HttpResponse.json(makeResourcePage([]));
-      })
-    );
-
-    const { findByText } = renderWithTheme(<DatabaseBackups />);
-
-    expect(await findByText('No backups to display.')).toBeInTheDocument();
-  });
-
-  it('should disable the restore button if disabled = true', async () => {
-    const mockDatabase = databaseFactory.build({
-      platform: 'rdbms-legacy',
-    });
-    const backups = databaseBackupFactory.buildList(7);
-
-    server.use(
-      http.get('*/databases/:engine/instances/:id', () => {
-        return HttpResponse.json(mockDatabase);
-      }),
-      http.get('*/databases/:engine/instances/:id/backups', () => {
-        return HttpResponse.json(makeResourcePage(backups));
-      })
-    );
-
-    const { findAllByText } = renderWithTheme(
-      <DatabaseDetailContext.Provider
-        value={{ database: mockDatabase, engine: 'mysql' }}
-      >
-        <DatabaseBackups />
-      </DatabaseDetailContext.Provider>
-    );
-
-    const buttonSpans = await findAllByText('Restore');
-
-    // There should be a button for each backup
-    expect(buttonSpans).toHaveLength(7);
-
-    for (const span of buttonSpans) {
-      const button = span.closest('button');
-      expect(button).toBeDisabled();
-    }
-  });
-
-  it('should enable the restore button if disabled = false', async () => {
-    const mockDatabase = databaseFactory.build({
-      platform: 'rdbms-legacy',
-    });
-    const backups = databaseBackupFactory.buildList(7);
-
-    server.use(
-      http.get('*/databases/:engine/instances/:id', () => {
-        return HttpResponse.json(mockDatabase);
-      }),
-      http.get('*/databases/:engine/instances/:id/backups', () => {
-        return HttpResponse.json(makeResourcePage(backups));
-      })
-    );
-
-    const { findAllByText } = renderWithTheme(
-      <DatabaseDetailContext.Provider
-        value={{ database: mockDatabase, engine: 'mysql' }}
-      >
-        <DatabaseBackups />
-      </DatabaseDetailContext.Provider>
-    );
-
-    const buttonSpans = await findAllByText('Restore');
-
-    // There should be a button for each backup
-    expect(buttonSpans).toHaveLength(7);
-
-    for (const span of buttonSpans) {
-      const button = span.closest('button');
-      expect(button).toBeEnabled();
-    }
-  });
-});
-
 describe('Database Backups (v2)', () => {
   beforeEach(() => {
     queryMocks.useParams.mockReturnValue({
@@ -169,7 +46,7 @@ describe('Database Backups (v2)', () => {
     queriesMocks.useDatabaseQuery.mockReset();
   });
 
-  it('should disable the restore button if no oldest_restore_time is returned', async () => {
+  it('should disable the restore button if the engine is postgres/mysql and no oldest_restore_time is returned', async () => {
     const mockDatabase = databaseFactory.build({
       id: 1234567890,
       oldest_restore_time: null,
@@ -223,9 +100,7 @@ describe('Database Backups (v2)', () => {
     );
 
     await waitFor(() => {
-      expect(
-        container.getElementsByClassName('MuiDateCalendar-root')
-      ).toHaveLength(1);
+      expect(container.querySelector('cds-calendar')).toBeInTheDocument();
     });
   });
 
@@ -254,5 +129,57 @@ describe('Database Backups (v2)', () => {
 
     const timePickerLabel = await findByText('Time (UTC)');
     expect(timePickerLabel).toBeInTheDocument();
+  });
+
+  it('should render a restore time dropdown if the engine is valkey', async () => {
+    const mockDatabase = databaseFactory.build({
+      id: 1234567890,
+      platform: 'rdbms-default',
+      engine: 'valkey',
+      oldest_restore_time: null,
+      available_restore_times: [
+        '2025-12-28T20:34:59',
+        '2025-12-29T08:35:29',
+        '2025-12-30T15:35:29',
+      ],
+    });
+
+    queriesMocks.useDatabaseQuery.mockReturnValue({
+      data: mockDatabase,
+      error: null,
+      isLoading: false,
+    });
+
+    const { container } = renderWithTheme(
+      <DatabaseDetailContext.Provider
+        value={{ database: mockDatabase, engine: 'valkey' }}
+      >
+        <DatabaseBackups />
+      </DatabaseDetailContext.Provider>,
+      {
+        initialRoute: backupsTestRoute,
+      }
+    );
+
+    const cdsSelect = container.querySelector('cds-select');
+    expect(cdsSelect).not.toBeNull();
+
+    const inputSelect = await getShadowRootElement<HTMLInputElement>(
+      cdsSelect as HTMLElement,
+      'input[role="combobox"]'
+    );
+    expect(inputSelect).not.toBeNull();
+
+    await userEvent.click(inputSelect!);
+    await waitFor(() => {
+      expect(inputSelect).toHaveAttribute('aria-expanded', 'true');
+    });
+
+    const options = Array.from(
+      cdsSelect!.shadowRoot?.querySelectorAll<HTMLElement>(
+        'li[role="option"]'
+      ) ?? []
+    );
+    expect(options).toHaveLength(3);
   });
 });

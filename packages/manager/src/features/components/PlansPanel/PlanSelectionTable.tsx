@@ -1,11 +1,13 @@
-import { TooltipIcon } from '@linode/ui';
 import * as React from 'react';
-import type { JSX } from 'react';
 
 import { TableBody } from 'src/components/TableBody';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
+import {
+  STORAGE_PLAN_COPY,
+  VALKEY_STORAGE_TOOLTIP_COPY,
+} from 'src/features/Databases/constants';
 import { useFlags } from 'src/hooks/useFlags';
 import { useIsGenerationalPlansEnabled } from 'src/utilities/linodes';
 import {
@@ -14,20 +16,23 @@ import {
 } from 'src/utilities/pricing/constants';
 
 import { StyledTable, StyledTableCell } from './PlanContainer.styles';
+import { renderPlanTableTooltip } from './shared';
 
 import type { PlanSelectionFilterOptionsTable } from './PlanContainer';
 import type { PlanWithAvailability } from './types';
 import type { LinodeTypeClass } from '@linode/api-v4/';
-import type { TooltipIconStatus } from '@linode/ui';
 
 interface PlanSelectionTableProps {
   filterEmptyStateMessage?: string;
   filterOptions?: PlanSelectionFilterOptionsTable;
   plans?: PlanWithAvailability[];
   planType?: LinodeTypeClass;
-  renderPlanSelection?: (plans: PlanWithAvailability[]) => React.JSX.Element[];
+  renderPlanSelection?: (
+    plans: PlanWithAvailability[],
+    isValkeyEngineSelected?: boolean
+  ) => React.JSX.Element[];
   shouldDisplayNoRegionSelectedMessage: boolean;
-  showMonthlyColumnHourlyOnlyTooltip?: boolean;
+  showHourlyBillingTooltip?: boolean;
   showNetwork?: boolean;
   showTransfer?: boolean;
   showUsableStorage?: boolean;
@@ -58,7 +63,7 @@ export const PlanSelectionTable = (props: PlanSelectionTableProps) => {
     plans,
     renderPlanSelection,
     shouldDisplayNoRegionSelectedMessage,
-    showMonthlyColumnHourlyOnlyTooltip,
+    showHourlyBillingTooltip,
     showNetwork: shouldShowNetwork,
     showTransfer: shouldShowTransfer,
     showUsableStorage,
@@ -69,50 +74,30 @@ export const PlanSelectionTable = (props: PlanSelectionTableProps) => {
     planType
   );
 
+  const isValkeyEngineSelected =
+    showUsableStorage && plans?.every((plan) => plan.engines?.['valkey']);
+
   // Determine spacing based on feature flag:
   // - If generationalPlans is enabled (pagination mode) -> spacingBottom={0}
   // - If disabled (legacy mode) -> spacingBottom={16}
   const spacingBottom = isGenerationalPlansEnabled ? 0 : 16;
 
   const showTransferTooltip = React.useCallback(
-    (cellName: string) =>
-      plans?.some((plan) => {
-        const showTooltipForGPUPlans =
-          (flags.gpuv2?.transferBanner &&
-            plan.class === 'gpu' &&
-            filterOptions?.header?.includes('Ada')) ||
-          filterOptions?.header?.includes('Blackwell');
-        return (
-          (showTooltipForGPUPlans || plan.class === 'accelerated') &&
-          cellName === 'Transfer'
-        );
-      }),
-    [plans, filterOptions, flags.gpuv2]
+    (cellName: string) => {
+      const isRegionSelected = !shouldDisplayNoRegionSelectedMessage;
+      return (
+        (showHourlyBillingTooltip ||
+          plans?.some((plan) => plan.class === 'accelerated')) &&
+        isRegionSelected &&
+        cellName === 'Transfer'
+      );
+    },
+    [plans, showHourlyBillingTooltip, shouldDisplayNoRegionSelectedMessage]
   );
 
   const showUsableStorageTooltip = (cellName: string) =>
     cellName === 'Usable Storage';
 
-  const showTooltip = (
-    status: TooltipIconStatus,
-    text: JSX.Element | string,
-    width?: number
-  ) => {
-    return (
-      <TooltipIcon
-        status={status}
-        sxTooltipIcon={{
-          height: 12,
-          marginTop: '-2px',
-          ml: 0.5,
-          px: 0,
-          py: 0,
-        }}
-        text={text}
-        width={width}
-      />
-    );
-  };
   return (
     <StyledTable
       aria-label={`List of ${filterOptions?.header ?? 'Linode'} Plans`}
@@ -153,21 +138,26 @@ export const PlanSelectionTable = (props: PlanSelectionTableProps) => {
                   ? filterOptions?.header
                   : cellName}
                 {showTransferTooltip(cellName) &&
-                  showTooltip(
+                  renderPlanTableTooltip(
                     'info',
                     'Some plans do not include bundled network transfer. If the transfer allotment is 0, all outbound network transfer is subject to charges.'
                   )}
                 {showUsableStorageTooltip(cellName) &&
-                  showTooltip(
+                  renderPlanTableTooltip(
                     'info',
-                    'Usable storage is smaller than the actual plan storage due to the overhead from the database platform.',
+                    isValkeyEngineSelected
+                      ? VALKEY_STORAGE_TOOLTIP_COPY
+                      : STORAGE_PLAN_COPY,
                     240
                   )}
                 {/* Only show when a region is selected and the tab has hourly-only plans. */}
                 {cellName === 'Monthly' &&
-                  showMonthlyColumnHourlyOnlyTooltip &&
+                  showHourlyBillingTooltip &&
                   !shouldDisplayNoRegionSelectedMessage &&
-                  showTooltip('info', MONTHLY_COLUMN_HOURLY_ONLY_TOOLTIP_TEXT)}
+                  renderPlanTableTooltip(
+                    'info',
+                    MONTHLY_COLUMN_HOURLY_ONLY_TOOLTIP_TEXT
+                  )}
               </StyledTableCell>
             );
           })}
@@ -185,7 +175,8 @@ export const PlanSelectionTable = (props: PlanSelectionTableProps) => {
             message={filterEmptyStateMessage}
           />
         ) : (
-          ((plans && renderPlanSelection?.(plans)) ?? null)
+          ((plans && renderPlanSelection?.(plans, isValkeyEngineSelected)) ??
+          null)
         )}
       </TableBody>
     </StyledTable>

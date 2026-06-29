@@ -1,10 +1,10 @@
+import { toast } from '@akamai/cds-components/notification-toast';
 import { Button, Icon, Tooltip } from '@akamai/cds-components/react';
-import { Spacing } from '@akamai/cds-tokens';
+import { Alias, Spacing } from '@akamai/cds-tokens';
+import { Alias as DarkThemeAlias } from '@akamai/cds-tokens/themes/dark';
 import { useDatabaseCredentialsQuery } from '@linode/queries';
-import { Typography } from '@linode/ui';
-import { Box, Grid, styled } from '@mui/material';
+import { styled } from '@mui/material';
 import copy from 'copy-to-clipboard';
-import { enqueueSnackbar } from 'notistack';
 import React, { useState } from 'react';
 
 import { Code } from 'src/components/Code/Code';
@@ -14,7 +14,6 @@ import {
   DISABLE_CREDENTIAL_STATES,
   DISABLED_PASSWORD_BUTTON_TEXT,
 } from 'src/features/Databases/constants';
-import { StyledValueGrid } from 'src/features/Databases/DatabaseDetail/DatabaseSummary/DatabaseSummaryClusterConfiguration.style';
 
 import { CopyTooltip } from '../shared/CopyTooltip/CopyTooltip';
 
@@ -25,6 +24,18 @@ interface ServiceURIProps {
   isGeneralServiceURI?: boolean;
   showPrivateVPC?: boolean;
 }
+
+const ENGINE_SSLMODE_MAP = {
+  mysql: '/defaultdb?ssl-mode=REQUIRED',
+  postgres: '/defaultdb?sslmode=require',
+  valkey: '',
+};
+
+const ENGINE_TEXT_MAP = {
+  mysql: 'mysql',
+  postgres: 'postgres',
+  valkey: 'rediss', // rediss is needed for backwards compatibility
+};
 
 export const ServiceURI = (props: ServiceURIProps) => {
   const {
@@ -38,7 +49,7 @@ export const ServiceURI = (props: ServiceURIProps) => {
   const engine =
     database.engine === 'postgresql' ? 'postgres' : database.engine;
   const generalSslmode =
-    engine === 'mysql' ? 'ssl-mode=REQUIRED' : 'sslmode=require';
+    ENGINE_SSLMODE_MAP[engine] ?? '/defaultdb?sslmode=require';
 
   const {
     data: credentials,
@@ -77,12 +88,12 @@ export const ServiceURI = (props: ServiceURIProps) => {
           // copy with revealed credentials
           copy(getServiceURIText(data, isGeneralServiceURI));
         } else {
-          enqueueSnackbar(CREDENTIALS_ERROR_TEXT, { variant: 'error' });
+          toast.open({ text: CREDENTIALS_ERROR_TEXT, type: 'error' });
         }
         setIsCopying(false);
       } catch {
         setIsCopying(false);
-        enqueueSnackbar(CREDENTIALS_ERROR_TEXT, { variant: 'error' });
+        toast.open({ text: CREDENTIALS_ERROR_TEXT, type: 'error' });
       }
     }
   };
@@ -92,7 +103,7 @@ export const ServiceURI = (props: ServiceURIProps) => {
     isGeneralServiceURI?: boolean
   ) => {
     if (isGeneralServiceURI) {
-      return `${engine}://${credentials?.username}:${credentials?.password}@${primaryHost?.address}:${primaryHost?.port}/defaultdb?${generalSslmode}`;
+      return `${ENGINE_TEXT_MAP[engine]}://${credentials?.username}:${credentials?.password}@${primaryHost?.address}:${primaryHost?.port}${generalSslmode}`;
     }
     return `postgres://${credentials?.username}:${credentials?.password}@${primaryConnectionPoolHost?.address}:${primaryConnectionPoolHost?.port}/{connection pool label}?sslmode=require`;
   };
@@ -113,7 +124,7 @@ export const ServiceURI = (props: ServiceURIProps) => {
   React.useEffect(() => {
     if (!hidePassword && credentialsError) {
       setHidePassword(true);
-      enqueueSnackbar(CREDENTIALS_ERROR_TEXT, { variant: 'error' });
+      toast.open({ text: CREDENTIALS_ERROR_TEXT, type: 'error' });
     }
   }, [credentialsError, hidePassword]);
 
@@ -125,7 +136,7 @@ export const ServiceURI = (props: ServiceURIProps) => {
           style={{ whiteSpace: 'normal' }}
           tooltipText={disabledPasswordTooltipText}
         >
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
             <Button
               disabled={disablePasswordBtn}
               onClick={() => {
@@ -145,7 +156,7 @@ export const ServiceURI = (props: ServiceURIProps) => {
                 <Icon icon="info-outline" size="m" />
               ) : null}
             </Button>
-          </Box>
+          </div>
         </Tooltip>
       );
     }
@@ -158,41 +169,35 @@ export const ServiceURI = (props: ServiceURIProps) => {
     (engine === 'postgres' && !primaryConnectionPoolHost)
   ) {
     return (
-      <Grid display="contents">
-        <StyledValueGrid
+      <div style={{ display: 'contents' }}>
+        <div
           data-testid="service-uri"
-          size="grow"
-          sx={{
+          style={{
             overflowX: 'auto',
             overflowY: 'hidden',
-            p: '0',
+            padding: 0,
+            whiteSpace: 'pre',
           }}
-          whiteSpace="pre"
         >
-          <Typography fontStyle="italic">
+          <span style={{ fontStyle: 'italic' }}>
             Your Service URI will appear here once it is available.
-          </Typography>
-        </StyledValueGrid>
-      </Grid>
+          </span>
+        </div>
+      </div>
     );
   }
 
   return (
-    <Grid display="contents">
-      <Box
+    <div style={{ display: 'contents' }}>
+      <div
         data-testid="service-uri"
-        sx={{
-          display: 'inline',
-          overflowX: 'scroll',
-          whiteSpace: 'nowrap',
-        }}
+        style={{ display: 'inline', overflowX: 'scroll', whiteSpace: 'nowrap' }}
       >
-        {engine}://
+        {ENGINE_TEXT_MAP[engine]}://
         {renderPassword()}
         {isGeneralServiceURI ? (
           <>
-            @{primaryHost?.address}:
-            {`${primaryHost?.port}/defaultdb?${generalSslmode}`}
+            @{primaryHost?.address}:{`${primaryHost?.port}${generalSslmode}`}
           </>
         ) : (
           <>
@@ -202,30 +207,31 @@ export const ServiceURI = (props: ServiceURIProps) => {
             ?sslmode=require
           </>
         )}
-      </Box>
+      </div>
       {isCopying ? (
-        <Box
-          sx={(theme) => ({
-            paddingX: theme.spacingFunction(8),
+        <div
+          style={{
+            paddingLeft: Spacing.S8,
+            paddingRight: Spacing.S8,
             position: 'relative',
-            top: theme.spacingFunction(),
-            backgroundColor: theme.palette.background.paper,
-          })}
+            top: Spacing.S0,
+            backgroundColor: `light-dark(${Alias.Background.Normal}, ${DarkThemeAlias.Background.Normal})`,
+          }}
         >
           <Icon icon="spinner-gradient" size="s" />
-        </Box>
+        </div>
       ) : (
-        <Grid alignContent="center" size="auto">
+        <div style={{ display: 'contents' }}>
           <CopyTooltip
             disabled={disablePasswordBtn}
             disabledReason={disabledPasswordTooltipText}
             onClickCallback={handleCopy}
             text={getServiceURIText(credentials, isGeneralServiceURI)}
           />
-        </Grid>
+        </div>
       )}
       {hasPublicVPC && showPrivateVPC && (
-        <Grid>
+        <div style={{ display: 'contents' }}>
           <Tooltip
             style={{ marginLeft: Spacing.S4 }}
             tooltipPlacement="bottom"
@@ -233,9 +239,9 @@ export const ServiceURI = (props: ServiceURIProps) => {
           >
             <Icon icon="info-outline" size="m" />
           </Tooltip>
-        </Grid>
+        </div>
       )}
-    </Grid>
+    </div>
   );
 };
 

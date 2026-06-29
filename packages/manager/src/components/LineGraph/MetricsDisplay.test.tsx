@@ -1,4 +1,4 @@
-import { formatPercentage } from '@linode/utilities';
+import { formatPercentage } from '@akamai/compute-ui-core/api';
 import { screen } from '@testing-library/react';
 import * as React from 'react';
 

@@ -1,3 +1,4 @@
+import { convertMegabytesTo } from '@akamai/compute-ui-core/api';
 import {
   useAllNodeBalancerConfigsQuery,
   useNodeBalancerQuery,
@@ -8,7 +9,6 @@ import {
   useVPCQuery,
 } from '@linode/queries';
 import { Paper, Typography } from '@linode/ui';
-import { convertMegabytesTo } from '@linode/utilities';
 import { styled } from '@mui/material/styles';
 import { useParams } from '@tanstack/react-router';
 import * as React from 'react';

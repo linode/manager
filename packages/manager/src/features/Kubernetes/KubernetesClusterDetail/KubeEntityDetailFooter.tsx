@@ -1,3 +1,4 @@
+import { getAPIErrorOrDefault } from '@akamai/compute-ui-core/api';
 import { formatDate } from '@akamai/compute-ui-core/datetime';
 import { pluralize } from '@akamai/compute-ui-core/formatting';
 import { useProfile, useVPCQuery } from '@linode/queries';
@@ -17,7 +18,6 @@ import {
   sxListItemFirstChild,
 } from 'src/features/Linodes/LinodeEntityDetail.styles';
 import { useKubernetesClusterMutation } from 'src/queries/kubernetes';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { useIsLkeEnterpriseEnabled } from '../kubeUtils';
 

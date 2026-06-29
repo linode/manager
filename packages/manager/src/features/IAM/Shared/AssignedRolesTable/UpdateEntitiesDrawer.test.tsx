@@ -2,9 +2,12 @@ import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
-import { accountEntityFactory } from 'src/factories/accountEntities';
-import { renderWithTheme } from 'src/utilities/testHelpers';
-
+import { createAccountEntity } from '../../factories';
+import { submitCdsDrawerForm } from '../../utilities/testHelpers';
+import {
+  mockMatchMedia,
+  renderWithProviders,
+} from '../../utilities/testHelpers';
 import { UpdateEntitiesDrawer } from './UpdateEntitiesDrawer';
 
 import type { ExtendedRoleView } from '../types';
@@ -34,12 +37,12 @@ vi.mock('@tanstack/react-router', async () => {
 });
 
 const mockEntities = [
-  accountEntityFactory.build({
+  createAccountEntity({
     id: 1,
     label: 'Linode 1',
     type: 'linode',
   }),
-  accountEntityFactory.build({
+  createAccountEntity({
     id: 2,
     label: 'Linode 2',
     type: 'linode',
@@ -82,6 +85,8 @@ vi.mock('@linode/api-v4', async () => {
   };
 });
 
+beforeAll(() => mockMatchMedia());
+
 describe('UpdateEntitiesDrawer', () => {
   beforeEach(() => {
     queryMocks.useParams.mockReturnValue({
@@ -90,10 +95,10 @@ describe('UpdateEntitiesDrawer', () => {
   });
 
   it('should render correctly', async () => {
-    renderWithTheme(<UpdateEntitiesDrawer {...props} />);
+    renderWithProviders(<UpdateEntitiesDrawer {...props} />);
 
     // Verify the title renders
-    expect(screen.getByText('Update List of Entities')).toBeVisible();
+    expect(screen.getByText('Update Entities')).toBeVisible();
 
     // Verify the description renders
     expect(
@@ -109,7 +114,7 @@ describe('UpdateEntitiesDrawer', () => {
       data: mockEntities,
       isLoading: false,
     });
-    renderWithTheme(<UpdateEntitiesDrawer {...props} />);
+    renderWithProviders(<UpdateEntitiesDrawer {...props} />);
 
     // Verify the prefilled entities
     expect(screen.getByText('Linode 1')).toBeVisible();
@@ -132,7 +137,7 @@ describe('UpdateEntitiesDrawer', () => {
       },
     });
 
-    renderWithTheme(<UpdateEntitiesDrawer {...props} />);
+    renderWithProviders(<UpdateEntitiesDrawer {...props} />);
 
     // Linode 1 is initially selected (from role.entity_ids)
     expect(screen.getByText('Linode 1')).toBeVisible();
@@ -145,8 +150,7 @@ describe('UpdateEntitiesDrawer', () => {
     });
 
     // Submit the form
-    const submitButton = screen.getByTestId('submit');
-    await userEvent.click(submitButton);
+    submitCdsDrawerForm();
 
     // Verify the mutation was called with the updated entities
     await waitFor(() => {
@@ -169,7 +173,7 @@ describe('UpdateEntitiesDrawer', () => {
   });
 
   it('should close the drawer when cancel is clicked', async () => {
-    renderWithTheme(<UpdateEntitiesDrawer {...props} />);
+    renderWithProviders(<UpdateEntitiesDrawer {...props} />);
 
     // Click the cancel button
     const cancelButton = screen.getByTestId('cancel');

@@ -5,6 +5,11 @@ import type { IPAddress, IPRange } from '../networking/types';
 import type { LinodePlacementGroupPayload } from '../placement-groups/types';
 import type { Region, RegionSite } from '../regions';
 import type {
+  LinodeType,
+  NetStats,
+  StatsData,
+} from '@akamai/compute-ui-core/api';
+import type {
   CreateLinodeInterfaceSchema,
   ModifyLinodeInterfaceSchema,
   RebuildLinodeSchema,
@@ -503,22 +508,7 @@ export interface Kernel {
   version: string;
 }
 
-export interface NetStats {
-  in: [number, number][];
-  out: [number, number][];
-  private_in: [number, number][];
-  private_out: [number, number][];
-}
-
-export interface StatsData {
-  cpu: [number, number][];
-  io: {
-    io: [number, number][];
-    swap: [number, number][];
-  };
-  netv4: NetStats;
-  netv6: NetStats;
-}
+export type { NetStats, StatsData };
 
 export interface Stats {
   data: StatsData;
@@ -574,30 +564,10 @@ export interface BaseType {
   memory: number;
   vcpus: number;
 }
-export interface LinodeType extends BaseType {
-  accelerated_devices: number;
-  addons: {
-    backups: { price: PriceObject; region_prices: RegionPriceObject[] };
-  };
-  class: LinodeTypeClass;
-  gpus: number;
-  network_out: number;
-  price: PriceObject;
-  region_prices: RegionPriceObject[];
-  successor: null | string;
-  transfer: number;
-}
 
-export type LinodeTypeClass =
-  | 'accelerated'
-  | 'dedicated'
-  | 'gpu'
-  | 'highmem'
-  | 'metal'
-  | 'nanode'
-  | 'premium'
-  | 'prodedicated'
-  | 'standard';
+export type { LinodeType };
+
+export type LinodeTypeClass = LinodeType['class'];
 
 export interface IPAllocationRequest {
   public: boolean;

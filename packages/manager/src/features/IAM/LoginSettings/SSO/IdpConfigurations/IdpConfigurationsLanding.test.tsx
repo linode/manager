@@ -5,14 +5,51 @@ import {
   ERROR_STATE_TEXT,
   ERROR_STATE_TITLE,
 } from 'src/features/IAM/Shared/constants';
-import { getCdsButtonByText } from 'src/features/IAM/utilities/testHelpers';
-import { renderWithTheme } from 'src/utilities/testHelpers';
 
+import { getCdsButtonByText } from '../../../utilities/testHelpers';
+import {
+  mockMatchMedia,
+  renderWithProviders,
+} from '../../../utilities/testHelpers';
 import { IdpConfigurationsLanding } from './IdpConfigurationsLanding';
+
+const mockIdpConfig = {
+  id: 'config-id',
+  label: 'Test Config',
+  created: '2024-01-01T00:00:00.000Z',
+  created_by: 'user',
+  updated: '2024-01-01T00:00:00.000Z',
+  updated_by: 'user',
+  enabled: true,
+  enforce: false,
+  default: false,
+  excluded_users_count: 0,
+  included_users_count: 0,
+  saml: {
+    entity_id: 'test-entity-id',
+    identity_element: 'name_id',
+    idp_url: 'https://idp.example.com',
+    public_certificates: [
+      {
+        id: 'cert-id',
+        certificate: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ123456',
+        created: '2024-01-01T00:00:00.000Z',
+        created_by: 'user',
+        not_after: new Date(
+          Date.now() + 200 * 24 * 60 * 60 * 1000
+        ).toISOString(),
+        not_before: new Date(
+          Date.now() - 365 * 24 * 60 * 60 * 1000
+        ).toISOString(),
+      },
+    ],
+  },
+};
 
 const queryMocks = vi.hoisted(() => ({
   useGetIdpConfigsQuery: vi.fn().mockReturnValue({}),
   usePermissions: vi.fn().mockReturnValue({}),
+  useProfile: vi.fn().mockReturnValue({ data: { timezone: 'UTC' } }),
 }));
 
 vi.mock('@linode/queries', async () => {
@@ -20,6 +57,7 @@ vi.mock('@linode/queries', async () => {
   return {
     ...actual,
     useGetIdpConfigsQuery: queryMocks.useGetIdpConfigsQuery,
+    useProfile: queryMocks.useProfile,
   };
 });
 
@@ -33,8 +71,10 @@ vi.mock('src/features/IAM/hooks/usePermissions', async () => {
 
 describe('IdpConfigurationsLanding', () => {
   beforeEach(() => {
+    vi.clearAllMocks();
+    mockMatchMedia();
     queryMocks.usePermissions.mockReturnValue({
-      data: { is_account_admin: true },
+      data: { create_idp_config: true },
       error: null,
     });
     queryMocks.useGetIdpConfigsQuery.mockReturnValue({
@@ -42,6 +82,7 @@ describe('IdpConfigurationsLanding', () => {
       error: null,
       isLoading: false,
     });
+    queryMocks.useProfile.mockReturnValue({ data: { timezone: 'UTC' } });
   });
 
   it('renders an error state when the IDP configurations request fails', () => {
@@ -52,7 +93,7 @@ describe('IdpConfigurationsLanding', () => {
       status: 'error',
     });
 
-    renderWithTheme(<IdpConfigurationsLanding />);
+    renderWithProviders(<IdpConfigurationsLanding />);
 
     expect(screen.getByText(ERROR_STATE_TITLE)).toBeVisible();
     expect(screen.getByText(ERROR_STATE_TEXT)).toBeVisible();
@@ -66,27 +107,32 @@ describe('IdpConfigurationsLanding', () => {
       status: 'error',
     });
 
-    renderWithTheme(<IdpConfigurationsLanding />);
+    renderWithProviders(<IdpConfigurationsLanding />);
 
     expect(screen.getByText(ERROR_STATE_TITLE)).toBeVisible();
     expect(screen.getByText(ERROR_STATE_TEXT)).toBeVisible();
   });
 
-  it('renders IDP configurations when a configuration exists', () => {
+  it('renders IDP configurations when a configuration exists', async () => {
     queryMocks.useGetIdpConfigsQuery.mockReturnValue({
-      data: { results: 1 },
+      data: {
+        results: 1,
+        data: [mockIdpConfig],
+      },
       error: null,
       isLoading: false,
     });
 
-    renderWithTheme(<IdpConfigurationsLanding />);
+    const { container } = renderWithProviders(<IdpConfigurationsLanding />);
 
-    expect(screen.getByText('IDP Configurations')).toBeVisible();
+    expect(
+      await getCdsButtonByText(container, 'Edit IDP Configuration')
+    ).toBeVisible();
     expect(screen.queryByText('No data to display')).not.toBeInTheDocument();
   });
 
   it('renders the empty state with an enabled create button for account admins', async () => {
-    const { container } = renderWithTheme(<IdpConfigurationsLanding />);
+    const { container } = renderWithProviders(<IdpConfigurationsLanding />);
 
     const createButton = await getCdsButtonByText(
       container,
@@ -103,11 +149,11 @@ describe('IdpConfigurationsLanding', () => {
 
   it('disables the create button when the user is not an account admin', async () => {
     queryMocks.usePermissions.mockReturnValue({
-      data: { is_account_admin: false },
+      data: { create_idp_config: false },
       error: null,
     });
 
-    const { container } = renderWithTheme(<IdpConfigurationsLanding />);
+    const { container } = renderWithProviders(<IdpConfigurationsLanding />);
 
     const createButton = await getCdsButtonByText(
       container,

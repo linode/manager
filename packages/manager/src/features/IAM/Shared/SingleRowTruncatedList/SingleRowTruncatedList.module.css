@@ -1,0 +1,92 @@
+.container {
+  align-items: center;
+  display: flex;
+  min-width: 0;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+}
+
+.phantom {
+  left: 0;
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  visibility: hidden;
+}
+
+.ellipsisMeasure {
+  line-height: 20px;
+  position: relative;
+  top: 2px;
+  white-space: nowrap;
+}
+
+.itemStrip {
+  align-items: center;
+  display: flex;
+  flex: 0 1 auto;
+  flex-wrap: nowrap;
+  max-width: 100%;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.item {
+  flex-shrink: 0;
+}
+
+.ellipsis {
+  flex-shrink: 0;
+  line-height: 20px;
+  position: relative;
+  top: 2px;
+}
+
+.overflowPill {
+  align-items: center;
+  display: flex;
+  flex: 1 1 0;
+  flex-shrink: 0;
+  justify-content: flex-end;
+  min-width: max-content;
+}
+
+.overflowPillBadge,
+.entityChipBadge {
+  align-items: center;
+  background-color: var(
+    --token-component-badge-informative-subtle-background,
+    light-dark(lch(36.671 58.169 285.69 / 0.12), lch(77.722 28.674 275.08 / 0.12))
+  );
+  border-radius: var(--token-global-border-radius-s4, 4px);
+  display: inline-flex;
+  height: 22px;
+  padding: 0 var(--token-global-spacing-s8, 8px);
+  font-size: var(--token-global-font-font-size-xxxs, 0.75rem);
+}
+
+.overflowPillButton {
+  color: var(
+    --token-alias-content-text-primary-default,
+    light-dark(#343438, #ffffff)
+  );
+  font-family: var(--token-global-font-font-family-brand, 'Nunito Sans');
+  font-size: var(--token-global-font-font-size-xxs, 0.75rem);
+  font-weight: var(--token-global-font-font-weight-regular, 400);
+  line-height: var(--token-global-font-line-height-xxxs, 1rem);
+  padding: 0;
+}
+
+.entityChip {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.entityChipRemoveButton {
+  margin-left: 4px;
+  position: relative;
+  top: 2px;
+  left: 2px;
+}

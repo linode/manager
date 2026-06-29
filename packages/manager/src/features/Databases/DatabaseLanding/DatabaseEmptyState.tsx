@@ -24,9 +24,7 @@ export const DatabaseEmptyState = () => {
   });
 
   if (isDatabasesV2Enabled || isDatabasesV2GA) {
-    headers.logo = (
-      <DatabaseLogo sx={{ marginBottom: '20px', marginTop: '-10px' }} />
-    );
+    headers.logo = <DatabaseLogo />;
   } // TODO (UIE-8634): Determine if condition is still necessary
 
   return (

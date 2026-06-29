@@ -4,6 +4,7 @@ import {
   createObjectStorageKeys,
   deleteBucket,
   deleteSSLCert,
+  getBucket,
   getBucketAccess,
   getObjectACL,
   getObjectList,
@@ -22,7 +23,6 @@ import {
   queryPresets,
   updateAccountSettingsData,
   useAccount,
-  useRegionsQuery,
 } from '@linode/queries';
 import { isFeatureEnabledV2 } from '@linode/utilities';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
@@ -31,8 +31,10 @@ import {
   queryOptions,
   useInfiniteQuery,
   useMutation,
+  useQueries,
   useQuery,
   useQueryClient,
+  type UseQueryResult,
 } from '@tanstack/react-query';
 
 import { OBJECT_STORAGE_DELIMITER as delimiter } from 'src/constants';
@@ -44,14 +46,13 @@ import {
 } from 'src/utilities/analytics/customEventAnalytics';
 
 import {
-  getAllBucketsFromEndpoints,
-  getAllBucketsFromRegions,
+  getAllBucketsInRegion,
   getAllObjectStorageEndpoints,
   getAllObjectStorageTypes,
 } from './requests';
 import { prefixToQueryKey } from './utilities';
 
-import type { BucketsResponse, BucketsResponseType } from './requests';
+import type { PriceType } from '@akamai/compute-ui-core/api';
 import type {
   ACLType,
   APIError,
@@ -68,7 +69,6 @@ import type {
   ObjectStorageObjectList,
   ObjectStorageObjectURL,
   Params,
-  PriceType,
   ResourcePage,
   UpdateObjectStorageBucketAccessPayload,
   UpdateObjectStorageKeyPayload,
@@ -110,12 +110,13 @@ export const objectStorageQueries = createQueryKeys('object-storage', {
         queryKey: null,
       },
     },
+    queryFn: () => getBucket(regionId, bucketName),
     queryKey: [regionId, bucketName],
   }),
-  buckets: {
-    queryFn: () => null, // This is a placeholder queryFn. Look at `useObjectStorageBuckets` for the actual logic.
-    queryKey: null,
-  },
+  allBucketsInRegion: (regionId: string) => ({
+    queryFn: () => getAllBucketsInRegion(regionId),
+    queryKey: [regionId],
+  }),
   endpoints: {
     queryFn: getAllObjectStorageEndpoints,
     queryKey: null,
@@ -230,7 +231,7 @@ export const useDeleteAccessKeyMutation = () => {
   });
 };
 
-export const useObjectStorageEndpoints = (enabled = true) => {
+export const useObjectStorageEndpointsQuery = (enabled = true) => {
   const flags = useFlags();
   const { data: account } = useAccount();
 
@@ -247,82 +248,58 @@ export const useObjectStorageEndpoints = (enabled = true) => {
   });
 };
 
-export const useObjectStorageBuckets = (enabled: boolean = true) => {
-  const flags = useFlags();
-  const { data: account, isLoading: accountIsLoading } = useAccount(enabled);
-
-  // TODO: always use regions query once dynamic Object Storage capability resolution is enabled
-  const isObjectStorageGen2Enabled =
-    account === undefined
-      ? undefined
-      : isFeatureEnabledV2(
-          'Object Storage Endpoint Types',
-          Boolean(flags.objectStorageGen2?.enabled),
-          account.capabilities ?? []
-        );
-  const endpointsQueryEnabled = enabled && isObjectStorageGen2Enabled === true;
-  const regionsQueryEnabled = enabled && isObjectStorageGen2Enabled === false;
-
-  const { data: allRegions, isLoading: regionsAreLoading } =
-    useRegionsQuery(regionsQueryEnabled);
-  const objRegions = allRegions?.filter((r) =>
-    r.capabilities.includes('Object Storage')
-  );
-
-  // Endpoints contain all the regions that support Object Storage.
-  const { data: endpoints, isLoading: endpointsAreLoading } =
-    useObjectStorageEndpoints(endpointsQueryEnabled);
-
-  const bucketsQueryEnabled =
-    (endpointsQueryEnabled && Boolean(endpoints)) ||
-    (regionsQueryEnabled && Boolean(objRegions));
-  const queryFn = endpointsQueryEnabled
-    ? () => getAllBucketsFromEndpoints(endpoints)
-    : () => getAllBucketsFromRegions(objRegions);
-
-  const dependencyIsLoading =
-    accountIsLoading || regionsAreLoading || endpointsAreLoading;
-
-  const bucketsQuery = useQuery<
-    BucketsResponseType<typeof isObjectStorageGen2Enabled>
-  >({
-    enabled: bucketsQueryEnabled,
-    queryFn,
-    queryKey: objectStorageQueries.buckets.queryKey,
-    retry: false,
+/**
+ * The array returned from `useQueries` will have the same length and order
+ * as the provided `regionIds`. In other words, `queries[idx]` corresponds
+ * to `regionIds[idx]`. Each region id produces one result object, even when
+ * the query is disabled.
+ */
+export const useBucketsByRegionQueries = (
+  regionIds: string[],
+  enabled: boolean = true,
+  opts: { retryOnMount?: boolean } = {}
+): UseQueryResult<ObjectStorageBucket[], APIError[]>[] => {
+  const retryOnMount = opts.retryOnMount ?? true;
+  return useQueries({
+    queries: regionIds.map((regionId) => ({
+      ...objectStorageQueries.allBucketsInRegion(regionId),
+      enabled: enabled && Boolean(regionId),
+      retryOnMount,
+    })),
   });
-  return {
-    ...bucketsQuery,
-    isLoading: bucketsQuery.isLoading || dependencyIsLoading,
-  };
 };
 
-// TODO: Optimize to use tanstack cache
-export const useObjectStorageBucket = (
-  region: string | undefined,
-  bucketName: string | undefined
-) => {
+export const useObjectStorageBucket = ({
+  bucketName,
+  enabled = true,
+  regionId,
+}: {
+  bucketName: string;
+  enabled: boolean;
+  regionId: string;
+}) => {
   const queryClient = useQueryClient();
 
-  if (!region || !bucketName) {
-    return {};
-  }
+  return useQuery<ObjectStorageBucket, APIError[]>({
+    ...objectStorageQueries.bucket(regionId, bucketName),
+    enabled,
+    initialData() {
+      const queries = queryClient.getQueriesData({
+        queryKey: objectStorageQueries.allBucketsInRegion(regionId).queryKey,
+      });
 
-  const queries = queryClient.getQueriesData({
-    queryKey: objectStorageQueries.buckets.queryKey,
+      for (const [, data] of queries) {
+        const bucket = (data as ObjectStorageBucket[])?.find(
+          (bucket) => bucket.region === regionId && bucket.label === bucketName
+        );
+        if (bucket) {
+          return bucket;
+        }
+      }
+
+      return undefined;
+    },
   });
-
-  for (const [, data] of queries) {
-    const bucket = (data as { buckets: ObjectStorageBucket[] })?.buckets?.find(
-      (bucket) => bucket.region === region && bucket.label === bucketName
-    );
-
-    if (bucket) {
-      return { data: bucket };
-    }
-  }
-
-  return { data: undefined };
 };
 
 export const useBucketAccess = (
@@ -409,20 +386,48 @@ export const useCreateBucketMutation = () => {
         queryKey: accountQueries.settings.queryKey,
       });
 
+      // add endpoint if needed
+      queryClient.setQueryData<ObjectStorageEndpoint[]>(
+        objectStorageQueries.endpoints.queryKey,
+        (oldEndpoints) => {
+          const endpointAlreadyExists = oldEndpoints?.some(
+            (endpoint) => endpoint.s3_endpoint === bucket.s3_endpoint
+          );
+          if (
+            endpointAlreadyExists ||
+            !bucket.s3_endpoint ||
+            !bucket.endpoint_type
+          ) {
+            return oldEndpoints;
+          }
+
+          const newEndpoint: ObjectStorageEndpoint = {
+            region: bucket.region,
+            s3_endpoint: bucket.s3_endpoint,
+            endpoint_type: bucket.endpoint_type,
+          };
+
+          return [...(oldEndpoints ?? []), newEndpoint];
+        }
+      );
+
+      // Invalidate endpoints query because creating a bucket may cause new endpoints to become available.
+      queryClient.invalidateQueries({
+        queryKey: objectStorageQueries.endpoints.queryKey,
+      });
+
       // Add the new bucket to the cache
-      queryClient.setQueryData<BucketsResponse>(
-        objectStorageQueries.buckets.queryKey,
-        (oldData) => ({
-          buckets: [...(oldData?.buckets ?? []), bucket],
-          errors: oldData?.errors ?? [],
-        })
+      queryClient.setQueryData<ObjectStorageBucket[]>(
+        objectStorageQueries.allBucketsInRegion(bucket.region).queryKey,
+        (oldData) => [...(oldData ?? []), bucket]
       );
 
       // Invalidate buckets and cancel existing requests to GET buckets
-      // because a user might create a bucket bfore all buckets have been fetched.
+      // because a user might create a bucket before all buckets have been fetched.
       queryClient.invalidateQueries(
         {
-          queryKey: objectStorageQueries.buckets.queryKey,
+          queryKey: objectStorageQueries.allBucketsInRegion(bucket.region)
+            .queryKey,
         },
         {
           cancelRefetch: true,
@@ -437,19 +442,16 @@ export const useDeleteBucketMutation = () => {
   return useMutation<{}, APIError[], { bucketName: string; regionId: string }>({
     mutationFn: deleteBucket,
     onSuccess: (_, variables) => {
-      queryClient.setQueryData<BucketsResponse>(
-        objectStorageQueries.buckets.queryKey,
-        (oldData) => ({
-          buckets:
-            oldData?.buckets.filter(
-              (bucket: ObjectStorageBucket) =>
-                !(
-                  bucket.region === variables.regionId &&
-                  bucket.label === variables.bucketName
-                )
-            ) ?? [],
-          errors: oldData?.errors ?? [],
-        })
+      queryClient.setQueryData<ObjectStorageBucket[]>(
+        objectStorageQueries.allBucketsInRegion(variables.regionId).queryKey,
+        (oldData) =>
+          oldData?.filter(
+            (bucket: ObjectStorageBucket) =>
+              !(
+                bucket.region === variables.regionId &&
+                bucket.label === variables.bucketName
+              )
+          ) ?? []
       );
     },
   });
@@ -553,7 +555,7 @@ export const useCancelObjectStorageMutation = () => {
     onSuccess() {
       updateAccountSettingsData({ object_storage: 'disabled' }, queryClient);
       queryClient.invalidateQueries({
-        queryKey: objectStorageQueries.buckets.queryKey,
+        queryKey: objectStorageQueries.allBucketsInRegion._def,
       });
       queryClient.invalidateQueries({
         queryKey: objectStorageQueries.accessKeys._def,

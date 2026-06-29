@@ -1,6 +1,4 @@
-import { accountRolesFactory } from 'src/factories/accountRoles';
-import { userRolesFactory } from 'src/factories/userRoles';
-
+import { createUserRoles } from '../../factories';
 import {
   addEntitiesNamesToRoles,
   combineRoles,
@@ -9,9 +7,13 @@ import {
 
 import type { ExtendedRoleView } from '../types';
 import type { CombinedRoles } from './utils';
-import type { AccountEntity, EntityType } from '@linode/api-v4';
+import type {
+  AccountEntity,
+  EntityType,
+  IamAccountRoles,
+} from '@linode/api-v4';
 
-const userPermissions = userRolesFactory.build({
+const userPermissions = createUserRoles({
   account_access: ['account_linode_admin', 'account_linode_creator'],
   entity_access: [
     {
@@ -25,7 +27,34 @@ const userPermissions = userRolesFactory.build({
 const accountAccess = 'account_access';
 const entityAccess = 'entity_access';
 
-const accountPermissions = accountRolesFactory.build();
+// Minimal inline fixture — only the roles this file's tests actually inspect.
+const accountPermissions: IamAccountRoles = {
+  account_access: [
+    {
+      type: 'firewall',
+      roles: [
+        {
+          name: 'account_firewall_creator',
+          description: 'Allows the user to create firewalls in the account.',
+          permissions: ['create_firewall'],
+        },
+      ],
+    },
+  ],
+  entity_access: [
+    {
+      type: 'image',
+      roles: [
+        {
+          name: 'image_viewer',
+          description:
+            'Allows the user to view Volume instances attached to this role.',
+          permissions: [],
+        },
+      ],
+    },
+  ],
+};
 describe('combineRoles', () => {
   it('should return an object of users roles', () => {
     const expectedRoles = [

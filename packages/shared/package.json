@@ -1,6 +1,6 @@
 {
   "name": "@linode/shared",
-  "version": "0.12.0",
+  "version": "0.13.0",
   "description": "Linode shared feature component library",
   "main": "src/index.ts",
   "module": "src/index.ts",
@@ -39,8 +39,8 @@
   },
   "devDependencies": {
     "@linode/tsconfig": "workspace:*",
-    "@storybook/react-vite": "^10.3.3",
-    "storybook": "^10.3.3",
+    "@storybook/react-vite": "^10.4.6",
+    "storybook": "^10.4.6",
     "@testing-library/dom": "^10.1.0",
     "@testing-library/jest-dom": "~6.9.1",
     "@testing-library/react": "~16.0.0",

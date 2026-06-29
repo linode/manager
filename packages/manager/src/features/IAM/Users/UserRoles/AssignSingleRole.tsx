@@ -1,13 +1,12 @@
 import { Button, Icon, Select, Tooltip } from '@akamai/cds-components/react';
 import { Spacing } from '@akamai/cds-tokens';
-import { useTheme } from '@mui/material';
-import Box from '@mui/material/Box';
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import { AssignedPermissionsPanel } from 'src/features/IAM/Shared/AssignedPermissionsPanel/AssignedPermissionsPanel';
 import { getRoleByName } from 'src/features/IAM/Shared/utilities';
 
+import { Box } from '../../Shared/Box/Box';
 import { Divider } from '../../Shared/Divider/Divider';
 
 import type { IamAccountRoles } from '@linode/api-v4';
@@ -31,21 +30,16 @@ export const AssignSingleRole = ({
   permissions,
   hideDetails,
 }: Props) => {
-  const theme = useTheme();
-
   const { control, watch, setValue } =
     useFormContext<AssignNewRoleFormValues>();
   const role = watch(`roles.${index}.role`);
   const roles = watch('roles');
 
   return (
-    <Box display="flex">
-      <Box display="flex" flexDirection="column" sx={{ flex: '5 1 auto' }}>
+    <Box direction="row" wrap="nowrap">
+      <Box style={{ flex: '5 1 auto' }}>
         {index !== 0 && (
-          <Divider
-            spacingBottom={theme.tokens.spacing.S24}
-            spacingTop={theme.tokens.spacing.S20}
-          />
+          <Divider spacingBottom={Spacing.S24} spacingTop={Spacing.S20} />
         )}
 
         <Controller
@@ -113,13 +107,10 @@ export const AssignSingleRole = ({
         )}
       </Box>
       <Box
-        sx={{
+        style={{
           flex: '0 1 auto',
-          marginTop:
-            index === 0
-              ? `-${theme.tokens.spacing.S2}`
-              : theme.tokens.spacing.S40,
-          paddingTop: index === 0 ? undefined : theme.tokens.spacing.S4,
+          marginTop: index === 0 ? `-${Spacing.S2}` : Spacing.S40,
+          paddingTop: index === 0 ? undefined : Spacing.S4,
           verticalAlign: 'top',
         }}
       >

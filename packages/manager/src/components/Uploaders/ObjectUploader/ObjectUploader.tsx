@@ -1,6 +1,6 @@
+import { readableBytes } from '@akamai/compute-ui-core/api';
 import { getObjectURL } from '@linode/api-v4/lib/object-storage';
 import { Button } from '@linode/ui';
-import { readableBytes } from '@linode/utilities';
 import { useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';

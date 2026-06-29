@@ -1,10 +1,10 @@
+import { getAPIErrorOrDefault } from '@akamai/compute-ui-core/api';
 import { useNodebalancerUpdateMutation } from '@linode/queries';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 
 import { TagCell } from 'src/components/TagCell/TagCell';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import type { NodeBalancer } from '@linode/api-v4';
 

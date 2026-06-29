@@ -1,3 +1,4 @@
+import { getAPIErrorOrDefault } from '@akamai/compute-ui-core/api';
 import { streamStatus } from '@linode/api-v4';
 import { useStreamsQuery, useUpdateStreamMutation } from '@linode/queries';
 import { CircleProgress, ErrorState, Hidden, Paper } from '@linode/ui';
@@ -23,7 +24,6 @@ import { StreamsLandingEmptyState } from 'src/features/Delivery/Streams/StreamsL
 import { StreamTableRow } from 'src/features/Delivery/Streams/StreamTableRow';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import type { StreamHandlers } from './StreamActionMenu';
 import type { Stream } from '@linode/api-v4';

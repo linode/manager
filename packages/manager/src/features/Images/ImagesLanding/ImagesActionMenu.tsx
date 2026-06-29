@@ -5,6 +5,7 @@ import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 
 import type { SHARED_WITH_ME_IMAGES_TAB_PENDO_IDS } from '../constants';
+import type { JOINED_GROUP_DETAILS_PENDO_IDS } from './v2/constants';
 import type { Event, Image } from '@linode/api-v4';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
@@ -16,6 +17,7 @@ export interface Handlers {
   onManageRegions?: (image: Image) => void;
   onRebuild?: (image: Image) => void;
   onView?: (image: Image) => void;
+  onViewShareGroups?: (image: Image) => void;
 }
 
 interface Props {
@@ -23,18 +25,30 @@ interface Props {
   handlers: Handlers;
   image: Image;
   isSharedImageRow?: boolean;
-  pendoIDs?: typeof SHARED_WITH_ME_IMAGES_TAB_PENDO_IDS;
+  pendoIDs?:
+    | typeof JOINED_GROUP_DETAILS_PENDO_IDS
+    | typeof SHARED_WITH_ME_IMAGES_TAB_PENDO_IDS;
 }
 
 export const ImagesActionMenu = (props: Props) => {
   const { handlers, image, isSharedImageRow, pendoIDs } = props;
 
-  const { id, status } = image;
+  const { id, status, image_sharing } = image;
+
+  const shareGroupCount = image_sharing?.shared_with?.sharegroup_count ?? 0;
+  const isSharedImage = shareGroupCount > 0;
 
   const [isOpen, setIsOpen] = React.useState<boolean>(false);
 
-  const { onDelete, onDeploy, onEdit, onManageRegions, onRebuild, onView } =
-    handlers;
+  const {
+    onDelete,
+    onDeploy,
+    onEdit,
+    onManageRegions,
+    onRebuild,
+    onView,
+    onViewShareGroups,
+  } = handlers;
 
   const { data: imagePermissions, isLoading: isImagePermissionsLoading } =
     usePermissions(
@@ -106,6 +120,14 @@ export const ImagesActionMenu = (props: Props) => {
             ? 'Image is not yet available for use.'
             : undefined,
       },
+      ...(isSharedImage
+        ? [
+            {
+              onClick: () => onViewShareGroups?.(image),
+              title: `View Image Share Groups`,
+            },
+          ]
+        : []),
       ...(onManageRegions && image.regions && image.regions.length > 0
         ? [
             {
@@ -125,7 +147,7 @@ export const ImagesActionMenu = (props: Props) => {
       { ...deployAction },
       { ...rebuildAction },
       {
-        disabled: !imagePermissions.delete_image,
+        disabled: !imagePermissions.delete_image || isSharedImage,
         onClick: () => onDelete?.(image),
         title: isAvailable ? 'Delete' : 'Cancel',
         tooltip: !imagePermissions.delete_image
@@ -134,7 +156,9 @@ export const ImagesActionMenu = (props: Props) => {
               isSingular: true,
               resourceType: 'Images',
             })
-          : undefined,
+          : isSharedImage
+            ? 'Before deleting an image, remove it from all share groups first.'
+            : undefined,
       },
     ];
   }, [
@@ -143,6 +167,8 @@ export const ImagesActionMenu = (props: Props) => {
     onEdit,
     image,
     onManageRegions,
+    onView,
+    onViewShareGroups,
     onDeploy,
     onRebuild,
     onDelete,
@@ -150,6 +176,7 @@ export const ImagesActionMenu = (props: Props) => {
     linodeAccountPermissions,
     pendoIDs,
     isSharedImageRow,
+    isSharedImage,
   ]);
 
   return (

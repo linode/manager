@@ -28,11 +28,11 @@ import {
   nodeBalancerFactory,
   pickRandom,
   premiumTypeFactory,
-  proDedicatedTypeFactory,
   profileFactory,
   regionAvailabilityFactory,
   regions,
   securityQuestionsFactory,
+  sharegroupFactory,
   sharegroupTokenFactory,
 } from '@linode/utilities';
 import { DateTime } from 'luxon';
@@ -54,7 +54,6 @@ import {
   credentialFactory,
   creditPaymentResponseFactory,
   dashboardFactory,
-  databaseBackupFactory,
   databaseConnectionPoolFactory,
   databaseEngineFactory,
   databaseFactory,
@@ -134,6 +133,7 @@ import {
   supportReplyFactory,
   supportTicketFactory,
   tagFactory,
+  valkeyConfigResponse,
   VLANFactory,
   volumeFactory,
   volumeTypeFactory,
@@ -222,6 +222,15 @@ const makeMockDatabase = (params: PathParams): Database => {
 
   const database = databaseFactory.build(db);
 
+  if (database.engine === 'valkey') {
+    database.oldest_restore_time = null;
+    database.available_restore_times = [
+      '2025-12-28T20:34:59',
+      '2025-12-29T08:35:29',
+      '2025-12-30T15:35:29',
+    ];
+  }
+
   // Mock a database cluster with a public VPC Configuration
   database.private_network = {
     public_access: true,
@@ -232,8 +241,8 @@ const makeMockDatabase = (params: PathParams): Database => {
   if (database.private_network) {
     // When a database is configured with a VPC, the primary and standby hostnames are prepended with 'private-' in the backend
     database.hosts = {
-      primary: 'private-db-mysql-primary-0.b.linodeb.net',
-      standby: 'private-db-mysql-standby-0.b.linodeb.net',
+      primary: 'private-db-primary-0.b.linodeb.net',
+      standby: 'private-db-standby-0.b.linodeb.net',
       /**
        * The contents of the hosts.endpoints vary based off whether the VPC has public access or not.
        * If private_network public_access is true, the endpoints should return both public and private addresses.
@@ -242,37 +251,37 @@ const makeMockDatabase = (params: PathParams): Database => {
       endpoints: [
         {
           role: 'primary',
-          address: 'public-db-mysql-primary-0.b.linodeb.net',
+          address: 'public-db-primary-0.b.linodeb.net',
           port: 3306,
           public_access: true,
         },
         {
           role: 'primary',
-          address: 'private-db-mysql-primary-0.b.linodeb.net',
+          address: 'private-db-primary-0.b.linodeb.net',
           port: 3306,
           public_access: false,
         },
         {
           role: 'standby',
-          address: 'public-replica-db-mysql-standby-0.b.linodeb.net',
+          address: 'public-replica-db-standby-0.b.linodeb.net',
           port: 3306,
           public_access: true,
         },
         {
           role: 'standby',
-          address: 'private-replica-db-mysql-standby-0.b.linodeb.net',
+          address: 'private-replica-db-standby-0.b.linodeb.net',
           port: 3306,
           public_access: false,
         },
         {
           role: 'primary-connection-pool',
-          address: 'public-db-mysql-primary-0.b.linodeb.net',
+          address: 'public-db-primary-0.b.linodeb.net',
           port: 15848,
           public_access: true,
         },
         {
           role: 'primary-connection-pool',
-          address: 'private-db-mysql-primary-0.b.linodeb.net',
+          address: 'private-db-primary-0.b.linodeb.net',
           port: 15848,
           public_access: false,
         },
@@ -283,17 +292,17 @@ const makeMockDatabase = (params: PathParams): Database => {
   // Uncomment the lines below to mock a database cluster without a VPC configuration
   // database.private_network = null;
   // database.hosts = {
-  //   primary: 'db-mysql-primary-0.b.linodeb.net',
+  //   primary: 'db-primary-0.b.linodeb.net',
   //   endpoints: [
   //     {
   //       role: 'primary',
-  //       address: 'db-mysql-primary-0.b.linodeb.net',
+  //       address: 'db-primary-0.b.linodeb.net',
   //       port: 3306,
   //       public_access: true,
   //     },
   //     {
   //       role: 'primary-connection-pool',
-  //       address: 'public-db-mysql-primary-0.b.linodeb.net',
+  //       address: 'public-db-primary-0.b.linodeb.net',
   //       port: 15848,
   //       public_access: true,
   //     },
@@ -488,18 +497,13 @@ const databases = [
   ),
 
   http.get('*/databases/:engine/instances/:id', ({ params }) => {
-    const database = makeMockDatabase(params);
+    const database = makeMockDatabase({ ...params });
     return HttpResponse.json(database);
   }),
 
   http.put('*/databases/:engine/instances/:id', ({ params }) => {
-    const database = makeMockDatabase(params);
+    const database = makeMockDatabase({ ...params });
     return HttpResponse.json(database);
-  }),
-
-  http.get('*/databases/:engine/instances/:databaseId/backups', () => {
-    const backups = databaseBackupFactory.buildList(10);
-    return HttpResponse.json(makeResourcePage(backups));
   }),
 
   http.get('*/databases/:engine/instances/:databaseId/credentials', () => {
@@ -526,13 +530,6 @@ const databases = [
       }),
     });
   }),
-
-  http.post(
-    '*/databases/:engine/instances/:databaseId/backups/:backupId/restore',
-    () => {
-      return HttpResponse.json({});
-    }
-  ),
 
   http.post(
     '*/databases/:engine/instances/:databaseId/credentials/reset',
@@ -569,6 +566,9 @@ const databases = [
     }
     if (engine === 'postgresql') {
       return HttpResponse.json(postgresConfigResponse);
+    }
+    if (engine === 'valkey') {
+      return HttpResponse.json(valkeyConfigResponse);
     }
 
     return HttpResponse.json(mysqlConfigResponse);
@@ -768,7 +768,6 @@ const marketplace = [
 const nanodeType = linodeTypeFactory.build({ id: 'g6-nanode-1' });
 const standardTypes = linodeTypeFactory.buildList(7);
 const dedicatedTypes = dedicatedTypeFactory.buildList(7);
-const proDedicatedType = proDedicatedTypeFactory.build();
 const gpuTypesAda = gpuTypeAdaFactory.buildList(7);
 const gpuTypesRX = gpuTypeRtxFactory.buildList(7);
 const premiumTypes = [
@@ -818,10 +817,10 @@ const hourlyBillingSupportedTypes = [
 ];
 
 const proxyAccountUser = accountUserFactory.build({
-  email: 'partner@proxy.com',
+  email: 'delegate@delegate.com',
   last_login: null,
-  user_type: 'proxy',
-  username: 'ParentCompany_a1b2c3d4e5',
+  user_type: 'delegate',
+  username: 'delegateUsername',
 });
 const parentAccountUser = accountUserFactory.build({
   email: 'parent@acme.com',
@@ -999,6 +998,17 @@ export const handlers = [
 
     return HttpResponse.json(makeResourcePage(joinedOrRequestedGroups));
   }),
+  http.get('*/images/sharegroups/tokens/:token', () => {
+    return HttpResponse.json(sharegroupTokenFactory.build());
+  }),
+  http.get('*/images/sharegroups/tokens/:token/sharegroup', () => {
+    return HttpResponse.json(sharegroupFactory.build());
+  }),
+  http.post('*/images/sharegroups/tokens', () => {
+    const newToken = sharegroupTokenFactory.build();
+
+    return HttpResponse.json(newToken);
+  }),
   http.post<any, UpdateImageRegionsPayload>(
     '*/v4/images/:id/regions',
     async ({ request }) => {
@@ -1025,7 +1035,6 @@ export const handlers = [
         ...gpuTypesRX,
         ...premiumTypes,
         ...acceleratedType,
-        proDedicatedType,
         ...monthlyBillingSupportedTypes,
         ...hourlyBillingSupportedTypes,
       ])
@@ -1034,16 +1043,11 @@ export const handlers = [
   http.get('*/linode/types-legacy', () => {
     return HttpResponse.json(makeResourcePage(linodeTypeFactory.buildList(0)));
   }),
-  ...[
-    nanodeType,
-    ...standardTypes,
-    ...dedicatedTypes,
-    ...premiumTypes,
-    proDedicatedType,
-  ].map((type) =>
-    http.get(`*/linode/types/${type.id}`, () => {
-      return HttpResponse.json(type);
-    })
+  ...[nanodeType, ...standardTypes, ...dedicatedTypes, ...premiumTypes].map(
+    (type) =>
+      http.get(`*/linode/types/${type.id}`, () => {
+        return HttpResponse.json(type);
+      })
   ),
   http.get(`*/linode/types/*`, () => {
     return HttpResponse.json(linodeTypeFactory.build());
@@ -2458,7 +2462,7 @@ export const handlers = [
     return HttpResponse.json(childAccount);
   }),
   http.post('*/account/child-accounts/:euuid/token', () => {
-    // Proxy tokens expire in 15 minutes.
+    // Delegate tokens expire in 15 minutes.
     const now = new Date();
     const expiry = new Date(now.setMinutes(now.getMinutes() + 15));
 
@@ -3935,6 +3939,22 @@ export const handlers = [
             url: '/v4/linode/instances/4',
           }),
         ];
+      } else if (alertId === '494' && serviceType === 'logs') {
+        entitiesFactory.resetSequenceNumber();
+        entities = [
+          entitiesFactory.build({
+            id: '1',
+            label: 'delivery-1',
+            type: 'logs',
+            url: '/v4/logs/instances/1',
+          }),
+          entitiesFactory.build({
+            id: '2',
+            label: 'delivery-2',
+            type: 'logs',
+            url: '/v4/logs/instances/2',
+          }),
+        ];
       } else if (serviceType === 'linode') {
         // Default linode entities for generic alerts
         entitiesFactory.resetSequenceNumber();
@@ -4181,6 +4201,8 @@ export const handlers = [
               unit: '%',
               group_by: ['entity_id'],
               y_label: 'system_cpu_utilization_ratio',
+              description:
+                'Percentage of the available CPU capacity used by the Linode hosting the database.',
             }),
           ],
         })
@@ -4194,13 +4216,46 @@ export const handlers = [
           label: 'Linode Dashboard',
           service_type: 'linode',
           widgets: [
-            widgetFactory.build({
-              label: 'CPU utilization',
-              metric: 'system_cpu_utilization_percent',
+            {
+              metric: 'vm_cpu_time_total',
               unit: '%',
+              label: 'CPU Usage by Instance',
+              color: 'default',
+              size: 12,
+              chart_type: 'area',
+              y_label: 'vm_cpu_time_total',
               group_by: ['entity_id'],
-              y_label: 'system_cpu_utilization_ratio',
-            }),
+              aggregate_function: 'avg',
+            },
+            {
+              metric: 'vm_local_disk_iops_total',
+              unit: 'IOPS',
+              label: 'Local Disk I/O by Instance',
+              color: 'default',
+              size: 12,
+              chart_type: 'area',
+              y_label: 'vm_local_disk_iops_total',
+              group_by: ['entity_id'],
+              aggregate_function: 'avg',
+            },
+            {
+              metric: 'vm_network_bytes_total',
+              unit: 'Kbps',
+              label: 'Network Traffic In by Instance',
+              color: 'default',
+              size: 12,
+              chart_type: 'area',
+              y_label: 'vm_network_bytes_total',
+              group_by: ['entity_id'],
+              aggregate_function: 'avg',
+              filters: [
+                {
+                  dimension_label: 'pattern',
+                  operator: 'in',
+                  value: 'publicin',
+                },
+              ],
+            },
           ],
         })
       );
@@ -4212,6 +4267,30 @@ export const handlers = [
           id: 3,
           label: 'Nodebalancer Dashboard',
           service_type: 'nodebalancer',
+          widgets: [
+            {
+              metric: 'nb_ingress_traffic_rate',
+              unit: 'Bps',
+              label: 'Ingress Traffic Rate',
+              color: 'default',
+              size: 12,
+              chart_type: 'line',
+              y_label: 'nb_ingress_traffic_rate',
+              group_by: ['entity_id'],
+              aggregate_function: 'sum',
+            },
+            {
+              metric: 'nb_egress_traffic_rate',
+              unit: 'Bps',
+              label: 'Egress Traffic Rate',
+              color: 'default',
+              size: 12,
+              chart_type: 'line',
+              y_label: 'nb_egress_traffic_rate',
+              group_by: ['entity_id'],
+              aggregate_function: 'sum',
+            },
+          ],
         })
       );
     }
@@ -4239,6 +4318,39 @@ export const handlers = [
           id: 6,
           label: 'Object Storage Dashboard',
           service_type: 'objectstorage',
+          widgets: [
+            {
+              metric: 'obj_bucket_size',
+              unit: 'Bytes',
+              label: 'Content Stored',
+              color: 'default',
+              size: 6,
+              chart_type: 'line',
+              y_label: 'obj_bucket_size',
+              aggregate_function: 'sum',
+            },
+            {
+              metric: 'obj_bucket_num_objects',
+              unit: 'Count',
+              label: 'Number Of Objects',
+              color: 'default',
+              size: 6,
+              chart_type: 'line',
+              y_label: 'obj_bucket_num_objects',
+              aggregate_function: 'sum',
+            },
+            {
+              metric: 'obj_responses_num',
+              unit: 'Count',
+              label: 'Total Responses',
+              color: 'default',
+              size: 6,
+              chart_type: 'line',
+              y_label: 'obj_responses_num',
+              group_by: ['response_type'],
+              aggregate_function: 'sum',
+            },
+          ],
         })
       );
       response.data.push(
@@ -4246,6 +4358,39 @@ export const handlers = [
           id: 10,
           label: 'Endpoint Dashboard',
           service_type: 'objectstorage',
+          widgets: [
+            {
+              metric: 'obj_bucket_size',
+              unit: 'Bytes',
+              label: 'Content Stored',
+              color: 'default',
+              size: 6,
+              chart_type: 'line',
+              y_label: 'obj_bucket_size',
+              aggregate_function: 'sum',
+            },
+            {
+              metric: 'obj_bucket_num_objects',
+              unit: 'Count',
+              label: 'Number Of Objects',
+              color: 'default',
+              size: 6,
+              chart_type: 'line',
+              y_label: 'obj_bucket_num_objects',
+              aggregate_function: 'sum',
+            },
+            {
+              metric: 'obj_responses_num',
+              unit: 'Count',
+              label: 'Total Responses',
+              color: 'default',
+              size: 6,
+              chart_type: 'line',
+              y_label: 'obj_responses_num',
+              group_by: ['response_type'],
+              aggregate_function: 'sum',
+            },
+          ],
         })
       );
     }
@@ -4276,6 +4421,55 @@ export const handlers = [
           id: 5,
           service_type: 'netloadbalancer',
           label: 'Network Load Balancer',
+          widgets: [
+            {
+              metric: 'nlb_ingress_traffic',
+              unit: 'Bps',
+              label: 'Ingress Traffic Rate',
+              color: 'default',
+              size: 12,
+              chart_type: 'line',
+              y_label: 'nlb_ingress_traffic',
+              aggregate_function: 'sum',
+              description:
+                'Amount of incoming data processed by the Network Load Balancer.',
+            },
+            {
+              metric: 'nlb_ingress_packets',
+              unit: 'packets/s',
+              label: 'Ingress Packets Rate',
+              color: 'default',
+              size: 12,
+              chart_type: 'line',
+              y_label: 'nlb_ingress_packets',
+              aggregate_function: 'sum',
+              description:
+                'Rate of inbound packets received by the Network Load Balancer.',
+            },
+            {
+              metric: 'nlb_backend_ingress_traffic',
+              unit: 'Bps',
+              label: 'Ingress Traffic Rate Per backend',
+              color: 'default',
+              size: 12,
+              chart_type: 'line',
+              y_label: 'nlb_backend_ingress_traffic',
+              aggregate_function: 'sum',
+              description:
+                'Rate of incoming data processed by the Network Load Balancer per backend node.',
+            },
+            {
+              metric: 'nlb_backend_ingress_packets',
+              unit: 'packets/s',
+              label: 'Ingress Packets Rate Per backend',
+              color: 'default',
+              size: 12,
+              chart_type: 'line',
+              y_label: 'nlb_backend_ingress_packets',
+              aggregate_function: 'sum',
+              description: '',
+            },
+          ],
         })
       );
     }
@@ -4286,6 +4480,38 @@ export const handlers = [
           id: 11,
           service_type: 'logs',
           label: 'Log Delivery Status',
+          widgets: [
+            {
+              metric: 'success_upload_count',
+              unit: 'Count',
+              label: 'Success Upload',
+              color: 'default',
+              size: 6,
+              chart_type: 'area',
+              y_label: 'success_upload_count',
+              aggregate_function: 'sum',
+            },
+            {
+              metric: 'error_upload_count',
+              unit: 'Count',
+              label: 'Error Upload',
+              color: 'default',
+              size: 6,
+              chart_type: 'area',
+              y_label: 'error_upload_count',
+              aggregate_function: 'sum',
+            },
+            {
+              metric: 'error_upload_rate',
+              unit: '%',
+              label: 'Error Rate',
+              color: 'default',
+              size: 12,
+              chart_type: 'area',
+              y_label: 'error_upload_rate',
+              aggregate_function: 'avg',
+            },
+          ],
         })
       );
     }
@@ -4595,6 +4821,8 @@ export const handlers = [
           y_label: 'cpu_usage',
           group_by: ['entity_id'],
           aggregate_function: 'avg',
+          description:
+            'Percentage of the available CPU capacity used by the Linode hosting the database.',
         },
         {
           metric: 'memory_usage',
@@ -4606,6 +4834,11 @@ export const handlers = [
           y_label: 'memory_usage',
           group_by: ['entity_id'],
           aggregate_function: 'avg',
+          // intentionally add empty lines to the string to test/view the trimming behaviour.
+          description: `Number of available entries in the firewall’s connection table recorded each minute, showing how many more TCP, UDP, ICMP, and IPencap flows can be tracked.
+
+
+Number of available entries in the firewall’s connection table recorded each minute, showing how many more traffic flows can be tracked.`,
         },
       ];
     } else if (id === '3') {
@@ -4778,6 +5011,8 @@ export const handlers = [
           chart_type: 'line',
           y_label: 'nlb_ingress_traffic',
           aggregate_function: 'sum',
+          description:
+            'Amount of incoming data processed by the Network Load Balancer.',
         },
         {
           metric: 'nlb_ingress_packets',
@@ -4788,6 +5023,8 @@ export const handlers = [
           chart_type: 'line',
           y_label: 'nlb_ingress_packets',
           aggregate_function: 'sum',
+          description:
+            'Rate of inbound packets received by the Network Load Balancer.',
         },
         {
           metric: 'nlb_backend_ingress_traffic',
@@ -4798,6 +5035,8 @@ export const handlers = [
           chart_type: 'line',
           y_label: 'nlb_backend_ingress_traffic',
           aggregate_function: 'sum',
+          description:
+            'Rate of incoming data processed by the Network Load Balancer per backend node.',
         },
         {
           metric: 'nlb_backend_ingress_packets',
@@ -4808,6 +5047,7 @@ export const handlers = [
           chart_type: 'line',
           y_label: 'nlb_backend_ingress_packets',
           aggregate_function: 'sum',
+          description: '',
         },
       ];
       serviceType = 'netloadbalancer';
@@ -4962,7 +5202,137 @@ export const handlers = [
         result: [
           {
             metric: {
+              entity_id: 'ob.j-bucket-683.us-ord.linodeobjects.com',
+              metric_name: 'average_cpu_usage',
+              linode_id: '1',
+              node_id: 'primary-1',
+              node_id1: 'primary-1',
+              node_id2: 'primary-1',
+              node_id3: 'primary-1',
+            },
+            values: [
+              [1721854379, '0.2744841110560275'],
+              [1721857979, '0.2980357104166823'],
+              [1721861579, null],
+              [1721865179, null],
+              [1721868779, '0.3269247326830727'],
+              [1721872379, '0.3393055885526987'],
+              [1721875979, '0.3237102833940027'],
+              [1721879579, '0.3153372503472701'],
+              [1721883179, '0.26811506053820466'],
+              [1721886779, '0.25839295774934357'],
+              [1721890379, '0.26863082415681144'],
+              [1721893979, '0.26126998689934394'],
+              [1721897579, '0.26164641539434685'],
+            ],
+          },
+          {
+            metric: {
               entity_id: 'ob.j-bucket-583.us-ord.linodeobjects.com',
+              metric_name: 'average_cpu_usage',
+              linode_id: '1',
+              node_id: 'primary-1',
+              node_id1: 'primary-1',
+              node_id2: 'primary-1',
+              node_id3: 'primary-1',
+            },
+            values: [
+              [1721854379, '0.2744841110560275'],
+              [1721857979, '0.2980357104166823'],
+              [1721861579, null],
+              [1721865179, null],
+              [1721868779, '0.3269247326830727'],
+              [1721872379, '0.3393055885526987'],
+              [1721875979, '0.3237102833940027'],
+              [1721879579, '0.3153372503472701'],
+              [1721883179, '0.26811506053820466'],
+              [1721886779, '0.25839295774934357'],
+              [1721890379, '0.26863082415681144'],
+              [1721893979, '0.26126998689934394'],
+              [1721897579, '0.26164641539434685'],
+            ],
+          },
+          {
+            metric: {
+              entity_id: 'ob.j-bucket-783.us-ord.linodeobjects.com',
+              metric_name: 'average_cpu_usage',
+              linode_id: '1',
+              node_id: 'primary-1',
+              node_id1: 'primary-1',
+              node_id2: 'primary-1',
+              node_id3: 'primary-1',
+            },
+            values: [
+              [1721854379, '0.2744841110560275'],
+              [1721857979, '0.2980357104166823'],
+              [1721861579, null],
+              [1721865179, null],
+              [1721868779, '0.3269247326830727'],
+              [1721872379, '0.3393055885526987'],
+              [1721875979, '0.3237102833940027'],
+              [1721879579, '0.3153372503472701'],
+              [1721883179, '0.26811506053820466'],
+              [1721886779, '0.25839295774934357'],
+              [1721890379, '0.26863082415681144'],
+              [1721893979, '0.26126998689934394'],
+              [1721897579, '0.26164641539434685'],
+            ],
+          },
+          {
+            metric: {
+              entity_id: 'ob.j-bucket-883.us-ord.linodeobjects.com',
+              metric_name: 'average_cpu_usage',
+              linode_id: '1',
+              node_id: 'primary-1',
+              node_id1: 'primary-1',
+              node_id2: 'primary-1',
+              node_id3: 'primary-1',
+            },
+            values: [
+              [1721854379, '0.2744841110560275'],
+              [1721857979, '0.2980357104166823'],
+              [1721861579, null],
+              [1721865179, null],
+              [1721868779, '0.3269247326830727'],
+              [1721872379, '0.3393055885526987'],
+              [1721875979, '0.3237102833940027'],
+              [1721879579, '0.3153372503472701'],
+              [1721883179, '0.26811506053820466'],
+              [1721886779, '0.25839295774934357'],
+              [1721890379, '0.26863082415681144'],
+              [1721893979, '0.26126998689934394'],
+              [1721897579, '0.26164641539434685'],
+            ],
+          },
+          {
+            metric: {
+              entity_id: 'ob.j-bucket-983.us-ord.linodeobjects.com',
+              metric_name: 'average_cpu_usage',
+              linode_id: '1',
+              node_id: 'primary-1',
+              node_id1: 'primary-1',
+              node_id2: 'primary-1',
+              node_id3: 'primary-1',
+            },
+            values: [
+              [1721854379, '0.2744841110560275'],
+              [1721857979, '0.2980357104166823'],
+              [1721861579, null],
+              [1721865179, null],
+              [1721868779, '0.3269247326830727'],
+              [1721872379, '0.3393055885526987'],
+              [1721875979, '0.3237102833940027'],
+              [1721879579, '0.3153372503472701'],
+              [1721883179, '0.26811506053820466'],
+              [1721886779, '0.25839295774934357'],
+              [1721890379, '0.26863082415681144'],
+              [1721893979, '0.26126998689934394'],
+              [1721897579, '0.26164641539434685'],
+            ],
+          },
+          {
+            metric: {
+              entity_id: 'ob.j-bucket-383.us-ord.linodeobjects.com',
               metric_name: 'average_cpu_usage',
               linode_id: '1',
               node_id: 'primary-1',
@@ -5004,50 +5374,6 @@ export const handlers = [
           //     [1721897579, '0.26164641539434685'],
           //   ],
           // })),
-          {
-            metric: {
-              entity_id: 'obj-bucket-230.ap-west.linodeobjects.com',
-              metric_name: 'average_cpu_usage',
-              linode_id: '7',
-              node_id: 'primary-2',
-            },
-            values: [
-              [1721854379, '0.3744841110560275'],
-              [1721857979, '0.4980357104166823'],
-              [1721861579, null],
-              [1721865179, null],
-              [1721868779, '0.2269247326830727'],
-              [1721872379, '0.3393055885526987'],
-              [1721875979, '0.5237102833940027'],
-              [1721879579, '0.3153372503472701'],
-              [1721883179, '0.26811506053820466'],
-              [1721886779, '0.35839295774934357'],
-              [1721890379, '0.36863082415681144'],
-              [1721893979, '0.46126998689934394'],
-              [1721897579, '0.56164641539434685'],
-            ],
-          },
-          {
-            metric: {
-              entity_id: 'obj-bucket-383.ap-west.linodeobjects.com',
-              metric_name: 'average_cpu_usage',
-            },
-            values: [
-              [1721854379, '0.3744841110560275'],
-              [1721857979, '0.4980357104166823'],
-              [1721861579, '0.3290476561287732'],
-              [1721865179, '0.4148793964961897'],
-              [1721868779, '0.4269247326830727'],
-              [1721872379, '0.3393055885526987'],
-              [1721875979, '0.6237102833940027'],
-              [1721879579, '0.3153372503472701'],
-              [1721883179, '0.26811506053820466'],
-              [1721886779, '0.45839295774934357'],
-              [1721890379, '0.36863082415681144'],
-              [1721893979, '0.56126998689934394'],
-              [1721897579, '0.66164641539434685'],
-            ],
-          },
         ],
         resultType: 'matrix',
       },
@@ -5078,7 +5404,7 @@ export const handlers = [
   ...entities,
   ...netLoadBalancers,
   ...marketplace,
-  http.get('*/v4beta/maintenance/policies', () => {
+  http.get('*/v4/maintenance/policies', () => {
     return HttpResponse.json(
       makeResourcePage(maintenancePolicyFactory.buildList(2))
     );

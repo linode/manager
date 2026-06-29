@@ -1,3 +1,4 @@
+import { getAPIErrorOrDefault } from '@akamai/compute-ui-core/api';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useNavigate } from '@tanstack/react-router';
@@ -7,7 +8,6 @@ import * as React from 'react';
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { useUpdateLinodeSettingsMutation } from 'src/queries/managed/managed';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import type { APIError } from '@linode/api-v4/lib/types';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';

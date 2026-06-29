@@ -1,7 +1,8 @@
-import { Box, Typography } from '@linode/ui';
+import { Spacing } from '@akamai/cds-tokens';
 import React from 'react';
 
 import { useFlags } from 'src/hooks/useFlags';
+import { useComputePricing } from 'src/utilities/pricing/useComputePricing';
 
 import { StyledPlanSummarySpan } from '../DatabaseDetail/DatabaseResize/DatabaseResize.style';
 import { useIsDatabasesEnabled } from '../utilities';
@@ -15,7 +16,6 @@ import type {
   Engine,
   VPC,
 } from '@linode/api-v4';
-import type { Theme } from '@mui/material';
 import type { PlanSelectionWithDatabaseType } from 'src/features/components/PlansPanel/types';
 
 interface Props {
@@ -61,13 +61,18 @@ export const DatabaseSummarySection = (props: Props) => {
   const currentBasePrice = currentPlan?.engines[currentEngine]?.[0]
     .price as DatabasePriceObject;
 
-  const currentNodePrice = `$${currentPrice?.monthly}/month`;
-  const currentPlanPrice = `$${currentBasePrice?.monthly}/month`;
+  // Pricing scoped to the active billing interval from the `computePricing` LD flag.
+  // Pass the plan id so `activeBillingPlanMatchers` can scope hourly billing to specific
+  // plan classes (e.g. G8, GPU) without affecting others.
+  const { formatPrice, priceLabel } = useComputePricing(currentPlan?.id);
+
+  const currentNodePrice = `$${formatPrice(currentPrice)}/${priceLabel}`;
+  const currentPlanPrice = `$${formatPrice(currentBasePrice)}/${priceLabel}`;
 
   const isNewDatabase = isDatabasesV2GA && platform !== 'rdbms-legacy';
 
   const currentSummary = currentPlan ? (
-    <Box data-testid="currentSummary">
+    <div data-testid="currentSummary">
       <StyledPlanSummarySpan>
         {isResize && 'Current Cluster: '}
         {currentPlan?.heading}
@@ -96,24 +101,24 @@ export const DatabaseSummarySection = (props: Props) => {
         </>
       ) : (
         <>
-          <Typography component="span">
+          <span>
             {currentClusterSize} Node
             {getSuffix(isNewDatabase, currentClusterSize)}
-          </Typography>
+          </span>
           {currentNodePrice}
         </>
       )}
-    </Box>
+    </div>
   ) : (
-    'Please specify your cluster configuration'
+    `Once you configure the cluster, you'll see the summary here.`
   );
 
   const resizeSummary = (
-    <Box
+    <div
       data-testid="resizeSummary"
-      sx={(theme: Theme) => ({
-        marginTop: theme.spacing(2),
-      })}
+      style={{
+        marginTop: Spacing.S16,
+      }}
     >
       {resizeData ? (
         <>
@@ -123,10 +128,10 @@ export const DatabaseSummarySection = (props: Props) => {
               : resizeData.plan}
           </StyledPlanSummarySpan>{' '}
           {isNewDatabase && <StyledSpan>{resizeData.basePrice}</StyledSpan>}
-          <Typography component="span">
+          <span>
             {resizeData.numberOfNodes} Node
             {getSuffix(isNewDatabase, resizeData.numberOfNodes)}
-          </Typography>
+          </span>
           {resizeData.price}
         </>
       ) : isNewDatabase ? (
@@ -137,19 +142,19 @@ export const DatabaseSummarySection = (props: Props) => {
       ) : (
         'Please select a plan.'
       )}
-    </Box>
+    </div>
   );
 
   return (
     <>
-      <Typography
-        sx={(theme) => ({
-          marginBottom: isDatabasesV2GA ? theme.spacing(2) : 0,
-        })}
-        variant="h2"
+      <h3
+        style={{
+          marginBottom: isDatabasesV2GA ? Spacing.S16 : 0,
+          marginTop: 0,
+        }}
       >
         Summary {isNewDatabase && label}
-      </Typography>
+      </h3>
       {isNewDatabase && currentSummary}
       {isResize && resizeSummary}
     </>

@@ -1,8 +1,16 @@
-import { createChatCompletion } from 'src/mocks/presets/crud/handlers/inferencePlatform';
+import {
+  createApiKey,
+  createChatCompletion,
+  deleteApiKey,
+  getApiKey,
+  getApiKeys,
+  revokeApiKey,
+  updateApiKey,
+} from 'src/mocks/presets/crud/handlers/inferencePlatform';
 
 import type { MockPresetExtra } from 'src/mocks/types';
 
-export const inferencePlatformPreset: MockPresetExtra = {
+export const inferencePlatformChatPreset: MockPresetExtra = {
   desc: 'Mocks the inference platform chat completions endpoint.',
   group: {
     id: 'Inference Platform',
@@ -12,3 +20,24 @@ export const inferencePlatformPreset: MockPresetExtra = {
   id: 'inferencePlatform:chat-completions',
   label: 'Chat Completions',
 };
+
+export const inferencePlatformApiKeysPreset: MockPresetExtra = {
+  desc: 'Mocks the inference platform API keys endpoints.',
+  group: {
+    id: 'Inference Platform',
+    type: 'checkbox',
+  },
+  handlers: [
+    getApiKeys,
+    getApiKey,
+    createApiKey,
+    updateApiKey,
+    revokeApiKey,
+    deleteApiKey,
+  ],
+  id: 'inferencePlatform:api-keys',
+  label: 'API Keys',
+};
+
+// Keep the old export for backward compatibility
+export const inferencePlatformPreset = inferencePlatformChatPreset;

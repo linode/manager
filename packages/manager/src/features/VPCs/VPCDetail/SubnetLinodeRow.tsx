@@ -1,7 +1,7 @@
+import { getFormattedStatus } from '@akamai/compute-ui-core/api';
 import { useLinodeQuery } from '@linode/queries';
 import { Box, CircleProgress, TooltipIcon, Typography } from '@linode/ui';
 import { Hidden } from '@linode/ui';
-import { getFormattedStatus } from '@linode/utilities';
 import ErrorOutline from '@mui/icons-material/ErrorOutline';
 import * as React from 'react';
 import type { JSX } from 'react';

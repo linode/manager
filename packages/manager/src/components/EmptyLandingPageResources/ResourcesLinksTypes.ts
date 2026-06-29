@@ -1,5 +1,6 @@
 interface ResourcesLink {
   external?: boolean;
+  pendoId?: string;
   text: string;
   to: string;
 }

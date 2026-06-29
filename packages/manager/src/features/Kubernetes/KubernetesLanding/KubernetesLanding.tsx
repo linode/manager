@@ -1,3 +1,4 @@
+import { getErrorStringOrDefault } from '@akamai/compute-ui-core/api';
 import { CircleProgress, ErrorState, Typography } from '@linode/ui';
 import { Hidden } from '@linode/ui';
 import { useNavigate } from '@tanstack/react-router';
@@ -24,7 +25,6 @@ import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useKubernetesClustersQuery } from 'src/queries/kubernetes';
-import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 import { KubernetesClusterRow } from '../ClusterList/KubernetesClusterRow';
 import { DeleteKubernetesClusterDialog } from '../KubernetesClusterDetail/DeleteKubernetesClusterDialog';

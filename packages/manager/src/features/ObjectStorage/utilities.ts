@@ -1,8 +1,13 @@
 import { OBJECT_STORAGE_DELIMITER } from 'src/constants';
 
-import type { AccountSettings } from '@linode/api-v4/lib/account';
-import type { ObjectStorageObject } from '@linode/api-v4/lib/object-storage';
-import type { ObjectStorageEndpoint } from '@linode/api-v4/lib/object-storage';
+import type {
+  AccountSettings,
+  ObjectStorageBucket,
+} from '@linode/api-v4/lib/account';
+import type {
+  ObjectStorageEndpoint,
+  ObjectStorageObject,
+} from '@linode/api-v4/lib/object-storage';
 import type { FormikProps } from 'formik';
 
 export const generateObjectUrl = (hostname: string, objectName: string) => {
@@ -191,15 +196,72 @@ export const filterRegionsByEndpoints = <T extends { id: string }>(
   return regions.filter((region) => endpointRegions.has(region.id));
 };
 
-export const uniqueByKey = <T extends Record<string, unknown>>(
-  arr: Array<T>,
-  key: string
-): Array<T> => {
-  const seen = new Set();
-  return arr.filter((item) => {
-    const value = item[key];
-    if (seen.has(value)) return false;
-    seen.add(value);
-    return true;
+export function getRequiredObjectStorageRegionIds(
+  endpoints: ObjectStorageEndpoint[] | undefined,
+  regionIdsFilter: null | Set<string> | undefined,
+  endpointsFilter: null | Set<string> | undefined
+): Set<string> | undefined {
+  if (
+    regionIdsFilter === undefined ||
+    endpointsFilter === undefined ||
+    endpoints === undefined
+  ) {
+    return undefined;
+  }
+
+  return new Set(
+    endpoints
+      .filter((endpoint) => {
+        const matchesRegion =
+          regionIdsFilter === null || regionIdsFilter.has(endpoint.region);
+        const matchesEndpoint =
+          endpointsFilter === null ||
+          endpointsFilter.has(endpoint.s3_endpoint!);
+        return matchesRegion && matchesEndpoint;
+      })
+      .map((endpoint) => endpoint.region)
+  );
+}
+
+export const filterBucketsByEndpoints = (
+  buckets: ObjectStorageBucket[] | undefined,
+  endpointsFilter: null | Set<string> | undefined
+) =>
+  (buckets ?? []).filter(
+    (bucket) =>
+      endpointsFilter === null || endpointsFilter?.has(bucket.s3_endpoint ?? '')
+  );
+
+export const parseCsvSet = (value?: string): null | Set<string> =>
+  value ? new Set(value.split(',').filter(Boolean)) : null;
+
+export const toSortedCsv = (set: null | Set<string>): string | undefined =>
+  set ? Array.from(set).sort().join(',') : undefined;
+
+export const matchesFilter = (
+  filterSet: null | Set<string>,
+  value: null | string | undefined
+): boolean => filterSet === null || (value ? filterSet.has(value) : false);
+
+export const filterSet = (
+  set: null | Set<string>,
+  allowed: Set<string>
+): null | Set<string> => {
+  if (!set) {
+    return null;
+  }
+
+  const next = new Set<string>();
+  set.forEach((v) => {
+    if (allowed.has(v)) {
+      next.add(v);
+    }
   });
+
+  return next.size > 0 ? next : null;
 };
+
+export const toStringSet = <T>(
+  values: Iterable<T>,
+  map: (value: T) => string
+) => new Set<string>(Array.from(values, map));

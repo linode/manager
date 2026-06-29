@@ -258,21 +258,6 @@ describe('DatabaseSettings Component', () => {
     expect(maintenance).toBeInTheDocument();
   });
 
-  it('Should render Maintenance Window with radio buttons', async () => {
-    const database = databaseFactory.build({
-      platform: 'rdbms-legacy',
-    });
-    const { getByRole, queryByText } = renderWithTheme(
-      <DatabaseDetailContext.Provider value={{ database, engine }}>
-        <DatabaseSettings />
-      </DatabaseDetailContext.Provider>
-    );
-    const radioInput = getByRole('radiogroup');
-    expect(radioInput).toHaveTextContent('Monthly');
-    expect(radioInput).toHaveTextContent('Weekly');
-    expect(queryByText('Maintenance Window')).toBeTruthy();
-  });
-
   it('Should render Weekly Maintenance Window', async () => {
     const database = databaseFactory.build({
       platform: 'rdbms-default',

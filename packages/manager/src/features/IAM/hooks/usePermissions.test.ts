@@ -1,7 +1,6 @@
 import { renderHook } from '@testing-library/react';
 
-import { wrapWithTheme } from 'src/utilities/testHelpers';
-
+import { wrapWithProviders } from '../utilities/testHelpers';
 import { usePermissions } from './usePermissions';
 
 import type { AccessType, PermissionType } from '@linode/api-v4';
@@ -78,7 +77,7 @@ describe('usePermissions', () => {
     renderHook(
       () => usePermissions('account', ['cancel_account', 'create_linode']),
       {
-        wrapper: (ui) => wrapWithTheme(ui, { flags }),
+        wrapper: (ui) => wrapWithProviders(ui, { flags }),
       }
     );
 
@@ -97,7 +96,7 @@ describe('usePermissions', () => {
     renderHook(
       () => usePermissions('linode', ['reboot_linode', 'view_linode'], 123),
       {
-        wrapper: (ui) => wrapWithTheme(ui, { flags }),
+        wrapper: (ui) => wrapWithProviders(ui, { flags }),
       }
     );
 
@@ -122,7 +121,7 @@ describe('usePermissions', () => {
     renderHook(
       () => usePermissions('account', ['cancel_account', 'create_linode']),
       {
-        wrapper: (ui) => wrapWithTheme(ui, { flags }),
+        wrapper: (ui) => wrapWithProviders(ui, { flags }),
       }
     );
 

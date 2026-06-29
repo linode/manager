@@ -7,6 +7,7 @@ import {
   Box,
   FormControl,
   FormControlLabel,
+  Notice,
   Radio,
   RadioGroup,
   Stack,
@@ -35,7 +36,11 @@ const disabledReasonMap: Partial<
 };
 
 export const InterfaceGeneration = () => {
-  const { control, setValue } = useFormContext<LinodeCreateFormValues>();
+  const {
+    control,
+    formState: { errors },
+    setValue,
+  } = useFormContext<LinodeCreateFormValues>();
 
   const { field } = useController<
     LinodeCreateFormValues,
@@ -85,6 +90,10 @@ export const InterfaceGeneration = () => {
       {linodeInterfacesUnavailableInRegion && (
         <LinodeInterfacesAvailabilityNotice />
       )}
+      {/* Display an error message if interface_generation does not match default account settings. This applies only to restricted users who can't access account settings API. */}
+      {errors.interface_generation?.message && (
+        <Notice text={errors.interface_generation.message} variant="error" />
+      )}
       <RadioGroup
         aria-labelledby="interface-generation"
         onChange={(e, value) => {
@@ -103,7 +112,7 @@ export const InterfaceGeneration = () => {
             ]);
           }
         }}
-        value={field.value ?? 'linode'}
+        value={field.value}
       >
         <FormControlLabel
           control={<Radio />}

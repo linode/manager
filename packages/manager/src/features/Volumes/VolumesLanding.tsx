@@ -1,3 +1,4 @@
+import { getAPIErrorOrDefault } from '@akamai/compute-ui-core/api';
 import { useVolumesQuery } from '@linode/queries';
 import { getAPIFilterFromQuery } from '@linode/search';
 import { CircleProgress, ErrorState, Stack } from '@linode/ui';
@@ -26,7 +27,6 @@ import {
   VOLUME_TABLE_DEFAULT_ORDER_BY,
 } from 'src/routes/volumes/constants';
 import { VOLUME_TABLE_PREFERENCE_KEY } from 'src/routes/volumes/constants';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { useVolumeActionHandlers } from './hooks/useVolumeActionHandlers';
 import { VolumeTableRow } from './Partials/VolumeTableRow';

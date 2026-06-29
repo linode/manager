@@ -1,3 +1,4 @@
+import { getAPIErrorOrDefault } from '@akamai/compute-ui-core/api';
 import {
   getActiveLongviewPlan,
   getLongviewSubscriptions,
@@ -19,7 +20,6 @@ import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useTabs } from 'src/hooks/useTabs';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { SubscriptionDialog } from './SubscriptionDialog';
 

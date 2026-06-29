@@ -75,7 +75,7 @@ const clientCertificateDetailsSchema = object({
     .test(
       'is-valid-url',
       'TLS hostname must be a valid URL.',
-      (value) => !value || isValidUrl(value),
+      (value) => !value || isValidUrl(value, false),
     ),
   client_ca_certificate: string(),
   client_certificate: string(),
@@ -272,10 +272,10 @@ const akamaiObjectStorageDetailsBaseSchema = object({
   path: string().max(maxLength, maxLengthMessage).defined(),
   access_key_id: string()
     .max(maxLength, maxLengthMessage)
-    .required('Access Key ID is required.'),
+    .required('Access Key is required.'),
   access_key_secret: string()
     .max(maxLength, maxLengthMessage)
-    .required('Secret Access Key is required.'),
+    .required('Secret Key is required.'),
 });
 
 const akamaiObjectStorageDetailsPayloadSchema =

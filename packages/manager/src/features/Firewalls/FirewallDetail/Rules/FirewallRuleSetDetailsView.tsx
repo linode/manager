@@ -27,8 +27,8 @@ import {
   useStyles,
 } from './shared.styles';
 
-import type { PrefixListRuleReference } from '../../shared';
 import type { Category } from './shared';
+import type { PrefixListRuleReference } from '@akamai/compute-ui-core/api';
 import type { FirewallRuleType } from '@linode/api-v4';
 
 interface FirewallRuleSetDetailsViewProps {

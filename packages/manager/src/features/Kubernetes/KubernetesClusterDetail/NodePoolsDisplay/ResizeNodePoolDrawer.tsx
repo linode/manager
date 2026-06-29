@@ -1,4 +1,5 @@
-import { isNumber, pluralize } from '@akamai/compute-ui-core/formatting';
+import { getLinodeRegionPrice } from '@akamai/compute-ui-core/api';
+import { pluralize } from '@akamai/compute-ui-core/formatting';
 import { useTypeQuery } from '@linode/queries';
 import {
   ActionsPanel,
@@ -18,12 +19,14 @@ import {
 } from 'src/features/Kubernetes/constants';
 import { useUpdateNodePoolMutation } from 'src/queries/kubernetes';
 import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants';
-import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/dynamicPricing';
-import { getKubernetesMonthlyPrice } from 'src/utilities/pricing/kubernetes';
-import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
+import {
+  getNodePriceDisplay,
+  getPoolPriceDisplay,
+} from 'src/utilities/pricing/kubernetes';
+import { useComputePricing } from 'src/utilities/pricing/useComputePricing';
 
 import { nodeWarning } from '../../constants';
-import { hasInvalidNodePoolPrice, useNodePoolDisplayLabel } from './utils';
+import { useNodePoolDisplayLabel } from './utils';
 
 import type {
   KubeNodePoolResponse,
@@ -40,6 +43,9 @@ const useStyles = makeStyles()((theme: Theme) => ({
     paddingBottom: theme.spacing(3),
   },
   summary: {
+    fontSize: '16px',
+  },
+  price: {
     font: theme.font.bold,
     fontSize: '16px',
   },
@@ -107,6 +113,8 @@ export const ResizeNodePoolDrawer = (props: Props) => {
     }
   }, [error]);
 
+  const { billing, getPrice } = useComputePricing(nodePool?.type);
+
   if (!nodePool) {
     // This should never happen, but it keeps TypeScript happy and avoids crashing if we
     // are unable to load the specified pool.
@@ -119,24 +127,10 @@ export const ResizeNodePoolDrawer = (props: Props) => {
     });
   };
 
-  const pricePerNode = getLinodeRegionPrice(
-    planType,
-    kubernetesRegionId
-  )?.monthly;
+  const pricePerNodeObj = getLinodeRegionPrice(planType, kubernetesRegionId);
+  const pricePerNode = getPrice(pricePerNodeObj);
 
-  const totalMonthlyPrice =
-    planType &&
-    getKubernetesMonthlyPrice({
-      count: nodePool.count,
-      region: kubernetesRegionId,
-      type: nodePool.type,
-      types: planType ? [planType] : [],
-    });
-
-  const hasInvalidPrice = hasInvalidNodePoolPrice(
-    pricePerNode,
-    totalMonthlyPrice
-  );
+  const hasInvalidPrice = typeof pricePerNode !== 'number';
 
   return (
     <Drawer
@@ -180,22 +174,23 @@ export const ResizeNodePoolDrawer = (props: Props) => {
 
           <div className={classes.section}>
             <Typography className={classes.summary}>
-              Current price: $
-              {renderMonthlyPriceToCorrectDecimalPlace(totalMonthlyPrice)}
-              /month ({pluralize('node', 'nodes', nodePool.count)} at $
-              {renderMonthlyPriceToCorrectDecimalPlace(pricePerNode)}
-              /month each)
+              Current price:{' '}
+              <span className={classes.price}>
+                {getPoolPriceDisplay(pricePerNodeObj, nodePool.count, billing)}
+              </span>{' '}
+              ({pluralize('node', 'nodes', nodePool.count)} at{' '}
+              {getNodePriceDisplay(pricePerNodeObj, billing)} each)
             </Typography>
           </div>
           <div className={classes.section}>
-            {/* Renders total pool price/month for N nodes at price per node/month. */}
+            {/* Renders total pool price for N nodes at price per node. */}
             <Typography className={classes.summary}>
-              {`Resized price: $${renderMonthlyPriceToCorrectDecimalPlace(
-                isNumber(pricePerNode) ? updatedCount * pricePerNode : undefined
-              )}/month`}{' '}
-              ({pluralize('node', 'nodes', updatedCount)} at $
-              {renderMonthlyPriceToCorrectDecimalPlace(pricePerNode)}
-              /month each)
+              Resized price:{' '}
+              <span className={classes.price}>
+                {getPoolPriceDisplay(pricePerNodeObj, updatedCount, billing)}
+              </span>{' '}
+              ({pluralize('node', 'nodes', updatedCount)} at{' '}
+              {getNodePriceDisplay(pricePerNodeObj, billing)} each)
             </Typography>
           </div>
 

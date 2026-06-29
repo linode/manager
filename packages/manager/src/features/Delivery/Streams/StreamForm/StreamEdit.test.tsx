@@ -79,12 +79,10 @@ describe.skip('StreamEdit', () => {
     expect(screen.getByText('destinations-bucket-name.host.com')).toBeVisible();
     // Bucket:
     expect(screen.getByText('destinations-bucket-name')).toBeVisible();
-    // Access Key ID:
-    expect(screen.getByTestId('access-key-id')).toHaveTextContent(MASKED_VALUE);
-    // Secret Access Key:
-    expect(screen.getByTestId('secret-access-key')).toHaveTextContent(
-      MASKED_VALUE
-    );
+    // Access Key:
+    expect(screen.getByTestId('access-key')).toHaveTextContent(MASKED_VALUE);
+    // Secret Key:
+    expect(screen.getByTestId('secret-key')).toHaveTextContent(MASKED_VALUE);
     // Log Path:
     expect(screen.getByText('file')).toBeVisible();
   });
@@ -116,9 +114,9 @@ describe.skip('StreamEdit', () => {
       await user.type(endpointInput, 'test');
       const bucketInput = screen.getByLabelText('Bucket');
       await user.type(bucketInput, 'test');
-      const accessKeyIDInput = screen.getByLabelText('Access Key ID');
+      const accessKeyIDInput = screen.getByLabelText('Access Key');
       await user.type(accessKeyIDInput, 'Test');
-      const secretAccessKeyInput = screen.getByLabelText('Secret Access Key');
+      const secretAccessKeyInput = screen.getByLabelText('Secret Key');
       await user.type(secretAccessKeyInput, 'Test');
       const logPathPrefixInput = screen.getByLabelText(
         'Log Path Prefix (optional)'

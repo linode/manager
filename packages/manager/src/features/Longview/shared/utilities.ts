@@ -1,5 +1,5 @@
+import { readableBytes } from '@akamai/compute-ui-core/api';
 import { pluralize } from '@akamai/compute-ui-core/formatting';
-import { readableBytes } from '@linode/utilities';
 
 import type {
   CPU,

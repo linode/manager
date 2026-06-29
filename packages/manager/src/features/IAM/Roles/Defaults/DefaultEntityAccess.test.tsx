@@ -1,14 +1,16 @@
 import { screen } from '@testing-library/react';
 import React from 'react';
 
-import { expectNotificationBannerText } from 'src/features/IAM/utilities/testHelpers';
-import { renderWithTheme } from 'src/utilities/testHelpers';
-
 import {
   ERROR_STATE_TEXT,
   ERROR_STATE_TITLE,
   NO_ASSIGNED_DEFAULT_ENTITIES_TEXT,
 } from '../../Shared/constants';
+import { expectNotificationBannerText } from '../../utilities/testHelpers';
+import {
+  mockMatchMedia,
+  renderWithProviders,
+} from '../../utilities/testHelpers';
 import { DefaultEntityAccess } from './DefaultEntityAccess';
 
 const queryMocks = vi.hoisted(() => ({
@@ -61,12 +63,18 @@ vi.mock('@tanstack/react-router', async () => {
   };
 });
 
+beforeAll(() => mockMatchMedia());
+
 describe('DefaultEntityAccess', () => {
   beforeEach(() => {
     vi.clearAllMocks();
 
     queryMocks.usePermissions.mockReturnValue({
-      data: { view_default_delegate_access: true },
+      data: {
+        list_entities: true,
+        update_default_delegate_access: true,
+        view_default_delegate_access: true,
+      },
       isLoading: false,
     });
   });
@@ -80,14 +88,14 @@ describe('DefaultEntityAccess', () => {
       },
       isLoading: false,
     });
-    const { container } = renderWithTheme(<DefaultEntityAccess />);
+    const { container } = renderWithProviders(<DefaultEntityAccess />);
 
     expect(
       screen.getByText('Default Entity Access for Delegate Users')
     ).toBeVisible();
-    expect(screen.getByPlaceholderText('Search')).toBeVisible();
+    expect(container.querySelector('cds-search-field')).toBeVisible();
     expect(container.querySelector('cds-select')).toBeVisible();
-    expect(screen.getByRole('table')).toBeVisible();
+    expect(screen.getByLabelText('Assigned Entities')).toBeVisible();
   });
   it('should render empty state', async () => {
     queryMocks.useGetDefaultDelegationAccessQuery.mockReturnValue({
@@ -95,7 +103,7 @@ describe('DefaultEntityAccess', () => {
       isLoading: false,
     });
 
-    renderWithTheme(<DefaultEntityAccess />);
+    renderWithProviders(<DefaultEntityAccess />);
 
     expect(screen.getByText(NO_ASSIGNED_DEFAULT_ENTITIES_TEXT)).toBeVisible();
   });
@@ -108,7 +116,7 @@ describe('DefaultEntityAccess', () => {
       status: 'error',
     });
 
-    renderWithTheme(<DefaultEntityAccess />);
+    renderWithProviders(<DefaultEntityAccess />);
     expect(screen.getByText(ERROR_STATE_TITLE)).toBeVisible();
     expect(screen.getByText(ERROR_STATE_TEXT)).toBeVisible();
   });
@@ -121,7 +129,7 @@ describe('DefaultEntityAccess', () => {
       isLoading: false,
     });
 
-    renderWithTheme(<DefaultEntityAccess />);
+    renderWithProviders(<DefaultEntityAccess />);
 
     return expectNotificationBannerText(
       'You do not have permission to view default entity access for delegate users.'

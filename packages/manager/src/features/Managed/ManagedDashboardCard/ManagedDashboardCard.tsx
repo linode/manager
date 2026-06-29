@@ -1,3 +1,4 @@
+import { getAPIErrorOrDefault } from '@akamai/compute-ui-core/api';
 import { CircleProgress, ErrorState } from '@linode/ui';
 import Grid from '@mui/material/Grid';
 import * as React from 'react';
@@ -6,7 +7,6 @@ import {
   useAllManagedIssuesQuery,
   useAllManagedMonitorsQuery,
 } from 'src/queries/managed/managed';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import ManagedChartPanel from './ManagedChartPanel';
 import {

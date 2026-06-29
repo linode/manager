@@ -13,11 +13,14 @@ import * as React from 'react';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { Markdown } from 'src/components/Markdown/Markdown';
+import { FOOTER_HEIGHT, FOOTER_HEIGHT_SM } from 'src/features/Footer';
+import { TOPMENU_HEIGHT } from 'src/features/TopMenu/constants';
 
 import { getProductById } from '../products';
 import {
   formatTrademarkSymbols,
   getLogoUrl,
+  MAIN_CONTENT_VERTICAL_PADDING,
   marketplaceContainerStyles,
 } from '../shared';
 import { ContactSalesDrawer } from './ContactSalesDrawer';
@@ -92,7 +95,17 @@ export const ProductDetails = () => {
   };
 
   return (
-    <Box sx={marketplaceContainerStyles}>
+    <Box
+      display="flex"
+      flexDirection="column"
+      height={{
+        md: `calc(100vh - ${TOPMENU_HEIGHT}px - ${FOOTER_HEIGHT}px - ${MAIN_CONTENT_VERTICAL_PADDING}px)`,
+        sm: `calc(100vh - ${TOPMENU_HEIGHT}px - ${FOOTER_HEIGHT_SM}px - ${MAIN_CONTENT_VERTICAL_PADDING}px)`,
+        xs: 'auto',
+      }}
+      overflow="hidden"
+      sx={marketplaceContainerStyles}
+    >
       <DocumentTitleSegment
         segment={
           isContactSalesOpen
@@ -126,7 +139,10 @@ export const ProductDetails = () => {
           alignItems: 'flex-start',
           border: `1px solid ${theme.tokens.alias.Border.Normal}`,
           display: 'flex',
+          flex: 1,
           flexDirection: 'column',
+          minHeight: 0,
+          overflow: 'hidden',
           padding: theme.spacingFunction(24),
           [theme.breakpoints.down('md')]: {
             padding: theme.spacingFunction(16),
@@ -245,7 +261,16 @@ export const ProductDetails = () => {
 
           {/* Product Details Tabs */}
           {details && (
-            <Box width="100%">
+            <Box
+              sx={{
+                display: 'flex',
+                flex: 1,
+                flexDirection: 'column',
+                minHeight: 0,
+                overflow: 'hidden',
+                width: '100%',
+              }}
+            >
               <ProductDetailsTabs details={details} />
             </Box>
           )}

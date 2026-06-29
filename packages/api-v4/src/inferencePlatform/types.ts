@@ -38,3 +38,51 @@ export type ChatResponseBody = {
     total_tokens: number;
   };
 };
+
+// API Key types
+export type ApiKeyStatus = 'active' | 'expired' | 'revoked';
+
+export type ApiKeyType = 'playground' | 'user';
+
+export interface ApiKey {
+  allowed_models: string[];
+  created: string;
+  description: string;
+  expiry: null | string;
+  id: number;
+  key: string;
+  key_prefix: string;
+  key_type: ApiKeyType;
+  label: string;
+  last_used: null | string;
+  status: ApiKeyStatus;
+  updated: string;
+  usage_24h?: number[];
+}
+
+// Response when creating an API key - includes the full key (only shown once)
+export interface CreateApiKeyResponse extends ApiKey {
+  key: string;
+}
+
+export interface CreateApiKeyPayload {
+  allowed_models?: string[];
+  description?: string;
+  expiry?: null | string;
+  key_type: ApiKeyType;
+  label: string;
+}
+
+export interface UpdateApiKeyPayload {
+  allowed_models?: string[];
+  description?: string;
+  expiry?: null | string;
+  label?: string;
+}
+
+// Model types
+export interface Model {
+  id: string;
+  label: string;
+  provider: string;
+}

@@ -19,7 +19,11 @@ interface WidgetFilterGroupByRendererProps {
   /**
    * Callback function to handle the selected values
    */
-  handleChange: (selectedValue: string[], savePreferences?: boolean) => void;
+  handleChange: (
+    selectedValue: string[],
+    selectedLabels: string[],
+    savePreferences?: boolean
+  ) => void;
   /**
    * Label for the widget metric
    */
@@ -82,6 +86,7 @@ export const WidgetFilterGroupByRenderer = (
       }
       handleChange(
         selectedValue.map(({ value }) => value),
+        selectedValue.map(({ label }) => label),
         savePref ?? savePreferences
       );
       setOpen(false);

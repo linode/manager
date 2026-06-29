@@ -51,7 +51,7 @@ export const addSharegroupImagesSchema = object({
 });
 
 export const updateSharegroupImageSchema = object({
-  label: labelSchema.optional(),
+  label: labelSchema.required('Label is required.'),
   description: string().optional(),
 });
 
@@ -77,7 +77,7 @@ export const updateSharegroupMemberSchema = object({
 
 export const generateSharegroupTokenSchema = object({
   label: labelSchema.optional(),
-  valid_for_sharegroup_uuid: boolean().required(
+  valid_for_sharegroup_uuid: string().required(
     'Valid sharegroup UUID required.',
   ),
 });

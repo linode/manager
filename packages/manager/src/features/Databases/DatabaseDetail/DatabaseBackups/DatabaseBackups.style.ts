@@ -1,55 +1,9 @@
-import { Stack, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
-import { DateCalendar } from '@mui/x-date-pickers';
 
-export const StyledDateCalendar = styled(DateCalendar, {
-  label: 'StyledDateCalendar',
-})(({ theme }) => ({
-  '.MuiButtonBase-root.MuiPickersDay-root.Mui-disabled': {
-    color: theme.color.grey3,
-  },
-  '.MuiPickersArrowSwitcher-spacer': { width: '15px' },
-  '.MuiPickersCalendarHeader-labelContainer': {
-    fontSize: '0.95rem',
-  },
-  '.MuiPickersCalendarHeader-root': {
-    marginTop: '0',
-    paddingLeft: '17px',
-    paddingRight: '3px',
-  },
-  '.MuiPickersCalendarHeader-switchViewIcon': {
-    fontSize: '28px',
-  },
-  '.MuiPickersDay-root': {
-    fontSize: '0.875rem',
-    height: '32px',
-    width: '32px',
-  },
-  '.MuiSvgIcon-root': {
-    fontSize: '22px',
-  },
-  '.MuiTypography-root': {
-    fontSize: '0.875rem',
-    height: '32px',
-    width: '32px',
-  },
-  '.MuiYearCalendar-root': {
-    width: '260px',
-  },
-  height: 'auto',
-  margin: 0,
-  marginRight: theme.spacingFunction(40),
-  width: '260px',
-}));
-
-export const StyledTypography = styled(Typography)(() => ({
-  lineHeight: '20px',
-  marginTop: '4px',
-}));
-
-export const StyledDateTimeStack = styled(Stack, {
+export const StyledDateTimeStack = styled('div', {
   label: 'StyledDateTimeStack',
 })(({ theme }) => ({
+  display: 'flex',
   flexDirection: 'row',
   [theme.breakpoints.down('md')]: {
     flexDirection: 'column',
@@ -58,7 +12,7 @@ export const StyledDateTimeStack = styled(Stack, {
   },
 }));
 
-export const StyledRegionStack = styled(Stack, { label: 'StyledRegionStack' })(
+export const StyledRegionStack = styled('div', { label: 'StyledRegionStack' })(
   ({ theme }) => ({
     [theme.breakpoints.down('md')]: {
       marginTop: theme.spacingFunction(24),

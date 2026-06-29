@@ -1,41 +1,46 @@
 import { Icon, Tooltip } from '@akamai/cds-components/react';
 import { Spacing } from '@akamai/cds-tokens';
+import { formatStorageUnits } from '@akamai/compute-ui-core/api';
 import { useDatabaseTypesQuery, useRegionsQuery } from '@linode/queries';
-import { Typography } from '@linode/ui';
-import { convertMegabytesTo, formatStorageUnits } from '@linode/utilities';
-import Grid from '@mui/material/Grid';
 import * as React from 'react';
-import { makeStyles } from 'tss-react/mui';
 
-import { DatabaseStatusDisplay } from 'src/features/Databases/DatabaseDetail/DatabaseStatusDisplay';
 import {
-  StyledGridContainer,
-  StyledLabelTypography,
-  StyledValueGrid,
-} from 'src/features/Databases/DatabaseDetail/DatabaseSummary/DatabaseSummaryClusterConfiguration.style';
+  STORAGE_COPY,
+  VALKEY_STORAGE_TOOLTIP_COPY,
+} from 'src/features/Databases/constants';
+import { DatabaseStatusDisplay } from 'src/features/Databases/DatabaseDetail/DatabaseStatusDisplay';
 import { DatabaseEngineVersion } from 'src/features/Databases/DatabaseEngineVersion';
 import { useInProgressEvents } from 'src/queries/events/events';
+
+import { useBreakpoint } from '../../hooks/useBreakpoint';
+import { cssVars } from '../../shared/utilities/cssVars';
+import styles from '../DatabaseDetail.module.css';
 
 import type { Region } from '@linode/api-v4';
 import type {
   Database,
   DatabaseType,
 } from '@linode/api-v4/lib/databases/types';
-import type { Theme } from '@mui/material/styles';
-
-const useStyles = makeStyles()((theme: Theme) => ({
-  header: {
-    marginBottom: theme.spacing(2),
-  },
-}));
 
 interface Props {
   database: Database;
 }
 
 export const DatabaseSummaryClusterConfiguration = (props: Props) => {
-  const { classes } = useStyles();
   const { database } = props;
+  const isMdDown = useBreakpoint('down', 'md');
+  const isLgDown = useBreakpoint('down', 'lg');
+
+  let clusterConfigurationGridLayout = 'repeat(4, auto 1fr)';
+  if (isMdDown) {
+    clusterConfigurationGridLayout = 'repeat(1, auto 1fr)';
+  } else if (isLgDown) {
+    clusterConfigurationGridLayout = 'repeat(2, auto 1fr)';
+  }
+
+  const style = cssVars({
+    '--cluster-configuration-grid-layout': clusterConfigurationGridLayout,
+  });
 
   const { data: types } = useDatabaseTypesQuery({
     platform: database.platform,
@@ -50,83 +55,50 @@ export const DatabaseSummaryClusterConfiguration = (props: Props) => {
   const { data: events } = useInProgressEvents();
 
   if (!database || !type) {
-    return null;
+    return (
+      <div style={{ marginBottom: Spacing.S16 }}>
+        <h3 style={{ marginTop: 0 }}>Cluster Configuration</h3>
+      </div>
+    );
   }
 
+  const nodeCount = database.cluster_size - 1;
+  const nodeLabel = nodeCount === 1 ? 'Node' : 'Nodes';
   const configuration =
     database.cluster_size === 1
       ? 'Primary (1 Node)'
-      : database.cluster_size > 2
-        ? `Primary (+${database.cluster_size - 1} Nodes)`
-        : `Primary (+${database.cluster_size - 1} Node)`;
+      : `Primary (+${nodeCount} ${nodeLabel})`;
 
-  const STORAGE_COPY =
-    'The total disk size is smaller than the selected plan capacity due to overhead from the OS.';
+  const isValkeyDatabase = database.engine === 'valkey';
 
   return (
-    <>
-      <Typography className={classes.header} variant="h3">
-        Cluster Configuration
-      </Typography>
-      <StyledGridContainer container size={{ md: 11 }} spacing={0}>
-        <Grid
-          size={{
-            lg: 1,
-            md: 2,
-            xs: 4,
-          }}
-        >
-          <StyledLabelTypography>Status</StyledLabelTypography>
-        </Grid>
-        <StyledValueGrid size={{ lg: 2, md: 4, xs: 8 }}>
+    <div style={{ marginBottom: Spacing.S16 }}>
+      <h3 style={{ marginTop: 0 }}>Cluster Configuration</h3>
+      <div className={styles.summaryLabelValueContainer} style={style}>
+        <div className={styles.summaryLabelColumn}>
+          <p>Status</p>
+        </div>
+        <div className={styles.summaryValueColumn}>
           <DatabaseStatusDisplay database={database} events={events} />
-        </StyledValueGrid>
-        <Grid
-          size={{
-            lg: 0.9,
-            md: 2,
-            xs: 4,
-          }}
-        >
-          <StyledLabelTypography>Plan</StyledLabelTypography>
-        </Grid>
-        <StyledValueGrid size={{ lg: 2.2, md: 4, xs: 8 }}>
+        </div>
+        <div className={styles.summaryLabelColumn}>
+          <p>Plan</p>
+        </div>
+        <div className={styles.summaryValueColumn}>
           {formatStorageUnits(type.label)}
-        </StyledValueGrid>
-        <Grid
-          size={{
-            lg: 1,
-            md: 2,
-            xs: 4,
-          }}
-        >
-          <StyledLabelTypography>Nodes</StyledLabelTypography>
-        </Grid>
-        <StyledValueGrid size={{ lg: 1.7, md: 4, xs: 8 }}>
-          {configuration}
-        </StyledValueGrid>
-        <Grid
-          size={{
-            lg: 1.7,
-            md: 2,
-            xs: 4,
-          }}
-        >
-          <StyledLabelTypography>CPUs</StyledLabelTypography>
-        </Grid>
-        <StyledValueGrid size={{ lg: 1.5, md: 4, xs: 8 }}>
-          {type.vcpus}
-        </StyledValueGrid>
-        <Grid
-          size={{
-            lg: 1,
-            md: 2,
-            xs: 4,
-          }}
-        >
-          <StyledLabelTypography>Engine</StyledLabelTypography>
-        </Grid>
-        <StyledValueGrid size={{ lg: 2, md: 4, xs: 8 }}>
+        </div>
+        <div className={styles.summaryLabelColumn}>
+          <p>Nodes</p>
+        </div>
+        <div className={styles.summaryValueColumn}>{configuration}</div>
+        <div className={styles.summaryLabelColumn}>
+          <p>CPUs</p>
+        </div>
+        <div className={styles.summaryValueColumn}>{type.vcpus}</div>
+        <div className={styles.summaryLabelColumn}>
+          <p>Engine</p>
+        </div>
+        <div className={styles.summaryValueColumn}>
           <DatabaseEngineVersion
             databaseEngine={database.engine}
             databaseID={database.id}
@@ -134,67 +106,38 @@ export const DatabaseSummaryClusterConfiguration = (props: Props) => {
             databasePlatform={database.platform}
             databaseVersion={database.version}
           />
-        </StyledValueGrid>
-        <Grid
-          size={{
-            lg: 0.9,
-            md: 2,
-            xs: 4,
-          }}
-        >
-          <StyledLabelTypography>Region</StyledLabelTypography>
-        </Grid>
-        <StyledValueGrid size={{ lg: 2.2, md: 4, xs: 8 }}>
+        </div>
+        <div className={styles.summaryLabelColumn}>
+          <p>Region</p>
+        </div>
+        <div className={styles.summaryValueColumn}>
           {region?.label ?? database.region}
-        </StyledValueGrid>
-        <Grid
-          size={{
-            lg: 1,
-            md: 2,
-            xs: 4,
-          }}
-        >
-          <StyledLabelTypography>RAM</StyledLabelTypography>
-        </Grid>
-        <StyledValueGrid size={{ lg: 1.7, md: 4, xs: 8 }}>
-          {type.memory / 1024} GB
-        </StyledValueGrid>
-        <Grid
-          size={{
-            lg: 1.7,
-            md: 2,
-            xs: 4,
-          }}
-        >
-          <StyledLabelTypography>
-            {database.total_disk_size_gb ? 'Total Disk Size' : 'Storage'}
-          </StyledLabelTypography>
-        </Grid>
-        <StyledValueGrid size={{ lg: 1.5, md: 4, xs: 8 }}>
-          {database.total_disk_size_gb ? (
-            <>
-              {database.total_disk_size_gb} GB
-              <Tooltip
-                style={{ marginLeft: Spacing.S4 }}
-                tooltipPlacement="bottom"
-                tooltipText={STORAGE_COPY}
-              >
-                <Icon
-                  icon="info-outline"
-                  size="m"
-                  style={{
-                    position: 'relative',
-                    top: -1,
-                  }}
-                />
-              </Tooltip>
-            </>
-          ) : (
-            convertMegabytesTo(type.disk, true)
-          )}
-        </StyledValueGrid>
-      </StyledGridContainer>
-    </>
+        </div>
+        <div className={styles.summaryLabelColumn}>
+          <p>RAM</p>
+        </div>
+        <div className={styles.summaryValueColumn}>{type.memory / 1024} GB</div>
+        <div className={styles.summaryLabelColumn}>
+          <p>Usable Disk Size</p>
+        </div>
+        <div className={styles.summaryValueColumn}>
+          {isValkeyDatabase ? 'N/A' : `${database.total_disk_size_gb} GB`}
+          <Tooltip
+            style={{ marginLeft: Spacing.S4 }}
+            tooltipPlacement="bottom"
+            tooltipText={
+              isValkeyDatabase ? VALKEY_STORAGE_TOOLTIP_COPY : STORAGE_COPY
+            }
+          >
+            <Icon
+              icon="info-outline"
+              size="m"
+              style={{ position: 'relative', top: -1 }}
+            />
+          </Tooltip>
+        </div>
+      </div>
+    </div>
   );
 };
 

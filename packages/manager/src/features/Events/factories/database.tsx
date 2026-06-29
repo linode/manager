@@ -60,6 +60,14 @@ export const database: PartialEventMap<'database'> = {
       </>
     ),
   },
+  database_create_failed: {
+    notification: (e) => (
+      <>
+        Database <EventLink event={e} to="entity" /> could <strong>not</strong>{' '}
+        be <strong>created</strong>.
+      </>
+    ),
+  },
   database_credentials_reset: {
     notification: (e) => (
       <>
@@ -193,6 +201,22 @@ export const database: PartialEventMap<'database'> = {
       <>
         Database <EventLink event={e} to="entity" /> could <strong>not</strong>{' '}
         be <strong>updated</strong>.
+      </>
+    ),
+  },
+  database_resume: {
+    notification: (e) => (
+      <>
+        Database <EventLink event={e} to="entity" /> has been{' '}
+        <strong>resumed</strong>.
+      </>
+    ),
+  },
+  database_suspend: {
+    notification: (e) => (
+      <>
+        Database <EventLink event={e} to="entity" /> has been{' '}
+        <strong>suspended</strong>.
       </>
     ),
   },

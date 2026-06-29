@@ -1,13 +1,13 @@
+import { toast } from '@akamai/cds-components/notification-toast';
 import { Button, Icon, Tooltip } from '@akamai/cds-components/react';
 import { Spacing } from '@akamai/cds-tokens';
+import { getErrorStringOrDefault } from '@akamai/compute-ui-core/api';
 import { downloadFile } from '@akamai/compute-ui-core/browser';
 import { getSSLFields } from '@linode/api-v4/lib/databases/databases';
 import { styled } from '@mui/material/styles';
-import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import DownloadIcon from 'src/assets/icons/lke-download.svg';
-import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 import type { Database, SSLFields } from '@linode/api-v4';
 
@@ -17,7 +17,6 @@ interface Props {
 
 export const DatabaseCaCert = (props: Props) => {
   const { database } = props;
-  const { enqueueSnackbar } = useSnackbar();
   const [isCACertDownloading, setIsCACertDownloading] =
     React.useState<boolean>(false);
 
@@ -31,8 +30,9 @@ export const DatabaseCaCert = (props: Props) => {
           downloadFile(`${database.label}-ca-certificate.crt`, decodedFile);
           setIsCACertDownloading(false);
         } catch {
-          enqueueSnackbar('Error parsing your CA Certificate file', {
-            variant: 'error',
+          toast.open({
+            text: 'Error parsing your CA Certificate file',
+            type: 'error',
           });
           setIsCACertDownloading(false);
           return;
@@ -44,7 +44,7 @@ export const DatabaseCaCert = (props: Props) => {
           'Unable to download your CA Certificate'
         );
         setIsCACertDownloading(false);
-        enqueueSnackbar(error, { variant: 'error' });
+        toast.open({ text: error, type: 'error' });
       });
   };
 

@@ -61,10 +61,6 @@ export const LinodeEntityDetailRowConfigFirewall = (props: Props) => {
     });
   };
 
-  if (!linodeLkeClusterId && !attachedFirewall) {
-    return null;
-  }
-
   return (
     <Grid
       container

@@ -321,7 +321,9 @@ export const GroupMembersTable = (props: Props) => {
                 <TableCell>{member.label}</TableCell>
                 <TableCell>
                   <Stack alignContent="baseline" direction="row">
-                    <Typography>{member.token_uuid ?? '-'}</Typography>
+                    <Typography sx={{ wordBreak: 'break-all' }}>
+                      {member.token_uuid ?? '-'}
+                    </Typography>
                     <StyledCopyIcon
                       data-pendo-id={
                         SHARE_GROUP_DETAILS_PENDO_IDS.copyMembersuuidIcon

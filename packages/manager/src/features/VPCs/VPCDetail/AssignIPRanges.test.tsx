@@ -5,7 +5,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { AssignIPRanges } from './AssignIPRanges';
 
-import type { ExtendedIP } from 'src/utilities/ipUtils';
+import type { ExtendedIP } from '@akamai/compute-ui-core/api';
 
 describe('AssignIPRanges', () => {
   const handleIPRangeChangeMock = vi.fn();

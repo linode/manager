@@ -1,3 +1,8 @@
+import {
+  getLinodeBackupPrice,
+  getLinodeRegionPrice,
+  getRegionCountryGroup,
+} from '@akamai/compute-ui-core/api';
 import { useRegionsQuery, useTypeQuery } from '@linode/queries';
 import { useIsGeckoEnabled } from '@linode/shared';
 import { Notice, Typography } from '@linode/ui';
@@ -9,13 +14,8 @@ import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { NO_PLACEMENT_GROUPS_IN_SELECTED_REGION_MESSAGE } from 'src/features/PlacementGroups/constants';
 import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils';
 import { useFlags } from 'src/hooks/useFlags';
-import { getRegionCountryGroup } from 'src/utilities/formatRegion';
-import { getLinodeBackupPrice } from 'src/utilities/pricing/backups';
 import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants';
-import {
-  getLinodeRegionPrice,
-  isLinodeTypeDifferentPriceInSelectedRegion,
-} from 'src/utilities/pricing/linodes';
+import { isLinodeTypeDifferentPriceInSelectedRegion } from 'src/utilities/pricing/linodes';
 
 import {
   StyledDiv,

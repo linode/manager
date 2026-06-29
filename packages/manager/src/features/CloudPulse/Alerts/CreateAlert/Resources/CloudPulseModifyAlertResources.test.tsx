@@ -165,8 +165,12 @@ describe('CreateAlertResources component tests', () => {
       });
 
     expect(getAllByTestId('alert_message_notice').length).toBe(2); // one for error and one for selection warning
-    expect(getByText('You can select up to 2 entities.')).toBeInTheDocument();
-    expect(getByText('More than 2 entities selected')).toBeInTheDocument();
+    expect(
+      getByText(
+        'This alert has 3 entities, exceeding the 2 limit. Use the API to make changes.'
+      )
+    ).toBeVisible();
+    expect(getByText('More than 2 entities selected')).toBeVisible();
     const resourceFour = getByTestId('select_item_4');
     expect(resourceFour).toBeInTheDocument();
     expect(resourceFour.querySelector('input')).toBeDisabled();

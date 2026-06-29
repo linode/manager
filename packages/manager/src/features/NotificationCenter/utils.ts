@@ -15,7 +15,8 @@ export const checkIfMaintenanceNotification = (type: NotificationType) => {
 
 export const isEUModelContractNotification = (notification: Notification) => {
   return (
-    notification.type === 'notice' && /eu-model/gi.test(notification.message)
+    notification.type === 'notice' &&
+    notification.message.includes('cross-border-data-transfer-statement')
   );
 };
 

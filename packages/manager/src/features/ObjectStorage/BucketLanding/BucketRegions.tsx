@@ -1,8 +1,8 @@
+import { useRegionsQuery } from '@linode/queries';
 import { useIsGeckoEnabled } from '@linode/shared';
 import * as React from 'react';
 
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
-import { useObjectStorageRegions } from 'src/features/ObjectStorage/hooks/useObjectStorageRegions';
 import { useFlags } from 'src/hooks/useFlags';
 
 interface Props {
@@ -17,8 +17,7 @@ interface Props {
 export const BucketRegions = (props: Props) => {
   const { disabled, error, onBlur, onChange, required, selectedRegion } = props;
 
-  const { allRegionsError, availableStorageRegions } =
-    useObjectStorageRegions();
+  const { error: regionsErrors, data: regions } = useRegionsQuery();
 
   const flags = useFlags();
   const { isGeckoLAEnabled } = useIsGeckoEnabled(
@@ -27,7 +26,7 @@ export const BucketRegions = (props: Props) => {
   );
 
   // Error could be: 1. General Regions error, 2. Field error, 3. Nothing
-  const errorText = error || allRegionsError?.[0]?.reason;
+  const errorText = error || regionsErrors?.[0]?.reason;
 
   return (
     <RegionSelect
@@ -40,7 +39,7 @@ export const BucketRegions = (props: Props) => {
       onBlur={onBlur}
       onChange={(e, region) => onChange(region.id)}
       placeholder="Select a Region"
-      regions={availableStorageRegions ?? []}
+      regions={regions ?? []}
       required={required}
       value={selectedRegion ?? null}
     />

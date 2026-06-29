@@ -1,3 +1,4 @@
+import { getAPIErrorOrDefault } from '@akamai/compute-ui-core/api';
 import { useAllVPCsQuery, useRegionsQuery } from '@linode/queries';
 import {
   Autocomplete,
@@ -25,9 +26,8 @@ import {
   VPC_AUTO_ASSIGN_IPV6_TOOLTIP,
 } from 'src/features/VPCs/constants';
 import { AssignIPRanges } from 'src/features/VPCs/VPCDetail/AssignIPRanges';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
-import type { ExtendedIP } from 'src/utilities/ipUtils';
+import type { ExtendedIP } from '@akamai/compute-ui-core/api';
 
 export interface VPCPanelProps {
   additionalIPv4RangesForVPC: ExtendedIP[];

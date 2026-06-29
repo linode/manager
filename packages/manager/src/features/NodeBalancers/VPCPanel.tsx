@@ -1,3 +1,4 @@
+import { getAPIErrorOrDefault } from '@akamai/compute-ui-core/api';
 import { useAllVPCsQuery, useRegionQuery } from '@linode/queries';
 import {
   Autocomplete,
@@ -16,7 +17,6 @@ import { useMediaQuery, useTheme } from '@mui/material';
 import React from 'react';
 
 import { Code } from 'src/components/Code/Code';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { NODEBALANCER_REGION_CAVEAT_HELPER_TEXT } from '../VPCs/constants';
 

@@ -1,3 +1,4 @@
+import { readableBytes } from '@akamai/compute-ui-core/api';
 import {
   useAccountNetworkTransfer,
   useLinodeTransfer,
@@ -5,7 +6,6 @@ import {
   useTypeQuery,
 } from '@linode/queries';
 import { Typography } from '@linode/ui';
-import { readableBytes } from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 

@@ -1,7 +1,5 @@
-import { useLinodeQuery, useTypeQuery } from '@linode/queries';
 import * as React from 'react';
 
-import { BareMetalRescue } from './BareMetalRescue';
 import { StandardRescueDialog } from './StandardRescueDialog';
 
 export interface Props {
@@ -14,33 +12,7 @@ export interface Props {
 export const RescueDialog = (props: Props) => {
   const { linodeId, linodeLabel, onClose, open } = props;
 
-  const { data: linode } = useLinodeQuery(
-    linodeId ?? -1,
-    linodeId !== undefined && open
-  );
-  const { data: type } = useTypeQuery(
-    linode?.type ?? '',
-    Boolean(linode?.type)
-  );
-
-  const isBareMetalInstance = type?.class === 'metal';
-
-  /**
-   * Bare Metal Linodes have a much simpler Rescue flow,
-   * since it's not possible to select disk mounts. Rather
-   * than conditionally handle everything in RescueDialog,
-   * we instead render a simple ConfirmationDialog for
-   * these instances.
-   */
-  return isBareMetalInstance ? (
-    <BareMetalRescue
-      isOpen={open}
-      linodeId={linodeId}
-      linodeLabel={linodeLabel}
-      onClose={onClose}
-    />
-  ) : (
-    /** For normal Linodes, load the standard rescue dialog. */
+  return (
     <StandardRescueDialog
       linodeId={linodeId}
       linodeLabel={linodeLabel}

@@ -1,3 +1,19 @@
+## [2026-06-29] - v0.87.0
+
+
+### Fixed:
+
+- Validation on TLS Hostname field ([#366](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/366))
+
+### Tech Stories:
+
+- Update concurrently@10.0.3 to resolve shell-quote@1.8.3 vuln ([#447](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/447))
+
+### Upcoming Features:
+
+- Private Image Sharing: Update the updateSharegroupImageSchema validation ([#257](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/257))
+- Private Image Sharing: Change data type of `valid_for_sharegroup_uuid` property in `generateSharegroupTokenSchema` to a string instead of a boolean ([#269](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/269))
+
 ## [2026-06-03] - v0.86.1
 
 

@@ -19,6 +19,7 @@ export const ResourceLinks = (props: ResourcesLinks) => {
               getLinkOnClick(linkAnalyticsEvent, linkData.text);
               onClick?.();
             }}
+            pendoId={linkData.pendoId}
             to={linkData.to}
           >
             {linkData.text}

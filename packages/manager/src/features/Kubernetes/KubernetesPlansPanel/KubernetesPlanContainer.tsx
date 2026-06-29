@@ -11,6 +11,7 @@ import {
 } from 'src/features/components/PlansPanel/constants';
 import { useIsGenerationalPlansEnabled } from 'src/utilities/linodes';
 import { PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE } from 'src/utilities/pricing/constants';
+import { useComputePricing } from 'src/utilities/pricing/useComputePricing';
 
 import { KubernetesPlanSelection } from './KubernetesPlanSelection';
 import { KubernetesPlanSelectionTable } from './KubernetesPlanSelectionTable';
@@ -117,6 +118,7 @@ export const KubernetesPlanContainer = (
     plans,
     planType
   );
+  const { hasHourlyEligiblePlans } = useComputePricing();
 
   /**
    * This features allows us to divide the GPU plans into two separate tables.
@@ -310,6 +312,7 @@ export const KubernetesPlanContainer = (
                         shouldDisplayNoRegionSelectedMessage={
                           shouldDisplayNoRegionSelectedMessage
                         }
+                        showHourlyBillingTooltip={hasHourlyEligiblePlans(plans)}
                       />
                     )
                   );
@@ -323,6 +326,7 @@ export const KubernetesPlanContainer = (
                   shouldDisplayNoRegionSelectedMessage={
                     shouldDisplayNoRegionSelectedMessage
                   }
+                  showHourlyBillingTooltip={hasHourlyEligiblePlans(plans)}
                 />
               )
             )}
@@ -409,6 +413,7 @@ export const KubernetesPlanContainer = (
                     shouldDisplayNoRegionSelectedMessage={
                       shouldDisplayNoRegionSelectedMessage
                     }
+                    showHourlyBillingTooltip={hasHourlyEligiblePlans(plans)}
                   />
                 </Grid>
               </Hidden>

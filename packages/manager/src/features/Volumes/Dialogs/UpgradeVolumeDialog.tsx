@@ -1,3 +1,4 @@
+import { getAPIErrorOrDefault } from '@akamai/compute-ui-core/api';
 import { useVolumesMigrateMutation } from '@linode/queries';
 import { ActionsPanel, Typography } from '@linode/ui';
 import { useSnackbar } from 'notistack';
@@ -5,7 +6,6 @@ import * as React from 'react';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Link } from 'src/components/Link';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import type { APIError, Volume } from '@linode/api-v4';
 

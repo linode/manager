@@ -1,3 +1,4 @@
+import { getGDPRDetails } from '@akamai/compute-ui-core/api';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
   useAccountAgreements,
@@ -20,14 +21,14 @@ import { Controller, useForm } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
 import { BucketRateLimitTable } from 'src/features/ObjectStorage/BucketLanding/BucketRateLimitTable';
+import { useObjectStorageBuckets } from 'src/features/ObjectStorage/hooks/useObjectStorageBuckets';
 import { useObjectStorageRegions } from 'src/features/ObjectStorage/hooks/useObjectStorageRegions';
 import {
   useCreateBucketMutation,
-  useObjectStorageBuckets,
+  useObjectStorageEndpointsQuery,
   useObjectStorageTypesQuery,
 } from 'src/queries/object-storage/queries';
 import { sendCreateBucketEvent } from 'src/utilities/analytics/customEventAnalytics';
-import { getGDPRDetails } from 'src/utilities/formatRegion';
 import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants';
 import { reportAgreementSigningError } from 'src/utilities/reportAgreementSigningError';
 
@@ -72,13 +73,11 @@ export const CreateBucketDrawer = (props: Props) => {
   const { isOpen, onClose } = props;
   const isRestrictedUser = profile?.restricted;
 
-  const {
-    availableStorageRegions,
-    isStorageEndpointsLoading,
-    storageEndpoints,
-  } = useObjectStorageRegions();
+  const { objectStorageRegions } = useObjectStorageRegions();
+  const { data: objectStorageEndpoints, isLoading: areEndpointsLoading } =
+    useObjectStorageEndpointsQuery();
 
-  const { data: bucketsData } = useObjectStorageBuckets();
+  const { data: buckets } = useObjectStorageBuckets();
 
   const {
     data: objTypes,
@@ -117,7 +116,7 @@ export const CreateBucketDrawer = (props: Props) => {
     setValue,
     watch,
   } = useForm<CreateObjectStorageBucketPayload>({
-    context: { buckets: bucketsData?.buckets ?? [] },
+    context: { buckets: buckets ?? [] },
     defaultValues: {
       cors_enabled: true,
       endpoint_type: undefined,
@@ -170,7 +169,7 @@ export const CreateBucketDrawer = (props: Props) => {
     // Custom validation in the handleBucketFormSubmit function
     // to catch missing endpoint_type values before form submission
     // since this is optional in the schema.
-    if (Boolean(storageEndpoints) && !formValues.endpoint_type) {
+    if (Boolean(objectStorageEndpoints) && !formValues.endpoint_type) {
       setError('endpoint_type', {
         message: 'Endpoint Type is required.',
         type: 'manual',
@@ -186,10 +185,10 @@ export const CreateBucketDrawer = (props: Props) => {
   };
 
   const selectedRegion = watchRegion
-    ? availableStorageRegions?.find((region) => watchRegion === region.id)
+    ? objectStorageRegions?.find((region) => watchRegion === region.id)
     : undefined;
 
-  const filteredEndpoints = storageEndpoints?.filter(
+  const filteredEndpoints = objectStorageEndpoints?.filter(
     (endpoint) => selectedRegion?.id === endpoint.region
   );
 
@@ -244,7 +243,7 @@ export const CreateBucketDrawer = (props: Props) => {
   const { showGDPRCheckbox } = getGDPRDetails({
     agreements,
     profile,
-    regions: availableStorageRegions,
+    regions: objectStorageRegions,
     selectedRegionId: selectedRegion?.id ?? '',
   });
 
@@ -330,7 +329,7 @@ export const CreateBucketDrawer = (props: Props) => {
           )}
         />
         {selectedRegion?.id && <OveragePricing regionId={selectedRegion.id} />}
-        {Boolean(storageEndpoints) && selectedRegion && (
+        {Boolean(objectStorageEndpoints) && selectedRegion && (
           <>
             <Controller
               control={control}
@@ -340,7 +339,7 @@ export const CreateBucketDrawer = (props: Props) => {
                   disableClearable={hasSingleEndpointType}
                   errorText={errors.endpoint_type?.message}
                   label="Object Storage Endpoint Type"
-                  loading={isStorageEndpointsLoading}
+                  loading={areEndpointsLoading}
                   onBlur={field.onBlur}
                   onChange={(_, endpointOption) =>
                     updateEndpointType(endpointOption)
@@ -371,7 +370,7 @@ export const CreateBucketDrawer = (props: Props) => {
                 />
               )}
             />
-            {Boolean(storageEndpoints) && selectedEndpointOption && (
+            {Boolean(objectStorageEndpoints) && selectedEndpointOption && (
               <BucketRateLimitTable
                 endpointType={selectedEndpointOption?.endpoint_type}
                 typographyProps={{

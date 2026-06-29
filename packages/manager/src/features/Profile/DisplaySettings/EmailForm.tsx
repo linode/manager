@@ -18,7 +18,7 @@ type Values = Pick<Profile, 'email'>;
 
 export const EmailForm = () => {
   const { mutateAsync: updateProfile } = useMutateProfile();
-  const { isProxyOrDelegateUserType, profile } = useDelegationRole();
+  const { isDelegateUserType, profile } = useDelegationRole();
   const { enqueueSnackbar } = useSnackbar();
 
   const { focusEmail } = useSearch({ strict: false });
@@ -44,7 +44,7 @@ export const EmailForm = () => {
     values,
   });
 
-  const tooltipForDisabledEmailField = isProxyOrDelegateUserType
+  const tooltipForDisabledEmailField = isDelegateUserType
     ? RESTRICTED_FIELD_TOOLTIP
     : undefined;
 

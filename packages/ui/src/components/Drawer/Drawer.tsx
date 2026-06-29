@@ -1,3 +1,4 @@
+import { getErrorText } from '@akamai/compute-ui-core/api';
 import { CloseIcon } from '@linode/ui';
 import _Drawer from '@mui/material/Drawer';
 import Grid from '@mui/material/Grid';
@@ -5,7 +6,6 @@ import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import ChevronLeftIcon from '../../assets/icons/chevron-left.svg';
-import { getErrorText } from '../../utilities/error';
 import { convertForAria } from '../../utilities/stringUtils';
 import { Box } from '../Box';
 import { CircleProgress } from '../CircleProgress';
@@ -18,6 +18,10 @@ import type { APIError } from '../../utilities/error';
 import type { DrawerProps as _DrawerProps } from '@mui/material/Drawer';
 
 export interface DrawerProps extends _DrawerProps {
+  /**
+   * Optional Pendo ID for tracking clicks on the X icon that closes the drawer.
+   */
+  closeButtonPendoId?: string;
   /**
    * Error that will be shown in the drawer, such as an API error for data passed to the drawer (NotFound for instance).
    * Those are different from errors that are shown in the drawer's content, such as a form submission or validation error.
@@ -35,10 +39,6 @@ export interface DrawerProps extends _DrawerProps {
    * If true, the drawer will feature a loading spinner for its content.
    */
   isFetching?: boolean;
-  /**
-   * Optional Pendo ID for tracking clicks on the X icon that closes the drawer.
-   */
-  pendoId?: string;
   /**
    * Title that appears at the top of the drawer
    */
@@ -71,12 +71,12 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
   (props: DrawerProps, ref) => {
     const {
       children,
+      closeButtonPendoId,
       error,
       handleBackNavigation,
       isFetching,
       onClose,
       open,
-      pendoId,
       sx,
       title,
       titleSuffix,
@@ -209,7 +209,7 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
             <IconButton
               aria-label="Close drawer"
               color="primary"
-              data-pendo-id={pendoId}
+              data-pendo-id={closeButtonPendoId}
               data-qa-close-drawer
               onClick={() => onClose?.({}, 'escapeKeyDown')}
               size="large"

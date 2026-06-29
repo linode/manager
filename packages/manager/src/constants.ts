@@ -47,7 +47,7 @@ export const ALGOLIA_APPLICATION_ID =
 export const ALGOLIA_SEARCH_KEY =
   import.meta.env.REACT_APP_ALGOLIA_SEARCH_KEY || '';
 export const LAUNCH_DARKLY_API_KEY =
-  import.meta.env.REACT_APP_LAUNCH_DARKLY_ID || '';
+  import.meta.env.REACT_APP_LAUNCH_DARKLY_ID || '67ed97f93736be0c14fa0ea2';
 export const LINODE_STATUS_PAGE_URL =
   import.meta.env.REACT_APP_STATUS_PAGE_URL ||
   'https://status.linode.com/api/v2';
@@ -286,6 +286,8 @@ export const DISALLOWED_IMAGE_REGIONS = [
   'sg-sin-2',
   'jp-tyo-3',
   'fr-par-2',
+  'us-iad-2',
+  'de-fra-2',
 ];
 
 // Default tooltip text for actions without permission

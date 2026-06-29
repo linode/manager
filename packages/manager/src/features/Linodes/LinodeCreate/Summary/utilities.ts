@@ -1,4 +1,5 @@
-import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
+import { getLinodeRegionPrice } from '@akamai/compute-ui-core/api';
+
 import {
   formatPrice,
   getLabelForInterval,

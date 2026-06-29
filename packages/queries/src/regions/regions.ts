@@ -2,7 +2,7 @@ import {
   getRegion,
   getRegionAvailability,
   getRegionVPCAvailability,
-} from '@linode/api-v4/lib/regions';
+} from '@linode/api-v4';
 import { getNewRegionLabel } from '@linode/utilities';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import { queryOptions, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -15,11 +15,11 @@ import {
 } from './requests';
 
 import type {
+  APIError,
   Region,
   RegionAvailability,
   RegionVPCAvailability,
-} from '@linode/api-v4/lib/regions';
-import type { APIError } from '@linode/api-v4/lib/types';
+} from '@linode/api-v4';
 
 export const regionQueries = createQueryKeys('regions', {
   availability: {

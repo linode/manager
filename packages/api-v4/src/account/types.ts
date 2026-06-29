@@ -1,7 +1,10 @@
 import type { Capabilities, Region } from '../regions';
 import type { APIWarning, RequestOptions } from '../types';
+import type { Event, EventAction } from '@akamai/compute-ui-core/events';
 
-export type UserType = 'child' | 'default' | 'delegate' | 'parent' | 'proxy';
+export type { Event, EventAction };
+
+export type UserType = 'child' | 'default' | 'delegate' | 'parent'; // 'proxy' is deprecated
 
 export interface User {
   email: string;
@@ -322,204 +325,6 @@ export interface Entity {
   url: string;
 }
 
-export const EventActionKeys = [
-  'account_agreement_eu_model',
-  'account_promo_apply',
-  'account_settings_update',
-  'account_update',
-  'backups_cancel',
-  'backups_enable',
-  'backups_restore',
-  'community_like',
-  'community_mention',
-  'community_question_reply',
-  'credit_card_updated',
-  'database_backup_create',
-  'database_backup_delete',
-  'database_backup_restore',
-  'database_create',
-  'database_credentials_reset',
-  'database_degraded',
-  'database_delete',
-  'database_failed',
-  'database_low_disk_space',
-  'database_resize_create',
-  'database_resize',
-  'database_scale',
-  'database_update_failed',
-  'database_update',
-  'database_migrate',
-  'database_upgrade',
-  'destination_create',
-  'destination_delete',
-  'destination_update',
-  'disk_create',
-  'disk_delete',
-  'disk_duplicate',
-  'disk_imagize',
-  'disk_resize',
-  'disk_update',
-  'dns_record_create',
-  'dns_record_delete',
-  'dns_zone_create',
-  'dns_zone_delete',
-  'domain_create',
-  'domain_delete',
-  'domain_import',
-  'domain_record_create',
-  'domain_record_delete',
-  'domain_record_update',
-  'domain_record_updated',
-  'domain_update',
-  'entity_transfer_accept_recipient',
-  'entity_transfer_accept',
-  'entity_transfer_cancel',
-  'entity_transfer_create',
-  'entity_transfer_fail',
-  'entity_transfer_stale',
-  'firewall_apply',
-  'firewall_create',
-  'firewall_delete',
-  'firewall_device_add',
-  'firewall_device_remove',
-  'firewall_disable',
-  'firewall_enable',
-  'firewall_rules_update',
-  'firewall_update',
-  'host_reboot',
-  'image_delete',
-  'image_update',
-  'image_upload',
-  'interface_create',
-  'interface_delete',
-  'interface_update',
-  'ipaddress_update',
-  'ipv6pool_add',
-  'ipv6pool_delete',
-  'lassie_reboot',
-  'linode_addip',
-  'linode_boot',
-  'linode_clone',
-  'linode_config_create',
-  'linode_config_delete',
-  'linode_config_update',
-  'linode_create',
-  'linode_delete',
-  'linode_deleteip',
-  'linode_migrate_datacenter_create',
-  'linode_migrate_datacenter',
-  'linode_migrate',
-  'linode_mutate_create',
-  'linode_mutate',
-  'linode_poweroff_on',
-  'linode_reboot',
-  'linode_rebuild',
-  'linode_resize_create',
-  'linode_resize_warm_create',
-  'linode_resize',
-  'linode_shutdown',
-  'linode_snapshot',
-  'linode_update',
-  'lish_boot',
-  'lke_cluster_create',
-  'lke_cluster_delete',
-  'lke_cluster_recycle',
-  'lke_cluster_regenerate',
-  'lke_cluster_update',
-  'lke_control_plane_acl_create',
-  'lke_control_plane_acl_delete',
-  'lke_control_plane_acl_update',
-  'lke_kubeconfig_regenerate',
-  'lke_node_create',
-  'lke_node_recycle',
-  'lke_pool_create',
-  'lke_pool_delete',
-  'lke_pool_recycle',
-  'lke_token_rotate',
-  'lock_create',
-  'lock_delete',
-  'longviewclient_create',
-  'longviewclient_delete',
-  'longviewclient_update',
-  'managed_enabled',
-  'managed_service_create',
-  'managed_service_delete',
-  'nodebalancer_config_create',
-  'nodebalancer_config_delete',
-  'nodebalancer_config_update',
-  'nodebalancer_create',
-  'nodebalancer_delete',
-  'nodebalancer_node_create',
-  'nodebalancer_node_delete',
-  'nodebalancer_node_update',
-  'nodebalancer_update',
-  'oauth_client_create',
-  'oauth_client_delete',
-  'oauth_client_secret_reset',
-  'oauth_client_update',
-  'obj_access_key_create',
-  'obj_access_key_delete',
-  'obj_access_key_update',
-  'password_reset',
-  'payment_method_add',
-  'payment_submitted',
-  'placement_group_assign',
-  'placement_group_became_compliant',
-  'placement_group_became_non_compliant',
-  'placement_group_create',
-  'placement_group_delete',
-  'placement_group_unassign',
-  'placement_group_update',
-  'profile_update',
-  'reserved_ip_assign',
-  'reserved_ip_create',
-  'reserved_ip_delete',
-  'reserved_ip_unassign',
-  'stackscript_create',
-  'stackscript_delete',
-  'stackscript_publicize',
-  'stackscript_revise',
-  'stackscript_update',
-  'stream_create',
-  'stream_delete',
-  'stream_update',
-  'subnet_create',
-  'subnet_delete',
-  'subnet_update',
-  'tag_create',
-  'tag_delete',
-  'tax_id_invalid',
-  'tax_id_valid',
-  'tfa_disabled',
-  'tfa_enabled',
-  'ticket_attachment_upload',
-  'ticket_create',
-  'ticket_update',
-  'token_create',
-  'token_delete',
-  'token_update',
-  'user_create',
-  'user_delete',
-  'user_ssh_key_add',
-  'user_ssh_key_delete',
-  'user_ssh_key_update',
-  'user_update',
-  'volume_attach',
-  'volume_clone',
-  'volume_create',
-  'volume_delete',
-  'volume_detach',
-  'volume_migrate_scheduled',
-  'volume_migrate',
-  'volume_resize',
-  'volume_update',
-  'vpc_create',
-  'vpc_delete',
-  'vpc_update',
-] as const;
-
-export type EventAction = (typeof EventActionKeys)[number];
-
 export type EventStatus =
   | 'canceled'
   | 'failed'
@@ -530,31 +335,6 @@ export type EventStatus =
 
 export type EventSource = 'platform' | 'user';
 
-export interface Event {
-  action: EventAction;
-  complete_time?: null | string;
-  created: string;
-  description?: null | string;
-  /*
-    NOTE: events before the duration key was added will have a duration of 0
-  */
-  duration: null | number;
-  entity: Entity | null;
-  id: number;
-  maintenance_policy_set?: MaintenancePolicySlug | null;
-  message: null | string;
-  not_before?: null | string;
-  percent_complete: null | number;
-  rate: null | string;
-  read: boolean;
-  secondary_entity: Entity | null;
-  seen: boolean;
-  source?: EventSource | null;
-  start_time?: null | string;
-  status: EventStatus;
-  time_remaining: null | string;
-  username: null | string;
-}
 /**
  * Represents an event which has an entity. For use with type guards.
  * https://www.typescriptlang.org/docs/handbook/advanced-types.html

@@ -20,4 +20,12 @@ export const tag: PartialEventMap<'tag'> = {
       </>
     ),
   },
+  tag_update: {
+    notification: (e) => (
+      <>
+        Tag <EventLink event={e} to="entity" /> has been{' '}
+        <strong>updated</strong>.
+      </>
+    ),
+  },
 };

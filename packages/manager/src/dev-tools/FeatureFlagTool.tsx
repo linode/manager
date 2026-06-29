@@ -42,6 +42,7 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'gecko2', label: 'Gecko' },
   { flag: 'generationalPlansv2', label: 'Generational compute plans' },
   { flag: 'hostnameEndpoints', label: 'Hostname Endpoints' },
+  { flag: 'inferencePlatform', label: 'Inference Platform' },
   { flag: 'kubernetesBlackwellPlans', label: 'Kubernetes Blackwell Plans' },
   { flag: 'limitsEvolution', label: 'Limits Evolution' },
   { flag: 'linodeDiskEncryption', label: 'Linode Disk Encryption (LDE)' },
@@ -52,6 +53,7 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'networkLoadBalancer', label: 'Network Load Balancer' },
   { flag: 'nodebalancerIpv6', label: 'NodeBalancer Dual Stack (IPv6)' },
   { flag: 'nodebalancerVpc', label: 'NodeBalancer-VPC Integration' },
+  { flag: 'premiumNodebalancer', label: 'Premium Nodebalancer' },
   { flag: 'objectStorageGen2', label: 'OBJ Gen2' },
   { flag: 'objectStorageGlobalQuotas', label: 'OBJ Global Quotas' },
   { flag: 'passwordlessLinodes', label: 'PasswordLess Linodes' },
@@ -89,7 +91,10 @@ const options: { flag: keyof Flags; label: string }[] = [
     flag: 'iamNewBadge',
     label: 'IAM New Badge',
   },
-  { flag: 'iamDelegation', label: 'IAM Delegation (Parent/Child)' },
+  {
+    flag: 'iamFederation',
+    label: 'IAM Federation',
+  },
   {
     flag: 'linodeCloneFirewall',
     label: 'Linode Clone Firewall',
@@ -112,6 +117,7 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'vpcDbaasResources', label: 'VPC DBaaS Resources' },
   { flag: 'vpcIpv6', label: 'VPC IPv6' },
   { flag: 'reserveIp', label: 'Reserve IP' },
+  { flag: 'reserveIpNewBadge', label: 'Reserve IP New Badge' },
   { flag: 'marketplaceV2GlobalBanner', label: 'Marketplace V2 Global Banner' },
 ];
 

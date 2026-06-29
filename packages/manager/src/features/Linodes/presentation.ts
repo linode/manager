@@ -14,9 +14,10 @@ export const typeLabelLong = (
 export const typeLabelDetails = (
   memory: number,
   disk: number,
-  cpus: number
+  cpus: number,
+  isValkeyEngine?: boolean
 ) => {
   const memG = memory / 1024;
   const diskG = disk / 1024;
-  return `${cpus} CPU, ${diskG} GB Storage, ${memG} GB RAM`;
+  return `${cpus} CPU, ${isValkeyEngine ? '' : `${diskG} GB Storage,`} ${memG} GB RAM`;
 };

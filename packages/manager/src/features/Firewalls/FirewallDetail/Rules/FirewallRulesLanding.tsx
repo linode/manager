@@ -1,3 +1,4 @@
+import { getAPIErrorOrDefault } from '@akamai/compute-ui-core/api';
 import {
   linodeQueries,
   nodebalancerQueries,
@@ -17,7 +18,6 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { FirewallPrefixListDrawer } from './FirewallPrefixListDrawer';
 import { FirewallRuleDrawer } from './FirewallRuleDrawer';

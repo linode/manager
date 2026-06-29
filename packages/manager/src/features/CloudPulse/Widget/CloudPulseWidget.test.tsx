@@ -1,4 +1,4 @@
-import { formatPercentage } from '@linode/utilities';
+import { formatPercentage } from '@akamai/compute-ui-core/api';
 import userEvent from '@testing-library/user-event';
 import { DateTime } from 'luxon';
 import React from 'react';
@@ -50,6 +50,8 @@ const props: CloudPulseWidgetProperties = {
   unit: '%',
   widget: widgetFactory.build({
     label: 'CPU Utilization',
+    description:
+      'Percentage of the available CPU capacity used by the Linode hosting the database.',
   }),
   globalFilterGroupBy: [],
 };
@@ -117,8 +119,8 @@ vi.mock('../Utils/UserPreference', () => ({
 describe('Cloud pulse widgets', () => {
   window.ResizeObserver = ResizeObserver;
 
-  it('should render widget with all required components', () => {
-    const { container, getByTestId, getByText } = renderWithTheme(
+  it('should render widget with all required components', async () => {
+    const { container, getByTestId, getByText, findByText } = renderWithTheme(
       <CloudPulseWidget {...props} />
     );
 
@@ -134,6 +136,16 @@ describe('Cloud pulse widgets', () => {
     // Verify zoom icon
     expect(getByTestId('zoom-out')).toBeInTheDocument();
 
+    // Verify tooltip info icon
+    expect(getByTestId('tooltip-info-icon')).toBeVisible();
+
+    // Verify tooltip info text
+    await userEvent.hover(getByTestId('tooltip-info-icon'));
+    expect(
+      await findByText(
+        'Percentage of the available CPU capacity used by the Linode hosting the database.'
+      )
+    ).toBeVisible();
     // Verify graph component
     expect(
       container.querySelector('.recharts-responsive-container')

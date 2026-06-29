@@ -1,75 +1,67 @@
-import { Icon, Tooltip } from '@akamai/cds-components/react';
+import {
+  Badge,
+  Icon,
+  TableCell,
+  TableRow,
+  Tooltip,
+} from '@akamai/cds-components/react';
 import { Spacing } from '@akamai/cds-tokens';
 import { capitalize, truncateEnd } from '@akamai/compute-ui-core/formatting';
-import { useProfile } from '@linode/queries';
-import { Box, Chip, Stack, Typography } from '@linode/ui';
-import { useTheme } from '@mui/material/styles';
 import React from 'react';
 
-import { Avatar } from 'src/components/Avatar/Avatar';
-import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
-import { TableCell } from 'src/components/TableCell';
-import { TableRow } from 'src/components/TableRow';
-
-import { useDelegationRole } from '../../hooks/useDelegationRole';
-import { useIsIAMDelegationEnabled } from '../../hooks/useIsIAMEnabled';
 import { usePermissions } from '../../hooks/usePermissions';
+import { Avatar } from '../../Shared/Avatar/Avatar';
+import { Box } from '../../Shared/Box/Box';
 import {
   IAM_CHILD_USERS_PENDO_IDS,
   IAM_DELEGATE_USERS_PENDO_IDS,
   IAM_PARENT_USERS_PENDO_IDS,
 } from '../../Shared/constants';
+import { DateTimeDisplay } from '../../Shared/DateTimeDisplay/DateTimeDisplay';
 import { Link } from '../../Shared/Link/Link';
 import { MaskableText } from '../../Shared/MaskableText/MaskableText';
 import { StatusIcon } from '../../Shared/StatusIcon/StatusIcon';
 import { UsersActionMenu } from './UsersActionMenu';
+import {
+  getUsersTableCellStyle,
+  useUsersTableColumns,
+} from './usersTableColumnsUtils';
 
 import type { User } from '@linode/api-v4';
-
 interface Props {
   onDelete: (username: string) => void;
   user: User;
 }
 
 export const UserRow = ({ onDelete, user }: Props) => {
-  const theme = useTheme();
+  const {
+    columnWidths,
+    isChildOrDelegate,
+    showEmail,
+    showLastLogin,
+    showUserType,
+  } = useUsersTableColumns();
 
-  const { data: profile } = useProfile();
   const { data: permissions } = usePermissions('account', [
     'delete_user',
     'is_account_admin',
     'view_user',
   ]);
 
-  const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
-  const { isChildUserType, isDelegateUserType } = useDelegationRole();
-
   const canViewUser = permissions.view_user;
 
-  // Determine if the current user is a child or delegate profile with isIAMDelegationEnabled enabled
-  // If so, we need to show the 'User type' column in the table
-  const isChildOrDelegateWithDelegationEnabled =
-    isIAMDelegationEnabled && (isChildUserType || isDelegateUserType);
-
   return (
-    <TableRow data-qa-table-row={user.username} key={user.username}>
-      <TableCell>
-        <Stack alignItems="center" direction="row" spacing={1.5}>
-          <Avatar
-            color={
-              user.username !== profile?.username
-                ? theme.palette.primary.dark
-                : undefined
-            }
-            username={user.username}
-          />
+    <TableRow data-qa-table-row={user.username} key={user.username} zebra>
+      <TableCell style={getUsersTableCellStyle(columnWidths.username)}>
+        <Box direction="row" style={{ alignItems: 'center', gap: Spacing.S12 }}>
+          <Avatar username={user.username} />
           <MaskableText isToggleable text={user.username}>
             <Tooltip
               disabled={user.username.length <= 32}
               tooltipPlacement="bottom"
               tooltipText={user.username}
             >
-              <Typography sx={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              <p style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
                 {canViewUser ? (
                   <Link
                     data-pendo-id={
@@ -80,8 +72,7 @@ export const UserRow = ({ onDelete, user }: Props) => {
                           : IAM_PARENT_USERS_PENDO_IDS.parentUsernameLink
                     }
                     to={
-                      isChildOrDelegateWithDelegationEnabled &&
-                      user.user_type === 'delegate'
+                      isChildOrDelegate && user.user_type === 'delegate'
                         ? `/iam/users/${user.username}/roles`
                         : `/iam/users/${user.username}/details`
                     }
@@ -91,39 +82,36 @@ export const UserRow = ({ onDelete, user }: Props) => {
                 ) : (
                   truncateEnd(user.username, 32)
                 )}
-              </Typography>
+              </p>
             </Tooltip>
           </MaskableText>
-          <Box display="flex" flexGrow={1} />
-          {user.tfa_enabled && <Chip color="success" label="2FA" />}
-        </Stack>
+          {user.tfa_enabled && (
+            <Badge color="green" variant="solid">
+              2FA
+            </Badge>
+          )}
+        </Box>
       </TableCell>
-      {isChildOrDelegateWithDelegationEnabled && (
-        <TableCell sx={{ display: { lg: 'table-cell', xs: 'none' } }}>
-          <Typography>
-            {user.user_type === 'child' ? 'User' : 'Delegate User'}
-          </Typography>
+      {showUserType && (
+        <TableCell style={getUsersTableCellStyle(columnWidths.userType)}>
+          <p>{user.user_type === 'child' ? 'User' : 'Delegate User'}</p>
         </TableCell>
       )}
-      <TableCell
-        sx={{
-          '& > p': { overflow: 'hidden', textOverflow: 'ellipsis' },
-          display: { sm: 'table-cell', xs: 'none' },
-        }}
-      >
-        <UserEmailContent
-          isChildOrDelegateWithDelegationEnabled={
-            isChildOrDelegateWithDelegationEnabled
-          }
-          userEmail={user.email}
-          userType={user.user_type}
-        />
-      </TableCell>
-      <TableCell sx={{ display: { lg: 'table-cell', xs: 'none' } }}>
-        <LastLogin last_login={user.last_login} user_type={user.user_type} />
-      </TableCell>
-
-      <TableCell actionCell>
+      {showEmail ? (
+        <TableCell style={getUsersTableCellStyle(columnWidths.email)}>
+          <UserEmailContent
+            isChildOrDelegate={isChildOrDelegate}
+            userEmail={user.email}
+            userType={user.user_type}
+          />
+        </TableCell>
+      ) : null}
+      {showLastLogin ? (
+        <TableCell style={getUsersTableCellStyle(columnWidths.lastLogin)}>
+          <LastLogin last_login={user.last_login} user_type={user.user_type} />
+        </TableCell>
+      ) : null}
+      <TableCell style={getUsersTableCellStyle(columnWidths.actions)}>
         <UsersActionMenu
           onDelete={onDelete}
           permissions={permissions}
@@ -153,7 +141,7 @@ const LastLogin = (props: Pick<User, 'last_login' | 'user_type'>) => {
   }
 
   if (last_login === null) {
-    return <Typography>Never</Typography>;
+    return <p>Never</p>;
   }
 
   if (last_login.status === 'successful') {
@@ -161,12 +149,16 @@ const LastLogin = (props: Pick<User, 'last_login' | 'user_type'>) => {
   }
 
   return (
-    <Stack alignItems="center" direction="row" spacing={1}>
+    <Box
+      direction="row"
+      style={{ alignItems: 'center', gap: Spacing.S8 }}
+      wrap="nowrap"
+    >
       <DateTimeDisplay value={last_login.login_datetime} />
-      <Typography>&#8212;</Typography>
+      <p>&#8212;</p>
       <StatusIcon status="error" />
-      <Typography>{capitalize(last_login.status)}</Typography>
-    </Stack>
+      <p>{capitalize(last_login.status)}</p>
+    </Box>
   );
 };
 
@@ -177,16 +169,26 @@ const LastLogin = (props: Pick<User, 'last_login' | 'user_type'>) => {
  * - The component renders the user's email with the ability to toggle visibility for all other cases
  */
 const UserEmailContent = ({
-  isChildOrDelegateWithDelegationEnabled,
+  isChildOrDelegate,
   userEmail,
   userType,
 }: {
-  isChildOrDelegateWithDelegationEnabled: boolean;
+  isChildOrDelegate: boolean;
   userEmail: string;
   userType: User['user_type'];
 }) => {
-  if (!isChildOrDelegateWithDelegationEnabled || userType === 'child') {
-    return <MaskableText isToggleable text={userEmail} />;
+  if (!isChildOrDelegate || userType === 'child') {
+    return (
+      <MaskableText
+        isToggleable
+        styleTypography={{
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          margin: 0,
+        }}
+        text={userEmail}
+      />
+    );
   }
 
   return (
@@ -198,10 +200,10 @@ const UserEmailContent = ({
  * Displays "Not applicable" with a tooltip for delegate users
  */
 const NotApplicableWithTooltip = ({ tooltipText }: { tooltipText: string }) => (
-  <Typography>
+  <p>
     Not applicable{' '}
     <Tooltip tooltipPlacement="left" tooltipText={tooltipText}>
       <Icon icon="info-outline" size="m" style={{ marginBottom: Spacing.S4 }} />
     </Tooltip>
-  </Typography>
+  </p>
 );

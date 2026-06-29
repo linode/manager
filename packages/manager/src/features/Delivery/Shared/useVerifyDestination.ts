@@ -1,9 +1,9 @@
+import { getAPIErrorOrDefault } from '@akamai/compute-ui-core/api';
 import { useVerifyDestinationQuery } from '@linode/queries';
 import { enqueueSnackbar } from 'notistack';
 import { useState } from 'react';
 
 import { getDestinationPayloadDetails } from 'src/features/Delivery/deliveryUtils';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import type { DestinationForm } from 'src/features/Delivery/Shared/types';
 

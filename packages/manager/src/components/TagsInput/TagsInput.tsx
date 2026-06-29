@@ -1,3 +1,4 @@
+import { getErrorMap } from '@akamai/compute-ui-core/api';
 import {
   updateTagsSuggestionsData,
   useAllTagsQuery,
@@ -6,8 +7,6 @@ import {
 import { Autocomplete, Chip, CloseIcon } from '@linode/ui';
 import { useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
-
-import { getErrorMap } from 'src/utilities/errorUtils';
 
 import type { APIError } from '@linode/api-v4/lib/types';
 

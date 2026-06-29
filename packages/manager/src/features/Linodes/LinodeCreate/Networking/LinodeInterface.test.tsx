@@ -19,6 +19,9 @@ vi.mock('src/features/IAM/hooks/usePermissions', () => ({
 vi.mock('src/features/ReservedIps/utils', () => ({
   getReservedIPHourlyPrice: vi.fn(() => 0.007),
   useIsReserveIpEnabled: vi.fn(() => ({ isReserveIpEnabled: true })),
+  useIsReserveIpNewBadgeEnabled: vi.fn(() => ({
+    isReserveIpNewBadgeEnabled: false,
+  })),
 }));
 
 describe('LinodeInterface (Linode Interfaces)', () => {

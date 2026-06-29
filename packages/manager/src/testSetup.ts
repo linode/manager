@@ -4,6 +4,52 @@ import { expect } from 'vitest';
 
 import { server } from './mocks/testServer';
 
+// Mock LaunchDarkly provider BEFORE any other imports to prevent "window is not defined" errors
+// The real launchDarklyProvider tries to access window in async callbacks which can
+// cause intermittent test failures when those timeouts fire at inopportune moments
+vi.mock('@akamai/compute-ui-core/feature-flags', () => {
+  const mockProvider = () => ({
+    getFlag: () => undefined,
+    getFlags: () => ({}),
+    identify: async () => {},
+    start: async () => {},
+    subscribe: () => () => {},
+  });
+
+  class MockFeatureFlagClient {
+    provider: any;
+
+    constructor(config: any) {
+      this.provider = config?.provider ? config.provider() : mockProvider();
+    }
+
+    getFlag(key: string) {
+      return this.provider.getFlag(key);
+    }
+
+    getFlags() {
+      return this.provider.getFlags();
+    }
+
+    async identify(context: any) {
+      return this.provider.identify(context);
+    }
+
+    async start() {
+      return this.provider.start();
+    }
+
+    subscribe(callback: (flags: any) => void) {
+      return this.provider.subscribe(callback);
+    }
+  }
+
+  return {
+    FeatureFlagClient: MockFeatureFlagClient,
+    launchDarklyProvider: () => mockProvider,
+  };
+});
+
 expect.extend(matchers);
 
 // Configure testing-library timeouts for CI stability
@@ -23,36 +69,6 @@ afterEach(() => server.resetHandlers());
 HTMLCanvasElement.prototype.getContext = () => {
   return 0;
 };
-
-/**
- * Stub LaunchDarkly in unit tests: avoids loading the real SDK (slow, flaky teardown
- * when several Vitest processes run) while preserving `LDProvider` + `flags` behavior
- * via React context so `renderWithTheme(..., { flags })` keeps working.
- */
-vi.mock('launchdarkly-react-client-sdk', async () => {
-  const React = await import('react');
-  const LDFlagsContext = React.createContext<Record<string, unknown>>({});
-
-  return {
-    LDProvider: ({
-      children,
-      flags,
-    }: {
-      children?: React.ReactNode;
-      flags?: Record<string, unknown>;
-    }) =>
-      React.createElement(
-        LDFlagsContext.Provider,
-        { value: flags ?? {} },
-        children ?? null
-      ),
-    useFlags: () => React.useContext(LDFlagsContext),
-    useLDClient: () => ({
-      identify: vi.fn().mockResolvedValue(undefined),
-    }),
-    withLDProvider: () => (component: React.ComponentType) => component,
-  };
-});
 
 /**
  * When we mock chartjs below, we need
@@ -95,6 +111,13 @@ global.ResizeObserver = class ResizeObserver {
   observe() {}
   unobserve() {}
 };
+
+// JSDOM implements attachInternals() but omits the Constraint Validation API
+// methods on ElementInternals (e.g. setValidity).
+// CDS web components call these on mount, which throws without this polyfill.
+if (typeof ElementInternals !== 'undefined') {
+  ElementInternals.prototype.setValidity ??= () => {};
+}
 
 // @ts-expect-error Mock IntersectionObserver for tests
 global.IntersectionObserver = class IntersectionObserver {

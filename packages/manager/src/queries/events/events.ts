@@ -182,7 +182,9 @@ export const useEventsPoller = () => {
     },
     queryKey: ['events', 'poller'],
     refetchInterval: (query) => {
-      const hasInProgressEvents = query.state.data?.some(isInProgressEvent);
+      const hasInProgressEvents = query.state.data?.some((e) =>
+        isInProgressEvent(e)
+      );
       if (hasInProgressEvents) {
         return POLLING_INTERVALS.IN_PROGRESS;
       }

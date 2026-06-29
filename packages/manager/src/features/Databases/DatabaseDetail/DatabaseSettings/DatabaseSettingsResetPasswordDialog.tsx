@@ -1,10 +1,11 @@
-import { NotificationBanner } from '@akamai/cds-components/react';
+import {
+  Button,
+  Modal,
+  NotificationBanner,
+} from '@akamai/cds-components/react';
 import { Spacing } from '@akamai/cds-tokens';
 import { useDatabaseCredentialsMutation } from '@linode/queries';
-import { ActionsPanel, Typography } from '@linode/ui';
 import * as React from 'react';
-
-import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 
 import type { Engine } from '@linode/api-v4';
 
@@ -15,26 +16,7 @@ interface Props {
   open: boolean;
 }
 
-// I feel like this pattern should be its own component due to how common it is
-const renderActions = (
-  onClose: () => void,
-  onConfirm: () => void,
-  loading: boolean
-) => {
-  return (
-    <ActionsPanel
-      primaryButtonProps={{
-        'data-testid': 'confirm',
-        label: 'Reset Root Password',
-        loading,
-        onClick: onConfirm,
-      }}
-      secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
-    />
-  );
-};
-
-export const DatabaseSettingsResetPasswordDialog: React.FC<Props> = (props) => {
+export const DatabaseSettingsResetPasswordDialog = (props: Props) => {
   const { databaseEngine, databaseID, onClose, open } = props;
 
   const {
@@ -55,25 +37,35 @@ export const DatabaseSettingsResetPasswordDialog: React.FC<Props> = (props) => {
   };
 
   return (
-    <ConfirmationDialog
-      actions={renderActions(handleOnClose, onResetRootPassword, isPending)}
-      onClose={handleOnClose}
-      open={open}
-      title="Reset Root Password"
-    >
-      {error ? (
-        <NotificationBanner
-          style={{ marginBottom: Spacing.S16 }}
-          text={error[0].reason}
-          type="error"
-        />
-      ) : undefined}
-      <Typography>
-        After resetting your root password, you can view your new password on
-        the database cluster summary page.
-      </Typography>
-    </ConfirmationDialog>
+    <Modal closeModal={handleOnClose} open={open}>
+      <span slot="title">Reset root password?</span>
+      <div slot="body">
+        {error ? (
+          <NotificationBanner
+            style={{ marginBottom: Spacing.S16 }}
+            text={error[0].reason}
+            type="error"
+          />
+        ) : undefined}
+
+        <p>
+          After resetting your root password, you can view your new password on
+          the database cluster summary page.
+        </p>
+      </div>
+      <div slot="actions" style={{ display: 'flex', alignItems: 'center' }}>
+        <Button onClick={handleOnClose} variant="link">
+          Cancel
+        </Button>
+        <Button
+          data-testid="confirm"
+          onClick={onResetRootPassword}
+          processing={isPending}
+          variant="primary"
+        >
+          Reset Root Password
+        </Button>
+      </div>
+    </Modal>
   );
 };
-
-export default DatabaseSettingsResetPasswordDialog;

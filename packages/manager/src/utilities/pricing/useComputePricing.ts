@@ -1,8 +1,8 @@
+import { UNKNOWN_PRICE } from '@akamai/compute-ui-core/api';
 import { useMemo } from 'react';
 
 import { useFlags } from 'src/hooks/useFlags';
 
-import { UNKNOWN_PRICE } from './constants';
 import {
   formatPrice,
   getLabelForInterval,
@@ -11,6 +11,27 @@ import {
 
 import type { PriceObject } from '@linode/api-v4';
 import type { PlanWithAvailability } from 'src/features/components/PlansPanel/types';
+
+/**
+ * Pure helper - resolves the active billing mode for a given plan type ID.
+ * Monthly is the universal fallback for all plans, so scoping matchers only
+ * matters when `baseBilling` is non-monthly.
+ */
+const resolveBillingForPlanType = (
+  typeId: null | string | undefined,
+  baseBilling: keyof PriceObject,
+  matchers: string[]
+): keyof PriceObject => {
+  if (!typeId || baseBilling === 'monthly') {
+    return baseBilling;
+  }
+  if (matchers.length === 0) {
+    return baseBilling;
+  }
+  return matchers.some((m) => typeId.toLowerCase().includes(m.toLowerCase()))
+    ? baseBilling
+    : 'monthly';
+};
 
 /**
  * Returns pricing helpers bound to the active billing interval from the `computePricing` LD flag.
@@ -31,25 +52,8 @@ export const useComputePricing = (planTypeId?: null | string) => {
   const baseBilling: keyof PriceObject = computePricing?.billing ?? 'monthly';
 
   const billing: keyof PriceObject = useMemo(() => {
-    // Only relevant when billing is non-monthly - monthly is the universal fallback
-    // for all plans regardless, so scoping it makes no difference.
-    // `computePricing` may be undefined when the flag is off entirely; fall back to [].
-    const activeBillingPlanMatchers: string[] =
-      computePricing?.activeBillingPlanMatchers ?? [];
-
-    if (!planTypeId || baseBilling === 'monthly') {
-      return baseBilling;
-    }
-
-    if (activeBillingPlanMatchers.length === 0) {
-      return baseBilling;
-    }
-
-    const isEligibleForActiveBilling = activeBillingPlanMatchers.some(
-      (matcher) => planTypeId.toLowerCase().includes(matcher.toLowerCase())
-    );
-
-    return isEligibleForActiveBilling ? baseBilling : 'monthly';
+    const matchers: string[] = computePricing?.activeBillingPlanMatchers ?? [];
+    return resolveBillingForPlanType(planTypeId, baseBilling, matchers);
   }, [computePricing, baseBilling, planTypeId]);
 
   return {
@@ -60,7 +64,7 @@ export const useComputePricing = (planTypeId?: null | string) => {
      * in the Monthly column). Pass the full tab plan list (not paginated/filtered) -
      * so the result stays consistent across page and filter changes.
      *
-     * It always checks against the base billing mode and it's not affected by `planTypeId` even ifprovided.
+     * It always checks against the base billing mode and it's not affected by `planTypeId` even if provided.
      */
     hasHourlyEligiblePlans: (planList: PlanWithAvailability[]): boolean => {
       if (baseBilling !== 'hourly') {
@@ -105,9 +109,93 @@ export const useComputePricing = (planTypeId?: null | string) => {
       return formatPrice(value);
     },
     /**
+     * Returns the formatted price subheading shown on a plan or node row for the active billing mode.
+     *
+     * - On monthly billing it shows the monthly price with the hourly price in parentheses.
+     * - On hourly billing it shows just the hourly price. Those plans have no monthly commitment,
+     * so we hide the monthly value even when the API happens to return a monthly value.
+     *
+     * @param options.format - Pass `format: 'short'` for tight spaces like table rows to get
+     * abbreviated price labels (`mo`/`hr`) instead of the default long-form labels (`month`/`hour`).
+     *
+     * @param options.missingPriceFallback - Pass `missingPriceFallback: 'zero'` to show `$0` for missing prices
+     * (e.g. before a plan is picked) instead of the default unknown-price placeholder `$--.--`.
+     *
+     * @example
+     * 1. Monthly billing (default)
+     *    a. getPriceSubheading({ hourly: 0.09, monthly: 60 })
+     *    // '$60/month ($0.09/hour)'
+     *    b. getPriceSubheading({ hourly: 0.09, monthly: 60 }, { format: 'short' })
+     *    // '$60/mo ($0.09/hr)'
+     *    c. getPriceSubheading(undefined)
+     *    // '$--.--/month ($--.--/hour)'
+     *    d. getPriceSubheading(undefined, { format: 'short', missingPriceFallback: 'zero' })
+     *    // '$0/mo ($0/hr)'
+     *
+     * 2. Hourly billing
+     *    a. getPriceSubheading({ hourly: 0.09, monthly: 60 })
+     *    // '$0.09/hour'
+     *    b. getPriceSubheading({ hourly: 0.09, monthly: 60 }, { format: 'short' })
+     *    // '$0.09/hr'
+     *    c. getPriceSubheading(undefined)
+     *    // '$--.--/hour'
+     *    d. getPriceSubheading(undefined, { format: 'short', missingPriceFallback: 'zero' })
+     *    // '$0/hr'
+     */
+    getPriceSubheading: (
+      priceObject: null | PriceObject | undefined,
+      options: {
+        format?: 'long' | 'short';
+        missingPriceFallback?: 'unknown' | 'zero';
+      } = {}
+    ): string => {
+      const { format = 'long', missingPriceFallback = 'unknown' } = options;
+
+      const formatValue = (value: null | number | undefined): string => {
+        if (value === null || value === undefined) {
+          return missingPriceFallback === 'zero' ? '0' : UNKNOWN_PRICE;
+        }
+        return formatPrice(value);
+      };
+
+      const monthlyLabel = getLabelForInterval('monthly', format);
+      const hourlyLabel = getLabelForInterval('hourly', format);
+      const formattedHourly = `$${formatValue(priceObject?.hourly)}/${hourlyLabel}`;
+      const formattedMonthly = `$${formatValue(priceObject?.monthly)}/${monthlyLabel}`;
+
+      if (billing === 'hourly') {
+        // Hourly-scoped plans are billed purely by the hour and have no monthly commitment,
+        // so the subheading always shows only the hourly price - even when the API happens to return a monthly value.
+        return formattedHourly;
+      }
+
+      if (billing === 'monthly') {
+        return `${formattedMonthly} (${formattedHourly})`;
+      }
+
+      return '';
+    },
+    /**
      * Label for the active billing mode (e.g. `'hour'`, `'month'`).
      * Pass `'short'` to `getLabelForInterval` directly if an abbreviated form is needed.
      */
     priceLabel: getLabelForInterval(billing),
+    /**
+     * Returns the active billing mode for a given plan type ID.
+     * Use this to determine per-pool billing in utility functions that can't call hooks.
+     *
+     * NOTE: This is independent of the `planTypeId` passed to `useComputePricing`.
+     * The hook-level `planTypeId` only affects UI-scoped billing state (`billing`),
+     * while this function always resolves billing based on the provided `typeId`.
+     *
+     * @example
+     * const { getBillingForPlanType } = useComputePricing();
+     * getTotalClusterPrice({ getBillingForPlanType, ... });
+     */
+    getBillingForPlanType: (typeId: string): keyof PriceObject => {
+      const matchers: string[] =
+        computePricing?.activeBillingPlanMatchers ?? [];
+      return resolveBillingForPlanType(typeId, baseBilling, matchers);
+    },
   };
 };

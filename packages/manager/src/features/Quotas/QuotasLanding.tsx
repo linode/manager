@@ -15,6 +15,7 @@ export const QuotasLanding = () => {
     },
 
     title: 'Quotas',
+    docsLink: 'https://techdocs.akamai.com/cloud-computing/docs/quotas',
   };
 
   return (

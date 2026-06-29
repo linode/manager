@@ -1,4 +1,5 @@
-import { isNumber, pluralize } from '@akamai/compute-ui-core/formatting';
+import { getLinodeRegionPrice } from '@akamai/compute-ui-core/api';
+import { pluralize } from '@akamai/compute-ui-core/formatting';
 import {
   type CreateNodePoolData,
   type KubernetesTier,
@@ -20,13 +21,15 @@ import { useCreateNodePoolMutation } from 'src/queries/kubernetes';
 import { extendType } from 'src/utilities/extendType';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants';
-import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/dynamicPricing';
-import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
+import {
+  getNodePriceDisplay,
+  getPoolPriceDisplay,
+} from 'src/utilities/pricing/kubernetes';
+import { useComputePricing } from 'src/utilities/pricing/useComputePricing';
 
 import { PremiumCPUPlanNotice } from '../../CreateCluster/PremiumCPUPlanNotice';
 import { KubernetesPlansPanel } from '../../KubernetesPlansPanel/KubernetesPlansPanel';
 import { NodePoolConfigOptions } from '../../KubernetesPlansPanel/NodePoolConfigOptions';
-import { hasInvalidNodePoolPrice } from './utils';
 
 export interface Props {
   clusterId: number;
@@ -76,15 +79,13 @@ export const AddNodePoolDrawer = (props: Props) => {
     ? extendedTypes.find((t) => t.id === type)
     : undefined;
 
-  const pricePerNode = getLinodeRegionPrice(
-    selectedType,
-    clusterRegionId
-  )?.monthly;
+  const { billing, getPrice } = useComputePricing(type);
 
-  const totalPrice =
-    type && count && isNumber(pricePerNode) ? count * pricePerNode : undefined;
+  const pricePerNodeObj = getLinodeRegionPrice(selectedType, clusterRegionId);
+  const pricePerNode = getPrice(pricePerNodeObj);
 
-  const hasInvalidPrice = hasInvalidNodePoolPrice(pricePerNode, totalPrice);
+  const hasInvalidPrice = typeof pricePerNode !== 'number';
+
   const shouldShowPricingInfo = Boolean(type) && count > 0;
 
   React.useEffect(() => {
@@ -211,10 +212,9 @@ export const AddNodePoolDrawer = (props: Props) => {
                 <Typography>
                   This pool will add{' '}
                   <strong>
-                    ${renderMonthlyPriceToCorrectDecimalPlace(totalPrice)}/month
-                    ({pluralize('node', 'nodes', count)} at $
-                    {renderMonthlyPriceToCorrectDecimalPlace(pricePerNode)}
-                    /month)
+                    {getPoolPriceDisplay(pricePerNodeObj, count, billing)} (
+                    {pluralize('node', 'nodes', count)} at{' '}
+                    {getNodePriceDisplay(pricePerNodeObj, billing)})
                   </strong>{' '}
                   to this cluster.
                 </Typography>

@@ -1,10 +1,9 @@
+import { getErrorMap } from '@akamai/compute-ui-core/api';
 import { useGrants, useImportZoneMutation, useProfile } from '@linode/queries';
 import { ActionsPanel, Drawer, Notice, TextField } from '@linode/ui';
 import { useNavigate } from '@tanstack/react-router';
 import { useFormik } from 'formik';
 import * as React from 'react';
-
-import { getErrorMap } from 'src/utilities/errorUtils';
 
 import type { ImportZonePayload } from '@linode/api-v4/lib/domains';
 

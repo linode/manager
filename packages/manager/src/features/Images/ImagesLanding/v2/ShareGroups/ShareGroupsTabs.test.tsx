@@ -55,6 +55,9 @@ describe('ShareGroupsTabs', () => {
     vi.clearAllMocks();
     const mockNavigate = vi.fn();
     queryMocks.useNavigate.mockReturnValue(mockNavigate);
+    queryMocks.useLocation.mockReturnValue({
+      pathname: '/images/share-groups/membership-requests',
+    });
   });
 
   it('should render all share groups tabs', async () => {

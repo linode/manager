@@ -1,48 +1,14 @@
 import { Button } from '@akamai/cds-components/react';
-import { Box, TextField, Typography } from '@linode/ui';
-import { Grid, styled } from '@mui/material';
+import { styled } from '@mui/material';
 
 import { PlansPanel } from 'src/features/components/PlansPanel/PlansPanel';
-
-export const StyledLabelTooltip = styled(Box, {
-  label: 'StyledLabelTooltip',
-})(() => ({
-  '& strong': {
-    padding: 8,
-  },
-  '& ul': {
-    margin: '4px',
-  },
-}));
-
-export const StyledTextField = styled(TextField, {
-  label: 'StyledTextField',
-})(({ theme }) => ({
-  '& .MuiTooltip-tooltip': {
-    [theme.breakpoints.up('md')]: {
-      minWidth: 350,
-    },
-  },
-}));
-
 export const StyledPlansPanel = styled(PlansPanel, {
   label: 'StyledPlansPanel',
 })(() => ({
   margin: 0,
   padding: 0,
-}));
-
-export const StyledBtnCtn = styled(Grid, {
-  label: 'StyledBtnCtn',
-})(({ theme }) => ({
-  alignItems: 'center',
-  display: 'flex',
-  justifyContent: 'flex-end',
-  marginTop: theme.spacing(2),
-  [theme.breakpoints.down('sm')]: {
-    alignItems: 'flex-end',
-    flexDirection: 'column',
-    marginTop: theme.spacing(),
+  h2: {
+    fontSize: '1.17em',
   },
 }));
 
@@ -55,9 +21,11 @@ export const StyledCreateBtn = styled(Button, {
   whiteSpace: 'nowrap',
 }));
 
-export const StyledTypography = styled(Typography, {
+export const StyledTypography = styled('p', {
   label: 'StyledTypography',
 })(({ theme }) => ({
+  marginBottom: 0,
+  marginTop: 0,
   marginLeft: theme.spacing(),
   marginRight: theme.spacing(3),
   [theme.breakpoints.down('sm')]: {

@@ -118,16 +118,16 @@ describe('UserRow', () => {
     expect(queryByText('Enabled')).not.toBeInTheDocument();
   });
 
-  it('renders only a username, email, and account access status for a Proxy user', async () => {
+  it('renders only a username, email, and account access status for a delegate user', async () => {
     const mockLogin = {
       login_datetime: '2022-02-09T16:19:26',
     };
-    const proxyUser = accountUserFactory.build({
-      email: 'proxy@proxy.com',
+    const delegateUser = accountUserFactory.build({
+      email: 'delegate@delegate.com',
       last_login: mockLogin,
       restricted: true,
-      user_type: 'proxy',
-      username: 'proxyUsername',
+      user_type: 'delegate',
+      username: 'delegateUsername',
     });
 
     server.use(
@@ -138,15 +138,15 @@ describe('UserRow', () => {
     );
 
     const { findByText, queryByText } = renderWithTheme(
-      wrapWithTableBody(<UserRow onDelete={vi.fn()} user={proxyUser} />)
+      wrapWithTableBody(<UserRow onDelete={vi.fn()} user={delegateUser} />)
     );
 
-    // Renders Username, Email, and Account Access fields for a proxy user.
-    expect(await findByText('proxyUsername')).toBeInTheDocument();
-    expect(await findByText('proxy@proxy.com')).toBeInTheDocument();
+    // Renders Username, Email, and Account Access fields for a delegate user.
+    expect(await findByText('delegateUsername')).toBeInTheDocument();
+    expect(await findByText('delegate@delegate.com')).toBeInTheDocument();
     expect(await findByText('Limited')).toBeInTheDocument();
 
-    // Does not render the Last Login for a proxy user.
+    // Does not render the Last Login for a delegate user.
     expect(queryByText('2022-02-09T16:19:26')).not.toBeInTheDocument();
   });
 

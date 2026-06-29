@@ -14,7 +14,7 @@ const props: Props = {
   nodeCount: 3,
   onRemove: vi.fn(),
   poolType: extendedTypes[1],
-  price: 1000,
+  nodePriceObject: { hourly: 1.37, monthly: 1000 },
   updateNodeCount: vi.fn(),
 };
 
@@ -54,6 +54,6 @@ describe('Node Pool Summary Item', () => {
         },
       },
     });
-    getByText('$1,000.00');
+    getByText('$3000/mo');
   });
 });

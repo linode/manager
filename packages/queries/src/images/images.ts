@@ -3,6 +3,7 @@ import {
   deleteImage,
   getImage,
   getImages,
+  getSharegroupsFromImage,
   updateImage,
   updateImageRegions,
   uploadImage,
@@ -26,6 +27,7 @@ import type {
   ImageUploadPayload,
   Params,
   ResourcePage,
+  Sharegroup,
   UpdateImageRegionsPayload,
   UploadImageResponse,
 } from '@linode/api-v4';
@@ -230,4 +232,18 @@ export const imageEventsHandler = ({
       });
     }
   }
+};
+
+export const useImageShareGroupsQuery = (
+  imageId: string,
+  params: Params = {},
+  filter: Filter = {},
+  enabled: boolean,
+) => {
+  return useQuery<ResourcePage<Sharegroup>, APIError[]>({
+    queryKey: ['image', imageId, 'sharegroups'],
+    queryFn: () => getSharegroupsFromImage(imageId, params, filter),
+    enabled,
+    refetchOnMount: 'always',
+  });
 };

@@ -1,5 +1,7 @@
 import {
   Button,
+  FormField,
+  FormLabel,
   Icon,
   Pagination,
   Select,
@@ -15,35 +17,33 @@ import {
 } from '@akamai/cds-components/react';
 import { Spacing } from '@akamai/cds-tokens';
 import { capitalizeAllWords } from '@akamai/compute-ui-core/formatting';
-import { Hidden, Typography } from '@linode/ui';
-import { useTheme } from '@mui/material';
-import Grid from '@mui/material/Grid';
 import { useLocation, useNavigate, useSearch } from '@tanstack/react-router';
 import React, { useState } from 'react';
 
-import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { AssignSelectedRolesDrawer } from 'src/features/IAM/Roles/RolesTable/AssignSelectedRolesDrawer';
 import { RolesTableActionMenu } from 'src/features/IAM/Roles/RolesTable/RolesTableActionMenu';
 import { RolesTableExpandedRow } from 'src/features/IAM/Roles/RolesTable/RolesTableExpandedRow';
+import { DebouncedSearchField } from 'src/features/IAM/Shared/DebouncedSearchField/DebouncedSearchField';
+import globalStyles from 'src/features/IAM/Shared/global.module.css';
 import {
   getFacadeRoleDescription,
   mapEntityTypesForSelect,
 } from 'src/features/IAM/Shared/utilities';
-import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
+import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { useDelegationRole } from '../../hooks/useDelegationRole';
+import { usePagination } from '../../hooks/usePagination';
 import { usePermissions } from '../../hooks/usePermissions';
+import { Box } from '../../Shared/Box/Box';
 import {
   IAM_ROLES_PENDO_IDS,
   ROLES_LEARN_MORE_LINK,
   ROLES_TABLE_PREFERENCE_KEY,
 } from '../../Shared/constants';
 import { Link } from '../../Shared/Link/Link';
-import { Paper } from '../../Shared/Paper/Paper';
 
-import type { RoleView } from '../../Shared/types';
+import type { RoleView, SelectOption } from '../../Shared/types';
 import type { Order } from '@akamai/cds-components/react/Table';
-import type { SelectOption } from '@linode/ui';
 
 const ALL_ROLES_OPTION: SelectOption = {
   label: 'All Roles',
@@ -66,7 +66,7 @@ interface Props {
 const DEFAULT_PAGE_SIZE = 10;
 
 export const RolesTable = ({ roles = [] }: Props) => {
-  const theme = useTheme();
+  const isSmUp = useBreakpoint('up', 'sm');
   const navigate = useNavigate();
   const location = useLocation();
   const { query } = useSearch({
@@ -113,7 +113,7 @@ export const RolesTable = ({ roles = [] }: Props) => {
     return sortRows(filteredRows, sort.order, sort.column);
   }, [filteredRows, sort]);
 
-  const pagination = usePaginationV2({
+  const pagination = usePagination({
     currentRoute: '/iam/roles',
     defaultPageSize: DEFAULT_PAGE_SIZE,
     initialPage: 1,
@@ -143,12 +143,15 @@ export const RolesTable = ({ roles = [] }: Props) => {
     }
   };
 
-  const handleTextFilter = (fs: string) => {
-    navigate({
-      to: location.pathname,
-      search: { query: fs !== '' ? fs : undefined },
-    });
-  };
+  const handleTextFilter = React.useCallback(
+    (fs: string) => {
+      navigate({
+        to: location.pathname,
+        search: { query: fs !== '' ? fs : undefined },
+      });
+    },
+    [navigate, location.pathname]
+  );
 
   const handleChangeEntityTypeFilter = (event: CustomEvent) => {
     const entityType = event.detail as null | SelectOption;
@@ -177,53 +180,53 @@ export const RolesTable = ({ roles = [] }: Props) => {
 
   return (
     <>
-      <Paper
-        marginTop={Spacing.S16}
-        padding={Spacing.S0}
-        paddingBottom={Spacing.S0}
-        paddingTop={Spacing.S0}
+      <Box
+        style={{
+          marginTop: Spacing.S16,
+          padding: 0,
+        }}
       >
-        <Grid
-          container
+        <Box
           direction="row"
           spacing={2}
-          sx={{
+          style={{
             justifyContent: 'space-between',
             marginBottom: Spacing.S12,
           }}
         >
-          <Grid
-            container
+          <Box
             direction="row"
-            sx={{
+            spacing={2}
+            style={{
               alignItems: 'center',
               justifyContent: 'flex-start',
             }}
           >
-            <DebouncedSearchTextField
-              clearable
-              containerProps={{
-                sx: {
-                  width: { md: '416px', xs: '100%' },
-                  height: 34,
-                },
-              }}
-              debounceTime={250}
-              hideLabel
-              label="Search"
-              onSearch={handleTextFilter}
-              placeholder="Search"
-              value={query ?? ''}
-            />
+            <FormField labelPosition="top" style={{ padding: 0 }}>
+              <FormLabel
+                className={globalStyles.visuallyHidden}
+                htmlFor="filter-roles"
+                slot="label"
+              >
+                Search Roles
+              </FormLabel>
+              <DebouncedSearchField
+                id="filter-roles"
+                onSearch={handleTextFilter}
+                placeholder="Search"
+                style={{ padding: 0 }}
+                value={query ?? ''}
+              />
+            </FormField>
             <Select
               items={filterableOptions}
               onChange={handleChangeEntityTypeFilter}
               placeholder="All Roles"
               selected={filterableEntityType}
-              style={{ minWidth: 250 }}
+              style={{ minWidth: 250, maxWidth: 360 }}
               valueFn={(item) => (item as SelectOption).label}
             />
-          </Grid>
+          </Box>
           <Tooltip
             disabled={isAccountAdmin && selectedRows.length > 0}
             tooltipPlacement="bottom"
@@ -254,13 +257,11 @@ export const RolesTable = ({ roles = [] }: Props) => {
               ) : null}
             </Button>
           </Tooltip>
-        </Grid>
+        </Box>
         <Table data-testid="roles-table">
           <TableHead>
             <TableRow
-              headerbackground={
-                theme.tokens.component.Table.HeaderNested.Background
-              }
+              headerbackground="var(--token-component-table-header-nested-background)"
               headerborder
               select={(event) => handleSelect(event, 'all')}
               selected={areAllSelected}
@@ -276,7 +277,7 @@ export const RolesTable = ({ roles = [] }: Props) => {
               >
                 Role
               </TableHeaderCell>
-              <Hidden smDown>
+              {isSmUp && (
                 <TableHeaderCell
                   onSort={(event) => handleSort(event, 'access')}
                   sortable
@@ -288,8 +289,8 @@ export const RolesTable = ({ roles = [] }: Props) => {
                 >
                   Role Type
                 </TableHeaderCell>
-              </Hidden>
-              <Hidden smDown>
+              )}
+              {isSmUp && (
                 <TableHeaderCell
                   style={{
                     minWidth: COLUMN_WIDTHS.description,
@@ -298,7 +299,7 @@ export const RolesTable = ({ roles = [] }: Props) => {
                 >
                   Description
                 </TableHeaderCell>
-              </Hidden>
+              )}
               <TableHeaderCell
                 style={{
                   minWidth: COLUMN_WIDTHS.actions,
@@ -342,7 +343,7 @@ export const RolesTable = ({ roles = [] }: Props) => {
                   >
                     {roleRow.name}
                   </TableCell>
-                  <Hidden smDown>
+                  {isSmUp && (
                     <TableCell
                       style={{
                         minWidth: COLUMN_WIDTHS.access,
@@ -351,8 +352,8 @@ export const RolesTable = ({ roles = [] }: Props) => {
                     >
                       {capitalizeAllWords(roleRow.access, '_')}
                     </TableCell>
-                  </Hidden>
-                  <Hidden smDown>
+                  )}
+                  {isSmUp && (
                     <TableCell
                       style={{
                         minWidth: COLUMN_WIDTHS.description,
@@ -362,16 +363,16 @@ export const RolesTable = ({ roles = [] }: Props) => {
                       {roleRow.permissions.length ? (
                         roleRow.description
                       ) : (
-                        <Typography>
+                        <p>
                           {getFacadeRoleDescription(roleRow)}{' '}
                           <Link to={ROLES_LEARN_MORE_LINK}>Learn more</Link>.
-                        </Typography>
+                        </p>
                       )}
                     </TableCell>
-                  </Hidden>
+                  )}
                   <TableCell
+                    className={globalStyles.actionsCell}
                     style={{
-                      justifyContent: 'flex-end',
                       minWidth: COLUMN_WIDTHS.actions,
                       ...TABLE_CELL_BASE_STYLE,
                     }}
@@ -386,9 +387,9 @@ export const RolesTable = ({ roles = [] }: Props) => {
                   <TableRowExpanded
                     slot="expanded"
                     style={{
-                      marginBottom: theme.spacingFunction(12),
-                      marginLeft: theme.spacingFunction(44),
-                      padding: `0 ${theme.spacingFunction(4)}`,
+                      marginBottom: Spacing.S12,
+                      marginLeft: Spacing.S40,
+                      padding: `0 ${Spacing.S4}`,
                       width: '100%',
                     }}
                   >
@@ -409,7 +410,7 @@ export const RolesTable = ({ roles = [] }: Props) => {
             style={{ border: 0 }}
           />
         )}
-      </Paper>
+      </Box>
       <AssignSelectedRolesDrawer
         onClose={() => setIsDrawerOpen(false)}
         onSuccess={() => setSelectedRows([])}

@@ -1,6 +1,6 @@
+import { getMetrics } from '@akamai/compute-ui-core/api';
 import { Alias } from '@linode/design-language-system';
 import { DateTimeRangePicker } from '@linode/ui';
-import { getMetrics } from '@linode/utilities';
 
 import { DIMENSION_TRANSFORM_CONFIG } from '../shared/DimensionTransform';
 import {

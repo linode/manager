@@ -1,3 +1,4 @@
+import { getAPIErrorOrDefault } from '@akamai/compute-ui-core/api';
 import { Notice, Typography } from '@linode/ui';
 import { groupByTags, sortGroups } from '@linode/utilities';
 import { GridLegacy, TableBody, TableHead, TableRow } from '@mui/material';
@@ -18,7 +19,6 @@ import {
   useDeleteAlertDefinitionMutation,
   useEditAlertDefinition,
 } from 'src/queries/cloudpulse/alerts';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { AlertConfirmationDialog } from '../AlertsLanding/AlertConfirmationDialog';
 import {

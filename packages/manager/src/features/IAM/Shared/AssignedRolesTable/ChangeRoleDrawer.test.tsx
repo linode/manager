@@ -2,13 +2,16 @@ import { fireEvent, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
-import { accountEntityFactory } from 'src/factories/accountEntities';
-import { accountRolesFactory } from 'src/factories/accountRoles';
+import { createAccountEntity, createAccountRoles } from '../../factories';
+import {
+  mockScrollIntoView,
+  submitCdsDrawerForm,
+} from '../../utilities/testHelpers';
 import {
   getShadowRootElement,
-  renderWithTheme,
-} from 'src/utilities/testHelpers';
-
+  mockMatchMedia,
+  renderWithProviders,
+} from '../../utilities/testHelpers';
 import { ChangeRoleDrawer } from './ChangeRoleDrawer';
 
 import type { ExtendedRoleView } from '../types';
@@ -84,9 +87,11 @@ vi.mock('@linode/api-v4', async () => {
   };
 });
 
+beforeAll(() => mockMatchMedia());
+
 describe('ChangeRoleDrawer', () => {
   beforeEach(() => {
-    Element.prototype.scrollIntoView ??= vi.fn();
+    mockScrollIntoView();
 
     queryMocks.useParams.mockReturnValue({
       username: 'test_user',
@@ -94,14 +99,14 @@ describe('ChangeRoleDrawer', () => {
   });
 
   it('should render', async () => {
-    renderWithTheme(<ChangeRoleDrawer {...props} mode="change-role" />);
+    renderWithProviders(<ChangeRoleDrawer {...props} mode="change-role" />);
 
     // Verify title renders
     expect(screen.getByText('Change Role')).toBeVisible();
   });
 
   it('renders the correct text for account_access roles', async () => {
-    renderWithTheme(<ChangeRoleDrawer {...props} mode="change-role" />);
+    renderWithProviders(<ChangeRoleDrawer {...props} mode="change-role" />);
 
     // Check that the correct text is displayed for account_access
     expect(
@@ -110,7 +115,7 @@ describe('ChangeRoleDrawer', () => {
   });
 
   it('renders the correct text for entity_access roles', async () => {
-    renderWithTheme(
+    renderWithProviders(
       <ChangeRoleDrawer
         {...props}
         mode="change-role"
@@ -143,14 +148,14 @@ describe('ChangeRoleDrawer', () => {
     });
 
     queryMocks.useAccountRoles.mockReturnValue({
-      data: accountRolesFactory.build(),
+      data: createAccountRoles(),
     });
 
     queryMocks.useAccountEntities.mockReturnValue({
-      data: accountEntityFactory.build(),
+      data: createAccountEntity(),
     });
 
-    renderWithTheme(<ChangeRoleDrawer {...props} mode="change-role" />);
+    renderWithProviders(<ChangeRoleDrawer {...props} mode="change-role" />);
 
     const cdsSelect = document.querySelector('cds-select');
     expect(cdsSelect).not.toBeNull();
@@ -191,7 +196,7 @@ describe('ChangeRoleDrawer', () => {
     await waitFor(() => {
       expect(inputSelect).toHaveValue('account_viewer');
     });
-    await userEvent.click(screen.getByText('Save Change'));
+    submitCdsDrawerForm();
 
     await waitFor(() => {
       expect(mockUpdateUserRole).toHaveBeenCalledWith({
@@ -209,10 +214,10 @@ describe('ChangeRoleDrawer', () => {
 
   it('should not list the current role in the autocomplete options', async () => {
     queryMocks.useAccountRoles.mockReturnValue({
-      data: accountRolesFactory.build(),
+      data: createAccountRoles(),
     });
 
-    renderWithTheme(<ChangeRoleDrawer {...props} mode="change-role" />);
+    renderWithProviders(<ChangeRoleDrawer {...props} mode="change-role" />);
 
     const cdsSelect = document.querySelector('cds-select');
     expect(cdsSelect).not.toBeNull();

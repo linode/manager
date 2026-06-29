@@ -1,5 +1,5 @@
+import { getFormattedStatus } from '@akamai/compute-ui-core/api';
 import { usePlacementGroupQuery } from '@linode/queries';
-import { getFormattedStatus } from '@linode/utilities';
 import { useParams } from '@tanstack/react-router';
 import * as React from 'react';
 

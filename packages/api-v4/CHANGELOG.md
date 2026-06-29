@@ -1,3 +1,19 @@
+## [2026-06-29] - v0.162.0
+
+
+### Tech Stories:
+
+- Point API endpoints to v4 instead of v4beta ([#357](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/357))
+- Update concurrently@10.0.3 to resolve shell-quote@1.8.3 vuln ([#447](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/447))
+- Update axios@1.18.0 to resolve a vulnerability in form-data 4.0.5 ([#471](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/471))
+
+### Upcoming Features:
+
+- Private Image Sharing: Fix typo in the UpdateSharegroupImage() URL ([#257](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/257))
+- Add description as a parameter for the Widgets interface for ACLP-Metrics ([#347](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/347))
+- Updated /nodebalancer API endpoints to support Premium Nodebalancers ([#393](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/393))
+- Private Image Sharing: Add missing return statement in getShareGroupsFromImage() ([#427](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/427))
+
 ## [2026-05-27] - v0.161.0
 
 

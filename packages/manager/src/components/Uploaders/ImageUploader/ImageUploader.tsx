@@ -1,5 +1,5 @@
+import { readableBytes } from '@akamai/compute-ui-core/api';
 import { Box, Button, Stack, Typography } from '@linode/ui';
-import { readableBytes } from '@linode/utilities';
 import { styled } from '@mui/material';
 import { Duration } from 'luxon';
 import * as React from 'react';

@@ -72,17 +72,3 @@ export const checkIAMEnabled = async (
     return false;
   }
 };
-
-/**
- * Returns whether or not features related to the IAM Delegation project
- * should be enabled.
- */
-export const useIsIAMDelegationEnabled = () => {
-  const flags = useFlags();
-  const { isIAMEnabled } = useIsIAMEnabled();
-
-  return {
-    isIAMDelegationEnabled:
-      (flags.iamDelegation?.enabled && isIAMEnabled) ?? false,
-  };
-};

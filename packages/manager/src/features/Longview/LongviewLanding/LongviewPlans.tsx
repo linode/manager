@@ -1,3 +1,4 @@
+import { getAPIErrorOrDefault } from '@akamai/compute-ui-core/api';
 import {
   getActiveLongviewPlan,
   updateActiveLongviewPlan,
@@ -15,7 +16,6 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import {
   StyledChip,

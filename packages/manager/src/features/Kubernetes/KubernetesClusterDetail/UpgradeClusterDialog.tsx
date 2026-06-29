@@ -1,3 +1,4 @@
+import { getDCSpecificPriceByType } from '@akamai/compute-ui-core/api';
 import {
   ActionsPanel,
   Checkbox,
@@ -20,7 +21,6 @@ import {
   useKubernetesTypesQuery,
 } from 'src/queries/kubernetes';
 import { HA_UPGRADE_PRICE_ERROR_MESSAGE } from 'src/utilities/pricing/constants';
-import { getDCSpecificPriceByType } from 'src/utilities/pricing/dynamicPricing';
 
 import { HACopy } from '../CreateCluster/HAControlPlane';
 

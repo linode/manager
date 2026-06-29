@@ -1,6 +1,5 @@
-import { Tooltip } from '@linode/ui';
+import { Tooltip } from '@akamai/cds-components/react';
 import * as React from 'react';
-import type { ComponentProps } from 'react';
 
 import { truncateEnd } from '../truncate';
 
@@ -15,11 +14,6 @@ interface Props {
    * Optional Styles
    */
   style?: React.CSSProperties;
-  /**
-   * Optional tooltip placement
-   * @default 'bottom'
-   */
-  tooltipPlacement?: ComponentProps<typeof Tooltip>['placement'];
   /** The username to truncate
    */
   username: string;
@@ -49,18 +43,17 @@ const useWindowWidth = () => {
  * this is mainly used for delegate usernames that has format: {delegate-parentUsername-HASH}.
  */
 export const TruncatedUsername = (props: Props) => {
-  const {
-    maxWindowWidth,
-    style,
-    tooltipPlacement = 'bottom',
-    username,
-  } = props;
+  const { maxWindowWidth, style, username } = props;
   const windowWidth = useWindowWidth();
   const isTruncated =
     username.length > 32 && (!maxWindowWidth || windowWidth <= maxWindowWidth);
 
   return (
-    <Tooltip placement={tooltipPlacement} title={isTruncated ? username : null}>
+    <Tooltip
+      disabled={!isTruncated}
+      tooltipPlacement="bottom"
+      tooltipText={username}
+    >
       <p
         style={{
           marginTop: 0,

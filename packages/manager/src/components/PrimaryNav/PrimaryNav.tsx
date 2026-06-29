@@ -27,7 +27,10 @@ import { useIsInferencePlatformEnabled } from 'src/features/InferencePlatform/ut
 import { useIsMarketplaceV2Enabled } from 'src/features/Marketplace/shared';
 import { useIsNetworkLoadBalancerEnabled } from 'src/features/NetworkLoadBalancers/utils';
 import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils';
-import { useIsReserveIpEnabled } from 'src/features/ReservedIps/utils';
+import {
+  useIsReserveIpEnabled,
+  useIsReserveIpNewBadgeEnabled,
+} from 'src/features/ReservedIps/utils';
 import { useFlags } from 'src/hooks/useFlags';
 
 import PrimaryLink from './PrimaryLink';
@@ -149,6 +152,8 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
 
   const { isReserveIpEnabled } = useIsReserveIpEnabled();
 
+  const { isReserveIpNewBadgeEnabled } = useIsReserveIpNewBadgeEnabled();
+
   const { data: preferences } = usePreferences();
 
   const collapsedSideNavPreference =
@@ -248,9 +253,13 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
                 to: '/nodebalancers',
               },
               {
+                attr: {
+                  'data-pendo-id': 'menu-item-Reserved IPs',
+                },
                 display: 'Reserved IPs',
                 hide: !isReserveIpEnabled,
                 to: '/reserved-ips',
+                isNew: isReserveIpEnabled && isReserveIpNewBadgeEnabled,
               },
               {
                 display: 'Domains',
@@ -384,6 +393,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
         isMarketplaceV2FeatureEnabled,
         isNetworkLoadBalancerEnabled,
         isReserveIpEnabled,
+        isReserveIpNewBadgeEnabled,
         isInferencePlatformEnabled,
         limitsEvolution,
       ]

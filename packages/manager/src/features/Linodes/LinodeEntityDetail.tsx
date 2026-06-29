@@ -1,3 +1,4 @@
+import { formatStorageUnits } from '@akamai/compute-ui-core/api';
 import {
   useAllImagesQuery,
   useLinodeVolumesQuery,
@@ -5,7 +6,6 @@ import {
   useTypeQuery,
 } from '@linode/queries';
 import { Notice } from '@linode/ui';
-import { formatStorageUnits } from '@linode/utilities';
 import * as React from 'react';
 
 import { EntityDetail } from 'src/components/EntityDetail/EntityDetail';

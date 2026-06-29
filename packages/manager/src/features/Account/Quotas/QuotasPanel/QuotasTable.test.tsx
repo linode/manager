@@ -133,21 +133,20 @@ describe('QuotasTable', () => {
           resource_metric: 'byte_per_second',
           has_usage: false,
         }),
+        objEndpointQuotaFactory.build({
+          quota_name: 'Egress Throughput (per endpoint)',
+          description:
+            'Current total egress bandwidth per account, per endpoint',
+          quota_limit: 2500000000,
+          quota_type: 'obj-total-egress-throughput',
+          resource_metric: 'byte_per_second',
+          has_usage: false,
+        }),
       ],
       isFetching: false,
     });
 
-    queryMocks.useQueries.mockReturnValue([
-      {
-        data: quotaUsageFactory.build({
-          quota_limit: 1250000000,
-          usage: 10,
-        }),
-        isLoading: false,
-      },
-    ]);
-
-    const { getByLabelText, getByText } = renderWithTheme(
+    const { getByLabelText, getAllByRole, getByRole } = renderWithTheme(
       <QuotasTable
         scope={'obj-endpoint'}
         scopeValue={'endpoint.linodeobjects.com'}
@@ -156,17 +155,48 @@ describe('QuotasTable', () => {
     );
 
     await waitFor(() => {
-      expect(getByText('Ingress Throughput')).toBeInTheDocument();
-      expect(getByText(`10 Gbps`)).toBeInTheDocument();
+      expect(getByRole('table')).toBeInTheDocument();
+      expect(getAllByRole('row')).toHaveLength(3);
+
+      const ingressActionMenu = getByLabelText(
+        'Action menu for quota Ingress Throughput'
+      );
+      const ingressRow = ingressActionMenu.closest('tr');
+      expect(ingressRow).not.toBeNull();
+      expect(ingressRow).toHaveTextContent('Ingress Throughput');
+      expect(ingressRow).toHaveTextContent('10 Gbps');
       expect(
         getByLabelText(
           'Current total ingress bandwidth per account, per endpoint'
         )
       ).toBeInTheDocument();
-      expect(getByText('Not applicable')).toBeInTheDocument();
+
+      const ingressUsageLink = ingressRow!.querySelector('a');
+      expect(ingressUsageLink).not.toBeNull();
+      expect(ingressUsageLink).toHaveTextContent(
+        'Ingress usage available in Cloud Pulse Metrics'
+      );
+      expect(ingressUsageLink).toHaveAttribute('href', '/metrics');
+
+      const egressActionMenu = getByLabelText(
+        'Action menu for quota Egress Throughput'
+      );
+      const egressRow = egressActionMenu.closest('tr');
+      expect(egressRow).not.toBeNull();
+      expect(egressRow).toHaveTextContent('Egress Throughput');
+      expect(egressRow).toHaveTextContent('20 Gbps');
       expect(
-        getByLabelText('Action menu for quota Ingress Throughput')
+        getByLabelText(
+          'Current total egress bandwidth per account, per endpoint'
+        )
       ).toBeInTheDocument();
+
+      const egressUsageLink = egressRow!.querySelector('a');
+      expect(egressUsageLink).not.toBeNull();
+      expect(egressUsageLink).toHaveTextContent(
+        'Egress usage available in Cloud Pulse Metrics'
+      );
+      expect(egressUsageLink).toHaveAttribute('href', '/metrics');
     });
   });
 });

@@ -1,0 +1,37 @@
+.truncatedList {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  list-style-type: none;
+  flex-wrap: wrap;
+  max-height: 3.2em;
+  overflow: hidden;
+}
+
+.truncatedList.expanded {
+  max-height: none;
+}
+
+.truncatedList :global(.visible-overflow-button) {
+  flex: 1;
+  display: flex;
+  justify-content: end;
+}
+
+.truncatedList :global(.last-visible-before-overflow) {
+  position: relative;
+}
+
+.truncatedList :global(.last-visible-before-overflow)::after {
+  content: '...';
+  display: inline;
+  top: 2px;
+  position: absolute;
+  right: -3px;
+}
+
+@supports (selector(:has(*))) {
+  .truncatedList li:not([hidden]):has(~ li:not([hidden])) > span {
+    border-right: 1px solid var(--token-alias-border-normal);
+  }
+}

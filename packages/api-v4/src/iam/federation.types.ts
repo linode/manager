@@ -1,6 +1,6 @@
 import type { Filter, Params } from '../types';
 
-export type IdentityElement = 'NAME_ID' | 'USER_ID_ATTRIBUTE';
+export type IdentityElement = 'name_id' | 'user_id_attribute';
 
 export interface IdpCertificate {
   certificate: string;

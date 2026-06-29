@@ -2,10 +2,9 @@ import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
-import { accountRolesFactory } from 'src/factories/accountRoles';
-import { renderWithTheme } from 'src/utilities/testHelpers';
-
+import { createAccountRoles } from '../../factories';
 import { getCdsButtonByText } from '../../utilities/testHelpers';
+import { renderWithProviders } from '../../utilities/testHelpers';
 import { INTERNAL_ERROR_NO_CHANGES_SAVED } from '../constants';
 import { UnassignRoleConfirmationDialog } from './UnassignRoleConfirmationDialog';
 
@@ -96,7 +95,7 @@ describe('UnassignRoleConfirmationDialog', () => {
   });
 
   it('should render', async () => {
-    renderWithTheme(<UnassignRoleConfirmationDialog {...props} />);
+    renderWithProviders(<UnassignRoleConfirmationDialog {...props} />);
 
     // The title is rendered in a slot of cds-modal (light DOM)
     expect(screen.getByText('Unassign role?')).toBeInTheDocument();
@@ -117,7 +116,7 @@ describe('UnassignRoleConfirmationDialog', () => {
   });
 
   it('calls the corresponding functions when buttons are clicked', async () => {
-    renderWithTheme(<UnassignRoleConfirmationDialog {...props} />);
+    renderWithProviders(<UnassignRoleConfirmationDialog {...props} />);
 
     const deleteButton = await getCdsButtonByText(document.body, 'Remove');
     expect(deleteButton).toBeVisible();
@@ -145,7 +144,7 @@ describe('UnassignRoleConfirmationDialog', () => {
     });
 
     queryMocks.useAccountRoles.mockReturnValue({
-      data: accountRolesFactory.build(),
+      data: createAccountRoles(),
     });
 
     queryMocks.useUserRolesMutation.mockReturnValue({
@@ -155,7 +154,7 @@ describe('UnassignRoleConfirmationDialog', () => {
       reset: vi.fn(),
     });
 
-    renderWithTheme(<UnassignRoleConfirmationDialog {...props} />);
+    renderWithProviders(<UnassignRoleConfirmationDialog {...props} />);
 
     const removeButton = await getCdsButtonByText(document.body, 'Remove');
 
@@ -188,7 +187,7 @@ describe('UnassignRoleConfirmationDialog', () => {
       isDefaultDelegationRolesForChildAccount: true,
     });
 
-    renderWithTheme(<UnassignRoleConfirmationDialog {...props} />);
+    renderWithProviders(<UnassignRoleConfirmationDialog {...props} />);
 
     const removeButton = await getCdsButtonByText(document.body, 'Remove');
     expect(removeButton).toBeVisible();

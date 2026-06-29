@@ -65,7 +65,7 @@ export interface ConfigurationItem {
   minLength?: number; // min length for the text input
   pattern?: string;
   requires_restart?: boolean;
-  type?: [string, null] | string | string[];
+  type?: [number, null] | [string, null] | string | string[];
 }
 
 export type ConfigValue = boolean | number | string;

@@ -1,3 +1,4 @@
+import { getAPIErrorOrDefault } from '@akamai/compute-ui-core/api';
 import { useVPCQuery, useVPCsQuery } from '@linode/queries';
 import { CircleProgress, ErrorState } from '@linode/ui';
 import { Hidden } from '@linode/ui';
@@ -23,7 +24,6 @@ import { VPC_DOCS_LINK, VPC_LABEL } from 'src/features/VPCs/constants';
 import { useFlags } from 'src/hooks/useFlags';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { VPCDeleteDialog } from './VPCDeleteDialog';
 import { VPCEditDrawer } from './VPCEditDrawer';

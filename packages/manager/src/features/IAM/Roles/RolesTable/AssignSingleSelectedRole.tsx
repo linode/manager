@@ -1,10 +1,11 @@
-import { useTheme } from '@mui/material';
-import Box from '@mui/material/Box';
+import { Spacing } from '@akamai/cds-tokens';
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import { AssignedPermissionsPanel } from 'src/features/IAM/Shared/AssignedPermissionsPanel/AssignedPermissionsPanel';
 import { Divider } from 'src/features/IAM/Shared/Divider/Divider';
+
+import { Box } from '../../Shared/Box/Box';
 
 import type { RoleView } from 'src/features/IAM/Shared/types';
 import type { AssignNewRoleFormValues } from 'src/features/IAM/Shared/utilities';
@@ -20,18 +21,13 @@ export const AssignSingleSelectedRole = ({
   index,
   role,
 }: Props) => {
-  const theme = useTheme();
-
   const { control } = useFormContext<AssignNewRoleFormValues>();
 
   return (
-    <Box display="flex">
-      <Box display="flex" flexDirection="column" sx={{ flex: '5 1 auto' }}>
+    <Box>
+      <Box style={{ flex: '5 1 auto' }}>
         {index !== 0 && (
-          <Divider
-            spacingBottom={theme.tokens.spacing.S6}
-            spacingTop={theme.tokens.spacing.S12}
-          />
+          <Divider spacingBottom={Spacing.S6} spacingTop={Spacing.S12} />
         )}
 
         {!!role && (

@@ -2,6 +2,7 @@ import { useLinodeQuery } from '@linode/queries';
 import * as React from 'react';
 
 import { SupportLink } from 'src/components/SupportLink';
+import { useComputePricing } from 'src/utilities/pricing/useComputePricing';
 
 import type { IPType } from './AddIPDrawer';
 
@@ -12,6 +13,8 @@ interface ExplainerCopyProps {
 
 export const ExplainerCopy = ({ ipType, linodeId }: ExplainerCopyProps) => {
   const { data: linode } = useLinodeQuery(linodeId);
+  // Use global billing mode, not plan-specific
+  const { billing } = useComputePricing();
 
   switch (ipType) {
     case 'v4Private':
@@ -27,7 +30,7 @@ export const ExplainerCopy = ({ ipType, linodeId }: ExplainerCopyProps) => {
       return (
         <>
           Public IP addresses, over and above the one included with each Linode,
-          incur an additional monthly charge. If you need an additional Public
+          incur an additional {billing} charge. If you need an additional Public
           IP Address you must request one. Please open a{' '}
           <SupportLink
             entity={{ id: linodeId, type: 'linode_id' }}

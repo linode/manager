@@ -37,7 +37,7 @@ export const UserDetail = () => {
     },
   ]);
 
-  const isProxyUser = user?.user_type === 'proxy';
+  const isDelegateUser = user?.user_type === 'delegate';
 
   if (isLoading) {
     return <CircleProgress />;
@@ -65,7 +65,7 @@ export const UserDetail = () => {
         title={user?.username}
       />
       <Tabs index={tabIndex} onChange={handleTabChange}>
-        {!isProxyUser && <TanStackTabLinkList tabs={tabs} />}
+        {!isDelegateUser && <TanStackTabLinkList tabs={tabs} />}
         <TabPanels>
           <SafeTabPanel index={0}>
             <UserProfile />

@@ -1,4 +1,5 @@
-import { isNumber, pluralize } from '@akamai/compute-ui-core/formatting';
+import { getLinodeRegionPrice } from '@akamai/compute-ui-core/api';
+import { pluralize } from '@akamai/compute-ui-core/formatting';
 import { useSpecificTypes } from '@linode/queries';
 import { ActionsPanel, Drawer, Notice, Typography } from '@linode/ui';
 import { Box, FormLabel } from '@mui/material';
@@ -14,8 +15,11 @@ import {
 
 import { EnhancedNumberInput } from 'src/components/EnhancedNumberInput/EnhancedNumberInput';
 import { extendType } from 'src/utilities/extendType';
-import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/dynamicPricing';
-import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
+import {
+  getNodePriceDisplay,
+  getPoolPriceDisplay,
+} from 'src/utilities/pricing/kubernetes';
+import { useComputePricing } from 'src/utilities/pricing/useComputePricing';
 
 import {
   DEFAULT_PLAN_COUNT,
@@ -87,10 +91,9 @@ export const NodePoolConfigDrawer = (props: Props) => {
   const nodeCountWatcher = useWatch({ control, name: 'count' });
   const updatedCount =
     nodeCountWatcher ?? form.getValues('count') ?? DEFAULT_PLAN_COUNT;
-  const pricePerNode = getLinodeRegionPrice(
-    planType,
-    selectedRegion?.toString()
-  )?.monthly;
+
+  const pricePerNodeObj = getLinodeRegionPrice(planType, selectedRegion?.id);
+  const { billing } = useComputePricing(planId);
 
   const isAddMode = mode === 'add';
 
@@ -196,17 +199,14 @@ export const NodePoolConfigDrawer = (props: Props) => {
                 />
               )}
             />
-            {isNumber(pricePerNode) && (
+            {pricePerNodeObj && (
               <Typography marginTop={3}>
-                {/* Renders total pool price/month for N nodes at price per node/month. */}
+                {/* Renders total pool price for N nodes at price per node. */}
                 <strong>
-                  {`$${renderMonthlyPriceToCorrectDecimalPlace(
-                    updatedCount * pricePerNode
-                  )}/month`}{' '}
-                </strong>
-                ({pluralize('node', 'nodes', updatedCount)} at $
-                {renderMonthlyPriceToCorrectDecimalPlace(pricePerNode)}
-                /month each)
+                  {getPoolPriceDisplay(pricePerNodeObj, updatedCount, billing)}
+                </strong>{' '}
+                ({pluralize('node', 'nodes', updatedCount)} at{' '}
+                {getNodePriceDisplay(pricePerNodeObj, billing)} each)
               </Typography>
             )}
           </Box>

@@ -1,5 +1,7 @@
-import { Color, Spacing } from '@akamai/cds-tokens';
+import { Spacing } from '@akamai/cds-tokens';
 import * as React from 'react';
+
+import { STATUS_COLORS } from './constants';
 
 export type Status = 'active' | 'error' | 'inactive' | 'other';
 
@@ -19,13 +21,6 @@ export interface StatusProps
    */
   status: Status;
 }
-
-const STATUS_COLORS: Record<Status, string> = {
-  active: Color.Green[70],
-  error: Color.Red[70],
-  inactive: Color.Neutrals[30],
-  other: Color.Amber[70],
-};
 
 export const StatusIcon = React.memo((props: StatusProps) => {
   const { ariaLabel, pulse, status, style, ...rest } = props;

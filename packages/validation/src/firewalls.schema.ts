@@ -1,10 +1,8 @@
+import { IP_ERROR_MESSAGE } from '@akamai/compute-ui-core/api';
 // We must use a default export for ipaddr.js so our packages node compatability
 // Refer to https://github.com/linode/manager/issues/8675
 import ipaddr from 'ipaddr.js';
 import { array, number, object, string } from 'yup';
-
-export const IP_ERROR_MESSAGE =
-  'Must be a valid IPv4 or IPv6 address or range.';
 
 export const validateIP = (ipAddress?: null | string): boolean => {
   // ''is falsy, so we must specify that it is OK

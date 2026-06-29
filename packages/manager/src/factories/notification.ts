@@ -40,7 +40,7 @@ export const gdprComplianceNotification = notificationFactory.extend({
   label: "We've updated our policies",
   // safe
   message:
-    "We've updated our policies. See <a href='https://www.linode.com/eu-model/'>https://www.linode.com/eu-model/</a> for more information.",
+    "We've updated our policies. See <a href='https://www.akamai.com/legal/compliance/privacy-trust-center/cross-border-data-transfer-statement'>https://www.akamai.com/legal/compliance/privacy-trust-center/cross-border-data-transfer-statement</a> for more information.",
   severity: 'major',
   type: 'notice',
   until: null,

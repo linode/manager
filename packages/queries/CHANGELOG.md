@@ -1,3 +1,16 @@
+## [2026-06-29] - v0.26.0
+
+
+### Upcoming Features:
+
+- Private Image Sharing: Add useShareGroupTokenQuery(), useShareGroupFromTokenQuery(), and useShareGroupImagesFromTokenQuery() ([#221](https://github.com/linode/manager/pull/221))
+- Private Image Sharing: add useDeleteTokenFromShareGroupMutation() query ([#247](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/247))
+- Private Image Sharing: Add the useDeleteShareGroupImageMutation() query ([#256](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/256/overview))
+- Private Image Sharing: Add the useUpdateShareGroupImageMutation() query ([#257](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/257))
+- Private Image Sharing: Add useGenerateShareGroupTokenMutation() query ([#269](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/269))
+- Private Image Sharing: Add the useShareGroupsAddImagesMutation() query ([#327](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/327/overview))
+- Private Image Sharing: Implement the useImageShareGroupsQuery() ([#427](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/427))
+
 ## [2026-05-27] - v0.25.0
 
 

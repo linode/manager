@@ -3,13 +3,29 @@ import userEvent from '@testing-library/user-event';
 import React from 'react';
 
 import {
+  changeCdsTextField,
+  expectCdsFormError,
   expectNotificationBannerText,
   getCdsTextFieldInput,
-} from 'src/features/IAM/utilities/testHelpers';
-import { http, HttpResponse, server } from 'src/mocks/testServer';
-import { renderWithTheme } from 'src/utilities/testHelpers';
-
+  submitCdsDrawerForm,
+} from '../../utilities/testHelpers';
+import { renderWithProviders } from '../../utilities/testHelpers';
 import { CreateUserDrawer } from './CreateUserDrawer';
+
+const mocks = vi.hoisted(() => ({
+  mutateAsync: vi.fn(),
+}));
+
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
+
+  return {
+    ...actual,
+    useCreateUserMutation: vi.fn(() => ({
+      mutateAsync: mocks.mutateAsync,
+    })),
+  };
+});
 
 const props = {
   onClose: vi.fn(),
@@ -17,6 +33,11 @@ const props = {
 };
 
 const testEmail = 'testuser@example.com';
+
+beforeEach(() => {
+  vi.clearAllMocks();
+  mocks.mutateAsync.mockResolvedValue({});
+});
 
 const getDrawerInputs = async () => {
   const usernameHost = document.querySelector<HTMLElement>(
@@ -36,31 +57,36 @@ const getDrawerInputs = async () => {
   expect(emailInput).toBeTruthy();
 
   return {
+    emailHost: emailHost!,
     emailInput: emailInput!,
+    usernameHost: usernameHost!,
     usernameInput: usernameInput!,
   };
 };
 
 describe('CreateUserDrawer', () => {
   it('should render the drawer when open is true', () => {
-    const { getByTestId } = renderWithTheme(<CreateUserDrawer {...props} />);
+    const { getByTestId } = renderWithProviders(
+      <CreateUserDrawer {...props} />
+    );
 
     const dialog = getByTestId('drawer');
     expect(dialog).toBeInTheDocument();
   });
 
-  it('should allow the user to fill out the form',  async () => {
-    const { getByTestId } = renderWithTheme(
+  it('should allow the user to fill out the form', async () => {
+    const { getByTestId } = renderWithProviders(
       <CreateUserDrawer {...props} />
     );
 
     const dialog = getByTestId('drawer');
     expect(dialog).toBeInTheDocument();
 
-    const { emailInput, usernameInput } = await getDrawerInputs();
+    const { emailHost, emailInput, usernameHost, usernameInput } =
+      await getDrawerInputs();
 
-    await userEvent.type(usernameInput, 'testuser');
-    await userEvent.type(emailInput, testEmail);
+    await changeCdsTextField(usernameHost, 'testuser');
+    await changeCdsTextField(emailHost, testEmail);
 
     expect(usernameInput).toHaveValue('testuser');
     expect(emailInput).toHaveValue(testEmail);
@@ -69,27 +95,24 @@ describe('CreateUserDrawer', () => {
   it('should display an error message when submission fails', async () => {
     const mockErrorMessage = 'An unexpected error occurred.';
 
-    server.use(
-      http.post('*/account/users', () => {
-        return HttpResponse.json(
-          { errors: [{ reason: mockErrorMessage }] },
-          { status: 500 }
-        );
-      })
-    );
+    mocks.mutateAsync.mockRejectedValue([
+      {
+        reason: mockErrorMessage,
+      },
+    ]);
 
-    const { getByTestId } = renderWithTheme(
+    const { getByTestId } = renderWithProviders(
       <CreateUserDrawer {...props} />
     );
 
     const dialog = getByTestId('drawer');
     expect(dialog).toBeInTheDocument();
 
-    const { emailInput, usernameInput } = await getDrawerInputs();
+    const { emailHost, usernameHost } = await getDrawerInputs();
 
-    await userEvent.type(usernameInput, 'testuser');
-    await userEvent.type(emailInput, testEmail);
-    await userEvent.click(getByTestId('submit'));
+    await changeCdsTextField(usernameHost, 'testuser');
+    await changeCdsTextField(emailHost, testEmail);
+    submitCdsDrawerForm();
 
     await expectNotificationBannerText(mockErrorMessage);
   });
@@ -102,18 +125,15 @@ describe('CreateUserDrawer - Username Validation', () => {
     username: string,
     expectedError: string
   ) => {
-    const { findByText, getByTestId } = renderWithTheme(
-      <CreateUserDrawer {...props} />
-    );
+    renderWithProviders(<CreateUserDrawer {...props} />);
 
-    const { emailInput, usernameInput } = await getDrawerInputs();
+    const { emailHost, usernameHost } = await getDrawerInputs();
 
-    await userEvent.type(usernameInput, username);
-    await userEvent.type(emailInput, validEmail);
-    await userEvent.click(getByTestId('submit'));
+    await changeCdsTextField(usernameHost, username);
+    await changeCdsTextField(emailHost, validEmail);
+    submitCdsDrawerForm();
 
-    const errorMessage = await findByText(expectedError);
-    expect(errorMessage).toBeInTheDocument();
+    await expectCdsFormError(expectedError);
   };
 
   it('should display error for username too short', async () => {
@@ -159,13 +179,16 @@ describe('CreateUserDrawer - Username Validation', () => {
 
   describe('Valid usernames', () => {
     const testValidUsername = async (username: string) => {
-      const { queryByText } = renderWithTheme(<CreateUserDrawer {...props} />);
+      const { queryByText } = renderWithProviders(
+        <CreateUserDrawer {...props} />
+      );
 
-      const { emailInput, usernameInput } = await getDrawerInputs();
+      const { emailHost, usernameHost } = await getDrawerInputs();
 
-      await userEvent.type(usernameInput, username);
-      await userEvent.type(emailInput, validEmail);
-      await userEvent.click(usernameInput);
+      await changeCdsTextField(usernameHost, username);
+      await changeCdsTextField(emailHost, validEmail);
+      const usernameInput = await getCdsTextFieldInput(usernameHost);
+      await userEvent.click(usernameInput!);
       await new Promise((resolve) => setTimeout(resolve, 100));
 
       expect(

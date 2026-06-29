@@ -1,3 +1,4 @@
+import { getAPIErrorOrDefault } from '@akamai/compute-ui-core/api';
 import {
   useAllLinodesQuery,
   usePlacementGroupQuery,
@@ -24,7 +25,6 @@ import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import {
   PG_LANDING_TABLE_DEFAULT_ORDER,

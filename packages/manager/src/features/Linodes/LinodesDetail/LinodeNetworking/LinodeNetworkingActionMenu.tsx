@@ -28,6 +28,7 @@ interface Props {
   onEdit?: (ip: IPAddress | IPRange) => void;
   onRemove?: (ip: IPAddress | IPRange) => void;
   onReserve?: (ip: IPAddress) => void;
+  pendoId?: string;
   readOnly: boolean;
 }
 
@@ -46,6 +47,7 @@ export const LinodeNetworkingActionMenu = (props: Props) => {
     onEdit,
     onRemove,
     onReserve,
+    pendoId,
     readOnly,
   } = props;
 
@@ -101,6 +103,7 @@ export const LinodeNetworkingActionMenu = (props: Props) => {
           onClick: () => {
             onReserve(ipAddress);
           },
+          pendoId: 'Linodes Details Network IP Addresses-Reserve IP Start Flow',
           title: 'Reserve IP',
           tooltip: isAlreadyReserved
             ? 'This IP Address has already been reserved'
@@ -156,7 +159,11 @@ export const LinodeNetworkingActionMenu = (props: Props) => {
   return actions.length > 0 ? (
     <>
       {isReserveIpEnabled ? (
-        <ActionMenu actionsList={actions} ariaLabel={getAriaLabel()} />
+        <ActionMenu
+          actionsList={actions}
+          ariaLabel={getAriaLabel()}
+          pendoId={pendoId}
+        />
       ) : (
         <>
           {!matchesMdDown &&
@@ -173,7 +180,11 @@ export const LinodeNetworkingActionMenu = (props: Props) => {
               );
             })}
           {matchesMdDown && (
-            <ActionMenu actionsList={actions} ariaLabel={getAriaLabel()} />
+            <ActionMenu
+              actionsList={actions}
+              ariaLabel={getAriaLabel()}
+              pendoId={pendoId}
+            />
           )}
         </>
       )}

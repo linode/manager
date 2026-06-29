@@ -13,7 +13,10 @@ import { customProfileAndGrantsPreset } from './extra/account/customProfileAndGr
 import { managedDisabledPreset } from './extra/account/managedDisabled';
 import { managedEnabledPreset } from './extra/account/managedEnabled';
 import { apiResponseTimePreset } from './extra/api/api';
-import { inferencePlatformPreset } from './extra/inferencePlatform/inferencePlatform';
+import {
+  inferencePlatformApiKeysPreset,
+  inferencePlatformPreset,
+} from './extra/inferencePlatform/inferencePlatform';
 import { linodeLimitsPreset } from './extra/limits/linode-limits';
 import { lkeLimitsPreset } from './extra/limits/lke-limits';
 import { coreAndDistributedRegionsPreset } from './extra/regions/coreAndDistributed';
@@ -53,6 +56,7 @@ export const extraMockPresets: MockPresetExtra[] = [
   customMaintenancePreset,
   customNotificationsPreset,
   inferencePlatformPreset,
+  inferencePlatformApiKeysPreset,
   linodeLimitsPreset,
   lkeLimitsPreset,
   managedEnabledPreset,

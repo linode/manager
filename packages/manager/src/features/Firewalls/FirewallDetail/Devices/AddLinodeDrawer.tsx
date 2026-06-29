@@ -1,3 +1,4 @@
+import { getAPIErrorOrDefault } from '@akamai/compute-ui-core/api';
 import {
   linodeQueries,
   useAddFirewallDeviceMutation,
@@ -22,7 +23,6 @@ import { SupportLink } from 'src/components/SupportLink';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useGetAllUserEntitiesByPermission } from 'src/features/IAM/hooks/useGetAllUserEntitiesByPermission';
 import { getLinodeInterfaceType } from 'src/features/Linodes/LinodesDetail/LinodeNetworking/LinodeInterfaces/utilities';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
 
 import type { Linode, LinodeInterfaces } from '@linode/api-v4';

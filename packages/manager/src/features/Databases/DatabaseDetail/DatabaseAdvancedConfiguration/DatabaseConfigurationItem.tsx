@@ -1,12 +1,22 @@
-import { Badge, Button, FormField, Switch } from '@akamai/cds-components/react';
-import { Autocomplete, CloseIcon, TextField, Typography } from '@linode/ui';
+import {
+  Badge,
+  Button,
+  FormError,
+  FormField,
+  Switch,
+  TextField,
+} from '@akamai/cds-components/react';
+import { Alias, Spacing } from '@akamai/cds-tokens';
+import { Alias as DarkThemeAlias } from '@akamai/cds-tokens/themes/dark';
+import { Autocomplete, CloseIcon } from '@linode/ui';
 import React from 'react';
 
-import { StyledBox, StyledWrapper } from './DatabaseConfigurationItem.style';
 import {
   formatConfigValue,
   isConfigBoolean,
-  isConfigStringWithEnum,
+  isConfigNumber,
+  isConfigString,
+  isTopLevelCategory,
 } from './utilities';
 
 import type { ConfigurationOption } from './DatabaseConfigurationSelect';
@@ -25,7 +35,11 @@ export const DatabaseConfigurationItem = (props: Props) => {
   const configLabel = configItem?.label || '';
 
   const renderInputField = () => {
-    if (configItem && isConfigBoolean(configItem)) {
+    if (!configItem) {
+      return null;
+    }
+
+    if (isConfigBoolean(configItem)) {
       return (
         <FormField>
           <Switch
@@ -37,7 +51,8 @@ export const DatabaseConfigurationItem = (props: Props) => {
         </FormField>
       );
     }
-    if (configItem && isConfigStringWithEnum(configItem)) {
+
+    if (configItem.enum && isConfigString(configItem)) {
       const options =
         configItem.enum?.map((option) => ({ label: option })) || [];
       const selectedValue = options.find(
@@ -47,101 +62,109 @@ export const DatabaseConfigurationItem = (props: Props) => {
         <Autocomplete
           autoHighlight
           disableClearable
+          disablePortal={false} // Portal must be enabled for the popper to open in a CDS Drawer
+          errorText={errorText}
           isOptionEqualToValue={(option, value) => option.label === value.label}
           label={''}
           onChange={(_, selected) => {
             onChange(selected?.label ?? '');
           }}
           options={options}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              errorText={errorText}
-              label=""
-              placeholder="Select an option"
-            />
-          )}
+          placeholder="Select an option"
           value={selectedValue ?? options[0]}
         />
       );
     }
-    if (
-      (configItem?.type === 'number' || configItem?.type === 'integer') &&
-      typeof configItem.value !== 'boolean'
-    ) {
+
+    if (isConfigString(configItem)) {
       return (
-        <TextField
-          errorText={errorText}
-          fullWidth
-          label=""
-          name={configLabel}
+        <FormField
+          error={Boolean(errorText)}
+          labelPosition="top"
           onBlur={onBlur}
-          onChange={(e) => {
-            const value = e.target.value;
-            onChange(value === '' ? '' : Number(value));
-          }}
-          placeholder={
-            configItem.isNew ? String(configItem?.example ?? '') : ''
-          }
-          slotProps={{
-            htmlInput: {
-              step: 'any', // UIE-10285: Fix edge-case tooltip
-            },
-          }}
-          type="number"
-          value={configItem.value}
-        />
+        >
+          <TextField
+            error={Boolean(errorText)}
+            onChange={(e) =>
+              onChange(
+                (e.currentTarget as EventTarget & { value?: string })?.value ??
+                  ''
+              )
+            }
+            placeholder={String(configItem?.example ?? '')}
+            value={configItem.value ? String(configItem.value) : ''}
+          />
+          <FormError slot="error">{errorText}</FormError>
+        </FormField>
       );
     }
 
-    if (
-      configItem?.type === 'string' ||
-      (Array.isArray(configItem?.type) &&
-        configItem?.type.includes('string') &&
-        !configItem.enum)
-    ) {
+    if (isConfigNumber(configItem)) {
       return (
-        <TextField
-          errorText={errorText}
-          fullWidth
-          label=""
-          name={configLabel}
+        <FormField
+          error={Boolean(errorText)}
+          labelPosition="top"
           onBlur={onBlur}
-          onChange={(e) => onChange(e.target.value)}
-          placeholder={String(configItem.example)}
-          type="text"
-          value={configItem.value ? String(configItem.value) : ''}
-        />
+        >
+          <TextField
+            error={Boolean(errorText)}
+            onChange={(e) => {
+              const raw =
+                (e.currentTarget as EventTarget & { value?: string })?.value ??
+                '';
+              if (raw === '') {
+                onChange('');
+              } else {
+                const n = Number(raw);
+                // Pass raw string for non-numeric input so Yup's typeError
+                // fires with a clear message rather than receiving NaN.
+                onChange(isNaN(n) ? raw : n);
+              }
+            }}
+            placeholder={
+              configItem.isNew ? String(configItem?.example ?? '') : ''
+            }
+            value={String(configItem.value ?? '')}
+          />
+          <FormError slot="error">{errorText}</FormError>
+        </FormField>
       );
     }
+
     return null;
   };
 
   return (
-    <StyledWrapper
-      alignItems="flex-start"
-      display="flex"
-      justifyContent="space-between"
+    <div
+      style={{
+        alignItems: 'flex-start',
+        display: 'flex',
+        justifyContent: 'space-between',
+        marginBottom: Spacing.S12,
+      }}
     >
-      <StyledBox>
-        <Typography
-          sx={(theme) => ({
-            font: theme.tokens.alias.Typography.Body.Bold,
-            mr: 0.5,
-          })}
-        >
-          {configItem?.category === 'other'
+      <div
+        style={{
+          background: `light-dark(${Alias.Background.Neutral}, ${DarkThemeAlias.Background.Neutral})`,
+          padding: Spacing.S8,
+          width: '100%',
+        }}
+      >
+        <p style={{ margin: 0, fontWeight: 'bold' }}>
+          {isTopLevelCategory(configItem?.category ?? '')
             ? configLabel
             : `${configItem?.category}.${configLabel}`}
-        </Typography>
+        </p>
         {configItem?.requires_restart && (
           <Badge color="amber">RESTARTS SERVICE</Badge>
         )}
         {configItem?.description && (
-          <Typography mt={0.5}>{configItem?.description}</Typography>
+          <p style={{ marginTop: Spacing.S4, marginBottom: Spacing.S0 }}>
+            {configItem?.description}
+          </p>
         )}
         {renderInputField()}
-      </StyledBox>
+      </div>
 
       {configItem?.isNew && configItem && onRemove && (
         <Button
@@ -153,6 +176,6 @@ export const DatabaseConfigurationItem = (props: Props) => {
           <CloseIcon />
         </Button>
       )}
-    </StyledWrapper>
+    </div>
   );
 };

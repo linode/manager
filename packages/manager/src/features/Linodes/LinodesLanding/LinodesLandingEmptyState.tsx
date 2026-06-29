@@ -21,7 +21,7 @@ import {
   youtubeLinkData,
 } from './LinodesLandingEmptyStateData';
 
-const APPS_MORE_LINKS_TEXT = 'See all Marketplace apps';
+const APPS_MORE_LINKS_TEXT = 'See all Quick Deploy Apps';
 
 export const LinodesLandingEmptyState = () => {
   const navigate = useNavigate();

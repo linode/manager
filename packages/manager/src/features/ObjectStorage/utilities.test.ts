@@ -3,15 +3,25 @@ import {
   confirmObjectStorage,
   displayName,
   extendObject,
+  filterBucketsByEndpoints,
+  filterSet,
   firstSubfolder,
   generateObjectUrl,
+  getRequiredObjectStorageRegionIds,
   isFile,
   isFolder,
+  matchesFilter,
+  parseCsvSet,
   prefixArrayToString,
   tableUpdateAction,
-  uniqueByKey,
+  toSortedCsv,
+  toStringSet,
 } from './utilities';
 
+import type {
+  ObjectStorageBucket,
+  ObjectStorageEndpoint,
+} from '@linode/api-v4';
 import type { ObjectStorageObject } from '@linode/api-v4/lib/object-storage';
 
 const folder: ObjectStorageObject = {
@@ -249,20 +259,210 @@ describe('Object Storage utilities', () => {
     });
   });
 
-  describe('uniqueByKey', () => {
-    it('should remove objects from a list that contain duplicate values for a provided key', () => {
-      const listOfObjects = [
-        { name: 'John', age: 22 },
-        { name: 'Jane', age: 35 },
-        { name: 'John', age: 55 },
-      ];
+  describe('getRequiredObjectStorageRegionIds', () => {
+    const endpoints: ObjectStorageEndpoint[] = [
+      { region: 'us\-east', s3_endpoint: 'us\-east\-1' } as any,
+      { region: 'us\-west', s3_endpoint: 'us\-west\-1' } as any,
+      { region: 'eu\-central', s3_endpoint: 'eu\-central\-1' } as any,
+      // s3_endpoint may be absent in some data shapes; keep as undefined to
+      // exercise the non\-null assertion path (it should just not match filters).
+      { region: 'ap\-south' } as any,
+    ];
 
-      expect(listOfObjects.length).toBe(3);
+    it('returns undefined if regionIdsFilter is undefined', () => {
+      const result = getRequiredObjectStorageRegionIds(
+        endpoints,
+        undefined,
+        null
+      );
+      expect(result).toBeUndefined();
+    });
 
-      const filteredList = uniqueByKey(listOfObjects, 'name');
+    it('returns undefined if endpointsFilter is undefined', () => {
+      const result = getRequiredObjectStorageRegionIds(
+        endpoints,
+        null,
+        undefined
+      );
+      expect(result).toBeUndefined();
+    });
 
-      expect(filteredList.length).toBe(2);
-      expect(filteredList.find((person) => person.age === 55)).toBeFalsy();
+    it('returns undefined if endpoints is undefined', () => {
+      const result = getRequiredObjectStorageRegionIds(undefined, null, null);
+      expect(result).toBeUndefined();
+    });
+
+    it('returns all endpoint regions when both filters are null', () => {
+      const result = getRequiredObjectStorageRegionIds(endpoints, null, null);
+      expect(result).toEqual(
+        new Set(['us\-east', 'us\-west', 'eu\-central', 'ap\-south'])
+      );
+    });
+
+    it('filters by regionIdsFilter when endpointsFilter is null', () => {
+      const regionIdsFilter = new Set(['us\-west', 'eu\-central']);
+      const result = getRequiredObjectStorageRegionIds(
+        endpoints,
+        regionIdsFilter,
+        null
+      );
+      expect(result).toEqual(new Set(['us\-west', 'eu\-central']));
+    });
+
+    it('filters by endpointsFilter when regionIdsFilter is null', () => {
+      const endpointsFilter = new Set(['us\-east\-1', 'eu\-central\-1']);
+      const result = getRequiredObjectStorageRegionIds(
+        endpoints,
+        null,
+        endpointsFilter
+      );
+      expect(result).toEqual(new Set(['us\-east', 'eu\-central']));
+    });
+
+    it('applies both filters together', () => {
+      const regionIdsFilter = new Set(['us\-east', 'us\-west', 'eu\-central']);
+      const endpointsFilter = new Set(['us\-west\-1', 'eu\-central\-1']);
+      const result = getRequiredObjectStorageRegionIds(
+        endpoints,
+        regionIdsFilter,
+        endpointsFilter
+      );
+      expect(result).toEqual(new Set(['us\-west', 'eu\-central']));
+    });
+
+    it('returns an empty Set when nothing matches (but filters are defined)', () => {
+      const regionIdsFilter = new Set(['does\-not\-exist']);
+      const endpointsFilter = new Set(['also\-nope']);
+      const result = getRequiredObjectStorageRegionIds(
+        endpoints,
+        regionIdsFilter,
+        endpointsFilter
+      );
+      expect(result).toEqual(new Set());
+    });
+  });
+
+  describe('filterBucketsByEndpoints', () => {
+    const buckets: ObjectStorageBucket[] = [
+      { label: 'a', region: 'us\-east', s3_endpoint: 'us\-east\-1' } as any,
+      { label: 'b', region: 'us\-west', s3_endpoint: 'us\-west\-1' } as any,
+    ];
+
+    it('returns an empty array when buckets is undefined', () => {
+      expect(filterBucketsByEndpoints(undefined, null)).toEqual([]);
+    });
+
+    it('returns all buckets when endpointsFilter is null', () => {
+      expect(filterBucketsByEndpoints(buckets, null)).toEqual(buckets);
+    });
+
+    it('filters buckets by s3_endpoint when endpointsFilter is a Set', () => {
+      const endpointsFilter = new Set(['us\-west\-1']);
+      expect(filterBucketsByEndpoints(buckets, endpointsFilter)).toEqual([
+        buckets[1],
+      ]);
+    });
+  });
+
+  describe('parseCsvSet', () => {
+    it('returns null for undefined', () => {
+      expect(parseCsvSet(undefined)).toBeNull();
+    });
+
+    it('returns null for empty string', () => {
+      expect(parseCsvSet('')).toBeNull();
+    });
+
+    it('splits comma\-separated values into a Set', () => {
+      expect(parseCsvSet('a,b,c')).toEqual(new Set(['a', 'b', 'c']));
+    });
+
+    it('drops empty segments', () => {
+      expect(parseCsvSet('a,,b,')).toEqual(new Set(['a', 'b']));
+    });
+  });
+
+  describe('toSortedCsv', () => {
+    it('returns undefined for null', () => {
+      expect(toSortedCsv(null)).toBeUndefined();
+    });
+
+    it('returns a sorted, comma\-joined string', () => {
+      expect(toSortedCsv(new Set(['b', 'a', 'c']))).toBe('a,b,c');
+    });
+
+    it('returns empty string for an empty Set', () => {
+      expect(toSortedCsv(new Set())).toBe('');
+    });
+  });
+
+  describe('matchesFilter', () => {
+    it('returns true when filterSet is null (include all)', () => {
+      expect(matchesFilter(null, 'x')).toBe(true);
+      expect(matchesFilter(null, null)).toBe(true);
+      expect(matchesFilter(null, undefined)).toBe(true);
+    });
+
+    it('returns false when value is null/undefined and filterSet is not null', () => {
+      expect(matchesFilter(new Set(['x']), null)).toBe(false);
+      expect(matchesFilter(new Set(['x']), undefined)).toBe(false);
+    });
+
+    it('returns true only if value exists in the filterSet', () => {
+      const set = new Set(['a', 'b']);
+      expect(matchesFilter(set, 'a')).toBe(true);
+      expect(matchesFilter(set, 'c')).toBe(false);
+    });
+
+    it('returns false for empty string when filterSet is not null (value treated as missing)', () => {
+      expect(matchesFilter(new Set(['']), '')).toBe(false);
+    });
+  });
+
+  describe('filterSet', () => {
+    const allowed = new Set(['a', 'b']);
+
+    it('returns null when set is null', () => {
+      expect(filterSet(null, allowed)).toBeNull();
+    });
+
+    it('returns null when set is undefined', () => {
+      expect(filterSet(undefined as any, allowed)).toBeNull();
+    });
+
+    it('returns a new Set containing only allowed values', () => {
+      const input = new Set(['a', 'c']);
+      const result = filterSet(input, allowed);
+      expect(result).toEqual(new Set(['a']));
+      // ensure it is not the same instance
+      expect(result).not.toBe(input);
+    });
+
+    it('returns null when no values are allowed after filtering', () => {
+      const input = new Set(['c', 'd']);
+      expect(filterSet(input, allowed)).toBeNull();
+    });
+
+    it('returns null for an empty input Set', () => {
+      expect(filterSet(new Set(), allowed)).toBeNull();
+    });
+  });
+
+  describe('toStringSet', () => {
+    it('maps values to strings and returns a Set', () => {
+      const result = toStringSet([1, 2, 3], (n) => `id\-${n}`);
+      expect(result).toEqual(new Set(['id\-1', 'id\-2', 'id\-3']));
+    });
+
+    it('deduplicates when map produces duplicate strings', () => {
+      const result = toStringSet([1, 1, 2], (n) => String(n));
+      expect(result).toEqual(new Set(['1', '2']));
+    });
+
+    it('works with non\-array iterables', () => {
+      const values = new Set([10, 20]);
+      const result = toStringSet(values, (n) => `${n}`);
+      expect(result).toEqual(new Set(['10', '20']));
     });
   });
 });

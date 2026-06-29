@@ -18,6 +18,7 @@ describe('BucketTable', () => {
         handleClickDetails={vi.fn()}
         handleClickRemove={vi.fn()}
         handleOrderChange={vi.fn()}
+        loading={false}
         order="asc"
         orderBy="label"
       />
@@ -37,6 +38,7 @@ describe('BucketTable', () => {
         handleClickDetails={vi.fn()}
         handleClickRemove={vi.fn()}
         handleOrderChange={vi.fn()}
+        loading={false}
         order="asc"
         orderBy="label"
       />
@@ -55,6 +57,7 @@ describe('BucketTable', () => {
         handleClickDetails={vi.fn()}
         handleClickRemove={vi.fn()}
         handleOrderChange={vi.fn()}
+        loading={false}
         order="asc"
         orderBy="label"
       />

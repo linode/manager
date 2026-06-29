@@ -1,3 +1,4 @@
+import { getAPIErrorOrDefault } from '@akamai/compute-ui-core/api';
 import { useAddPaymentMethodMutation, useClientToken } from '@linode/queries';
 import { Box, CircleProgress } from '@linode/ui';
 import {
@@ -10,7 +11,6 @@ import { useSnackbar } from 'notistack';
 import React, { type JSX, useEffect } from 'react';
 
 import { reportException } from 'src/exceptionReporting';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import type { APIError } from '@linode/api-v4/lib/types';
 import type {

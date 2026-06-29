@@ -1,5 +1,5 @@
-import { fireEvent } from '@testing-library/react';
-import React from 'react';
+import { fireEvent, waitFor } from '@testing-library/react';
+import * as React from 'react';
 
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
@@ -78,7 +78,7 @@ describe('DatabaseCreateAccessControls', () => {
     expect(enabledButtons).toHaveLength(3);
   });
 
-  it('Should disable ips', () => {
+  it('Should disable ips', async () => {
     vi.mocked(useIsDatabasesEnabled).mockReturnValue({
       isDatabasesV2GA: true,
     } as IsDatabasesEnabled);
@@ -97,10 +97,22 @@ describe('DatabaseCreateAccessControls', () => {
     let enabledButtons = container.querySelectorAll('[aria-disabled="false"]');
     expect(enabledButtons).toHaveLength(1);
 
-    const noneRadio = container.querySelector('[data-qa-dbaas-radio="None"]');
-    fireEvent.click(noneRadio as Element);
+    const radioGroup = container.querySelector(
+      'cds-radio-group'
+    ) as HTMLElement;
 
-    enabledButtons = container.querySelectorAll('[aria-disabled="false"]');
-    expect(enabledButtons).toHaveLength(0);
+    // Trigger the change event that the RadioGroup listens for
+    fireEvent(
+      radioGroup,
+      new CustomEvent('change', {
+        detail: { value: 'none' },
+        bubbles: true,
+      })
+    );
+
+    await waitFor(() => {
+      enabledButtons = container.querySelectorAll('[aria-disabled="false"]');
+      expect(enabledButtons).toHaveLength(0);
+    });
   });
 });

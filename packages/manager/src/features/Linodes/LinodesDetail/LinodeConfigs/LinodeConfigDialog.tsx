@@ -69,6 +69,7 @@ import {
 } from './utilities';
 
 import type { ExtendedInterface } from '../LinodeSettings/InterfaceSelect';
+import type { ExtendedIP } from '@akamai/compute-ui-core/api';
 import type {
   APIError,
   Config,
@@ -76,7 +77,6 @@ import type {
   LinodeConfigCreationData,
 } from '@linode/api-v4';
 import type { DevicesAsStrings } from '@linode/utilities';
-import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 interface Helpers {
   devtmpfs_automount: boolean;

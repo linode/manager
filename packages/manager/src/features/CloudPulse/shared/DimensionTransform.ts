@@ -15,8 +15,8 @@ export const TRANSFORMS: TransformFunctionMap = {
 };
 
 const responseTypeFormatMap: Map<string, string> = new Map([
-  ['quota_exceeded', '403(Quota Exceeded)'],
-  ['rate_limited', '503(Rate Limited)'],
+  ['quota_exceeded', '403 (Quota Exceeded)'],
+  ['rate_limited', '503 (Rate Limited)'],
 ]);
 
 /**

@@ -1,3 +1,4 @@
+import { Font } from '@akamai/cds-tokens';
 import { BetaChip } from '@linode/ui';
 import { Outlet } from '@tanstack/react-router';
 import React from 'react';
@@ -37,7 +38,7 @@ export const ImagesLandingV2 = () => {
       />
 
       <Tabs index={tabIndex} onChange={handleTabChange}>
-        <TanStackTabLinkList tabs={tabs} />
+        <TanStackTabLinkList fontSize={Font.FontSize.S} tabs={tabs} />
         <React.Suspense fallback={<SuspenseLoader />}>
           <TabPanels>
             <Outlet />

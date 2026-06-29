@@ -1,4 +1,4 @@
-import { UNKNOWN_PRICE } from './constants';
+import { UNKNOWN_PRICE } from '@akamai/compute-ui-core/api';
 
 import type { PriceObject } from '@linode/api-v4';
 

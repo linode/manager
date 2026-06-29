@@ -1,3 +1,4 @@
+import { getErrorStringOrDefault } from '@akamai/compute-ui-core/api';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { getLiveChatToken, uploadAttachment } from '@linode/api-v4/lib/support';
 import { useCreateSupportTicketMutation } from '@linode/queries';
@@ -20,7 +21,6 @@ import { debounce } from 'throttle-debounce';
 
 import { teardownLiveChat } from 'src/hooks/useLiveChatBootstrap';
 import { sendSupportTicketExitEvent } from 'src/utilities/analytics/customEventAnalytics';
-import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import { storage, supportTicketStorageDefaults } from 'src/utilities/storage';
 
 import { AttachFileForm } from '../AttachFileForm';
@@ -302,6 +302,12 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
   ).current;
 
   React.useEffect(() => {
+    return () => {
+      debouncedSave.cancel();
+    };
+  }, [debouncedSave]);
+
+  React.useEffect(() => {
     // Store in-progress work to localStorage
     debouncedSave(form.getValues());
   }, [
@@ -392,9 +398,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
       window.sessionStorage.setItem('LiveChatDescription', description);
       window.sessionStorage.setItem('EnableLiveChat', 'true');
 
-      window.dispatchEvent(new Event(LIVE_CHAT_ENABLE_EVENT));
-
-      const liveChatOutcome = await new Promise<
+      const liveChatOutcomePromise = new Promise<
         'cancelled' | 'failed' | 'ready' | 'timeout'
       >((resolve) => {
         let settled = false;
@@ -438,6 +442,10 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
           once: true,
         });
       });
+
+      window.dispatchEvent(new Event(LIVE_CHAT_ENABLE_EVENT));
+
+      const liveChatOutcome = await liveChatOutcomePromise;
 
       if (liveChatOutcome === 'cancelled') {
         // User chose to open a ticket instead — no error needed.
@@ -528,7 +536,10 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
           ...accumulator,
           errors: [
             ...accumulator.errors,
-            { error: newError, file: attachment.file.get('name') },
+            {
+              error: newError,
+              file: attachment.file.get('name'),
+            },
           ],
         };
       });
@@ -560,13 +571,6 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
 
   const handleSubmit = form.handleSubmit(async (values) => {
     const { onSuccess } = props;
-
-    if (values.entityType === 'none') {
-      form.setError('entityType', {
-        message: 'Please select a topic.',
-      });
-      return;
-    }
 
     if (isEligibleForLiveChat) {
       await handleStartLiveChat();
@@ -824,7 +828,22 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
               data-testid="submit"
               loading={submitting}
               onClick={
-                isEligibleForLiveChat ? handleStartLiveChat : handleSubmit
+                isEligibleForLiveChat
+                  ? handleStartLiveChat
+                  : () => {
+                      if (entityType === 'none') {
+                        form.setError('entityType', {
+                          message: 'Please select a category.',
+                        });
+                        if (!summary.trim()) {
+                          form.setError('summary', {
+                            message: 'Summary is required.',
+                          });
+                        }
+                        return;
+                      }
+                      handleSubmit();
+                    }
               }
             >
               {isEligibleForLiveChat ? 'Start a Live Chat' : 'Open Ticket'}

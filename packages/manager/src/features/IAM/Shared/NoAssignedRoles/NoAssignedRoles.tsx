@@ -65,10 +65,12 @@ export const NoAssignedRoles = (props: Props) => {
           </Tooltip>
         )}
       </ZeroErrorActions>
-      <AssignNewRoleDrawer
-        onClose={() => setIsAssignNewRoleDrawerOpen(false)}
-        open={isAssignNewRoleDrawerOpen}
-      />
+      {hasAssignNewRoleDrawer && (
+        <AssignNewRoleDrawer
+          onClose={() => setIsAssignNewRoleDrawerOpen(false)}
+          open={isAssignNewRoleDrawerOpen}
+        />
+      )}
     </ZeroErrorState>
   );
 };

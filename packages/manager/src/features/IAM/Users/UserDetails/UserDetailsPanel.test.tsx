@@ -1,10 +1,8 @@
-import { profileFactory } from '@linode/utilities';
 import { fireEvent, screen, within } from '@testing-library/react';
 import React from 'react';
 
-import { accountUserFactory } from 'src/factories';
-import { renderWithTheme } from 'src/utilities/testHelpers';
-
+import { createProfile, createUser } from '../../factories';
+import { renderWithProviders } from '../../utilities/testHelpers';
 import { UserDetailsPanel } from './UserDetailsPanel';
 
 import type { IamUserRoles } from '@linode/api-v4';
@@ -28,12 +26,19 @@ const mockPermissions = {
   view_user: true,
 };
 
+const getDetailsGrid = (container: HTMLElement) => {
+  const grid = container.querySelector('[class*="itemsGrid"]');
+  expect(grid).not.toBeNull();
+
+  return within(grid as HTMLElement);
+};
+
 describe('UserDetailsPanel', () => {
   it("renders the user's username and email", async () => {
-    const user = accountUserFactory.build();
+    const user = createUser();
     const assignedRoles = { account_access: [], entity_access: [] };
 
-    renderWithTheme(
+    const { container } = renderWithProviders(
       <UserDetailsPanel
         activeUser={user}
         assignedRoles={assignedRoles}
@@ -41,24 +46,17 @@ describe('UserDetailsPanel', () => {
       />
     );
 
-    const usernameField = screen.getByText(/Username/).parentElement;
-    expect(usernameField).not.toBeNull();
-    expect(
-      within(usernameField as HTMLElement).getByText(user.username)
-    ).toBeVisible();
+    const details = getDetailsGrid(container);
 
-    const emailField = screen.getByText(/E-mail/).parentElement;
-    expect(emailField).not.toBeNull();
-    expect(
-      within(emailField as HTMLElement).getByText(user.email)
-    ).toBeVisible();
+    expect(details.getByText(user.username)).toBeVisible();
+    expect(details.getByText(user.email)).toBeVisible();
   });
 
   it("renders '0' if the user doesn't have the assigned roles", async () => {
-    const user = accountUserFactory.build({ restricted: true });
+    const user = createUser({ restricted: true });
     const assignedRoles = { account_access: [], entity_access: [] };
 
-    const { getAllByText, getByText } = renderWithTheme(
+    const { getAllByText, getByText } = renderWithProviders(
       <UserDetailsPanel
         activeUser={user}
         assignedRoles={assignedRoles}
@@ -71,7 +69,7 @@ describe('UserDetailsPanel', () => {
   });
 
   it("renders '7' if the user has 7 different roles", async () => {
-    const user = accountUserFactory.build({ restricted: false });
+    const user = createUser({ restricted: false });
     const assignedRoles: IamUserRoles = {
       account_access: [
         'account_linode_admin',
@@ -92,7 +90,7 @@ describe('UserDetailsPanel', () => {
       ],
     };
 
-    const { getByText } = renderWithTheme(
+    const { getByText } = renderWithProviders(
       <UserDetailsPanel
         activeUser={user}
         assignedRoles={assignedRoles}
@@ -105,7 +103,7 @@ describe('UserDetailsPanel', () => {
   });
 
   it("renders '4' if the user has 4 different roles", async () => {
-    const user = accountUserFactory.build({ restricted: false });
+    const user = createUser({ restricted: false });
     const assignedRoles: IamUserRoles = {
       account_access: ['account_linode_admin', 'account_linode_creator'],
       entity_access: [
@@ -117,7 +115,7 @@ describe('UserDetailsPanel', () => {
       ],
     };
 
-    const { getByText } = renderWithTheme(
+    const { getByText } = renderWithProviders(
       <UserDetailsPanel
         activeUser={user}
         assignedRoles={assignedRoles}
@@ -130,12 +128,12 @@ describe('UserDetailsPanel', () => {
   });
 
   it("renders the user's phone number", async () => {
-    const user = accountUserFactory.build({
+    const user = createUser({
       verified_phone_number: '+17040000000',
     });
     const assignedRoles = { account_access: [], entity_access: [] };
 
-    const { getByText } = renderWithTheme(
+    const { getByText } = renderWithProviders(
       <UserDetailsPanel
         activeUser={user}
         assignedRoles={assignedRoles}
@@ -148,10 +146,10 @@ describe('UserDetailsPanel', () => {
   });
 
   it("renders the user's 2FA status", async () => {
-    const user = accountUserFactory.build({ tfa_enabled: true });
+    const user = createUser({ tfa_enabled: true });
     const assignedRoles = { account_access: [], entity_access: [] };
 
-    const { getByText } = renderWithTheme(
+    const { getByText } = renderWithProviders(
       <UserDetailsPanel
         activeUser={user}
         assignedRoles={assignedRoles}
@@ -173,17 +171,17 @@ describe('UserDetailsPanel – Delete User button', () => {
     );
   };
 
-  it('disables the Delete User button for proxy users', () => {
+  it('disables the Delete User button for delegate users', () => {
     queryMocks.useProfile.mockReturnValue({
-      data: profileFactory.build({ username: 'current_user' }),
+      data: createProfile({ username: 'current_user' }),
     });
 
-    const user = accountUserFactory.build({
-      user_type: 'proxy',
-      username: 'proxy_user',
+    const user = createUser({
+      user_type: 'delegate',
+      username: 'delegate_user',
     });
 
-    const { container } = renderWithTheme(
+    const { container } = renderWithProviders(
       <UserDetailsPanel
         activeUser={user}
         assignedRoles={assignedRoles}
@@ -199,15 +197,15 @@ describe('UserDetailsPanel – Delete User button', () => {
 
   it('disables the Delete User button when viewing your own account', () => {
     queryMocks.useProfile.mockReturnValue({
-      data: profileFactory.build({ username: 'current_user' }),
+      data: createProfile({ username: 'current_user' }),
     });
 
-    const user = accountUserFactory.build({
+    const user = createUser({
       user_type: 'default',
       username: 'current_user',
     });
 
-    const { container } = renderWithTheme(
+    const { container } = renderWithProviders(
       <UserDetailsPanel
         activeUser={user}
         assignedRoles={assignedRoles}
@@ -223,15 +221,15 @@ describe('UserDetailsPanel – Delete User button', () => {
 
   it('enables the Delete User button for other deletable users', () => {
     queryMocks.useProfile.mockReturnValue({
-      data: profileFactory.build({ username: 'current_user' }),
+      data: createProfile({ username: 'current_user' }),
     });
 
-    const user = accountUserFactory.build({
+    const user = createUser({
       user_type: 'default',
       username: 'other_user',
     });
 
-    const { container } = renderWithTheme(
+    const { container } = renderWithProviders(
       <UserDetailsPanel
         activeUser={user}
         assignedRoles={assignedRoles}
@@ -247,15 +245,15 @@ describe('UserDetailsPanel – Delete User button', () => {
 
   it('opens the delete confirmation dialog when the Delete User button is clicked', () => {
     queryMocks.useProfile.mockReturnValue({
-      data: profileFactory.build({ username: 'current_user' }),
+      data: createProfile({ username: 'current_user' }),
     });
 
-    const user = accountUserFactory.build({
+    const user = createUser({
       user_type: 'default',
       username: 'other_user',
     });
 
-    const { container } = renderWithTheme(
+    const { container } = renderWithProviders(
       <UserDetailsPanel
         activeUser={user}
         assignedRoles={assignedRoles}
@@ -274,12 +272,12 @@ describe('UserDetailsPanel – Delete User button', () => {
 
   it('disables the Delete User button when delete_user permission is false', () => {
     queryMocks.useProfile.mockReturnValue({
-      data: profileFactory.build({ username: 'current_user' }),
+      data: createProfile({ username: 'current_user' }),
     });
 
-    const user = accountUserFactory.build({ username: 'other_user' });
+    const user = createUser({ username: 'other_user' });
 
-    const { container } = renderWithTheme(
+    const { container } = renderWithProviders(
       <UserDetailsPanel
         activeUser={user}
         assignedRoles={assignedRoles}

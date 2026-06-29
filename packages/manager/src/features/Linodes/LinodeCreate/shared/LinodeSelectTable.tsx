@@ -1,3 +1,4 @@
+import { isPrivateIP } from '@akamai/compute-ui-core/api';
 import { useLinodesQuery, useRegionsQuery } from '@linode/queries';
 import { getAPIFilterFromQuery } from '@linode/search';
 import { Box, Notice, Stack, Typography } from '@linode/ui';
@@ -30,7 +31,6 @@ import { PowerActionsDialog } from 'src/features/Linodes/PowerActionsDialogOrDra
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { sendLinodePowerOffEvent } from 'src/utilities/analytics/customEventAnalytics';
-import { isPrivateIP } from 'src/utilities/ipUtils';
 
 import { getGeneratedLinodeLabel } from '../utilities';
 import { LinodeSelectTableRow } from './LinodeSelectTableRow';

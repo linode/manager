@@ -6,13 +6,3 @@ export interface APIError {
   field?: string;
   reason: string;
 }
-
-export const getErrorText = (
-  error: APIError[] | null | string | undefined,
-): null | string | undefined => {
-  if (Array.isArray(error)) {
-    return error[0]?.reason;
-  }
-
-  return error;
-};

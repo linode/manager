@@ -1,3 +1,4 @@
+import { getErrorStringOrDefault } from '@akamai/compute-ui-core/api';
 import {
   useAllFirewallDevicesQuery,
   useFirewallQuery,
@@ -29,7 +30,6 @@ import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useFlags } from 'src/hooks/useFlags';
 import { useSecureVMNoticesEnabled } from 'src/hooks/useSecureVMNoticesEnabled';
 import { useTabs } from 'src/hooks/useTabs';
-import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 import {
   FIREWALL_DEFAULT_ENTITY_TO_READABLE_NAME,

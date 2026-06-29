@@ -9,7 +9,7 @@ import Request, {
   setXFilter,
 } from '../request';
 
-import type { Filter, ResourcePage as Page, Params, PriceType } from '../types';
+import type { Filter, ResourcePage as Page, Params } from '../types';
 import type {
   CreateKubeClusterPayload,
   KubeConfigResponse,
@@ -20,6 +20,7 @@ import type {
   KubernetesTieredVersion,
   KubernetesVersion,
 } from './types';
+import type { PriceType } from '@akamai/compute-ui-core/api';
 
 /**
  * getKubernetesClusters

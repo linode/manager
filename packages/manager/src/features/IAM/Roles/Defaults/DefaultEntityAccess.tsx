@@ -1,6 +1,6 @@
 import { NotificationBanner } from '@akamai/cds-components/react';
+import { Spacing, Typography } from '@akamai/cds-tokens';
 import { useGetDefaultDelegationAccessQuery } from '@linode/queries';
-import { Stack, Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { ErrorState } from 'src/features/IAM/Shared/ErrorState/ErrorState';
@@ -50,17 +50,15 @@ export const DefaultEntityAccess = () => {
     <Paper>
       {hasAssignedEntities ? (
         <>
-          <Stack marginBottom={2}>
-            <Typography variant="h2">
-              Default Entity Access for Delegate Users
-            </Typography>
-            <Typography marginTop={2}>
-              View and update entities assigned to delegate users by default.
-              Note that changes implemented here will apply only to new delegate
-              users. For existing delegate users, use their Assigned Roles page
-              to update the assignment.
-            </Typography>
-          </Stack>
+          <h2 style={{ font: Typography.Heading.M }}>
+            Default Entity Access for Delegate Users
+          </h2>
+          <p style={{ marginTop: Spacing.S16, marginBottom: Spacing.S16 }}>
+            View and update entities assigned to delegate users by default. Note
+            that changes implemented here will apply only to new delegate users.
+            For existing delegate users, use their Assigned Roles page to update
+            the assignment.
+          </p>
           <AssignedEntitiesTable />
         </>
       ) : (

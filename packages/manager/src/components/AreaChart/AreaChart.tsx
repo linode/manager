@@ -26,8 +26,7 @@ import {
   tooltipValueFormatter,
 } from './utils';
 
-import type { TooltipProps } from 'recharts';
-import type { CategoricalChartFunc } from 'recharts/types/chart/generateCategoricalChart';
+import type { MouseHandlerDataParam, TooltipContentProps } from 'recharts';
 import type { MetricsDisplayRow } from 'src/components/LineGraph/MetricsDisplay';
 
 export interface DataSet {
@@ -53,15 +52,15 @@ interface ZoomCallbacks {
   /**
    * Callback fired on mouse down event on the chart
    */
-  onMouseDown?: CategoricalChartFunc;
+  onMouseDown?: (e: MouseHandlerDataParam) => void;
   /**
    * Callback fired on mouse move event on the chart
    */
-  onMouseMove?: CategoricalChartFunc;
+  onMouseMove?: (e: MouseHandlerDataParam) => void;
   /**
    * Callback fired on mouse up event on the chart
    */
-  onMouseUp?: CategoricalChartFunc;
+  onMouseUp?: (e: MouseHandlerDataParam) => void;
 }
 
 interface ReferenceAreaProps {
@@ -107,6 +106,11 @@ export interface AreaChartProps {
   ariaLabel: string;
 
   /**
+   * Optional ref to the chart container element. Used for viewport boundary calculations during tooltip positioning.
+   */
+  chartContainerRef?: React.RefObject<HTMLDivElement | null>;
+
+  /**
    * connect nulls value between two data points
    */
   connectNulls?: boolean;
@@ -147,6 +151,11 @@ export interface AreaChartProps {
   margin?: { bottom: number; left: number; right: number; top: number };
 
   /**
+   * On Click of legend row, returns the list of hidden series. This is used for accessibility purposes to announce which series are hidden when a legend row is clicked.
+   */
+  onHiddenAreasChange?: (hiddenKeys: string[]) => void;
+
+  /**
    * reference area to be highlighted on the chart
    */
   referenceArea?: null | ReferenceAreaProps;
@@ -171,6 +180,16 @@ export interface AreaChartProps {
    * formatter for the tooltip value
    */
   tooltipCustomValueFormatter?: (value: number, unit: string) => string;
+
+  /**
+   * Optional tooltip position. When provided, overrides default recharts positioning.
+   */
+  tooltipPosition?: undefined | { x: number; y: number };
+
+  /**
+   * Optional ref to the tooltip wrapper element. Used for measuring tooltip dimensions during positioning.
+   */
+  tooltipRef?: React.RefObject<HTMLDivElement | null>;
 
   /**
    * unit to be displayed with data
@@ -211,6 +230,27 @@ export interface AreaChartProps {
   zoomCallbacks?: ZoomCallbacks;
 }
 
+interface CustomTooltipProps extends TooltipContentProps {
+  /**
+   * timezone for formatting the tooltip label timestamp
+   */
+  timezone: string;
+  /**
+   * formatter for the tooltip value
+   */
+  tooltipCustomValueFormatter?: (value: number, unit: string) => string;
+
+  /**
+   * Optional ref to the tooltip wrapper element. Used for measuring tooltip dimensions during positioning.
+   */
+  tooltipRef?: React.RefObject<HTMLDivElement | null>;
+
+  /**
+   * unit to be displayed with data in tooltip
+   */
+  unit: string;
+}
+
 export const AreaChart = (props: AreaChartProps) => {
   const {
     areas,
@@ -235,6 +275,10 @@ export const AreaChart = (props: AreaChartProps) => {
     tooltipCustomValueFormatter,
     zoomCallbacks,
     referenceArea,
+    tooltipRef,
+    chartContainerRef,
+    tooltipPosition,
+    onHiddenAreasChange,
   } = props;
 
   const theme = useTheme();
@@ -256,37 +300,18 @@ export const AreaChart = (props: AreaChartProps) => {
     );
   };
 
-  const CustomTooltip = ({
-    active,
-    label,
-    payload,
-  }: TooltipProps<any, any>) => {
-    if (active && payload && payload.length) {
-      return (
-        <StyledTooltipPaper>
-          <Typography>{tooltipLabelFormatter(label, timezone)}</Typography>
-          {payload.map((item) => (
-            <Box
-              display="flex"
-              justifyContent="space-between"
-              key={item.dataKey}
-            >
-              <Typography sx={{ font: theme.font.bold }}>
-                {item.dataKey}
-              </Typography>
-              <Typography marginLeft={2} sx={{ font: theme.font.bold }}>
-                {tooltipCustomValueFormatter
-                  ? tooltipCustomValueFormatter(item.value, unit)
-                  : tooltipValueFormatter(item.value, unit)}
-              </Typography>
-            </Box>
-          ))}
-        </StyledTooltipPaper>
-      );
-    }
-
-    return null;
-  };
+  const TooltipWrapper = React.useCallback(
+    (tooltipProps: TooltipContentProps) => (
+      <CustomTooltip
+        {...tooltipProps}
+        timezone={timezone}
+        tooltipCustomValueFormatter={tooltipCustomValueFormatter}
+        tooltipRef={tooltipRef}
+        unit={unit}
+      />
+    ),
+    [timezone, tooltipCustomValueFormatter, tooltipRef, unit]
+  );
 
   const CustomLegend = ({ legendHeight }: { legendHeight?: string }) => {
     if (legendRows) {
@@ -308,6 +333,7 @@ export const AreaChart = (props: AreaChartProps) => {
   };
 
   const accessibleDataKeys = areas.map((area) => area.dataKey);
+  const hideAxis = !data || data.length === 0; // in recharts 3.8.1, if there is no data, the axes are still rendered with default ticks which can be misleading, so we hide them when there is no data to display
 
   const legendStyles = {
     bottom: 0,
@@ -315,11 +341,17 @@ export const AreaChart = (props: AreaChartProps) => {
     width: '100%',
   };
 
+  React.useEffect(() => {
+    onHiddenAreasChange?.(activeSeries);
+  }, [activeSeries, onHiddenAreasChange]);
+
   return (
     <>
       <ResponsiveContainer
         data-testid="area-chart-container"
         height={height}
+        initialDimension={{ width: 1, height: 1 }}
+        ref={chartContainerRef}
         width={width}
       >
         <_AreaChart
@@ -338,6 +370,7 @@ export const AreaChart = (props: AreaChartProps) => {
           <XAxis
             dataKey="timestamp"
             domain={['dataMin', 'dataMax']}
+            hide={hideAxis}
             interval={xAxisTickCount ? 0 : 'preserveEnd'}
             minTickGap={xAxis.tickGap}
             scale="time"
@@ -346,18 +379,25 @@ export const AreaChart = (props: AreaChartProps) => {
             ticks={
               xAxisTickCount
                 ? generate12HourTicks(data, timezone, xAxisTickCount)
-                : []
+                : undefined // instead of empty we can pass undefined to take care of the case when xAxisTickCount is 0 or undefined, both means we want recharts to generate ticks on its own
             }
             type="number"
           />
           <YAxis
+            hide={hideAxis} // hide y-axis
             stroke={theme.color.label}
+            style={{
+              /**
+               * When all series are hidden, we hide y-axis instead of not rendering, because when y-axis is not rendered, the chart area takes up the full width and x-axis is hampered, so maintaining consistency
+               */
+              display: activeSeries.length === areas.length ? 'none' : 'inline',
+            }}
             tickFormatter={
               yAxisProps?.tickFormat ? yAxisProps.tickFormat : humanizeLargeData
             }
           />
           <Tooltip
-            content={<CustomTooltip />}
+            content={TooltipWrapper}
             contentStyle={{
               color: theme.tokens.color.Neutrals[70],
             }}
@@ -366,7 +406,8 @@ export const AreaChart = (props: AreaChartProps) => {
               font: theme.font.bold,
             }}
             offset={20}
-            wrapperStyle={{ zIndex: 2 }}
+            position={tooltipPosition}
+            wrapperStyle={{ zIndex: 1000 }} // we need higher z-index for tooltip to be above the reference area in 3.8.1
           />
           {showLegend && !legendRows && (
             <Legend
@@ -409,6 +450,7 @@ export const AreaChart = (props: AreaChartProps) => {
               key={dataKey}
               stroke={color}
               type="monotone"
+              zIndex={1000} // the x-axis and y-axis have z-index of 500, so we need higher z-index for the area to be above the axes in 3.8.1
             />
           ))}
         </_AreaChart>
@@ -430,3 +472,60 @@ const StyledTooltipPaper = styled(Paper, {
   border: `1px solid ${theme.color.border2}`,
   padding: theme.spacing(1),
 }));
+
+const CustomTooltip = React.memo(
+  ({
+    active,
+    label,
+    payload,
+    timezone,
+    tooltipCustomValueFormatter,
+    unit,
+    tooltipRef,
+  }: CustomTooltipProps) => {
+    if (active && payload && payload.length && typeof label === 'number') {
+      return (
+        <StyledTooltipPaper ref={tooltipRef}>
+          <Typography>{tooltipLabelFormatter(label, timezone)}</Typography>
+          {payload.map((item) => {
+            if (
+              (typeof item.dataKey !== 'string' &&
+                typeof item.dataKey !== 'number') ||
+              typeof item.value !== 'number'
+            ) {
+              return null;
+            }
+
+            return (
+              <Box
+                display="flex"
+                justifyContent="space-between"
+                key={item.dataKey}
+              >
+                <Typography
+                  sx={(theme) => ({
+                    font: theme.font.bold,
+                  })}
+                >
+                  {item.dataKey}
+                </Typography>
+                <Typography
+                  marginLeft={2}
+                  sx={(theme) => ({
+                    font: theme.font.bold,
+                  })}
+                >
+                  {tooltipCustomValueFormatter
+                    ? tooltipCustomValueFormatter(item.value, unit)
+                    : tooltipValueFormatter(item.value, unit)}
+                </Typography>
+              </Box>
+            );
+          })}
+        </StyledTooltipPaper>
+      );
+    }
+
+    return null;
+  }
+);

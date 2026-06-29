@@ -1,13 +1,5 @@
 import { styled } from '@mui/material/styles';
 
-import { StyledValueGrid } from '../DatabaseSummary/DatabaseSummaryClusterConfiguration.style';
-
-export const StyledConfigValue = styled(StyledValueGrid, {
-  label: 'StyledValueGrid',
-})(({ theme }) => ({
-  padding: `${theme.tokens.spacing.S4} ${theme.tokens.spacing.S6}`,
-}));
-
 export const GroupHeader = styled('div')(({ theme }) => ({
   background: theme.tokens.alias.Background.Neutral,
   color:
@@ -24,6 +16,7 @@ export const GroupHeader = styled('div')(({ theme }) => ({
   top: 0,
   zIndex: 1,
 }));
+
 export const GroupItems = styled('ul')(({ theme }) => ({
   '& li': {
     color:

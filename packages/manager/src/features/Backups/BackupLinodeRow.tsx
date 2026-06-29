@@ -1,14 +1,14 @@
+import {
+  getMonthlyBackupsPrice,
+  UNKNOWN_PRICE,
+} from '@akamai/compute-ui-core/api';
 import { useRegionsQuery, useTypeQuery } from '@linode/queries';
 import { Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { getMonthlyBackupsPrice } from 'src/utilities/pricing/backups';
-import {
-  PRICE_ERROR_TOOLTIP_TEXT,
-  UNKNOWN_PRICE,
-} from 'src/utilities/pricing/constants';
+import { PRICE_ERROR_TOOLTIP_TEXT } from 'src/utilities/pricing/constants';
 
 import type { Linode, PriceObject } from '@linode/api-v4';
 

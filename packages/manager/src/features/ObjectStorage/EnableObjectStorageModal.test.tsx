@@ -1,3 +1,4 @@
+import { UNKNOWN_PRICE } from '@akamai/compute-ui-core/api';
 import { fireEvent, render } from '@testing-library/react';
 import * as React from 'react';
 
@@ -5,7 +6,6 @@ import {
   objectStorageOverageTypeFactory,
   objectStorageTypeFactory,
 } from 'src/factories';
-import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 
 import {

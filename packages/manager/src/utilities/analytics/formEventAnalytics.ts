@@ -10,7 +10,7 @@ import type {
   FormStepEvent,
   LinodeCreateFormEventOptions,
 } from '@akamai/compute-ui-core/analytics';
-import type { LinodeCreateType } from '@linode/utilities';
+import type { LinodeCreateType } from '@akamai/compute-ui-core/api';
 
 /**
  * Form Events

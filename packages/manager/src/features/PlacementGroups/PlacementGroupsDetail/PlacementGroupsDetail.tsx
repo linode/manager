@@ -1,3 +1,4 @@
+import { getErrorStringOrDefault } from '@akamai/compute-ui-core/api';
 import { PLACEMENT_GROUP_TYPES } from '@linode/api-v4';
 import {
   useMutatePlacementGroup,
@@ -13,7 +14,6 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 import { PLACEMENT_GROUPS_DOCS_LINK } from '../constants';
 import { PlacementGroupsLinodes } from './PlacementGroupsLinodes/PlacementGroupsLinodes';

@@ -19,8 +19,8 @@ import {
   CREATE_CLUSTER_STANDARD_TIER_ACL_COPY,
 } from '../constants';
 
+import type { ExtendedIP } from '@akamai/compute-ui-core/api';
 import type { KubernetesTier } from '@linode/api-v4';
-import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 export interface ControlPlaneACLProps {
   enableControlPlaneACL: boolean;

@@ -1,8 +1,7 @@
 import { screen } from '@testing-library/react';
 import React from 'react';
 
-import { renderWithTheme } from 'src/utilities/testHelpers';
-
+import { renderWithProviders } from '../../utilities/testHelpers';
 import { RolesTableActionMenu } from './RolesTableActionMenu';
 
 beforeEach(() => {
@@ -11,7 +10,7 @@ beforeEach(() => {
 
 describe('RolesTableActionMenu', () => {
   it('renders when used', () => {
-    renderWithTheme(
+    renderWithProviders(
       <RolesTableActionMenu canUpdateUserGrants={true} onClick={() => {}} />
     );
 

@@ -11,13 +11,13 @@ import type { Theme } from '@mui/material/styles';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
-  isProxyOrDelegateUser: boolean;
+  isDelegateUser: boolean;
   onDelete: (username: string) => void;
   username: string;
 }
 
 export const UsersActionMenu = ({
-  isProxyOrDelegateUser,
+  isDelegateUser,
   onDelete,
   username,
 }: Props) => {
@@ -28,7 +28,7 @@ export const UsersActionMenu = ({
   const { data: profile } = useProfile();
   const profileUsername = profile?.username;
 
-  const proxyUserActions: Action[] = [
+  const delegateUserActions: Action[] = [
     {
       onClick: () => {
         navigate({
@@ -40,7 +40,7 @@ export const UsersActionMenu = ({
     },
   ];
 
-  const nonProxyUserActions: Action[] = [
+  const nonDelegateUserActions: Action[] = [
     {
       onClick: () => {
         navigate({
@@ -72,9 +72,7 @@ export const UsersActionMenu = ({
     },
   ];
 
-  const actions = isProxyOrDelegateUser
-    ? proxyUserActions
-    : nonProxyUserActions;
+  const actions = isDelegateUser ? delegateUserActions : nonDelegateUserActions;
 
   return (
     // eslint-disable-next-line react/jsx-no-useless-fragment

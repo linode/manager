@@ -1,8 +1,6 @@
 import { Button, Icon, Tooltip } from '@akamai/cds-components/react';
 import { Spacing } from '@akamai/cds-tokens';
 import { useDatabaseEnginesQuery } from '@linode/queries';
-import { Typography } from '@linode/ui';
-import { GridLegacy, styled } from '@mui/material';
 import * as React from 'react';
 
 import {
@@ -35,11 +33,13 @@ export const DatabaseSettingsMaintenance = (props: Props) => {
   const hasUpdates = hasPendingUpdates(databasePendingUpdates);
 
   return (
-    <GridLegacy container data-qa-settings-section="Maintenance">
-      <GridLegacy item xs={6}>
-        <StyledTypography variant="h3">Maintenance</StyledTypography>
-        <BoldTypography>Version</BoldTypography>
-        <StyledTypography>{engineVersion}</StyledTypography>
+    <div data-qa-settings-section="Maintenance" style={{ display: 'flex' }}>
+      <div style={{ width: '50%' }}>
+        <h3 style={{ margin: 0, marginBottom: Spacing.S4 }}>Maintenance</h3>
+        <p style={{ margin: 0 }}>
+          <strong>Version</strong>
+        </p>
+        <p style={{ margin: 0 }}>{engineVersion}</p>
         <Button
           data-testid="upgrade"
           disabled={!versions?.length || hasUpdates}
@@ -61,18 +61,20 @@ export const DatabaseSettingsMaintenance = (props: Props) => {
             />
           </Tooltip>
         )}
-      </GridLegacy>
+      </div>
       {/*
         TODO Uncomment and provide value when the EOL is returned by the API.
         Currently, it is not supported, however they are working on returning it since it has value to the end user
-        <Grid item xs={4}>
+        <div>
           <StyledTypography variant="h3">End of life</StyledTypography>
-        </Grid>
+        </div>
       */}
-      <GridLegacy item xs={6}>
-        <StyledTypography variant="h3">Maintenance updates</StyledTypography>
+      <div style={{ width: '50%' }}>
+        <h3 style={{ margin: 0, marginBottom: Spacing.S4 }}>
+          Maintenance Updates
+        </h3>
         {hasUpdates ? (
-          <BoldTypography>
+          <p style={{ margin: 0 }}>
             One or more minor version upgrades or patches will be applied during
             the next maintenance window.{' '}
             <Button
@@ -82,22 +84,14 @@ export const DatabaseSettingsMaintenance = (props: Props) => {
             >
               Click to review
             </Button>
-          </BoldTypography>
+          </p>
         ) : (
-          <BoldTypography>
+          <p style={{ margin: 0 }}>
             There are no minor version upgrades or patches planned for the next
             maintenance window.{' '}
-          </BoldTypography>
+          </p>
         )}
-      </GridLegacy>
-    </GridLegacy>
+      </div>
+    </div>
   );
 };
-
-const StyledTypography = styled(Typography)(({ theme }) => ({
-  marginBottom: theme.spacing(0.25),
-}));
-
-const BoldTypography = styled(StyledTypography)(({ theme }) => ({
-  font: theme.font.bold,
-}));

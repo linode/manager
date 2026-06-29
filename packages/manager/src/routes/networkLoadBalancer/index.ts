@@ -1,8 +1,9 @@
 import { createRoute, redirect } from '@tanstack/react-router';
 
 import { rootRoute } from '../root';
-import { TableSearchParams } from '../types';
 import { NetworkLoadBalancersRoute } from './networkLoadBalancersRoute';
+
+import type { TableSearchParams } from '../types';
 
 export interface NodesSearchParams extends TableSearchParams {
   query?: string;

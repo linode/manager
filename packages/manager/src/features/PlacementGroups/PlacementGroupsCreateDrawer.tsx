@@ -42,13 +42,13 @@ import {
 } from './utils';
 
 import type { PlacementGroupsCreateDrawerProps } from './types';
+import type { LinodeCreateType } from '@akamai/compute-ui-core/api';
 import type {
   CreatePlacementGroupPayload,
   PlacementGroup,
   Region,
 } from '@linode/api-v4';
 import type { DisableItemOption } from '@linode/ui';
-import type { LinodeCreateType } from '@linode/utilities';
 import type { FormikHelpers } from 'formik';
 
 export const PlacementGroupsCreateDrawer = (

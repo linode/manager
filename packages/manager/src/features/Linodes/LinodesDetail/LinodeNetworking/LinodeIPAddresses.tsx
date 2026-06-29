@@ -340,6 +340,12 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
           mode="reserve"
           onClose={() => setIsReserveIPDrawerOpen(false)}
           open={isReserveIPDrawerOpen}
+          pendoIds={{
+            cancel: 'Linodes Details Network Reserve IP-Cancel',
+            close: 'Linodes Details Network Reserve IP-Close',
+            submit:
+              'Linodes Details Network Reserve IP-Reserve IP Address End Flow',
+          }}
         />
       )}
       <IPTransfer

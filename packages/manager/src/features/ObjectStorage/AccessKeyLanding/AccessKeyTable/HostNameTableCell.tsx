@@ -19,16 +19,11 @@ export const HostNameTableCell = (props: Props) => {
   const { storageKeyData } = props;
   const { openDrawer } = useAccessKeyDrawers();
 
-  const { availableStorageRegions, regionsByIdMap } = useObjectStorageRegions();
+  const { regionsByIdMap } = useObjectStorageRegions();
 
   const { regions } = storageKeyData;
 
-  if (
-    !regionsByIdMap ||
-    !availableStorageRegions ||
-    !regions ||
-    regions.length === 0
-  ) {
+  if (!regionsByIdMap || !regions || regions.length === 0) {
     return <TableCell>None</TableCell>;
   }
   const formatEndpoint = (region: ObjectStorageKeyRegions) => {

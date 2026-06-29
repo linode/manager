@@ -1,3 +1,4 @@
+import { getLinodeRegionPrice } from '@akamai/compute-ui-core/api';
 import { breakpoints } from '@linode/ui';
 import { fireEvent, waitFor, within } from '@testing-library/react';
 import React from 'react';
@@ -7,7 +8,7 @@ import {
   planSelectionTypeFactory,
 } from 'src/factories/types';
 import { LIMITED_AVAILABILITY_COPY } from 'src/features/components/PlansPanel/constants';
-import * as linodesPricing from 'src/utilities/pricing/linodes';
+import { formatPrice as realFormatPrice } from 'src/utilities/pricing/priceInterval';
 import { useComputePricing } from 'src/utilities/pricing/useComputePricing';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import { resizeScreenSize } from 'src/utilities/testHelpers';
@@ -19,12 +20,25 @@ import type { PlanSelectionProps } from './PlanSelection';
 import type { PlanWithAvailability } from './types';
 import type { PriceObject } from '@linode/api-v4';
 
+vi.mock('@akamai/compute-ui-core/api', async () => {
+  const actual = await vi.importActual<
+    typeof import('@akamai/compute-ui-core/api')
+  >('@akamai/compute-ui-core/api');
+  return {
+    ...actual,
+    getLinodeRegionPrice: vi.fn(actual.getLinodeRegionPrice),
+  };
+});
+
 vi.mock('src/utilities/pricing/useComputePricing', () => ({
   useComputePricing: vi.fn(() => ({
     billing: 'monthly' as const,
-    formatPrice: (p: null | PriceObject | undefined) =>
-      String(p?.monthly ?? '--.--'),
-    getPrice: (p: null | PriceObject | undefined) => p?.monthly ?? '--.--',
+    formatPrice: vi.fn(),
+    getBillingForPlanType: vi.fn(),
+    getPrice: vi.fn(),
+    getPriceSubheading: (p: null | PriceObject | undefined) =>
+      `$${realFormatPrice(p?.monthly)}/mo ($${realFormatPrice(p?.hourly)}/hr)`,
+    hasHourlyEligiblePlans: () => false,
     priceLabel: 'month',
   })),
 }));
@@ -32,9 +46,11 @@ vi.mock('src/utilities/pricing/useComputePricing', () => ({
 const mockMonthlyBilling = () =>
   vi.mocked(useComputePricing).mockReturnValue({
     billing: 'monthly',
-    formatPrice: (p: null | PriceObject | undefined) =>
-      String(p?.monthly ?? '--.--'),
-    getPrice: (p: null | PriceObject | undefined) => p?.monthly ?? '--.--',
+    formatPrice: vi.fn(),
+    getBillingForPlanType: vi.fn(),
+    getPrice: vi.fn(),
+    getPriceSubheading: (p: null | PriceObject | undefined) =>
+      `$${realFormatPrice(p?.monthly)}/mo ($${realFormatPrice(p?.hourly)}/hr)`,
     hasHourlyEligiblePlans: () => false,
     priceLabel: 'month',
   });
@@ -42,9 +58,11 @@ const mockMonthlyBilling = () =>
 const mockHourlyBilling = () =>
   vi.mocked(useComputePricing).mockReturnValue({
     billing: 'hourly',
-    formatPrice: (p: null | PriceObject | undefined) =>
-      String(p?.hourly ?? '--.--'),
-    getPrice: (p: null | PriceObject | undefined) => p?.hourly ?? '--.--',
+    formatPrice: vi.fn(),
+    getBillingForPlanType: vi.fn(),
+    getPrice: vi.fn(),
+    getPriceSubheading: (p: null | PriceObject | undefined) =>
+      `$${realFormatPrice(p?.hourly)}/hr`,
     hasHourlyEligiblePlans: () => true,
     priceLabel: 'hour',
   });
@@ -296,7 +314,7 @@ describe('PlanSelection (table, desktop)', () => {
 
       // Case 2: API returns null for monthly - should also be N/A.
       mockHourlyBilling();
-      vi.spyOn(linodesPricing, 'getLinodeRegionPrice').mockReturnValueOnce({
+      vi.mocked(getLinodeRegionPrice).mockReturnValueOnce({
         hourly: 0.015,
         monthly: null,
       });
@@ -323,7 +341,7 @@ describe('PlanSelection (table, desktop)', () => {
       // In both cases the plan is in monthly billing mode, where a null monthly price from the API is unexpected
       // and should be treated as an error (unlike hourly billing, where null monthly is intentional and shown as N/A).
       mockMonthlyBilling();
-      vi.spyOn(linodesPricing, 'getLinodeRegionPrice').mockReturnValueOnce({
+      vi.mocked(getLinodeRegionPrice).mockReturnValueOnce({
         hourly: 0.015,
         monthly: null,
       });
@@ -350,7 +368,7 @@ describe('PlanSelection (table, desktop)', () => {
       // The hourly cell error condition is independent of billing mode - it executes whenever
       // hourly price is null regardless of whether billing is 'monthly' or 'hourly'.
       mockMonthlyBilling();
-      vi.spyOn(linodesPricing, 'getLinodeRegionPrice').mockReturnValueOnce({
+      vi.mocked(getLinodeRegionPrice).mockReturnValueOnce({
         hourly: null,
         monthly: null,
       });
@@ -477,19 +495,20 @@ describe('PlanSelection (card, mobile)', () => {
       expect(getByText('$10/mo ($0.015/hr)')).toBeVisible();
     });
 
-    it('subheading displays "$monthly/mo ($hourly/hr)" in hourly billing mode when monthly price is present', () => {
+    it('subheading shows only "$hourly/hr" in hourly billing mode, even when monthly price is present', () => {
       mockHourlyBilling();
 
-      const { getByText } = renderWithTheme(
+      const { getByText, queryByText } = renderWithTheme(
         <PlanSelection {...defaultProps} selectedRegionId={'us-east'} />
       );
 
-      expect(getByText('$10/mo ($0.015/hr)')).toBeVisible();
+      expect(getByText('$0.015/hr')).toBeVisible();
+      expect(queryByText(/\/mo/)).not.toBeInTheDocument();
     });
 
     it('subheading shows only "$hourly/hr" in hourly billing mode when monthly price is absent', () => {
       mockHourlyBilling();
-      vi.spyOn(linodesPricing, 'getLinodeRegionPrice').mockReturnValueOnce({
+      vi.mocked(getLinodeRegionPrice).mockReturnValueOnce({
         hourly: 0.015,
         monthly: null,
       });

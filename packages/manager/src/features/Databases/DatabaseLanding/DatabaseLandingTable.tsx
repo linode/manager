@@ -13,7 +13,7 @@ import { MIN_PAGE_SIZE } from 'src/components/PaginationFooter/PaginationFooter.
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { DEFAULT_PAGE_SIZES } from 'src/features/Databases/constants';
 import { DatabaseSettingsDeleteClusterDialog } from 'src/features/Databases/DatabaseDetail/DatabaseSettings/DatabaseSettingsDeleteClusterDialog';
-import DatabaseSettingsResetPasswordDialog from 'src/features/Databases/DatabaseDetail/DatabaseSettings/DatabaseSettingsResetPasswordDialog';
+import { DatabaseSettingsResetPasswordDialog } from 'src/features/Databases/DatabaseDetail/DatabaseSettings/DatabaseSettingsResetPasswordDialog';
 import { ManageAccessControlDrawer } from 'src/features/Databases/DatabaseDetail/ManageAccessControlDrawer';
 import DatabaseLogo from 'src/features/Databases/DatabaseLanding/DatabaseLogo';
 import DatabaseRow from 'src/features/Databases/DatabaseLanding/DatabaseRow';

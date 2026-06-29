@@ -1,9 +1,8 @@
 import { screen } from '@testing-library/react';
 import React from 'react';
 
-import { renderWithTheme } from 'src/utilities/testHelpers';
-
 import { openActionMenu } from '../../utilities/testHelpers';
+import { renderWithProviders } from '../../utilities/testHelpers';
 import { AssignedRolesActionMenu } from './AssignedRolesActionMenu';
 
 import type { ExtendedRoleView } from '../types';
@@ -36,7 +35,7 @@ const mockEntityRole: ExtendedRoleView = {
 
 describe('AssignedRolesActionMenu', () => {
   it('should render actions for account access roles correctly', async () => {
-    renderWithTheme(
+    renderWithProviders(
       <AssignedRolesActionMenu
         handleChangeRole={mockOnChangeRole}
         handleUnassignRole={mockOnUnassignRole}
@@ -61,7 +60,7 @@ describe('AssignedRolesActionMenu', () => {
   });
 
   it('should render actions for entity access roles correctly', async () => {
-    renderWithTheme(
+    renderWithProviders(
       <AssignedRolesActionMenu
         handleChangeRole={mockOnChangeRole}
         handleUnassignRole={mockOnUnassignRole}

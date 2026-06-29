@@ -1,28 +1,23 @@
-import { NotificationBanner } from '@akamai/cds-components/react';
-import { Spacing } from '@akamai/cds-tokens';
 import {
-  FormControlLabel,
-  Radio,
+  NotificationBanner,
+  RadioButton,
   RadioGroup,
-  styled,
-  Typography,
-} from '@linode/ui';
-import Box from '@mui/material/Box';
+} from '@akamai/cds-components/react';
+import { Spacing } from '@akamai/cds-tokens';
+import { ipV6FieldPlaceholder, validateIPs } from '@akamai/compute-ui-core/api';
+import { styled } from '@linode/ui';
 import { useState } from 'react';
 import * as React from 'react';
-import type { ChangeEvent } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
-import { Link } from 'src/components/Link';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
-import { enforceIPMasks } from 'src/features/Firewalls/FirewallDetail/Rules/FirewallRuleDrawer.utils';
-import { ipV6FieldPlaceholder, validateIPs } from 'src/utilities/ipUtils';
 
 import { ACCESS_CONTROLS_IP_VALIDATION_ERROR_TEXT } from '../constants';
+import { enforceIPMasks } from '../utilities';
 
 import type { DatabaseCreateValues } from './DatabaseCreate';
+import type { ExtendedIP } from '@akamai/compute-ui-core/api';
 import type { APIError } from '@linode/api-v4/lib/types';
-import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 export type AccessOption = 'none' | 'specific';
 export type AccessVariant = 'networking' | 'standard';
@@ -62,23 +57,31 @@ export const DatabaseCreateAccessControls = (props: AccessProps) => {
   const ips = useWatch({ control, name: 'allow_list' });
 
   return (
-    <Box>
-      <Typography variant={variant === 'networking' ? 'h3' : 'h2'}>
-        Manage Access
-      </Typography>
-      <Typography>
+    <div>
+      {variant === 'standard' ? (
+        <h3 style={{ margin: 0 }}>Manage Access</h3>
+      ) : (
+        <h4 style={{ margin: 0 }}>Manage Access</h4>
+      )}
+      <p style={{ margin: 0 }}>
         Add IPv6 (recommended) or IPv4 addresses or ranges that should be
         authorized to access this cluster.{' '}
-        <Link to="https://techdocs.akamai.com/cloud-computing/docs/aiven-manage-database#ipv6-support">
+        <a
+          aria-label="Learn more - link opens in a new tab"
+          data-testid="external-link"
+          href="https://techdocs.akamai.com/cloud-computing/docs/aiven-manage-database#ipv6-support"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
           Learn more
-        </Link>
+        </a>
         .
-      </Typography>
-      <Typography mb={1} mt={1}>
+      </p>
+      <p style={{ marginBottom: Spacing.S8, marginTop: Spacing.S8 }}>
         (Note: You can modify access controls after your database cluster is
         active.)
-      </Typography>
-      <Box>
+      </p>
+      <div>
         {errors &&
           errors.map((apiError: APIError) => (
             <NotificationBanner
@@ -95,7 +98,8 @@ export const DatabaseCreateAccessControls = (props: AccessProps) => {
             <RadioGroup
               aria-label="type"
               name="type"
-              onChange={(_: ChangeEvent, value: AccessOption) => {
+              onChange={(e: CustomEvent) => {
+                const value = e.detail.value as AccessOption;
                 setAccessOption(value);
                 if (value === 'none') {
                   field.onChange([{ address: '', error: '' }]);
@@ -103,13 +107,13 @@ export const DatabaseCreateAccessControls = (props: AccessProps) => {
               }}
               value={accessOption}
             >
-              <FormControlLabel
-                control={<Radio />}
+              <RadioButton
                 data-qa-dbaas-radio="Specific"
                 disabled={disabled}
-                label="Specific Access (recommended)"
+                id="specific"
                 value="specific"
               />
+              <label htmlFor="specific">Specific Access (recommended)</label>
               <StyledMultipleIPInput
                 buttonText={ips.length > 1 ? 'Add Another IP' : 'Add an IP'}
                 disabled={accessOption === 'none' || disabled}
@@ -119,18 +123,20 @@ export const DatabaseCreateAccessControls = (props: AccessProps) => {
                 placeholder={ipV6FieldPlaceholder}
                 title="Allowed IP Addresses or Ranges"
               />
-              <FormControlLabel
-                control={<Radio />}
+              <RadioButton
                 data-qa-dbaas-radio="None"
                 disabled={disabled}
-                label="No Access (Deny connections from all IP addresses)"
+                id="none"
                 value="none"
               />
+              <label htmlFor="none">
+                No Access (Deny connections from all IP addresses)
+              </label>
             </RadioGroup>
           )}
         />
-      </Box>
-    </Box>
+      </div>
+    </div>
   );
 };
 

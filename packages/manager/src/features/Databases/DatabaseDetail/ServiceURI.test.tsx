@@ -24,8 +24,8 @@ const mockCredentials = {
   username: 'lnroot',
 };
 
-const DEFAULT_PRIMARY = 'db-postgres-default-primary.net';
-const DEFAULT_STANDBY = 'db-postgres-default-standby.net';
+const DEFAULT_PRIMARY = 'db-default-primary.net';
+const DEFAULT_STANDBY = 'db-default-standby.net';
 
 const PRIVATE_PRIMARY = `private-${DEFAULT_PRIMARY}`;
 const PRIVATE_STANDBY = `private-${DEFAULT_STANDBY}`;
@@ -252,6 +252,24 @@ describe('ServiceURI', () => {
     expect(revealPasswordBtn).toBeInTheDocument();
     expect(serviceURIText).toBe(
       `mysql://{Click To Reveal Password}@${DEFAULT_PRIMARY}:3306/defaultdb?ssl-mode=REQUIRED`
+    );
+  });
+
+  it('should render general service URI with rediss and no sslmode if isGeneralServiceURI is true and the engine is valkey', async () => {
+    const mockDb = {
+      ...databaseWithNoVPC,
+      engine: 'valkey' as Engine,
+    };
+    const { container } = renderWithTheme(
+      <ServiceURI database={mockDb} isGeneralServiceURI />
+    );
+
+    const revealPasswordBtn = await getServiceUriRevealButton(container);
+    const serviceURIText = screen.getByTestId('service-uri').textContent;
+
+    expect(revealPasswordBtn).toBeInTheDocument();
+    expect(serviceURIText).toBe(
+      `rediss://{Click To Reveal Password}@${DEFAULT_PRIMARY}:3306`
     );
   });
 

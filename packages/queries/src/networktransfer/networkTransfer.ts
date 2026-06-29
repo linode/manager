@@ -3,7 +3,8 @@ import { useQuery } from '@tanstack/react-query';
 
 import { getAllNetworkTransferPrices } from './requests';
 
-import type { APIError, PriceType } from '@linode/api-v4';
+import type { PriceType } from '@akamai/compute-ui-core/api';
+import type { APIError } from '@linode/api-v4';
 
 export const queryKey = 'network-transfer';
 

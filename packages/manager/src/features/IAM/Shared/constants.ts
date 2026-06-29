@@ -96,13 +96,14 @@ export const USER_ROLES_LINK =
 export const USER_ENTITIES_LINK =
   'https://techdocs.akamai.com/cloud-computing/docs/identity-access-cm-manage-access#check-and-update-users-entity-assignment';
 
-// TODO: UIE-11341 - update this link when the doc is ready
 export const SSO_ENFORCEMENT_LINK =
-  'https://techdocs.akamai.com/cloud-computing/docs/identity-and-access-cm';
+  'https://techdocs.akamai.com/cloud-computing/v1_sk/docs/sso-cm-configuration';
 
-// TODO: UIE-11341 - update this link when the doc is ready
 export const SSO_DOCS_LINK =
-  'https://techdocs.akamai.com/cloud-computing/docs/identity-and-access-cm';
+  'https://techdocs.akamai.com/cloud-computing/docs/single-sign-on-cm';
+
+export const SSO_RECOMMENDATIONS_LINK =
+  'https://techdocs.akamai.com/home#why-should-you-configure-an-emergency-access-account';
 
 export const PAID_ENTITY_TYPES = [
   'database',

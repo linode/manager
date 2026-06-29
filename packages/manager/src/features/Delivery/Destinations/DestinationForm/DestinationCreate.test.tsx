@@ -135,19 +135,19 @@ describe.skip('DestinationCreate', () => {
       expect(bucketInput).toHaveValue('test-bucket');
     });
 
-    it('should render Access Key ID input and allow to type text', async () => {
+    it('should render Access Key input and allow to type text', async () => {
       renderDestinationCreate();
 
-      const accessKeyIdInput = screen.getByLabelText('Access Key ID');
+      const accessKeyIdInput = screen.getByLabelText('Access Key');
       await user.type(accessKeyIdInput, 'test-access-key');
 
       expect(accessKeyIdInput).toHaveValue('test-access-key');
     });
 
-    it('should render Secret Access Key input and allow to type text', async () => {
+    it('should render Secret Key input and allow to type text', async () => {
       renderDestinationCreate();
 
-      const secretAccessKeyInput = screen.getByLabelText('Secret Access Key');
+      const secretAccessKeyInput = screen.getByLabelText('Secret Key');
       await user.type(secretAccessKeyInput, 'test-secret-key');
 
       expect(secretAccessKeyInput).toHaveValue('test-secret-key');
@@ -324,9 +324,9 @@ describe.skip('DestinationCreate', () => {
         await user.type(endpointInput, 'test');
         const bucketInput = screen.getByLabelText('Bucket');
         await user.type(bucketInput, 'test');
-        const accessKeyIDInput = screen.getByLabelText('Access Key ID');
+        const accessKeyIDInput = screen.getByLabelText('Access Key');
         await user.type(accessKeyIDInput, 'Test');
-        const secretAccessKeyInput = screen.getByLabelText('Secret Access Key');
+        const secretAccessKeyInput = screen.getByLabelText('Secret Key');
         await user.type(secretAccessKeyInput, 'Test');
         const logPathPrefixInput = screen.getByLabelText(
           'Log Path Prefix (optional)'

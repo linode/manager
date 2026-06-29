@@ -1,14 +1,13 @@
+import {
+  doesEventMatchAPIFilter,
+  isInProgressEvent,
+} from '@akamai/compute-ui-core/events';
+
 import { EVENTS_LIST_FILTER } from 'src/features/Events/constants';
 
+export { doesEventMatchAPIFilter, isInProgressEvent };
+
 import type { Event, EventAction, Filter } from '@linode/api-v4';
-
-export const isInProgressEvent = (event: Event) => {
-  if (event.percent_complete === null) {
-    return false;
-  }
-
-  return event.percent_complete < 100;
-};
 
 export const isEventInProgressDiskImagize = (event: Event): boolean => {
   return (
@@ -47,34 +46,6 @@ export const eventActionsForLinodeAsSecondaryEntity: EventAction[] = [
 ];
 export const isEventRelevantToLinodeAsSecondaryEntity = (event: Event) =>
   eventActionsForLinodeAsSecondaryEntity.includes(event?.action);
-
-/**
- * Because we're using one polling instance (without any API filter) and have many possible event infinite queires
- * with various filters, we must make sure that we filter out API-filtered events when we update our filtered
- * infinite queries.
- *
- * @returns This function return true if the API filter `filter` would match the given `event`. We are basiclly
- * mimicing the API's filtering for the sake of updating our different events infinite queries.
- */
-export const doesEventMatchAPIFilter = (event: Event, filter: Filter) => {
-  // @ts-expect-error todo fix filter type
-  const notEqualItems = filter.action?.['+neq'];
-  if (notEqualItems && notEqualItems.includes(event.action)) {
-    return false;
-  }
-
-  // @ts-expect-error todo improve indexability of filter type
-  if (filter?.['entity.id'] && filter['entity.id'] !== event.entity?.id) {
-    return false;
-  }
-
-  // @ts-expect-error todo improve indexability of filter type
-  if (filter?.['entity.type'] && filter['entity.type'] !== event.entity?.type) {
-    return false;
-  }
-
-  return true;
-};
 
 /**
  * Generates a "found in filter" list filter for the API.

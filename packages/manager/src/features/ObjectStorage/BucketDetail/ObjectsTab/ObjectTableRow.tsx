@@ -1,6 +1,6 @@
+import { readableBytes } from '@akamai/compute-ui-core/api';
 import { Box, LinkButton, Typography } from '@linode/ui';
 import { Hidden } from '@linode/ui';
-import { readableBytes } from '@linode/utilities';
 import Grid from '@mui/material/Grid';
 import * as React from 'react';
 

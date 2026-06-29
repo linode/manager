@@ -1,3 +1,4 @@
+import { getAPIErrorOrDefault } from '@akamai/compute-ui-core/api';
 import {
   Autocomplete,
   BetaChip,
@@ -23,7 +24,6 @@ import { useFlags } from 'src/hooks/useFlags';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { useAllAlertsByNotificationChannelIdQuery } from 'src/queries/cloudpulse/alerts';
 import { useCloudPulseServiceTypes } from 'src/queries/cloudpulse/services';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import {
   alertsFromEnabledServices,

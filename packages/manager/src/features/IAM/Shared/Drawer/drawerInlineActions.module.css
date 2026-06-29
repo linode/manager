@@ -1,0 +1,6 @@
+.drawerInlineActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--token-global-spacing-s12, 12px);
+  margin: var(--token-global-spacing-s24, 24px) 0;
+}

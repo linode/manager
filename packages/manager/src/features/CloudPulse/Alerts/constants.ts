@@ -321,6 +321,3 @@ export const CLONE_ALERT_NAME_SUFFIX = '_Clone 1';
 
 export const CLONE_ALERT_SUCCESS_MESSAGE =
   'Alert definition was successfully cloned.';
-
-export const CLONE_ALERT_FAILED_MESSAGE =
-  'Failed to clone the alert definition.';

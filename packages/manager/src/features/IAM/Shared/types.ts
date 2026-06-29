@@ -11,6 +11,8 @@ export interface EntitiesOption {
   value: number;
 }
 
+export type SelectOption<T = number | string> = { label: string; value: T };
+
 export interface RoleView {
   access: 'account_access' | 'entity_access';
   description: string;

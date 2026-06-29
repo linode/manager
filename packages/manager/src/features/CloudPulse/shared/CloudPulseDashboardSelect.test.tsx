@@ -10,6 +10,7 @@ import { CloudPulseDashboardSelect } from './CloudPulseDashboardSelect';
 import type { CloudPulseDashboardSelectProps } from './CloudPulseDashboardSelect';
 
 const dashboardLabel = 'Factory Dashboard-1';
+const selectedDashboardLabel = 'Linodes - Factory Dashboard-1';
 const props: CloudPulseDashboardSelectProps = {
   handleDashboardChange: vi.fn(),
 };
@@ -19,7 +20,10 @@ const queryMocks = vi.hoisted(() => ({
   useCloudPulseServiceTypes: vi.fn().mockReturnValue({}),
 }));
 const mockDashboard = dashboardFactory.buildList(2);
-const mockServiceTypesList = serviceTypesFactory.build();
+const mockServiceTypesList = serviceTypesFactory.build({
+  service_type: 'linode',
+  label: 'Linodes',
+});
 
 vi.mock('src/queries/cloudpulse/dashboards', async () => {
   const actual = await vi.importActual('src/queries/cloudpulse/dashboards');
@@ -83,7 +87,7 @@ describe('CloudPulse Dashboard select', () => {
 
     expect(screen.getByRole('combobox')).toHaveAttribute(
       'value',
-      dashboardLabel
+      selectedDashboardLabel
     );
   });
   it('Should select the default value from preferences', () => {
@@ -93,7 +97,7 @@ describe('CloudPulse Dashboard select', () => {
 
     expect(screen.getByRole('combobox')).toHaveAttribute(
       'value',
-      dashboardLabel
+      selectedDashboardLabel
     );
   });
 

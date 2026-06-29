@@ -3,12 +3,15 @@ import React from 'react';
 
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
+import { ObjectStorageSelectionProvider } from 'src/features/ObjectStorage/ObjectStorageContext';
 
 export const ObjectStorageRoute = () => {
   return (
     <React.Suspense fallback={<SuspenseLoader />}>
-      <ProductInformationBanner bannerLocation="Object Storage" />
-      <Outlet />
+      <ObjectStorageSelectionProvider>
+        <ProductInformationBanner bannerLocation="Object Storage" />
+        <Outlet />
+      </ObjectStorageSelectionProvider>
     </React.Suspense>
   );
 };

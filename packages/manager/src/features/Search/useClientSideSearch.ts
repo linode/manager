@@ -12,9 +12,9 @@ import {
   useReservedIPsQuery,
 } from '@linode/queries';
 
+import { useObjectStorageBuckets } from 'src/features/ObjectStorage/hooks/useObjectStorageBuckets';
 import { useIsReserveIpEnabled } from 'src/features/ReservedIps/utils';
 import { useAllKubernetesClustersQuery } from 'src/queries/kubernetes';
-import { useObjectStorageBuckets } from 'src/queries/object-storage/queries';
 import {
   bucketToSearchableItem,
   databaseToSearchableItem,
@@ -85,7 +85,7 @@ export const useClientSideSearch = ({ enabled, query }: Props) => {
     isLoading: databasesLoading,
   } = useAllDatabasesQuery(enabled);
   const { data: objectStorageBuckets, error: bucketsError } =
-    useObjectStorageBuckets(enabled);
+    useObjectStorageBuckets({ enabled });
   const {
     data: privateImages,
     error: imagesError,
@@ -126,7 +126,7 @@ export const useClientSideSearch = ({ enabled, query }: Props) => {
   const searchableStackScripts =
     stackscripts?.map(stackscriptToSearchableItem) ?? [];
   const searchableBuckets =
-    objectStorageBuckets?.buckets.map(bucketToSearchableItem) ?? [];
+    objectStorageBuckets?.map(bucketToSearchableItem) ?? [];
   const searchableClusters =
     clusters?.map(kubernetesClusterToSearchableItem) ?? [];
   const searchableStreams = streams?.map(streamToSearchableItem) ?? [];
@@ -166,7 +166,7 @@ export const useClientSideSearch = ({ enabled, query }: Props) => {
     reservedIpsLoading;
 
   const entityErrors: Record<SearchableEntityType, null | string> = {
-    bucket: bucketsError?.message ?? null,
+    bucket: bucketsError,
     database: databasesError?.[0].reason ?? null,
     destination: destinationsError?.[0].reason ?? null,
     domain: domainsError?.[0].reason ?? null,

@@ -1,4 +1,10 @@
-import { NotificationBanner, Select } from '@akamai/cds-components/react';
+import { toast } from '@akamai/cds-components/notification-toast';
+import {
+  Button,
+  NotificationBanner,
+  Select,
+} from '@akamai/cds-components/react';
+import { Spacing } from '@akamai/cds-tokens';
 import {
   useAccountRoles,
   useGetDefaultDelegationAccessQuery,
@@ -6,13 +12,12 @@ import {
   useUserRoles,
   useUserRolesMutation,
 } from '@linode/queries';
-import { ActionsPanel, Drawer, Typography } from '@linode/ui';
-import { useTheme } from '@mui/material/styles';
-import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { useIsDefaultDelegationRolesForChildAccount } from '../../hooks/useDelegationRole';
+import { Drawer, DrawerInlineActions } from '../../Shared/Drawer';
+import styles from '../../Shared/global.module.css';
 import { AssignedPermissionsPanel } from '../AssignedPermissionsPanel/AssignedPermissionsPanel';
 import {
   INTERNAL_ERROR_NO_CHANGES_SAVED,
@@ -45,9 +50,6 @@ export const ChangeRoleForEntityDrawer = ({
   role,
   username,
 }: Props) => {
-  const theme = useTheme();
-  const { enqueueSnackbar } = useSnackbar();
-
   const { isDefaultDelegationRolesForChildAccount } =
     useIsDefaultDelegationRolesForChildAccount();
 
@@ -149,8 +151,9 @@ export const ChangeRoleForEntityDrawer = ({
         entity_access: updatedEntityRoles,
       });
 
-      enqueueSnackbar(`Role changed`, {
-        variant: 'success',
+      toast.open({
+        text: 'Role changed',
+        type: 'success',
       });
 
       handleClose();
@@ -168,24 +171,33 @@ export const ChangeRoleForEntityDrawer = ({
     onClose();
   };
 
+  const drawerTitle = 'Change Role';
+
   return (
-    <Drawer onClose={handleClose} open={open} title="Change Role">
-      {errors.root?.message && (
-        <NotificationBanner text={errors.root?.message} type="error" />
-      )}
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Typography sx={{ marginBottom: 2.5 }}>
+    <Drawer
+      aria-label="Change Role"
+      className={styles.noMargin}
+      onClose={handleClose}
+      open={open}
+      title={drawerTitle}
+    >
+      <div slot="header">{drawerTitle}</div>
+      <form onSubmit={handleSubmit(onSubmit)} slot="body">
+        {errors.root?.message && (
+          <NotificationBanner text={errors.root?.message} type="error" />
+        )}
+        <p style={{ marginBottom: Spacing.S20 }}>
           Select a role you want the entity to be attached to.{' '}
           <Link to={ROLES_LEARN_MORE_LINK}>
             Learn more about roles and permissions
           </Link>
           .
-        </Typography>
+        </p>
 
-        <Typography sx={{ marginBottom: theme.tokens.spacing.S8 }}>
+        <p style={{ marginBottom: Spacing.S8 }}>
           Change the role for <strong>{role?.entity_name}</strong> from{' '}
           <strong>{role?.role_name}</strong> to:
-        </Typography>
+        </p>
 
         <Controller
           control={control}
@@ -206,7 +218,7 @@ export const ChangeRoleForEntityDrawer = ({
               }}
               placeholder="Select a Role"
               selected={field.value || null}
-              style={{ marginBottom: theme.tokens.spacing.S16 }}
+              style={{ marginBottom: Spacing.S16 }}
               valueFn={(item) => (item as ExtendedEntityRole).label}
             />
           )}
@@ -221,20 +233,23 @@ export const ChangeRoleForEntityDrawer = ({
             value={[]}
           />
         )}
-
-        <ActionsPanel
-          primaryButtonProps={{
-            'data-testid': 'submit',
-            label: 'Save Changes',
-            loading: isSubmitting,
-            type: 'submit',
-          }}
-          secondaryButtonProps={{
-            'data-testid': 'cancel',
-            label: 'Cancel',
-            onClick: handleClose,
-          }}
-        />
+        <DrawerInlineActions>
+          <Button
+            data-testid="cancel"
+            onClick={handleClose}
+            variant="secondary"
+          >
+            Cancel
+          </Button>
+          <Button
+            data-testid="submit"
+            processing={isSubmitting}
+            type="submit"
+            variant="primary"
+          >
+            Save
+          </Button>
+        </DrawerInlineActions>
       </form>
     </Drawer>
   );

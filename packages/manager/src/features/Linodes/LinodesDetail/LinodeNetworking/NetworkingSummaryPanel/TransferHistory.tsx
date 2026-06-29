@@ -1,4 +1,8 @@
 import {
+  getAPIErrorOrDefault,
+  readableBytes,
+} from '@akamai/compute-ui-core/api';
+import {
   STATS_NOT_READY_API_MESSAGE,
   STATS_NOT_READY_MESSAGE,
   useLinodeStatsByDate,
@@ -6,7 +10,6 @@ import {
   useProfile,
 } from '@linode/queries';
 import { Box, CircleProgress, ErrorState, Typography } from '@linode/ui';
-import { readableBytes } from '@linode/utilities';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { IconButton } from '@mui/material';
@@ -20,7 +23,6 @@ import {
   convertNetworkToUnit,
   generateNetworkUnits,
 } from 'src/features/Longview/shared/utilities';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import type { Stats } from '@linode/api-v4/lib/linodes';
 import type {

@@ -6,6 +6,7 @@ export * from './databases.schema';
 export * from './delivery.schema';
 export * from './domains.schema';
 export * from './firewalls.schema';
+export * from './iam.schema';
 export * from './images.schema';
 export * from './kubernetes.schema';
 export * from './linodes.schema';

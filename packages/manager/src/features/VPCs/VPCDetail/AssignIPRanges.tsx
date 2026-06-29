@@ -13,8 +13,8 @@ import {
   VPCRangesDescription,
 } from '../components/VPCRangesDescription';
 
+import type { ExtendedIP } from '@akamai/compute-ui-core/api';
 import type { SxProps, Theme } from '@mui/material/styles';
-import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 interface Props {
   handleIPRangeChange: (ips: ExtendedIP[]) => void;

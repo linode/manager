@@ -27,6 +27,23 @@ export interface ScopeValueSelectorProps {
   regionCapability?: Capabilities;
 }
 
+export interface QuotaUsageLink {
+  /**
+   * The text to display for the usage link.
+   */
+  text: string;
+
+  /**
+   * An optional tooltip to display on hover for the usage link.
+   */
+  tooltip?: string;
+
+  /**
+   * The URL to navigate to when the usage link is clicked.
+   */
+  url: string;
+}
+
 /**
  * Represents the definition of a quota scope, including how to retrieve and display quotas for that scope in the UI.
  */
@@ -60,6 +77,16 @@ export interface QuotaScopeDefinition<Q extends Quota = Quota> {
    * @returns The transformed quota data to be used in the UI for this scope.
    */
   transformFunction?: (quota: Q) => Q;
+
+  /**
+   * An optional function to provide a link to the usage page for a given quota in this scope.
+   * The function is applicable only when the quota doesn't provide usage information.
+   *
+   * @param quota - The quota data returned from the API for this scope.
+   *
+   * @returns An object containing the text and URL for the usage link, or null if no link should be provided.
+   */
+  usageLinkFunction?: (quota: Q) => null | QuotaUsageLink;
 
   /**
    * An optional function to determine whether a quota should be visible in the UI for this scope.
@@ -166,6 +193,28 @@ export const objectStorageQuotaService = (
           ...quota,
           quota_name: quota.quota_name.replace(' (per endpoint)', ''),
         }),
+        usageLinkFunction(
+          quota: ObjectStorageEndpointQuota
+        ): null | QuotaUsageLink {
+          switch (quota.quota_type) {
+            case 'obj-total-egress-throughput':
+              return {
+                text: 'Egress usage available in Cloud Pulse Metrics',
+                url: '/metrics',
+                tooltip:
+                  'To view egress usage by endpoint, open the Object Storage Endpoint Activity dashboard available within Akamai Cloud Pulse Metrics and select your endpoint.',
+              };
+            case 'obj-total-ingress-throughput':
+              return {
+                text: 'Ingress usage available in Cloud Pulse Metrics',
+                url: '/metrics',
+                tooltip:
+                  'To view ingress usage by endpoint, open the Object Storage Endpoint Activity dashboard available within Akamai Cloud Pulse Metrics and select your endpoint.',
+              };
+            default:
+              return null;
+          }
+        },
       } satisfies QuotaScopeDefinition<ObjectStorageEndpointQuota>,
     },
   }) satisfies QuotaService;

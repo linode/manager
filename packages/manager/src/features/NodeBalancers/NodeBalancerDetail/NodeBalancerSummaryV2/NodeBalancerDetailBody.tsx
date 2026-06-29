@@ -1,10 +1,10 @@
+import { convertMegabytesTo } from '@akamai/compute-ui-core/api';
 import {
   useAllNodeBalancerConfigsQuery,
   useNodeBalancersFirewallsQuery,
   useRegionsQuery,
 } from '@linode/queries';
 import { Box, Typography } from '@linode/ui';
-import { convertMegabytesTo } from '@linode/utilities';
 import Grid from '@mui/material/Grid';
 import { useParams } from '@tanstack/react-router';
 import React from 'react';

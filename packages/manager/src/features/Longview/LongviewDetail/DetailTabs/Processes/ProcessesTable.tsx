@@ -1,4 +1,4 @@
-import { readableBytes } from '@linode/utilities';
+import { readableBytes } from '@akamai/compute-ui-core/api';
 import * as React from 'react';
 
 import { MaskableText } from 'src/components/MaskableText/MaskableText';

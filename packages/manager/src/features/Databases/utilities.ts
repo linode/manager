@@ -1,9 +1,11 @@
 import { useAccount, useDatabaseTypesQuery } from '@linode/queries';
 import { isFeatureEnabledV2 } from '@linode/utilities';
+import { parse as parseIP } from 'ipaddr.js';
 import { DateTime } from 'luxon';
 
 import { useFlags } from 'src/hooks/useFlags';
 
+import type { ExtendedIP } from '@akamai/compute-ui-core/api';
 import type {
   Database,
   DatabaseEngine,
@@ -261,3 +263,28 @@ export const convertPrivateToPublicHostname = (host: string) => {
 
 export const getIsLinkInactive = (status: DatabaseStatus) =>
   ['migrated', 'resuming', 'suspended', 'suspending'].includes(status);
+
+export const enforceIPMasks = (ips: ExtendedIP[]): ExtendedIP[] => {
+  // Check if a mask was provided and if not, add the appropriate mask for IPv4 or IPv6 addresses, respectively.
+  return ips.map((extendedIP) => {
+    const ipAddress = extendedIP.address;
+
+    const [base, mask] = ipAddress.split('/');
+    if (mask) {
+      // The user provided a mask already
+      return extendedIP;
+    }
+
+    try {
+      const parsed = parseIP(base);
+      const type = parsed.kind();
+
+      const appendedMask = type === 'ipv4' ? '/32' : '/128';
+      const ipWithMask = base + appendedMask;
+
+      return { ...extendedIP, address: ipWithMask };
+    } catch (err) {
+      return extendedIP;
+    }
+  });
+};

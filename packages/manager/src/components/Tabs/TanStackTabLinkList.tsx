@@ -13,11 +13,16 @@ export interface Tab {
 }
 
 interface TabLinkListProps {
+  fontSize?: string;
   noLink?: boolean;
   tabs: TanstackTab[];
 }
 
-export const TanStackTabLinkList = ({ noLink, tabs }: TabLinkListProps) => {
+export const TanStackTabLinkList = ({
+  fontSize,
+  noLink,
+  tabs,
+}: TabLinkListProps) => {
   return (
     <TabList>
       {tabs.map((tab, _index) => {
@@ -26,6 +31,7 @@ export const TanStackTabLinkList = ({ noLink, tabs }: TabLinkListProps) => {
             // @ts-expect-error - Tab accepts 'as' prop at runtime but it's not in the types
             as={noLink ? undefined : TanstackLink}
             data-testid={tab.title}
+            fontSize={fontSize}
             key={`tab-${_index}`}
             preload={noLink ? undefined : 'intent'}
             to={noLink ? undefined : tab.to}

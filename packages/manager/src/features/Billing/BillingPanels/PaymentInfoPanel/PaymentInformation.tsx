@@ -1,3 +1,4 @@
+import { getAPIErrorOrDefault } from '@akamai/compute-ui-core/api';
 import { deletePaymentMethod } from '@linode/api-v4/lib/account';
 import { accountQueries } from '@linode/queries';
 import { Typography } from '@linode/ui';
@@ -11,7 +12,6 @@ import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { PaymentMethods } from 'src/features/Billing/BillingPanels/PaymentInfoPanel/PaymentMethods';
 import { ADD_PAYMENT_METHOD } from 'src/features/Billing/constants';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import {
   BillingActionButton,

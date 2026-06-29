@@ -1,3 +1,4 @@
+import { profileFactory } from '@linode/utilities';
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
@@ -6,14 +7,14 @@ import { SwitchAccountButton } from 'src/features/Account/SwitchAccountButton';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 const queryMocks = vi.hoisted(() => ({
-  useFlags: vi.fn().mockReturnValue({}),
+  useProfile: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('src/hooks/useFlags', () => {
-  const actual = vi.importActual('src/hooks/useFlags');
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
   return {
     ...actual,
-    useFlags: queryMocks.useFlags,
+    useProfile: queryMocks.useProfile,
   };
 });
 
@@ -35,26 +36,15 @@ describe('SwitchAccountButton', () => {
     expect(onClickMock).toHaveBeenCalledTimes(1);
   });
 
-  test('enables the button when user has create_child_account_token permission', () => {
-    queryMocks.useFlags.mockReturnValue({
-      iamDelegation: { enabled: true },
+  test('renders Switch Back to Your Account for delegate users', () => {
+    queryMocks.useProfile.mockReturnValue({
+      data: profileFactory.build({ user_type: 'delegate' }),
     });
 
     renderWithTheme(<SwitchAccountButton />);
 
-    const button = screen.getByRole('button', { name: /switch account/i });
-    expect(button).toBeEnabled();
-  });
-
-  test('enables the button when iamDelegation flag is off', async () => {
-    queryMocks.useFlags.mockReturnValue({
-      iamDelegation: { enabled: false },
-    });
-
-    renderWithTheme(<SwitchAccountButton />);
-
-    const button = screen.getByRole('button', { name: /switch account/i });
-    expect(button).toBeEnabled();
-    expect(button).not.toHaveAttribute('aria-describedby', 'button-tooltip');
+    expect(
+      screen.getByRole('button', { name: /switch back to your account/i })
+    ).toBeEnabled();
   });
 });

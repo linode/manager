@@ -125,6 +125,7 @@ export const LinodeIPAddressRow = (props: LinodeIPAddressRowProps) => {
             onReserve={
               isReserveIpEnabled ? handleOpenReserveIPDrawer : undefined
             }
+            pendoId="Linodes Details Network IP Addresses-Action Menu"
             readOnly={readOnly}
           />
         ) : _range ? (
@@ -138,6 +139,7 @@ export const LinodeIPAddressRow = (props: LinodeIPAddressRowProps) => {
             isOnlyPublicIP={isOnlyPublicIP}
             onEdit={() => handleOpenEditRDNSForRange(_range)}
             onRemove={openRemoveIPRangeDialog}
+            pendoId="Linodes Details Network IP Addresses-Action Menu"
             readOnly={readOnly}
           />
         ) : null}

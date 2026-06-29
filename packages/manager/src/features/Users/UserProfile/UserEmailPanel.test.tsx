@@ -47,10 +47,10 @@ describe('UserEmailPanel', () => {
     expect(getByText('Save').closest('button')).toBeDisabled();
   });
 
-  it("does not allow the user to update a proxy user's email", async () => {
+  it("does not allow the user to update a delegate user's email", async () => {
     const user = accountUserFactory.build({
-      user_type: 'proxy',
-      username: 'proxy-user-1',
+      user_type: 'delegate',
+      username: 'delegate-user-1',
     });
 
     const { getByLabelText, getByText } = renderWithTheme(
@@ -60,7 +60,7 @@ describe('UserEmailPanel', () => {
     const warning = getByLabelText('This field can’t be modified.');
 
     // Verify there is a tooltip explaining that the user can't change
-    // a proxy user's email.
+    // a delegate user's email.
     expect(warning).toBeInTheDocument();
 
     // Verify the input is disabled

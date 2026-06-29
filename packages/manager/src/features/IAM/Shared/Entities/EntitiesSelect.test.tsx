@@ -1,19 +1,14 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import React from 'react';
 
-import { accountEntityFactory } from 'src/factories/accountEntities';
-import { renderWithTheme } from 'src/utilities/testHelpers';
-
+import { createAccountEntity } from '../../factories';
+import {
+  mockMatchMedia,
+  renderWithProviders,
+} from '../../utilities/testHelpers';
 import { EntitiesSelect } from './EntitiesSelect';
 
 import type { EntitiesOption } from '../types';
-
-// Remove the debounce delay so filter changes take effect synchronously.
-vi.mock('@linode/utilities', async () => {
-  const actual = await vi.importActual('@linode/utilities');
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return { ...actual, useDebouncedValue: (value: any) => value };
-});
 
 const queryMocks = vi.hoisted(() => ({
   useAllAccountEntities: vi.fn().mockReturnValue({}),
@@ -28,12 +23,12 @@ vi.mock('src/queries/entities/entities', async () => {
 });
 
 const mockEntities = [
-  accountEntityFactory.build({
+  createAccountEntity({
     id: 7,
     type: 'linode',
     label: 'linode',
   }),
-  accountEntityFactory.build({
+  createAccountEntity({
     id: 1,
     label: 'firewall-1',
     type: 'firewall',
@@ -41,8 +36,8 @@ const mockEntities = [
 ];
 
 const linodeEntities = [
-  accountEntityFactory.build({ id: 1, label: 'linode-1', type: 'linode' }),
-  accountEntityFactory.build({ id: 2, label: 'linode-2', type: 'linode' }),
+  createAccountEntity({ id: 1, label: 'linode-1', type: 'linode' }),
+  createAccountEntity({ id: 2, label: 'linode-2', type: 'linode' }),
 ];
 const bothSelected: EntitiesOption[] = [
   { label: 'linode-1', value: 1 },
@@ -52,9 +47,11 @@ const bothSelected: EntitiesOption[] = [
 const mockOnChange = vi.fn();
 const mockValue: EntitiesOption[] = [];
 
+beforeAll(() => mockMatchMedia());
+
 describe('Entities', () => {
   it('renders correct data when it is an account access and type is an account', () => {
-    renderWithTheme(
+    renderWithProviders(
       <EntitiesSelect
         access="account_access"
         mode="assign-role"
@@ -75,7 +72,7 @@ describe('Entities', () => {
   });
 
   it('renders correct data when it is an account access and type is not an account', () => {
-    renderWithTheme(
+    renderWithProviders(
       <EntitiesSelect
         access="account_access"
         mode="assign-role"
@@ -100,7 +97,7 @@ describe('Entities', () => {
       data: mockEntities,
     });
 
-    const { container } = renderWithTheme(
+    const { container } = renderWithProviders(
       <EntitiesSelect
         access="entity_access"
         mode="assign-role"
@@ -123,7 +120,7 @@ describe('Entities', () => {
       data: mockEntities,
     });
 
-    const { container } = renderWithTheme(
+    const { container } = renderWithProviders(
       <EntitiesSelect
         access="entity_access"
         mode="assign-role"
@@ -144,7 +141,7 @@ describe('Entities', () => {
       data: mockEntities,
     });
 
-    renderWithTheme(
+    renderWithProviders(
       <EntitiesSelect
         access="entity_access"
         mode="assign-role"
@@ -164,7 +161,7 @@ describe('Entities', () => {
       data: mockEntities,
     });
 
-    renderWithTheme(
+    renderWithProviders(
       <EntitiesSelect
         access="entity_access"
         mode="assign-role"
@@ -179,7 +176,7 @@ describe('Entities', () => {
   });
 
   it('disables interactions when mode is "change-role"', () => {
-    const { container } = renderWithTheme(
+    const { container } = renderWithProviders(
       <EntitiesSelect
         access="entity_access"
         mode="change-role"
@@ -196,10 +193,10 @@ describe('Entities', () => {
     expect(searchField?.disabled).toBe(true);
   });
 
-  it('displays errorText when provided', () => {
+  it('displays errorText when provided', async () => {
     const errorMessage = 'Entities are required.';
 
-    renderWithTheme(
+    renderWithProviders(
       <EntitiesSelect
         access="entity_access"
         errorText={errorMessage}
@@ -210,13 +207,22 @@ describe('Entities', () => {
       />
     );
 
-    // Verify that the error message is displayed
-    expect(screen.getByText(errorMessage)).toBeVisible();
+    // CDS NotificationBanner renders copy inside shadow DOM (not visible to getByText)
+    await waitFor(() => {
+      const banners = Array.from(
+        document.querySelectorAll('cds-notification-banner')
+      );
+      const hasErrorBanner = banners.some((banner) =>
+        (banner.textContent ?? '').includes(errorMessage)
+      );
+
+      expect(hasErrorBanner).toBe(true);
+    });
   });
 
   it('filters visible rows by search text when the toggle is active', async () => {
     queryMocks.useAllAccountEntities.mockReturnValue({ data: linodeEntities });
-    const { container } = renderWithTheme(
+    const { container } = renderWithProviders(
       <EntitiesSelect
         access="entity_access"
         mode="assign-role"
@@ -254,7 +260,7 @@ describe('Entities', () => {
 
   it('deactivates the toggle when "Clear all" empties the selection', async () => {
     queryMocks.useAllAccountEntities.mockReturnValue({ data: linodeEntities });
-    const { container } = renderWithTheme(
+    const { container } = renderWithProviders(
       <EntitiesSelect
         access="entity_access"
         mode="assign-role"
@@ -282,5 +288,34 @@ describe('Entities', () => {
 
     // The toggle must be automatically deactivated
     await waitFor(() => expect(showSelectedOnlyCheckbox?.checked).toBeFalsy());
+  });
+
+  it('selects only filtered entities when "Select all" is clicked', async () => {
+    queryMocks.useAllAccountEntities.mockReturnValue({ data: linodeEntities });
+    mockOnChange.mockClear();
+
+    const { container } = renderWithProviders(
+      <EntitiesSelect
+        access="entity_access"
+        mode="assign-role"
+        onChange={mockOnChange}
+        type="linode"
+        value={mockValue}
+      />
+    );
+
+    const searchField = container.querySelector('cds-search-field');
+    fireEvent.change(searchField!, { target: { value: 'linode-1' } });
+
+    await waitFor(() => {
+      expect(screen.getByText('linode-1')).toBeVisible();
+      expect(screen.queryByText('linode-2')).not.toBeInTheDocument();
+    });
+
+    fireEvent.click(screen.getByText('Select all'));
+
+    expect(mockOnChange).toHaveBeenCalledWith([
+      { label: 'linode-1', value: 1 },
+    ]);
   });
 });

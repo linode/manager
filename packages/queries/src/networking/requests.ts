@@ -1,13 +1,8 @@
 import { getIPs, getIPv6Ranges, getReservedIPsTypes } from '@linode/api-v4';
 import { getAll } from '@linode/utilities';
 
-import type {
-  Filter,
-  IPAddress,
-  IPRange,
-  Params,
-  PriceType,
-} from '@linode/api-v4';
+import type { PriceType } from '@akamai/compute-ui-core/api';
+import type { Filter, IPAddress, IPRange, Params } from '@linode/api-v4';
 
 export const getAllIps = (
   passedParams: Params = {},

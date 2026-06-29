@@ -1,7 +1,14 @@
-import { Box, CircleProgress, TooltipIcon, Typography } from '@linode/ui';
+import {
+  Box,
+  CircleProgress,
+  Tooltip,
+  TooltipIcon,
+  Typography,
+} from '@linode/ui';
 import * as React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
+import { Link } from 'src/components/Link';
 import { QuotaUsageBar } from 'src/components/QuotaUsageBar/QuotaUsageBar';
 import { TableCell } from 'src/components/TableCell/TableCell';
 import { TableRow } from 'src/components/TableRow/TableRow';
@@ -119,13 +126,19 @@ export const QuotasTableRow = (props: QuotasTableRowProps) => {
             </Typography>
           ) : quotaWithUsage.usage !== null ? (
             <QuotaUsageBar
+              layout="slim"
               limit={quota.quota_limit}
               resourceMetric={quota.resource_metric}
               usage={quotaWithUsage.usage}
-              variant="quotas"
             />
           ) : quotaWithUsage.hasUsage ? (
             <Typography>Data not available</Typography>
+          ) : quotaWithUsage.usageLink ? (
+            <Tooltip title={quotaWithUsage.usageLink.tooltip}>
+              <Link to={quotaWithUsage.usageLink.url}>
+                {quotaWithUsage.usageLink.text}
+              </Link>
+            </Tooltip>
           ) : (
             <Typography>Not applicable</Typography>
           )}

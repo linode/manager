@@ -1,4 +1,5 @@
-import { type Event, EventActionKeys } from '@linode/api-v4';
+import { EventActionSchema } from '@akamai/compute-ui-core/events';
+import { type Event } from '@linode/api-v4';
 import { Typography } from '@linode/ui';
 import * as React from 'react';
 
@@ -101,7 +102,7 @@ const renderEventFields = (
       onChange={onChange}
       value={event.action}
     >
-      {EventActionKeys.map((action) => (
+      {EventActionSchema.options.map((action) => (
         <option key={action} value={action}>
           {action}
         </option>

@@ -1,3 +1,4 @@
+import { getAPIErrorOrDefault } from '@akamai/compute-ui-core/api';
 import { useStreamQuery } from '@linode/queries';
 import { Box, CircleProgress, ErrorState } from '@linode/ui';
 import { useParams } from '@tanstack/react-router';
@@ -16,7 +17,6 @@ import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
 import { StreamMetrics } from 'src/features/Delivery/Streams/Stream/StreamMetrics';
 import { StreamEdit } from 'src/features/Delivery/Streams/StreamForm/StreamEdit';
 import { useTabs } from 'src/hooks/useTabs';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import type { Tab } from 'src/hooks/useTabs';
 

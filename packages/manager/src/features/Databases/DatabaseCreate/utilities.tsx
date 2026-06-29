@@ -40,7 +40,7 @@ export const engineIcons = {
 };
 
 export const getEngineOptions = (engines: DatabaseEngine[]) => {
-  return engines.map((e) => {
+  const _engines = engines.map((e) => {
     return {
       engine: e.engine,
       flag: engineIcons[e.engine],
@@ -50,6 +50,24 @@ export const getEngineOptions = (engines: DatabaseEngine[]) => {
       }),
       value: `${e.engine}/${e.version}`,
     };
+  });
+
+  return _engines.sort((engine1, engine2) => {
+    // Group by engine first
+    if (engine1.engine < engine2.engine) {
+      return -1;
+    }
+    if (engine1.engine > engine2.engine) {
+      return 1;
+    }
+    // Then sort by descending version within each engine group
+    if (engine1.label < engine2.label) {
+      return 1;
+    }
+    if (engine1.label > engine2.label) {
+      return -1;
+    }
+    return 0;
   });
 };
 

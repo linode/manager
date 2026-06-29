@@ -1,8 +1,7 @@
 import { screen } from '@testing-library/react';
 import React from 'react';
 
-import { renderWithTheme } from 'src/utilities/testHelpers';
-
+import { renderWithProviders } from '../../utilities/testHelpers';
 import { Permissions } from './Permissions';
 
 import type { PermissionType } from '@linode/api-v4/lib/iam/types';
@@ -21,7 +20,7 @@ const mockPermissionsLong: PermissionType[] = [
 
 describe('Permissions', () => {
   it('renders the correct number of permission chips', () => {
-    const { getAllByTestId, getByText } = renderWithTheme(
+    const { getAllByTestId, getByText } = renderWithProviders(
       <Permissions permissions={mockPermissions} />
     );
 
@@ -32,7 +31,7 @@ describe('Permissions', () => {
   });
 
   it('renders the title', () => {
-    const { getByText } = renderWithTheme(
+    const { getByText } = renderWithProviders(
       <Permissions permissions={mockPermissions} />
     );
 
@@ -40,7 +39,7 @@ describe('Permissions', () => {
   });
 
   it('renders the correct number of permission chips', () => {
-    const { getAllByTestId } = renderWithTheme(
+    const { getAllByTestId } = renderWithProviders(
       <Permissions permissions={mockPermissionsLong} />
     );
 
@@ -49,7 +48,7 @@ describe('Permissions', () => {
   });
 
   it('renders a message when there are no permissions', () => {
-    renderWithTheme(<Permissions permissions={[]} />);
+    renderWithProviders(<Permissions permissions={[]} />);
 
     screen.getByText(
       'This role doesn’t include permissions. Refer to the role description to understand what access is granted by this role.'

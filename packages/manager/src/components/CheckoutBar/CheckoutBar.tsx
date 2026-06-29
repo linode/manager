@@ -46,6 +46,11 @@ export interface CheckoutBarProps {
    */
   onDeploy: () => void;
   /**
+   * Optional heading rendered above the price (e.g. "Max monthly cost" with a tooltip).
+   * Use when the price needs additional context beyond the default display.
+   */
+  priceHeading?: React.ReactNode;
+  /**
    * Helper text to be displayed alongside the price.
    */
   priceHelperText?: string;
@@ -71,6 +76,7 @@ export const CheckoutBar = (props: CheckoutBarProps) => {
     isMakingRequest,
     onDeploy,
     priceHelperText,
+    priceHeading,
     priceSelectionText,
     submitText,
   } = props;
@@ -97,6 +103,7 @@ export const CheckoutBar = (props: CheckoutBarProps) => {
           <>
             {children}
             <Box>
+              {priceHeading && <Box mb={0.5}>{priceHeading}</Box>}
               <DisplayPrice data-qa-total-price interval="mo" price={price} />
             </Box>
             {additionalPricing}

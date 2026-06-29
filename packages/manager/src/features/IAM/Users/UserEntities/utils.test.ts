@@ -1,5 +1,4 @@
-import { userRolesFactory } from 'src/factories/userRoles';
-
+import { createUserRoles } from '../../factories';
 import { addEntityNamesToRoles } from './utils';
 
 import type { AccountEntity, EntityType } from '@linode/api-v4';
@@ -19,7 +18,7 @@ const mockGoupedEntities: Map<
 
 describe('addEntityNamesToRoles', () => {
   it('should map entity names to roles correctly', () => {
-    const assignedRoles = userRolesFactory.build({
+    const assignedRoles = createUserRoles({
       account_access: ['account_linode_admin', 'account_admin'],
       entity_access: [
         {
@@ -45,7 +44,7 @@ describe('addEntityNamesToRoles', () => {
   });
 
   it('should return an empty array if no matching entities are found', () => {
-    const assignedRoles = userRolesFactory.build({
+    const assignedRoles = createUserRoles({
       account_access: ['account_linode_admin', 'account_admin'],
       entity_access: [],
     });

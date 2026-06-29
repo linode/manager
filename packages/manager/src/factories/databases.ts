@@ -2,7 +2,6 @@ import {
   type ClusterSize,
   type ConnectionPool,
   type Database,
-  type DatabaseBackup,
   type DatabaseEngine,
   type DatabaseInstance,
   type DatabaseStatus,
@@ -11,7 +10,7 @@ import {
   type MySQLReplicationType,
   type PostgresReplicationType,
 } from '@linode/api-v4';
-import { pickRandom, randomDate } from '@linode/utilities';
+import { pickRandom } from '@linode/utilities';
 import { Factory } from '@linode/utilities';
 
 export const possibleStatuses: DatabaseStatus[] = [
@@ -203,11 +202,11 @@ export const databaseInstanceFactory =
     hosts: Factory.each((i) =>
       adb10(i)
         ? {
-            primary: 'db-mysql-primary-0.b.linodeb.net',
-            secondary: 'db-mysql-secondary-0.b.linodeb.net',
+            primary: 'db-primary-0.b.linodeb.net',
+            secondary: 'db-secondary-0.b.linodeb.net',
             endpoints: [
               {
-                address: 'public-db-mysql-primary-0.b.linodeb.net',
+                address: 'public-db-primary-0.b.linodeb.net',
                 role: 'primary',
                 public_access: true,
                 port: 3306,
@@ -215,11 +214,11 @@ export const databaseInstanceFactory =
             ],
           }
         : {
-            primary: 'db-mysql-primary-0.b.linodeb.net',
-            standby: 'db-mysql-secondary-0.b.linodeb.net',
+            primary: 'db-primary-0.b.linodeb.net',
+            standby: 'db-secondary-0.b.linodeb.net',
             endpoints: [
               {
-                address: 'public-db-mysql-primary-0.b.linodeb.net',
+                address: 'public-db-primary-0.b.linodeb.net',
                 role: 'primary',
                 public_access: true,
                 port: 3306,
@@ -274,11 +273,11 @@ export const databaseFactory = Factory.Sync.makeFactory<Database>({
   hosts: Factory.each((i) =>
     adb10(i)
       ? {
-          primary: 'db-mysql-primary-0.b.linodeb.net',
-          secondary: 'db-mysql-secondary-0.b.linodeb.net',
+          primary: 'db-primary-0.b.linodeb.net',
+          secondary: 'db-secondary-0.b.linodeb.net',
           endpoints: [
             {
-              address: 'public-db-mysql-primary-0.b.linodeb.net',
+              address: 'public-db-primary-0.b.linodeb.net',
               role: 'primary',
               public_access: true,
               port: 3306,
@@ -286,11 +285,11 @@ export const databaseFactory = Factory.Sync.makeFactory<Database>({
           ],
         }
       : {
-          primary: 'db-mysql-primary-0.b.linodeb.net',
-          standby: 'db-mysql-secondary-0.b.linodeb.net',
+          primary: 'db-primary-0.b.linodeb.net',
+          standby: 'db-secondary-0.b.linodeb.net',
           endpoints: [
             {
-              address: 'public-db-mysql-primary-0.b.linodeb.net',
+              address: 'public-db-primary-0.b.linodeb.net',
               role: 'primary',
               public_access: true,
               port: 3306,
@@ -331,17 +330,6 @@ export const databaseFactory = Factory.Sync.makeFactory<Database>({
   },
   used_disk_size_gb: 5,
   version: '5.8.13',
-});
-
-export const databaseBackupFactory = Factory.Sync.makeFactory<DatabaseBackup>({
-  created: Factory.each(() => {
-    const now = new Date();
-    const tenDaysAgo = new Date(now.getTime() - 10 * 24 * 60 * 60 * 1000);
-    return randomDate(tenDaysAgo, now).toISO() ?? '';
-  }),
-  id: Factory.each((i) => i),
-  label: Factory.each(() => `backup-${crypto.randomUUID()}`),
-  type: pickRandom(['snapshot', 'auto']),
 });
 
 export const databaseEngineFactory = Factory.Sync.makeFactory<DatabaseEngine>({
@@ -529,6 +517,97 @@ export const postgresConfigResponse = {
 };
 
 export const valkeyConfigResponse = {
+  backup_hour: {
+    description:
+      'The hour of day (in UTC) when backup for the service is started. New backup is only started if previous backup has already completed.',
+    example: 3,
+    maximum: 23,
+    minimum: 0,
+    requires_restart: false,
+    type: ['integer', 'null'],
+  },
+  backup_minute: {
+    description:
+      'The minute of an hour when backup for the service is started. New backup is only started if previous backup has already completed.',
+    example: 30,
+    maximum: 59,
+    minimum: 0,
+    requires_restart: false,
+    type: ['integer', 'null'],
+  },
+  frequent_snapshots: {
+    default: true,
+    description:
+      'When enabled, Valkey will create frequent local RDB snapshots. When disabled, Valkey will only take RDB snapshots when a backup is created, based on the backup schedule. This setting is ignored when `valkey_persistence` is set to `off`.',
+    requires_restart: false,
+    type: 'boolean',
+  },
+  valkey_acl_channels_default: {
+    description:
+      "Determines default pub/sub channels' ACL for new users if ACL is not supplied. When this option is not defined, all_channels is assumed to keep backward compatibility. This option doesn't affect Valkey configuration acl-pubsub-default.",
+    enum: ['allchannels', 'resetchannels'],
+    requires_restart: false,
+    type: 'string',
+  },
+  valkey_active_expire_effort: {
+    default: 1,
+    description:
+      'Valkey reclaims expired keys both when accessed and in the background. The background process scans for expired keys to free memory. Increasing the active-expire-effort setting (default 1, max 10) uses more CPU to reclaim expired keys faster, reducing memory usage but potentially increasing latency.',
+    maximum: 10,
+    minimum: 1,
+    requires_restart: false,
+    type: 'integer',
+  },
+  valkey_io_threads: {
+    description:
+      'Set Valkey IO thread count. Changing this will cause a restart of the Valkey service.',
+    example: 1,
+    maximum: 256,
+    minimum: 1,
+    requires_restart: true,
+    type: 'integer',
+  },
+  valkey_lfu_decay_time: {
+    default: 1,
+    description: 'LFU maxmemory-policy counter decay time in minutes',
+    maximum: 120,
+    minimum: 1,
+    requires_restart: false,
+    type: 'integer',
+  },
+  valkey_lfu_log_factor: {
+    default: 10,
+    description:
+      'Counter logarithm factor for volatile-lfu and allkeys-lfu maxmemory-policies',
+    maximum: 100,
+    minimum: 0,
+    requires_restart: false,
+    type: 'integer',
+  },
+  valkey_maxmemory_policy: {
+    default: 'noeviction',
+    description: 'Valkey maxmemory-policy',
+    enum: [
+      'noeviction',
+      'allkeys-lru',
+      'volatile-lru',
+      'allkeys-random',
+      'volatile-random',
+      'volatile-ttl',
+      'volatile-lfu',
+      'allkeys-lfu',
+    ],
+    requires_restart: false,
+    type: ['string', 'null'],
+  },
+  valkey_notify_keyspace_events: {
+    example: 'KEA',
+    description: 'Set notify-keyspace-events option',
+    maxLength: 32,
+    pattern: '^[KEg\\$lshzxentdmA]*$',
+    requires_restart: false,
+    type: 'string',
+  },
   valkey_number_of_databases: {
     description:
       'Set number of Valkey databases. Changing this will cause a restart of the Valkey service.',
@@ -536,6 +615,30 @@ export const valkeyConfigResponse = {
     maximum: 128,
     minimum: 1,
     requires_restart: true,
+    type: 'integer',
+  },
+  valkey_persistence: {
+    description:
+      "When persistence is 'rdb', Valkey does RDB dumps each 10 minutes if any key is changed. Also RDB dumps are done according to backup schedule for backup purposes. When persistence is 'off', no RDB dumps and backups are done, so data can be lost at any moment if service is restarted for any reason, or if service is powered off. Also service can't be forked.",
+    enum: ['off', 'rdb'],
+    requires_restart: true,
+    type: 'string',
+  },
+  valkey_pubsub_client_output_buffer_limit: {
+    description:
+      'Set output buffer limit for pub / sub clients in MB. The value is the hard limit, the soft limit is 1/4 of the hard limit. When setting the limit, be mindful of the available memory in the selected service plan.',
+    example: 64,
+    maximum: 512,
+    minimum: 32,
+    requires_restart: false,
+    type: 'integer',
+  },
+  valkey_timeout: {
+    default: 300,
+    description: 'Valkey idle connection timeout in seconds',
+    maximum: 2073600,
+    minimum: 0,
+    requires_restart: false,
     type: 'integer',
   },
 };

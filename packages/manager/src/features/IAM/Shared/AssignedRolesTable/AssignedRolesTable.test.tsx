@@ -2,11 +2,16 @@ import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
-import { accountEntityFactory } from 'src/factories/accountEntities';
-import { accountRolesFactory } from 'src/factories/accountRoles';
-import { userRolesFactory } from 'src/factories/userRoles';
-import { renderWithTheme } from 'src/utilities/testHelpers';
-
+import {
+  createAccountEntity,
+  createAccountRoles,
+  createUserRoles,
+} from '../../factories';
+import { getCdsButtonByText } from '../../utilities/testHelpers';
+import {
+  mockMatchMedia,
+  renderWithProviders,
+} from '../../utilities/testHelpers';
 import { AssignedRolesTable } from './AssignedRolesTable';
 
 const queryMocks = vi.hoisted(() => ({
@@ -20,7 +25,12 @@ const queryMocks = vi.hoisted(() => ({
   useIsDefaultDelegationRolesForChildAccount: vi.fn().mockReturnValue({
     isDefaultDelegationRolesForChildAccount: false,
   }),
+  usePermissions: vi.fn().mockReturnValue({
+    data: { is_account_admin: true, update_default_delegate_access: true },
+  }),
 }));
+
+beforeAll(() => mockMatchMedia());
 
 vi.mock('@linode/queries', async () => {
   const actual = await vi.importActual('@linode/queries');
@@ -56,20 +66,28 @@ vi.mock('../../hooks/useDelegationRole', () => ({
     queryMocks.useIsDefaultDelegationRolesForChildAccount,
 }));
 
+vi.mock('../../hooks/usePermissions', async () => {
+  const actual = await vi.importActual('src/features/IAM/hooks/usePermissions');
+  return {
+    ...actual,
+    usePermissions: queryMocks.usePermissions,
+  };
+});
+
 const mockEntities = [
-  accountEntityFactory.build({
+  createAccountEntity({
     id: 7,
     type: 'linode',
   }),
-  accountEntityFactory.build({
+  createAccountEntity({
     id: 1,
     label: 'firewall-1',
     type: 'firewall',
   }),
 ];
 
-const mockUserRoles = userRolesFactory.build();
-const mockAccountRoles = accountRolesFactory.build();
+const mockUserRoles = createUserRoles();
+const mockAccountRoles = createAccountRoles();
 
 describe('AssignedRolesTable', () => {
   beforeEach(() => {
@@ -83,7 +101,7 @@ describe('AssignedRolesTable', () => {
       data: {},
     });
 
-    renderWithTheme(<AssignedRolesTable />);
+    renderWithProviders(<AssignedRolesTable />);
 
     expect(screen.getByText('No items to display.')).toBeVisible();
   });
@@ -101,7 +119,7 @@ describe('AssignedRolesTable', () => {
       data: mockEntities,
     });
 
-    renderWithTheme(<AssignedRolesTable />);
+    renderWithProviders(<AssignedRolesTable />);
 
     expect(screen.getByText('account_linode_admin')).toBeVisible();
     expect(screen.getAllByText('All Linodes')[0]).toBeVisible();
@@ -131,7 +149,7 @@ describe('AssignedRolesTable', () => {
 
     queryMocks.useSearch.mockReturnValue({ query: 'NonExistentRole' });
 
-    renderWithTheme(<AssignedRolesTable />);
+    renderWithProviders(<AssignedRolesTable />);
 
     expect(screen.getByText('No items to display.')).toBeVisible();
   });
@@ -149,12 +167,12 @@ describe('AssignedRolesTable', () => {
       data: mockEntities,
     });
 
-    renderWithTheme(<AssignedRolesTable />);
-
     queryMocks.useSearch.mockReturnValue({ query: 'account_linode_admin' });
 
+    renderWithProviders(<AssignedRolesTable />);
+
     await waitFor(() => {
-      expect(screen.queryByText('account_linode_admin')).toBeVisible();
+      expect(screen.getByText('account_linode_admin')).toBeVisible();
     });
   });
 
@@ -171,11 +189,12 @@ describe('AssignedRolesTable', () => {
       data: mockEntities,
     });
 
-    renderWithTheme(<AssignedRolesTable />);
-
     queryMocks.useSearch.mockReturnValue({ roleType: 'firewall' });
+
+    renderWithProviders(<AssignedRolesTable />);
+
     await waitFor(() => {
-      expect(screen.queryByText('account_firewall_creator')).toBeVisible();
+      expect(screen.getByText('account_firewall_creator')).toBeVisible();
     });
   });
 
@@ -196,9 +215,13 @@ describe('AssignedRolesTable', () => {
       data: mockEntities,
     });
 
-    renderWithTheme(<AssignedRolesTable />);
+    const { container } = renderWithProviders(<AssignedRolesTable />);
 
-    expect(screen.getByText('Add New Default Roles')).toBeVisible();
-    expect(screen.queryByText('Assign New Roles')).not.toBeInTheDocument();
+    expect(
+      await getCdsButtonByText(container, 'Add New Default Roles')
+    ).toBeVisible();
+    expect(
+      screen.queryByRole('button', { name: 'Assign New Roles' })
+    ).not.toBeInTheDocument();
   });
 });

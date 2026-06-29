@@ -1,6 +1,10 @@
 import React from 'react';
 
-import { alertFactory, serviceTypesFactory } from 'src/factories';
+import {
+  alertFactory,
+  cpuRulesFactory,
+  serviceTypesFactory,
+} from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { convertStringToCamelCasesWithSpaces } from '../../Utils/utils';
@@ -18,20 +22,30 @@ const alertDetails = alertFactory.build({
   label: 'Test alert',
   severity: 3,
 });
+
+const metricDefinitions = cpuRulesFactory.build();
 // Mock Queries
 const queryMocks = vi.hoisted(() => ({
   useCloudPulseServiceTypes: vi.fn(),
+  useGetCloudPulseMetricDefinitionsByServiceType: vi.fn(),
 }));
 
 vi.mock('src/queries/cloudpulse/services', () => ({
   ...vi.importActual('src/queries/cloudpulse/services'),
   useCloudPulseServiceTypes: queryMocks.useCloudPulseServiceTypes,
+  useGetCloudPulseMetricDefinitionsByServiceType:
+    queryMocks.useGetCloudPulseMetricDefinitionsByServiceType,
 }));
 
 // Shared Setup
 beforeEach(() => {
   queryMocks.useCloudPulseServiceTypes.mockReturnValue({
     data: { data: serviceTypes },
+    isError: false,
+    isFetching: false,
+  });
+  queryMocks.useGetCloudPulseMetricDefinitionsByServiceType.mockReturnValue({
+    data: { data: [] },
     isError: false,
     isFetching: false,
   });
@@ -64,6 +78,24 @@ describe('AlertDetailOverview component tests', () => {
     );
 
     expect(getByTestId('circle-progress')).toBeInTheDocument();
+    expect(queryByText('Overview')).not.toBeInTheDocument();
+  });
+  it('should render circle progress if the metric definitions call is fetching', () => {
+    queryMocks.useCloudPulseServiceTypes.mockReturnValue({
+      data: { data: serviceTypes },
+      isError: false,
+      isFetching: true,
+    });
+    queryMocks.useGetCloudPulseMetricDefinitionsByServiceType.mockReturnValue({
+      data: { data: [metricDefinitions] },
+      isError: false,
+      isFetching: false,
+    });
+    const { getByTestId, queryByText } = renderWithTheme(
+      <AlertDetailOverview alertDetails={alertDetails} />
+    );
+
+    expect(getByTestId('circle-progress')).toBeVisible();
     expect(queryByText('Overview')).not.toBeInTheDocument();
   });
 });

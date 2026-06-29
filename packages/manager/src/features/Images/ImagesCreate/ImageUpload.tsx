@@ -1,3 +1,4 @@
+import { getGDPRDetails, readableBytes } from '@akamai/compute-ui-core/api';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
   useAccountAgreements,
@@ -17,7 +18,6 @@ import {
   TextField,
   Typography,
 } from '@linode/ui';
-import { readableBytes } from '@linode/utilities';
 import { useBlocker, useNavigate, useSearch } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import React, { useState } from 'react';
@@ -35,7 +35,6 @@ import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useFlags } from 'src/hooks/useFlags';
 import { usePendingUpload } from 'src/hooks/usePendingUpload';
 import { setPendingUpload } from 'src/store/pendingUpload';
-import { getGDPRDetails } from 'src/utilities/formatRegion';
 import { reportAgreementSigningError } from 'src/utilities/reportAgreementSigningError';
 
 import { EUAgreementCheckbox } from '../../Account/Agreements/EUAgreementCheckbox';

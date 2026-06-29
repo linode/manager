@@ -1,4 +1,10 @@
 import {
+  getAPIErrorOrDefault,
+  getDCSpecificPriceByType,
+  getGDPRDetails,
+  renderMonthlyPriceToCorrectDecimalPlace,
+} from '@akamai/compute-ui-core/api';
+import {
   useAccountAgreements,
   useMutateAccountAgreements,
   useNodebalancerCreateBetaMutation,
@@ -39,20 +45,17 @@ import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperT
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { FIREWALL_GET_STARTED_LINK } from 'src/constants';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
-import { useIsReserveIpEnabled } from 'src/features/ReservedIps/utils';
+import {
+  useIsReserveIpEnabled,
+  useIsReserveIpNewBadgeEnabled,
+} from 'src/features/ReservedIps/utils';
 import { useFlags } from 'src/hooks/useFlags';
 import { sendCreateNodeBalancerEvent } from 'src/utilities/analytics/customEventAnalytics';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { getGDPRDetails } from 'src/utilities/formatRegion';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 import {
   DOCS_LINK_LABEL_DC_PRICING,
   PRICE_ERROR_TOOLTIP_TEXT,
 } from 'src/utilities/pricing/constants';
-import {
-  getDCSpecificPriceByType,
-  renderMonthlyPriceToCorrectDecimalPlace,
-} from 'src/utilities/pricing/dynamicPricing';
 import { reportAgreementSigningError } from 'src/utilities/reportAgreementSigningError';
 
 import { EUAgreementCheckbox } from '../Account/Agreements/EUAgreementCheckbox';
@@ -181,6 +184,7 @@ const NodeBalancerCreate = () => {
   }, [vpcSelected]);
 
   const { isReserveIpEnabled } = useIsReserveIpEnabled();
+  const { isReserveIpNewBadgeEnabled } = useIsReserveIpNewBadgeEnabled();
   const [ipMode, setIpMode] = React.useState<'auto' | 'reserved'>('auto');
   const [selectedIP, setSelectedIP] = React.useState<IPAddress | null>(null);
   const [reservedIPError, setReservedIPError] = React.useState<string>();
@@ -770,8 +774,25 @@ const NodeBalancerCreate = () => {
                 setSelectedIP(ip);
                 setReservedIPError(undefined);
               }}
+              pendoIds={{
+                // Pendo IDS for the Reserve IP selection
+                auto: 'NodeBalancers Create Network-Auto-assigned',
+                reserved: 'NodeBalancers Create Network-Reserved',
+                reserveIPLink:
+                  'NodeBalancers Create Network Reserved-Reserve IP Start Flow',
+                reserveIPAutocomplete:
+                  'NodeBalancers Create Network-Reserved IPs open',
+                reserveIPAutocompleteOptions:
+                  'NodeBalancers Create Network-Reserved-IP Options',
+                // Pendo IDs for the Reserve IP Drawer
+                cancelReserveIPDrawer: 'NodeBalancers Create Reserve IP-Cancel',
+                closeReserveIPDrawer: 'NodeBalancers Create Reserve IP-Close',
+                submitReserveIPDrawer:
+                  'NodeBalancers Create Reserve IP-Reserve IP Address End Flow',
+              }}
               regionId={nodeBalancerFields.region ?? ''}
               selectedIP={selectedIP}
+              showNewBadge={isReserveIpEnabled && isReserveIpNewBadgeEnabled}
               tooltipText={{
                 auto: "A public IPv4 address automatically assigned to your NodeBalancer’s \
                   frontend to serve as the entry point for incoming traffic. Use this for \

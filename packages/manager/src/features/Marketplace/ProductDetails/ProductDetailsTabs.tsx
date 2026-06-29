@@ -8,7 +8,11 @@ import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { allowedHTMLAttr, allowedHTMLTagsFlexible } from 'src/constants';
 
-import { ContentSection, OverviewContainer } from './ProductDetailsTabs.styles';
+import {
+  ContentSection,
+  OverviewContainer,
+  TabContentContainer,
+} from './ProductDetailsTabs.styles';
 import { StyledTabContent } from './TabContent.styles';
 
 import type { ProductTabDetails } from './pages';
@@ -127,21 +131,23 @@ export const ProductDetailsTabs = ({ details }: Props) => {
   };
 
   return (
-    <Tabs index={index} onChange={handleTabChange}>
-      <TabList>
-        {tabs.map((tab, idx) => (
-          <Tab data-pendo-id={tab.pendoId} key={idx}>
-            {tab.label}
-          </Tab>
-        ))}
-      </TabList>
-      <TabPanels>
-        {tabs.map((tab, idx) => (
-          <SafeTabPanel index={idx} key={idx}>
-            {tab.content}
-          </SafeTabPanel>
-        ))}
-      </TabPanels>
-    </Tabs>
+    <TabContentContainer>
+      <Tabs index={index} onChange={handleTabChange}>
+        <TabList>
+          {tabs.map((tab, idx) => (
+            <Tab data-pendo-id={tab.pendoId} key={idx}>
+              {tab.label}
+            </Tab>
+          ))}
+        </TabList>
+        <TabPanels>
+          {tabs.map((tab, idx) => (
+            <SafeTabPanel index={idx} key={idx}>
+              {tab.content}
+            </SafeTabPanel>
+          ))}
+        </TabPanels>
+      </Tabs>
+    </TabContentContainer>
   );
 };

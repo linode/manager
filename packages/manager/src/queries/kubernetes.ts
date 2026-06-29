@@ -32,6 +32,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 
+import type { PriceType } from '@akamai/compute-ui-core/api';
 import type {
   CreateKubeClusterPayload,
   CreateNodePoolData,
@@ -47,7 +48,6 @@ import type {
   APIError,
   Filter,
   Params,
-  PriceType,
   ResourcePage,
 } from '@linode/api-v4/lib/types';
 

@@ -106,14 +106,13 @@ describe('InterfaceGeneration', () => {
     }
   });
 
-  it('defaults to linode interface when value is not set', async () => {
-    const accountSettings = accountSettingsFactory.build({
-      interfaces_for_new_linodes: 'linode_default_but_legacy_config_allowed',
-    });
-
+  it('defaults to linode interface when Account Settings API fails is not set', async () => {
     server.use(
       http.get(getAccountSettingsAPI, () => {
-        return HttpResponse.json(accountSettings);
+        return HttpResponse.json(
+          { errors: [{ reason: 'Unauthorized' }] },
+          { status: 403 }
+        );
       })
     );
 
@@ -121,7 +120,7 @@ describe('InterfaceGeneration', () => {
       component: <InterfaceGeneration />,
       useFormOptions: {
         defaultValues: {
-          interface_generation: null,
+          interface_generation: 'linode',
         },
       },
     });

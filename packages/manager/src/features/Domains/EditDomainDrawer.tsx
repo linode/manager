@@ -1,4 +1,9 @@
 import {
+  extendedIPToString,
+  getErrorMap,
+  stringToExtendedIP,
+} from '@akamai/compute-ui-core/api';
+import {
   useGrants,
   useProfile,
   useUpdateDomainMutation,
@@ -17,14 +22,12 @@ import * as React from 'react';
 
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
-import { getErrorMap } from 'src/utilities/errorUtils';
 import { handleFormikBlur } from 'src/utilities/formikTrimUtil';
-import { extendedIPToString, stringToExtendedIP } from 'src/utilities/ipUtils';
 
 import { transferHelperText as helperText } from './domainUtils';
 
+import type { ExtendedIP } from '@akamai/compute-ui-core/api';
 import type { APIError, Domain, UpdateDomainPayload } from '@linode/api-v4';
-import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 interface EditDomainDrawerProps {
   domain: Domain | undefined;

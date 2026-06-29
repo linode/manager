@@ -8,7 +8,7 @@ import { IAM_ROLES_PENDO_IDS } from '../constants';
 import type { EntitiesRole } from '../types';
 import type { PickPermissions } from '@linode/api-v4';
 
-type RolesActionsPermissions = PickPermissions<
+export type RolesActionsPermissions = PickPermissions<
   'is_account_admin' | 'update_default_delegate_access'
 >;
 interface Props {

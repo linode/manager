@@ -1,22 +1,29 @@
-import { Button, Icon, Select, Tooltip } from '@akamai/cds-components/react';
+import {
+  Button,
+  FormError,
+  FormField,
+  FormLabel,
+  Icon,
+  Pagination,
+  Select,
+  Table,
+  TableBody,
+  Tooltip,
+} from '@akamai/cds-components/react';
 import { Spacing } from '@akamai/cds-tokens';
 import { useAccountUsers } from '@linode/queries';
 import { getAPIFilterFromQuery } from '@linode/search';
-import { Grid, useMediaQuery } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
 import { useNavigate, useSearch } from '@tanstack/react-router';
 import React from 'react';
 
-import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
-import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import { Table } from 'src/components/Table';
-import { TableBody } from 'src/components/TableBody';
-import { useOrderV2 } from 'src/hooks/useOrderV2';
+import { DebouncedSearchField } from 'src/features/IAM/Shared/DebouncedSearchField/DebouncedSearchField';
+import globalStyles from 'src/features/IAM/Shared/global.module.css';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
 import { useDelegationRole } from '../../hooks/useDelegationRole';
-import { useIsIAMDelegationEnabled } from '../../hooks/useIsIAMEnabled';
+import { useOrder } from '../../hooks/useOrder';
 import { usePermissions } from '../../hooks/usePermissions';
+import { Box } from '../../Shared/Box/Box';
 import {
   IAM_CHILD_USERS_PENDO_IDS,
   IAM_DELEGATE_USERS_PENDO_IDS,
@@ -28,17 +35,18 @@ import { CreateUserDrawer } from './CreateUserDrawer';
 import { UsersLandingTableBody } from './UsersLandingTableBody';
 import { UsersLandingTableHead } from './UsersLandingTableHead';
 
+import type { SelectOption } from '../../Shared/types';
 import type { Filter } from '@linode/api-v4';
-import type { SelectOption } from '@linode/ui';
 
 const ALL_USERS_OPTION: SelectOption = {
   label: 'All User Types',
   value: 'all',
 };
 
+const MIN_PAGE_SIZE = 25;
+
 export const UsersLanding = () => {
   const navigate = useNavigate();
-  const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
 
   const { isChildUserType, isDelegateUserType } = useDelegationRole();
 
@@ -49,7 +57,6 @@ export const UsersLanding = () => {
     React.useState<boolean>(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
   const [selectedUsername, setSelectedUsername] = React.useState('');
-  const theme = useTheme();
   const { data: permissions } = usePermissions('account', [
     'create_user',
     'view_user',
@@ -59,7 +66,7 @@ export const UsersLanding = () => {
     initialPage: 1,
     preferenceKey: 'iam-account-users-pagination',
   });
-  const order = useOrderV2({
+  const order = useOrder({
     initialRoute: {
       defaultOrder: {
         order: 'desc',
@@ -74,10 +81,9 @@ export const UsersLanding = () => {
     searchableFieldsWithoutOperator: ['username', 'email'],
   });
 
-  // Determine if the current user is a child or delegate profile with isIAMDelegationEnabled enabled
+  // Determine if the current user is a child or delegate profile
   // If so, we need to show both 'child' and 'delegate_user' users in the table
-  const isChildOrDelegateWithDelegationEnabled =
-    isIAMDelegationEnabled && (isChildUserType || isDelegateUserType);
+  const isChildOrDelegate = isChildUserType || isDelegateUserType;
 
   const filterableOptions = React.useMemo(
     () => [
@@ -113,9 +119,7 @@ export const UsersLanding = () => {
     ['+order']: order.order,
     ['+order_by']: order.orderBy,
     ...filter,
-    ...(isChildOrDelegateWithDelegationEnabled &&
-    userType &&
-    userType.value !== 'all'
+    ...(isChildOrDelegate && userType && userType.value !== 'all'
       ? {
           user_type: userType.value === 'users' ? 'child' : 'delegate',
         }
@@ -136,28 +140,20 @@ export const UsersLanding = () => {
     },
   });
 
-  const isSmDown = useMediaQuery(theme.breakpoints.down('sm'));
-  const isLgDown = useMediaQuery(theme.breakpoints.up('lg'));
-
-  const numColsLg = isLgDown
-    ? isChildOrDelegateWithDelegationEnabled
-      ? 5
-      : 4
-    : 3;
-
-  const numCols = isSmDown ? 2 : numColsLg;
-
-  const handleSearch = (value: string) => {
-    const nextQuery = value === '' ? undefined : String(value);
-    navigate({
-      to: '/iam/users',
-      search: (prev) => ({
-        ...prev,
-        query: nextQuery,
-        page: 1,
-      }),
-    });
-  };
+  const handleSearch = React.useCallback(
+    (value: string) => {
+      const nextQuery = value === '' ? undefined : String(value);
+      navigate({
+        to: '/iam/users',
+        search: (prev) => ({
+          ...prev,
+          query: nextQuery,
+          page: 1,
+        }),
+      });
+    },
+    [navigate]
+  );
 
   const handleDelete = (username: string) => {
     setIsDeleteDialogOpen(true);
@@ -175,39 +171,42 @@ export const UsersLanding = () => {
   };
 
   const canCreateUser = permissions.create_user;
+
   return (
     <React.Fragment>
-      <Paper marginTop={Spacing.S16}>
-        <Grid
-          container
+      <Paper>
+        <Box
           direction="row"
-          rowSpacing={1}
-          sx={{
+          spacing={1}
+          style={{
             alignItems: 'center',
             justifyContent: 'space-between',
             marginBottom: Spacing.S12,
           }}
         >
-          <Grid container direction="row" rowSpacing={1}>
-            <DebouncedSearchTextField
-              clearable
-              containerProps={{
-                sx: {
-                  width: '320px',
-                  marginRight: { md: 2, xs: 2 },
-                },
-              }}
-              debounceTime={250}
-              disabled={!permissions?.view_user}
-              errorText={searchError?.message}
-              hideLabel
-              isSearching={isFetching}
-              label="Filter"
-              onSearch={handleSearch}
-              placeholder="Filter"
-              value={query ?? ''}
-            />
-            {isChildOrDelegateWithDelegationEnabled && (
+          <Box direction="row" spacing={2}>
+            <FormField
+              error={Boolean(searchError?.message)}
+              labelPosition="top"
+              style={{ padding: 0, marginRight: Spacing.S16 }}
+            >
+              <FormLabel
+                className={globalStyles.visuallyHidden}
+                htmlFor="filter-users"
+                slot="label"
+              >
+                Filter Users
+              </FormLabel>
+              <DebouncedSearchField
+                disabled={!permissions?.view_user}
+                id="filter-users"
+                onSearch={handleSearch}
+                placeholder="Filter"
+                value={query ?? ''}
+              />
+              <FormError slot="error">{searchError?.message}</FormError>
+            </FormField>
+            {isChildOrDelegate && (
               <Select
                 disabled={!permissions?.view_user}
                 items={filterableOptions}
@@ -231,51 +230,55 @@ export const UsersLanding = () => {
                 valueFn={(item) => (item as SelectOption).label}
               />
             )}
-          </Grid>
-          <Grid sx={{ alignSelf: 'flex-start' }}>
-            <Tooltip
-              disabled={canCreateUser}
-              tooltipPlacement="bottom"
-              tooltipText="You do not have permission to create other users."
+          </Box>
+          <Tooltip
+            disabled={canCreateUser}
+            tooltipPlacement="bottom"
+            tooltipText="You do not have permission to create other users."
+          >
+            <Button
+              data-pendo-id={
+                isDelegateUserType
+                  ? IAM_DELEGATE_USERS_PENDO_IDS.addUserButton
+                  : isChildUserType
+                    ? IAM_CHILD_USERS_PENDO_IDS.addUserButton
+                    : IAM_PARENT_USERS_PENDO_IDS.addUserButton
+              }
+              disabled={!canCreateUser}
+              onClick={() => setIsCreateDrawerOpen(true)}
+              variant="primary"
             >
-              <Button
-                data-pendo-id={
-                  isDelegateUserType
-                    ? IAM_DELEGATE_USERS_PENDO_IDS.addUserButton
-                    : isChildUserType
-                      ? IAM_CHILD_USERS_PENDO_IDS.addUserButton
-                      : IAM_PARENT_USERS_PENDO_IDS.addUserButton
-                }
-                disabled={!canCreateUser}
-                onClick={() => setIsCreateDrawerOpen(true)}
-                variant="primary"
-              >
-                Add a User
-                {!canCreateUser && <Icon icon="info-outline" size="m" />}
-              </Button>
-            </Tooltip>
-          </Grid>
-        </Grid>
-        <Table aria-label="List of Users" sx={{ tableLayout: 'fixed' }}>
+              Add a User
+              {!canCreateUser && <Icon icon="info-outline" size="m" />}
+            </Button>
+          </Tooltip>
+        </Box>
+        <Table aria-label="List of Users">
           <UsersLandingTableHead order={order} />
           <TableBody>
             <UsersLandingTableBody
               error={error}
-              isLoading={isLoading}
-              numCols={numCols}
+              isLoading={isLoading || isFetching}
               onDelete={handleDelete}
               users={users?.data ?? []}
             />
           </TableBody>
         </Table>
-        <PaginationFooter
-          count={users?.results ?? 0}
-          eventCategory="users landing"
-          handlePageChange={pagination.handlePageChange}
-          handleSizeChange={pagination.handlePageSizeChange}
-          page={pagination.page}
-          pageSize={pagination.pageSize}
-        />
+        {users?.results && users.results > MIN_PAGE_SIZE ? (
+          <Pagination
+            count={users?.results ?? 0}
+            onPageChange={(e: CustomEvent<number>) =>
+              pagination.handlePageChange(Number(e.detail))
+            }
+            onPageSizeChange={(
+              e: CustomEvent<{ page: number; pageSize: number }>
+            ) => pagination.handlePageSizeChange(Number(e.detail.pageSize))}
+            page={pagination.page}
+            pageSize={pagination.pageSize}
+            pageSizes={[MIN_PAGE_SIZE, 50, 75, 100]}
+            style={{ borderBottom: 0 }}
+          />
+        ) : null}
       </Paper>
       <CreateUserDrawer
         onClose={() => setIsCreateDrawerOpen(false)}

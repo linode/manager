@@ -12,6 +12,7 @@ import {
   getCleanedLinodeInterfaceValues,
   getLinodeInterfacePayload,
 } from 'src/features/Linodes/LinodeCreate/Networking/utilities';
+import { useComputePricing } from 'src/utilities/pricing/useComputePricing';
 
 import { getLinodeInterfaceType } from '../utilities';
 import { Actions } from './Actions';
@@ -33,6 +34,9 @@ interface Props {
 export const AddInterfaceForm = (props: Props) => {
   const { linodeId, onClose, regionId } = props;
   const { enqueueSnackbar } = useSnackbar();
+
+  // Use global billing mode, not plan-specific
+  const { billing } = useComputePricing();
 
   const { mutateAsync } = useCreateLinodeInterfaceMutation(linodeId);
 
@@ -104,8 +108,8 @@ export const AddInterfaceForm = (props: Props) => {
     );
   }
 
-  const additionalWarningMessage =
-    'Each Linode comes with one public IP address. Additional public IP addresses are available upon request and will incur a monthly charge.';
+  // Use `billing` directly in the copy (e.g. 'hourly', 'monthly', etc), so any new billing mode added in future just works.
+  const additionalWarningMessage = `Each Linode comes with one public IP address. Additional public IP addresses are available upon request and will incur an additional ${billing} charge.`;
 
   const getWarningNotice = () => {
     if (

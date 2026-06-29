@@ -1,7 +1,7 @@
+import { getFormattedStatus } from '@akamai/compute-ui-core/api';
 import { formatDate } from '@akamai/compute-ui-core/datetime';
 import { useProfile, useRegionsQuery } from '@linode/queries';
 import { Box, Typography } from '@linode/ui';
-import { getFormattedStatus } from '@linode/utilities';
 import Grid from '@mui/material/Grid';
 import { useTheme } from '@mui/material/styles';
 import React from 'react';

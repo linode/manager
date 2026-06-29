@@ -1,12 +1,14 @@
-import { formatStorageUnits, isNotNullOrUndefined } from '@linode/utilities';
+import { formatStorageUnits } from '@akamai/compute-ui-core/api';
+import { isNotNullOrUndefined } from '@linode/utilities';
 
 import { LINODE_NETWORK_IN } from 'src/constants';
 import { typeLabelDetails } from 'src/features/Linodes/presentation';
 
-import type { APIError, LinodeType } from '@linode/api-v4';
+import type { APIError, Engines, LinodeType } from '@linode/api-v4';
 import type { UseQueryResult } from '@tanstack/react-query';
 
 export interface ExtendedType extends LinodeType {
+  engines?: Engines; // Only present on database types
   formattedLabel: string;
   heading: string;
   isDeprecated: boolean;

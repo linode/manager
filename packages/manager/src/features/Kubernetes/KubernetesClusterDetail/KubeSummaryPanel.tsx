@@ -1,3 +1,4 @@
+import { getErrorStringOrDefault } from '@akamai/compute-ui-core/api';
 import {
   ActionsPanel,
   Box,
@@ -22,7 +23,6 @@ import {
   useKubernetesDashboardQuery,
   useResetKubeConfigMutation,
 } from 'src/queries/kubernetes';
-import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 import { ClusterChips } from '../ClusterList/ClusterChips';
 import { DeleteKubernetesClusterDialog } from './DeleteKubernetesClusterDialog';
@@ -166,7 +166,8 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
                 <ActionMenu
                   actionsList={[
                     {
-                      disabled: Boolean(dashboardError) || !dashboard || !dashboard.url,
+                      disabled:
+                        Boolean(dashboardError) || !dashboard || !dashboard.url,
                       onClick: () => window.open(dashboard?.url, '_blank'),
                       title: 'Kubernetes Dashboard',
                     },
@@ -183,7 +184,10 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
                 cluster.tier === 'enterprise' ? undefined : (
                   <StyledActionButton
                     disabled={
-                      Boolean(dashboardError) || !dashboard || !dashboard.url || isClusterReadOnly
+                      Boolean(dashboardError) ||
+                      !dashboard ||
+                      !dashboard.url ||
+                      isClusterReadOnly
                     }
                     endIcon={<ExternalLinkIcon sx={{ height: '14px' }} />}
                     onClick={() => window.open(dashboard?.url, '_blank')}

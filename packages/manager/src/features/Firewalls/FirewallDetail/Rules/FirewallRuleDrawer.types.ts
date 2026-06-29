@@ -1,13 +1,17 @@
-import type { FirewallOptionItem, PrefixListRuleReference } from '../../shared';
+import type { FirewallOptionItem } from '../../shared';
 import type { PrefixListDrawerContext } from './FirewallPrefixListDrawer';
 import type { ExtendedFirewallRule } from './firewallRuleEditor';
 import type { Category, FirewallRuleError } from './shared';
+import type {
+  ExtendedIP,
+  ExtendedPL,
+  PrefixListRuleReference,
+} from '@akamai/compute-ui-core/api';
 import type {
   FirewallPolicyType,
   FirewallRuleType,
 } from '@linode/api-v4/lib/firewalls';
 import type { FormikProps } from 'formik';
-import type { ExtendedIP, ExtendedPL } from 'src/utilities/ipUtils';
 
 export type FirewallRuleDrawerMode = 'create' | 'edit' | 'view';
 

@@ -2,14 +2,16 @@ import { fireEvent, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
-import { accountRolesFactory } from 'src/factories/accountRoles';
-import { userRolesFactory } from 'src/factories/userRoles';
+import { createAccountRoles, createUserRoles } from '../../factories';
+import { ChangeRoleForEntityDrawer } from '../../Shared/AssignedEntitiesTable/ChangeRoleForEntityDrawer';
+import {
+  mockScrollIntoView,
+  submitCdsDrawerForm,
+} from '../../utilities/testHelpers';
 import {
   getShadowRootElement,
-  renderWithTheme,
-} from 'src/utilities/testHelpers';
-
-import { ChangeRoleForEntityDrawer } from '../../Shared/AssignedEntitiesTable/ChangeRoleForEntityDrawer';
+  renderWithProviders,
+} from '../../utilities/testHelpers';
 
 import type { EntitiesRole } from '../../Shared/types';
 
@@ -66,7 +68,7 @@ vi.mock('@linode/api-v4', async () => {
 
 describe('ChangeRoleForEntityDrawer', () => {
   beforeEach(() => {
-    Element.prototype.scrollIntoView ??= vi.fn();
+    mockScrollIntoView();
 
     queryMocks.useParams.mockReturnValue({
       username: 'test_user',
@@ -74,7 +76,7 @@ describe('ChangeRoleForEntityDrawer', () => {
   });
 
   it('should render', async () => {
-    renderWithTheme(<ChangeRoleForEntityDrawer {...props} />);
+    renderWithProviders(<ChangeRoleForEntityDrawer {...props} />);
 
     // Verify title renders
     expect(screen.getByText('Change Role')).toBeVisible();
@@ -85,7 +87,7 @@ describe('ChangeRoleForEntityDrawer', () => {
 
   it('should allow changing role for entity from "linode_contributor" to "linode_viewer"', async () => {
     queryMocks.useUserRoles.mockReturnValue({
-      data: userRolesFactory.build({
+      data: createUserRoles({
         account_access: ['account_linode_admin', 'account_admin'],
         entity_access: [
           {
@@ -98,10 +100,10 @@ describe('ChangeRoleForEntityDrawer', () => {
     });
 
     queryMocks.useAccountRoles.mockReturnValue({
-      data: accountRolesFactory.build(),
+      data: createAccountRoles(),
     });
 
-    renderWithTheme(<ChangeRoleForEntityDrawer {...props} />);
+    renderWithProviders(<ChangeRoleForEntityDrawer {...props} />);
 
     const cdsSelect = document.querySelector('cds-select');
     expect(cdsSelect).not.toBeNull();
@@ -142,7 +144,7 @@ describe('ChangeRoleForEntityDrawer', () => {
       expect(inputSelect).toHaveValue('linode_viewer');
     });
 
-    await userEvent.click(screen.getByText('Save Changes'));
+    submitCdsDrawerForm();
 
     await waitFor(() => {
       expect(mockUpdateUserRole).toHaveBeenCalledWith({

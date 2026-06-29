@@ -68,9 +68,9 @@ describe('StreamCreate', () => {
         await userEvent.type(endpointInput, 'test.com');
         const bucketInput = screen.getByLabelText('Bucket');
         await userEvent.type(bucketInput, 'test');
-        const accessKeyIDInput = screen.getByLabelText('Access Key ID');
+        const accessKeyIDInput = screen.getByLabelText('Access Key');
         await userEvent.type(accessKeyIDInput, 'Test');
-        const secretAccessKeyInput = screen.getByLabelText('Secret Access Key');
+        const secretAccessKeyInput = screen.getByLabelText('Secret Key');
         await userEvent.type(secretAccessKeyInput, 'Test');
         const logPathPrefixInput = screen.getByLabelText(
           'Log Path Prefix (optional)'

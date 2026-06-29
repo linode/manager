@@ -1,3 +1,7 @@
+import {
+  getAPIErrorOrDefault,
+  getErrorStringOrDefault,
+} from '@akamai/compute-ui-core/api';
 import { deleteDomainRecord as _deleteDomainRecord } from '@linode/api-v4/lib/domains';
 import { ActionsPanel, Stack, Typography } from '@linode/ui';
 import { scrollErrorIntoViewV2 } from '@linode/utilities';
@@ -8,10 +12,6 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
-import {
-  getAPIErrorOrDefault,
-  getErrorStringOrDefault,
-} from 'src/utilities/errorUtils';
 import { storage } from 'src/utilities/storage';
 
 import { DomainRecordDrawer } from './DomainRecordDrawer';

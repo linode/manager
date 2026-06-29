@@ -1,8 +1,11 @@
+import {
+  extendedIPToString,
+  stringToExtendedIP,
+} from '@akamai/compute-ui-core/api';
 import { TextField as _TextField, Autocomplete } from '@linode/ui';
 import * as React from 'react';
 
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
-import { extendedIPToString, stringToExtendedIP } from 'src/utilities/ipUtils';
 
 import { transferHelperText as helperText } from '../../domainUtils';
 import { resolve, shouldResolve } from './DomainRecordDrawerUtils';
@@ -11,7 +14,7 @@ import type {
   DomainRecordDrawerProps,
   EditableDomainFields,
 } from './DomainRecordDrawer';
-import type { ExtendedIP } from 'src/utilities/ipUtils';
+import type { ExtendedIP } from '@akamai/compute-ui-core/api';
 
 interface AdjustedTextFieldProps {
   errorText?: string;

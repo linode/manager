@@ -55,6 +55,14 @@ export interface ReserveIPDrawerProps {
   onClose: () => void;
   onSuccess?: (ip: IPAddress) => void;
   open: boolean;
+  /**
+   * Optional overrides for Pendo tracking IDs on drawer elements.
+   */
+  pendoIds?: {
+    cancel?: string;
+    close?: string;
+    submit?: string;
+  };
   // Optional region text to display when mode is 'create'. This is to show region
   // selected and disabled while reserving an IP during create Linode flow.
   region?: string;
@@ -84,7 +92,7 @@ const reserveIPDrawerConfig: Record<
 };
 
 export const ReserveIPDrawer = (props: ReserveIPDrawerProps) => {
-  const { ipAddress, mode, onClose, open } = props;
+  const { ipAddress, mode, onClose, open, pendoIds } = props;
 
   const flags = useFlags();
   const { isGeckoLAEnabled } = useIsGeckoEnabled(
@@ -202,6 +210,7 @@ export const ReserveIPDrawer = (props: ReserveIPDrawerProps) => {
 
   return (
     <Drawer
+      closeButtonPendoId={pendoIds?.close}
       onClose={handleClose}
       onTransitionExited={() => reset()}
       open={open}
@@ -219,7 +228,13 @@ export const ReserveIPDrawer = (props: ReserveIPDrawerProps) => {
               <Typography variant="body1">
                 {RESERVE_IP_DESCRIPTION}
                 <br />
-                <Link to={RESERVE_AN_IP_DOC_LINK}>Learn more</Link>.
+                <Link
+                  pendoId="Reserved IPs Reserve IP-Learn-more"
+                  to={RESERVE_AN_IP_DOC_LINK}
+                >
+                  Learn more
+                </Link>
+                .
               </Typography>
             )}
 
@@ -263,6 +278,7 @@ export const ReserveIPDrawer = (props: ReserveIPDrawerProps) => {
                   isGeckoLAEnabled={isGeckoLAEnabled}
                   noMarginTop
                   onChange={(_, region) => field.onChange(region?.id ?? '')}
+                  pendoIdPrefix="Reserved IPs Reserve IP Region"
                   regions={regions ?? []}
                   value={field.value}
                 />
@@ -298,6 +314,7 @@ export const ReserveIPDrawer = (props: ReserveIPDrawerProps) => {
 
           <ActionsPanel
             primaryButtonProps={{
+              'data-pendo-id': pendoIds?.submit,
               'data-testid': 'reserve-button',
               disabled: isSubmitDisabled,
               label: reserveIPDrawerConfig[mode].submitLabel,
@@ -306,6 +323,7 @@ export const ReserveIPDrawer = (props: ReserveIPDrawerProps) => {
               onClick: handleSubmit(onSubmit),
             }}
             secondaryButtonProps={{
+              'data-pendo-id': pendoIds?.cancel,
               'data-testid': 'cancel-button',
               label: 'Cancel',
               onClick: handleClose,

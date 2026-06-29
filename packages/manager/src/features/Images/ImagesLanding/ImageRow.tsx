@@ -1,16 +1,18 @@
+import { convertStorageUnit } from '@akamai/compute-ui-core/api';
 import { formatDate } from '@akamai/compute-ui-core/datetime';
 import { pluralize } from '@akamai/compute-ui-core/formatting';
 import { useProfile } from '@linode/queries';
 import { LinkButton, Stack, TooltipIcon } from '@linode/ui';
 import { Hidden } from '@linode/ui';
-import { convertStorageUnit } from '@linode/utilities';
 import React from 'react';
 
 import CloudInitIcon from 'src/assets/icons/cloud-init.svg';
+import CoreSharedIcon from 'src/assets/icons/core-shared.svg';
 import UnlockIcon from 'src/assets/icons/unlock.svg';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 
+import { SHARED_IMAGE_ICON_TOOLTIP } from '../constants';
 import { ImagesActionMenu } from './ImagesActionMenu';
 import { ImageStatus } from './ImageStatus';
 
@@ -43,6 +45,9 @@ export const ImageRow = (props: Props) => {
 
   const isFailedUpload =
     image.status === 'pending_upload' && event?.status === 'failed';
+
+  const shareGroupCount =
+    image.image_sharing?.shared_with?.sharegroup_count ?? 0;
 
   const getSizeForImage = (
     size: number,
@@ -96,6 +101,15 @@ export const ImageRow = (props: Props) => {
                   padding: 0,
                 }}
                 text="This image supports our Metadata service via cloud-init."
+              />
+            )}
+            {shareGroupCount > 0 && (
+              <TooltipIcon
+                icon={<CoreSharedIcon />}
+                sxTooltipIcon={{
+                  padding: 0,
+                }}
+                text={SHARED_IMAGE_ICON_TOOLTIP}
               />
             )}
           </Stack>

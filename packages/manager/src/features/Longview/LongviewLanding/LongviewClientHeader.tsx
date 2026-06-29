@@ -1,3 +1,4 @@
+import { getAPIErrorOrDefault } from '@akamai/compute-ui-core/api';
 import { formatDate } from '@akamai/compute-ui-core/datetime';
 import { useProfile } from '@linode/queries';
 import { Typography } from '@linode/ui';
@@ -8,7 +9,6 @@ import * as React from 'react';
 import { EditableEntityLabel } from 'src/components/EditableEntityLabel/EditableEntityLabel';
 import { Link } from 'src/components/Link';
 import withClientStats from 'src/containers/longview.stats.container';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { getPackageNoticeText } from '../shared/utilities';
 import {

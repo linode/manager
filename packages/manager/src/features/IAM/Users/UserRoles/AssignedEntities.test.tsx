@@ -1,8 +1,7 @@
 import { fireEvent, screen } from '@testing-library/react';
 import React from 'react';
 
-import { renderWithTheme } from 'src/utilities/testHelpers';
-
+import { renderWithProviders } from '../../utilities/testHelpers';
 import { AssignedEntities } from './AssignedEntities';
 
 import type { ExtendedRoleView } from '../../Shared/types';
@@ -23,7 +22,7 @@ const mockRole: ExtendedRoleView = {
 
 describe('AssignedEntities', () => {
   it('renders the correct number of entity chips', () => {
-    renderWithTheme(
+    renderWithProviders(
       <AssignedEntities
         onButtonClick={handleClick}
         onRemoveAssignment={handleRemove}
@@ -36,7 +35,7 @@ describe('AssignedEntities', () => {
   });
 
   it('calls onRemoveAssignment when the delete icon is clicked', () => {
-    renderWithTheme(
+    renderWithProviders(
       <AssignedEntities
         onButtonClick={handleClick}
         onRemoveAssignment={handleRemove}
@@ -44,13 +43,13 @@ describe('AssignedEntities', () => {
       />
     );
 
-    const deleteIcons = screen.getAllByTestId('CloseIcon');
-    expect(deleteIcons).toHaveLength(mockRole.entity_names!.length);
+    const removeButton = screen
+      .getByTestId('entities')
+      .querySelector('cds-button');
+    expect(removeButton).toBeTruthy();
 
-    // Simulate clicking the delete icon for the first chip
-    fireEvent.click(deleteIcons[0]);
+    fireEvent.click(removeButton!);
 
-    // Ensure the onRemoveAssignment handler is called with the correct arguments
     expect(handleRemove).toHaveBeenCalledTimes(1);
     expect(handleRemove).toHaveBeenCalledWith(
       { name: mockRole.entity_names![0], id: mockRole.entity_ids![0] },
@@ -60,7 +59,7 @@ describe('AssignedEntities', () => {
 
   it('renders a tooltip with the entity name when the name is longer than 30 characters', () => {
     const longName = 'this-is-a-long-entity-name-that-needs-to-be-truncated';
-    const { container } = renderWithTheme(
+    const { container } = renderWithProviders(
       <AssignedEntities
         onButtonClick={handleClick}
         onRemoveAssignment={handleRemove}

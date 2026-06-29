@@ -2,20 +2,24 @@ import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
-import { accountEntityFactory } from 'src/factories/accountEntities';
-import { accountRolesFactory } from 'src/factories/accountRoles';
-import { userRolesFactory } from 'src/factories/userRoles';
-import { renderWithTheme } from 'src/utilities/testHelpers';
-
+import {
+  createAccountEntity,
+  createAccountRoles,
+  createUserRoles,
+} from '../../factories';
 import {
   ERROR_STATE_TEXT,
   ERROR_STATE_TITLE,
   NO_ASSIGNED_ENTITIES_TEXT,
 } from '../../Shared/constants';
+import {
+  mockMatchMedia,
+  renderWithProviders,
+} from '../../utilities/testHelpers';
 import { UserEntities } from './UserEntities';
 
 const mockEntities = [
-  accountEntityFactory.build({
+  createAccountEntity({
     id: 1,
     label: 'firewall-1',
     type: 'firewall',
@@ -23,19 +27,31 @@ const mockEntities = [
 ];
 
 const queryMocks = vi.hoisted(() => ({
+  useAccountUser: vi.fn().mockReturnValue({ error: null }),
   useAllAccountEntities: vi.fn().mockReturnValue({}),
+  useIsDefaultDelegationRolesForChildAccount: vi
+    .fn()
+    .mockReturnValue({ isDefaultDelegationRolesForChildAccount: false }),
   useParams: vi.fn().mockReturnValue({}),
   useSearch: vi.fn().mockReturnValue({}),
   useAccountRoles: vi.fn().mockReturnValue({}),
-  useUserRoles: vi.fn().mockReturnValue({}),
+  useUserRoles: vi.fn().mockReturnValue({ isLoading: false }),
   usePermissions: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('@linode/queries', async () => {
-  const actual = await vi.importActual('@linode/queries');
+beforeAll(() => mockMatchMedia());
+
+vi.mock('src/features/IAM/hooks/useDelegationRole', () => ({
+  useIsDefaultDelegationRolesForChildAccount:
+    queryMocks.useIsDefaultDelegationRolesForChildAccount,
+}));
+
+vi.mock('@linode/queries', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@linode/queries')>();
   return {
     ...actual,
     useAccountRoles: queryMocks.useAccountRoles,
+    useAccountUser: queryMocks.useAccountUser,
     useUserRoles: queryMocks.useUserRoles,
   };
 });
@@ -82,52 +98,58 @@ describe('UserEntities', () => {
 
   it('should display no entities text if no entity roles are assigned to user', async () => {
     queryMocks.useUserRoles.mockReturnValue({
-      data: userRolesFactory.build({
+      data: createUserRoles({
         account_access: ['account_admin'],
         entity_access: [],
       }),
     });
 
-    renderWithTheme(<UserEntities />);
+    renderWithProviders(<UserEntities />);
     expect(screen.getByText('This list is empty')).toBeVisible();
 
-    expect(screen.queryByText('Assign New Roles')).toBeNull();
+    expect(
+      screen.queryByRole('button', { name: 'Assign New Roles' })
+    ).not.toBeInTheDocument();
     expect(screen.getByText(NO_ASSIGNED_ENTITIES_TEXT)).toBeVisible();
   });
 
   it('should display no entities text if no roles are assigned to user', async () => {
     queryMocks.useUserRoles.mockReturnValue({
-      data: userRolesFactory.build({
+      data: createUserRoles({
         account_access: [],
         entity_access: [],
       }),
     });
 
-    renderWithTheme(<UserEntities />);
+    renderWithProviders(<UserEntities />);
 
     expect(screen.getByText('This list is empty')).toBeVisible();
 
-    expect(screen.queryByText('Assign New Roles')).toBeNull();
+    expect(
+      screen.queryByRole('button', { name: 'Assign New Roles' })
+    ).not.toBeInTheDocument();
 
     expect(screen.getByText(NO_ASSIGNED_ENTITIES_TEXT)).toBeVisible();
   });
 
   it('should display entities and menu when data is available', async () => {
     queryMocks.useUserRoles.mockReturnValue({
-      data: userRolesFactory.build(),
+      data: createUserRoles(),
     });
 
     queryMocks.useAccountRoles.mockReturnValue({
-      data: accountRolesFactory.build(),
+      data: createAccountRoles(),
     });
 
     queryMocks.useAllAccountEntities.mockReturnValue({
       data: mockEntities,
     });
 
-    renderWithTheme(<UserEntities />);
+    renderWithProviders(<UserEntities />);
 
-    expect(screen.queryByText('Assign New Roles')).toBeNull();
+    expect(
+      screen.queryByRole('button', { name: 'Assign New Roles' })
+    ).not.toBeInTheDocument();
     expect(screen.getByText('firewall_admin')).toBeVisible();
     expect(screen.getByText('firewall-1')).toBeVisible();
 
@@ -137,8 +159,8 @@ describe('UserEntities', () => {
     expect(actionMenuButton).toBeVisible();
 
     await userEvent.click(actionMenuButton);
-    expect(screen.getByText('Change Role')).toBeVisible();
-    expect(screen.getByText('Remove Assignment')).toBeVisible();
+    expect(screen.getByTestId('Change Role')).toBeVisible();
+    expect(screen.getByTestId('Remove Assignment')).toBeVisible();
   });
 
   it('should show error state when api fails', () => {
@@ -149,7 +171,7 @@ describe('UserEntities', () => {
       status: 'error',
     });
 
-    renderWithTheme(<UserEntities />);
+    renderWithProviders(<UserEntities />);
     expect(screen.getByText(ERROR_STATE_TITLE)).toBeVisible();
     expect(screen.getByText(ERROR_STATE_TEXT)).toBeVisible();
   });
@@ -163,9 +185,11 @@ describe('UserEntities', () => {
       },
     });
 
-    renderWithTheme(<UserEntities />);
+    renderWithProviders(<UserEntities />);
     expect(screen.queryByText('This list is empty')).toBeNull();
-    expect(screen.queryByText('Assign New Roles')).toBeNull();
+    expect(
+      screen.queryByRole('button', { name: 'Assign New Roles' })
+    ).not.toBeInTheDocument();
     expect(screen.queryByText(NO_ASSIGNED_ENTITIES_TEXT)).toBeNull();
   });
 });

@@ -1,3 +1,4 @@
+import { getAPIErrorOrDefault } from '@akamai/compute-ui-core/api';
 import {
   useAllIPv6RangesQuery,
   useAllLinodesQuery,
@@ -19,8 +20,6 @@ import Grid from '@mui/material/Grid';
 import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import type { JSX } from 'react';
-
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import type { APIError, IPRange } from '@linode/api-v4';
 

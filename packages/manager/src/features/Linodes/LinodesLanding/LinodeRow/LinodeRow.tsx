@@ -1,7 +1,10 @@
+import {
+  formatStorageUnits,
+  getFormattedStatus,
+} from '@akamai/compute-ui-core/api';
 import { useTypeQuery } from '@linode/queries';
 import { Tooltip, TooltipIcon, Typography } from '@linode/ui';
 import { Hidden } from '@linode/ui';
-import { formatStorageUnits, getFormattedStatus } from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -62,8 +65,6 @@ export const LinodeRow = (props: Props) => {
   const recentEvent = events?.find(
     (e) => e.entity?.type === 'linode' && e.entity.id === id
   );
-
-  const isBareMetalInstance = linodeType?.class === 'metal';
 
   const isTransitioning = linodeInTransition(status, recentEvent);
 
@@ -171,7 +172,6 @@ export const LinodeRow = (props: Props) => {
         <TableCell>
           <BackupStatus
             backupsEnabled={backups.enabled}
-            isBareMetalInstance={isBareMetalInstance}
             linodeId={id}
             mostRecentBackup={backups.last_successful}
           />

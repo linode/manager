@@ -1,22 +1,20 @@
-import { NotificationBanner } from '@akamai/cds-components/react';
-import { Spacing } from '@akamai/cds-tokens';
-import { useDatabaseEnginesQuery, useDatabaseMutation } from '@linode/queries';
+import { toast } from '@akamai/cds-components/notification-toast';
 import {
-  ActionsPanel,
-  Autocomplete,
-  FormControl,
-  Typography,
-} from '@linode/ui';
-import { useTheme } from '@mui/material';
-import { useSnackbar } from 'notistack';
+  Button,
+  FormField,
+  Modal,
+  NotificationBanner,
+  Select,
+} from '@akamai/cds-components/react';
+import { Spacing } from '@akamai/cds-tokens';
+import { getAPIErrorOrDefault } from '@akamai/compute-ui-core/api';
+import { useDatabaseEnginesQuery, useDatabaseMutation } from '@linode/queries';
 import * as React from 'react';
 
-import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import {
   DATABASE_ENGINE_MAP,
   upgradableVersions,
 } from 'src/features/Databases/utilities';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import type { Engine } from '@linode/api-v4/lib/databases';
 
@@ -43,8 +41,7 @@ export const DatabaseSettingsUpgradeVersionDialog = (props: Props) => {
     onClose,
     open,
   } = props;
-  const theme = useTheme();
-  const { enqueueSnackbar } = useSnackbar();
+
   const { mutateAsync: updateDatabase } = useDatabaseMutation(
     databaseEngine,
     databaseID
@@ -78,10 +75,11 @@ export const DatabaseSettingsUpgradeVersionDialog = (props: Props) => {
     updateDatabase({ version: selectedVersion.value })
       .then(() => {
         setIsLoading(false);
-        enqueueSnackbar('Database version upgraded successfully.', {
-          variant: 'success',
+        toast.open({
+          text: 'Database version upgraded successfully.',
+          type: 'success',
         });
-        onClose();
+        handleClose();
       })
       .catch((e) => {
         setIsLoading(false);
@@ -89,65 +87,82 @@ export const DatabaseSettingsUpgradeVersionDialog = (props: Props) => {
       });
   };
 
-  const renderActions = (
-    <ActionsPanel
-      primaryButtonProps={{
-        'data-testid': 'upgrade',
-        disabled: !selectedVersion,
-        label: 'Upgrade',
-        loading,
-        onClick: onUpgradeVersion,
-      }}
-      secondaryButtonProps={{
-        'data-testid': 'cancel',
-        label: 'Cancel',
-        onClick: onClose,
-      }}
-    />
-  );
+  const handleClose = () => {
+    setSelectedVersion(null);
+    setError('');
+    onClose();
+  };
 
   return (
-    <ConfirmationDialog
-      actions={renderActions}
-      error={error}
-      onClose={onClose}
-      open={open}
-      title={`Upgrade ${dialogTitle}`}
-    >
-      <Typography sx={{ mb: theme.spacing(1.5) }}>
-        Current Version: v{databaseVersion}
-      </Typography>
-      <Typography>
-        {`Please select the new ${DATABASE_ENGINE_MAP[databaseEngine]} version. Once you select the new version we
+    <Modal closeModal={handleClose} open={open} size="medium">
+      <span slot="title">Upgrade {dialogTitle}</span>
+      <div slot="body">
+        {error ? (
+          <NotificationBanner type="error">{error}</NotificationBanner>
+        ) : undefined}
+        <p style={{ marginBottom: Spacing.S6 }}>
+          Current Version: v{databaseVersion}
+        </p>
+        <p>
+          {`Please select the new ${DATABASE_ENGINE_MAP[databaseEngine]} version. Once you select the new version we
         will check it for compatibility with your current version. If it is
         compatible you can proceed with the upgrade.`}
-      </Typography>
+        </p>
 
-      <FormControl sx={{ mb: theme.spacing(2) }}>
-        <Autocomplete
-          autoComplete={false}
-          label="New Version"
-          onChange={(_, v) => setSelectedVersion(v)}
-          options={versions ?? []}
-          placeholder="Select a version"
-          value={selectedVersion}
-        />
-      </FormControl>
+        <FormField style={{ marginBottom: Spacing.S16 }}>
+          <label
+            htmlFor="new-version"
+            // eslint-disable-next-line @linode/cloud-manager/no-custom-fontWeight
+            style={{ fontWeight: 700, marginBottom: Spacing.S8 }}
+          >
+            New Version
+          </label>
+          <Select
+            clearable
+            id="new-version"
+            items={versions ?? []}
+            onChange={(e) =>
+              setSelectedVersion(e.detail as unknown as VersionOption)
+            }
+            placeholder="Select a version"
+            selected={selectedVersion}
+            style={{ width: 416 }}
+            valueFn={(option) => (option as VersionOption).label}
+          />
+        </FormField>
 
-      {loading && (
-        <NotificationBanner style={{ marginBottom: Spacing.S16 }} type="info">
-          <Typography style={{ fontSize: '0.875rem' }}>
-            Checking version upgrade compatibility, then will start upgrade
-          </Typography>
-          {/* Then the text changes to "Starting to upgrade." then closes after 1 second */}
+        {loading && (
+          <NotificationBanner style={{ marginBottom: Spacing.S16 }} type="info">
+            <p style={{ fontSize: '0.875rem' }}>
+              Checking version upgrade compatibility, then will start upgrade
+            </p>
+            {/* Then the text changes to "Starting to upgrade." then closes after 1 second */}
+          </NotificationBanner>
+        )}
+        <NotificationBanner
+          style={{ marginBottom: Spacing.S16 }}
+          type="warning"
+        >
+          <p style={{ fontSize: '0.875rem' }}>
+            Reverting back to the prior version is not possible once the upgrade
+            has been started
+          </p>
         </NotificationBanner>
-      )}
-      <NotificationBanner style={{ marginBottom: Spacing.S16 }} type="warning">
-        <Typography style={{ fontSize: '0.875rem' }}>
-          Reverting back to the prior version is not possible once the upgrade
-          has been started
-        </Typography>
-      </NotificationBanner>
-    </ConfirmationDialog>
+      </div>
+      <div slot="actions" style={{ display: 'flex', alignItems: 'center' }}>
+        <Button data-testid="cancel" onClick={handleClose} variant="link">
+          Cancel
+        </Button>
+        <Button
+          data-testid="upgrade"
+          disabled={!selectedVersion}
+          onClick={onUpgradeVersion}
+          processing={loading}
+          variant="primary"
+        >
+          Upgrade
+        </Button>
+      </div>
+    </Modal>
   );
 };

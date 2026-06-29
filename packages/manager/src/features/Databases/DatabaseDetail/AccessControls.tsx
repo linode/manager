@@ -1,4 +1,8 @@
-import { Button, NotificationBanner } from '@akamai/cds-components/react';
+import {
+  Button,
+  Modal,
+  NotificationBanner,
+} from '@akamai/cds-components/react';
 import {
   Table,
   TableBody,
@@ -7,13 +11,11 @@ import {
 } from '@akamai/cds-components/react/Table';
 import { Spacing } from '@akamai/cds-tokens';
 import { useDatabaseMutation } from '@linode/queries';
-import { ActionsPanel, Typography } from '@linode/ui';
 import * as React from 'react';
 import type { JSX } from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-
+import globalStyles from '../shared/global.module.css';
 import { ManageAccessControlDrawer } from './ManageAccessControlDrawer';
 
 import type { APIError, Database } from '@linode/api-v4';
@@ -142,6 +144,11 @@ export const AccessControls = (props: Props) => {
                 key={`${accessControl}-tablecell`}
               >
                 {accessControl}
+              </TableCell>
+              <TableCell
+                className={globalStyles.actionsCell}
+                key={`${accessControl}-tablecell-button`}
+              >
                 {disabled ? (
                   <Button disabled={disabled} size="large" variant="primary">
                     Remove
@@ -163,23 +170,12 @@ export const AccessControls = (props: Props) => {
     );
   };
 
-  const actionsPanel = (
-    <ActionsPanel
-      primaryButtonProps={{
-        label: 'Remove IP Address',
-        loading: databaseUpdating,
-        onClick: handleRemoveIPAddress,
-      }}
-      secondaryButtonProps={{ label: 'Cancel', onClick: handleDialogClose }}
-    />
-  );
-
   return (
     <>
       <div className={classes.topSection}>
         <div className={classes.sectionTitleAndText}>
           <div className={classes.sectionTitle}>
-            <Typography variant="h3">Manage Access</Typography>
+            <h3 style={{ margin: 0 }}>Manage Access</h3>
           </div>
           <div className={classes.sectionText}>{description ?? null}</div>
         </div>
@@ -194,26 +190,39 @@ export const AccessControls = (props: Props) => {
         </Button>
       </div>
       {ipTable(database.allow_list)}
-      <ConfirmationDialog
-        actions={actionsPanel}
-        onClose={handleDialogClose}
-        open={isDialogOpen}
-        title={`Remove IP Address ${accessControlToBeRemoved}`}
-      >
-        {error ? (
-          <NotificationBanner
-            style={{ marginBottom: Spacing.S16 }}
-            text={error}
-            type="error"
-          />
-        ) : null}
-        <Typography data-testid="ip-removal-confirmation-warning">
-          IP {accessControlToBeRemoved} will lose all access to the data on this
-          database cluster. This action cannot be undone, but you can re-enable
-          access by clicking Manage Access Controls and adding the same IP
-          address.
-        </Typography>
-      </ConfirmationDialog>
+      <Modal closeModal={handleDialogClose} open={isDialogOpen}>
+        <span slot="title">Remove IP Address {accessControlToBeRemoved}</span>
+        <div slot="body">
+          {error ? (
+            <NotificationBanner
+              style={{ marginBottom: Spacing.S16 }}
+              text={error}
+              type="error"
+            />
+          ) : null}
+          <p
+            data-testid="ip-removal-confirmation-warning"
+            style={{ margin: 0 }}
+          >
+            IP {accessControlToBeRemoved} will lose all access to the data on
+            this database cluster. This action cannot be undone, but you can
+            re-enable access by clicking Manage Access Controls and adding the
+            same IP address.
+          </p>
+        </div>
+        <div slot="actions">
+          <Button onClick={handleDialogClose} variant="secondary">
+            Cancel
+          </Button>
+          <Button
+            onClick={handleRemoveIPAddress}
+            processing={databaseUpdating}
+            variant="primary"
+          >
+            Remove IP Address
+          </Button>
+        </div>
+      </Modal>
       <ManageAccessControlDrawer
         database={database}
         onClose={() => setManageAccessControlDrawerOpen(false)}

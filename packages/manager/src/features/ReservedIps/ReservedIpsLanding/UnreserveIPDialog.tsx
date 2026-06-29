@@ -1,10 +1,10 @@
+import { getAPIErrorOrDefault } from '@akamai/compute-ui-core/api';
 import { useUnReserveIPMutation } from '@linode/queries';
 import { ActionsPanel, Notice, Typography } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import type { IPAddress } from '@linode/api-v4';
 
@@ -51,12 +51,14 @@ export const UnreserveIPDialog = (props: Props) => {
       actions={
         <ActionsPanel
           primaryButtonProps={{
+            'data-pendo-id': 'Reserved IPs Landing-Unreserve End Flow',
             disabled: isPending,
             label: 'Unreserve',
             loading: isPending,
             onClick: handleSubmit,
           }}
           secondaryButtonProps={{
+            'data-pendo-id': 'Reserved IPs Landing-Unreserve Cancel',
             disabled: isPending,
             label: 'Cancel',
             onClick: onClose,
@@ -64,6 +66,7 @@ export const UnreserveIPDialog = (props: Props) => {
           sx={{ padding: 0 }}
         />
       }
+      closeIconPendoId="Reserved IPs Landing-Unreserve Close"
       onClose={onClose}
       open={open}
       title={`Unreserve ${ipAddress.address}`}

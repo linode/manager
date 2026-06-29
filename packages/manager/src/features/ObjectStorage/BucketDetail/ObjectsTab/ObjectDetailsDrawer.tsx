@@ -1,14 +1,14 @@
+import { readableBytes } from '@akamai/compute-ui-core/api';
 import { formatDate } from '@akamai/compute-ui-core/datetime';
 import { truncateMiddle } from '@akamai/compute-ui-core/formatting';
 import { useProfile } from '@linode/queries';
 import { CircleProgress, Divider, Drawer, Typography } from '@linode/ui';
-import { readableBytes } from '@linode/utilities';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { Link } from 'src/components/Link';
-import { useObjectStorageBuckets } from 'src/queries/object-storage/queries';
+import { useObjectStorageBuckets } from 'src/features/ObjectStorage/hooks/useObjectStorageBuckets';
 
 import { AccessSelect } from '../AccessTab/AccessSelect';
 
@@ -40,12 +40,12 @@ export const ObjectDetailsDrawer = React.memo(
     let formattedLastModified;
 
     const { data: profile } = useProfile();
-    const { data: bucketsData, isLoading: isLoadingEndpointData } =
+    const { data: buckets, isLoading: isLoadingEndpointData } =
       useObjectStorageBuckets();
 
-    const isLoadingEndpoint = isLoadingEndpointData || !bucketsData;
+    const isLoadingEndpoint = isLoadingEndpointData || !buckets;
 
-    const bucket = bucketsData?.buckets.find(
+    const bucket = buckets?.find(
       ({ label, region }) => label === bucketName && region === regionId
     );
 

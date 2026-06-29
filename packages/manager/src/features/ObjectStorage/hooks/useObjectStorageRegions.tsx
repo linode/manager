@@ -1,33 +1,50 @@
+import { getRegionsByRegionId } from '@akamai/compute-ui-core/api';
 import { useRegionsQuery } from '@linode/queries';
-import { getRegionsByRegionId } from '@linode/utilities';
 import * as React from 'react';
 
-import { filterRegionsByEndpoints } from 'src/features/ObjectStorage/utilities';
-import { useObjectStorageEndpoints } from 'src/queries/object-storage/queries';
+import type { APIError, Region } from '@linode/api-v4';
 
-export const useObjectStorageRegions = () => {
-  const { data: allRegions, error: allRegionsError } = useRegionsQuery();
+export interface UseObjectStorageRegionsOptions {
+  enabled?: boolean;
+}
+
+export interface UseObjectStorageRegionsResult {
+  errors: APIError[] | null;
+  isError: boolean;
+  isLoading: boolean;
+  isPending: boolean;
+  objectStorageRegions: Region[] | undefined;
+  regionsByIdMap: Record<string, Region> | undefined;
+}
+
+export function useObjectStorageRegions({
+  enabled = true,
+}: UseObjectStorageRegionsOptions = {}): UseObjectStorageRegionsResult {
   const {
-    data: storageEndpoints,
-    error: storageEndpointsError,
-    isFetching: isStorageEndpointsLoading,
-  } = useObjectStorageEndpoints();
+    data: allRegions,
+    error: errors,
+    isError,
+    isLoading,
+    isPending,
+  } = useRegionsQuery(enabled);
 
-  const availableStorageRegions = React.useMemo(
-    () => filterRegionsByEndpoints(allRegions, storageEndpoints),
-    [allRegions, storageEndpoints]
+  const objectStorageRegions = React.useMemo(
+    () =>
+      allRegions?.filter((region) =>
+        region.capabilities.includes('Object Storage')
+      ),
+    [allRegions]
   );
 
   const regionsByIdMap =
-    availableStorageRegions && getRegionsByRegionId(availableStorageRegions);
+    objectStorageRegions && getRegionsByRegionId(objectStorageRegions);
 
   return {
-    allRegions,
-    allRegionsError,
-    availableStorageRegions,
-    isStorageEndpointsLoading,
+    errors,
+    objectStorageRegions,
     regionsByIdMap,
-    storageEndpoints,
-    storageEndpointsError,
+    isLoading,
+    isError,
+    isPending,
   };
-};
+}

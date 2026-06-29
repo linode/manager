@@ -25,7 +25,7 @@ import {
   StyledWrapper,
 } from './LineGraph.styles';
 
-import type { Metrics } from '@linode/utilities';
+import type { Metrics } from '@akamai/compute-ui-core/api';
 import type { Theme } from '@mui/material/styles';
 import type {
   ChartData,

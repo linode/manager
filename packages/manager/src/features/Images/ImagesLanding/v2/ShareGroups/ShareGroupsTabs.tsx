@@ -1,3 +1,4 @@
+import { Font } from '@akamai/cds-tokens';
 import { useShareGroupQuery } from '@linode/queries';
 import { BetaChip, Stack } from '@linode/ui';
 import { useNavigate, useParams } from '@tanstack/react-router';
@@ -13,6 +14,7 @@ import { getSubTabIndex } from 'src/features/Images/utils';
 
 import { DeleteShareGroupDialog } from './DeleteShareGroupDialog';
 import { EditShareGroupDrawer } from './EditShareGroupDrawer';
+import { MembershipRequestDrawer } from './MembershipRequestsDrawer/MembershipRequestDrawer';
 import { AddMembersDrawer } from './ShareGroupsDetails/AddMembersDrawer';
 import { shareGroupsSubTabs as subTabs } from './shareGroupsTabsConfig';
 import { ShareGroupsView } from './ShareGroupsView';
@@ -70,12 +72,16 @@ export const ShareGroupsTabs = () => {
     });
   };
 
-  const handleDelete = (shareGroupId: string) => {
-    handleShareGroupAction(shareGroupId, 'delete');
+  const handleAddImages = (shareGroupId: string) => {
+    handleShareGroupAction(shareGroupId, 'add-images');
   };
 
   const handleAddMembers = (shareGroupId: string) => {
     handleShareGroupAction(shareGroupId, 'add-members');
+  };
+
+  const handleDelete = (shareGroupId: string) => {
+    handleShareGroupAction(shareGroupId, 'delete');
   };
 
   const handleEdit = (shareGroupId: string) => {
@@ -100,8 +106,9 @@ export const ShareGroupsTabs = () => {
     });
 
   const handlers: ShareGroupHandlers = {
-    onDelete: handleDelete,
+    onAddImages: handleAddImages,
     onAddMembers: handleAddMembers,
+    onDelete: handleDelete,
     onEdit: handleEdit,
   };
 
@@ -110,7 +117,11 @@ export const ShareGroupsTabs = () => {
       <Tabs index={subTabIndex} onChange={onTabChange}>
         <TabList>
           {subTabs.map((tab) => (
-            <Tab data-pendo-id={tab.pendoId} key={`images-${tab.type}`}>
+            <Tab
+              data-pendo-id={tab.pendoId}
+              fontSize={Font.FontSize.Xs}
+              key={`images-${tab.type}`}
+            >
               {tab.title} {tab.isBeta ? <BetaChip /> : null}
             </Tab>
           ))}
@@ -152,6 +163,7 @@ export const ShareGroupsTabs = () => {
         open={ownedGroupsActionParams?.action === 'add-members'}
         shareGroupId={ownedGroupsActionParams?.shareGroupId}
       />
+      <MembershipRequestDrawer />
     </Stack>
   );
 };

@@ -7,14 +7,14 @@ import { EndpointMultiselect } from './EndpointMultiselect';
 import type { EndpointMultiselectValue } from './EndpointMultiselect';
 
 const queryMocks = vi.hoisted(() => ({
-  useObjectStorageEndpoints: vi.fn().mockReturnValue([]),
+  useObjectStorageEndpointsQuery: vi.fn().mockReturnValue([]),
 }));
 
 vi.mock('src/queries/object-storage/queries', async () => {
   const actual = await vi.importActual('src/queries/object-storage/queries');
   return {
     ...actual,
-    useObjectStorageEndpoints: queryMocks.useObjectStorageEndpoints,
+    useObjectStorageEndpointsQuery: queryMocks.useObjectStorageEndpointsQuery,
   };
 });
 
@@ -40,7 +40,7 @@ const onChangeMock = vi.fn();
 
 describe('EndpointMultiselect', () => {
   it('should show loading text while fetching endpoints', () => {
-    queryMocks.useObjectStorageEndpoints.mockReturnValue({
+    queryMocks.useObjectStorageEndpointsQuery.mockReturnValue({
       data: [],
       isFetching: true,
     });
@@ -55,7 +55,7 @@ describe('EndpointMultiselect', () => {
   });
 
   it('should show proper placeholder after fetching endpoints', () => {
-    queryMocks.useObjectStorageEndpoints.mockReturnValue({
+    queryMocks.useObjectStorageEndpointsQuery.mockReturnValue({
       data: endpointsMock,
       isFetching: false,
     });
@@ -72,7 +72,7 @@ describe('EndpointMultiselect', () => {
   });
 
   it('should show label if showLabel property set to true', () => {
-    queryMocks.useObjectStorageEndpoints.mockReturnValue({
+    queryMocks.useObjectStorageEndpointsQuery.mockReturnValue({
       data: endpointsMock,
       isFetching: false,
     });
@@ -87,6 +87,6 @@ describe('EndpointMultiselect', () => {
       />
     );
 
-    expect(getByText('Endpoint')).toBeVisible();
+    expect(getByText('Endpoints')).toBeVisible();
   });
 });

@@ -31,9 +31,6 @@ export const CloseAccountSetting = () => {
     case 'delegate':
       closeAccountButtonTooltipText = DELEGATE_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT;
       break;
-    case 'proxy':
-      closeAccountButtonTooltipText = DELEGATE_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT;
-      break;
     default:
       closeAccountButtonTooltipText = PARENT_USER_CLOSE_ACCOUNT_TOOLTIP_TEXT;
   }

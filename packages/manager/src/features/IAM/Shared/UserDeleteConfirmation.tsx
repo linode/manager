@@ -1,3 +1,4 @@
+import { toast } from '@akamai/cds-components/notification-toast';
 import {
   Button,
   Modal,
@@ -5,7 +6,6 @@ import {
 } from '@akamai/cds-components/react';
 import { Spacing } from '@akamai/cds-tokens';
 import { useAccountUserDeleteMutation } from '@linode/queries';
-import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { ErrorState } from './ErrorState/ErrorState';
@@ -21,8 +21,6 @@ interface Props {
 export const UserDeleteConfirmation = (props: Props) => {
   const { onClose: _onClose, onSuccess, open, username } = props;
 
-  const { enqueueSnackbar } = useSnackbar();
-
   const {
     error,
     isPending,
@@ -37,8 +35,9 @@ export const UserDeleteConfirmation = (props: Props) => {
 
   const onDelete = async () => {
     await deleteUser();
-    enqueueSnackbar(`User ${username} has been deleted successfully.`, {
-      variant: 'success',
+    toast.open({
+      text: `User ${username} has been successfully deleted.`,
+      type: 'success',
     });
     if (onSuccess) {
       onSuccess();

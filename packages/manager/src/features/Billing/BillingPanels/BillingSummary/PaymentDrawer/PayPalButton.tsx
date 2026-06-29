@@ -1,3 +1,4 @@
+import { getAPIErrorOrDefault } from '@akamai/compute-ui-core/api';
 import { makePayment } from '@linode/api-v4/lib/account/payments';
 import { accountQueries, useAccount, useClientToken } from '@linode/queries';
 import { CircleProgress, Tooltip } from '@linode/ui';
@@ -15,7 +16,6 @@ import { makeStyles } from 'tss-react/mui';
 
 import { reportException } from 'src/exceptionReporting';
 import { getPaymentLimits } from 'src/features/Billing/billingUtils';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import type { SetSuccess } from './types';
 import type { APIError } from '@linode/api-v4/lib/types';

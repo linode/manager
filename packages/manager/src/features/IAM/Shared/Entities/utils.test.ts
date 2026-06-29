@@ -1,5 +1,4 @@
-import { accountEntityFactory } from 'src/factories/accountEntities';
-
+import { createAccountEntity, createAccountEntityList } from '../../factories';
 import {
   getCreateLinkForEntityType,
   getEntitiesByType,
@@ -41,12 +40,8 @@ describe('getPlaceholder', () => {
 describe('getEntitiesByType', () => {
   it('should return entities of the type "linode', () => {
     const mockEntities = [
-      ...accountEntityFactory.buildList(3, {
-        type: 'linode',
-      }),
-      accountEntityFactory.build({
-        type: 'firewall',
-      }),
+      ...createAccountEntityList(3, { type: 'linode' }),
+      createAccountEntity({ type: 'firewall' }),
     ];
 
     const result = getEntitiesByType('linode', mockEntities);
@@ -60,14 +55,8 @@ describe('getEntitiesByType', () => {
 
   it('should return entities of the type "linode', () => {
     const mockEntities = [
-      ...accountEntityFactory.buildList(3, {
-        type: 'linode',
-      }),
-      accountEntityFactory.build({
-        id: 1,
-        label: 'firewall-1',
-        type: 'firewall',
-      }),
+      ...createAccountEntityList(3, { type: 'linode' }),
+      createAccountEntity({ id: 1, label: 'firewall-1', type: 'firewall' }),
     ];
 
     const result = getEntitiesByType('firewall', mockEntities);

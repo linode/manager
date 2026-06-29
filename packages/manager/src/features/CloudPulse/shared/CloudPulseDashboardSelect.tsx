@@ -5,6 +5,7 @@ import { useFlags } from 'src/hooks/useFlags';
 import { useCloudPulseDashboardsQuery } from 'src/queries/cloudpulse/dashboards';
 import { useCloudPulseServiceTypes } from 'src/queries/cloudpulse/services';
 
+import { useCloudPulseContext } from '../Context/useCloudPulseContext';
 import { getAllDashboards, getEnabledServiceTypes } from '../Utils/utils';
 
 import type {
@@ -55,7 +56,9 @@ export const CloudPulseDashboardSelect = React.memo(
       data: serviceTypesList,
       error: serviceTypesError,
       isLoading: serviceTypesLoading,
-    } = useCloudPulseServiceTypes(!!savePreferences);
+    } = useCloudPulseServiceTypes(true);
+
+    const { setCurrentServiceLabel } = useCloudPulseContext();
 
     const { aclpServices } = useFlags();
     // Check if the integration service type is enabled
@@ -70,10 +73,14 @@ export const CloudPulseDashboardSelect = React.memo(
       ? [serviceType]
       : getEnabledServiceTypes(serviceTypesList, aclpServices);
 
-    const serviceTypeMap: Map<CloudPulseServiceType, string> = new Map(
-      (serviceTypesList?.data || [])
-        .filter((item) => item?.service_type !== undefined)
-        .map((item) => [item.service_type, item.label ?? ''])
+    const serviceTypeMap: Map<CloudPulseServiceType, string> = React.useMemo(
+      () =>
+        new Map(
+          (serviceTypesList?.data || [])
+            .filter((item) => item?.service_type !== undefined)
+            .map((item) => [item.service_type, item.label ?? ''])
+        ),
+      [serviceTypesList]
     );
 
     const {
@@ -130,6 +137,15 @@ export const CloudPulseDashboardSelect = React.memo(
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dashboardsList]);
+
+    React.useEffect(() => {
+      if (selectedDashboard && serviceTypeMap.size > 0) {
+        setCurrentServiceLabel(
+          serviceTypeMap.get(selectedDashboard.service_type) ??
+            selectedDashboard.service_type
+        );
+      }
+    }, [selectedDashboard, serviceTypeMap, setCurrentServiceLabel]);
     return (
       <Autocomplete
         autoHighlight
@@ -143,12 +159,21 @@ export const CloudPulseDashboardSelect = React.memo(
         }
         errorText={dashboardsList?.length ? '' : errorText}
         fullWidth
+        getOptionLabel={(option) => {
+          if (option.id === selectedDashboard?.id) {
+            return `${
+              serviceTypeMap.get(option.service_type) ?? option.service_type
+            } - ${option.label}`;
+          }
+
+          return option.label;
+        }}
         groupBy={(option: Dashboard) => option.service_type}
         isOptionEqualToValue={(option, value) => option.id === value.id}
         label="Dashboard"
         loading={dashboardsLoading || serviceTypesLoading}
         noMarginTop
-        onChange={(e, dashboard: Dashboard) => {
+        onChange={(_, dashboard: Dashboard) => {
           setSelectedDashboard(dashboard);
           handleDashboardChange(dashboard, savePreferences);
         }}
@@ -172,6 +197,11 @@ export const CloudPulseDashboardSelect = React.memo(
             </Box>
             {params.children}
           </Box>
+        )}
+        renderOption={({ key, ...props }, option) => (
+          <li key={key} {...props}>
+            {option.label}
+          </li>
         )}
         sx={(theme) => ({
           '& .MuiInputBase-input.Mui-disabled': {

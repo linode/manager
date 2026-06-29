@@ -1,6 +1,6 @@
+import { convertMegabytesTo } from '@akamai/compute-ui-core/api';
 import { useAllNodeBalancerConfigsQuery } from '@linode/queries';
 import { Box, Hidden } from '@linode/ui';
-import { convertMegabytesTo } from '@linode/utilities';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';

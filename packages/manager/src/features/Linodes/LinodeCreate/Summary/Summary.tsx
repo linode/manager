@@ -1,11 +1,14 @@
 import {
+  formatStorageUnits,
+  getLinodeBackupPrice,
+} from '@akamai/compute-ui-core/api';
+import {
   useAllTypes,
   useImageQuery,
   useRegionsQuery,
   useTypeQuery,
 } from '@linode/queries';
 import { Divider, Paper, Stack, Typography } from '@linode/ui';
-import { formatStorageUnits } from '@linode/utilities';
 import { useTheme } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import React from 'react';
@@ -15,7 +18,6 @@ import { Currency } from 'src/components/Currency';
 import { TextTooltip } from 'src/components/TextTooltip';
 import { useIsAclpSupportedRegion } from 'src/features/CloudPulse/Utils/utils';
 import { useFlags } from 'src/hooks/useFlags';
-import { getLinodeBackupPrice } from 'src/utilities/pricing/backups';
 import { useComputePricing } from 'src/utilities/pricing/useComputePricing';
 
 import { getLinodePrice } from './utilities';

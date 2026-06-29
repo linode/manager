@@ -1,6 +1,6 @@
+import { getFormattedStatus } from '@akamai/compute-ui-core/api';
 import { capitalizeAllWords } from '@akamai/compute-ui-core/formatting';
 import { Stack, TooltipIcon } from '@linode/ui';
-import { getFormattedStatus } from '@linode/utilities';
 import React from 'react';
 
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';

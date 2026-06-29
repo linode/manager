@@ -29,6 +29,7 @@ const queryMocks = vi.hoisted(() => ({
   useRegionsQuery: vi.fn(),
   useResourcesQuery: vi.fn(),
   useParams: vi.fn(),
+  useGetCloudPulseMetricDefinitionsByServiceType: vi.fn(),
 }));
 
 vi.mock('src/queries/cloudpulse/alerts', () => ({
@@ -47,6 +48,8 @@ vi.mock('src/queries/cloudpulse/services', () => {
   return {
     ...vi.importActual('src/queries/cloudpulse/services'),
     useCloudPulseServiceTypes: queryMocks.useCloudPulseServiceTypes,
+    useGetCloudPulseMetricDefinitionsByServiceType:
+      queryMocks.useGetCloudPulseMetricDefinitionsByServiceType,
   };
 });
 
@@ -107,6 +110,11 @@ beforeEach(() => {
   queryMocks.useParams.mockReturnValue({
     alertId: '1',
     serviceType: 'linode',
+  });
+  queryMocks.useGetCloudPulseMetricDefinitionsByServiceType.mockReturnValue({
+    data: { data: [] },
+    isError: false,
+    isFetching: false,
   });
 });
 

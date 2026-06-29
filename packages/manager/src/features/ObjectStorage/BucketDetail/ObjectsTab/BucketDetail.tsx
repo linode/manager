@@ -19,11 +19,11 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { ObjectUploader } from 'src/components/Uploaders/ObjectUploader/ObjectUploader';
 import { OBJECT_STORAGE_DELIMITER } from 'src/constants';
+import { useObjectStorageBuckets } from 'src/features/ObjectStorage/hooks/useObjectStorageBuckets';
 import {
   getObjectBucketObjectsQueryKey,
   objectStorageQueries,
   useObjectBucketObjectsInfiniteQuery,
-  useObjectStorageBuckets,
 } from 'src/queries/object-storage/queries';
 import { fetchBucketAndUpdateCache } from 'src/queries/object-storage/utilities';
 import { sendDownloadObjectEvent } from 'src/utilities/analytics/customEventAnalytics';
@@ -67,7 +67,7 @@ export const BucketDetail = () => {
 
   const { data: buckets } = useObjectStorageBuckets();
 
-  const bucket = buckets?.buckets.find((bucket) => {
+  const bucket = buckets?.find((bucket) => {
     return bucket.label === bucketName && bucket.region === regionId;
   });
 

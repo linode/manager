@@ -1,3 +1,4 @@
+import { getAPIErrorOrDefault } from '@akamai/compute-ui-core/api';
 import { formatDate, parseAPIDate } from '@akamai/compute-ui-core/datetime';
 import { capitalize, pluralize } from '@akamai/compute-ui-core/formatting';
 import { acceptServiceTransfer } from '@linode/api-v4';
@@ -14,7 +15,6 @@ import * as React from 'react';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { sendEntityTransferReceiveEvent } from 'src/utilities/analytics/customEventAnalytics';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { countByEntity } from '../utilities';
 import {

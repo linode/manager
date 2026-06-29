@@ -1,4 +1,4 @@
-import { convertMegabytesTo } from '@linode/utilities';
+import { convertMegabytesTo } from '@akamai/compute-ui-core/api';
 
 import type { PlanSelectionWithDatabaseType } from 'src/features/components/PlansPanel/types';
 

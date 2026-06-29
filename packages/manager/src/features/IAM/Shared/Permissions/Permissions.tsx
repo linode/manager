@@ -1,15 +1,14 @@
+import { Spacing, Typography } from '@akamai/cds-tokens';
 import { sortByString } from '@akamai/compute-ui-core/formatting';
-import { Typography } from '@linode/ui';
-import { Grid } from '@mui/material';
 import * as React from 'react';
 
-import { TruncatedList } from '../TruncatedList';
-import { StyledPermissionItem, StyledTitle } from './Permissions.style';
+import styles from '../../Shared/global.module.css';
+import { Box } from '../Box/Box';
+import { TruncatedList } from '../TruncatedList/TruncatedList';
 
 import type { PermissionType } from '@linode/api-v4/lib/iam/types';
 
 type Props = {
-  noPermissionsMessage?: string;
   permissions: PermissionType[];
 };
 
@@ -19,27 +18,39 @@ export const Permissions = React.memo(({ permissions }: Props) => {
   });
 
   return (
-    <Grid container data-testid="parent" direction="column">
-      <StyledTitle>Permissions</StyledTitle>
+    <Box className={styles.noMargin} data-testid="parent" direction="column">
+      <p
+        style={{
+          font: Typography.Label.Bold.S,
+          marginBottom: Spacing.S8,
+        }}
+      >
+        Permissions
+      </p>
       {!permissions.length ? (
-        <Typography>
+        <p>
           This role doesn’t include permissions. Refer to the role description
           to understand what access is granted by this role.
-        </Typography>
+        </p>
       ) : (
         <TruncatedList
           dataTestId="container"
-          listContainerSx={(theme) => ({
-            marginLeft: `-${theme.spacingFunction(6)}`,
-          })}
+          listContainerStyle={{ marginLeft: `-${Spacing.S6}` }}
         >
           {sortedPermissions.map((permission: PermissionType) => (
-            <StyledPermissionItem data-testid="permission" key={permission}>
+            <span
+              data-testid="permission"
+              key={permission}
+              style={{
+                display: 'inline-block',
+                padding: `0px ${Spacing.S6} ${Spacing.S4}`,
+              }}
+            >
               {permission}
-            </StyledPermissionItem>
+            </span>
           ))}
         </TruncatedList>
       )}
-    </Grid>
+    </Box>
   );
 });

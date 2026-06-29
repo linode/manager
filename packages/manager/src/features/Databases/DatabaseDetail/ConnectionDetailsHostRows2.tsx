@@ -1,4 +1,3 @@
-import { Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { ConnectionDetailsHostDisplay } from './ConnectionDetailsHostDisplay';
@@ -33,11 +32,9 @@ export const ConnectionDetailsHostRows2 = (
 
     if (!primaryHost) {
       return (
-        <Typography>
-          <span className={classes.provisioningText}>
-            Your hostname will appear here once it is available.
-          </span>
-        </Typography>
+        <span className={classes.provisioningText}>
+          Your hostname will appear here once it is available.
+        </span>
       );
     }
 

@@ -47,7 +47,7 @@ const PREFERENCE_KEY = 'api-tokens';
 
 export const APITokenTable = (props: Props) => {
   const { title, type } = props;
-  const { isProxyOrDelegateUserType } = useDelegationRole();
+  const { isDelegateUserType } = useDelegationRole();
   const { handleOrderChange, order, orderBy } = useOrderV2({
     initialRoute: {
       defaultOrder: {
@@ -167,7 +167,7 @@ export const APITokenTable = (props: Props) => {
         </TableCell>
         <TableCell actionCell>
           <APITokenMenu
-            isProxyOrDelegateUserType={isProxyOrDelegateUserType}
+            isDelegateUserType={isDelegateUserType}
             isThirdPartyAccessToken={title === 'Third Party Access Tokens'}
             openEditDrawer={openEditDrawer}
             openRevokeDialog={openRevokeDialog}
@@ -200,10 +200,10 @@ export const APITokenTable = (props: Props) => {
         {type === 'Personal Access Token' && (
           <Button
             buttonType="primary"
-            disabled={isProxyOrDelegateUserType}
+            disabled={isDelegateUserType}
             onClick={() => setIsCreateOpen(true)}
             tooltipText={
-              isProxyOrDelegateUserType
+              isDelegateUserType
                 ? DELEGATE_USER_RESTRICTED_TOOLTIP_TEXT
                 : undefined
             }

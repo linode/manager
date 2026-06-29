@@ -8,6 +8,7 @@ import { DEVELOPERS_LINK, FEEDBACK_LINK } from 'src/constants';
 import packageJson from '../../package.json';
 
 export const FOOTER_HEIGHT = 45;
+export const FOOTER_HEIGHT_SM = 81; // height when footer stacks on screens < md (960px)
 
 export const Footer = React.memo(() => {
   return (

@@ -15,7 +15,7 @@ import Request, {
   setXFilter,
 } from '../request';
 
-import type { Filter, ResourcePage as Page, Params, PriceType } from '../types';
+import type { Filter, ResourcePage as Page, Params } from '../types';
 import type {
   AllocateIPPayload,
   CreateIPv6RangePayload,
@@ -27,6 +27,7 @@ import type {
   ReserveIPPayload,
   UpdateIPPayload,
 } from './types';
+import type { PriceType } from '@akamai/compute-ui-core/api';
 
 /**
  * Returns a paginated list of IP Addresses on your Account, excluding private

@@ -28,18 +28,31 @@ vi.mock('@linode/queries', async (importOriginal) => ({
   ...(await importOriginal()),
   useRegionsQuery: vi.fn(() => ({
     data: [
-      ...regionFactory.buildList(1, { id: 'region1', label: 'Newark, NJ' }),
-      ...regionFactory.buildList(1, { id: 'region2', label: 'Atlanta, GA' }),
+      ...regionFactory.buildList(1, {
+        id: 'region1',
+        label: 'Newark, NJ',
+        capabilities: ['Object Storage'],
+      }),
+      ...regionFactory.buildList(1, {
+        id: 'region2',
+        label: 'Atlanta, GA',
+        capabilities: ['Object Storage'],
+      }),
     ],
   })),
+}));
+
+vi.mock('src/queries/object-storage/queries', async (importOriginal) => ({
+  ...(await importOriginal()),
+  useObjectStorageAccessKey: vi.fn(() => ({ data: mockAccessKey })),
 }));
 
 describe('HostNamesDrawer', () => {
   it('renders the drawer with regions and copyable text', () => {
     renderWithTheme(
       <HostNamesDrawer
+        accessKeyId={mockAccessKey.id}
         isOpen={true}
-        objectStorageKey={mockAccessKey}
         onClose={mockOnClose}
       />
     );
@@ -69,8 +82,8 @@ describe('HostNamesDrawer', () => {
   it('calls onClose when the drawer is closed', async () => {
     renderWithTheme(
       <HostNamesDrawer
+        accessKeyId={mockAccessKey.id}
         isOpen={true}
-        objectStorageKey={mockAccessKey}
         onClose={mockOnClose}
       />
     );

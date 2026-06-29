@@ -171,10 +171,7 @@ export const queryFactory = createQueryKeys(key, {
       case 'objectstorage':
         return {
           queryFn: () => getAllBuckets(),
-          queryKey: [
-            ...objectStorageQueries.endpoints.queryKey,
-            objectStorageQueries.buckets.queryKey[1],
-          ],
+          queryKey: [...objectStorageQueries.endpoints.queryKey, 'buckets'],
         };
       case 'volumes':
         return volumeQueries.lists._ctx.all(params, filters); // in this we don't need to define our own query factory, we will reuse existing implementation in volumes.ts
@@ -193,11 +190,11 @@ const getAllBuckets = async () => {
   const endpoints = await getAllObjectStorageEndpoints();
 
   // Get all the buckets from the endpoints
-  const allBuckets = await getAllBucketsFromEndpoints(endpoints, true);
+  const allBuckets = await getAllBucketsFromEndpoints(endpoints);
 
   // Throw the error if we encounter any error for any single call.
   if (allBuckets.errors.length) {
-    const firstError = allBuckets.errors[0]?.error?.[0]; // it is enough to check the first error since if there is an error in any of the endpoint call, we want to throw error and stop the execution.
+    const firstError = allBuckets.errors[0]; // it is enough to check the first error since if there is an error in any of the endpoint call, we want to throw error and stop the execution.
     if (firstError?.reason === 'Unauthorized') {
       throw new Error('Unauthorized');
     }

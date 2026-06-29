@@ -3,9 +3,12 @@ import { IconButton } from '@mui/material';
 import { GridLegacy } from '@mui/material';
 import * as React from 'react';
 
+import DownloadIcon from 'src/assets/icons/lke-download.svg';
 import Reload from 'src/assets/icons/refresh.svg';
+import { useFlags } from 'src/hooks/useFlags';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 
+import { useCloudPulseContext } from '../Context/useCloudPulseContext';
 import { GlobalFilterGroupByRenderer } from '../GroupBy/GlobalFilterGroupByRenderer';
 import { CloudPulseDashboardFilterBuilder } from '../shared/CloudPulseDashboardFilterBuilder';
 import { CloudPulseDashboardSelect } from '../shared/CloudPulseDashboardSelect';
@@ -34,9 +37,12 @@ export interface GlobalFilterProperties {
     dashboard: Dashboard | undefined,
     skipReset?: boolean
   ): void;
+  handleDownloadPDF: () => void;
   handleGroupByChange: (selectedValues: string[]) => void;
   handleTimeDurationChange(timeDuration: DateTimeWithPreset): void;
   handleToggleAppliedFilter(isVisible: boolean): void;
+  isDownloadingPdf?: boolean;
+  isMandatoryFiltersSelected?: boolean;
 }
 
 export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
@@ -46,7 +52,12 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
     handleTimeDurationChange,
     handleToggleAppliedFilter,
     handleGroupByChange,
+    handleDownloadPDF,
+    isDownloadingPdf = false,
+    isMandatoryFiltersSelected = false,
   } = props;
+
+  const flags = useFlags();
 
   const { preferences, updateGlobalFilterPreference: updatePreferences } =
     useAclpPreference();
@@ -123,6 +134,8 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
     []
   );
 
+  const { isWidgetLoading } = useCloudPulseContext();
+
   const isUnAuthorizedError =
     isError &&
     ((error instanceof Error && error.message === 'Unauthorized') ||
@@ -174,6 +187,29 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
                 <Reload height="24px" width="24px" />
               </IconButton>
             </CloudPulseTooltip>
+            {flags.aclp?.enablePDFDownload && (
+              <CloudPulseTooltip placement="bottom-end" title="Download PDF">
+                <IconButton
+                  aria-label="Download Dashboard PDF"
+                  color="inherit"
+                  data-testid="global-download-pdf"
+                  disabled={
+                    !selectedDashboard ||
+                    isWidgetLoading ||
+                    !isMandatoryFiltersSelected
+                  }
+                  loading={isDownloadingPdf}
+                  onClick={handleDownloadPDF}
+                  size="small"
+                  sx={(theme) => ({
+                    marginBlockEnd: 'auto',
+                    marginTop: { md: theme.spacingFunction(28) },
+                  })}
+                >
+                  <DownloadIcon height="24px" width="24px" />
+                </IconButton>
+              </CloudPulseTooltip>
+            )}
             <GlobalFilterGroupByRenderer
               handleChange={onGroupByChange}
               preferenceGroupBy={preferences?.[GROUP_BY]}

@@ -3,18 +3,14 @@ import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { vi } from 'vitest';
 
-import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
-
+import {
+  mockMatchMedia,
+  renderWithProviders,
+  submitCdsDrawerForm,
+} from '../utilities/testHelpers';
 import { UpdateDelegationForm } from './UpdateDelegationForm';
 
 import type { ChildAccountWithDelegates, User } from '@linode/api-v4';
-
-// Remove the debounce delay so filter changes take effect synchronously.
-vi.mock('@linode/utilities', async () => {
-  const actual = await vi.importActual('@linode/utilities');
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return { ...actual, useDebouncedValue: (value: any) => value };
-});
 
 beforeAll(() => mockMatchMedia());
 
@@ -107,7 +103,7 @@ describe('UpdateDelegationsDrawer', () => {
   });
 
   it('renders the drawer with current delegates', () => {
-    renderWithTheme(<UpdateDelegationForm {...defaultProps} />);
+    renderWithProviders(<UpdateDelegationForm {...defaultProps} />);
 
     expect(screen.getByText(/test company/i)).toBeInTheDocument();
     // user1 is returned by the mocked API and appears as a table row
@@ -115,15 +111,14 @@ describe('UpdateDelegationsDrawer', () => {
   });
 
   it('allows adding a new delegate', async () => {
-    renderWithTheme(<UpdateDelegationForm {...defaultProps} />);
+    renderWithProviders(<UpdateDelegationForm {...defaultProps} />);
 
     const user = userEvent.setup();
 
     // user2 is in the table (from API), click its row to select it
     await user.click(screen.getByText('user2'));
 
-    const submitButton = screen.getByRole('button', { name: /save changes/i });
-    await user.click(submitButton);
+    submitCdsDrawerForm();
 
     await waitFor(() => {
       expect(mocks.mockMutateAsync).toHaveBeenCalledWith({
@@ -134,15 +129,14 @@ describe('UpdateDelegationsDrawer', () => {
   });
 
   it('allows sending an empty payload', async () => {
-    renderWithTheme(<UpdateDelegationForm {...defaultProps} />);
+    renderWithProviders(<UpdateDelegationForm {...defaultProps} />);
 
     const user = userEvent.setup();
 
     // user1 is pre-selected; click its row to deselect it
     await user.click(screen.getByText('user1'));
 
-    const submitButton = screen.getByRole('button', { name: /save changes/i });
-    await user.click(submitButton);
+    submitCdsDrawerForm();
 
     await waitFor(() => {
       expect(mocks.mockMutateAsync).toHaveBeenCalledWith({
@@ -153,7 +147,7 @@ describe('UpdateDelegationsDrawer', () => {
   });
 
   it('filters selected users by search text when the toggle is active', async () => {
-    const { container } = renderWithTheme(
+    const { container } = renderWithProviders(
       <UpdateDelegationForm
         {...defaultProps}
         formattedCurrentUsers={[
@@ -190,7 +184,7 @@ describe('UpdateDelegationsDrawer', () => {
   });
 
   it('deactivates the toggle when "Clear all" empties the selection', async () => {
-    const { container } = renderWithTheme(
+    const { container } = renderWithProviders(
       <UpdateDelegationForm {...defaultProps} />
     );
 

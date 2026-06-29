@@ -150,7 +150,7 @@ export const createNodeBalancerConfigNode = (
  * Creates a NodeBalancer Node, a backend that can accept traffic for
  * this NodeBalancer Config. Nodes are routed requests on the configured port based on their status.
  *
- * Note: The BETA version accepts a Node's VPC IP address and subnet-id
+ * Note: The BETA version accepts a Node's IPv6 addresses
  *
  * @param nodeBalancerId { number } The ID of the NodeBalancer the config belongs to.
  * @param configId { number } The configuration profile to add a node to.
@@ -217,7 +217,7 @@ export const updateNodeBalancerConfigNode = (
  *
  * Updates a backend node for the specified NodeBalancer configuration profile.
  *
- * Note: The BETA version accepts a Node's VPC IP address and subnet-id
+ * Note: The BETA version accepts a Node's IPv6 addresses
  *
  * @param nodeBalancerId { number } The ID of the NodeBalancer the config belongs to.
  * @param configId { number } The configuration profile to add a node to.

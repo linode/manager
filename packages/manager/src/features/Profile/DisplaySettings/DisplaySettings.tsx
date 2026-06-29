@@ -10,7 +10,7 @@ import { TimezoneForm } from './TimezoneForm';
 import { UsernameForm } from './UsernameForm';
 
 export const DisplaySettings = () => {
-  const { isProxyOrDelegateUserType } = useDelegationRole();
+  const { isDelegateUserType } = useDelegationRole();
 
   return (
     <>
@@ -20,7 +20,7 @@ export const DisplaySettings = () => {
           divider={<Divider spacingBottom={0} spacingTop={0} />}
           spacing={3}
         >
-          {!isProxyOrDelegateUserType && <AvatarForm />}
+          {!isDelegateUserType && <AvatarForm />}
           <UsernameForm />
           <EmailForm />
           <TimezoneForm />

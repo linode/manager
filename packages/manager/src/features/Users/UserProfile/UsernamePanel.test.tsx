@@ -16,10 +16,10 @@ describe('UsernamePanel', () => {
     expect(usernameTextField).toHaveDisplayValue(user.username);
   });
 
-  it("does not allow the user to update a proxy user's username", async () => {
+  it("does not allow the user to update a delegate user's username", async () => {
     const user = accountUserFactory.build({
-      user_type: 'proxy',
-      username: 'proxy-user-1',
+      user_type: 'delegate',
+      username: 'delegate-user-1',
     });
 
     const { getByLabelText, getByText } = renderWithTheme(
@@ -29,7 +29,7 @@ describe('UsernamePanel', () => {
     const warning = getByLabelText('This field can’t be modified.');
 
     // Verify there is a tooltip explaining that the user can't change
-    // a proxy user's username.
+    // a delegate user's username.
     expect(warning).toBeInTheDocument();
 
     // Verify the input is disabled

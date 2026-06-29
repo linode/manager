@@ -6,7 +6,7 @@
  */
 import * as React from 'react';
 
-import type { CategoricalChartState } from 'recharts/types/chart/types';
+import type { MouseHandlerDataParam } from 'recharts';
 
 export type ZoomState = {
   /**
@@ -41,35 +41,39 @@ export const useZoomController = (zoomResetKey: string) => {
   const dragStartRef = React.useRef<null | number>(null); // Tracks the timestamp where the drag started
   const isDraggingRef = React.useRef(false); // Tracks if dragging is in progress
 
-  const onMouseDown = React.useCallback((e: CategoricalChartState) => {
-    const payload = e?.activePayload?.[0]?.payload;
-    if (payload?.timestamp === undefined) return;
+  const onMouseDown = React.useCallback((e: MouseHandlerDataParam) => {
+    // activeLabel contains the raw X-Axis dataKey value.
+    // Assuming <XAxis dataKey="timestamp" />, this is your timestamp.
+    const currentTimestamp = e?.activeLabel;
 
-    // set the drag start timestamp
-    dragStartRef.current = payload.timestamp;
+    // Type narrowing: ensures it is a number and satisfies TS perfectly
+    if (typeof currentTimestamp !== 'number') return;
+
+    dragStartRef.current = currentTimestamp;
     isDraggingRef.current = false;
   }, []);
 
-  const onMouseMove = React.useCallback((e: CategoricalChartState) => {
+  const onMouseMove = React.useCallback((e: MouseHandlerDataParam) => {
     const dragStart = dragStartRef.current;
     if (dragStart === null) return;
 
-    const payload = e?.activePayload?.[0]?.payload;
-    if (payload?.timestamp === undefined) return;
+    const currentTimestamp = e?.activeLabel;
+    if (typeof currentTimestamp !== 'number') return;
 
     if (!isDraggingRef.current) {
       isDraggingRef.current = true;
       setZoom((prev) => ({
         ...prev,
         refAreaLeft: dragStart,
-        refAreaRight: payload.timestamp, // Set initial right to show drag
+        // currentTimestamp is strictly narrowed to a number here
+        refAreaRight: currentTimestamp,
       }));
       return;
     }
 
     setZoom((prev) => ({
       ...prev,
-      refAreaRight: payload.timestamp, // Set initial right to show drag
+      refAreaRight: currentTimestamp,
     }));
   }, []);
 
@@ -79,7 +83,7 @@ export const useZoomController = (zoomResetKey: string) => {
       return;
     }
 
-    isDraggingRef.current = false; // Reset dragging state on completion
+    isDraggingRef.current = false;
 
     setZoom((prev) => {
       if (
@@ -94,10 +98,11 @@ export const useZoomController = (zoomResetKey: string) => {
         };
       }
 
+      // Handle reverse drag
       const [from, to] =
         prev.refAreaLeft < prev.refAreaRight
           ? [prev.refAreaLeft, prev.refAreaRight]
-          : [prev.refAreaRight, prev.refAreaLeft]; // Handle reverse drag
+          : [prev.refAreaRight, prev.refAreaLeft];
 
       return {
         ...prev,

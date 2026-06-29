@@ -1,3 +1,4 @@
+import { getAPIErrorOrDefault } from '@akamai/compute-ui-core/api';
 import {
   createDomainRecord,
   updateDomainRecord,
@@ -6,8 +7,6 @@ import { ActionsPanel, Drawer, Notice } from '@linode/ui';
 import { scrollErrorIntoViewV2 } from '@linode/utilities';
 import * as React from 'react';
 import { useForm } from 'react-hook-form';
-
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { isValidCNAME, isValidDomainRecord } from '../../domainUtils';
 import {

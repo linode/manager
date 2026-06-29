@@ -5,6 +5,7 @@ import {
   useMutation,
   useQuery,
   useQueryClient,
+  type UseQueryResult,
 } from '@tanstack/react-query';
 
 import { delegationQueries } from '../iam/delegation';
@@ -169,7 +170,7 @@ export const useAllAccountUsersQuery = (
   enabled: boolean = true,
   filters: Filter = {},
   params: Params = {},
-) => {
+): UseQueryResult<User[], APIError[]> => {
   return useQuery<User[], APIError[]>({
     ...accountQueries.users._ctx.all(params, filters),
     enabled,

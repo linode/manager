@@ -47,16 +47,7 @@ interface PlansByType<T> extends Omit<PlansTypes<T>, 'nanode' | 'standard'> {
 export const planTypeOrder: (
   | 'shared'
   | Exclude<LinodeTypeClass, 'nanode' | 'standard'>
-)[] = [
-  'prodedicated',
-  'dedicated',
-  'shared',
-  'highmem',
-  'gpu',
-  'metal',
-  'premium',
-  'accelerated',
-];
+)[] = ['dedicated', 'shared', 'highmem', 'gpu', 'premium', 'accelerated'];
 
 export const useIsAcceleratedPlansEnabled = () => {
   const flags = useFlags();

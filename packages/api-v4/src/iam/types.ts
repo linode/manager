@@ -13,6 +13,8 @@ export type AccountRoleType =
   | 'account_event_viewer'
   | 'account_firewall_admin'
   | 'account_firewall_creator'
+  | 'account_idp_admin'
+  | 'account_idp_viewer'
   | 'account_image_creator'
   | 'account_ip_admin'
   | 'account_ip_viewer'
@@ -137,6 +139,7 @@ export type AccountAdmin =
   | AccountBillingAdmin
   | AccountEventViewer
   | AccountFirewallAdmin
+  | AccountIDPAdmin
   | AccountImageAdmin
   | AccountLinodeAdmin
   | AccountMaintenanceViewer
@@ -213,6 +216,25 @@ export type AccountImageCreator =
   | 'create_image'
   | 'list_images'
   | 'upload_image';
+
+/** Permissions associated with the "account_idp_admin" role. */
+export type AccountIDPAdmin =
+  | 'create_idp_config'
+  | 'create_idp_config_cert'
+  | 'delete_idp_config'
+  | 'delete_idp_config_cert'
+  | 'update_idp_config'
+  | 'update_idp_config_user_excludes'
+  | 'update_idp_config_user_includes'
+  | AccountIDPViewer;
+
+/** Permissions associated with the "account_idp_viewer" role. */
+export type AccountIDPViewer =
+  | 'list_idp_configs'
+  | 'view_idp_config'
+  | 'view_idp_config_certs'
+  | 'view_idp_config_user_excludes'
+  | 'view_idp_config_user_includes';
 
 /** Permissions associated with the "account_maintenance_viewer" role. */
 export type AccountMaintenanceViewer = 'list_maintenances';

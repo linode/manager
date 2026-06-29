@@ -8,9 +8,49 @@ import React from 'react';
 import { firewallFactory, firewallSettingsFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
+import { useComputePricing } from 'src/utilities/pricing/useComputePricing';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { AddInterfaceForm } from './AddInterfaceForm';
+
+import type { PriceObject } from '@linode/api-v4';
+
+vi.mock('src/utilities/pricing/useComputePricing', () => ({
+  useComputePricing: vi.fn(() => ({
+    billing: 'monthly' as const,
+    formatPrice: (p: null | PriceObject | undefined) =>
+      String(p?.monthly ?? '--.--'),
+    getBillingForPlanType: vi.fn(() => 'monthly' as const),
+    getPrice: (p: null | PriceObject | undefined) => p?.monthly ?? '--.--',
+    getPriceSubheading: vi.fn(),
+    hasHourlyEligiblePlans: () => false,
+    priceLabel: 'month',
+  })),
+}));
+
+const mockHourlyBilling = () =>
+  vi.mocked(useComputePricing).mockReturnValue({
+    billing: 'hourly',
+    formatPrice: (p: null | PriceObject | undefined) =>
+      String(p?.hourly ?? '--.--'),
+    getBillingForPlanType: vi.fn(() => 'hourly' as const),
+    getPrice: (p: null | PriceObject | undefined) => p?.hourly ?? '--.--',
+    getPriceSubheading: vi.fn(),
+    hasHourlyEligiblePlans: () => true,
+    priceLabel: 'hour',
+  });
+
+const mockMonthlyBilling = () =>
+  vi.mocked(useComputePricing).mockReturnValue({
+    billing: 'monthly',
+    formatPrice: (p: null | PriceObject | undefined) =>
+      String(p?.monthly ?? '--.--'),
+    getBillingForPlanType: vi.fn(() => 'monthly' as const),
+    getPrice: (p: null | PriceObject | undefined) => p?.monthly ?? '--.--',
+    getPriceSubheading: vi.fn(),
+    hasHourlyEligiblePlans: () => false,
+    priceLabel: 'month',
+  });
 
 const props = { linodeId: 0, onClose: vi.fn(), regionId: '' };
 
@@ -261,4 +301,58 @@ describe('AddInterfaceForm', () => {
 
     expect(getByRole('radio', { name: 'Public' })).toBeDisabled();
   });
+
+  // The warning appears in two situations:
+  //   1. VPC exists -> user selects Public
+  //   2. Public exists -> user selects VPC
+  it.each([
+    {
+      existingFactory: linodeInterfaceFactoryVPC,
+      radioToClick: 'Public',
+      billing: 'monthly' as const,
+      expectedCopy: /will incur an additional monthly charge/i,
+    },
+    {
+      existingFactory: linodeInterfaceFactoryVPC,
+      radioToClick: 'Public',
+      billing: 'hourly' as const,
+      expectedCopy: /will incur an additional hourly charge/i,
+    },
+    {
+      existingFactory: linodeInterfaceFactoryPublic,
+      radioToClick: 'VPC',
+      billing: 'monthly' as const,
+      expectedCopy: /will incur an additional monthly charge/i,
+    },
+    {
+      existingFactory: linodeInterfaceFactoryPublic,
+      radioToClick: 'VPC',
+      billing: 'hourly' as const,
+      expectedCopy: /will incur an additional hourly charge/i,
+    },
+  ])(
+    'shows "$billing charge" in warning when $radioToClick is selected ($billing billing)',
+    async ({ existingFactory, radioToClick, billing, expectedCopy }) => {
+      if (billing === 'hourly') {
+        mockHourlyBilling();
+      } else {
+        mockMonthlyBilling();
+      }
+
+      server.use(
+        http.get('*/linode/instances/:linodeId/interfaces', () => {
+          return HttpResponse.json({ interfaces: [existingFactory.build()] });
+        })
+      );
+
+      const { getByRole, findByRole, getByText } = renderWithTheme(
+        <AddInterfaceForm {...props} />
+      );
+
+      await findByRole('radio', { name: radioToClick });
+      await userEvent.click(getByRole('radio', { name: radioToClick }));
+
+      expect(getByText(expectedCopy)).toBeVisible();
+    }
+  );
 });

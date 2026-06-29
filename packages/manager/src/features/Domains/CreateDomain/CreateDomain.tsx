@@ -1,4 +1,9 @@
 import {
+  extendedIPToString,
+  getErrorMap,
+  stringToExtendedIP,
+} from '@akamai/compute-ui-core/api';
+import {
   useCreateDomainMutation,
   useGrants,
   useProfile,
@@ -29,16 +34,15 @@ import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput'
 import { reportException } from 'src/exceptionReporting';
 import { NodeBalancerSelect } from 'src/features/NodeBalancers/NodeBalancerSelect';
 import { sendCreateDomainEvent } from 'src/utilities/analytics/customEventAnalytics';
-import { getErrorMap } from 'src/utilities/errorUtils';
 import {
   handleFieldErrors,
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
 import { handleFormikBlur } from 'src/utilities/formikTrimUtil';
-import { extendedIPToString, stringToExtendedIP } from 'src/utilities/ipUtils';
 
 import { generateDefaultDomainRecords } from '../domainUtils';
 
+import type { ExtendedIP } from '@akamai/compute-ui-core/api';
 import type { Linode } from '@linode/api-v4';
 import type {
   CreateDomainPayload,
@@ -48,7 +52,6 @@ import type {
 import type { NodeBalancer } from '@linode/api-v4/lib/nodebalancers';
 import type { APIError } from '@linode/api-v4/lib/types';
 import type { DomainState } from 'src/routes/domains';
-import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 interface DefaultRecordsSetting {
   label: string;

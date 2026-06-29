@@ -1,0 +1,7 @@
+.engineIconWrapper {
+  padding-top: 5.6px;
+  svg {
+    height: 20px;
+    width: 20px;
+  }
+}

@@ -231,7 +231,7 @@ export const SHAREGROUPS_CONFIG: Record<
     },
     buttonProps: {
       buttonText: 'Request membership',
-      navigateTo: '/images/share-groups/membership-requests',
+      navigateTo: '/images/share-groups/membership-requests/request',
       disabledToolTipText:
         'You do not have permissions to request share group memberships',
       pendoId:

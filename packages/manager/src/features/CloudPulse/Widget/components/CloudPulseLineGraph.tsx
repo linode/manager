@@ -11,6 +11,7 @@ import {
   computeZoomedInData,
 } from '../../Utils/CloudPulseZoomInUtils';
 import { humanizeLargeData } from '../../Utils/utils';
+import { useTooltipPositioning } from './useTooltipPositioning';
 import { useZoomController } from './useZoomController';
 
 import type {
@@ -22,11 +23,13 @@ export interface CloudPulseLineGraph extends AreaChartProps {
   data: DataSet[];
   error?: string;
   loading?: boolean;
+  onHiddenAreasChange?: (hiddenKeys: string[]) => void;
   onZoomChange?: (
     isZoomed: boolean,
     left: 'dataMin' | number,
     right: 'dataMax' | number
   ) => void;
+  widgetLabel: string;
   zoomResetKey: string;
 }
 
@@ -40,6 +43,8 @@ export const CloudPulseLineGraph = React.memo((props: CloudPulseLineGraph) => {
     zoomResetKey,
     onZoomChange,
     showLegend,
+    widgetLabel,
+    onHiddenAreasChange,
     ...rest
   } = props;
   const flags = useFlags();
@@ -56,12 +61,20 @@ export const CloudPulseLineGraph = React.memo((props: CloudPulseLineGraph) => {
 
   const isZoomEnabled = flags.aclp?.enableZoomInCharts ?? false; // default to false
 
+  const isMobileOrTablet = useMediaQuery(theme.breakpoints.down('md')); // no need to enable dynamic tooltip positioning on mobile and tablets
+
   const {
     zoom,
     isZoomed,
     zoomOut: resetZoom,
     zoomCallbacks,
   } = useZoomController(zoomResetKey);
+
+  const { tooltipPos, handleMouseMove, chartContainerRef, tooltipRef } =
+    useTooltipPositioning(
+      isZoomEnabled ? zoomCallbacks?.onMouseMove : undefined,
+      isMobileOrTablet
+    );
 
   const zoomedData = React.useMemo(() => {
     if (!isZoomEnabled) {
@@ -121,6 +134,7 @@ export const CloudPulseLineGraph = React.memo((props: CloudPulseLineGraph) => {
           {isZoomed && (
             <Button
               buttonType="primary"
+              data-pendo-id={`cloudpulse-widget-reset-zoomin-${widgetLabel}`}
               data-qa-buttons
               onClick={resetZoom}
               sx={(theme) => ({
@@ -136,6 +150,7 @@ export const CloudPulseLineGraph = React.memo((props: CloudPulseLineGraph) => {
           )}
           <AreaChart
             {...rest}
+            chartContainerRef={chartContainerRef}
             data={zoomedData}
             fillOpacity={0.5}
             legendHeight="165px"
@@ -146,6 +161,7 @@ export const CloudPulseLineGraph = React.memo((props: CloudPulseLineGraph) => {
               right: 30,
               top: 2,
             }}
+            onHiddenAreasChange={onHiddenAreasChange}
             referenceArea={
               zoom.refAreaLeft !== undefined && zoom.refAreaRight !== undefined
                 ? {
@@ -160,6 +176,8 @@ export const CloudPulseLineGraph = React.memo((props: CloudPulseLineGraph) => {
                 ? (value, unit) => `${humanizeLargeData(value)} ${unit}`
                 : undefined
             }
+            tooltipPosition={tooltipPos}
+            tooltipRef={tooltipRef}
             unit={unit}
             xAxisTickCount={
               isSmallScreen ? undefined : Math.min(zoomedData.length, 7)
@@ -174,7 +192,16 @@ export const CloudPulseLineGraph = React.memo((props: CloudPulseLineGraph) => {
                     tickFormat: (value: number) => `${roundTo(value, 3)}`,
                   }
             }
-            zoomCallbacks={isZoomEnabled ? zoomCallbacks : undefined}
+            zoomCallbacks={
+              isZoomEnabled
+                ? {
+                    ...zoomCallbacks,
+                    onMouseMove: handleMouseMove,
+                  }
+                : {
+                    onMouseMove: handleMouseMove,
+                  }
+            }
           />
         </Box>
       )}

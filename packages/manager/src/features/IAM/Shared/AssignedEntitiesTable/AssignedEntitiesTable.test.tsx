@@ -2,19 +2,33 @@ import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
-import { accountEntityFactory } from 'src/factories/accountEntities';
-import { userRolesFactory } from 'src/factories/userRoles';
-import { renderWithTheme } from 'src/utilities/testHelpers';
-
+import { createAccountEntity, createUserRoles } from '../../factories';
 import { AssignedEntitiesTable } from '../../Shared/AssignedEntitiesTable/AssignedEntitiesTable';
+import {
+  mockMatchMedia,
+  renderWithProviders,
+} from '../../utilities/testHelpers';
+
+vi.mock('src/OAuth/oauthClient', () => ({
+  getIsAdminToken: vi.fn(),
+  oauthClient: {},
+}));
 
 const queryMocks = vi.hoisted(() => ({
   useAllAccountEntities: vi.fn().mockReturnValue({}),
+  useIsDefaultDelegationRolesForChildAccount: vi
+    .fn()
+    .mockReturnValue({ isDefaultDelegationRolesForChildAccount: false }),
   useParams: vi.fn().mockReturnValue({}),
+  usePermissions: vi.fn().mockReturnValue({
+    data: { is_account_admin: true, list_entities: true },
+  }),
   useSearch: vi.fn().mockReturnValue({}),
   useNavigate: vi.fn(() => vi.fn()),
   useUserRoles: vi.fn().mockReturnValue({}),
 }));
+
+beforeAll(() => mockMatchMedia());
 
 vi.mock('@linode/queries', async () => {
   const actual = await vi.importActual<any>('@linode/queries');
@@ -32,6 +46,19 @@ vi.mock('src/queries/entities/entities', async () => {
   };
 });
 
+vi.mock('src/features/IAM/hooks/useDelegationRole', () => ({
+  useIsDefaultDelegationRolesForChildAccount:
+    queryMocks.useIsDefaultDelegationRolesForChildAccount,
+}));
+
+vi.mock('src/features/IAM/hooks/usePermissions', async () => {
+  const actual = await vi.importActual('src/features/IAM/hooks/usePermissions');
+  return {
+    ...actual,
+    usePermissions: queryMocks.usePermissions,
+  };
+});
+
 vi.mock('@tanstack/react-router', async () => {
   const actual = await vi.importActual('@tanstack/react-router');
   return {
@@ -43,7 +70,7 @@ vi.mock('@tanstack/react-router', async () => {
 });
 
 const mockEntities = [
-  accountEntityFactory.build({
+  createAccountEntity({
     id: 1,
     label: 'no_devices',
     type: 'firewall',
@@ -65,21 +92,21 @@ describe('AssignedEntitiesTable', () => {
       data: {},
     });
 
-    renderWithTheme(<AssignedEntitiesTable />);
+    renderWithProviders(<AssignedEntitiesTable />);
 
     expect(screen.getByText('No items to display.')).toBeVisible();
   });
 
   it('should display roles and menu when data is available', async () => {
     queryMocks.useUserRoles.mockReturnValue({
-      data: userRolesFactory.build(),
+      data: createUserRoles(),
     });
 
     queryMocks.useAllAccountEntities.mockReturnValue({
       data: mockEntities,
     });
 
-    renderWithTheme(<AssignedEntitiesTable />);
+    renderWithProviders(<AssignedEntitiesTable />);
 
     expect(screen.getByText('no_devices')).toBeVisible();
     expect(screen.getByText('Firewall')).toBeVisible();
@@ -91,13 +118,13 @@ describe('AssignedEntitiesTable', () => {
     expect(actionMenuButton).toBeVisible();
 
     await userEvent.click(actionMenuButton);
-    expect(screen.getByText('Change Role')).toBeVisible();
-    expect(screen.getByText('Remove Assignment')).toBeVisible();
+    expect(screen.getByTestId('Change Role')).toBeVisible();
+    expect(screen.getByTestId('Remove Assignment')).toBeVisible();
   });
 
   it('should display empty state when no roles match filters', async () => {
     queryMocks.useUserRoles.mockReturnValue({
-      data: userRolesFactory.build(),
+      data: createUserRoles(),
     });
 
     queryMocks.useAllAccountEntities.mockReturnValue({
@@ -106,24 +133,29 @@ describe('AssignedEntitiesTable', () => {
 
     queryMocks.useSearch.mockReturnValue({ query: 'NonExistentRole' });
 
-    renderWithTheme(<AssignedEntitiesTable />);
+    renderWithProviders(<AssignedEntitiesTable />);
 
     expect(screen.getByText('No items to display.')).toBeVisible();
   });
 
   it('should filter roles based on search query', async () => {
     queryMocks.useUserRoles.mockReturnValue({
-      data: userRolesFactory.build(),
+      data: createUserRoles(),
     });
 
     queryMocks.useAllAccountEntities.mockReturnValue({
       data: mockEntities,
     });
 
-    renderWithTheme(<AssignedEntitiesTable />);
+    const { container } = renderWithProviders(<AssignedEntitiesTable />);
 
-    const searchInput = screen.getByPlaceholderText('Search');
-    await userEvent.type(searchInput, 'no_devices');
+    const searchField = container.querySelector('cds-search-field');
+    searchField!.dispatchEvent(
+      new CustomEvent('change', {
+        bubbles: true,
+        detail: { value: 'no_devices' },
+      })
+    );
 
     await waitFor(() => {
       expect(screen.queryByText('no_devices')).toBeVisible();
@@ -132,14 +164,16 @@ describe('AssignedEntitiesTable', () => {
 
   it('should filter roles based on selected resource type', async () => {
     queryMocks.useUserRoles.mockReturnValue({
-      data: userRolesFactory.build(),
+      data: createUserRoles(),
     });
 
     queryMocks.useAllAccountEntities.mockReturnValue({
       data: mockEntities,
     });
 
-    const { container, rerender } = renderWithTheme(<AssignedEntitiesTable />);
+    const { container, rerender } = renderWithProviders(
+      <AssignedEntitiesTable />
+    );
 
     const cdsSelect = container.querySelector('cds-select');
     expect(cdsSelect).not.toBeNull();

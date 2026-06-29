@@ -8,7 +8,8 @@ import {
   useIsReserveIpEnabled,
 } from './utils';
 
-import type { IPAddress, PriceType } from '@linode/api-v4';
+import type { PriceType } from '@akamai/compute-ui-core/api';
+import type { IPAddress } from '@linode/api-v4';
 
 describe('useIsReserveIpEnabled', () => {
   it('returns true if the feature is enabled', async () => {

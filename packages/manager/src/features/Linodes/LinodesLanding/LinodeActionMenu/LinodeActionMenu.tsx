@@ -58,7 +58,6 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
   const navigate = useNavigate();
   const flags = useFlags();
   const regions = useRegionsQuery().data ?? [];
-  const isBareMetalInstance = linodeType?.class === 'metal';
   const hasHostMaintenance = linodeStatus === 'stopped';
   const [isOpen, setIsOpen] = React.useState<boolean>(false);
 
@@ -156,7 +155,7 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
         : undefined,
     },
     {
-      condition: !isBareMetalInstance,
+      condition: true,
       disabled:
         !permissions.clone_linode ||
         !accountPermissions.create_linode ||
@@ -187,7 +186,7 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
             : undefined,
     },
     {
-      condition: !isBareMetalInstance,
+      condition: true,
       disabled: !permissions.resize_linode || hasHostMaintenance || isMTCLinode,
       isReadOnly: !permissions.resize_linode,
       onClick: props.onOpenResizeDialog,
@@ -228,7 +227,7 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
           : undefined,
     },
     {
-      condition: !isBareMetalInstance,
+      condition: true,
       disabled: !permissions.migrate_linode || hasHostMaintenance,
       isReadOnly: !permissions.migrate_linode,
       onClick: () => {

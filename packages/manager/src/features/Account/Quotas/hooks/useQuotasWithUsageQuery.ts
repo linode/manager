@@ -102,6 +102,9 @@ export const useQuotasWithUsageQuery = ({
             quota: transformedQuota,
             hasUsage: Boolean(quotaUsageQuery),
             usage: quotaUsageQuery?.data?.usage ?? null,
+            usageLink: scopeDefinition.usageLinkFunction
+              ? scopeDefinition.usageLinkFunction(quota)
+              : null,
             isFetchingUsage: quotaUsageQuery?.isFetching ?? false,
             fetchingUsageFailed: quotaUsageQuery?.isError ?? false,
             usageFetchErrorMessage: quotaUsageQuery?.error?.[0]?.reason ?? null,

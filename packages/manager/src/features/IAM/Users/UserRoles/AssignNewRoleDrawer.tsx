@@ -1,5 +1,6 @@
+import { toast } from '@akamai/cds-components/notification-toast';
 import { Button, NotificationBanner } from '@akamai/cds-components/react';
-import { Spacing } from '@akamai/cds-tokens';
+import { Spacing, Typography } from '@akamai/cds-tokens';
 import {
   delegationQueries,
   iamQueries,
@@ -8,22 +9,20 @@ import {
   useUpdateDefaultDelegationAccessQuery,
   useUserRolesMutation,
 } from '@linode/queries';
-import { ActionsPanel, Drawer, Typography } from '@linode/ui';
-import { useTheme } from '@mui/material';
-import Grid from '@mui/material/Grid';
 import { useParams } from '@tanstack/react-router';
-import { enqueueSnackbar } from 'notistack';
 import React, { useEffect, useState } from 'react';
 import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
 
-import { AssignSingleRole } from 'src/features/IAM/Users/UserRoles/AssignSingleRole';
-
+import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { useIsDefaultDelegationRolesForChildAccount } from '../../hooks/useDelegationRole';
+import { Box } from '../../Shared/Box/Box';
 import {
   IAM_ROLES_PENDO_IDS,
   INTERNAL_ERROR_NO_CHANGES_SAVED,
   ROLES_LEARN_MORE_LINK,
 } from '../../Shared/constants';
+import { Drawer, DrawerInlineActions } from '../../Shared/Drawer';
+import styles from '../../Shared/global.module.css';
 import { Link } from '../../Shared/Link/Link';
 import {
   getAllRoles,
@@ -31,6 +30,7 @@ import {
   isEntityRole,
   mergeAssignedRolesIntoExistingRoles,
 } from '../../Shared/utilities';
+import { AssignSingleRole } from '../UserRoles/AssignSingleRole';
 
 import type { AssignNewRoleFormValues } from '../../Shared/utilities';
 import type { IamUserRoles } from '@linode/api-v4';
@@ -46,7 +46,6 @@ export const AssignNewRoleDrawer = ({
   onClose,
   open,
 }: Props) => {
-  const theme = useTheme();
   const queryClient = useQueryClient();
   const { username } = useParams({ strict: false });
   const { data: accountRoles } = useAccountRoles();
@@ -62,6 +61,7 @@ export const AssignNewRoleDrawer = ({
       ],
     },
   });
+  const isSMUp = useBreakpoint('up', 'sm');
 
   const { control, handleSubmit, reset, watch, formState, setError } = form;
   const { append, fields, remove } = useFieldArray({
@@ -124,7 +124,10 @@ export const AssignNewRoleDrawer = ({
         );
         await updateUserRoles(mergedRoles);
       }
-      enqueueSnackbar(`Roles added.`, { variant: 'success' });
+      toast.open({
+        text: 'Roles added.',
+        type: 'success',
+      });
       handleClose();
     } catch (error) {
       setError(error.field ?? 'root', {
@@ -146,26 +149,21 @@ export const AssignNewRoleDrawer = ({
     }
   }, [open, reset]);
 
+  const drawerTitle = isDefaultDelegationRolesForChildAccount
+    ? 'Add New Default Roles'
+    : 'Assign New Roles';
+
   return (
     <Drawer
+      className={styles.noMargin}
       onClose={handleClose}
       open={open}
-      slotProps={{
-        paper: {
-          sx: {
-            maxWidth: { xs: '100% !important', sm: '600px !important' },
-          },
-        },
-      }}
-      title={
-        isDefaultDelegationRolesForChildAccount
-          ? 'Add New Default Roles'
-          : 'Assign New Roles'
-      }
-      wide
+      title={drawerTitle}
+      width={isSMUp ? '600px' : '100%'}
     >
+      <div slot="header">{drawerTitle}</div>
       <FormProvider {...form}>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit)} slot="body">
           {formState.errors.root?.message && (
             <NotificationBanner
               text={formState.errors.root?.message}
@@ -173,7 +171,7 @@ export const AssignNewRoleDrawer = ({
             />
           )}
 
-          <Typography sx={{ marginBottom: 2.5 }}>
+          <p style={{ marginBottom: Spacing.S20, marginTop: Spacing.S0 }}>
             {isDefaultDelegationRolesForChildAccount
               ? 'Add a role you want to assign by default to new delegate users. Some roles require selecting entities they should apply to. Configure the first role and continue adding roles or save the assignment.'
               : 'Select a role you want to assign to a user. Some roles require selecting entities they should apply to. Configure the first role and continue adding roles or save the assignment.'}{' '}
@@ -181,17 +179,15 @@ export const AssignNewRoleDrawer = ({
               Learn more about roles and permissions
             </Link>
             .
-          </Typography>
-          <Grid
-            container
+          </p>
+          <Box
             direction="row"
-            spacing={2}
-            sx={() => ({
+            style={{
               justifyContent: 'space-between',
-              marginBottom: theme.tokens.spacing.S16,
-            })}
+              marginBottom: Spacing.S16,
+            }}
           >
-            <Typography variant={'h3'}>Roles</Typography>
+            <h3 style={{ font: Typography.Heading.S }}>Roles</h3>
             {roles.length > 0 && roles.some((field) => field.role) && (
               <Button
                 onClick={() => setAreDetailsHidden(!areDetailsHidden)}
@@ -200,7 +196,7 @@ export const AssignNewRoleDrawer = ({
                 {areDetailsHidden ? 'Show' : 'Hide'} details
               </Button>
             )}
-          </Grid>
+          </Box>
 
           {!!accountRoles &&
             fields.map((field, index) => (
@@ -228,25 +224,32 @@ export const AssignNewRoleDrawer = ({
               </Button>
             </div>
           )}
-          <ActionsPanel
-            primaryButtonProps={{
-              'data-testid': 'submit',
-              label: isDefaultDelegationRolesForChildAccount ? 'Add' : 'Assign',
-              type: 'submit',
-              loading:
+          <DrawerInlineActions>
+            <Button
+              data-testid="cancel"
+              onClick={handleClose}
+              variant="secondary"
+            >
+              Cancel
+            </Button>
+            <Button
+              data-pendo-id={
+                isDefaultDelegationRolesForChildAccount
+                  ? IAM_ROLES_PENDO_IDS.addNewDefaultRolesDrawer
+                  : undefined
+              }
+              data-testid="submit"
+              processing={
                 isUserRolesPending ||
                 isDefaultRolesPending ||
-                formState.isSubmitting,
-              'data-pendo-id': isDefaultDelegationRolesForChildAccount
-                ? IAM_ROLES_PENDO_IDS.addNewDefaultRolesDrawer
-                : undefined,
-            }}
-            secondaryButtonProps={{
-              'data-testid': 'cancel',
-              label: 'Cancel',
-              onClick: handleClose,
-            }}
-          />
+                formState.isSubmitting
+              }
+              type="submit"
+              variant="primary"
+            >
+              Save
+            </Button>
+          </DrawerInlineActions>
         </form>
       </FormProvider>
     </Drawer>

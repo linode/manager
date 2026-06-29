@@ -4,7 +4,11 @@ import * as React from 'react';
 
 import { databaseFactory } from 'src/factories';
 import { IPv4List } from 'src/factories/databases';
-import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
+import {
+  getShadowRootElement,
+  mockMatchMedia,
+  renderWithTheme,
+} from 'src/utilities/testHelpers';
 
 import AccessControls from './AccessControls';
 import { ManageAccessControlDrawer } from './ManageAccessControlDrawer';
@@ -20,10 +24,13 @@ describe('Manage Access Controls drawer', () => {
       <AccessControls database={database} />
     );
 
+    const drawer = document.body.querySelector('cds-drawer');
+    expect(drawer).toBeInTheDocument();
+
     const button = getByTestId('button-access-control');
     await userEvent.click(button);
-    // 'drawer' is the data-testid of the <Drawer /> component
-    expect(getByTestId('drawer')).toBeVisible();
+
+    expect(drawer?.open).toBe(true);
   });
 
   it('Should open with a full list of current inbound sources that are allow listed', async () => {
@@ -64,19 +71,21 @@ describe('Manage Access Controls drawer', () => {
       />
     );
 
-    const updateAccessControlsButton = getByText(
-      'Update Access Controls'
-    ).closest('button');
+    const updateAccessControlsButton = getByText('Update Access Controls');
+    const actualUpdateAccessControlsButton = await getShadowRootElement(
+      updateAccessControlsButton,
+      'button'
+    );
+
+    expect(actualUpdateAccessControlsButton).toBeDefined();
+    expect(actualUpdateAccessControlsButton).not.toBeNull();
 
     // Before making a change to the IP addresses, the "Add Inbound Sources" button should be disabled.
-    expect(updateAccessControlsButton).toHaveAttribute('aria-disabled', 'true');
+    expect(actualUpdateAccessControlsButton).toBeDisabled();
 
     const addAnIPButton = getByText('Add Another IP');
     await userEvent.click(addAnIPButton);
 
-    expect(updateAccessControlsButton).toHaveAttribute(
-      'aria-disabled',
-      'false'
-    );
+    expect(actualUpdateAccessControlsButton).toBeEnabled();
   });
 });

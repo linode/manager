@@ -45,6 +45,11 @@ export interface RegionSelectProps<
    */
   isGeckoLAEnabled: boolean;
   label?: string;
+  /**
+   * Optional prefix used to build a `data-pendo-id` attribute on each region
+   * option. The final attribute will be `${pendoIdPrefix}-${region.id}`.
+   */
+  pendoIdPrefix?: string;
   regionFilter?: RegionFilterValue;
   /**
    * The regions to display in the RegionSelect dropdown.

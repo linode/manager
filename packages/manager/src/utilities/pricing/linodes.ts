@@ -1,40 +1,10 @@
+import { getLinodeRegionPrice } from '@akamai/compute-ui-core/api';
+
 import type {
   LinodeType,
-  PriceObject,
   Region,
   RegionalNetworkUtilization,
 } from '@linode/api-v4';
-import type { PlanSelectionType } from 'src/features/components/PlansPanel/types';
-import type { ExtendedType } from 'src/utilities/extendType';
-
-/**
- * Gets the price of a Linode type for a specific region.
- *
- * @param type The Linode Type
- * @param regionId The region to get the price for
- * @returns pricing information for this specific linode type in a region
- */
-export const getLinodeRegionPrice = (
-  type: ExtendedType | LinodeType | PlanSelectionType | undefined,
-  regionId: null | string | undefined
-): PriceObject | undefined => {
-  if (!type || !regionId) {
-    return undefined;
-  }
-
-  const regionSpecificPrice = type.region_prices?.find(
-    (regionPrice) => regionPrice.id === regionId
-  );
-
-  if (regionSpecificPrice) {
-    return {
-      hourly: regionSpecificPrice.hourly,
-      monthly: regionSpecificPrice.monthly,
-    };
-  }
-
-  return type.price;
-};
 
 interface IsPriceDifferentOptions {
   regionA: Region['id'] | undefined;

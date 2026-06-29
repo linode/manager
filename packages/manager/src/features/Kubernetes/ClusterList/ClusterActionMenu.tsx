@@ -1,3 +1,4 @@
+import { getErrorStringOrDefault } from '@akamai/compute-ui-core/api';
 import { downloadFile } from '@akamai/compute-ui-core/browser';
 import { getKubeConfig } from '@linode/api-v4/lib/kubernetes';
 import { Hidden } from '@linode/ui';
@@ -10,7 +11,6 @@ import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { reportException } from 'src/exceptionReporting';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
-import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 import type { Theme } from '@mui/material/styles';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';

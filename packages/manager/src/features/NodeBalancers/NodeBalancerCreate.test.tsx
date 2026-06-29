@@ -19,6 +19,9 @@ const queryMocks = vi.hoisted(() => ({
   useNavigate: vi.fn(() => vi.fn()),
   useFlags: vi.fn().mockReturnValue({}),
   useIsReserveIpEnabled: vi.fn(() => ({ isReserveIpEnabled: true })),
+  useIsReserveIpNewBadgeEnabled: vi.fn(() => ({
+    isReserveIpNewBadgeEnabled: false,
+  })),
   useParams: vi.fn().mockReturnValue({ id: undefined }),
   userPermissions: vi.fn(() => ({
     data: {
@@ -91,6 +94,7 @@ vi.mock('src/features/IAM/hooks/usePermissions', () => ({
 
 vi.mock('src/features/ReservedIps/utils', () => ({
   useIsReserveIpEnabled: queryMocks.useIsReserveIpEnabled,
+  useIsReserveIpNewBadgeEnabled: queryMocks.useIsReserveIpNewBadgeEnabled,
 }));
 
 // Note: see nodeblaancers-create-in-complex-form.spec.ts for an e2e test of this flow

@@ -23,6 +23,7 @@ export interface LandingHeaderProps {
   disabledCreateButton?: boolean;
   docsLabel?: string;
   docsLink?: string;
+  docsPendoId?: string;
   entity?: string;
   extraActions?: JSX.Element;
   loading?: boolean;
@@ -52,6 +53,7 @@ export const LandingHeader = ({
   disabledCreateButton,
   docsLabel,
   docsLink,
+  docsPendoId,
   entity,
   extraActions,
   loading,
@@ -141,6 +143,7 @@ export const LandingHeader = ({
                 href={docsLink}
                 label={docsLabel}
                 onClick={onDocsClick}
+                pendoId={docsPendoId}
               />
             ) : null}
             {renderActions && (

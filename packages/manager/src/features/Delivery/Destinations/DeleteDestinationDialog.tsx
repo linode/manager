@@ -1,3 +1,4 @@
+import { getAPIErrorOrDefault } from '@akamai/compute-ui-core/api';
 import { useDeleteDestinationMutation } from '@linode/queries';
 import { ActionsPanel } from '@linode/ui';
 import { enqueueSnackbar } from 'notistack';
@@ -5,7 +6,6 @@ import * as React from 'react';
 import { useEffect } from 'react';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import type { Destination } from '@linode/api-v4';
 

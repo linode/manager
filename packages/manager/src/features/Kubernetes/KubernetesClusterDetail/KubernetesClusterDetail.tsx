@@ -1,3 +1,4 @@
+import { getAPIErrorOrDefault } from '@akamai/compute-ui-core/api';
 import { useAccount } from '@linode/queries';
 import { Box, CircleProgress, ErrorState, Notice, Stack } from '@linode/ui';
 import { useLocation, useParams } from '@tanstack/react-router';
@@ -13,7 +14,6 @@ import {
   useKubernetesClusterMutation,
   useKubernetesClusterQuery,
 } from 'src/queries/kubernetes';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { APLSummaryPanel } from './APLSummaryPanel';
 import { KubeSummaryPanel } from './KubeSummaryPanel';

@@ -1,8 +1,11 @@
 import { screen } from '@testing-library/react';
 import React from 'react';
 
-import { renderWithTheme } from 'src/utilities/testHelpers';
-
+import { getCdsButtonHostByText } from '../../utilities/testHelpers';
+import {
+  mockMatchMedia,
+  renderWithProviders,
+} from '../../utilities/testHelpers';
 import {
   NO_ASSIGNED_ENTITIES_TEXT,
   NO_ASSIGNED_ROLES_TEXT,
@@ -21,13 +24,15 @@ vi.mock('@tanstack/react-router', async () => {
   };
 });
 
+beforeAll(() => mockMatchMedia());
+
 describe('NoAssignedRoles', () => {
   beforeEach(() => {
     queryProps.useParams.mockReturnValue({ username: 'testuser' });
   });
 
   it('renders with correct text for the Assigned Roles tab', async () => {
-    renderWithTheme(
+    const { container } = renderWithProviders(
       <NoAssignedRoles
         hasAssignNewRoleDrawer={true}
         text={NO_ASSIGNED_ROLES_TEXT}
@@ -35,13 +40,11 @@ describe('NoAssignedRoles', () => {
     );
     expect(screen.getByText('This list is empty')).toBeVisible();
     expect(screen.getByText(NO_ASSIGNED_ROLES_TEXT)).toBeVisible();
-    expect(
-      screen.getByText('Assign New Roles').closest('cds-button')
-    ).toBeDefined();
+    expect(getCdsButtonHostByText(container, 'Assign New Roles')).toBeDefined();
   });
 
   it('renders with correct text for the Assigned Entities tab', async () => {
-    renderWithTheme(
+    renderWithProviders(
       <NoAssignedRoles
         hasAssignNewRoleDrawer={false}
         text={NO_ASSIGNED_ENTITIES_TEXT}

@@ -1,3 +1,4 @@
+import { getErrorMap } from '@akamai/compute-ui-core/api';
 import { appendConfigInterface } from '@linode/api-v4';
 import { createLinodeInterface } from '@linode/api-v4';
 import {
@@ -41,7 +42,6 @@ import {
 } from 'src/features/VPCs/constants';
 import { useUnassignLinode } from 'src/hooks/useUnassignLinode';
 import { useVPCDualStack } from 'src/hooks/useVPCDualStack';
-import { getErrorMap } from 'src/utilities/errorUtils';
 import { SUBNET_LINODE_CSV_HEADERS } from 'src/utilities/subnets';
 
 import { PublicAccess } from '../components/PublicAccess';
@@ -59,6 +59,7 @@ import { AssignIPRanges } from './AssignIPRanges';
 import { StyledButtonBox } from './SubnetAssignLinodesDrawer.styles';
 import { SubnetLinodeActionNotice } from './SubnetLinodeActionNotice';
 
+import type { ExtendedIP } from '@akamai/compute-ui-core/api';
 import type {
   APIError,
   Config,
@@ -68,7 +69,6 @@ import type {
   LinodeInterface,
   Subnet,
 } from '@linode/api-v4';
-import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 // @TODO VPC: if all subnet action menu item related components use (most of) this as their props, might be worth
 // putting this in a common file and naming it something like SubnetActionMenuItemProps or something

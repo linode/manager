@@ -1,3 +1,4 @@
+import { getAPIErrorOrDefault } from '@akamai/compute-ui-core/api';
 import {
   useAccount,
   useAllPaymentMethodsQuery,
@@ -12,7 +13,6 @@ import * as React from 'react';
 
 import { PAYPAL_CLIENT_ID } from 'src/constants';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { BillingActivityPanel } from './BillingPanels/BillingActivityPanel/BillingActivityPanel';
 import BillingSummary from './BillingPanels/BillingSummary';

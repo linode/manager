@@ -34,6 +34,7 @@ export const dimensionFilterFactory = Factory.Sync.makeFactory<Filters>({
 });
 
 export const widgetFactory = Factory.Sync.makeFactory<Widgets>({
+  description: '',
   aggregate_function: 'avg',
   chart_type: Factory.each((i) => chart_type[i % chart_type.length]),
   color: Factory.each((i) => color[i % color.length]),

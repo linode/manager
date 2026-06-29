@@ -5,6 +5,13 @@ import { EventLink } from '../EventLink';
 import type { PartialEventMap } from '../types';
 
 export const managed: PartialEventMap<'managed'> = {
+  managed_disabled: {
+    notification: () => (
+      <>
+        Managed has been <strong>deactivated</strong> on your account.
+      </>
+    ),
+  },
   managed_enabled: {
     notification: () => (
       <>

@@ -1,3 +1,4 @@
+import { getRegionCountryGroup } from '@akamai/compute-ui-core/api';
 import { useAllAccountAvailabilitiesQuery } from '@linode/queries';
 import {
   Autocomplete,
@@ -7,10 +8,6 @@ import {
   StyledListItem,
 } from '@linode/ui';
 import React from 'react';
-
-// @todo: modularization - Move `getRegionCountryGroup` utility to `@linode/shared` package
-// as it imports GLOBAL_QUOTA_VALUE from RegionSelect's constants.ts and update the import.
-import { getRegionCountryGroup } from 'src/utilities/formatRegion';
 
 // @todo: modularization - Move `Flag` component to `@linode/shared` package.
 import { Flag } from '../Flag';

@@ -1,9 +1,9 @@
 import { roundTo } from '@akamai/compute-ui-core/formatting';
-import { type Metrics } from '@linode/utilities';
 
 import { humanizeLargeData } from './utils';
 
 import type { ZoomState } from '../Widget/components/useZoomController';
+import type { Metrics } from '@akamai/compute-ui-core/api';
 import type { DataSet } from 'src/components/AreaChart/AreaChart';
 import type { MetricsDisplayRow } from 'src/components/LineGraph/MetricsDisplay';
 

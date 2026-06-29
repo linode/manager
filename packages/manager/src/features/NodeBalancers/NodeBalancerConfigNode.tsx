@@ -1,3 +1,4 @@
+import { getErrorMap } from '@akamai/compute-ui-core/api';
 import {
   Box,
   Button,
@@ -11,8 +12,6 @@ import {
 import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
-
-import { getErrorMap } from 'src/utilities/errorUtils';
 
 import { ConfigNodeIPSelect } from './ConfigNodeIPSelect';
 

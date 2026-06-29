@@ -1,3 +1,4 @@
+import { getErrorMap } from '@akamai/compute-ui-core/api';
 import {
   useAllIPsQuery,
   useLinodeIPMutation,
@@ -14,8 +15,6 @@ import { useTheme } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-
-import { getErrorMap } from 'src/utilities/errorUtils';
 
 import { listIPv6InRange } from './LinodeIPAddressRow';
 

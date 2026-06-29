@@ -1,4 +1,7 @@
-import { convertBytesToTarget, readableBytes } from '@linode/utilities';
+import {
+  convertBytesToTarget,
+  readableBytes,
+} from '@akamai/compute-ui-core/api';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 

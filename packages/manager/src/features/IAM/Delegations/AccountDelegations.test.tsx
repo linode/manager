@@ -2,9 +2,8 @@ import { screen, waitFor } from '@testing-library/react';
 import React from 'react';
 import { vi } from 'vitest';
 
-import { expectNotificationBannerText } from 'src/features/IAM/utilities/testHelpers';
-import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
-
+import { expectNotificationBannerText } from '../utilities/testHelpers';
+import { mockMatchMedia, renderWithProviders } from '../utilities/testHelpers';
 import { AccountDelegations } from './AccountDelegations';
 
 beforeAll(() => mockMatchMedia());
@@ -70,9 +69,8 @@ describe('AccountDelegations', () => {
   });
 
   it('should render the delegations table with data', async () => {
-    renderWithTheme(<AccountDelegations />, {
+    renderWithProviders(<AccountDelegations />, {
       flags: {
-        iamDelegation: { enabled: true },
         iam: { enabled: true },
       },
       initialRoute: '/iam',
@@ -97,8 +95,8 @@ describe('AccountDelegations', () => {
       isLoading: false,
     });
 
-    renderWithTheme(<AccountDelegations />, {
-      flags: { iamDelegation: { enabled: true }, iam: { enabled: true } },
+    renderWithProviders(<AccountDelegations />, {
+      flags: { iam: { enabled: true } },
       initialRoute: '/iam',
     });
 
@@ -116,8 +114,8 @@ describe('AccountDelegations', () => {
       isLoading: false,
     });
 
-    renderWithTheme(<AccountDelegations />, {
-      flags: { iamDelegation: { enabled: true }, iam: { enabled: true } },
+    renderWithProviders(<AccountDelegations />, {
+      flags: { iam: { enabled: true } },
       initialRoute: '/iam',
     });
 

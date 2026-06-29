@@ -47,6 +47,7 @@ const TICKET = 'ticket';
 const STACKSCRIPT = 'stackscript';
 const DEV_TOOLS_ENV = 'devTools/env';
 const NODE_POOLS_EXPANDED = 'nodePoolsExpanded';
+const AI_MODELS_LIST_VIEW_TYPE = 'AI_MODELS_LIST_VIEW_TYPE';
 
 export type PageSize = number;
 
@@ -85,6 +86,10 @@ export const supportTicketStorageDefaults: SupportTicketFormFields = {
 };
 
 export interface Storage {
+  aiModelsListViewType: {
+    get: () => 'grid' | 'list';
+    set: (v: 'grid' | 'list') => void;
+  };
   authentication: {
     codeVerifier: AuthGetAndSet;
     expire: AuthGetAndSet;
@@ -127,6 +132,10 @@ export interface Storage {
 }
 
 export const storage: Storage = {
+  aiModelsListViewType: {
+    get: () => getStorage(AI_MODELS_LIST_VIEW_TYPE, 'grid') as 'grid' | 'list',
+    set: (v) => setStorage(AI_MODELS_LIST_VIEW_TYPE, v),
+  },
   authentication: {
     codeVerifier: {
       get: () => getSessionStorage(CODE_VERIFIER),

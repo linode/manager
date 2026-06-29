@@ -1,16 +1,18 @@
-import { profileFactory } from '@linode/utilities';
 import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
-import { accountUserFactory } from 'src/factories';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
+
+import { createProfile, createUser } from '../../factories';
 import {
+  changeCdsTextField,
+  expectCdsFormError,
   getCdsTextFieldInput,
   getCdsTooltipHostByText,
-} from 'src/features/IAM/utilities/testHelpers';
-import { http, HttpResponse, server } from 'src/mocks/testServer';
-import { renderWithTheme } from 'src/utilities/testHelpers';
-
+  submitCdsDrawerForm,
+} from '../../utilities/testHelpers';
+import { renderWithProviders } from '../../utilities/testHelpers';
 import { EditUserDetailsDrawer } from './EditUserDetailsDrawer';
 
 const queryMocks = vi.hoisted(() => ({
@@ -46,19 +48,19 @@ const getDrawerInputs = async () => {
   expect(emailInput).toBeTruthy();
 
   return {
+    emailHost: emailHost!,
     emailInput,
-    emailHost,
+    usernameHost: usernameHost!,
     usernameInput,
-    usernameHost,
   };
 };
 
 describe('EditUserDetailsDrawer', () => {
   describe('Username field', () => {
     it("initializes the form with the user's username and email", async () => {
-      const user = accountUserFactory.build();
+      const user = createUser();
 
-      renderWithTheme(
+      renderWithProviders(
         <EditUserDetailsDrawer {...defaultProps} activeUser={user} />
       );
 
@@ -71,9 +73,9 @@ describe('EditUserDetailsDrawer', () => {
     });
 
     it('disables the username field and shows a tooltip when canUpdateUser is false', async () => {
-      const user = accountUserFactory.build();
+      const user = createUser();
 
-      renderWithTheme(
+      renderWithProviders(
         <EditUserDetailsDrawer
           {...defaultProps}
           activeUser={user}
@@ -92,13 +94,13 @@ describe('EditUserDetailsDrawer', () => {
       ).toBeDefined();
     });
 
-    it('disables the username field for a proxy user', async () => {
-      const user = accountUserFactory.build({
-        user_type: 'proxy',
-        username: 'proxy-user-1',
+    it('disables the username field for a delegate user', async () => {
+      const user = createUser({
+        user_type: 'delegate',
+        username: 'delegate-user-1',
       });
 
-      renderWithTheme(
+      renderWithProviders(
         <EditUserDetailsDrawer {...defaultProps} activeUser={user} />
       );
 
@@ -111,20 +113,20 @@ describe('EditUserDetailsDrawer', () => {
     });
 
     it('enables the Save button when the username is changed and canUpdateUser is true', async () => {
-      const user = accountUserFactory.build({
+      const user = createUser({
         username: 'my-linode-username',
       });
 
       queryMocks.useProfile.mockReturnValue({
-        data: profileFactory.build({ username: 'my-linode-username' }),
+        data: createProfile({ username: 'my-linode-username' }),
       });
 
-      renderWithTheme(
+      renderWithProviders(
         <EditUserDetailsDrawer {...defaultProps} activeUser={user} />
       );
 
       const { usernameInput } = await getDrawerInputs();
-      const saveButton = screen.getByRole('button', { name: 'Save' });
+      const saveButton = screen.getByTestId('submit');
 
       await waitFor(() => {
         expect(usernameInput).toHaveValue(user.username);
@@ -137,11 +139,11 @@ describe('EditUserDetailsDrawer', () => {
     });
 
     it('Save button is disabled on initial render when canUpdateUser is false', async () => {
-      const user = accountUserFactory.build({
+      const user = createUser({
         username: 'my-linode-username',
       });
 
-      renderWithTheme(
+      renderWithProviders(
         <EditUserDetailsDrawer
           {...defaultProps}
           activeUser={user}
@@ -155,14 +157,14 @@ describe('EditUserDetailsDrawer', () => {
         expect(usernameInput).toHaveValue(user.username);
       });
 
-      expect(screen.getByRole('button', { name: 'Save' })).toBeDisabled();
+      expect(screen.getByTestId('submit')).toBeDisabled();
     });
   });
 
   describe('Email field', () => {
     it("disables the email field when viewing another user's profile", async () => {
-      const profile = profileFactory.build({ username: 'my-linode-user-1' });
-      const user = accountUserFactory.build({ username: 'my-linode-user-2' });
+      const profile = createProfile({ username: 'my-linode-user-1' });
+      const user = createUser({ username: 'my-linode-user-2' });
 
       server.use(
         http.get('*/v4/profile', () => {
@@ -170,7 +172,7 @@ describe('EditUserDetailsDrawer', () => {
         })
       );
 
-      renderWithTheme(
+      renderWithProviders(
         <EditUserDetailsDrawer {...defaultProps} activeUser={user} />
       );
 
@@ -188,13 +190,13 @@ describe('EditUserDetailsDrawer', () => {
       ).toBeDefined();
     });
 
-    it('disables the email field for a proxy user', async () => {
-      const user = accountUserFactory.build({
-        user_type: 'proxy',
-        username: 'proxy-user-1',
+    it('disables the email field for a delegate user', async () => {
+      const user = createUser({
+        user_type: 'delegate',
+        username: 'delegate-user-1',
       });
 
-      renderWithTheme(
+      renderWithProviders(
         <EditUserDetailsDrawer {...defaultProps} activeUser={user} />
       );
 
@@ -208,31 +210,29 @@ describe('EditUserDetailsDrawer', () => {
 
     it('shows a validation error for an invalid email address', async () => {
       queryMocks.useProfile.mockReturnValue({
-        data: profileFactory.build({ username: 'user-1' }),
+        data: createProfile({ username: 'user-1' }),
       });
-      const user = accountUserFactory.build({ username: 'user-1' });
+      const user = createUser({ username: 'user-1' });
 
-      renderWithTheme(
+      renderWithProviders(
         <EditUserDetailsDrawer {...defaultProps} activeUser={user} />
       );
 
-      const { emailInput } = await getDrawerInputs();
+      const { emailHost } = await getDrawerInputs();
 
-      await userEvent.click(emailInput as HTMLInputElement);
-      await userEvent.keyboard('{Meta>}a{/Meta}{Backspace}');
-      await userEvent.type(emailInput as HTMLInputElement, 'user#@example.com');
-      await userEvent.click(screen.getByRole('button', { name: 'Save' }));
+      await changeCdsTextField(emailHost, 'user#@example.com');
+      submitCdsDrawerForm();
 
-      expect(screen.getByText(/valid email address/i)).toBeInTheDocument();
+      await expectCdsFormError(/valid email address/i);
     });
 
     it('disables the email field when the active user is not the logged-in user', async () => {
       queryMocks.useProfile.mockReturnValue({
-        data: profileFactory.build({ username: 'logged-in-user' }),
+        data: createProfile({ username: 'logged-in-user' }),
       });
-      const user = accountUserFactory.build({ username: 'another-user' });
+      const user = createUser({ username: 'another-user' });
 
-      renderWithTheme(
+      renderWithProviders(
         <EditUserDetailsDrawer {...defaultProps} activeUser={user} />
       );
 

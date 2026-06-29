@@ -97,13 +97,13 @@ describe('Database Create', () => {
 
     // default to $0 if no plan is selected
     const nodeRadioBtns = getByTestId('database-nodes');
-    expect(nodeRadioBtns).toHaveTextContent('$0/month $0/hr');
+    expect(nodeRadioBtns).toHaveTextContent('$0/mo ($0/hr)');
 
     // update node pricing if a plan is selected
     const radioBtn = getAllByText('Nanode 1 GB')[0];
     await userEvent.click(radioBtn);
-    expect(nodeRadioBtns).toHaveTextContent('$60/month $0.09/hr');
-    expect(nodeRadioBtns).toHaveTextContent('$140/month $0.21/hr');
+    expect(nodeRadioBtns).toHaveTextContent('$60/mo ($0.09/hr)');
+    expect(nodeRadioBtns).toHaveTextContent('$140/mo ($0.21/hr)');
   });
 
   it('should display the correct nodes for account with Managed Databases', async () => {
@@ -134,15 +134,15 @@ describe('Database Create', () => {
     await userEvent.click(sharedTab);
     // default to $0 if no plan is selected
     const nodeRadioBtns = getByTestId('database-nodes');
-    expect(nodeRadioBtns).toHaveTextContent('$0/month $0/hr');
+    expect(nodeRadioBtns).toHaveTextContent('$0/mo ($0/hr)');
 
     // update node pricing if a plan is selected
     const radioBtn = getAllByText('Linode 2 GB')[0];
 
     await userEvent.click(radioBtn);
-    expect(nodeRadioBtns).toHaveTextContent('$60/month $0.09/hr');
-    expect(nodeRadioBtns).not.toHaveTextContent('$100/month $0.15/hr');
-    expect(nodeRadioBtns).toHaveTextContent('$140/month $0.21/hr');
+    expect(nodeRadioBtns).toHaveTextContent('$60/mo ($0.09/hr)');
+    expect(nodeRadioBtns).not.toHaveTextContent('$100/mo ($0.15/hr)');
+    expect(nodeRadioBtns).toHaveTextContent('$140/mo ($0.21/hr)');
   });
 
   it('should have the "Create Database Cluster" button disabled for restricted users', async () => {

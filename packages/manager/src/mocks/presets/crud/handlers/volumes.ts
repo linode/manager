@@ -9,7 +9,8 @@ import {
   makeResponse,
 } from 'src/mocks/utilities/response';
 
-import type { PriceType, Volume } from '@linode/api-v4';
+import type { PriceType } from '@akamai/compute-ui-core/api';
+import type { Volume } from '@linode/api-v4';
 import type { StrictResponse } from 'msw';
 import type { MockState } from 'src/mocks/types';
 import type {

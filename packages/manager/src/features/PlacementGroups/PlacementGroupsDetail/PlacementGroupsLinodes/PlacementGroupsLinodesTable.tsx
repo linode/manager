@@ -1,3 +1,4 @@
+import { getAPIErrorOrDefault } from '@akamai/compute-ui-core/api';
 import * as React from 'react';
 
 import { Table } from 'src/components/Table';
@@ -7,7 +8,6 @@ import { TableContentWrapper } from 'src/components/TableContentWrapper/TableCon
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { PLACEMENT_GROUP_LINODES_ERROR_MESSAGE } from '../../constants';
 import { PlacementGroupsLinodesTableRow } from './PlacementGroupsLinodesTableRow';

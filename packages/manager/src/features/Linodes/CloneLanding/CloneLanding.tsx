@@ -1,3 +1,4 @@
+import { getErrorMap } from '@akamai/compute-ui-core/api';
 import { cloneLinode, cloneLinodeDisk } from '@linode/api-v4/lib/linodes';
 import {
   useAllLinodeConfigsQuery,
@@ -20,7 +21,6 @@ import { Tabs } from 'src/components/Tabs/Tabs';
 import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
 import { useTabs } from 'src/hooks/useTabs';
 import { useEventsPollingActions } from 'src/queries/events/events';
-import { getErrorMap } from 'src/utilities/errorUtils';
 
 import { MutationNotification } from '../LinodesDetail/LinodesDetailHeader/MutationNotification';
 import Notifications from '../LinodesDetail/LinodesDetailHeader/Notifications';

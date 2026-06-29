@@ -32,14 +32,9 @@ vi.mock('@linode/queries', async () => {
 });
 
 const standard = typeFactory.build({ class: 'standard', id: 'g6-standard-1' });
-const metal = typeFactory.build({ class: 'metal', id: 'g6-metal-alpha-2' });
 const dedicated = typeFactory.build({
   class: 'dedicated',
   id: 'g6-dedicated-2',
-});
-const prodedicated = typeFactory.build({
-  class: 'prodedicated',
-  id: 'g6-prodedicated-alpha-2',
 });
 const nanode = typeFactory.build({ class: 'nanode', id: 'g6-nanode-1' });
 const premium = typeFactory.build({ class: 'premium', id: 'g6-premium-2' });
@@ -54,32 +49,26 @@ describe('getPlanSelectionsByPlanType', () => {
   it('should return an object with plans grouped by type', () => {
     const actual = getPlanSelectionsByPlanType([
       premium,
-      metal,
       gpu,
       highmem,
       standard,
       nanode,
       dedicated,
-      prodedicated,
     ]);
     expect([standard, nanode]).toEqual(actual.shared);
-    expect([metal]).toEqual(actual.metal);
     expect([premium]).toEqual(actual.premium);
     expect([dedicated]).toEqual(actual.dedicated);
     expect([gpu]).toEqual(actual.gpu);
     expect([highmem]).toEqual(actual.highmem);
-    expect([prodedicated]).toEqual(actual.prodedicated);
   });
   it('should return grouped plans in the correct order', () => {
     const actual = getPlanSelectionsByPlanType([
       premium,
-      metal,
       gpu,
       highmem,
       standard,
       nanode,
       dedicated,
-      prodedicated,
       accelerated,
     ]);
     const expectedOrder = planTypeOrder;
@@ -90,14 +79,13 @@ describe('getPlanSelectionsByPlanType', () => {
   });
   it('case:1 -> should return grouped plans in the correct order after filtering empty plans', () => {
     const actual = getPlanSelectionsByPlanType([
-      metal,
       gpu,
       nanode,
       highmem,
       standard,
       dedicated,
     ]);
-    const expectedOrder = planTypeOrder.slice(1, 6);
+    const expectedOrder = ['dedicated', 'shared', 'highmem', 'gpu'];
     const actualKeys = Object.keys(actual);
 
     expect(actualKeys).toEqual(expectedOrder);
@@ -109,11 +97,7 @@ describe('getPlanSelectionsByPlanType', () => {
       gpu,
       standard,
     ]);
-    const expectedOrder = [
-      planTypeOrder[2],
-      planTypeOrder[4],
-      planTypeOrder[6],
-    ];
+    const expectedOrder = ['shared', 'gpu', 'premium'];
 
     const actualKeys = Object.keys(actual);
 
@@ -121,7 +105,7 @@ describe('getPlanSelectionsByPlanType', () => {
   });
   it('case:3 -> should return grouped plans in the correct order after filtering empty plans', () => {
     const actual = getPlanSelectionsByPlanType([premium]);
-    const expectedOrder = [planTypeOrder[6]];
+    const expectedOrder = ['premium'];
 
     const actualKeys = Object.keys(actual);
 

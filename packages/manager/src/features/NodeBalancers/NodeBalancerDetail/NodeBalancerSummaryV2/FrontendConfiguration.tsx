@@ -80,6 +80,7 @@ export const FrontendConfiguration = ({
               ) : (
                 <LinkButton
                   aria-label={`Reserve IP address ${nodebalancer.ipv4}`}
+                  data-pendo-id="NodeBalancers Details Frontend-Reserve IP Start Flow"
                   onClick={() => setIsReserveIpDrawerOpen(true)}
                   sx={{ minWidth: 'fit-content', whiteSpace: 'nowrap' }}
                 >
@@ -105,6 +106,12 @@ export const FrontendConfiguration = ({
           mode="reserve"
           onClose={() => setIsReserveIpDrawerOpen(false)}
           open={isReserveIpDrawerOpen}
+          pendoIds={{
+            cancel: 'NodeBalancers Details Reserve IP-Cancel',
+            close: 'NodeBalancers Details Reserve IP-Close',
+            submit:
+              'NodeBalancers Details Reserve IP-Reserve IP Address End Flow',
+          }}
         />
       )}
     </Paper>

@@ -1,5 +1,5 @@
+import { readableBytes } from '@akamai/compute-ui-core/api';
 import { capitalize } from '@akamai/compute-ui-core/formatting';
-import { readableBytes } from '@linode/utilities';
 import { object, string } from 'yup';
 
 import type { QuotaIncreaseFormFields } from './QuotasPanel/QuotasIncreaseForm';
@@ -7,6 +7,7 @@ import type { Profile, Quota } from '@linode/api-v4';
 import type {
   QuotaScope,
   QuotaService,
+  QuotaUsageLink,
   ScopeValueType,
 } from 'src/features/Account/Quotas/quotaServices';
 
@@ -17,6 +18,7 @@ export interface QuotaWithUsage {
   quota: Quota;
   usage: null | number;
   usageFetchErrorMessage: null | string;
+  usageLink: null | QuotaUsageLink;
 }
 
 interface GetQuotaIncreaseFormDefaultValuesProps {

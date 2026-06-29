@@ -1,5 +1,6 @@
+import { readableBytes } from '@akamai/compute-ui-core/api';
 import { Box, Stack, Typography } from '@linode/ui';
-import { formatUptime, readableBytes } from '@linode/utilities';
+import { formatUptime } from '@linode/utilities';
 import Grid from '@mui/material/Grid';
 import * as React from 'react';
 

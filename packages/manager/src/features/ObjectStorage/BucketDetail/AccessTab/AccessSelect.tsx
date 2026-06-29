@@ -1,3 +1,4 @@
+import { getErrorStringOrDefault } from '@akamai/compute-ui-core/api';
 import { capitalize } from '@akamai/compute-ui-core/formatting';
 import {
   ActionsPanel,
@@ -19,7 +20,6 @@ import {
   useUpdateBucketAccessMutation,
   useUpdateObjectAccessMutation,
 } from 'src/queries/object-storage/queries';
-import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 import { bucketACLOptions, objectACLOptions } from '../../utilities';
 import { copy } from './AccessSelect.data';

@@ -32,12 +32,8 @@ export const UsersLanding = () => {
   const [selectedUsername, setSelectedUsername] = React.useState('');
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
   const matchesLgUp = useMediaQuery(theme.breakpoints.up('lg'));
-  const {
-    isProxyOrDelegateUserType,
-    isChildUserType,
-    isParentUserType,
-    profile,
-  } = useDelegationRole();
+  const { isDelegateUserType, isChildUserType, isParentUserType, profile } =
+    useDelegationRole();
 
   const pagination = usePaginationV2({
     initialPage: 1,
@@ -55,8 +51,7 @@ export const UsersLanding = () => {
     preferenceKey: 'account-users-order',
   });
 
-  const showProxyOrDelegateUserTable =
-    isChildUserType || isProxyOrDelegateUserType;
+  const showProxyOrDelegateUserTable = isChildUserType || isDelegateUserType;
 
   const usersFilter: Filter = {
     ['+order']: order.order,
@@ -87,7 +82,7 @@ export const UsersLanding = () => {
     isInitialLoading: isLoadingProxyUser,
   } = useAccountUsers({
     enabled: showProxyOrDelegateUserTable && !isRestrictedUser,
-    filters: { user_type: 'proxy' },
+    filters: { user_type: 'delegate' },
   });
 
   const isChildAccountAccessRestricted = useRestrictedGlobalGrantCheck({
@@ -107,7 +102,7 @@ export const UsersLanding = () => {
       ? 3
       : 4;
 
-  // "last login" column omitted for proxy table.
+  // "last login" column omitted for delegate table.
   const proxyNumCols = matchesLgUp ? 4 : numCols;
 
   const handleDelete = (username: string) => {

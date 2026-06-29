@@ -4,6 +4,8 @@ import { useFlags } from 'src/hooks/useFlags';
 
 import type { SxProps, Theme } from '@mui/material/styles';
 
+export const MAIN_CONTENT_VERTICAL_PADDING = 56; // 24px top + 32px bottom
+
 export type Category =
   | 'AI'
   | 'CDN Affiliated'

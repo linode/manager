@@ -36,4 +36,23 @@ export const IMAGE_SELECT_TABLE_SHARE_GROUP_CREATE_PENDO_IDS = {
   pageSizeSelect: 'Share Groups Create Images-Page Size Select',
   previousPageButton: 'Share Groups Create Images-Previous Page Button',
   nextPageButton: 'Share Groups Create Images-Next Page Button',
+  useOriginalImageFieldsCheckbox:
+    'Share Groups Create Images-Use Original Image Fields Checkbox',
+};
+
+export const IMAGE_SELECT_TABLE_SHARE_GROUP_ADD_IMAGES_PENDO_IDS = {
+  searchImagesBar: 'Share Groups Add Images-Search click',
+  tagFilterSelect: 'Share Groups Add Images-Filter by Tag click',
+  regionFilterSelect: 'Share Groups Add Images-Filter by Region click',
+  metadataSupportedIcon: 'Share Groups Add Images-Metadata Supported icon',
+  replicatedRegionPopover: 'Share Groups Add Images-Replicated in',
+  shareGroupInfoIcon: 'Share Groups Add Images-Share Group info icon',
+  imageCheckbox: 'Share Groups Add Images-Image Checkbox',
+  pageSizeSelect: 'Share Groups Add Images-Page Size Select',
+  previousPageButton: 'Share Groups Add Images-Previous Page Button',
+  nextPageButton: 'Share Groups Add Images-Next Page Button',
+  useOriginalImageFieldsCheckbox:
+    'Share Groups Add Images-Use Original Image Fields Checkbox',
+  createImageLink: 'Share Groups Add Images-Create Image Link',
+  uploadImageLink: 'Share Groups Add Images-Upload Image Link',
 };

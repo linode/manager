@@ -1,21 +1,6 @@
 import { getStorage, setStorage } from '@akamai/compute-ui-core/browser';
 
-import type { Token, UserType } from '@linode/api-v4';
-
-export interface ProxyTokenCreationParams {
-  /**
-   * The euuid of the child account for which the token is being created.
-   */
-  euuid: string;
-  /**
-   * The parent token used to create the proxy or delegate token (includes 'Bearer' prefix).
-   */
-  token: string;
-  /**
-   * The userType of the child account.
-   */
-  userType: Omit<UserType, 'child' | 'default'>;
-}
+import type { Token } from '@linode/api-v4';
 
 export const updateParentTokenInLocalStorage = ({
   currentTokenWithBearer,
@@ -43,7 +28,7 @@ export const updateParentTokenInLocalStorage = ({
 export const isParentTokenValid = (): boolean => {
   const now = new Date().toISOString();
 
-  // From a proxy or delegate user, check whether parent token is still valid before switching.
+  // From a delegate user, check whether parent token is still valid before switching.
   if (
     now >
     new Date(getStorage('authentication/parent_token/expire')).toISOString()
@@ -55,7 +40,7 @@ export const isParentTokenValid = (): boolean => {
 
 /**
  * Set token information in the local storage.
- * This allows us to store a token for later use, such as switching between parent and proxy or delegate accounts.
+ * This allows us to store a token for later use, such as switching between parent and delegate accounts.
  */
 export const setTokenInLocalStorage = ({
   prefix,
@@ -81,7 +66,7 @@ export const setTokenInLocalStorage = ({
 export const updateCurrentTokenBasedOnUserType = ({
   userType,
 }: {
-  userType: 'delegate' | 'parent' | 'proxy';
+  userType: 'delegate' | 'parent';
 }) => {
   const storageKeyPrefix = `authentication/${userType}_token`;
 

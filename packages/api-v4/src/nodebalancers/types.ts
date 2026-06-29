@@ -12,6 +12,13 @@ export type Stickiness = TCPStickiness | UDPStickiness;
 
 type NodeBalancerType = 'common' | 'premium' | 'premium_40gb';
 
+type NodeBalancerBackendConnectivity =
+  | 'ipv6'
+  | 'ipv6_and_vpc'
+  | 'legacy'
+  | 'undefined'
+  | 'vpc';
+
 export interface LKEClusterInfo {
   id: number;
   label: string;
@@ -20,6 +27,7 @@ export interface LKEClusterInfo {
 }
 
 export interface NodeBalancer {
+  backend_connectivity?: NodeBalancerBackendConnectivity;
   /**
    * Maximum number of new TCP connections that a client (identified by a specific source IP)
    * is allowed to initiate every second.
@@ -237,6 +245,7 @@ export interface NodeBalancerConfigNodeWithPort extends NodeBalancerConfigNode {
 }
 
 export interface CreateNodeBalancerPayload {
+  backend_connectivity?: NodeBalancerBackendConnectivity;
   /**
    * The connections per second throttle for TCP and HTTP connections
    *
@@ -257,5 +266,6 @@ export interface CreateNodeBalancerPayload {
   label?: string;
   region?: string;
   tags?: string[];
+  type?: NodeBalancerType;
   vpcs?: NodeBalancerVpcPayload[];
 }

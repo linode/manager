@@ -1,10 +1,10 @@
+import { isPrivateIP } from '@akamai/compute-ui-core/api';
 import { usePreferences } from '@linode/queries';
 import { tail } from '@linode/utilities';
 import * as React from 'react';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { ShowMore } from 'src/components/ShowMore/ShowMore';
-import { isPrivateIP } from 'src/utilities/ipUtils';
 
 import {
   StyledCopyTooltip,

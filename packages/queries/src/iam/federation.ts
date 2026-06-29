@@ -340,6 +340,9 @@ export const useCreateIdpCertificateMutation = (
       queryClient.invalidateQueries({
         queryKey: federationQueries.idpConfig(euuid).queryKey,
       });
+      queryClient.invalidateQueries({
+        queryKey: federationQueries.idpConfigs.queryKey,
+      });
     },
   });
 };
@@ -363,6 +366,9 @@ export const useDeleteIdpCertificateMutation = (
       });
       queryClient.invalidateQueries({
         queryKey: federationQueries.idpConfig(euuid).queryKey,
+      });
+      queryClient.invalidateQueries({
+        queryKey: federationQueries.idpConfigs.queryKey,
       });
     },
   });

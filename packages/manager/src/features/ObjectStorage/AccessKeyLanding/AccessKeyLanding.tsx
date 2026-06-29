@@ -1,3 +1,4 @@
+import { getAPIErrorOrDefault } from '@akamai/compute-ui-core/api';
 import { useErrors, useOpenClose } from '@linode/utilities';
 import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
@@ -9,7 +10,6 @@ import {
   useDeleteAccessKeyMutation,
   useObjectStorageAccessKeys,
 } from 'src/queries/object-storage/queries';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { AccessKeyTable } from './AccessKeyTable/AccessKeyTable';
 import { useAccessKeyDrawers } from './hooks/useAccessKeyDrawers';

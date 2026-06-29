@@ -1,3 +1,4 @@
+import { getAPIErrorOrDefault } from '@akamai/compute-ui-core/api';
 import { getUserTimezone } from '@akamai/compute-ui-core/datetime';
 import { useProfile } from '@linode/queries';
 import { Box, CircleProgress, ErrorState, Typography } from '@linode/ui';
@@ -11,7 +12,6 @@ import {
   generateNetworkUnits,
 } from 'src/features/Longview/shared/utilities';
 import { useManagedStatsQuery } from 'src/queries/managed/managed';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import {
   StyledGraphControlsDiv,

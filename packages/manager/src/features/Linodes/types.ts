@@ -1,4 +1,5 @@
-import type { BaseQueryParams, LinodeCreateType } from '@linode/utilities';
+import type { LinodeCreateType } from '@akamai/compute-ui-core/api';
+import type { BaseQueryParams } from '@linode/utilities';
 
 export type DialogType =
   | 'add_lock'

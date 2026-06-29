@@ -1,4 +1,4 @@
-import { getMetrics } from '@linode/utilities';
+import { getMetrics } from '@akamai/compute-ui-core/api';
 import React from 'react';
 
 import { tooltipValueFormatter } from 'src/components/AreaChart/utils';

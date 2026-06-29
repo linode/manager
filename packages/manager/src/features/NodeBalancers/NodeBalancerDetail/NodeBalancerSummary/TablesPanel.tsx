@@ -1,3 +1,8 @@
+import {
+  formatNumber,
+  getAPIErrorOrDefault,
+  getMetrics,
+} from '@akamai/compute-ui-core/api';
 import { getUserTimezone } from '@akamai/compute-ui-core/datetime';
 import {
   useNodeBalancerQuery,
@@ -5,7 +10,6 @@ import {
   useProfile,
 } from '@linode/queries';
 import { Box, CircleProgress, ErrorState, Paper, Typography } from '@linode/ui';
-import { formatNumber, getMetrics } from '@linode/utilities';
 import { styled, useTheme } from '@mui/material/styles';
 import { useParams } from '@tanstack/react-router';
 import * as React from 'react';
@@ -13,7 +17,6 @@ import * as React from 'react';
 import PendingIcon from 'src/assets/icons/pending.svg';
 import { AreaChart } from 'src/components/AreaChart/AreaChart';
 import { formatBitsPerSecond } from 'src/features/Longview/shared/utilities';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import type { Theme } from '@mui/material/styles';
 import type {

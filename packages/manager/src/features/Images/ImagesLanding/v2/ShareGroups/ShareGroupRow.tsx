@@ -1,6 +1,5 @@
 import { TableCell, TableRow } from '@akamai/cds-components/react/Table';
 import { formatDate } from '@akamai/compute-ui-core/datetime';
-import { truncateEnd } from '@akamai/compute-ui-core/formatting';
 import { usePreferences, useProfile } from '@linode/queries';
 import { Hidden, Tooltip } from '@linode/ui';
 import React from 'react';
@@ -33,6 +32,41 @@ export const ShareGroupRow = (props: Props) => {
     id,
   } = shareGroup;
 
+  const labelRef = React.useRef<HTMLAnchorElement>(null);
+  const [isLabelOverflowing, setIsLabelOverflowing] = React.useState(false);
+
+  const descriptionRef = React.useRef<HTMLSpanElement>(null);
+  const [isDescriptionOverflowing, setIsDescriptionOverflowing] =
+    React.useState(false);
+
+  React.useLayoutEffect(() => {
+    const checkOverflow = () => {
+      if (labelRef.current) {
+        setIsLabelOverflowing(
+          labelRef.current.scrollWidth > labelRef.current.clientWidth
+        );
+      }
+      if (descriptionRef.current) {
+        setIsDescriptionOverflowing(
+          descriptionRef.current.scrollWidth >
+            descriptionRef.current.clientWidth
+        );
+      }
+    };
+
+    checkOverflow();
+
+    const observer = new ResizeObserver(checkOverflow);
+    if (labelRef.current) {
+      observer.observe(labelRef.current);
+    }
+    if (descriptionRef.current) {
+      observer.observe(descriptionRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [label, description]);
+
   const { data: tableStripingPreference } = usePreferences(
     (preferences) => preferences?.isTableStripingEnabled
   );
@@ -53,25 +87,34 @@ export const ShareGroupRow = (props: Props) => {
         className="group-column"
         data-pendo-id={`Images Groups Owned-Group name`}
       >
-        <Tooltip title={label.length > 32 ? label : ''}>
-          <span>
-            <Link
-              style={{
-                textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap',
-                overflow: 'hidden',
-                display: 'block',
-              }}
-              to={`/images/share-groups/owned-groups/${id}`}
-            >
-              {truncateEnd(label, 32)}
-            </Link>
-          </span>
+        <Tooltip title={isLabelOverflowing ? label : ''}>
+          <Link
+            ref={labelRef}
+            style={{
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              display: 'block',
+            }}
+            to={`/images/share-groups/owned-groups/${id}`}
+          >
+            {label}
+          </Link>
         </Tooltip>
       </TableCell>
       <TableCell className="description-column">
-        <Tooltip title={description.length > 50 ? description : ''}>
-          <span>{truncateEnd(description, 50)}</span>
+        <Tooltip title={isDescriptionOverflowing ? description : ''}>
+          <span
+            ref={descriptionRef}
+            style={{
+              display: 'block',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            {description}
+          </span>
         </Tooltip>
       </TableCell>
       <TableCell className="membersCount-column">{members_count}</TableCell>

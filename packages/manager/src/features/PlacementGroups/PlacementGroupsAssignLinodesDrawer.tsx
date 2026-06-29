@@ -1,3 +1,4 @@
+import { getErrorStringOrDefault } from '@akamai/compute-ui-core/api';
 import {
   PLACEMENT_GROUP_POLICIES,
   PLACEMENT_GROUP_TYPES,
@@ -22,7 +23,6 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { DescriptionList } from 'src/components/DescriptionList/DescriptionList';
-import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 import {
   getLinodesFromAllPlacementGroups,

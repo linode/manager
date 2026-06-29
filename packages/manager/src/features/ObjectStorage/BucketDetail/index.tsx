@@ -10,10 +10,10 @@ import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
+import { useObjectStorageBuckets } from 'src/features/ObjectStorage/hooks/useObjectStorageBuckets';
 import { useFlags } from 'src/hooks/useFlags';
 import { useTabs } from 'src/hooks/useTabs';
 import { useCloudPulseServiceByServiceType } from 'src/queries/cloudpulse/services';
-import { useObjectStorageBuckets } from 'src/queries/object-storage/queries';
 
 const ObjectList = React.lazy(() =>
   import('./ObjectsTab/BucketDetail').then((module) => ({
@@ -53,13 +53,13 @@ export const BucketDetailLanding = React.memo(() => {
     useCloudPulseServiceByServiceType('objectstorage', true);
 
   const {
-    data: bucketsData,
+    data: buckets,
     isLoading: bucketsLoading,
     error,
-    isPending,
+    isPending: bucketsPending,
   } = useObjectStorageBuckets();
 
-  const bucket = bucketsData?.buckets.find(
+  const bucket = buckets?.find(
     ({ label, region }) => label === bucketName && region === regionId
   );
 
@@ -108,12 +108,12 @@ export const BucketDetailLanding = React.memo(() => {
     },
   ]);
 
-  if (isPending || bucketsLoading || regionLoading || aclServiceLoading) {
+  if (bucketsPending || bucketsLoading || regionLoading || aclServiceLoading) {
     return <CircleProgress />;
   }
 
   if (!bucket || error) {
-    return <ErrorState errorText={error?.message ?? 'Not found'} />;
+    return <ErrorState errorText={error ?? 'Not found'} />;
   }
 
   const sslTabIndex = getTabIndex(`${BUCKET_DETAILS_URL}/ssl`);

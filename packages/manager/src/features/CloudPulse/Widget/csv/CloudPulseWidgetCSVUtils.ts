@@ -1,6 +1,10 @@
 import { DateTime } from 'luxon';
 
-import { DIMENSION_TRANSFORM_CONFIG } from '../../shared/DimensionTransform';
+import { dimensionOperatorTypeMap } from '../../Alerts/constants';
+import {
+  DIMENSION_TRANSFORM_CONFIG,
+  TRANSFORMS,
+} from '../../shared/DimensionTransform';
 import { convertStringToCamelCasesWithSpaces } from '../../Utils/utils';
 
 import type { FilterData } from '../../Dashboard/CloudPulseDashboardLanding';
@@ -68,6 +72,40 @@ export interface CSVDataProps {
   };
 }
 
+export interface WidgetFilterStringParams {
+  /**
+   * The dimension filters applied on the widget, used to extract the dimension filter information to include in the filter string
+   */
+  dimensionFilters: MetricsDimensionFilter[] | undefined;
+  /**
+   * The applied filters in the widgets
+   */
+  filteredDimensions: Dimension[] | undefined;
+  /**
+   * The group by options applied on the widget
+   */
+  groupBy: string[] | undefined;
+  /**
+   * The service type of the widget,
+   */
+  serviceType: CloudPulseServiceType;
+  /**
+   * The time zone to be applied when formatting any date
+   */
+  timezone: string;
+  /**
+   * The widget for which the filter string is being generated
+   */
+  widget: Widgets;
+  /**
+   * The zoom range boundaries (left and right timestamps) if the chart is zoomed
+   */
+  zoomRange?: {
+    left: 'dataMin' | number;
+    right: 'dataMax' | number;
+  };
+}
+
 type CSVRow = Array<number | string>;
 type CSVData = CSVRow[];
 
@@ -76,16 +114,23 @@ type CSVData = CSVRow[];
  * @param timeZone The time zone to be applied when formatting the ISO string, used to ensure that the date and time values in the CSV are presented in the user's local time zone for better readability and relevance
  * @returns The formatted date and time string in the specified time zone
  */
-const formatDateTime = (iso: string, timeZone: string | undefined) => {
+export const formatDateTime = (
+  iso: string,
+  timeZone: string | undefined,
+  zoneNeeded: boolean = true
+) => {
   const dateTime = DateTime.fromISO(iso).setZone(timeZone);
-  return `${dateTime.toLocaleString(DateTime.DATETIME_MED)} ${dateTime.offsetNameShort}`;
+  return `${dateTime.toLocaleString(DateTime.DATETIME_MED)} ${zoneNeeded ? dateTime.offsetNameShort : ''}`;
 };
 /**
  * @param millis The timestamp to be formatted in milliseconds
  * @param timeZone The time zone to be applied while formatting the timestamp
  * @returns The formatted data and time string in specified time zone
  */
-const formatTimestamp = (millis: number, timeZone: string | undefined) => {
+export const formatTimestamp = (
+  millis: number,
+  timeZone: string | undefined
+) => {
   const dateTime = DateTime.fromMillis(millis).setZone(timeZone);
   return dateTime.toLocaleString(DateTime.DATETIME_MED);
 };
@@ -104,7 +149,7 @@ const buildDimensionLabelMap = (dimensions: Dimension[]) =>
  * @param serviceType The service type of the widget, used to apply any service-specific transformations to dimension filter values and labels in the CSV
  * @returns The formatted dimension filter string to be included in the CSV, typically in the format of "Dimension Label, Operator, Value; Dimension Label, Operator, Value" for multiple dimension filters, with user-friendly dimension labels and transformed values based on the service type for better readability and relevance in the CSV
  */
-const buildDimensionFilterString = (
+export const buildDimensionFilterString = (
   dimensionFilters: MetricsDimensionFilter[],
   dimensionOptions: Dimension[],
   serviceType: CloudPulseServiceType
@@ -120,9 +165,12 @@ const buildDimensionFilterString = (
         const transformer =
           DIMENSION_TRANSFORM_CONFIG[serviceType]?.[filter.dimension_label];
 
-        const value = transformer?.(filter.value ?? '') ?? filter.value ?? '';
+        const value =
+          transformer?.(filter.value ?? '') ??
+          TRANSFORMS.capitalize(filter.value ?? '') ??
+          '';
 
-        return `${label},${filter.operator},${value}`;
+        return `${label},${filter.operator !== null ? TRANSFORMS.capitalize(dimensionOperatorTypeMap[filter.operator]) : ''},${value}`;
       }
       return undefined;
     })
@@ -161,6 +209,77 @@ const appendAppliedFilters = (
     csvData.push([]);
   }
 };
+
+/**
+ * Builds a comprehensive filter string for the widget, including interval, aggregation function,
+ * group by options, dimension filters, and zoom range information
+ *
+ * @param params Object containing all filter-related parameters
+ * @returns A formatted filter string with pipe-separated sections
+ */
+export const buildWidgetFilterString = ({
+  widget,
+  groupBy,
+  dimensionFilters,
+  filteredDimensions,
+  serviceType,
+  zoomRange,
+  timezone,
+}: WidgetFilterStringParams): string => {
+  let filterString = '';
+
+  // Add interval
+  if (widget.time_granularity) {
+    filterString += `Interval: ${widget.time_granularity.value !== -1 ? widget.time_granularity.value : ''} ${widget.time_granularity.unit} `;
+  }
+
+  // Add aggregation function
+  if (widget.aggregate_function) {
+    if (filterString.length > 0) {
+      filterString += '  |  ';
+    }
+    filterString += `Aggregation Function : ${convertStringToCamelCasesWithSpaces(widget.aggregate_function)} `;
+  }
+
+  // Add group by
+  if (groupBy?.length) {
+    if (filterString.length > 0) {
+      filterString += '  |  ';
+    }
+    filterString += `Group By: ${groupBy.join(', ')} `;
+  }
+
+  // Add dimension filters
+  if (dimensionFilters && dimensionFilters.length > 0) {
+    const dimensionFilterString = buildDimensionFilterString(
+      dimensionFilters,
+      filteredDimensions ?? [],
+      serviceType
+    );
+
+    if (dimensionFilterString.length > 0) {
+      if (filterString.length > 0) {
+        filterString += '  |  ';
+      }
+      filterString += `Dimension Filters: ${dimensionFilterString}`;
+    }
+  }
+
+  // Add zoom range
+  if (
+    zoomRange &&
+    typeof zoomRange.left === 'number' &&
+    typeof zoomRange.right === 'number'
+  ) {
+    if (filterString.length > 0) {
+      filterString += '  |  ';
+    }
+    filterString += `Zoomed Time Range: ${formatTimestamp(zoomRange.left, timezone)} - ${formatTimestamp(zoomRange.right, timezone)}`;
+  }
+
+  return filterString;
+};
+
 /**
  * @param props The properties required to generate the CSV data for a CloudPulse widget, including the dashboard name, widget data, applied filters, group by options, and other relevant information needed to build a comprehensive CSV representation of the widget data
  * @returns The generated CSV data for the CloudPulse widget, including header information, applied filters, group by details, aggregation function, scrape interval, dimension filters, metric information, and the actual data points

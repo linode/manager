@@ -1,9 +1,10 @@
-import { Box, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 
-export const StyledSummaryBox = styled(Box, {
-  label: 'StyledSummaryBox',
+export const StyledSummaryDiv = styled('div', {
+  label: 'StyledSummaryDiv',
 })(({ theme }) => ({
+  display: 'flex',
+  flex: 1,
   [theme.breakpoints.down('lg')]: {
     display: 'grid',
     gridTemplateColumns: '50% 2fr',
@@ -14,9 +15,10 @@ export const StyledSummaryBox = styled(Box, {
   },
 }));
 
-export const StyledSummaryTextTypography = styled(Typography, {
+export const StyledSummaryTextTypography = styled('p', {
   label: 'StyledSummaryTextTypography',
 })(({ theme }) => ({
+  margin: 0,
   '& strong': {
     paddingRight: theme.spacing(1),
   },
@@ -24,8 +26,8 @@ export const StyledSummaryTextTypography = styled(Typography, {
   whiteSpace: 'nowrap',
 }));
 
-export const StyledSummaryTextBox = styled(Box, {
-  label: 'StyledSummaryTextBox',
+export const StyledSummaryTextDiv = styled('div', {
+  label: 'StyledSummaryTextDiv',
 })(({ theme }) => ({
   '& strong': {
     paddingRight: theme.spacing(1),
@@ -39,14 +41,8 @@ export const StyledSummaryTextBox = styled(Box, {
   whiteSpace: 'nowrap',
 }));
 
-export const StyledTitleTypography = styled(Typography, {
-  label: 'StyledCurrentConfigurationTypography',
-})(({ theme }) => ({
-  marginBottom: theme.spacing(2),
-}));
-
-export const StyledStatusBox = styled(Box, {
-  label: 'StyledStatusBox',
+export const StyledStatusDiv = styled('div', {
+  label: 'StyledStatusDiv',
 })(() => ({
   alignItems: 'center',
   display: 'inline-flex',

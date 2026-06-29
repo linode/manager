@@ -50,7 +50,7 @@ describe('UsernameForm', () => {
     ).toBeVisible();
   });
 
-  it('disables the input if the user is a proxy user', async () => {
+  it('disables the input if the user is a delegate user', async () => {
     queryMocks.userPermissions.mockReturnValue({
       data: {
         is_account_admin: true,
@@ -59,7 +59,7 @@ describe('UsernameForm', () => {
 
     const profile = profileFactory.build({
       restricted: false,
-      user_type: 'proxy',
+      user_type: 'delegate',
     });
 
     server.use(http.get('*/v4/profile', () => HttpResponse.json(profile)));

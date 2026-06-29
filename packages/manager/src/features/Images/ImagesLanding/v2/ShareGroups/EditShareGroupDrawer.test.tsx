@@ -56,7 +56,7 @@ describe('Edit Share Group Drawer', () => {
       <EditShareGroupDrawer {...props} />
     );
 
-    const drawerTitle = getByText('Edit group details');
+    const drawerTitle = getByText('Edit Group Details');
     expect(drawerTitle).toBeVisible();
 
     const labelInput = getByLabelText(SHARE_GROUP_NAME_LABEL);

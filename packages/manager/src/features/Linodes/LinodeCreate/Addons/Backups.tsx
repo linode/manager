@@ -1,3 +1,4 @@
+import { getLinodeBackupPrice } from '@akamai/compute-ui-core/api';
 import {
   useAccountSettings,
   useRegionsQuery,
@@ -17,7 +18,6 @@ import { Currency } from 'src/components/Currency';
 import { DISK_ENCRYPTION_BACKUPS_CAVEAT_COPY } from 'src/components/Encryption/constants';
 import { Link } from 'src/components/Link';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
-import { getLinodeBackupPrice } from 'src/utilities/pricing/backups';
 import { useComputePricing } from 'src/utilities/pricing/useComputePricing';
 
 import { getBackupsEnabledValue } from './utilities';

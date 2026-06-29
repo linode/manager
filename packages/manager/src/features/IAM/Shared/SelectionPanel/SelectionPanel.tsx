@@ -1,7 +1,6 @@
 import {
   Button,
   Checkbox,
-  LoadingSpinner,
   Pagination,
   SearchField,
   Table,
@@ -10,8 +9,11 @@ import {
   TableRow,
 } from '@akamai/cds-components/react';
 import { Font, Spacing } from '@akamai/cds-tokens';
-import { useMediaQuery, useTheme } from '@mui/material';
 import React from 'react';
+
+import { useBreakpoint } from 'src/features/IAM/hooks/useBreakpoint';
+
+import { CircleProgress } from '../CircleProgress/CircleProgress';
 
 export interface SelectableOption {
   label: string;
@@ -106,8 +108,7 @@ export const SelectionPanel = ({
   showToolbar = true,
   totalCount,
 }: SelectionPanelProps) => {
-  const theme = useTheme();
-  const isSmUp = useMediaQuery(theme.breakpoints.up('sm'));
+  const isSmUp = useBreakpoint('up', 'sm');
 
   const handlePaginationPageChange = (e: CustomEvent<unknown>) => {
     if (typeof e.detail === 'number') {
@@ -175,6 +176,7 @@ export const SelectionPanel = ({
             onChange={(e) => {
               onShowSelectedOnlyChange(Boolean(e.detail));
             }}
+            size="small"
             style={{
               flexShrink: 0,
               order: isSmUp ? 1 : 0,
@@ -256,7 +258,7 @@ export const SelectionPanel = ({
             {isLoading ? (
               <TableRow>
                 <TableCell style={{ justifyContent: 'center' }}>
-                  <LoadingSpinner label={loadingLabel} />
+                  <CircleProgress label={loadingLabel} />
                 </TableCell>
               </TableRow>
             ) : (
@@ -281,8 +283,16 @@ export const SelectionPanel = ({
                         onToggle(p.rank, Boolean(e.detail));
                       }}
                       onClick={(e: React.MouseEvent) => e.stopPropagation()}
+                      size="small"
                     />
-                    <span style={{ flex: 1, lineHeight: '20px', minWidth: 0 }}>
+                    <span
+                      style={{
+                        flex: 1,
+                        lineHeight: '20px',
+                        minWidth: 0,
+                        marginLeft: `-${Spacing.S8}`,
+                      }}
+                    >
                       {p.name}
                     </span>
                   </TableCell>

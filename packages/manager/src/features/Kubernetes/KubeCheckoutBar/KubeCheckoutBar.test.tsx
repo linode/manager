@@ -1,10 +1,12 @@
+import { UNKNOWN_PRICE } from '@akamai/compute-ui-core/api';
 import { regionFactory } from '@linode/utilities';
+import { userEvent } from '@testing-library/user-event/dist/cjs/setup/index.js';
 import * as React from 'react';
 
 import { typeFactory } from 'src/factories';
 import { nodePoolFactory } from 'src/factories/kubernetesCluster';
-import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 import { LKE_CREATE_CLUSTER_CHECKOUT_MESSAGE } from 'src/utilities/pricing/constants';
+import { useComputePricing } from 'src/utilities/pricing/useComputePricing';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
 import KubeCheckoutBar from './KubeCheckoutBar';
@@ -25,6 +27,20 @@ const props: Props = {
   toggleHasAgreed: vi.fn(),
 };
 
+const defaultComputePricingMock: ReturnType<typeof useComputePricing> = {
+  billing: 'monthly',
+  formatPrice: vi.fn(),
+  getBillingForPlanType: vi.fn(),
+  getPrice: vi.fn(),
+  getPriceSubheading: vi.fn(),
+  hasHourlyEligiblePlans: () => false,
+  priceLabel: 'month',
+};
+
+vi.mock('src/utilities/pricing/useComputePricing', () => ({
+  useComputePricing: vi.fn(),
+}));
+
 describe('KubeCheckoutBar', () => {
   beforeAll(() => {
     vi.mock('@linode/queries', async () => {
@@ -36,6 +52,8 @@ describe('KubeCheckoutBar', () => {
           .mockImplementation(() => [{ data: typeFactory.build() }]),
       };
     });
+
+    vi.mocked(useComputePricing).mockReturnValue(defaultComputePricingMock);
   });
 
   it('should render helper text and disable create button until a region has been selected', async () => {
@@ -215,7 +233,7 @@ describe('KubeCheckoutBar', () => {
 
     // 5 node pools * 3 linodes per pool * 12 per linode * 20% increase for Jakarta + UNKNOWN_PRICE
     await findByText(/\$183\.00/);
-    getByText(/\$--.--\/month/);
+    getByText(/\$--.--\/mo/);
   });
 
   it('should display the total price of the cluster with LKE Enterprise', async () => {
@@ -251,5 +269,37 @@ describe('KubeCheckoutBar', () => {
 
     // 5 node pools * 3 linodes per pool * 10 per linode + 300 per month for enterprise (HA included)
     await findByText(/\$450\.00/);
+  });
+
+  it('should show max monthly cost tooltip when cluster contains hourly billed pools', async () => {
+    vi.mocked(useComputePricing).mockReturnValue({
+      ...defaultComputePricingMock,
+      getBillingForPlanType: vi.fn((type) =>
+        type === 'g8-hourly-1' ? 'hourly' : 'monthly'
+      ),
+    });
+
+    // Cluster with atleast one hourly pool
+    const poolsWithHourlyBilling = [
+      ...pools,
+      nodePoolFactory.build({ type: 'g8-hourly-1' }), // hourly billed pool
+    ];
+
+    const { findByText, getByTestId } = renderWithThemeAndHookFormContext({
+      component: <KubeCheckoutBar {...props} pools={poolsWithHourlyBilling} />,
+      useFormOptions: {
+        defaultValues: {
+          nodePools: [nodePoolFactory.build()],
+        },
+      },
+    });
+
+    // Max Monthly Cost Price Heading
+    await findByText('Max monthly cost');
+
+    // Max Monthly Cost Tooltip
+    const maxMonthlyCostTooltip = getByTestId('tooltip-info-icon');
+    await userEvent.hover(maxMonthlyCostTooltip);
+    await findByText('A monthly cluster price for a full 31-day month.');
   });
 });

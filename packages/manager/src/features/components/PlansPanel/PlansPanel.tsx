@@ -214,14 +214,11 @@ export const PlansPanel = (props: PlansPanelProps) => {
             <>
               <PlanInformation
                 additionalBanners={additionalBanners}
-                disabledClasses={disabledClasses}
                 flow={flow}
                 hasMajorityOfPlansDisabled={hasMajorityOfPlansDisabled}
                 hasSelectedRegion={hasSelectedRegion}
                 hideLimitedAvailabilityBanner={
-                  showDistributedRegionPlanTable ||
-                  !flags.disableLargestGbPlans ||
-                  plan === 'metal' // Bare Metal plans handle their own limited availability banner since they are an special case
+                  showDistributedRegionPlanTable || !flags.disableLargestGbPlans
                 }
                 isResize={isResize}
                 isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan(

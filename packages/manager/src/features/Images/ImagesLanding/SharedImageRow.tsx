@@ -1,3 +1,4 @@
+import { convertStorageUnit } from '@akamai/compute-ui-core/api';
 import { formatDate } from '@akamai/compute-ui-core/datetime';
 import { pluralize } from '@akamai/compute-ui-core/formatting';
 import { useProfile, useRegionsQuery } from '@linode/queries';
@@ -9,7 +10,6 @@ import {
   TooltipIcon,
   Typography,
 } from '@linode/ui';
-import { convertStorageUnit } from '@linode/utilities';
 import React from 'react';
 
 import CloudInitIcon from 'src/assets/icons/cloud-init.svg';
@@ -20,10 +20,10 @@ import {
   PlanTextTooltip,
   StyledFormattedRegionList,
 } from 'src/features/components/PlansPanel/PlansAvailabilityNotice.styles';
-import { SHARED_WITH_ME_IMAGES_TAB_PENDO_IDS } from 'src/features/Images/constants';
 import { ImagesActionMenu } from 'src/features/Images/ImagesLanding/ImagesActionMenu';
 
 import type { Event, Image, ImageRegion } from '@linode/api-v4';
+import type { SHARED_WITH_ME_IMAGES_TAB_PENDO_IDS } from 'src/features/Images/constants';
 import type { Handlers } from 'src/features/Images/ImagesLanding/ImagesActionMenu';
 
 interface Props {
@@ -112,9 +112,7 @@ export const SharedImageRow = (props: Props) => {
           {label}
           <Stack
             alignItems="center"
-            data-pendo-id={
-              SHARED_WITH_ME_IMAGES_TAB_PENDO_IDS.metadataSupportedIcon
-            }
+            data-pendo-id={pendoIDs.metadataSupportedIcon}
             direction="row"
             gap={1}
           >

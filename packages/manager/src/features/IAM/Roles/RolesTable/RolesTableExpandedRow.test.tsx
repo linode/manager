@@ -1,8 +1,7 @@
 import { screen } from '@testing-library/react';
 import React from 'react';
 
-import { renderWithTheme } from 'src/utilities/testHelpers';
-
+import { renderWithProviders } from '../../utilities/testHelpers';
 import { RolesTableExpandedRow } from './RolesTableExpandedRow';
 
 beforeEach(() => {
@@ -11,7 +10,7 @@ beforeEach(() => {
 
 describe('RolesTableExpandedRow', () => {
   it('renders when used', () => {
-    renderWithTheme(<RolesTableExpandedRow permissions={[]} />);
+    renderWithProviders(<RolesTableExpandedRow permissions={[]} />);
 
     expect(screen.getByText('Permissions')).toBeVisible();
   });

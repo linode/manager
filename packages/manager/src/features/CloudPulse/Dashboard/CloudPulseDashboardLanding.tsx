@@ -13,7 +13,9 @@ import { useCloudPulseContext } from '../Context/useCloudPulseContext';
 import { GlobalFilters } from '../Overview/GlobalFilters';
 import { CloudPulseAppliedFilterRenderer } from '../shared/CloudPulseAppliedFilterRenderer';
 import { defaultTimeDuration } from '../Utils/CloudPulseDateTimePickerUtils';
+import { checkIfAllMandatoryFiltersAreSelected } from '../Utils/FilterBuilder';
 import { CloudPulseDashboardRenderer } from './CloudPulseDashboardRenderer';
+import { usePdfExport } from './pdf/utils/usePdfExport';
 
 import type { Dashboard, DateTimeWithPreset } from '@linode/api-v4';
 
@@ -106,9 +108,23 @@ export const CloudPulseDashboardLanding = () => {
     []
   );
 
+  const { handleDownloadPDF, isDownloadingPdf } = usePdfExport({
+    dashboard,
+    filterData,
+    timeDuration,
+  });
   React.useEffect(() => {
     setGlobalFilterData(filterData);
   }, [filterData, setGlobalFilterData]);
+
+  const isMandatoryFiltersSelected =
+    (dashboard &&
+      checkIfAllMandatoryFiltersAreSelected({
+        dashboard,
+        filterValue: filterData.id,
+        timeDuration,
+      })) ||
+    !timeDuration;
   return (
     <React.Suspense fallback={<SuspenseLoader />}>
       <DocumentTitleSegment segment="Dashboards" />
@@ -129,9 +145,12 @@ export const CloudPulseDashboardLanding = () => {
               <GlobalFilters
                 handleAnyFilterChange={onFilterChange}
                 handleDashboardChange={onDashboardChange}
+                handleDownloadPDF={handleDownloadPDF}
                 handleGroupByChange={onGroupByChange}
                 handleTimeDurationChange={onTimeDurationChange}
                 handleToggleAppliedFilter={toggleAppliedFilter}
+                isDownloadingPdf={isDownloadingPdf}
+                isMandatoryFiltersSelected={isMandatoryFiltersSelected}
               />
               {dashboard?.service_type && showAppliedFilters && (
                 <CloudPulseAppliedFilterRenderer

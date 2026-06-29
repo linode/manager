@@ -16,9 +16,9 @@ import { makeStyles } from 'tss-react/mui';
 
 import { StyledLinkButtonBox } from 'src/components/SelectFirewallPanel/SelectFirewallPanel';
 
+import type { ExtendedIP } from '@akamai/compute-ui-core/api';
 import type { InputBaseProps } from '@mui/material/InputBase';
 import type { Theme } from '@mui/material/styles';
-import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   addIP: {

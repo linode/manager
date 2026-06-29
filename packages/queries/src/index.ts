@@ -9,6 +9,7 @@ export * from './eventHandlers';
 export * from './firewalls';
 export * from './iam';
 export * from './images';
+export * from './inference';
 export * from './linodes';
 export * from './locks';
 export * from './marketplace';

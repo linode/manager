@@ -1,10 +1,10 @@
-import { Button, Tooltip } from '@akamai/cds-components/react';
+import { Button, Icon, Tooltip } from '@akamai/cds-components/react';
+import { Spacing } from '@akamai/cds-tokens';
 import { sortByString } from '@akamai/compute-ui-core/formatting';
-import { Box, Chip, CloseIcon } from '@linode/ui';
-import { useTheme } from '@mui/material';
 import * as React from 'react';
 
-import { TruncatedList } from '../../Shared/TruncatedList';
+import { SingleRowTruncatedList } from '../../Shared/SingleRowTruncatedList/SingleRowTruncatedList';
+import styles from '../../Shared/SingleRowTruncatedList/SingleRowTruncatedList.module.css';
 
 import type { CombinedEntity, ExtendedRoleView } from '../../Shared/types';
 import type { AccountRoleType, EntityRoleType } from '@linode/api-v4';
@@ -16,14 +16,14 @@ interface Props {
   role: ExtendedRoleView;
 }
 
+const MAX_ITEMS_TO_RENDER = 25;
+
 export const AssignedEntities = ({
   onButtonClick,
   onRemoveAssignment,
   role,
   disabled,
 }: Props) => {
-  const theme = useTheme();
-
   const combinedEntities: CombinedEntity[] = React.useMemo(
     () =>
       role.entity_names!.map((name, index) => ({
@@ -33,114 +33,81 @@ export const AssignedEntities = ({
     [role.entity_names, role.entity_ids]
   );
 
-  const sortedEntities = combinedEntities?.sort((a, b) => {
-    return sortByString(a.name, b.name, 'asc');
-  });
+  const sortedEntities = React.useMemo(
+    () =>
+      [...combinedEntities].sort((a, b) => sortByString(a.name, b.name, 'asc')),
+    [combinedEntities]
+  );
 
-  // We don't need to send all items to the TruncatedList component for performance reasons,
-  // since past a certain count they will be hidden within the row.
-  const MAX_ITEMS_TO_RENDER = 25;
-  const entitiesToRender = sortedEntities.slice(0, MAX_ITEMS_TO_RENDER);
-  const totalCount = sortedEntities.length;
+  const entitiesToRender = React.useMemo(
+    () => sortedEntities.slice(0, MAX_ITEMS_TO_RENDER),
+    [sortedEntities]
+  );
 
-  const items = entitiesToRender?.map((entity: CombinedEntity) => (
-    <Box
+  const chipGapPx = Number.parseInt(Spacing.S8, 10) || 8;
+
+  const items = entitiesToRender.map((entity) => (
+    <Tooltip
+      disabled={entity.name.length <= 30}
       key={entity.id}
-      sx={{
-        display: 'inline',
-        marginRight: theme.tokens.spacing.S8,
-      }}
+      tooltipPlacement="top"
+      tooltipText={entity.name}
     >
-      <Tooltip
-        disabled={entity.name.length <= 30}
-        tooltipPlacement="top"
-        tooltipText={entity.name}
-      >
-        <Chip
-          data-testid="entities"
-          deleteIcon={
-            disabled ? undefined : <CloseIcon data-testid="CloseIcon" />
-          }
-          label={
-            entity.name.length > 30
-              ? `${entity.name.slice(0, 20)}...`
-              : entity.name
-          }
-          onDelete={
-            disabled ? undefined : () => onRemoveAssignment(entity, role)
-          }
-          sx={{
-            backgroundColor:
-              theme.name === 'light'
-                ? theme.tokens.color.Ultramarine[20]
-                : theme.tokens.color.Neutrals.Black,
-            color: theme.tokens.alias.Content.Text.Primary.Default,
-            '& .MuiChip-deleteIcon': {
-              color: theme.tokens.alias.Content.Text.Primary.Default,
-            },
-            position: 'relative',
-          }}
-        />
-      </Tooltip>
-    </Box>
+      <div className={styles.entityChip}>
+        <div className={styles.entityChipBadge} data-testid="entities">
+          {entity.name.length > 30
+            ? `${entity.name.slice(0, 20)}...`
+            : entity.name}
+          <Button
+            className={styles.entityChipRemoveButton}
+            disabled={disabled}
+            onClick={() => onRemoveAssignment(entity, role)}
+            size="small"
+            variant="link"
+          >
+            <Icon icon="close" size="xs" />
+          </Button>
+        </div>
+      </div>
+    </Tooltip>
   ));
 
-  return (
-    <Box>
-      <TruncatedList
-        addEllipsis
-        customOverflowButton={(numHiddenByTruncate) => {
-          const numHiddenItems =
-            totalCount <= MAX_ITEMS_TO_RENDER
-              ? numHiddenByTruncate
-              : totalCount - MAX_ITEMS_TO_RENDER + numHiddenByTruncate;
+  // Phantom uses the true total so the reserved overflow-pill width matches large +N labels.
+  const phantomLabel = `+${sortedEntities.length}`;
 
-          return (
-            <Box
-              sx={{
-                alignItems: 'center',
-                backgroundColor:
-                  theme.name === 'light'
-                    ? theme.tokens.color.Ultramarine[20]
-                    : theme.tokens.color.Neutrals.Black,
-                borderRadius: 1,
-                display: 'flex',
-                height: '20px',
-                maxWidth: 'max-content',
-                padding: `${theme.tokens.spacing.S4} ${theme.tokens.spacing.S8}`,
-                position: 'relative',
-                top: 2,
-              }}
+  return (
+    <SingleRowTruncatedList
+      gapPx={chipGapPx}
+      items={items}
+      overflowButtonPhantom={
+        <span className={styles.overflowPillBadge}>
+          <Button
+            className={styles.overflowPillButton}
+            size="small"
+            variant="link"
+          >
+            {phantomLabel}
+          </Button>
+        </span>
+      }
+      renderOverflowButton={(hiddenCount) => (
+        <span className={styles.overflowPillBadge}>
+          <Tooltip
+            tooltipPlacement="top"
+            tooltipText="Click to View All Entities"
+          >
+            <Button
+              className={styles.overflowPillButton}
+              onClick={() => onButtonClick(role.name)}
+              size="small"
+              variant="link"
             >
-              <Tooltip
-                tooltipPlacement="top"
-                tooltipText="Click to View All Entities"
-              >
-                <Button
-                  onClick={() => onButtonClick(role.name as EntityRoleType)}
-                  size="small"
-                  style={{
-                    color: theme.tokens.alias.Content.Text.Primary.Default,
-                    font: theme.tokens.alias.Typography.Label.Regular.Xs,
-                    padding: 0,
-                  }}
-                  variant="link"
-                >
-                  +{numHiddenItems}
-                </Button>
-              </Tooltip>
-            </Box>
-          );
-        }}
-        justifyOverflowButtonRight
-        listContainerSx={{
-          width: '100%',
-          overflow: 'hidden',
-          maxHeight: 24,
-        }}
-      >
-        {items}
-      </TruncatedList>
-    </Box>
+              +{hiddenCount}
+            </Button>
+          </Tooltip>
+        </span>
+      )}
+      totalCount={sortedEntities.length}
+    />
   );
 };

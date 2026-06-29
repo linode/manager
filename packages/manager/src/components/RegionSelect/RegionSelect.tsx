@@ -1,12 +1,9 @@
+import { getRegionCountryGroup } from '@akamai/compute-ui-core/api';
 import { useAllAccountAvailabilitiesQuery } from '@linode/queries';
 import { Autocomplete, InputAdornment } from '@linode/ui';
 import PublicIcon from '@mui/icons-material/Public';
 import { createFilterOptions } from '@mui/material/Autocomplete';
 import * as React from 'react';
-
-// @todo: modularization - Move `getRegionCountryGroup` utility to `@linode/shared` package
-// as it imports GLOBAL_QUOTA_VALUE from RegionSelect's constants.ts and update the import.
-import { getRegionCountryGroup } from 'src/utilities/formatRegion';
 
 // @todo: modularization - Move `Flag` component to `@linode/shared` package.
 import { Flag } from '../Flag';
@@ -46,6 +43,7 @@ export const RegionSelect = <
     label,
     noMarginTop,
     onChange,
+    pendoIdPrefix,
     placeholder,
     regionFilter,
     regions,
@@ -127,6 +125,10 @@ export const RegionSelect = <
         placeholder={placeholder ?? 'Select a Region'}
         renderOption={(props, region, state) => {
           const { key, ...rest } = props;
+          const optionProps: React.HTMLAttributes<HTMLLIElement> &
+            Record<`data-${string}`, string> = pendoIdPrefix
+            ? { ...rest, 'data-pendo-id': `${pendoIdPrefix}-${region.id}` }
+            : rest;
 
           return (
             <RegionOption
@@ -134,7 +136,7 @@ export const RegionSelect = <
               isGeckoLAEnabled={isGeckoLAEnabled}
               item={region}
               key={`${region.id}-${key}`}
-              props={rest}
+              props={optionProps}
               selected={state.selected}
             />
           );

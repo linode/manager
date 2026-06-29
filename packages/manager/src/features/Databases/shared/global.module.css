@@ -1,0 +1,5 @@
+.actionsCell {
+  &::part(content) {
+    justify-content: flex-end;
+  }
+}

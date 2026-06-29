@@ -1,3 +1,4 @@
+import { Font } from '@akamai/cds-tokens';
 import { pluralize } from '@akamai/compute-ui-core/formatting';
 import {
   Box,
@@ -9,28 +10,30 @@ import {
 } from '@linode/ui';
 import * as React from 'react';
 
-import { DisplayPrice } from 'src/components/DisplayPrice';
 import { EnhancedNumberInput } from 'src/components/EnhancedNumberInput/EnhancedNumberInput';
 import { StyledLinkButtonBox } from 'src/components/SelectFirewallPanel/SelectFirewallPanel';
 import {
   MAX_NODES_PER_POOL_ENTERPRISE_TIER,
   MAX_NODES_PER_POOL_STANDARD_TIER,
 } from 'src/features/Kubernetes/constants';
+import { getPoolPriceDisplay } from 'src/utilities/pricing/kubernetes';
+import { useComputePricing } from 'src/utilities/pricing/useComputePricing';
 
 import { useIsLkeEnterpriseEnabled } from '../kubeUtils';
 
 import type { NodePoolConfigDrawerHandlerParams } from '../CreateCluster/CreateCluster';
-import type { KubernetesTier } from '@linode/api-v4';
+import type { KubernetesTier, PriceObject } from '@linode/api-v4';
 import type { ExtendedType } from 'src/utilities/extendType';
 
 export interface Props {
   clusterTier?: KubernetesTier;
   handleConfigurePool?: (params: NodePoolConfigDrawerHandlerParams) => void;
   nodeCount: number;
+  /** Per-node price object from the API. Undefined until a Region is selected. */
+  nodePriceObject?: PriceObject;
   onRemove: () => void;
   poolIndex: number;
   poolType: ExtendedType | null;
-  price?: null | number; // Can be undefined until a Region is selected.
   updateNodeCount: (count: number) => void;
 }
 
@@ -41,12 +44,13 @@ export const NodePoolSummaryItem = React.memo((props: Props) => {
     onRemove,
     poolIndex,
     poolType,
-    price,
+    nodePriceObject,
     updateNodeCount,
     clusterTier,
   } = props;
 
   const { isLkeEnterprisePostLAFeatureEnabled } = useIsLkeEnterpriseEnabled();
+  const { billing } = useComputePricing(poolType?.id);
 
   // This should never happen but TS wants us to account for the situation
   // where we fail to match a selected type against our types list.
@@ -91,14 +95,11 @@ export const NodePoolSummaryItem = React.memo((props: Props) => {
         />
       )}
       <Box pt={0.5}>
-        {price ? (
-          <DisplayPrice
-            fontSize="14px"
-            interval="month"
-            price={price}
-            variant="body1"
-          />
-        ) : undefined}
+        {nodePriceObject && (
+          <Typography fontSize={Font.FontSize.Xs} variant="body1">
+            {getPoolPriceDisplay(nodePriceObject, nodeCount, billing)}
+          </Typography>
+        )}
       </Box>
       {isLkeEnterprisePostLAFeatureEnabled && handleConfigurePool && (
         <StyledLinkButtonBox>

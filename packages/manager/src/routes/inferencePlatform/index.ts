@@ -30,9 +30,14 @@ const inferencePlatformInferenceHubRoute = createRoute({
   )
 );
 
+export interface ModelPlaygroundSearch {
+  model?: string;
+}
+
 const inferencePlatformModelPlaygroundRoute = createRoute({
   getParentRoute: () => inferencePlatformRoute,
   path: 'model-playground',
+  validateSearch: (search: ModelPlaygroundSearch) => search,
 }).lazy(() =>
   import('src/features/InferencePlatform/inferencePlatformLazyRoute').then(
     (m) => m.inferencePlatformLazyRoute

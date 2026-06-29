@@ -1,3 +1,4 @@
+import { getAPIErrorOrDefault } from '@akamai/compute-ui-core/api';
 import { useDeleteImageMutation, useImageQuery } from '@linode/queries';
 import { Notice } from '@linode/ui';
 import { useSnackbar } from 'notistack';
@@ -30,7 +31,7 @@ export const DeleteImageDialog = (props: Props) => {
     open
   );
 
-  const { mutate: deleteImage, isPending } = useDeleteImageMutation({
+  const { mutateAsync: deleteImage, isPending } = useDeleteImageMutation({
     onSuccess() {
       enqueueSnackbar('Image has been scheduled for deletion.', {
         variant: 'info',
@@ -38,6 +39,19 @@ export const DeleteImageDialog = (props: Props) => {
       onClose();
     },
   });
+
+  const handleDeleteImage = async () => {
+    try {
+      await deleteImage({ imageId: imageId ?? '' });
+    } catch (error) {
+      onClose();
+      const errorText = getAPIErrorOrDefault(
+        error,
+        'There was an error deleting your image.'
+      )[0].reason;
+      enqueueSnackbar(errorText, { variant: 'error' });
+    }
+  };
 
   const isPendingUpload = image?.status === 'pending_upload';
 
@@ -54,7 +68,7 @@ export const DeleteImageDialog = (props: Props) => {
       isFetching={isLoading}
       label="Image Label"
       loading={isPending}
-      onClick={() => deleteImage({ imageId: imageId ?? '' })}
+      onClick={handleDeleteImage}
       onClose={onClose}
       open={open}
       secondaryButtonProps={{

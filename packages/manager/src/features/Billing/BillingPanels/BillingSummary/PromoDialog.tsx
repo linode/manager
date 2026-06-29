@@ -1,3 +1,4 @@
+import { getAPIErrorOrDefault } from '@akamai/compute-ui-core/api';
 import { addPromotion } from '@linode/api-v4/lib';
 import { accountQueries } from '@linode/queries';
 import { ActionsPanel, TextField, Typography } from '@linode/ui';
@@ -7,7 +8,6 @@ import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import type { APIError } from '@linode/api-v4/lib/types';
 

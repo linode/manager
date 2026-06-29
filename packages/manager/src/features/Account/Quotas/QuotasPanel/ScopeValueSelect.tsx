@@ -6,7 +6,7 @@ import { useState } from 'react';
 
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { useFlags } from 'src/hooks/useFlags';
-import { useObjectStorageEndpoints } from 'src/queries/object-storage/queries';
+import { useObjectStorageEndpointsQuery } from 'src/queries/object-storage/queries';
 
 import type { Region } from '@linode/api-v4';
 import type { SelectOption, SelectProps } from '@linode/ui';
@@ -42,7 +42,7 @@ export const ScopeValueSelect: React.FC<ScopeValueSelectProps> = ({
     scope === 'region'
   );
   const { data: endpoints, isFetching: isFetchingEndpoints } =
-    useObjectStorageEndpoints(scope === 'obj-endpoint');
+    useObjectStorageEndpointsQuery(scope === 'obj-endpoint');
 
   const handleRegionChange = (_: any, region: null | Region) => {
     const regionId = region?.id ?? null;

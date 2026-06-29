@@ -1,3 +1,4 @@
+import { getMonthlyBackupsPrice } from '@akamai/compute-ui-core/api';
 import {
   useLinodeBackupsEnableMutation,
   useLinodeQuery,
@@ -12,7 +13,6 @@ import { Currency } from 'src/components/Currency';
 import { DISK_ENCRYPTION_BACKUPS_CAVEAT_COPY } from 'src/components/Encryption/constants';
 import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
 import { useEventsPollingActions } from 'src/queries/events/events';
-import { getMonthlyBackupsPrice } from 'src/utilities/pricing/backups';
 import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants';
 
 import type { PriceObject } from '@linode/api-v4';

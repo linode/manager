@@ -416,7 +416,7 @@ const getEntityIdWithMax = (maxSelectionCount: number) => {
       .optional()
       .max(
         maxSelectionCount,
-        `The overall number of entities assigned to an alert can't exceed ${maxSelectionCount}.`
+        `Changes can't be saved. Alert exceeds the ${maxSelectionCount} entity limit. Use the API to make changes.`
       ),
   });
 };

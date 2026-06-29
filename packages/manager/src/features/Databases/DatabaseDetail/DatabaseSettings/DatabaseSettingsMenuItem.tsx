@@ -1,5 +1,4 @@
 import { Button } from '@akamai/cds-components/react';
-import { Typography } from '@linode/ui';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
@@ -28,9 +27,11 @@ const useStyles = makeStyles()((theme: Theme) => ({
       width: '100%',
     },
     width: '65%',
+    margin: 0,
   },
   sectionTitle: {
     marginBottom: '0.25rem',
+    marginTop: '0px',
   },
   sectionTitleAndText: {
     width: '100%',
@@ -59,12 +60,8 @@ export const DatabaseSettingsMenuItem = (props: Props) => {
   return (
     <div className={classes.topSection} data-qa-settings-section={sectionTitle}>
       <div className={classes.sectionTitleAndText}>
-        <Typography className={classes.sectionTitle} variant="h3">
-          {sectionTitle}
-        </Typography>
-        <Typography className={classes.sectionText}>
-          {descriptiveText}
-        </Typography>
+        <h3 className={classes.sectionTitle}>{sectionTitle}</h3>
+        <p className={classes.sectionText}>{descriptiveText}</p>
       </div>
       <Button
         className={classes.sectionButton}

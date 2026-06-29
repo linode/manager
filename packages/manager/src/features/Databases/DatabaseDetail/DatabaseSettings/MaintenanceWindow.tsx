@@ -1,5 +1,7 @@
+import { toast } from '@akamai/cds-components/notification-toast';
 import {
   Button,
+  FormLabel,
   Icon,
   NotificationBanner,
   Select,
@@ -8,24 +10,14 @@ import {
 import { Spacing } from '@akamai/cds-tokens';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useDatabaseMutation } from '@linode/queries';
-import {
-  Autocomplete,
-  Box,
-  FormControl,
-  FormControlLabel,
-  InputLabel,
-  Radio,
-  RadioGroup,
-  Stack,
-  Typography,
-} from '@linode/ui';
+import { Autocomplete } from '@linode/ui';
 import { updateMaintenanceSchema } from '@linode/validation';
 import { styled } from '@mui/material/styles';
 import { DateTime } from 'luxon';
-import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { useWatch } from 'react-hook-form';
-import { Controller, FormProvider, useForm } from 'react-hook-form';
+import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
+
+import { Stack } from '../../shared/Stack/Stack';
 
 import type { Database, UpdatesSchedule } from '@linode/api-v4/lib/databases';
 import type { SelectOption } from '@linode/ui';
@@ -41,8 +33,6 @@ export const MaintenanceWindow = (props: Props) => {
 
   const [modifiedWeekSelectionMap, setModifiedWeekSelectionMap] =
     React.useState<SelectOption<number>[]>([]);
-
-  const { enqueueSnackbar } = useSnackbar();
 
   const { mutateAsync: updateDatabase } = useDatabaseMutation(
     database.engine,
@@ -82,8 +72,9 @@ export const MaintenanceWindow = (props: Props) => {
         allow_list: database.allow_list,
         updates: values as UpdatesSchedule,
       });
-      enqueueSnackbar('Maintenance Window settings saved successfully.', {
-        variant: 'success',
+      toast.open({
+        text: 'Maintenance Window settings saved successfully.',
+        type: 'success',
       });
       // reset dirty state to disable Save Changes button
       reset(getValues(), { keepValues: true, keepDirty: false });
@@ -120,7 +111,6 @@ export const MaintenanceWindow = (props: Props) => {
     getValues,
     handleSubmit,
     reset,
-    setValue,
     setError,
   } = form;
 
@@ -129,24 +119,17 @@ export const MaintenanceWindow = (props: Props) => {
     name: ['day_of_week', 'hour_of_day', 'frequency', 'week_of_month'],
   });
 
-  const isLegacy = database.platform === 'rdbms-legacy';
-
-  const typographyLegacyDatabase =
-    'Select when you want the required OS and database engine updates to take place. The maintenance may cause downtime on clusters with less than 3 nodes (non high-availability clusters).';
-
   const typographyDatabase =
     "OS and database engine updates will be performed on the schedule below. Select the frequency, day, and time you'd prefer maintenance to occur.";
 
   return (
     <FormProvider {...form}>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <StyledStack>
+        <StyledDiv>
           <Stack>
-            <Typography mb={0.5} variant="h3">
-              {isLegacy
-                ? 'Maintenance Window'
-                : 'Set a Weekly Maintenance Window'}
-            </Typography>
+            <h3 style={{ marginBottom: Spacing.S4, marginTop: 0 }}>
+              Set a Weekly Maintenance Window
+            </h3>
             {errors.root?.message && (
               <NotificationBanner
                 style={{ marginBottom: Spacing.S16, marginTop: Spacing.S8 }}
@@ -156,80 +139,78 @@ export const MaintenanceWindow = (props: Props) => {
                 {errors.root?.message}
               </NotificationBanner>
             )}
-            <StyledTypography>
-              {isLegacy ? typographyLegacyDatabase : typographyDatabase}{' '}
+            <StyledParagraph>
+              {typographyDatabase}{' '}
               {database.cluster_size !== 3 &&
                 'For non-HA plans, expect downtime during this window.'}
-            </StyledTypography>
-            <Stack direction="row" mt={2} spacing={6}>
-              <FormControl>
-                <Controller
-                  control={control}
-                  name="day_of_week"
-                  render={({ field }) => (
-                    <Box>
-                      <InputLabel
-                        data-qa-dropdown-label="day-of-week-select"
-                        data-qa-textfield-label="Day of Week"
-                        sx={{
-                          marginBottom: '8px',
-                          transform: 'none',
+            </StyledParagraph>
+            <Stack
+              direction="row"
+              spacing={Spacing.S6}
+              style={{ marginTop: Spacing.S16 }}
+            >
+              <Controller
+                control={control}
+                name="day_of_week"
+                render={({ field }) => (
+                  <Stack spacing={Spacing.S4}>
+                    <FormLabel
+                      data-qa-dropdown-label="day-of-week-select"
+                      data-qa-textfield-label="Day of Week"
+                      slot="label"
+                      style={{ marginBottom: Spacing.S8 }}
+                    >
+                      Day of Week
+                    </FormLabel>
+                    <div
+                      data-qa-autocomplete="Day of Week"
+                      style={{ width: '125px' }}
+                    >
+                      <Select
+                        autocomplete
+                        id="dayOfWeek"
+                        items={daySelectionMap}
+                        onChange={(e: CustomEvent) => {
+                          const day: { label: string; value: number } =
+                            e.detail;
+                          field.onChange(day.value);
+                          weekSelectionModifier(day.label, weekSelectionMap);
                         }}
-                      >
-                        Day of Week
-                      </InputLabel>
-                      <Box
-                        data-qa-autocomplete="Day of Week"
-                        sx={{ width: '125px' }}
-                      >
-                        <Select
-                          autocomplete
-                          id="dayOfWeek"
-                          items={daySelectionMap}
-                          onChange={(e: CustomEvent) => {
-                            const day: { label: string; value: number } =
-                              e.detail;
-                            field.onChange(day.value);
-                            weekSelectionModifier(day.label, weekSelectionMap);
-                          }}
-                          placeholder="Choose a day"
-                          selected={daySelectionMap.find(
-                            (thisOption) => thisOption.value === dayOfWeek
-                          )}
-                          valueFn={(day: { label: string; value: number }) =>
-                            `${day.label}`
-                          }
-                        />
-                      </Box>
-                    </Box>
-                  )}
-                />
-              </FormControl>
-              <FormControl>
-                <Controller
-                  control={control}
-                  name="hour_of_day"
-                  render={({ field }) => (
-                    <Box data-qa-autocomplete="Time">
-                      <Box>
-                        <InputLabel
-                          data-qa-dropdown-label="time-select"
-                          data-qa-textfield-label="Time"
-                          htmlFor="time"
-                          sx={{
-                            marginBottom: '8px',
-                            transform: 'none',
-                          }}
-                        >
-                          Time
-                        </InputLabel>
-                      </Box>
-                      <Box
-                        sx={{
+                        placeholder="Choose a day"
+                        selected={daySelectionMap.find(
+                          (thisOption) => thisOption.value === dayOfWeek
+                        )}
+                        valueFn={(day: { label: string; value: number }) =>
+                          `${day.label}`
+                        }
+                      />
+                    </div>
+                  </Stack>
+                )}
+              />
+              <Controller
+                control={control}
+                name="hour_of_day"
+                render={({ field }) => (
+                  <Stack
+                    spacing={Spacing.S4}
+                    style={{ marginLeft: Spacing.S48 }}
+                  >
+                    <FormLabel
+                      data-qa-dropdown-label="time-select"
+                      data-qa-textfield-label="Time"
+                      slot="label"
+                      style={{ marginBottom: Spacing.S8 }}
+                    >
+                      Time
+                    </FormLabel>
+                    <div data-qa-autocomplete="Time">
+                      <div
+                        style={{
                           display: 'flex',
                         }}
                       >
-                        <Box sx={{ width: '120px' }}>
+                        <div style={{ width: '120px' }}>
                           <Select
                             autocomplete
                             disabled={disabled}
@@ -248,7 +229,7 @@ export const MaintenanceWindow = (props: Props) => {
                               `${time.label}`
                             }
                           />
-                        </Box>
+                        </div>
                         <Tooltip
                           style={{ marginLeft: Spacing.S8 }}
                           tooltipPlacement="bottom"
@@ -264,67 +245,19 @@ export const MaintenanceWindow = (props: Props) => {
                             }}
                           />
                         </Tooltip>
-                      </Box>
-                    </Box>
-                  )}
-                />
-              </FormControl>
-            </Stack>
-            {isLegacy && (
-              <Controller
-                control={control}
-                name="frequency"
-                render={({ field }) => (
-                  <FormControl
-                    disabled={disabled}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                      field.onChange(e.target.value);
-                      if (e.target.value === 'weekly') {
-                        // If the frequency is weekly, set the 'week_of_month' field to null since that should only be specified for a monthly frequency.
-                        setValue('week_of_month', null);
-                      }
-
-                      if (e.target.value === 'monthly') {
-                        const _dayOfWeek =
-                          daySelectionMap.find(
-                            (option) => option.value === dayOfWeek
-                          ) ?? daySelectionMap[0];
-
-                        weekSelectionModifier(
-                          _dayOfWeek.label,
-                          weekSelectionMap
-                        );
-                        setValue(
-                          'week_of_month',
-                          modifiedWeekSelectionMap[0].value
-                        );
-                      }
-                    }}
-                  >
-                    <RadioGroup
-                      style={{ marginBottom: 0, marginTop: 0 }}
-                      value={frequency}
-                    >
-                      {maintenanceFrequencyMap.map((option) => (
-                        <FormControlLabel
-                          control={<Radio />}
-                          key={option.value}
-                          label={option.key}
-                          value={option.value}
-                        />
-                      ))}
-                    </RadioGroup>
-                  </FormControl>
+                      </div>
+                    </div>
+                  </Stack>
                 )}
               />
-            )}
+            </Stack>
             <div>
               {frequency === 'monthly' && (
                 <Controller
                   control={control}
                   name="week_of_month"
                   render={({ field, fieldState }) => (
-                    <FormControl style={{ minWidth: '250px' }}>
+                    <div style={{ minWidth: '250px' }}>
                       <Autocomplete
                         autoHighlight
                         defaultValue={modifiedWeekSelectionMap[0]}
@@ -349,13 +282,13 @@ export const MaintenanceWindow = (props: Props) => {
                           (thisOption) => thisOption.value === weekOfMonth
                         )}
                       />
-                    </FormControl>
+                    </div>
                   )}
                 />
               )}
             </div>
           </Stack>
-          <StyledButtonStack>
+          <StyledButtonDiv>
             <Button
               data-testid="save-changes-button"
               disabled={!isDirty || isSubmitting || disabled}
@@ -366,23 +299,12 @@ export const MaintenanceWindow = (props: Props) => {
             >
               Save Changes
             </Button>
-          </StyledButtonStack>
-        </StyledStack>
+          </StyledButtonDiv>
+        </StyledDiv>
       </form>
     </FormProvider>
   );
 };
-
-const maintenanceFrequencyMap = [
-  {
-    key: 'Weekly',
-    value: 'weekly',
-  },
-  {
-    key: 'Monthly',
-    value: 'monthly',
-  },
-];
 
 const daySelectionMap = [
   { label: 'Monday', value: 1 },
@@ -434,8 +356,8 @@ const utcOffsetText = (utcOffsetInHours: number) => {
     : `-${utcOffsetInHours}`;
 };
 
-const StyledTypography = styled(Typography, {
-  label: 'StyledTypography',
+const StyledParagraph = styled('p', {
+  label: 'StyledParagraph',
 })(({ theme }) => ({
   [theme.breakpoints.down('md')]: {
     marginBottom: '1rem',
@@ -443,12 +365,14 @@ const StyledTypography = styled(Typography, {
   [theme.breakpoints.down('sm')]: {
     width: '100%',
   },
+  margin: 0,
   width: '65%',
 }));
 
-const StyledStack = styled(Stack, {
-  label: 'StyledStack',
+const StyledDiv = styled('div', {
+  label: 'StyledDiv',
 })(({ theme }) => ({
+  display: 'flex',
   justifyContent: 'space-between',
   flexDirection: 'row',
   [theme.breakpoints.down('md')]: {
@@ -456,9 +380,11 @@ const StyledStack = styled(Stack, {
   },
 }));
 
-const StyledButtonStack = styled(Stack, {
-  label: 'StyledButtonStack',
+const StyledButtonDiv = styled('div', {
+  label: 'StyledButtonDiv',
 })(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
   alignSelf: 'end',
   marginBottom: '1rem',
   marginTop: '1rem',

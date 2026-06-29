@@ -1,3 +1,4 @@
+import { getAPIErrorOrDefault, getErrorMap } from '@akamai/compute-ui-core/api';
 import { sortByString } from '@akamai/compute-ui-core/formatting';
 import { useAccountSettings, useProfile } from '@linode/queries';
 import {
@@ -17,14 +18,13 @@ import { useFormik } from 'formik';
 import React, { useEffect, useState } from 'react';
 
 import { Link } from 'src/components/Link';
+import { useObjectStorageBuckets } from 'src/features/ObjectStorage/hooks/useObjectStorageBuckets';
 import { useObjectStorageRegions } from 'src/features/ObjectStorage/hooks/useObjectStorageRegions';
 import { SecretTokenDialog } from 'src/features/Profile/SecretTokenDialog/SecretTokenDialog';
 import {
   useCreateAccessKeyMutation,
-  useObjectStorageBuckets,
   useUpdateAccessKeyMutation,
 } from 'src/queries/object-storage/queries';
-import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 
 import { EnableObjectStorageModal } from '../EnableObjectStorageModal';
 import { confirmObjectStorage } from '../utilities';
@@ -118,8 +118,8 @@ export const AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
   const { regionsByIdMap } = useObjectStorageRegions();
 
   const {
-    data: objectStorageBuckets,
-    error: bucketsError,
+    data: buckets = [],
+    bucketFetchFailedForAllRegions,
     isLoading: areBucketsLoading,
   } = useObjectStorageBuckets();
 
@@ -127,9 +127,7 @@ export const AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
   const { mutateAsync: createAccessKey } = useCreateAccessKeyMutation();
   const { mutateAsync: updateAccessKey } = useUpdateAccessKeyMutation();
 
-  const buckets = objectStorageBuckets?.buckets || [];
-
-  const hasBuckets = buckets?.length > 0;
+  const hasBuckets = buckets.length > 0;
 
   const createMode = mode === 'creating';
 
@@ -299,7 +297,7 @@ export const AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
   const handleToggleAccess = () => {
     setLimitedAccessChecked((checked) => !checked);
     // Reset scopes
-    const bucketsInRegions = buckets?.filter(
+    const bucketsInRegions = buckets.filter(
       (bucket) => bucket.region && formik.values.regions.includes(bucket.region)
     );
 
@@ -385,7 +383,7 @@ export const AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
               }
               name="regions"
               onChange={(values) => {
-                const bucketsInRegions = buckets?.filter(
+                const bucketsInRegions = buckets.filter(
                   (bucket) => bucket.region && values.includes(bucket.region)
                 );
                 formik.setFieldValue(
@@ -408,7 +406,7 @@ export const AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
                 creation of the key.
               </Typography>
             )}
-            {createMode && !bucketsError && (
+            {createMode && !bucketFetchFailedForAllRegions && (
               <LimitedAccessControls
                 bucket_access={formik.values.bucket_access}
                 checked={limitedAccessChecked}

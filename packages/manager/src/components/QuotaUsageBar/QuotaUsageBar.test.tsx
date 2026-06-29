@@ -44,10 +44,10 @@ describe('QuotaUsageBanner', () => {
     ({ usage, limit, expectedText }) => {
       const { getByText } = renderWithTheme(
         <QuotaUsageBar
+          layout="wide"
           limit={limit}
           resourceMetric="byte"
           usage={usage}
-          variant="quotas"
         />
       );
       const quotaUsageText = getByText(expectedText);

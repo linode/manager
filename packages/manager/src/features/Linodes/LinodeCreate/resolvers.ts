@@ -1,8 +1,7 @@
+import { getRegionCountryGroup, isEURegion } from '@akamai/compute-ui-core/api';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { accountQueries, regionQueries } from '@linode/queries';
 import type { FieldErrors, Resolver } from 'react-hook-form';
-
-import { getRegionCountryGroup, isEURegion } from 'src/utilities/formatRegion';
 
 import { getCleanedLinodeInterfaceValues } from './Networking/utilities';
 import {
@@ -19,7 +18,7 @@ import type {
   LinodeCreateFormContext,
   LinodeCreateFormValues,
 } from './utilities';
-import type { LinodeCreateType } from '@linode/utilities';
+import type { LinodeCreateType } from '@akamai/compute-ui-core/api';
 import type { QueryClient } from '@tanstack/react-query';
 
 export const getLinodeCreateResolver = (

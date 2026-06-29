@@ -1,3 +1,4 @@
+import { getAPIErrorOrDefault } from '@akamai/compute-ui-core/api';
 import { downloadFile } from '@akamai/compute-ui-core/browser';
 import { Box, CircleProgress, LinkButton, Stack, Typography } from '@linode/ui';
 import copy from 'copy-to-clipboard';
@@ -15,7 +16,6 @@ import {
   useAllKubernetesClusterAPIEndpointsQuery,
   useKubernetesKubeConfigQuery,
 } from 'src/queries/kubernetes';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import type { APIError } from '@linode/api-v4';
 import type { Theme } from '@mui/material/styles';

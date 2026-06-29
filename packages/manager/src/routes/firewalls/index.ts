@@ -4,7 +4,7 @@ import { rootRoute } from '../root';
 import { FirewallsRoute } from './FirewallsRoute';
 
 import type { TableSearchParams } from '../types';
-import type { LinodeCreateType } from '@linode/utilities';
+import type { LinodeCreateType } from '@akamai/compute-ui-core/api';
 
 export interface FirewallsSearchParams extends TableSearchParams {
   type?: LinodeCreateType;

@@ -69,7 +69,7 @@ describe('Add Members Drawer', () => {
   it('should render a title, share group name, member name input, token input, and action buttons', () => {
     renderWithTheme(<AddMembersDrawer {...props} />);
 
-    expect(screen.getByText('Add members')).toBeVisible();
+    expect(screen.getByText('Add Members')).toBeVisible();
     expect(screen.getByText(mockShareGroup.label)).toBeVisible();
 
     const memberNameInput = screen.getByRole('textbox', {

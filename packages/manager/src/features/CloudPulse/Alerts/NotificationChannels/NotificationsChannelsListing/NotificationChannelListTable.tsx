@@ -1,3 +1,4 @@
+import { getAPIErrorOrDefault } from '@akamai/compute-ui-core/api';
 import { Notice, TooltipIcon, Typography } from '@linode/ui';
 import { GridLegacy, TableBody, TableHead } from '@mui/material';
 import { useNavigate } from '@tanstack/react-router';
@@ -14,7 +15,6 @@ import { TableSortCell } from 'src/components/TableSortCell';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { useDeleteNotificationChannel } from 'src/queries/cloudpulse/alerts';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import {
   DELETE_CHANNEL_FAILED_MESSAGE,

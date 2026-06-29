@@ -27,8 +27,7 @@ import { getCompanyNameOrEmail } from './utils';
 import type { Theme } from '@mui/material';
 
 export const UserMenu = React.memo(() => {
-  const { isProxyOrDelegateUserType, isProxyUserType, isDelegateUserType } =
-    useDelegationRole();
+  const { isDelegateUserType } = useDelegationRole();
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
     null
   );
@@ -48,16 +47,7 @@ export const UserMenu = React.memo(() => {
     profile,
   });
 
-  // Used for fetching parent profile and account data by making a request with the parent's token.
-  const proxyHeaders = isProxyOrDelegateUserType
-    ? {
-        Authorization: getStorage(`authentication/parent_token/token`),
-      }
-    : undefined;
-
-  const { data: parentProfile } = useProfile({ headers: proxyHeaders });
-
-  const userName = (isProxyUserType ? parentProfile : profile)?.username ?? '';
+  const userName = profile?.username ?? '';
 
   const matchesSmDown = useMediaQuery((theme: Theme) =>
     theme.breakpoints.down('sm')
@@ -68,17 +58,9 @@ export const UserMenu = React.memo(() => {
   );
 
   React.useEffect(() => {
-    // Run after we've switched to a proxy user.
-    if (
-      (isProxyOrDelegateUserType &&
-        isProxyUserType &&
-        !getStorage('is_proxy_user_type')) ||
-      (isDelegateUserType && !getStorage('is_delegate_user_type'))
-    ) {
-      // Flag for proxy user to display success toast once.
-      if (isProxyUserType) {
-        setStorage('is_proxy_user_type', 'true');
-      }
+    // Run after we've switched to a delegate user.
+    if (isDelegateUserType && !getStorage('is_delegate_user_type')) {
+      // Flag for delegate user to display success toast once.
       if (isDelegateUserType) {
         setStorage('is_delegate_user_type', 'true');
       }
@@ -88,13 +70,7 @@ export const UserMenu = React.memo(() => {
         : 'Account switched.';
       enqueueSnackbar(message, { variant: 'success' });
     }
-  }, [
-    isProxyOrDelegateUserType,
-    companyNameOrEmail,
-    enqueueSnackbar,
-    isProxyUserType,
-    isDelegateUserType,
-  ]);
+  }, [companyNameOrEmail, enqueueSnackbar, isDelegateUserType]);
 
   const getEndIcon = () => {
     if (matchesSmDown) {
@@ -125,7 +101,7 @@ export const UserMenu = React.memo(() => {
           onClick={(e) => setAnchorEl(e.currentTarget)}
           open={open}
           startIcon={
-            isProxyOrDelegateUserType ? <AvatarForDelegateUser /> : <Avatar />
+            isDelegateUserType ? <AvatarForDelegateUser /> : <Avatar />
           }
         >
           <Stack

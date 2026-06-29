@@ -1,13 +1,17 @@
 import { screen } from '@testing-library/react';
 import React from 'react';
 
-import { accountRolesFactory } from 'src/factories/accountRoles';
-import { expectNotificationBannerText } from 'src/features/IAM/utilities/testHelpers';
-import { renderWithTheme } from 'src/utilities/testHelpers';
-
+import { createAccountRoles } from '../factories';
+import {
+  expectNotificationBannerText,
+  mockMatchMedia,
+  renderWithProviders,
+} from '../utilities/testHelpers';
 import { RolesLanding } from './Roles';
 
 const DEFAULT_ROLES_PANEL_TEXT = 'Default Roles for Delegate Users';
+
+beforeAll(() => mockMatchMedia());
 
 const queryMocks = vi.hoisted(() => ({
   useAccountRoles: vi.fn().mockReturnValue({}),
@@ -51,13 +55,13 @@ describe('RolesLanding', () => {
       isLoading: true,
     });
 
-    renderWithTheme(<RolesLanding />);
+    renderWithProviders(<RolesLanding />);
 
-    expect(screen.getByTestId('circle-progress')).toBeInTheDocument();
+    expect(screen.getByTestId('circle-progress')).toBeVisible();
   });
 
   it('renders roles table when permissions are loaded', async () => {
-    const mockPermissions = accountRolesFactory.build();
+    const mockPermissions = createAccountRoles();
     queryMocks.usePermissions.mockReturnValue({
       data: {
         list_role_permissions: true,
@@ -68,9 +72,8 @@ describe('RolesLanding', () => {
       isLoading: false,
     });
 
-    renderWithTheme(<RolesLanding />);
-    // RolesTable has a textbox at the top
-    expect(screen.getByRole('textbox')).toBeInTheDocument();
+    const { container } = renderWithProviders(<RolesLanding />);
+    expect(container.querySelector('cds-search-field')).toBeVisible();
   });
 
   it('should show an error message if user does not have permissions', () => {
@@ -80,7 +83,7 @@ describe('RolesLanding', () => {
       },
     });
 
-    renderWithTheme(<RolesLanding />);
+    renderWithProviders(<RolesLanding />);
 
     return expectNotificationBannerText(
       'You do not have permission to view roles.'
@@ -95,11 +98,7 @@ describe('RolesLanding', () => {
     });
     queryMocks.useProfile.mockReturnValue({ data: { user_type: 'parent' } });
 
-    renderWithTheme(<RolesLanding />, {
-      flags: {
-        iamDelegation: { enabled: true },
-      },
-    });
+    renderWithProviders(<RolesLanding />);
     expect(
       screen.queryByText(DEFAULT_ROLES_PANEL_TEXT)
     ).not.toBeInTheDocument();
@@ -113,12 +112,11 @@ describe('RolesLanding', () => {
     });
     queryMocks.useProfile.mockReturnValue({ data: { user_type: 'child' } });
 
-    renderWithTheme(<RolesLanding />, {
+    renderWithProviders(<RolesLanding />, {
       flags: {
-        iamDelegation: { enabled: true },
         iam: { enabled: true },
       },
     });
-    expect(screen.getByText(DEFAULT_ROLES_PANEL_TEXT)).toBeInTheDocument();
+    expect(screen.getByText(DEFAULT_ROLES_PANEL_TEXT)).toBeVisible();
   });
 });

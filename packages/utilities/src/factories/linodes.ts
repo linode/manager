@@ -326,19 +326,19 @@ export const gcpDedicatedTypeFactory = Factory.Sync.makeFactory<LinodeType[]>(
         addons: {
           backups: {
             price: {
-              hourly: null,
-              monthly: null,
+              hourly: 1,
+              monthly: 2,
             },
             region_prices: [
               {
-                hourly: null,
+                hourly: 2,
                 id: 'id-cgk',
-                monthly: null,
+                monthly: 4,
               },
               {
-                hourly: null,
+                hourly: 2,
                 id: 'br-gru',
-                monthly: null,
+                monthly: 4,
               },
             ],
           },
@@ -376,56 +376,6 @@ export const gcpDedicatedTypeFactory = Factory.Sync.makeFactory<LinodeType[]>(
       };
     }),
 );
-
-export const proDedicatedTypeFactory = Factory.Sync.makeFactory<LinodeType>({
-  accelerated_devices: 0,
-  addons: {
-    backups: {
-      price: {
-        hourly: null,
-        monthly: null,
-      },
-      region_prices: [
-        {
-          hourly: null,
-          id: 'id-cgk',
-          monthly: null,
-        },
-        {
-          hourly: null,
-          id: 'br-gru',
-          monthly: null,
-        },
-      ],
-    },
-  },
-  class: 'prodedicated',
-  disk: 5120000,
-  gpus: 0,
-  id: Factory.each((i) => `g6-prodedicated-${i}`),
-  label: Factory.each((i) => `Pro Dedicated 2${i}GB`),
-  memory: 262144,
-  network_out: 11000,
-  price: {
-    hourly: 2.88,
-    monthly: 1920.0,
-  },
-  region_prices: [
-    {
-      hourly: 4.032,
-      id: 'br-gru',
-      monthly: 2688,
-    },
-    {
-      hourly: 3.436,
-      id: 'id-cgk',
-      monthly: 2304,
-    },
-  ],
-  successor: null,
-  transfer: 11000,
-  vcpus: 56,
-});
 
 export const gpuTypeRtxFactory = linodeTypeFactory.extend({
   class: 'gpu',

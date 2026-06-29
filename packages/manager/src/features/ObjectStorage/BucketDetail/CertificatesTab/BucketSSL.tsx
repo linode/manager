@@ -1,3 +1,4 @@
+import { getErrorMap } from '@akamai/compute-ui-core/api';
 import {
   ActionsPanel,
   Box,
@@ -21,7 +22,6 @@ import {
   useBucketSSLMutation,
   useBucketSSLQuery,
 } from 'src/queries/object-storage/queries';
-import { getErrorMap } from 'src/utilities/errorUtils';
 
 import type { CreateObjectStorageBucketSSLPayload } from '@linode/api-v4';
 

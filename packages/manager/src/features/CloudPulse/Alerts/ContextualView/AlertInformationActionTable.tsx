@@ -1,3 +1,4 @@
+import { getAPIErrorOrDefault } from '@akamai/compute-ui-core/api';
 import { type Alert, type APIError } from '@linode/api-v4';
 import { useLinodeQuery } from '@linode/queries';
 import { Box, Button, CircleProgress, TooltipIcon } from '@linode/ui';
@@ -21,7 +22,6 @@ import {
   servicePayloadTransformerMap,
   useAlertsMutation,
 } from 'src/queries/cloudpulse/useAlertsMutation';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { arraysEqual, useContextualAlertsState } from '../../Utils/utils';
 import { AlertConfirmationDialog } from '../AlertsLanding/AlertConfirmationDialog';

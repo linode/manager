@@ -1,11 +1,10 @@
 import { NotificationBanner } from '@akamai/cds-components/react';
-import { Spacing } from '@akamai/cds-tokens';
+import { Spacing, Typography } from '@akamai/cds-tokens';
 import { useAccountUser, useUserRoles } from '@linode/queries';
-import { Typography } from '@linode/ui';
 import { useParams } from '@tanstack/react-router';
 import React from 'react';
 
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { DocumentTitleSegment } from 'src/features/IAM/Shared/DocumentTitleSegment/DocumentTitleSegment';
 import { ErrorState } from 'src/features/IAM/Shared/ErrorState/ErrorState';
 
 import { usePermissions } from '../../hooks/usePermissions';
@@ -57,16 +56,15 @@ export const UserRoles = () => {
     <>
       <DocumentTitleSegment segment={`${username} - User Roles`} />
       {hasAssignedRoles ? (
-        <Paper marginTop={Spacing.S16}>
-          <Typography variant="h2">Assigned Roles</Typography>
-          <Typography
-            sx={{
+        <Paper>
+          <h2 style={{ font: Typography.Heading.M }}>Assigned Roles</h2>
+          <p
+            style={{
               margin: `${Spacing.S12} 0 ${Spacing.S20}`,
             }}
-            variant="body1"
           >
             View and manage roles assigned to the user.
-          </Typography>
+          </p>
           <AssignedRolesTable />
         </Paper>
       ) : (

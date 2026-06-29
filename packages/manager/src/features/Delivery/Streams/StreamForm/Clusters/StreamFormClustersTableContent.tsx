@@ -1,8 +1,7 @@
-import { Box, Checkbox } from '@linode/ui';
+import { Checkbox } from '@linode/ui';
 import React from 'react';
 import type { ControllerRenderProps } from 'react-hook-form';
 
-import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
@@ -10,6 +9,9 @@ import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableSortCell } from 'src/components/TableSortCell';
 
+import { StreamFormClusterTableRow } from './StreamFormClusterTableRow';
+
+import type { Stream } from '@linode/api-v4';
 import type {
   ExtendedKubernetesCluster,
   StreamAndDestinationFormType,
@@ -28,6 +30,7 @@ interface StreamFormClusterTableContentProps {
   onOrderChange: (key: OrderByKeys) => void;
   order: 'asc' | 'desc';
   orderBy: OrderByKeys;
+  streamsByClusterId: Map<number, Stream[]>;
 }
 
 export const StreamFormClusterTableContent = ({
@@ -38,6 +41,7 @@ export const StreamFormClusterTableContent = ({
   onOrderChange,
   idsWithLogsEnabled,
   isAutoAddAllClustersEnabled,
+  streamsByClusterId,
 }: StreamFormClusterTableContentProps) => {
   const selectedIds = field.value || [];
 
@@ -100,33 +104,16 @@ export const StreamFormClusterTableContent = ({
       </TableHead>
       <TableBody>
         {clusters?.length ? (
-          clusters.map(
-            ({
-              label,
-              regionLabel,
-              id,
-              control_plane: { audit_logs_enabled: logsEnabled },
-            }) => (
-              <TableRow key={id}>
-                <TableCell>
-                  <Checkbox
-                    aria-label={`Toggle ${label} cluster`}
-                    checked={selectedIds.includes(id)}
-                    disabled={isAutoAddAllClustersEnabled || !logsEnabled}
-                    onChange={() => toggleCluster(id)}
-                  />
-                </TableCell>
-                <TableCell>{label}</TableCell>
-                <TableCell>{regionLabel}</TableCell>
-                <TableCell>
-                  <Box alignItems="center" display="flex">
-                    <StatusIcon status={logsEnabled ? 'active' : 'error'} />
-                    {logsEnabled ? 'Enabled' : 'Disabled'}
-                  </Box>
-                </TableCell>
-              </TableRow>
-            )
-          )
+          clusters.map((cluster) => (
+            <StreamFormClusterTableRow
+              cluster={cluster}
+              isAutoAddAllClustersEnabled={isAutoAddAllClustersEnabled}
+              isSelected={selectedIds.includes(cluster.id)}
+              key={cluster.id}
+              lkeStreamsUsingCluster={streamsByClusterId.get(cluster.id) ?? []}
+              onToggleCluster={toggleCluster}
+            />
+          ))
         ) : (
           <TableRowEmpty colSpan={4} message="No items to display." />
         )}

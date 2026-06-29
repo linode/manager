@@ -1,3 +1,4 @@
+import { getErrorMap } from '@akamai/compute-ui-core/api';
 import {
   useNodeBalancerQuery,
   useNodebalancerUpdateMutation,
@@ -16,7 +17,6 @@ import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useFlags } from 'src/hooks/useFlags';
 import { useTabs } from 'src/hooks/useTabs';
-import { getErrorMap } from 'src/utilities/errorUtils';
 
 import { NodeBalancerConfigurationsWrapper } from './NodeBalancerConfigurationsWrapper';
 import { NodeBalancerMetrics } from './NodeBalancerMetrics';

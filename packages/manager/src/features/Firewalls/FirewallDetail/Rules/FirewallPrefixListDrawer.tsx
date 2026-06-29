@@ -25,9 +25,9 @@ import {
   useStyles,
 } from './shared.styles';
 
-import type { PrefixListRuleReference } from '../../shared';
 import type { FirewallRuleDrawerMode } from './FirewallRuleDrawer.types';
 import type { Category } from './shared';
+import type { PrefixListRuleReference } from '@akamai/compute-ui-core/api';
 
 export interface PrefixListDrawerContext {
   modeViewedFrom?: FirewallRuleDrawerMode; // Optional in the case of normal rules

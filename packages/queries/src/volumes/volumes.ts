@@ -26,13 +26,13 @@ import { linodeQueries } from '../linodes';
 import { profileQueries } from '../profile';
 import { getAllVolumes, getAllVolumeTypes } from './requests';
 
+import type { PriceType } from '@akamai/compute-ui-core/api';
 import type {
   APIError,
   AttachVolumePayload,
   CloneVolumePayload,
   Filter,
   Params,
-  PriceType,
   ResizeVolumePayload,
   ResourcePage,
   UpdateVolumeRequest,

@@ -1,11 +1,9 @@
 import { screen, within } from '@testing-library/react';
 import React from 'react';
 
-import { accountUserFactory } from 'src/factories/accountUsers';
-import { userRolesFactory } from 'src/factories/userRoles';
-import { expectNotificationBannerText } from 'src/features/IAM/utilities/testHelpers';
-import { renderWithTheme } from 'src/utilities/testHelpers';
-
+import { createUser, createUserRoles } from '../../factories';
+import { expectNotificationBannerText } from '../../utilities/testHelpers';
+import { renderWithProviders } from '../../utilities/testHelpers';
 import { UserProfile } from './UserProfile';
 
 const queryMocks = vi.hoisted(() => ({
@@ -40,6 +38,13 @@ vi.mock('../../hooks/usePermissions', async () => {
   };
 });
 
+const getDetailsGrid = (container: HTMLElement) => {
+  const grid = container.querySelector('[class*="itemsGrid"]');
+  expect(grid).not.toBeNull();
+
+  return within(grid as HTMLElement);
+};
+
 describe('UserProfile', () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -55,7 +60,7 @@ describe('UserProfile', () => {
       isLoading: false,
     });
     queryMocks.useAccountUser.mockReturnValue({
-      data: accountUserFactory.build({
+      data: createUser({
         email: 'test-user@example.com',
         username: 'test-user',
       }),
@@ -63,7 +68,7 @@ describe('UserProfile', () => {
       isLoading: false,
     });
     queryMocks.useUserRoles.mockReturnValue({
-      data: userRolesFactory.build({
+      data: createUserRoles({
         account_access: ['account_admin'],
         entity_access: [],
       }),
@@ -77,7 +82,7 @@ describe('UserProfile', () => {
       isLoading: true,
     });
 
-    renderWithTheme(<UserProfile />);
+    renderWithProviders(<UserProfile />);
 
     expect(screen.getByTestId('circle-progress')).toBeVisible();
   });
@@ -93,7 +98,7 @@ describe('UserProfile', () => {
       isLoading: false,
     });
 
-    renderWithTheme(<UserProfile />);
+    renderWithProviders(<UserProfile />);
 
     return expectNotificationBannerText(
       "You do not have permission to view this user's details."
@@ -107,7 +112,7 @@ describe('UserProfile', () => {
       isLoading: false,
     });
 
-    renderWithTheme(<UserProfile />);
+    renderWithProviders(<UserProfile />);
 
     expect(screen.getByText('Unable to load user profile.')).toBeVisible();
   });
@@ -119,14 +124,14 @@ describe('UserProfile', () => {
       isLoading: false,
     });
 
-    renderWithTheme(<UserProfile />);
+    renderWithProviders(<UserProfile />);
 
     expect(screen.getByText('Not Found')).toBeVisible();
     expect(screen.getByText('This page does not exist.')).toBeVisible();
   });
 
   it('renders the profile panels with the resolved user data and permissions', () => {
-    renderWithTheme(<UserProfile />);
+    const { container } = renderWithProviders(<UserProfile />);
 
     expect(queryMocks.usePermissions).toHaveBeenCalledWith('account', [
       'view_user',
@@ -137,11 +142,9 @@ describe('UserProfile', () => {
     expect(queryMocks.useAccountUser).toHaveBeenCalledWith('test-user', true);
     expect(queryMocks.useUserRoles).toHaveBeenCalledWith('test-user', true);
 
-    const usernameField = screen.getByText('Username').parentElement;
+    const details = getDetailsGrid(container);
 
-    expect(usernameField).not.toBeNull();
-    expect(
-      within(usernameField as HTMLElement).getByText('test-user')
-    ).toBeVisible();
+    expect(details.getByText('test-user')).toBeVisible();
+    expect(details.getByText('test-user@example.com')).toBeVisible();
   });
 });

@@ -3,9 +3,17 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { useZoomController } from './useZoomController';
 
-import type { CategoricalChartState } from 'recharts/types/chart/types';
+import type { MouseHandlerDataParam } from 'recharts';
 
 describe('useZoomController', () => {
+  const mockEvent: MouseHandlerDataParam = {
+    activeLabel: 1000,
+    activeTooltipIndex: 0,
+    isTooltipActive: true,
+    activeIndex: 0,
+    activeDataKey: 'timestamp',
+    activeCoordinate: { x: 0, y: 0 },
+  };
   beforeEach(() => {
     vi.clearAllMocks();
   });
@@ -20,9 +28,6 @@ describe('useZoomController', () => {
   });
   it('should set refAreaLeft on mouse down with valid payload', () => {
     const { result } = renderHook(() => useZoomController('test-key'));
-    const mockEvent: CategoricalChartState = {
-      activePayload: [{ payload: { timestamp: 1000 } }],
-    };
     act(() => {
       result.current.zoomCallbacks.onMouseDown(mockEvent);
     });
@@ -30,9 +35,12 @@ describe('useZoomController', () => {
   });
   it('should not set refAreaLeft on mouse down without payload', () => {
     const { result } = renderHook(() => useZoomController('test-key'));
-    const mockEvent: CategoricalChartState = {};
     act(() => {
-      result.current.zoomCallbacks.onMouseDown(mockEvent);
+      result.current.zoomCallbacks.onMouseDown({
+        ...mockEvent,
+        activeLabel: 'string-label',
+        isTooltipActive: false,
+      });
     });
     expect(result.current.zoom.refAreaLeft).toBeUndefined();
   });
@@ -40,14 +48,15 @@ describe('useZoomController', () => {
     const { result } = renderHook(() => useZoomController('test-key'));
 
     act(() => {
-      result.current.zoomCallbacks.onMouseDown({
-        activePayload: [{ payload: { timestamp: 1000 } }],
-      });
+      result.current.zoomCallbacks.onMouseDown(mockEvent);
     });
 
     act(() => {
       result.current.zoomCallbacks.onMouseMove({
-        activePayload: [{ payload: { timestamp: 2000 } }],
+        ...mockEvent,
+        activeLabel: 2000,
+        activeTooltipIndex: 1,
+        activeIndex: 1,
       });
     });
 
@@ -57,11 +66,12 @@ describe('useZoomController', () => {
   it('should apply zoom on mouse up with valid drag', () => {
     const { result } = renderHook(() => useZoomController('test-key'));
     act(() => {
-      result.current.zoomCallbacks.onMouseDown({
-        activePayload: [{ payload: { timestamp: 1000 } }],
-      });
+      result.current.zoomCallbacks.onMouseDown(mockEvent);
       result.current.zoomCallbacks.onMouseMove({
-        activePayload: [{ payload: { timestamp: 2000 } }],
+        ...mockEvent,
+        activeLabel: 2000,
+        activeTooltipIndex: 1,
+        activeIndex: 1,
       });
       result.current.zoomCallbacks.onMouseUp();
     });
@@ -75,11 +85,10 @@ describe('useZoomController', () => {
     const { result } = renderHook(() => useZoomController('test-key'));
     act(() => {
       result.current.zoomCallbacks.onMouseDown({
-        activePayload: [{ payload: { timestamp: 2000 } }],
+        ...mockEvent,
+        activeLabel: 2000,
       });
-      result.current.zoomCallbacks.onMouseMove({
-        activePayload: [{ payload: { timestamp: 1000 } }],
-      });
+      result.current.zoomCallbacks.onMouseMove(mockEvent);
       result.current.zoomCallbacks.onMouseUp();
     });
     expect(result.current.zoom.left).toBe(1000);
@@ -88,11 +97,12 @@ describe('useZoomController', () => {
   it('should reset zoom on zoomOut', () => {
     const { result } = renderHook(() => useZoomController('test-key'));
     act(() => {
-      result.current.zoomCallbacks.onMouseDown({
-        activePayload: [{ payload: { timestamp: 1000 } }],
-      });
+      result.current.zoomCallbacks.onMouseDown(mockEvent);
       result.current.zoomCallbacks.onMouseMove({
-        activePayload: [{ payload: { timestamp: 2000 } }],
+        ...mockEvent,
+        activeLabel: 2000,
+        activeTooltipIndex: 1,
+        activeIndex: 1,
       });
       result.current.zoomCallbacks.onMouseUp();
     });
@@ -111,11 +121,12 @@ describe('useZoomController', () => {
       { initialProps: { key: 'key1' } }
     );
     act(() => {
-      result.current.zoomCallbacks.onMouseDown({
-        activePayload: [{ payload: { timestamp: 1000 } }],
-      });
+      result.current.zoomCallbacks.onMouseDown(mockEvent);
       result.current.zoomCallbacks.onMouseMove({
-        activePayload: [{ payload: { timestamp: 2000 } }],
+        ...mockEvent,
+        activeLabel: 2000,
+        activeTooltipIndex: 1,
+        activeIndex: 1,
       });
       result.current.zoomCallbacks.onMouseUp();
     });
@@ -128,9 +139,7 @@ describe('useZoomController', () => {
   it('should clear refArea on mouse up without drag', () => {
     const { result } = renderHook(() => useZoomController('test-key'));
     act(() => {
-      result.current.zoomCallbacks.onMouseDown({
-        activePayload: [{ payload: { timestamp: 1000 } }],
-      });
+      result.current.zoomCallbacks.onMouseDown(mockEvent);
       result.current.zoomCallbacks.onMouseUp();
     });
     expect(result.current.zoom.refAreaLeft).toBeUndefined();

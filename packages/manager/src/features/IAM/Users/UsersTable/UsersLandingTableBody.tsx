@@ -1,11 +1,9 @@
+import { Icon, TableCell, TableRow } from '@akamai/cds-components/react';
+import { Spacing } from '@akamai/cds-tokens';
 import { useProfile } from '@linode/queries';
-import { WarningIcon } from '@linode/ui';
 import React from 'react';
 
-import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
-import { TableRowError } from 'src/components/TableRowError/TableRowError';
-import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
-
+import { CircleProgress } from '../../Shared/CircleProgress/CircleProgress';
 import { UserRow } from './UserRow';
 
 import type { APIError, User } from '@linode/api-v4';
@@ -13,41 +11,57 @@ import type { APIError, User } from '@linode/api-v4';
 interface Props {
   error: APIError[] | null;
   isLoading: boolean;
-  numCols: number;
   onDelete: (username: string) => void;
   users: undefined | User[];
 }
 
 export const UsersLandingTableBody = (props: Props) => {
-  const { error, isLoading, numCols, onDelete, users } = props;
+  const { error, isLoading, onDelete, users } = props;
   const { data: profile } = useProfile();
 
   if (isLoading) {
-    return <TableRowLoading columns={numCols} rows={1} />;
+    return (
+      <TableRow
+        aria-label="Table content is loading"
+        data-testid="table-row-loading"
+      >
+        <TableCell style={{ height: 50, paddingTop: Spacing.S16 }}>
+          <CircleProgress size="medium" />
+        </TableCell>
+      </TableRow>
+    );
   }
 
   if (error) {
-    return <TableRowError colSpan={numCols} message={error[0].reason} />;
+    return (
+      <TableRow data-testid="table-row-error">
+        <TableCell style={{ textAlign: 'center', flexBasis: '100%' }}>
+          <p style={{ width: '100%' }}>{error[0].reason}</p>
+        </TableCell>
+      </TableRow>
+    );
   }
 
   if (!users || users.length === 0) {
     return (
-      <TableRowEmpty
-        colSpan={numCols}
-        message={
-          profile?.restricted ? (
-            <>
-              <WarningIcon
-                style={{ position: 'relative', top: 2, marginRight: 4 }}
-                width={16}
-              />{' '}
-              You do not have permission to list users.
-            </>
-          ) : (
-            'No users found'
-          )
-        }
-      />
+      <TableRow>
+        <TableCell style={{ textAlign: 'center', flexBasis: '100%' }}>
+          <p style={{ width: '100%' }}>
+            {profile?.restricted ? (
+              <>
+                <Icon
+                  icon="status-alert-filled"
+                  size="s"
+                  style={{ verticalAlign: 'sub' }}
+                />{' '}
+                You do not have permission to list users.
+              </>
+            ) : (
+              'No users found'
+            )}
+          </p>
+        </TableCell>
+      </TableRow>
     );
   }
 

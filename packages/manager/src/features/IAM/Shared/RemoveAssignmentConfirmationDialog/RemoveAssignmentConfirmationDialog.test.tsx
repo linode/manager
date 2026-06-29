@@ -2,10 +2,9 @@ import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
-import { accountRolesFactory } from 'src/factories/accountRoles';
-import { renderWithTheme } from 'src/utilities/testHelpers';
-
+import { createAccountRoles } from '../../factories';
 import { getCdsButtonByText } from '../../utilities/testHelpers';
+import { renderWithProviders } from '../../utilities/testHelpers';
 import { INTERNAL_ERROR_NO_CHANGES_SAVED } from '../constants';
 import { RemoveAssignmentConfirmationDialog } from './RemoveAssignmentConfirmationDialog';
 
@@ -82,7 +81,7 @@ describe('RemoveAssignmentConfirmationDialog', () => {
   });
 
   it('should render', async () => {
-    renderWithTheme(
+    renderWithProviders(
       <RemoveAssignmentConfirmationDialog {...props} username="test_user" />
     );
 
@@ -107,7 +106,7 @@ describe('RemoveAssignmentConfirmationDialog', () => {
   });
 
   it('calls onClose when the cancel button is clicked', async () => {
-    renderWithTheme(<RemoveAssignmentConfirmationDialog {...props} />);
+    renderWithProviders(<RemoveAssignmentConfirmationDialog {...props} />);
 
     const cancelButton = await getCdsButtonByText(document.body, 'Cancel');
     expect(cancelButton).toBeVisible();
@@ -133,7 +132,7 @@ describe('RemoveAssignmentConfirmationDialog', () => {
     });
 
     queryMocks.useAccountRoles.mockReturnValue({
-      data: accountRolesFactory.build(),
+      data: createAccountRoles(),
     });
 
     queryMocks.useUserRolesMutation.mockReturnValue({
@@ -143,7 +142,7 @@ describe('RemoveAssignmentConfirmationDialog', () => {
       reset: vi.fn(),
     });
 
-    renderWithTheme(<RemoveAssignmentConfirmationDialog {...props} />);
+    renderWithProviders(<RemoveAssignmentConfirmationDialog {...props} />);
 
     const removeButton = await getCdsButtonByText(document.body, 'Remove');
     expect(removeButton).toBeVisible();
@@ -162,7 +161,7 @@ describe('RemoveAssignmentConfirmationDialog', () => {
     queryMocks.useIsDefaultDelegationRolesForChildAccount.mockReturnValue({
       isDefaultDelegationRolesForChildAccount: true,
     });
-    renderWithTheme(<RemoveAssignmentConfirmationDialog {...props} />);
+    renderWithProviders(<RemoveAssignmentConfirmationDialog {...props} />);
 
     expect(
       screen.getByText('Remove entity from the list?')
@@ -191,7 +190,7 @@ describe('RemoveAssignmentConfirmationDialog', () => {
       isDefaultDelegationRolesForChildAccount: true,
     });
 
-    renderWithTheme(<RemoveAssignmentConfirmationDialog {...props} />);
+    renderWithProviders(<RemoveAssignmentConfirmationDialog {...props} />);
     const removeButton = await getCdsButtonByText(document.body, 'Remove');
     expect(removeButton).toBeVisible();
 

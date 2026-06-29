@@ -1,7 +1,8 @@
 import { useAccountSettings, useProfile } from '@linode/queries';
 import { styled } from '@mui/material/styles';
-import { useMatch, useNavigate } from '@tanstack/react-router';
+import { useNavigate, useRouterState } from '@tanstack/react-router';
 import * as React from 'react';
+import { useEffect } from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
@@ -12,18 +13,18 @@ import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
 import { TransferDisplay } from 'src/components/TransferDisplay/TransferDisplay';
+import { useObjectStorageBuckets } from 'src/features/ObjectStorage/hooks/useObjectStorageBuckets';
 import { useFlags } from 'src/hooks/useFlags';
 import { useTabs } from 'src/hooks/useTabs';
-import { useObjectStorageBuckets } from 'src/queries/object-storage/queries';
 
 import { getRestrictedResourceText } from '../Account/utils';
 import { AccessKeysDrawerOutlet } from './AccessKeyLanding/AccessKeysDrawerOutlet';
 import { useAccessKeyDrawers } from './AccessKeyLanding/hooks/useAccessKeyDrawers';
 import { BillingNotice } from './BillingNotice';
 import { BucketDrawerOutlet } from './BucketLanding/BucketDrawerOutlet';
+import { BucketLanding } from './BucketLanding/BucketLanding';
 import { BucketLandingEmptyState } from './BucketLanding/BucketLandingEmptyState';
 import { useBucketDrawers } from './BucketLanding/hooks/useBucketDrawers';
-import { OMC_BucketLanding } from './BucketLanding/OMC_BucketLanding';
 
 import type { Tab } from 'src/hooks/useTabs';
 
@@ -41,7 +42,9 @@ const AccessKeyLanding = React.lazy(() =>
 export const ObjectStorageLanding = () => {
   const { promotionalOffers, objSummaryPage } = useFlags();
   const navigate = useNavigate();
-  const { routeId } = useMatch({ strict: false });
+  const { routeId } = useRouterState({
+    select: (s) => s.matches[s.matches.length - 1],
+  });
 
   const { data: profile } = useProfile();
   const { data: accountSettings } = useAccountSettings();
@@ -51,13 +54,12 @@ export const ObjectStorageLanding = () => {
   const isRestrictedUser = profile?.restricted ?? false;
 
   const {
-    data: objectStorageBucketsResponse,
-    error: bucketsErrors,
+    data: buckets,
+    bucketFetchFailedForAnyRegion,
     isLoading: areBucketsLoading,
   } = useObjectStorageBuckets();
 
-  const userHasNoBucketCreated =
-    objectStorageBucketsResponse?.buckets.length === 0;
+  const userHasNoBucketCreated = buckets?.length === 0;
 
   // TODO: Remove when OBJ Summary is enabled
   const objTabs: Tab[] = [
@@ -98,49 +100,56 @@ export const ObjectStorageLanding = () => {
   const isObjectStorageOpened = routeId === '/object-storage/';
   const isSummaryOpened = routeId === '/object-storage/summary';
   const isCreateBucketOpen = routeId === '/object-storage/buckets/create';
-  const isLandingPageShown = !isObjectStorageEnabled || isRestrictedUser;
+  const isEmptyStateLandingPageShown =
+    !isObjectStorageEnabled || isRestrictedUser;
 
   // Users must explicitly cancel Object Storage in their Account Settings to avoid being billed.
   // Display a warning if the service is active but no buckets are present.
   const isBillingNoticeShown =
     !areBucketsLoading &&
-    !bucketsErrors &&
+    !bucketFetchFailedForAnyRegion &&
     userHasNoBucketCreated &&
     isObjectStorageEnabled;
 
-  if (!isLandingPageShown && isObjectStorageOpened) {
+  useEffect(() => {
     // TODO: Remove condition when OBJ Summary is enabled
-    navigate({
-      to: objSummaryPage
-        ? '/object-storage/summary'
-        : '/object-storage/buckets',
-    });
-    return;
-  }
-
-  if (isLandingPageShown && !isObjectStorageOpened) {
-    if (isRestrictedUser) {
-      navigate({ to: '/object-storage' });
+    if (!isEmptyStateLandingPageShown && isObjectStorageOpened) {
+      navigate({
+        to: objSummaryPage
+          ? '/object-storage/summary'
+          : '/object-storage/buckets',
+      });
       return;
     }
+    if (isEmptyStateLandingPageShown && !isObjectStorageOpened) {
+      if (isRestrictedUser) {
+        navigate({ to: '/object-storage' });
+        return;
+      }
 
-    if (!routeId.endsWith('/create')) {
-      navigate({ to: '/object-storage' });
-      return;
+      if (!routeId.endsWith('/create')) {
+        navigate({ to: '/object-storage' });
+        return;
+      }
     }
-  }
+  }, [
+    isEmptyStateLandingPageShown,
+    isObjectStorageOpened,
+    isRestrictedUser,
+    routeId,
+  ]);
 
   return (
     <>
       <DocumentTitleSegment
         segment={`${
-          isCreateBucketOpen && !objectStorageBucketsResponse?.buckets.length
+          isCreateBucketOpen && !buckets?.length
             ? 'Create a Bucket'
             : 'Object Storage'
         }`}
       />
 
-      {!isLandingPageShown && (
+      {!isEmptyStateLandingPageShown && (
         <LandingHeader
           breadcrumbProps={{ pathname: '/object-storage' }}
           buttonDataAttrs={{
@@ -161,7 +170,7 @@ export const ObjectStorageLanding = () => {
         />
       )}
 
-      {isLandingPageShown ? (
+      {isEmptyStateLandingPageShown ? (
         <BucketLandingEmptyState isRestricted={isRestrictedUser} />
       ) : (
         <>
@@ -185,7 +194,7 @@ export const ObjectStorageLanding = () => {
                   </SafeTabPanel>
                 )}
                 <SafeTabPanel index={bucketsTabIndex}>
-                  <OMC_BucketLanding
+                  <BucketLanding
                     isCreateBucketDrawerOpen={isCreateBucketOpen}
                   />
                 </SafeTabPanel>

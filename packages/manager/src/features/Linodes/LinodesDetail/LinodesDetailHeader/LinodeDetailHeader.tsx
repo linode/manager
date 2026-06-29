@@ -1,3 +1,4 @@
+import { getAPIErrorOrDefault } from '@akamai/compute-ui-core/api';
 import { useLinodeQuery, useLinodeUpdateMutation } from '@linode/queries';
 import { useAllAccountMaintenanceQuery } from '@linode/queries';
 import { CircleProgress, ErrorState } from '@linode/ui';
@@ -17,7 +18,6 @@ import {
   sendLinodeCreateFlowDocsClickEvent,
   sendUpdateLinodeLabelEvent,
 } from 'src/utilities/analytics/customEventAnalytics';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { addMaintenanceToLinodes } from 'src/utilities/linodes';
 
 import { DeleteLinodeDialog } from '../../LinodesLanding/DeleteLinodeDialog';

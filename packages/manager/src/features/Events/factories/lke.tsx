@@ -89,6 +89,14 @@ export const lke: PartialEventMap<'lke'> = {
       </>
     ),
   },
+  lke_node_delete: {
+    notification: (e) => (
+      <>
+        Kubernetes Cluster node on <EventLink event={e} to="entity" /> has been{' '}
+        <strong>deleted</strong>.
+      </>
+    ),
+  },
   lke_node_recycle: {
     notification: (e) => (
       <>

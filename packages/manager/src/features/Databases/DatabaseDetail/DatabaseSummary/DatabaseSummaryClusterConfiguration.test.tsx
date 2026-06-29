@@ -3,11 +3,13 @@ import { waitFor } from '@testing-library/react';
 import React from 'react';
 
 import { databaseFactory, databaseTypeFactory } from 'src/factories/databases';
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import { DatabaseSummaryClusterConfiguration } from './DatabaseSummaryClusterConfiguration';
 
 import type { Database, DatabaseStatus } from '@linode/api-v4/lib/databases';
+
+beforeAll(() => mockMatchMedia());
 
 const STATUS_VALUE = 'Active';
 const PLAN_VALUE = 'New DBaaS - Dedicated 8 GB';
@@ -96,7 +98,7 @@ describe('DatabaseSummaryClusterConfiguration', () => {
       expect(queryAllByText('RAM')).toHaveLength(1);
       expect(queryAllByText('8 GB')).toHaveLength(1);
 
-      expect(queryAllByText('Total Disk Size')).toHaveLength(1);
+      expect(queryAllByText('Usable Disk Size')).toHaveLength(1);
       expect(queryAllByText('130 GB')).toHaveLength(1);
     });
   });
@@ -127,7 +129,8 @@ describe('DatabaseSummaryClusterConfiguration', () => {
     });
 
     await waitFor(() => {
-      expect(queryAllByText('Cluster Configuration')).toHaveLength(0);
+      expect(queryAllByText('Cluster Configuration')).toHaveLength(1);
+      expect(queryAllByText('Status')).toHaveLength(0);
     });
   });
 });

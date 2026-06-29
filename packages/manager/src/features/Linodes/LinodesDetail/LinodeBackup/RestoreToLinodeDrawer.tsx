@@ -1,3 +1,4 @@
+import { getErrorMap } from '@akamai/compute-ui-core/api';
 import {
   useLinodeBackupRestoreMutation,
   useLinodeQuery,
@@ -18,7 +19,6 @@ import * as React from 'react';
 
 import { useGetAllUserEntitiesByPermission } from 'src/features/IAM/hooks/useGetAllUserEntitiesByPermission';
 import { useEventsPollingActions } from 'src/queries/events/events';
-import { getErrorMap } from 'src/utilities/errorUtils';
 
 import type { Linode, LinodeBackup } from '@linode/api-v4/lib/linodes';
 

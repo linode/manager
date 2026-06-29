@@ -42,3 +42,20 @@ export const ContentSection = styled(Box)(() => ({
   flex: 1,
   minWidth: 0,
 }));
+
+export const TabContentContainer = styled(Box)(() => ({
+  display: 'flex',
+  flex: 1,
+  flexDirection: 'column',
+  minHeight: 0,
+  '& [data-reach-tabs]': {
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100%',
+  },
+  '& [data-reach-tab-panels]': {
+    flex: 1,
+    minHeight: 0,
+    overflowY: 'auto',
+  },
+}));

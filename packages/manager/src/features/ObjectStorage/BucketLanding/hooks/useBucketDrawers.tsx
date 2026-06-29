@@ -1,4 +1,4 @@
-import { useMatch, useNavigate, useParams } from '@tanstack/react-router';
+import { useNavigate, useParams, useRouterState } from '@tanstack/react-router';
 import { useMemo } from 'react';
 
 type BucketDrawerType = 'bucket-details' | 'create-bucket';
@@ -13,7 +13,9 @@ interface BucketDrawerState {
 
 export const useBucketDrawers = () => {
   const navigate = useNavigate();
-  const { routeId } = useMatch({ strict: false });
+  const { routeId } = useRouterState({
+    select: (s) => s.matches[s.matches.length - 1],
+  });
   const { regionId, bucketName } = useParams({ strict: false });
 
   const drawer: BucketDrawerState | null = useMemo(() => {
@@ -36,16 +38,17 @@ export const useBucketDrawers = () => {
       case 'bucket-details':
         navigate({
           to: `${BUCKETS_BASE_URL}/${regionId}/${bucketName}/details`,
+          search: true,
         });
         break;
       case 'create-bucket':
-        navigate({ to: `${BUCKETS_BASE_URL}/create` });
+        navigate({ to: `${BUCKETS_BASE_URL}/create`, search: true });
         break;
     }
   }
 
   function closeDrawer() {
-    navigate({ to: BUCKETS_BASE_URL });
+    navigate({ to: BUCKETS_BASE_URL, search: true });
   }
 
   return {

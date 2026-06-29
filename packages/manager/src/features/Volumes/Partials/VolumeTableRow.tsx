@@ -1,7 +1,7 @@
+import { getFormattedStatus } from '@akamai/compute-ui-core/api';
 import { useNotificationsQuery, useRegionsQuery } from '@linode/queries';
 import { Box, Chip } from '@linode/ui';
 import { Hidden } from '@linode/ui';
-import { getFormattedStatus } from '@linode/utilities';
 import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';

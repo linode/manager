@@ -11,7 +11,11 @@ import { DatabaseCreate } from 'src/features/Databases/DatabaseCreate/DatabaseCr
 import { DatabaseResize } from 'src/features/Databases/DatabaseDetail/DatabaseResize/DatabaseResize';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
-import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
+import {
+  getShadowRootElement,
+  mockMatchMedia,
+  renderWithTheme,
+} from 'src/utilities/testHelpers';
 
 import { DatabaseDetailContext } from '../DatabaseDetail/DatabaseDetailContext';
 
@@ -118,8 +122,12 @@ describe('database summary section', () => {
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
-    const node = getByTestId('database-node-1');
-    await userEvent.click(node);
+    const nodeHost = getByTestId('database-node-1');
+    const nodeInput = await getShadowRootElement<HTMLInputElement>(
+      nodeHost,
+      'input'
+    );
+    await userEvent.click(nodeInput!);
 
     const summary = getByTestId('resizeSummary');
     const selectedNodesText = '1 Node $60/month';
@@ -150,8 +158,12 @@ describe('database summary section', () => {
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
-    const node = getByTestId('database-node-3');
-    await userEvent.click(node);
+    const nodeHost = getByTestId('database-node-3');
+    const nodeInput = await getShadowRootElement<HTMLInputElement>(
+      nodeHost,
+      'input'
+    );
+    await userEvent.click(nodeInput!);
 
     const summary = getByTestId('resizeSummary');
     const selectedNodesText = '3 Nodes - HA $140/month';

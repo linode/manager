@@ -2,7 +2,7 @@ import { getBucket } from '@linode/api-v4';
 
 import { objectStorageQueries } from './queries';
 
-import type { BucketsResponse } from './requests';
+import type { ObjectStorageBucket } from '@linode/api-v4';
 import type { QueryClient } from '@tanstack/react-query';
 
 /**
@@ -26,22 +26,22 @@ export const prefixToQueryKey = (prefix: string) => {
  * as opposed to re-fetching all buckets.
  */
 export const fetchBucketAndUpdateCache = async (
-  regionOrCluster: string,
+  regionId: string,
   bucketName: string,
   queryClient: QueryClient
 ) => {
-  const bucket = await getBucket(regionOrCluster, bucketName);
+  const bucket = await getBucket(regionId, bucketName);
 
-  queryClient.setQueryData<BucketsResponse>(
-    objectStorageQueries.buckets.queryKey,
+  queryClient.setQueryData<ObjectStorageBucket[]>(
+    objectStorageQueries.allBucketsInRegion(regionId).queryKey,
     (previousData) => {
       if (!previousData) {
         return undefined;
       }
 
-      const indexOfBucket = previousData.buckets.findIndex(
+      const indexOfBucket = previousData.findIndex(
         (b) =>
-          (b.region === regionOrCluster || b.cluster === regionOrCluster) &&
+          (b.region === regionId || b.cluster === regionId) &&
           b.label === bucketName
       );
 
@@ -50,14 +50,11 @@ export const fetchBucketAndUpdateCache = async (
         return undefined;
       }
 
-      const newBuckets = [...previousData.buckets];
+      const newBuckets = [...previousData];
 
       newBuckets[indexOfBucket] = bucket;
 
-      return {
-        buckets: newBuckets,
-        errors: previousData?.errors ?? [],
-      };
+      return newBuckets;
     }
   );
 

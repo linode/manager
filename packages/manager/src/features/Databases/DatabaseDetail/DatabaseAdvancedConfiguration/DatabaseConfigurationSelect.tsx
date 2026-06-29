@@ -68,6 +68,7 @@ export const DatabaseConfigurationSelect = (props: Props) => {
         </li>
       )}
       slotProps={{
+        popper: { disablePortal: false }, // Portal must be enabled for the popper to open in a CDS Drawer
         listbox: {
           style: {
             padding: 0,

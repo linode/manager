@@ -2,14 +2,37 @@ import { waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { vi } from 'vitest';
 
-import { databaseFactory } from 'src/factories';
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import { databaseFactory, databaseTypeFactory } from 'src/factories/databases';
+import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import * as utils from '../../utilities';
 import { DatabaseDetailContext } from '../DatabaseDetailContext';
 import { DatabaseSummary } from './DatabaseSummary';
 
 import type { Database } from '@linode/api-v4';
+
+beforeAll(() => mockMatchMedia());
+
+const queryMocks = vi.hoisted(() => ({
+  useDatabaseTypesQuery: vi.fn().mockReturnValue({}),
+}));
+
+vi.mock(import('@linode/queries'), async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
+    useDatabaseTypesQuery: queryMocks.useDatabaseTypesQuery,
+  };
+});
+
+queryMocks.useDatabaseTypesQuery.mockReturnValue({
+  data: databaseTypeFactory.buildList(1, {
+    id: 'g6-nanode-1',
+    label: 'DBaaS - Nanode 1GB',
+    memory: 1024,
+    vcpus: 1,
+  }),
+});
 
 const CLUSTER_CONFIGURATION = 'Cluster Configuration';
 

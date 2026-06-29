@@ -1,5 +1,5 @@
+import { Spacing } from '@akamai/cds-tokens/themes/dark';
 import { useProfile } from '@linode/queries';
-import { Stack, Typography } from '@linode/ui';
 import * as React from 'react';
 
 import {
@@ -22,12 +22,13 @@ import { useFlags } from 'src/hooks/useFlags';
 
 import { Divider } from '../../shared/Divider/Divider';
 import { Paper } from '../../shared/Paper/Paper';
+import { Stack } from '../../shared/Stack/Stack';
 import AccessControls from '../AccessControls';
 import { useDatabaseDetailContext } from '../DatabaseDetailContext';
 import { DatabaseSettingsDeleteClusterDialog } from './DatabaseSettingsDeleteClusterDialog';
 import { DatabaseSettingsMaintenance } from './DatabaseSettingsMaintenance';
 import DatabaseSettingsMenuItem from './DatabaseSettingsMenuItem';
-import DatabaseSettingsResetPasswordDialog from './DatabaseSettingsResetPasswordDialog';
+import { DatabaseSettingsResetPasswordDialog } from './DatabaseSettingsResetPasswordDialog';
 import { DatabaseSettingsSuspendClusterDialog } from './DatabaseSettingsSuspendClusterDialog';
 import { MaintenanceWindow } from './MaintenanceWindow';
 
@@ -40,11 +41,11 @@ export const DatabaseSettings = () => {
   const isVPCEnabled = flags.databaseVpc;
 
   const accessControlCopy = (
-    <Typography>
+    <p>
       {!isDefaultDB
         ? ACCESS_CONTROLS_IN_SETTINGS_TEXT_LEGACY
         : ACCESS_CONTROLS_IN_SETTINGS_TEXT}
-    </Typography>
+    </p>
   );
 
   const suspendClusterCopy = SUSPEND_CLUSTER_TEXT;
@@ -112,7 +113,10 @@ export const DatabaseSettings = () => {
   return (
     <>
       <Paper>
-        <Stack divider={<Divider marginBottom={0} marginTop={0} />} spacing={3}>
+        <Stack
+          divider={<Divider marginBottom={0} marginTop={0} />}
+          spacing={Spacing.S24}
+        >
           {isDatabasesV2GA && isDefaultDB && (
             <DatabaseSettingsMenuItem
               buttonText={'Suspend Cluster'}

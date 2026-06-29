@@ -150,13 +150,9 @@ export const PRODUCTS: Product[] = [
   },
   {
     categories: [
-      'Data Analytics',
-
-      'Data Sources',
       'Enterprise',
-      'Kubernetes',
+      'Media & Entertainment, Gaming',
       'Other Software and APIs',
-      'Storage',
     ],
     id: 'norsk-studio',
     name: 'Norsk Studio',

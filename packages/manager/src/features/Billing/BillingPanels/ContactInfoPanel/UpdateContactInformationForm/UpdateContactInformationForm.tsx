@@ -1,3 +1,4 @@
+import { getErrorMap } from '@akamai/compute-ui-core/api';
 import {
   accountQueries,
   useAccount,
@@ -33,7 +34,6 @@ import {
 } from 'src/features/Billing/constants';
 import { useDelegationRole } from 'src/features/IAM/hooks/useDelegationRole';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
-import { getErrorMap } from 'src/utilities/errorUtils';
 
 import type { Account } from '@linode/api-v4';
 import type { SelectOption } from '@linode/ui';

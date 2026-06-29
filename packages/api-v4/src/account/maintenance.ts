@@ -1,4 +1,4 @@
-import { BETA_API_ROOT } from '../constants';
+import { API_ROOT } from '../constants';
 import Request, { setMethod, setParams, setURL, setXFilter } from '../request';
 
 import type { Filter, Params, ResourcePage } from '../types';
@@ -12,7 +12,7 @@ import type { AccountMaintenance, MaintenancePolicy } from './types';
  */
 export const getAccountMaintenance = (params?: Params, filter?: Filter) =>
   Request<ResourcePage<AccountMaintenance>>(
-    setURL(`${BETA_API_ROOT}/account/maintenance`),
+    setURL(`${API_ROOT}/account/maintenance`),
     setMethod('GET'),
     setParams(params),
     setXFilter(filter),
@@ -26,7 +26,7 @@ export const getAccountMaintenance = (params?: Params, filter?: Filter) =>
  */
 export const getMaintenancePolicies = (params?: Params, filter?: Filter) =>
   Request<ResourcePage<MaintenancePolicy>>(
-    setURL(`${BETA_API_ROOT}/maintenance/policies`),
+    setURL(`${API_ROOT}/maintenance/policies`),
     setMethod('GET'),
     setParams(params),
     setXFilter(filter),

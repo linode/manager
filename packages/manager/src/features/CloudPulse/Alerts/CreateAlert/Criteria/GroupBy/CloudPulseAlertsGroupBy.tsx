@@ -121,7 +121,7 @@ export const CloudPulseAlertsGroupBy = ({ metricDefinitions, name }: Props) => {
       <Controller
         control={control}
         name={name}
-        render={({ field }) => {
+        render={({ field, fieldState }) => {
           const values: string[] = Array.isArray(field.value)
             ? field.value
             : [];
@@ -140,6 +140,7 @@ export const CloudPulseAlertsGroupBy = ({ metricDefinitions, name }: Props) => {
           return (
             <Autocomplete
               disabled={!serviceType}
+              errorText={fieldState.error?.message}
               getOptionDisabled={(option) => {
                 // Prevent disabling/removing Entity for non-objectstorage services
                 if (!isObjectStorage && option.value === ENTITY_OPTION.value) {

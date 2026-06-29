@@ -1,3 +1,4 @@
+import { getFeatureChip } from '@linode/shared';
 import { NotFound, Paper } from '@linode/ui';
 import { Outlet } from '@tanstack/react-router';
 import React from 'react';
@@ -40,7 +41,14 @@ export const CloudPulseAlertsRoute = () => {
     <React.Suspense fallback={<SuspenseLoader />}>
       <DocumentTitleSegment segment="Alerts" />
       <LandingHeader
-        breadcrumbProps={{ pathname: '/alerts' }}
+        breadcrumbProps={{
+          pathname: '/alerts',
+          labelOptions: {
+            suffixComponent: flags.aclpAlerting
+              ? getFeatureChip(flags.aclpAlerting)
+              : undefined,
+          },
+        }}
         docsLabel="Docs"
         docsLink="https://techdocs.akamai.com/cloud-computing/docs/akamai-cloud-pulse"
         spacingBottom={4}

@@ -1,6 +1,6 @@
 import { NotificationBanner } from '@akamai/cds-components/react';
+import { Spacing, Typography } from '@akamai/cds-tokens';
 import { useGetDefaultDelegationAccessQuery } from '@linode/queries';
-import { Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { ErrorState } from 'src/features/IAM/Shared/ErrorState/ErrorState';
@@ -51,16 +51,18 @@ export const DefaultRoles = () => {
     <Paper>
       {hasAssignedRoles ? (
         <>
-          <Typography variant="h2">Default Roles for Delegate Users</Typography>
-          <Typography mt={2}>
+          <h2 style={{ font: Typography.Heading.M }}>
+            Default Roles for Delegate Users
+          </h2>
+          <p style={{ marginTop: Spacing.S16 }}>
             View and manage roles to be assigned to delegate users by default.
             Note that changes implemented here will apply to only new delegate
             users.
-          </Typography>
-          <Typography mb={2}>
+          </p>
+          <p style={{ marginBottom: Spacing.S16 }}>
             For existing delegate users, use their Assigned Roles page to update
             the assignment.
-          </Typography>
+          </p>
           <AssignedRolesTable />
         </>
       ) : (

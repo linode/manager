@@ -24,8 +24,7 @@ import { VerificationDetailsBanner } from './VerificationDetailsBanner';
 
 export const GlobalNotifications = () => {
   const flags = useFlags();
-  const { isChildUserType, isProxyOrDelegateUserType, profile } =
-    useDelegationRole();
+  const { isChildUserType, isDelegateUserType, profile } = useDelegationRole();
   const sessionContext = React.useContext(switchAccountSessionContext);
   const sessionExpirationContext = React.useContext(_sessionExpirationContext);
   const { data: securityQuestions } = useSecurityQuestions({
@@ -60,7 +59,7 @@ export const GlobalNotifications = () => {
       <RegionStatusBanner />
       <AbuseTicketBanner />
       <ComplianceBanner />
-      {isProxyOrDelegateUserType && (
+      {isDelegateUserType && (
         <>
           <SwitchAccountSessionDialog
             isOpen={Boolean(sessionContext.isOpen)}

@@ -229,7 +229,7 @@ export const useGetChildAccountQuery = (
 
 /**
  * Create child account token
- * - Purpose: Create a short‑lived bearer token to act on a child account as a proxy/delegate.
+ * - Purpose: Create a short‑lived bearer token to act on a child account as a delegate.
  * - Scope: For a parent user delegated on the target child account identified by `euuid`.
  * - Audience: Clients that need temporary auth to perform actions in the child account.
  * - Data: Token for `POST /iam/delegation/child-accounts/:euuid/token`.

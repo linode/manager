@@ -1,10 +1,10 @@
+import { getAPIErrorOrDefault } from '@akamai/compute-ui-core/api';
 import { getTFAToken } from '@linode/api-v4/lib/profile';
 import { profileQueries, useSecurityQuestions } from '@linode/queries';
 import { LinkButton, Notice, Typography } from '@linode/ui';
 import { useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
 
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
 import { DisableTwoFactorDialog } from './DisableTwoFactorDialog';

@@ -1,3 +1,4 @@
+import { getErrorStringOrDefault } from '@akamai/compute-ui-core/api';
 import { arePropsEqual } from '@linode/utilities';
 import { useMediaQuery } from '@mui/material';
 import * as React from 'react';
@@ -6,7 +7,6 @@ import type { JSX } from 'react';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
-import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 import { ContactsRow } from './ContactsRow';
 

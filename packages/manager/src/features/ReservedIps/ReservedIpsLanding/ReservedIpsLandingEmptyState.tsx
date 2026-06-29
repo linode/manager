@@ -25,6 +25,8 @@ export const ReservedIpsLandingEmptyState = ({
           {
             children: 'Reserve an IP Address',
             onClick: openReserveIPDrawer,
+            'data-pendo-id':
+              'Reserved IP Landing Empty-Reserve IP Address Start Flow',
           },
         ]}
         descriptionMaxWidth={500}

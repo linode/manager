@@ -1,7 +1,7 @@
+import { UNKNOWN_PRICE } from '@akamai/compute-ui-core/api';
 import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
 
-import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { HAControlPlane } from './HAControlPlane';

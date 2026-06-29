@@ -1,5 +1,5 @@
+import { readableBytes } from '@akamai/compute-ui-core/api';
 import { Button, Tooltip, Typography } from '@linode/ui';
-import { readableBytes } from '@linode/utilities';
 import * as React from 'react';
 
 import CautionIcon from 'src/assets/icons/caution.svg';

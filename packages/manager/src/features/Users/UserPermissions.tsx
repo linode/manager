@@ -1,3 +1,4 @@
+import { getAPIErrorOrDefault } from '@akamai/compute-ui-core/api';
 import {
   getGrants,
   getUser,
@@ -32,7 +33,6 @@ import { Tabs } from 'src/components/Tabs/Tabs';
 import { withFeatureFlags } from 'src/containers/flags.container';
 import { withQueryClient } from 'src/containers/withQueryClient.container';
 import { grantTypeMap, PARENT_USER } from 'src/features/Account/constants';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
 import {
@@ -348,8 +348,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
   renderBillingPerm = () => {
     const { grants, userType } = this.state;
     const isChildUser = userType === 'child';
-    const isProxyOrDelegateUser =
-      userType === 'proxy' || userType === 'delegate';
+    const isDelegateUser = userType === 'delegate';
 
     if (!(grants && grants.global)) {
       return null;
@@ -382,7 +381,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           <SelectionCard
             checked={grants.global.account_access === null}
             data-qa-billing-access="None"
-            disabled={isProxyOrDelegateUser}
+            disabled={isDelegateUser}
             heading="None"
             onClick={this.billingPermOnClick(null)}
             subheadings={['The user cannot view any billing information.']}
@@ -393,7 +392,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
               (isChildUser && Boolean(this.state.grants?.global.account_access))
             }
             data-qa-billing-access="Read Only"
-            disabled={isProxyOrDelegateUser}
+            disabled={isDelegateUser}
             heading="Read Only"
             onClick={this.billingPermOnClick('read_only')}
             subheadings={['Can view invoices and billing info.']}
@@ -420,8 +419,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     const { errors, restricted } = this.state;
     const hasErrorFor = getAPIErrorFor({ restricted: 'Restricted' }, errors);
     const generalError = hasErrorFor('none');
-    const isProxyOrDelegateUser =
-      this.state.userType === 'proxy' || this.state.userType === 'delegate';
+    const isDelegateUser = this.state.userType === 'delegate';
 
     return (
       <Box>
@@ -446,7 +444,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
                 }}
                 variant="h2"
               >
-                {isProxyOrDelegateUser ? PARENT_USER : 'General'} Permissions
+                {isDelegateUser ? PARENT_USER : 'General'} Permissions
               </Typography>
             </StyledHeaderGrid>
             <StyledFullAccountAccessToggleGrid>

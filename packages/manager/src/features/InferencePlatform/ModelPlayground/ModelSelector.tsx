@@ -2,10 +2,12 @@ import { Box, Select, Typography, useTheme } from '@linode/ui';
 import React, { useContext, useEffect } from 'react';
 
 import { useInferencePlatform } from '../InferencePlatformContext';
-import { ModelPlaygroundContext } from './ModelPlaygroundContext';
+import { ModelPlaygroundModelContext } from './ModelPlaygroundContext';
 
 export const ModelSelector = () => {
-  const { onModelChange, selectedModel } = useContext(ModelPlaygroundContext);
+  const { onModelChange, selectedModel } = useContext(
+    ModelPlaygroundModelContext
+  );
   const { isModelsLoading, models } = useInferencePlatform();
   const theme = useTheme();
 
@@ -34,7 +36,8 @@ export const ModelSelector = () => {
     <Box
       sx={{
         alignItems: 'center',
-        bgcolor: theme.bg.offWhite,
+        bgcolor:
+          theme.palette.mode === 'light' ? theme.bg.white : theme.bg.offWhite,
         display: 'flex',
         flexShrink: 0,
         gap: 2,

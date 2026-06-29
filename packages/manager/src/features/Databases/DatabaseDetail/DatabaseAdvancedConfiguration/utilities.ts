@@ -2,28 +2,37 @@ import type { ConfigurationOption } from './DatabaseConfigurationSelect';
 import type {
   ConfigCategoryValues,
   ConfigurationItem,
+  ConfigValue,
   DatabaseEngineConfig,
   DatabaseInstanceAdvancedConfig,
 } from '@linode/api-v4';
 
+type ConfigTree = Record<
+  string,
+  ConfigurationItem | Record<string, ConfigurationItem>
+>;
+
+const CONFIG_VALUE_MAP: Record<string, string> = {
+  true: 'Enabled',
+  false: 'Disabled',
+  undefined: ' - ',
+} as const;
+
+export const isTopLevelCategory = (category: string) =>
+  ['other', 'valkey'].includes(category);
+
+// Aiven does not provide a parent category for valkey configs so we need to check the label
+const getCategoryFromFlatKey = (key: string): string =>
+  key.startsWith('valkey') ? 'valkey' : 'other';
+
 /**
  * Formats the provided config value into a more user-friendly representation.
- * - If the value is 'true', it will be displayed as 'Enabled'.
- * - If the value is 'false', it will be displayed as 'Disabled'.
- * - If the value is 'undefined', it will be displayed as ' - '.
- * - Otherwise, the original value will be returned as-is.
  *
  * @param {string} configValue - The configuration value to be formatted.
  * @returns {string} - The formatted string based on the configValue.
  */
 export const formatConfigValue = (configValue: string) =>
-  configValue === 'true'
-    ? 'Enabled'
-    : configValue === 'false'
-      ? 'Disabled'
-      : configValue === 'undefined'
-        ? ' - '
-        : configValue;
+  CONFIG_VALUE_MAP[configValue] ?? configValue;
 
 /**
  * Converts a nested database engine configuration into a flat array of configuration options.
@@ -34,41 +43,26 @@ export const formatConfigValue = (configValue: string) =>
 export const convertEngineConfigToOptions = (
   allConfigs: DatabaseEngineConfig | undefined
 ) => {
-  const options: ConfigurationOption[] = [];
-
-  const processConfig = (
-    config: Record<
-      string,
-      ConfigurationItem | Record<string, ConfigurationItem>
-    >,
-    parentCategory: string = ''
-  ) => {
-    for (const key in config) {
-      const value = config[key] as ConfigurationItem;
-      if (typeof value === 'object') {
-        // If it has "type" property, add option to the list
-        if ('type' in value) {
-          // If parentCategory is empty, use 'Other' as the category
-          const category = parentCategory || 'other';
-          options.push({
-            ...value,
-            category,
-            enum: value.enum ?? [],
-            label: key,
-            type: value.type,
-          });
-        }
-        // Else, it's a nested category, so recurse
-        else {
-          processConfig(value as Record<string, ConfigurationItem>, key);
-        }
-      }
-    }
-  };
-
-  if (allConfigs !== undefined) {
-    processConfig(allConfigs);
+  if (!allConfigs) {
+    return [];
   }
+  const options: ConfigurationOption[] = Object.entries(allConfigs).flatMap(
+    ([key, value]) => {
+      if (typeof value !== 'object') return [];
+
+      if ('type' in value) {
+        const category = getCategoryFromFlatKey(key);
+        return [{ ...value, category, enum: value.enum ?? [], label: key }];
+      }
+
+      return Object.entries(value).map(([subKey, subValue]) => ({
+        ...subValue,
+        category: key,
+        enum: subValue.enum ?? [],
+        label: subKey,
+      }));
+    }
+  );
 
   return options;
 };
@@ -81,23 +75,19 @@ export const convertEngineConfigToOptions = (
  * @returns The found configuration option or `undefined` if not found.
  */
 export const findConfigItem = (
-  configs:
-    | Record<string, ConfigurationItem | Record<string, ConfigurationItem>>
-    | undefined,
+  configs: ConfigTree | undefined,
   targetKey: string
 ): ConfigurationOption | undefined => {
-  for (const key in configs) {
-    const value = configs[key];
-
+  for (const [key, value] of Object.entries(configs ?? {})) {
     if (key === targetKey) {
-      return { ...value, category: 'other' } as ConfigurationOption;
+      return {
+        ...value,
+        category: getCategoryFromFlatKey(key),
+      } as ConfigurationOption;
     }
 
     if (typeof value === 'object' && value !== null) {
-      const found = findConfigItem(
-        value as Record<string, ConfigurationItem>,
-        targetKey
-      );
+      const found = findConfigItem(value as ConfigTree, targetKey);
       if (found) return { ...found, category: key };
     }
   }
@@ -116,38 +106,19 @@ export const convertExistingConfigsToArray = (
   configs: DatabaseInstanceAdvancedConfig,
   allConfigs: DatabaseEngineConfig | undefined
 ): ConfigurationOption[] => {
-  const options: ConfigurationOption[] = [];
+  const _configs: [string, ConfigValue][] = Object.entries(configs).flatMap(
+    ([key, value]) =>
+      typeof value === 'object' && value !== null
+        ? Object.entries(value)
+        : [[key, value]]
+  );
 
-  for (const key in configs) {
-    const value = configs[key];
-
-    if (typeof value === 'object' && value !== null) {
-      for (const subKey in value) {
-        const subValue = value[subKey];
-
-        const foundConfig = findConfigItem(allConfigs, subKey);
-        if (foundConfig) {
-          options.push({
-            ...foundConfig,
-            category: foundConfig.category || '',
-            label: subKey,
-            value: subValue,
-          });
-        }
-      }
-    } else {
-      const foundConfig = findConfigItem(allConfigs, key);
-      if (foundConfig) {
-        options.push({
-          ...foundConfig,
-          category: foundConfig.category || '',
-          label: key,
-          value,
-        });
-      }
-    }
-  }
-  return options;
+  return _configs.flatMap(([key, value]) => {
+    const foundConfig = findConfigItem(allConfigs, key);
+    return foundConfig
+      ? [{ ...foundConfig, category: foundConfig.category, label: key, value }]
+      : [];
+  });
 };
 
 /**
@@ -161,41 +132,51 @@ export const formatConfigPayload = (
   formData: ConfigurationOption[],
   configurations: ConfigurationOption[]
 ) => {
-  const formattedConfigData: DatabaseInstanceAdvancedConfig = {};
+  const formValues = new Map(
+    formData.map(({ label, value }) => [label, value])
+  );
 
-  configurations.forEach(({ category, label }) => {
-    // Find the matching config from the formData
-    const formConfig = formData.find((config) => config.label === label);
+  return configurations.reduce<DatabaseInstanceAdvancedConfig>(
+    (acc, { category, label }) => {
+      const value = formValues.get(label);
+      if (value === undefined) return acc;
 
-    if (formConfig && formConfig.value !== undefined) {
-      if (category === 'other') {
-        formattedConfigData[label] = formConfig.value;
+      if (isTopLevelCategory(category)) {
+        acc[label] = value;
       } else {
-        if (!formattedConfigData[category]) {
-          formattedConfigData[category] = {} as ConfigCategoryValues;
-        }
-        (formattedConfigData[category] as ConfigCategoryValues)[label] =
-          formConfig.value;
+        acc[category] ??= {} as ConfigCategoryValues;
+        (acc[category] as ConfigCategoryValues)[label] = value;
       }
-    }
-  });
 
-  return formattedConfigData;
+      return acc;
+    },
+    {}
+  );
 };
 
 export const isConfigBoolean = (config: ConfigurationOption) => {
   return (
     config?.type === 'boolean' ||
-    (Array.isArray(config?.type) && config?.type.includes('boolean'))
+    (Array.isArray(config?.type) &&
+      config?.type.some((type) => type === 'boolean'))
   );
 };
 
-export const isConfigStringWithEnum = (config: ConfigurationOption) => {
+export const isConfigString = (config: ConfigurationOption) => {
   return (
-    (config?.type === 'string' && config.enum) ||
+    config?.type === 'string' ||
     (Array.isArray(config?.type) &&
-      config?.type.includes('string') &&
-      config.enum)
+      config?.type.some((type) => type === 'string'))
+  );
+};
+
+export const isConfigNumber = (config: ConfigurationOption) => {
+  return (
+    config?.type === 'number' ||
+    config?.type === 'integer' ||
+    (typeof config?.value !== 'boolean' &&
+      Array.isArray(config?.type) &&
+      config.type.some((type) => type === 'integer' || type === 'number'))
   );
 };
 
@@ -208,7 +189,7 @@ export const isConfigStringWithEnum = (config: ConfigurationOption) => {
 export const getDefaultConfigValue = (config: ConfigurationOption) => {
   return isConfigBoolean(config)
     ? false
-    : isConfigStringWithEnum(config)
+    : config.enum && isConfigString(config)
       ? (config.enum?.[0] ?? '')
       : config?.type === 'number' || config?.type === 'integer'
         ? (config.minimum ?? 0)
@@ -218,20 +199,16 @@ export const getDefaultConfigValue = (config: ConfigurationOption) => {
 /**
  * Determines if a restart is required based on dirty fields.
  */
-export const hasRestartCluster = (
+export const getSaveBtnLabel = (
   currentConfigs: ConfigurationOption[],
   initialConfigs: ConfigurationOption[]
 ): string => {
-  const requiresRestart = currentConfigs.some((currentConfig) => {
-    const initialConfig = initialConfigs.find(
-      (item) => item.label === currentConfig.label
-    );
+  const initialByLabel = new Map(initialConfigs.map((c) => [c.label, c]));
 
-    const isNewConfig = !initialConfig;
-    const hasChangedValue =
-      initialConfig && initialConfig.value !== currentConfig.value;
-
-    return (isNewConfig || hasChangedValue) && currentConfig.requires_restart;
+  const requiresRestart = currentConfigs.some((current) => {
+    const initial = initialByLabel.get(current.label);
+    const hasChanged = !initial || initial.value !== current.value;
+    return hasChanged && current.requires_restart;
   });
 
   return requiresRestart ? 'Save and Restart Service' : 'Save';

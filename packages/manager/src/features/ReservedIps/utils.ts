@@ -1,10 +1,8 @@
 import { useFlags } from 'src/hooks/useFlags';
 
+import type { DataCenterPricingByTypeOptions } from '@akamai/compute-ui-core/api';
 import type { IPAddress } from '@linode/api-v4';
-import type {
-  DataCenterPricingByTypeOptions,
-  RegionPrice,
-} from 'src/utilities/pricing/dynamicPricing';
+import type { RegionPrice } from 'src/utilities/pricing/dynamicPricing';
 /**
  *
  * @returns an object that contains boolean property to check whether Reserved IP is enabled or not
@@ -15,6 +13,16 @@ export const useIsReserveIpEnabled = () => {
   // @TODO ReservedIps: check for customer tag/account capability when it exists
 
   return { isReserveIpEnabled: flags.reserveIp ?? false };
+};
+
+/**
+ *
+ * @returns an object that contains boolean property to check whether Reserved IP New Badge is enabled or not
+ */
+export const useIsReserveIpNewBadgeEnabled = () => {
+  const flags = useFlags();
+
+  return { isReserveIpNewBadgeEnabled: flags.reserveIpNewBadge ?? false };
 };
 
 /**

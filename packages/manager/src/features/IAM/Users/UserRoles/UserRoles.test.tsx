@@ -1,21 +1,40 @@
-import { screen } from '@testing-library/react';
+import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
-import { accountEntityFactory } from 'src/factories/accountEntities';
-import { accountRolesFactory } from 'src/factories/accountRoles';
-import { userRolesFactory } from 'src/factories/userRoles';
-import { renderWithTheme } from 'src/utilities/testHelpers';
-
+import {
+  createAccountEntity,
+  createAccountRoles,
+  createUserRoles,
+} from '../../factories';
 import {
   ERROR_STATE_TEXT,
   ERROR_STATE_TITLE,
   NO_ASSIGNED_ROLES_TEXT,
 } from '../../Shared/constants';
+import { getCdsButtonHostByText } from '../../utilities/testHelpers';
+import { renderWithProviders } from '../../utilities/testHelpers';
 import { UserRoles } from './UserRoles';
 
+const mockMatchMedia = () => {
+  window.matchMedia = vi.fn().mockImplementation((query: string) => ({
+    addEventListener: vi.fn(),
+    addListener: vi.fn(),
+    dispatchEvent: vi.fn(),
+    matches: true,
+    media: query,
+    onchange: null,
+    removeEventListener: vi.fn(),
+    removeListener: vi.fn(),
+  })) as unknown as typeof window.matchMedia;
+};
+
+beforeAll(() => {
+  mockMatchMedia();
+});
+
 const mockEntities = [
-  accountEntityFactory.build({
+  createAccountEntity({
     id: 1,
     type: 'firewall',
   }),
@@ -81,50 +100,49 @@ describe('UserRoles', () => {
 
   it('should display no roles text if no roles are assigned to user', async () => {
     queryMocks.useUserRoles.mockReturnValue({
-      data: userRolesFactory.build({
+      data: createUserRoles({
         account_access: [],
         entity_access: [],
       }),
     });
 
-    renderWithTheme(<UserRoles />);
+    const { container } = renderWithProviders(<UserRoles />);
 
     expect(screen.getByText('This list is empty')).toBeVisible();
     expect(screen.getByText(NO_ASSIGNED_ROLES_TEXT)).toBeVisible();
-    expect(
-      screen.getByText('Assign New Roles').closest('cds-button')
-    ).toBeVisible();
+    expect(getCdsButtonHostByText(container, 'Assign New Roles')).toBeVisible();
   });
 
   it('should display table if no entity access roles are assigned to user', async () => {
     queryMocks.useUserRoles.mockReturnValue({
-      data: userRolesFactory.build({
+      data: createUserRoles({
         account_access: ['account_admin'],
         entity_access: [],
       }),
     });
 
     queryMocks.useAccountRoles.mockReturnValue({
-      data: accountRolesFactory.build(),
+      data: createAccountRoles(),
     });
 
     queryMocks.useAllAccountEntities.mockReturnValue({
       data: mockEntities,
     });
 
-    renderWithTheme(<UserRoles />);
+    renderWithProviders(<UserRoles />);
 
     expect(
       screen.getByText('View and manage roles assigned to the user.')
     ).toBeVisible();
 
-    expect(screen.getByText(/All Entities/i)).toBeVisible();
-    expect(screen.getByText('account_admin')).toBeVisible();
+    const table = screen.getByLabelText('collapsible table');
+    expect(within(table).getByText('All Entities')).toBeVisible();
+    expect(within(table).getByText('account_admin')).toBeVisible();
   });
 
   it('should display table if no account access roles are assigned to user', async () => {
     queryMocks.useUserRoles.mockReturnValue({
-      data: userRolesFactory.build({
+      data: createUserRoles({
         account_access: [],
         entity_access: [
           {
@@ -137,21 +155,21 @@ describe('UserRoles', () => {
     });
 
     queryMocks.useAccountRoles.mockReturnValue({
-      data: accountRolesFactory.build(),
+      data: createAccountRoles(),
     });
 
     queryMocks.useAllAccountEntities.mockReturnValue({
       data: mockEntities,
     });
 
-    renderWithTheme(<UserRoles />);
+    renderWithProviders(<UserRoles />);
 
     expect(screen.getByText('firewall_admin')).toBeVisible();
   });
 
   it('should exclude the role from the table if the assigned entity (firewall with id 2) was removed', async () => {
     queryMocks.useUserRoles.mockReturnValue({
-      data: userRolesFactory.build({
+      data: createUserRoles({
         account_access: ['account_admin'],
         entity_access: [
           {
@@ -164,32 +182,32 @@ describe('UserRoles', () => {
     });
 
     queryMocks.useAccountRoles.mockReturnValue({
-      data: accountRolesFactory.build(),
+      data: createAccountRoles(),
     });
 
     queryMocks.useAllAccountEntities.mockReturnValue({
       data: mockEntities,
     });
 
-    renderWithTheme(<UserRoles />);
+    renderWithProviders(<UserRoles />);
 
     expect(screen.getByText('account_admin')).toBeVisible();
     expect(screen.queryByText('firewall_admin')).not.toBeInTheDocument();
   });
   it('should display roles and menu when data is available', async () => {
     queryMocks.useUserRoles.mockReturnValue({
-      data: userRolesFactory.build(),
+      data: createUserRoles(),
     });
 
     queryMocks.useAccountRoles.mockReturnValue({
-      data: accountRolesFactory.build(),
+      data: createAccountRoles(),
     });
 
     queryMocks.useAllAccountEntities.mockReturnValue({
       data: mockEntities,
     });
 
-    renderWithTheme(<UserRoles />);
+    renderWithProviders(<UserRoles />);
 
     expect(screen.getByText('account_linode_admin')).toBeVisible();
     expect(screen.getAllByText('All Linodes')[0]).toBeVisible();
@@ -212,7 +230,7 @@ describe('UserRoles', () => {
       status: 'error',
     });
 
-    renderWithTheme(<UserRoles />);
+    renderWithProviders(<UserRoles />);
     expect(screen.getByText(ERROR_STATE_TITLE)).toBeVisible();
     expect(screen.getByText(ERROR_STATE_TEXT)).toBeVisible();
   });

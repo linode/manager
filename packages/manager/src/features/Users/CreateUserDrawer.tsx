@@ -1,3 +1,4 @@
+import { getAPIErrorOrDefault } from '@akamai/compute-ui-core/api';
 import { createUser } from '@linode/api-v4/lib/account';
 import {
   ActionsPanel,
@@ -10,7 +11,6 @@ import {
 import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
 import type { User } from '@linode/api-v4/lib/account';

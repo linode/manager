@@ -6,7 +6,6 @@ import { alertFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import {
-  CLONE_ALERT_FAILED_MESSAGE,
   CLONE_ALERT_NAME_SUFFIX,
   CLONE_ALERT_SUCCESS_MESSAGE,
 } from '../constants';
@@ -148,7 +147,7 @@ describe('CloneAlertDefinition', () => {
   it('should show error snackbar on failed clone submission', async () => {
     cloneMutateAsyncSpy.mockRejectedValue([
       {
-        reason: 'Something failed',
+        reason: 'Resource error',
       },
     ]);
 
@@ -157,7 +156,9 @@ describe('CloneAlertDefinition', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Submit' }));
 
     await waitFor(() => {
-      expect(screen.getByText(CLONE_ALERT_FAILED_MESSAGE)).toBeVisible();
+      expect(
+        screen.getByText('Cloning alert failed: Resource error')
+      ).toBeVisible();
     });
 
     expect(navigate).not.toHaveBeenCalled();

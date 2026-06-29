@@ -23,6 +23,20 @@ const mockProps = {
   }),
 };
 
+type CdsTextFieldElement = HTMLElement & { value?: string };
+
+const getTextFieldHostById = (id: string) =>
+  document.querySelector(`cds-text-field#${id}`) as CdsTextFieldElement | null;
+
+const getTextFieldInputById = async (id: string) => {
+  const host = getTextFieldHostById(id);
+  if (!host) {
+    return null;
+  }
+
+  return getShadowRootElement(host, 'input');
+};
+
 // Hoist query mocks
 const queryMocks = vi.hoisted(() => {
   return {
@@ -56,35 +70,41 @@ describe('DatabaseEditConnectionPoolDrawer Component', () => {
     const drawerTitle = screen.getByText('Edit Connection Pool');
     expect(drawerTitle).toBeInTheDocument();
 
-    const poolLabelInput = screen.getByLabelText('Pool Label');
-    expect(poolLabelInput).toBeVisible();
-    expect(poolLabelInput).toHaveValue('test-pool');
+    const poolLabelInput = getTextFieldHostById('poolLabel');
+    expect(poolLabelInput).toBeTruthy();
+    expect(poolLabelInput!).toBeVisible();
+    expect(poolLabelInput?.value).toBe('test-pool');
     // Label should not be editable
-    expect(poolLabelInput).not.toBeEnabled();
+    const poolLabelInnerInput = await getTextFieldInputById('poolLabel');
+    expect(poolLabelInnerInput).toBeTruthy();
+    expect(poolLabelInnerInput!).toBeDisabled();
 
-    const databaseNameInput = screen.getByLabelText('Database Name');
+    const databaseNameInput = getTextFieldHostById('databaseName');
     const poolModeInput = screen.getByLabelText('Pool Mode');
-    const poolSizeInput = screen.getByLabelText('Pool Size');
-    const usernameInput = screen.getByLabelText('Username');
+    const poolSizeInput = getTextFieldHostById('poolSize');
+    const usernameInput = getTextFieldHostById('username');
     const reuseInboundUserCheckboxHost = screen.getByTestId(
       'database-reuse-inbound-user-checkbox'
     );
     const reuseInboundUserCheckbox = await getShadowRootElement(
-      reuseInboundUserCheckboxHost as HTMLElement,
+      reuseInboundUserCheckboxHost,
       'input'
     );
 
-    expect(databaseNameInput).toBeVisible();
-    expect(databaseNameInput).toHaveValue('defaultdb');
+    expect(databaseNameInput).toBeTruthy();
+    expect(databaseNameInput!).toBeVisible();
+    expect(databaseNameInput?.value).toBe('defaultdb');
 
     expect(poolModeInput).toBeVisible();
     expect(poolModeInput).toHaveValue('Session');
 
-    expect(poolSizeInput).toBeVisible();
-    expect(poolSizeInput).toHaveValue(22);
+    expect(poolSizeInput).toBeTruthy();
+    expect(poolSizeInput!).toBeVisible();
+    expect(poolSizeInput?.value).toBe('22');
 
-    expect(usernameInput).toBeVisible();
-    expect(usernameInput).toHaveValue('akmadmin');
+    expect(usernameInput).toBeTruthy();
+    expect(usernameInput!).toBeVisible();
+    expect(usernameInput?.value).toBe('akmadmin');
 
     expect(reuseInboundUserCheckbox).not.toBeChecked();
 
@@ -111,7 +131,10 @@ describe('DatabaseEditConnectionPoolDrawer Component', () => {
     await userEvent.click(poolModeSelect);
     await userEvent.click(screen.getByText('Statement'));
     const saveBtn = screen.getByText('Save');
-    await userEvent.click(saveBtn);
+    const actualSaveButton = await getShadowRootElement(saveBtn, 'button');
+    expect(actualSaveButton).toBeDefined();
+    expect(actualSaveButton).not.toBeNull();
+    await userEvent.click(actualSaveButton!);
 
     // CDS NotificationBanner renders copy inside shadow DOM (not visible to getByText)
     await waitFor(() => {
@@ -137,9 +160,11 @@ describe('DatabaseEditConnectionPoolDrawer Component', () => {
     // Edit and submit the filled form
     const poolModeSelect = screen.getByLabelText('Pool Mode');
     await userEvent.click(poolModeSelect);
+    await userEvent.click(poolModeSelect);
     await userEvent.click(screen.getByText('Statement'));
     const saveBtn = screen.getByText('Save');
-    await userEvent.click(saveBtn);
+    const actualSaveButton = await getShadowRootElement(saveBtn, 'button');
+    await userEvent.click(actualSaveButton!);
 
     // Check that inline errors are displayed
     const sizeError = screen.getByText('Size error message');
@@ -155,35 +180,37 @@ describe('DatabaseEditConnectionPoolDrawer Component', () => {
   it('Should enable the Username input if the Reuse Inbound User checkbox is not checked', async () => {
     renderWithTheme(<DatabaseEditConnectionPoolDrawer {...mockProps} />);
 
-    const usernameInput = screen.getByLabelText('Username');
+    const usernameInput = getTextFieldHostById('username');
 
     const reuseInboundUserCheckboxHost = screen.getByTestId(
       'database-reuse-inbound-user-checkbox'
     );
     const reuseInboundUserCheckbox = await getShadowRootElement(
-      reuseInboundUserCheckboxHost as HTMLElement,
+      reuseInboundUserCheckboxHost,
       'input'
     );
 
-    expect(usernameInput).toBeEnabled();
+    expect(usernameInput).toBeTruthy();
+    expect(usernameInput!).toBeEnabled();
     expect(reuseInboundUserCheckbox).not.toBeChecked();
   });
 
   it('Should disable the Username input if the Reuse Inbound User checkbox is checked', async () => {
     renderWithTheme(<DatabaseEditConnectionPoolDrawer {...mockProps} />);
 
-    const usernameInput = screen.getByLabelText('Username');
+    const usernameInput = getTextFieldHostById('username');
     const reuseInboundUserCheckboxHost = screen.getByTestId(
       'database-reuse-inbound-user-checkbox'
     );
     const reuseInboundUserCheckbox = await getShadowRootElement(
-      reuseInboundUserCheckboxHost as HTMLElement,
+      reuseInboundUserCheckboxHost,
       'input'
     );
 
     await userEvent.click(reuseInboundUserCheckbox!);
 
-    expect(usernameInput).toBeDisabled();
+    expect(usernameInput).toBeTruthy();
+    expect(usernameInput!).toBeDisabled();
     expect(reuseInboundUserCheckbox).toBeChecked();
   });
 });

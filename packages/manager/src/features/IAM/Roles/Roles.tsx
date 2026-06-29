@@ -1,7 +1,6 @@
 import { NotificationBanner } from '@akamai/cds-components/react';
-import { Spacing } from '@akamai/cds-tokens';
+import { Typography } from '@akamai/cds-tokens';
 import { useAccountRoles } from '@linode/queries';
-import { Typography } from '@linode/ui';
 import React from 'react';
 
 import { RolesTable } from 'src/features/IAM/Roles/RolesTable/RolesTable';
@@ -9,7 +8,6 @@ import { CircleProgress } from 'src/features/IAM/Shared/CircleProgress/CirclePro
 import { mapAccountPermissionsToRoles } from 'src/features/IAM/Shared/utilities';
 
 import { useDelegationRole } from '../hooks/useDelegationRole';
-import { useIsIAMDelegationEnabled } from '../hooks/useIsIAMEnabled';
 import { usePermissions } from '../hooks/usePermissions';
 import { Paper } from '../Shared/Paper/Paper';
 import { DefaultRolesPanel } from './Defaults/DefaultRolesPanel';
@@ -22,7 +20,6 @@ export const RolesLanding = () => {
   const { data: accountRoles, isLoading } = useAccountRoles(
     permissions?.list_role_permissions
   );
-  const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
   const { isChildUserType, isProfileLoading, isDelegateUserType } =
     useDelegationRole();
 
@@ -49,11 +46,9 @@ export const RolesLanding = () => {
 
   return (
     <>
-      {(isChildUserType || isDelegateUserType) && isIAMDelegationEnabled && (
-        <DefaultRolesPanel />
-      )}
-      <Paper marginTop={Spacing.S16}>
-        <Typography variant="h2">Roles</Typography>
+      {(isChildUserType || isDelegateUserType) && <DefaultRolesPanel />}
+      <Paper>
+        <h2 style={{ font: Typography.Heading.M }}>Roles</h2>
         <RolesTable roles={roles} />
       </Paper>
     </>

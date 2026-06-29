@@ -1,5 +1,6 @@
 import { Badge } from '@akamai/cds-components/react/Badge';
 import { TableCell, TableRow } from '@akamai/cds-components/react/Table';
+import { formatStorageUnits } from '@akamai/compute-ui-core/api';
 import {
   formatDate,
   isWithinDays,
@@ -10,7 +11,6 @@ import {
   useProfile,
   useRegionsQuery,
 } from '@linode/queries';
-import { formatStorageUnits } from '@linode/utilities';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';

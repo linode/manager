@@ -1,3 +1,4 @@
+import { getAPIErrorOrDefault } from '@akamai/compute-ui-core/api';
 import {
   useLinodeVolumesQuery,
   useNotificationsQuery,
@@ -10,7 +11,6 @@ import * as React from 'react';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { VolumeUpgradeCopy } from 'src/features/Volumes/Dialogs/UpgradeVolumeDialog';
 import { getUpgradeableVolumeIds } from 'src/features/Volumes/utils';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import type { Linode } from '@linode/api-v4';
 

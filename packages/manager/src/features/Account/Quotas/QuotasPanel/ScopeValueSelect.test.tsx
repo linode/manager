@@ -12,7 +12,7 @@ const mocks = vi.hoisted(() => ({
   useFlags: vi.fn().mockReturnValue({}),
   useIsGeckoEnabled: vi.fn().mockReturnValue({ isGeckoLAEnabled: true }),
   useRegionsQuery: vi.fn().mockReturnValue({}),
-  useObjectStorageEndpoints: vi.fn().mockReturnValue({}),
+  useObjectStorageEndpointsQuery: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('src/hooks/useFlags', () => ({
@@ -32,7 +32,7 @@ vi.mock('@linode/queries', async () => {
 });
 
 vi.mock('src/queries/object-storage/queries', () => ({
-  useObjectStorageEndpoints: mocks.useObjectStorageEndpoints,
+  useObjectStorageEndpointsQuery: mocks.useObjectStorageEndpointsQuery,
 }));
 
 describe('ScopeValueSelect', () => {
@@ -71,7 +71,7 @@ describe('ScopeValueSelect', () => {
   });
 
   it('renders object storage endpoint select and calls onChange with selected endpoint', async () => {
-    mocks.useObjectStorageEndpoints.mockReturnValue({
+    mocks.useObjectStorageEndpointsQuery.mockReturnValue({
       data: [
         objectStorageEndpointsFactory.build({
           s3_endpoint: 'endpoint1',

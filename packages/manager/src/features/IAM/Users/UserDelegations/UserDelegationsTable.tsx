@@ -1,40 +1,40 @@
+import {
+  FormField,
+  FormLabel,
+  Pagination,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeaderCell,
+  TableRow,
+} from '@akamai/cds-components/react';
+import { Spacing, Typography } from '@akamai/cds-tokens';
 import { useGetDelegatedChildAccountsForUserQuery } from '@linode/queries';
-import { Stack, Typography } from '@linode/ui';
 import { useNavigate, useParams, useSearch } from '@tanstack/react-router';
 import * as React from 'react';
 
-import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
-import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import { MIN_PAGE_SIZE } from 'src/components/PaginationFooter/PaginationFooter.constants';
-import { Table } from 'src/components/Table';
-import { TableBody } from 'src/components/TableBody';
-import { TableCell } from 'src/components/TableCell';
-import { TableHead } from 'src/components/TableHead';
-import { TableRow } from 'src/components/TableRow';
-import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
-import { TableSortCell } from 'src/components/TableSortCell';
-import { useIsIAMDelegationEnabled } from 'src/features/IAM/hooks/useIsIAMEnabled';
 import { NO_ITEMS_TO_DISPLAY_TEXT } from 'src/features/IAM/Shared/constants';
+import { DebouncedSearchField } from 'src/features/IAM/Shared/DebouncedSearchField/DebouncedSearchField';
 import { ErrorState } from 'src/features/IAM/Shared/ErrorState/ErrorState';
-import { useOrderV2 } from 'src/hooks/useOrderV2';
-import { usePaginationV2 } from 'src/hooks/usePaginationV2';
+import globalStyles from 'src/features/IAM/Shared/global.module.css';
 
+import { useOrder } from '../../hooks/useOrder';
+import { usePagination } from '../../hooks/usePagination';
 import { CircleProgress } from '../../Shared/CircleProgress/CircleProgress';
 import { Paper } from '../../Shared/Paper/Paper';
 
-import type { Theme } from '@mui/material';
-
 const USER_DELEGATION_ROUTE = '/iam/users/$username/delegations';
+const MIN_PAGE_SIZE = 25;
 
 export const UserDelegationsTable = () => {
   const { username } = useParams({ from: '/iam/users/$username' });
-  const { isIAMDelegationEnabled } = useIsIAMDelegationEnabled();
   const { company } = useSearch({
     from: USER_DELEGATION_ROUTE,
   });
   const navigate = useNavigate();
 
-  const { handleOrderChange, order, orderBy } = useOrderV2({
+  const { handleOrderChange, order, orderBy } = useOrder({
     initialRoute: {
       defaultOrder: {
         order: 'asc',
@@ -45,7 +45,7 @@ export const UserDelegationsTable = () => {
     preferenceKey: 'user-delegations',
   });
 
-  const pagination = usePaginationV2({
+  const pagination = usePagination({
     currentRoute: USER_DELEGATION_ROUTE,
     preferenceKey: 'user-delegations',
     initialPage: 1,
@@ -77,18 +77,17 @@ export const UserDelegationsTable = () => {
     filter,
   });
 
-  const handleSearch = (value: string) => {
-    pagination.handlePageChange(1);
-    navigate({
-      to: USER_DELEGATION_ROUTE,
-      params: { username },
-      search: { company: value || undefined },
-    });
-  };
-
-  if (!isIAMDelegationEnabled) {
-    return null;
-  }
+  const handleSearch = React.useCallback(
+    (value: string) => {
+      pagination.handlePageChange(1);
+      navigate({
+        to: USER_DELEGATION_ROUTE,
+        params: { username },
+        search: { company: value || undefined },
+      });
+    },
+    [navigate, pagination, username]
+  );
 
   if (isLoadingChildAccounts) {
     return <CircleProgress />;
@@ -100,67 +99,82 @@ export const UserDelegationsTable = () => {
 
   return (
     <Paper>
-      <Stack>
-        <Typography variant="h2">Account Delegations</Typography>
-        <DebouncedSearchTextField
-          clearable
-          debounceTime={250}
-          hideLabel
-          isSearching={isFetchingChildAccounts}
-          label="Search"
+      <h2
+        style={{
+          font: Typography.Heading.M,
+          marginBottom: Spacing.S24,
+        }}
+      >
+        Account Delegations
+      </h2>
+      <FormField labelPosition="top" style={{ padding: 0 }}>
+        <FormLabel
+          className={globalStyles.visuallyHidden}
+          htmlFor="filter-delegations"
+          slot="label"
+        >
+          Search Accounts
+        </FormLabel>
+        <DebouncedSearchField
+          id="filter-delegations"
+          isLoading={isFetchingChildAccounts}
           onSearch={handleSearch}
           placeholder="Search"
-          sx={{ mt: 3 }}
+          style={{ padding: 0 }}
           value={company ?? ''}
         />
-        <Table sx={{ mt: 2 }}>
-          <TableHead>
+      </FormField>
+      <Table style={{ marginTop: Spacing.S16 }}>
+        <TableHead>
+          <TableRow
+            headerbackground="var(--token-component-table-header-nested-background)"
+            headerborder
+          >
+            <TableHeaderCell
+              onSort={() =>
+                handleOrderChange('company', order === 'asc' ? 'desc' : 'asc')
+              }
+              sortable
+              sorted={orderBy === 'company' ? order : undefined}
+            >
+              Account
+            </TableHeaderCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {childAccounts?.data.length === 0 && (
             <TableRow>
-              <TableSortCell
-                active={orderBy === 'company'}
-                direction={order}
-                handleClick={handleOrderChange}
-                label={'company'}
-              >
-                Account
-              </TableSortCell>
+              <TableCell>
+                <p style={{ textAlign: 'center', width: '100%' }}>
+                  {NO_ITEMS_TO_DISPLAY_TEXT}
+                </p>
+              </TableCell>
             </TableRow>
-          </TableHead>
-          <TableBody>
-            {childAccounts?.data.length === 0 && (
-              <TableRowEmpty colSpan={1} message={NO_ITEMS_TO_DISPLAY_TEXT} />
-            )}
-            {childAccounts?.data?.map((childAccount) => (
-              <TableRow key={childAccount.euuid}>
-                <TableCell>{childAccount.company}</TableCell>
-              </TableRow>
-            ))}
-            {(childAccounts?.results ?? 0) > MIN_PAGE_SIZE && (
-              <TableRow>
-                <TableCell
-                  colSpan={1}
-                  sx={(theme: Theme) => ({
-                    padding: 0,
-                    '& > div': {
-                      border: 'none',
-                      borderTop: `1px solid ${theme.borderColors.divider}`,
-                    },
-                  })}
-                >
-                  <PaginationFooter
-                    count={childAccounts?.results ?? 0}
-                    eventCategory="DelegatedChildAccounts"
-                    handlePageChange={pagination.handlePageChange}
-                    handleSizeChange={pagination.handlePageSizeChange}
-                    page={pagination.page}
-                    pageSize={pagination.pageSize}
-                  />
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </Stack>
+          )}
+          {childAccounts?.data?.map((childAccount) => (
+            <TableRow key={childAccount.euuid} zebra>
+              <TableCell style={{ overflowX: 'auto' }}>
+                {childAccount.company}
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+      {(childAccounts?.results ?? 0) > MIN_PAGE_SIZE && (
+        <Pagination
+          count={childAccounts?.results ?? 0}
+          data-testid="user-delegations-table-pagination"
+          onPageChange={(e: CustomEvent<number>) =>
+            pagination.handlePageChange(Number(e.detail))
+          }
+          onPageSizeChange={(
+            e: CustomEvent<{ page: number; pageSize: number }>
+          ) => pagination.handlePageSizeChange(Number(e.detail.pageSize))}
+          page={pagination.page}
+          pageSize={pagination.pageSize}
+          pageSizes={[MIN_PAGE_SIZE, 50, 75, 100]}
+        />
+      )}
     </Paper>
   );
 };

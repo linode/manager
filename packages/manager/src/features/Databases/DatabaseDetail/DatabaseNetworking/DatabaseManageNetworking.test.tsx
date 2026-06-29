@@ -56,6 +56,9 @@ describe('DatabaseManageNetworking Component', () => {
     queryMocks.useAllVPCsQuery.mockReturnValue({
       data: [vpcFactory.build()],
     });
+    queryMocks.useRegionQuery.mockReturnValue({
+      data: undefined,
+    });
   });
 
   it('Should render Manage Networking field with Public grid variation when no VPC is configured for the database', () => {
@@ -67,7 +70,7 @@ describe('DatabaseManageNetworking Component', () => {
       <DatabaseManageNetworking database={publicAccessDatabase} />
     );
 
-    const heading = screen.getByRole('heading');
+    const heading = screen.getAllByRole('heading')[0]; // Gets the first heading. (The second heading is the drawer's heading)
     expect(heading.textContent).toBe('Manage Networking');
     const connectionTypeLabel = screen.queryByText('Connection Type');
     expect(connectionTypeLabel).toBeInTheDocument();
@@ -117,7 +120,7 @@ describe('DatabaseManageNetworking Component', () => {
     });
     renderWithTheme(<DatabaseManageNetworking database={mockDatabase} />);
 
-    const heading = screen.getByRole('heading');
+    const heading = screen.getAllByRole('heading')[0]; // Gets the first heading. (The second heading is the drawer's heading)
     expect(heading.textContent).toBe('Manage Networking');
     const connectionTypeLabel = screen.queryByText('Connection Type');
     expect(connectionTypeLabel).toBeInTheDocument();

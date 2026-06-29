@@ -1,3 +1,4 @@
+import { getErrorStringOrDefault } from '@akamai/compute-ui-core/api';
 import { maybeCastToNumber } from '@akamai/compute-ui-core/formatting';
 import {
   useCreateVolumeMutation,
@@ -24,7 +25,6 @@ import { MAX_VOLUME_SIZE } from 'src/constants';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useEventsPollingActions } from 'src/queries/events/events';
 import { sendCreateVolumeEvent } from 'src/utilities/analytics/customEventAnalytics';
-import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import {
   handleFieldErrors,
   handleGeneralErrors,

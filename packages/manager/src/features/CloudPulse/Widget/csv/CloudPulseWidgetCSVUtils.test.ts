@@ -1,10 +1,16 @@
 import { describe, expect, it } from 'vitest';
 
 import { FILTER_CONFIG } from '../../Utils/FilterConfig';
-import { generateCSVData } from './CloudPulseWidgetCSVUtils';
+import {
+  buildWidgetFilterString,
+  generateCSVData,
+} from './CloudPulseWidgetCSVUtils';
 
 import type { CloudPulseServiceTypeFilterMap } from '../../Utils/models';
-import type { CSVDataProps } from './CloudPulseWidgetCSVUtils';
+import type {
+  CSVDataProps,
+  WidgetFilterStringParams,
+} from './CloudPulseWidgetCSVUtils';
 
 const DASHBOARD_NAME = 'Test Dashboard';
 const START_TIME_LABEL = 'Start Time';
@@ -52,6 +58,7 @@ const baseProps: CSVDataProps = {
   isDataLoading: false,
   serviceType: 'dbaas',
   widget: {
+    description: '',
     label: 'CPU Usage',
     unit: '%',
     aggregate_function: 'avg',
@@ -123,7 +130,7 @@ describe('generateCSVData', () => {
     expect(csv.some((row) => row[0] === DIMENSION_FILTERS_LABEL)).toBe(true);
     expect(
       csv.some((row) =>
-        row[1] ? row[1].toString().includes('Test,eq,A') : false
+        row[1] ? row[1].toString().includes('Test,Equal,A') : false
       )
     ).toBe(true);
   });
@@ -278,7 +285,7 @@ describe('generateCSVData', () => {
     });
 
     const filterRow = csv.find((row) => row[0] === DIMENSION_FILTERS_LABEL);
-    expect(filterRow?.[1]).toContain('Test Label,eq,A;Test Label,eq,B');
+    expect(filterRow?.[1]).toContain('Test Label,Equal,A;Test Label,Equal,B');
   });
 
   it('should include zoom range times when zoomed', () => {
@@ -292,5 +299,58 @@ describe('generateCSVData', () => {
 
     expect(csv.some((row) => row[0] === 'Zoom Start Time')).toBe(true);
     expect(csv.some((row) => row[0] === 'Zoom End Time')).toBe(true);
+  });
+
+  describe('buildWidgetFilterString', () => {
+    const filterParams: WidgetFilterStringParams = {
+      widget: baseProps.widget,
+      groupBy: baseProps.groupBy,
+      dimensionFilters: baseProps.dimensionFilters,
+      serviceType: baseProps.serviceType,
+      zoomRange: baseProps.zoomRange,
+      timezone: 'UTC',
+      filteredDimensions: baseProps.dimensionOptions,
+    };
+    it('should build a comprehensive filter string when all parameters are provided', () => {
+      const result = buildWidgetFilterString(filterParams);
+
+      const expectedString =
+        'Interval: 5 minute   |  Aggregation Function : Avg   |  Group By: region   |  Dimension Filters: Test,Equal,A';
+
+      expect(result).toBe(expectedString);
+    });
+
+    /**
+     * Test 2: Minimal Payload / Missing Values
+     */
+    it('should omit group by, if not provided', () => {
+      const result = buildWidgetFilterString({
+        ...filterParams,
+        groupBy: [],
+      });
+
+      const expectedString =
+        'Interval: 5 minute   |  Aggregation Function : Avg   |  Dimension Filters: Test,Equal,A';
+
+      expect(result).toBe(expectedString);
+    });
+
+    it('should return an empty string for values not provided', () => {
+      const result = buildWidgetFilterString({
+        ...filterParams,
+        groupBy: [],
+        widget: {
+          ...filterParams.widget,
+          aggregate_function: '',
+          time_granularity: { value: -1, unit: 'Auto' },
+        },
+        dimensionFilters: [],
+        filteredDimensions: [],
+      });
+
+      const expectedString = 'Interval:  Auto ';
+
+      expect(result).toBe(expectedString);
+    });
   });
 });

@@ -9,14 +9,12 @@ import type { APIError } from '@linode/api-v4';
 
 interface UseSwitchToParentAccountProps {
   isDelegateUserType?: boolean;
-  isProxyUserType?: boolean;
   onClose?: () => void;
   onTokenExpired?: (error: APIError) => void;
 }
 
 export const useSwitchToParentAccount = ({
   isDelegateUserType,
-  isProxyUserType,
   onClose,
   onTokenExpired,
 }: UseSwitchToParentAccountProps = {}) => {
@@ -40,19 +38,14 @@ export const useSwitchToParentAccount = ({
     setSubmitting(true);
 
     try {
-      // Revoke proxy or delegate token before switching to parent account.
+      // Revoke delegate token before switching to parent account.
       await revokeToken().catch(() => {
         /* Allow user account switching; tokens will expire naturally. */
       });
 
       updateCurrentToken({ userType: 'parent' });
 
-      // Reset flag for proxy or delegate user to display success toast once.
-      if (isProxyUserType) {
-        setStorage('is_proxy_user_type', 'false');
-      } else if (isDelegateUserType) {
-        setStorage('is_delegate_user_type', 'false');
-      }
+      setStorage('is_delegate_user_type', 'false');
 
       onClose?.();
 
@@ -71,7 +64,6 @@ export const useSwitchToParentAccount = ({
     onTokenExpired,
     revokeToken,
     updateCurrentToken,
-    isProxyUserType,
     isDelegateUserType,
     onClose,
   ]);

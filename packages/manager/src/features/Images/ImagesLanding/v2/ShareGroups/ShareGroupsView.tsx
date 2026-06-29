@@ -95,7 +95,6 @@ export const ShareGroupsView = (props: Props) => {
     data: shareGroupTokens,
     error: shareGroupTokensError,
     isFetching: shareGroupTokensIsFetching,
-    isLoading: shareGroupTokensLoading,
   } = useShareGroupTokensQuery(
     { page: pagination.page, page_size: pagination.pageSize },
     { ...shareGroupsFilter },
@@ -131,10 +130,7 @@ export const ShareGroupsView = (props: Props) => {
     });
   };
 
-  if (
-    ((isJoinedGroups || isMembershipRequests) && shareGroupTokensLoading) ||
-    shareGroupsLoading
-  ) {
+  if (shareGroupsLoading) {
     return <CircleProgress />;
   }
 

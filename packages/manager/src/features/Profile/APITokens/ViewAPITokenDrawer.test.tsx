@@ -164,8 +164,8 @@ describe('View API Token Drawer', () => {
       testChildScopeNotDisplayed('default');
     });
 
-    it('should not display the Child Account Access scope for "proxy" user type', () => {
-      testChildScopeNotDisplayed('proxy');
+    it('should not display the Child Account Access scope for "delegate" user type', () => {
+      testChildScopeNotDisplayed('delegate');
     });
 
     it('should not display the Child Account Access scope for "child" user type', () => {

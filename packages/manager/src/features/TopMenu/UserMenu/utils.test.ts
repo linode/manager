@@ -7,8 +7,8 @@ import type { UserType } from '@linode/api-v4';
 const MOCK_COMPANY_NAME = 'Test Company, LLC';
 
 describe('getCompanyNameOrEmail', () => {
-  it('returns the company name for a parent/child/proxy user who has one', async () => {
-    const newUserTypes = ['parent', 'child', 'proxy'];
+  it('returns the company name for a parent/child/delegate user who has one', async () => {
+    const newUserTypes = ['parent', 'child', 'delegate'];
 
     newUserTypes.forEach((newUserType: UserType) => {
       const actual = getCompanyNameOrEmail({

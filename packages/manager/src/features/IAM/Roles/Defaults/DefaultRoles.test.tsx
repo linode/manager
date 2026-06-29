@@ -1,19 +1,25 @@
-import { screen, waitForElementToBeRemoved } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import React from 'react';
 
-import { expectNotificationBannerText } from 'src/features/IAM/utilities/testHelpers';
-import { renderWithTheme } from 'src/utilities/testHelpers';
-
+import { createAccountRoles } from '../../factories';
 import {
   ERROR_STATE_TEXT,
   ERROR_STATE_TITLE,
   NO_ASSIGNED_DEFAULT_ROLES_TEXT,
 } from '../../Shared/constants';
+import {
+  expectNotificationBannerText,
+  getCdsButtonByText,
+} from '../../utilities/testHelpers';
+import {
+  mockMatchMedia,
+  renderWithProviders,
+} from '../../utilities/testHelpers';
 import { DefaultRoles } from './DefaultRoles';
 
-const loadingTestId = 'circle-progress';
-
 const queryMocks = vi.hoisted(() => ({
+  useAccountRoles: vi.fn().mockReturnValue({ isLoading: false }),
+  useAllAccountEntities: vi.fn().mockReturnValue({ isLoading: false }),
   useGetDefaultDelegationAccessQuery: vi.fn().mockReturnValue({}),
   useLocation: vi.fn().mockReturnValue({}),
   useSearch: vi.fn().mockReturnValue({}),
@@ -38,8 +44,17 @@ vi.mock('@linode/queries', async () => {
   const actual = await vi.importActual<any>('@linode/queries');
   return {
     ...actual,
+    useAccountRoles: queryMocks.useAccountRoles,
     useGetDefaultDelegationAccessQuery:
       queryMocks.useGetDefaultDelegationAccessQuery,
+  };
+});
+
+vi.mock('src/queries/entities/entities', async () => {
+  const actual = await vi.importActual('src/queries/entities/entities');
+  return {
+    ...actual,
+    useAllAccountEntities: queryMocks.useAllAccountEntities,
   };
 });
 
@@ -55,12 +70,18 @@ vi.mock('src/features/IAM/hooks/useDelegationRole', () => ({
   useIsDefaultDelegationRolesForChildAccount:
     queryMocks.useIsDefaultDelegationRolesForChildAccount,
 }));
+beforeAll(() => mockMatchMedia());
+
 describe('DefaultRoles', () => {
   beforeEach(() => {
     vi.clearAllMocks();
 
     queryMocks.usePermissions.mockReturnValue({
-      data: { view_default_delegate_access: true },
+      data: {
+        is_account_admin: true,
+        update_default_delegate_access: true,
+        view_default_delegate_access: true,
+      },
       isLoading: false,
     });
   });
@@ -76,10 +97,14 @@ describe('DefaultRoles', () => {
       },
       isLoading: false,
     });
-    const { queryByTestId } = renderWithTheme(<DefaultRoles />);
-    await waitForElementToBeRemoved(queryByTestId(loadingTestId));
+    queryMocks.useAccountRoles.mockReturnValue({
+      data: createAccountRoles(),
+      isLoading: false,
+    });
+    renderWithProviders(<DefaultRoles />);
+
     expect(screen.getByText('Default Roles for Delegate Users')).toBeVisible();
-    expect(screen.getByRole('table')).toBeVisible();
+    expect(screen.getByText('Role')).toBeVisible();
   });
   it('should render empty state', async () => {
     queryMocks.useLocation.mockReturnValue({
@@ -90,10 +115,12 @@ describe('DefaultRoles', () => {
       isLoading: false,
     });
 
-    renderWithTheme(<DefaultRoles />);
+    const { container } = renderWithProviders(<DefaultRoles />);
 
     expect(screen.getByText(NO_ASSIGNED_DEFAULT_ROLES_TEXT)).toBeVisible();
-    expect(screen.getByText('Add New Default Roles')).toBeVisible();
+    expect(
+      await getCdsButtonByText(container, 'Add New Default Roles')
+    ).toBeVisible();
   });
 
   it('should show error state when api fails', () => {
@@ -104,7 +131,7 @@ describe('DefaultRoles', () => {
       status: 'error',
     });
 
-    renderWithTheme(<DefaultRoles />);
+    renderWithProviders(<DefaultRoles />);
     expect(screen.getByText(ERROR_STATE_TITLE)).toBeVisible();
     expect(screen.getByText(ERROR_STATE_TEXT)).toBeVisible();
   });
@@ -117,7 +144,7 @@ describe('DefaultRoles', () => {
       isLoading: false,
     });
 
-    renderWithTheme(<DefaultRoles />);
+    renderWithProviders(<DefaultRoles />);
 
     return expectNotificationBannerText(
       'You do not have permission to view default roles for delegate users.'

@@ -1,10 +1,9 @@
 import { NotificationBanner } from '@akamai/cds-components/react';
 import { useAccountUser, useUserRoles } from '@linode/queries';
-import { Stack } from '@linode/ui';
 import { useParams } from '@tanstack/react-router';
 import React from 'react';
 
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { DocumentTitleSegment } from 'src/features/IAM/Shared/DocumentTitleSegment/DocumentTitleSegment';
 import { ErrorState } from 'src/features/IAM/Shared/ErrorState/ErrorState';
 import { NotFound } from 'src/features/IAM/Shared/NotFound/NotFound';
 
@@ -56,16 +55,11 @@ export const UserProfile = () => {
   return (
     <>
       <DocumentTitleSegment segment={`${username} - Profile`} />
-      <Stack
-        spacing={2}
-        sx={(theme) => ({ marginTop: theme.tokens.spacing.S16 })}
-      >
-        <UserDetailsPanel
-          activeUser={user}
-          assignedRoles={assignedRoles}
-          permissions={permissions}
-        />
-      </Stack>
+      <UserDetailsPanel
+        activeUser={user}
+        assignedRoles={assignedRoles}
+        permissions={permissions}
+      />
     </>
   );
 };

@@ -1,11 +1,14 @@
 import { Icon, Tooltip } from '@akamai/cds-components/react';
 import { Spacing } from '@akamai/cds-tokens';
+import { formatStorageUnits } from '@akamai/compute-ui-core/api';
 import { useDatabaseTypesQuery, useRegionsQuery } from '@linode/queries';
-import { Box } from '@linode/ui';
-import { convertMegabytesTo, formatStorageUnits } from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
+import {
+  STORAGE_COPY,
+  VALKEY_STORAGE_TOOLTIP_COPY,
+} from 'src/features/Databases/constants';
 import { DatabaseEngineVersion } from 'src/features/Databases/DatabaseEngineVersion';
 import { useInProgressEvents } from 'src/queries/events/events';
 
@@ -13,11 +16,10 @@ import { CircleProgress } from '../../shared/CircleProgress/CircleProgress';
 import { ErrorState } from '../../shared/ErrorState/ErrorState';
 import { DatabaseStatusDisplay } from '../DatabaseStatusDisplay';
 import {
-  StyledStatusBox,
-  StyledSummaryBox,
-  StyledSummaryTextBox,
+  StyledStatusDiv,
+  StyledSummaryDiv,
+  StyledSummaryTextDiv,
   StyledSummaryTextTypography,
-  StyledTitleTypography,
 } from './DatabaseResizeCurrentConfiguration.style';
 
 import type { Region } from '@linode/api-v4';
@@ -63,26 +65,19 @@ export const DatabaseResizeCurrentConfiguration = ({ database }: Props) => {
         ? `Primary (+${database.cluster_size - 1} Nodes)`
         : `Primary (+${database.cluster_size - 1} Node)`;
 
-  const STORAGE_COPY =
-    'The total disk size is smaller than the selected plan capacity due to overhead from the OS.';
+  const isValkeyDatabase = database.engine === 'valkey';
 
   return (
     <>
-      <StyledTitleTypography variant="h3">
-        Current Configuration
-      </StyledTitleTypography>
-      <StyledSummaryBox
-        data-qa-db-configuration-summary
-        display="flex"
-        flex={1}
-      >
-        <Box key={'status-version'} paddingRight={6}>
-          <StyledSummaryTextBox>
+      <h4>Current Configuration</h4>
+      <StyledSummaryDiv data-qa-db-configuration-summary>
+        <div key={'status-version'} style={{ paddingRight: Spacing.S48 }}>
+          <StyledSummaryTextDiv>
             <span style={{ font: theme.font.bold }}>Status</span>{' '}
-            <StyledStatusBox>
+            <StyledStatusDiv>
               <DatabaseStatusDisplay database={database} events={events} />
-            </StyledStatusBox>
-          </StyledSummaryTextBox>
+            </StyledStatusDiv>
+          </StyledSummaryTextDiv>
           <StyledSummaryTextTypography>
             <span style={{ font: theme.font.bold }}>Version</span>{' '}
             <DatabaseEngineVersion
@@ -96,8 +91,8 @@ export const DatabaseResizeCurrentConfiguration = ({ database }: Props) => {
           <StyledSummaryTextTypography>
             <span style={{ font: theme.font.bold }}>Nodes</span> {configuration}
           </StyledSummaryTextTypography>
-        </Box>
-        <Box key={'region-plan'} paddingRight={6}>
+        </div>
+        <div key={'region-plan'} style={{ paddingRight: Spacing.S48 }}>
           <StyledSummaryTextTypography>
             <span style={{ font: theme.font.bold }}>Region</span>{' '}
             {region?.label ?? database.region}
@@ -106,9 +101,9 @@ export const DatabaseResizeCurrentConfiguration = ({ database }: Props) => {
             <span style={{ font: theme.font.bold }}>Plan</span>{' '}
             {formatStorageUnits(type.label)}
           </StyledSummaryTextTypography>
-        </Box>
+        </div>
 
-        <Box key={'ram-cpu'} paddingRight={6}>
+        <div key={'ram-cpu'} style={{ paddingRight: Spacing.S48 }}>
           <StyledSummaryTextTypography>
             <span style={{ font: theme.font.bold }}>RAM</span>{' '}
             {type.memory / 1024} GB
@@ -116,42 +111,37 @@ export const DatabaseResizeCurrentConfiguration = ({ database }: Props) => {
           <StyledSummaryTextTypography>
             <span style={{ font: theme.font.bold }}>CPUs</span> {type.vcpus}
           </StyledSummaryTextTypography>
-        </Box>
-        <Box key={'disk'} paddingRight={6}>
-          {database.total_disk_size_gb ? (
-            <>
-              <StyledSummaryTextTypography>
-                <span style={{ font: theme.font.bold }}>Total Disk Size</span>{' '}
-                {database.total_disk_size_gb} GB
-                <Tooltip
-                  style={{ marginLeft: Spacing.S4, whiteSpace: 'normal' }}
-                  tooltipText={STORAGE_COPY}
-                >
-                  <Icon
-                    icon="info-outline"
-                    size="m"
-                    style={{
-                      position: 'relative',
-                      top: -2,
-                    }}
-                  />
-                </Tooltip>
-              </StyledSummaryTextTypography>
-              <StyledSummaryTextTypography>
-                <span style={{ font: theme.font.bold }}>Used</span>{' '}
-                {database.used_disk_size_gb !== null
-                  ? `${database.used_disk_size_gb} GB`
-                  : 'N/A'}
-              </StyledSummaryTextTypography>
-            </>
-          ) : (
+        </div>
+        <div key={'disk'} style={{ paddingRight: Spacing.S48 }}>
+          <StyledSummaryTextTypography>
+            <span style={{ font: theme.font.bold }}>Usable Disk Size</span>{' '}
+            {isValkeyDatabase ? 'N/A' : `${database.total_disk_size_gb} GB`}
+            <Tooltip
+              style={{ marginLeft: Spacing.S4, whiteSpace: 'normal' }}
+              tooltipText={
+                isValkeyDatabase ? VALKEY_STORAGE_TOOLTIP_COPY : STORAGE_COPY
+              }
+            >
+              <Icon
+                icon="info-outline"
+                size="m"
+                style={{
+                  position: 'relative',
+                  top: -2,
+                }}
+              />
+            </Tooltip>
+          </StyledSummaryTextTypography>
+          {!isValkeyDatabase && (
             <StyledSummaryTextTypography>
-              <span style={{ font: theme.font.bold }}>Storage</span>{' '}
-              {convertMegabytesTo(type.disk, true)}
+              <span style={{ font: theme.font.bold }}>Used</span>{' '}
+              {database.used_disk_size_gb !== null
+                ? `${database.used_disk_size_gb} GB`
+                : 'N/A'}
             </StyledSummaryTextTypography>
           )}
-        </Box>
-      </StyledSummaryBox>
+        </div>
+      </StyledSummaryDiv>
     </>
   );
 };

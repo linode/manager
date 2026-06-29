@@ -47,6 +47,10 @@ type ShareGroupDetailsRouteParams = {
   shareGroupId: string;
 };
 
+type JoinedGroupDetailsRouteParams = {
+  tokenUuid: string;
+};
+
 interface ShareGroupActionRouteParams extends ShareGroupDetailsRouteParams {
   action: ShareGroupAction;
 }
@@ -58,6 +62,7 @@ const imageActions = {
   'manage-replicas': 'manage-replicas',
   rebuild: 'rebuild',
   view: 'view',
+  'view-share-groups': 'view-share-groups',
 } as const;
 
 const shareGroupActions = {
@@ -66,6 +71,11 @@ const shareGroupActions = {
   delete: 'delete',
   edit: 'edit',
 } as const;
+
+const IMAGE_LIBRARY_REDIRECT_TO = '/images/image-library/$imageType' as const;
+const IMAGE_LIBRARY_REDIRECT_PARAMS = {
+  imageType: 'owned-by-me' as const,
+};
 
 export type ImageAction = (typeof imageActions)[keyof typeof imageActions];
 export type ShareGroupAction =
@@ -83,8 +93,8 @@ const imagesIndexRoute = createRoute({
     // When private image sharing is enabled, redirect to Image Library tab with default 'owned-by-me' sub-tab
     if (context.isPrivateImageSharingEnabled) {
       throw redirect({
-        to: '/images/image-library/$imageType',
-        params: { imageType: 'owned-by-me' },
+        to: IMAGE_LIBRARY_REDIRECT_TO,
+        params: IMAGE_LIBRARY_REDIRECT_PARAMS,
       });
     }
   },
@@ -102,8 +112,8 @@ const imageActionRoute = createRoute({
     // Prevent access if private image sharing is enabled
     if (context.isPrivateImageSharingEnabled) {
       throw redirect({
-        to: '/images/image-library/$imageType',
-        params: { imageType: 'owned-by-me' },
+        to: IMAGE_LIBRARY_REDIRECT_TO,
+        params: IMAGE_LIBRARY_REDIRECT_PARAMS,
       });
     }
     if (!(params.action in imageActions)) {
@@ -222,8 +232,8 @@ const imageLibraryTypeRoute = createRoute({
       !imageLibrarySubTabs.map((tab) => tab.type).includes(params.imageType)
     ) {
       throw redirect({
-        to: '/images/image-library/$imageType',
-        params: { imageType: 'owned-by-me' },
+        to: IMAGE_LIBRARY_REDIRECT_TO,
+        params: IMAGE_LIBRARY_REDIRECT_PARAMS,
       });
     }
   },
@@ -374,6 +384,23 @@ const shareGroupActionRoute = createRoute({
   ).then((m) => m.shareGroupsTabsLazyRoute)
 );
 
+const shareGroupsMembershipRequestRoute = createRoute({
+  beforeLoad: ({ params }) => {
+    if (params.shareGroupsType !== 'membership-requests') {
+      throw redirect({
+        params: { shareGroupsType: 'membership-requests' },
+        to: '/images/share-groups/$shareGroupsType',
+      });
+    }
+  },
+  getParentRoute: () => shareGroupsTypeRoute,
+  path: 'request',
+}).lazy(() =>
+  import(
+    'src/features/Images/ImagesLanding/v2/ShareGroups/shareGroupsTabsLazyRoute'
+  ).then((m) => m.shareGroupsTabsLazyRoute)
+);
+
 const shareGroupDetailsRoute = createRoute({
   getParentRoute: () => imagesRoute,
   params: {
@@ -392,6 +419,41 @@ const shareGroupDetailsRoute = createRoute({
   ).then((m) => m.shareGroupDetailsLazyRoute)
 );
 
+const joinedGroupDetailsRoute = createRoute({
+  getParentRoute: () => imagesRoute,
+  params: {
+    parse: ({ tokenUuid }: JoinedGroupDetailsRouteParams) => ({
+      tokenUuid,
+    }),
+    stringify: ({ tokenUuid }: JoinedGroupDetailsRouteParams) => ({
+      tokenUuid,
+    }),
+  },
+  path: 'share-groups/joined-groups/$tokenUuid',
+  validateSearch: (search: ShareGroupDetailsSearchParams) => search,
+}).lazy(() =>
+  import(
+    'src/features/Images/ImagesLanding/v2/ShareGroups/JoinedGroupsDetails/JoinedGroupDetailsLazyRoute'
+  ).then((m) => m.joinedGroupDetailsLazyRoute)
+);
+
+const shareGroupsAddImagesRoute = createRoute({
+  getParentRoute: () => imagesRoute,
+  params: {
+    parse: ({ shareGroupId }: ShareGroupDetailsRouteParams) => ({
+      shareGroupId,
+    }),
+    stringify: ({ shareGroupId }: ShareGroupDetailsRouteParams) => ({
+      shareGroupId,
+    }),
+  },
+  path: 'share-groups/owned-groups/$shareGroupId/add-images',
+}).lazy(() =>
+  import(
+    'src/features/Images/ImagesLanding/v2/ShareGroups/AddImagesLazyRoute'
+  ).then((m) => m.addImagesLazyRoute)
+);
+
 export const imagesRouteTree = imagesRoute.addChildren([
   imagesIndexRoute.addChildren([imageActionRoute]),
   imageLibraryLandingRoute.addChildren([
@@ -400,10 +462,14 @@ export const imagesRouteTree = imagesRoute.addChildren([
     ]),
   ]),
   shareGroupsLandingRoute.addChildren([
-    shareGroupsIndexRoute.addChildren([shareGroupsTypeRoute]),
+    shareGroupsIndexRoute.addChildren([
+      shareGroupsTypeRoute.addChildren([shareGroupsMembershipRequestRoute]),
+    ]),
     shareGroupsCreateRoute,
+    shareGroupsAddImagesRoute,
     shareGroupActionRoute,
     shareGroupDetailsRoute,
+    joinedGroupDetailsRoute,
   ]),
   imagesCreateRoute.addChildren([
     imagesCreateIndexRoute,

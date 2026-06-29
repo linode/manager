@@ -1,3 +1,4 @@
+import { getAPIErrorOrDefault } from '@akamai/compute-ui-core/api';
 import { useCreateLockMutation } from '@linode/queries';
 import {
   ActionsPanel,
@@ -13,7 +14,6 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import type { LockType } from '@linode/api-v4';
 

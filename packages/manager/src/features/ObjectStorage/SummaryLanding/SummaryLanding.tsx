@@ -3,19 +3,19 @@ import React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Link } from 'src/components/Link';
+import { useObjectStorageSelection } from 'src/features/ObjectStorage/ObjectStorageContext';
 import { useFlags } from 'src/hooks/useFlags';
 
 import { EndpointMultiselect } from '../Partials/EndpointMultiselect';
 import { EndpointSummaryTable } from './EndpointSummaryTable/EndpointSummaryTable';
 
-import type { EndpointMultiselectValue } from '../Partials/EndpointMultiselect';
-
 export const SummaryLanding = () => {
   const { objectStorageSummaryPageLinks } = useFlags();
 
-  const [selectedEndpoints, setSelectedEndpoints] = React.useState<
-    EndpointMultiselectValue[]
-  >([]);
+  const {
+    selectedSummaryEndpoints: selectedEndpoints,
+    setSelectedSummaryEndpoints: setSelectedEndpoints,
+  } = useObjectStorageSelection();
 
   return (
     <>
@@ -46,11 +46,16 @@ export const SummaryLanding = () => {
 
           <Typography
             sx={(theme) => ({
-              color: theme.tokens.color.Neutrals[70],
+              color:
+                theme.palette.mode === 'light'
+                  ? theme.tokens.color.Neutrals[70]
+                  : theme.tokens.color.Neutrals[5],
             })}
           >
-            Select one or more endpoints using the dropdown menu to view your
-            usage details for those endpoints.
+            Select one or more endpoints in the dropdown list to view usage
+            summaries for those endpoints. You can view quotas and request
+            increases on the {''}
+            <Link to="/quotas?service=object-storage">Quotas</Link> page.
           </Typography>
         </Box>
 

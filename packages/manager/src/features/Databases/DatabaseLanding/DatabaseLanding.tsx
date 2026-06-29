@@ -1,5 +1,5 @@
 import { useDatabasesQuery, useDatabaseTypesQuery } from '@linode/queries';
-import { Box } from '@mui/material';
+import { ErrorState } from '@linode/ui';
 import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
@@ -13,7 +13,6 @@ import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 
 import { CircleProgress } from '../shared/CircleProgress/CircleProgress';
-import { ErrorState } from '../shared/ErrorState/ErrorState';
 
 const preferenceKey = 'databases';
 
@@ -102,7 +101,7 @@ export const DatabaseLanding = () => {
         onButtonClick={() => navigate({ to: '/databases/create' })}
         title="Database Clusters"
       />
-      <Box>
+      <div>
         <DatabaseLandingTable
           data={databases?.data}
           handleOrderChange={databaseHandleOrderChange}
@@ -111,7 +110,7 @@ export const DatabaseLanding = () => {
           orderBy={databaseOrderBy}
           results={databases?.results}
         />
-      </Box>
+      </div>
     </React.Fragment>
   );
 };

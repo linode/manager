@@ -1,3 +1,4 @@
+import { getAPIErrorOrDefault } from '@akamai/compute-ui-core/api';
 import {
   useDomainQuery,
   useDomainsQuery,
@@ -28,7 +29,6 @@ import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { CloneDomainDrawer } from './CloneDomainDrawer';
 import {

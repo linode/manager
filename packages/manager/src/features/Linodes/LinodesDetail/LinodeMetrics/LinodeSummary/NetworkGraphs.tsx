@@ -1,5 +1,5 @@
+import { getMetrics } from '@akamai/compute-ui-core/api';
 import { Paper } from '@linode/ui';
-import { getMetrics } from '@linode/utilities';
 import Grid from '@mui/material/Grid';
 import { useTheme } from '@mui/material/styles';
 import React from 'react';
@@ -13,8 +13,8 @@ import {
 
 import { StatsPanel } from './StatsPanel';
 
+import type { Metrics } from '@akamai/compute-ui-core/api';
 import type { Stats } from '@linode/api-v4/lib/linodes';
-import type { Metrics } from '@linode/utilities';
 import type { Theme } from '@mui/material/styles';
 import type { NetworkTimeData } from 'src/components/AreaChart/types';
 import type { NetworkUnit } from 'src/features/Longview/shared/utilities';

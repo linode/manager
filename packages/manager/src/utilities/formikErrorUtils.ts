@@ -1,6 +1,5 @@
+import { getAPIErrorOrDefault } from '@akamai/compute-ui-core/api';
 import { isNilOrEmpty } from '@akamai/compute-ui-core/formatting';
-
-import { getAPIErrorOrDefault } from './errorUtils';
 
 import type { APIError } from '@linode/api-v4/lib/types';
 import type { FormikErrors } from 'formik';

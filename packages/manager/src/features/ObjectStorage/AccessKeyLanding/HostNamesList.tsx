@@ -1,6 +1,6 @@
+import { getRegionsByRegionId } from '@akamai/compute-ui-core/api';
 import { useRegionsQuery } from '@linode/queries';
 import { Box, List, omittedProps } from '@linode/ui';
-import { getRegionsByRegionId } from '@linode/utilities';
 import { styled } from '@mui/material/styles';
 import React, { useRef } from 'react';
 

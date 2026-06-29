@@ -12,6 +12,7 @@ export const distributedRegions: Region[] = [
     id: 'us-den-1',
     label: 'Distributed - Denver, CO',
     placement_group_limits: {
+      maximum_linodes_per_flexible_pg: 5,
       maximum_linodes_per_pg: 5,
       maximum_pgs_per_customer: null,
     },
@@ -34,6 +35,7 @@ export const distributedRegions: Region[] = [
     id: 'de-ham-1',
     label: 'Distributed - Hamburg, DE',
     placement_group_limits: {
+      maximum_linodes_per_flexible_pg: 5,
       maximum_linodes_per_pg: 5,
       maximum_pgs_per_customer: null,
     },
@@ -56,6 +58,7 @@ export const distributedRegions: Region[] = [
     id: 'fr-mrs-1',
     label: 'Distributed - Marseille, FR',
     placement_group_limits: {
+      maximum_linodes_per_flexible_pg: 5,
       maximum_linodes_per_pg: 5,
       maximum_pgs_per_customer: null,
     },
@@ -78,6 +81,7 @@ export const distributedRegions: Region[] = [
     id: 'za-jnb-1',
     label: 'Distributed - Johannesburg, ZA\t',
     placement_group_limits: {
+      maximum_linodes_per_flexible_pg: 5,
       maximum_linodes_per_pg: 5,
       maximum_pgs_per_customer: null,
     },
@@ -100,6 +104,7 @@ export const distributedRegions: Region[] = [
     id: 'my-kul-1',
     label: 'Distributed - Kuala Lumpur, MY',
     placement_group_limits: {
+      maximum_linodes_per_flexible_pg: 5,
       maximum_linodes_per_pg: 5,
       maximum_pgs_per_customer: null,
     },
@@ -122,6 +127,7 @@ export const distributedRegions: Region[] = [
     id: 'co-bog-1',
     label: 'Distributed - Bogotá, CO',
     placement_group_limits: {
+      maximum_linodes_per_flexible_pg: 5,
       maximum_linodes_per_pg: 5,
       maximum_pgs_per_customer: null,
     },
@@ -144,6 +150,7 @@ export const distributedRegions: Region[] = [
     id: 'mx-qro-1',
     label: 'Distributed - Querétaro, MX',
     placement_group_limits: {
+      maximum_linodes_per_flexible_pg: 5,
       maximum_linodes_per_pg: 5,
       maximum_pgs_per_customer: null,
     },
@@ -166,6 +173,7 @@ export const distributedRegions: Region[] = [
     id: 'us-hou-1',
     label: 'Distributed - Houston, TX',
     placement_group_limits: {
+      maximum_linodes_per_flexible_pg: 5,
       maximum_linodes_per_pg: 5,
       maximum_pgs_per_customer: null,
     },
@@ -188,6 +196,7 @@ export const distributedRegions: Region[] = [
     id: 'cl-scl-1',
     label: 'Distributed - Santiago, CL',
     placement_group_limits: {
+      maximum_linodes_per_flexible_pg: 5,
       maximum_linodes_per_pg: 5,
       maximum_pgs_per_customer: null,
     },

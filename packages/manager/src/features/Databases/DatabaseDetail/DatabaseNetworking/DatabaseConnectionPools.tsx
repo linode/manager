@@ -10,9 +10,8 @@ import {
   TableRow,
   Tooltip,
 } from '@akamai/cds-components/react';
+import { Spacing } from '@akamai/cds-tokens';
 import { useDatabaseConnectionPoolsQuery } from '@linode/queries';
-import { Stack, Typography } from '@linode/ui';
-import Grid from '@mui/material/Grid';
 import { useTheme } from '@mui/material/styles';
 import React from 'react';
 
@@ -23,11 +22,7 @@ import {
   CONNECTION_POOL_LABEL_CELL_STYLES,
   MANAGE_CONNECTION_POOLS_LEARN_MORE_LINK,
 } from 'src/features/Databases/constants';
-import {
-  StyledGridContainer,
-  StyledLabelTypography,
-  StyledValueGrid,
-} from 'src/features/Databases/DatabaseDetail/DatabaseSummary/DatabaseSummaryClusterConfiguration.style';
+import { StyledLabelTypography } from 'src/features/Databases/DatabaseDetail/DatabaseSummary/DatabaseSummaryClusterConfiguration.style';
 import { useBreakpoint } from 'src/features/Databases/hooks/useBreakpoint';
 import { useFlags } from 'src/hooks/useFlags';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
@@ -35,6 +30,8 @@ import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { makeSettingsItemStyles } from '../../shared.styles';
 import { CircleProgress } from '../../shared/CircleProgress/CircleProgress';
 import { ErrorState } from '../../shared/ErrorState/ErrorState';
+import { Stack } from '../../shared/Stack/Stack';
+import styles from '../DatabaseDetail.module.css';
 import { ServiceURI } from '../ServiceURI';
 import { DatabaseAddConnectionPoolDrawer } from './DatabaseAddConnectionPoolDrawer';
 import { DatabaseConnectionPoolDeleteDialog } from './DatabaseConnectionPoolDeleteDialog';
@@ -82,17 +79,15 @@ export const DatabaseConnectionPools = ({ database }: Props) => {
   return (
     <>
       <div className={classes.topSection}>
-        <Stack spacing={0.5}>
-          <Typography variant="h3">
-            Manage PgBouncer Connection Pools
-          </Typography>
-          <Typography sx={{ maxWidth: '500px' }}>
+        <Stack spacing={Spacing.S4}>
+          <h3 style={{ margin: 0 }}>Manage PgBouncer Connection Pools</h3>
+          <p style={{ maxWidth: '500px', margin: 0 }}>
             Manage PgBouncer connection pools to minimize the use of your server
             resources.{' '}
             <Link to={MANAGE_CONNECTION_POOLS_LEARN_MORE_LINK}>
               Learn more.
             </Link>
-          </Typography>
+          </p>
         </Stack>
         <Tooltip
           disabled={!isDatabaseInactive}
@@ -111,38 +106,28 @@ export const DatabaseConnectionPools = ({ database }: Props) => {
       {flags?.hostnameEndpoints &&
         connectionPools &&
         connectionPools.data.length > 0 && (
-          <StyledGridContainer container size={12} spacing={0}>
-            <Grid
-              size={{
-                md: 2,
-                xs: 3,
-              }}
-            >
+          <div className={styles.summaryLabelValueContainer}>
+            <div className={styles.summaryLabelColumn}>
               <StyledLabelTypography>
                 {hasPublicVPC ? 'Public Service URI' : 'Service URI'}
               </StyledLabelTypography>
-            </Grid>
-            <StyledValueGrid size={{ md: 10, xs: 9 }}>
+            </div>
+            <div className={styles.summaryValueColumn}>
               <ServiceURI database={database} />
-            </StyledValueGrid>
+            </div>
             {hasPublicVPC && (
               <>
-                <Grid
-                  size={{
-                    md: 2,
-                    xs: 3,
-                  }}
-                >
+                <div className={styles.summaryLabelColumn}>
                   <StyledLabelTypography>
                     Private Service URI
                   </StyledLabelTypography>
-                </Grid>
-                <StyledValueGrid size={{ md: 10, xs: 9 }}>
+                </div>
+                <div className={styles.summaryValueColumn}>
                   <ServiceURI database={database} showPrivateVPC />
-                </StyledValueGrid>
+                </div>
               </>
             )}
-          </StyledGridContainer>
+          </div>
         )}
       <div style={{ overflowX: 'auto', width: '100%' }}>
         <Table

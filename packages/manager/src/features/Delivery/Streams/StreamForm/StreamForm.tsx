@@ -212,7 +212,7 @@ export const StreamForm = (props: StreamFormProps) => {
           <Stack spacing={2}>
             <StreamFormGeneralInfo mode={mode} />
             {selectedStreamType === streamType.LKEAuditLogs && (
-              <StreamFormClusters mode={mode} />
+              <StreamFormClusters mode={mode} streamId={streamId} />
             )}
             <StreamFormDelivery
               mode={mode}

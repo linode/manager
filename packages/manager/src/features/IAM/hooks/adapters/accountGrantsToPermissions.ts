@@ -90,5 +90,18 @@ export const accountGrantsToPermissions = (
     view_child_account: true,
     create_child_account_token: true,
     view_default_delegate_access: true,
+    // AccountIDPAdmin
+    create_idp_config: true,
+    update_idp_config: true,
+    delete_idp_config: true,
+    update_idp_config_user_includes: true,
+    update_idp_config_user_excludes: true,
+    create_idp_config_cert: true,
+    delete_idp_config_cert: true,
+    list_idp_configs: true,
+    view_idp_config: true,
+    view_idp_config_user_excludes: true,
+    view_idp_config_user_includes: true,
+    view_idp_config_certs: true,
   } as Record<AccountAdmin, boolean>;
 };

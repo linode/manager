@@ -1,6 +1,6 @@
 {
   "name": "@linode/validation",
-  "version": "0.86.1",
+  "version": "0.87.0",
   "description": "Yup validation schemas for use with the Linode APIv4",
   "type": "module",
   "main": "lib/index.cjs",
@@ -36,13 +36,14 @@
     "url": "https://github.com/linode/manager/tree/develop/packages/validation"
   },
   "dependencies": {
+    "@akamai/compute-ui-core": "0.0.0-20260615155722",
     "ipaddr.js": "^2.0.0",
     "libphonenumber-js": "^1.10.6",
     "yup": "^1.4.0"
   },
   "devDependencies": {
     "@linode/tsconfig": "workspace:*",
-    "concurrently": "^9.2.1",
+    "concurrently": "^10.0.3",
     "tsup": "^8.5.1"
   },
   "keywords": [

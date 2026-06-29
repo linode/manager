@@ -1,3 +1,4 @@
+import { Badge } from '@akamai/cds-components/react';
 import { useReservedIPsQuery } from '@linode/queries';
 import {
   Autocomplete,
@@ -54,6 +55,19 @@ export interface IPAddressSelectionProps {
    */
   onReservedIPSelect?: (ip: IPAddress | null) => void;
   /**
+   * Optional Pendo tracking IDs for the radio buttons.
+   */
+  pendoIds?: {
+    auto: string;
+    cancelReserveIPDrawer: string;
+    closeReserveIPDrawer: string;
+    reserved: string;
+    reserveIPAutocomplete: string;
+    reserveIPAutocompleteOptions: string;
+    reserveIPLink: string;
+    submitReserveIPDrawer: string;
+  };
+  /**
    * The currently selected region ID
    */
   regionId?: string;
@@ -62,6 +76,10 @@ export interface IPAddressSelectionProps {
    * Used to restore selection when component remounts
    */
   selectedIP?: IPAddress | null;
+  /**
+   * Whether to show a "New" badge next to the label
+   */
+  showNewBadge?: boolean;
   /**
    * Custom tooltip text for auto and reserved options
    */
@@ -85,8 +103,10 @@ export const IPAddressSelection = ({
   mode = 'auto',
   onIPModeChange,
   onReservedIPSelect,
+  pendoIds,
   regionId,
   selectedIP = null,
+  showNewBadge = false,
   tooltipText = {
     auto: "A public IPv4 address automatically assigned to your Linode. \
       Use this for standard web traffic that doesn't require a permanent, static IP. \
@@ -126,7 +146,7 @@ export const IPAddressSelection = ({
     <FormControl>
       <Box alignItems="center" display="flex" flexDirection="row">
         <FormLabel id="ip-address-label" sx={{ fontSize: label.fontSize }}>
-          {label.text}
+          {label.text} {showNewBadge && <Badge type="new">New</Badge>}
         </FormLabel>
       </Box>
       <RadioGroup
@@ -138,6 +158,7 @@ export const IPAddressSelection = ({
       >
         <FormControlLabel
           control={<Radio />}
+          data-pendo-id={pendoIds?.auto}
           data-qa-ip-mode-option="auto"
           disabled={disabled}
           key="auto"
@@ -157,6 +178,7 @@ export const IPAddressSelection = ({
         />
         <FormControlLabel
           control={<Radio />}
+          data-pendo-id={pendoIds?.reserved}
           data-qa-ip-mode-option="reserved"
           disabled={disabled}
           key="reserved"
@@ -203,9 +225,21 @@ export const IPAddressSelection = ({
             }}
             options={unassignedReservedIPs}
             placeholder="Select"
+            renderOption={(props, option) => (
+              <li
+                {...props}
+                data-pendo-id={pendoIds?.reserveIPAutocompleteOptions}
+                key={option.address}
+              >
+                {option.address}
+              </li>
+            )}
             sx={{ width: 300 }}
             textFieldProps={{
               hideLabel: true,
+              inputProps: {
+                'data-pendo-id': pendoIds?.reserveIPAutocomplete,
+              },
             }}
             value={
               selectedIP ? { ...selectedIP, label: selectedIP.address } : null
@@ -213,7 +247,10 @@ export const IPAddressSelection = ({
           />
           <Box mt={1}>
             <StyledLinkButtonBox>
-              <LinkButton onClick={() => setIsReserveIPDrawerOpen(true)}>
+              <LinkButton
+                data-pendo-id={pendoIds?.reserveIPLink}
+                onClick={() => setIsReserveIPDrawerOpen(true)}
+              >
                 Reserve IP
               </LinkButton>
             </StyledLinkButtonBox>
@@ -233,6 +270,11 @@ export const IPAddressSelection = ({
           }
         }}
         open={isReserveIPDrawerOpen}
+        pendoIds={{
+          cancel: pendoIds?.cancelReserveIPDrawer,
+          close: pendoIds?.closeReserveIPDrawer,
+          submit: pendoIds?.submitReserveIPDrawer,
+        }}
         region={regionId}
       />
     </FormControl>

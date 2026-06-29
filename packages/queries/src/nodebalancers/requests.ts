@@ -5,12 +5,12 @@ import {
 } from '@linode/api-v4';
 import { getAll } from '@linode/utilities';
 
+import type { PriceType } from '@akamai/compute-ui-core/api';
 import type {
   Filter,
   NodeBalancer,
   NodeBalancerConfig,
   Params,
-  PriceType,
 } from '@linode/api-v4';
 
 export const getAllNodeBalancerTypes = () =>

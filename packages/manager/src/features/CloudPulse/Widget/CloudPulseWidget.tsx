@@ -1,6 +1,7 @@
+import { Font } from '@akamai/cds-tokens';
 import { useProfile, useRegionsQuery } from '@linode/queries';
-import { Box, Paper, Typography } from '@linode/ui';
-import { GridLegacy, Stack, useTheme } from '@mui/material';
+import { Box, Paper, TooltipIcon, Typography } from '@linode/ui';
+import { GridLegacy, Stack } from '@mui/material';
 import { DateTime } from 'luxon';
 import React from 'react';
 
@@ -36,15 +37,18 @@ import {
   getFilteredDimensions,
 } from '../Utils/utils';
 import { CloudPulseAggregateFunction } from './components/CloudPulseAggregateFunction';
+import { CloudPulseGraphPdfWrapper } from './components/CloudPulseGraphPdfWrapper';
 import { CloudPulseIntervalSelect } from './components/CloudPulseIntervalSelect';
 import { CloudPulseLineGraph } from './components/CloudPulseLineGraph';
 import { CloudPulseDimensionFiltersSelect } from './components/DimensionFilters/CloudPulseDimensionFiltersSelect';
 import { ZoomIcon } from './components/Zoomer';
 import { CloudPulseWidgetCSVDownloader } from './csv/CloudPulseWidgetCSVDownloader';
+import { buildWidgetFilterString } from './csv/CloudPulseWidgetCSVUtils';
 
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
 import type { CloudPulseResources } from '../shared/CloudPulseResourcesSelect';
 import type { MetricsDimensionFilter } from './components/DimensionFilters/types';
+import type { Metrics } from '@akamai/compute-ui-core/api';
 import type {
   CloudPulseServiceType,
   DateTimeWithPreset,
@@ -53,7 +57,6 @@ import type {
   TimeGranularity,
   Widgets,
 } from '@linode/api-v4';
-import type { Metrics } from '@linode/utilities';
 import type {
   AreaProps,
   ChartVariant,
@@ -177,12 +180,16 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
   const [groupBy, setGroupBy] = React.useState<string[] | undefined>(
     props.widget.group_by
   );
+  const [groupByLabels, setGroupByLabels] = React.useState<
+    string[] | undefined
+  >(undefined);
   const [isZoomed, setIsZoomed] = React.useState(false);
   const [zoomRange, setZoomRange] = React.useState<{
     left: 'dataMin' | number;
     right: 'dataMax' | number;
   }>();
-  const theme = useTheme();
+
+  const [hiddenLegendKeys, setHiddenLegendKeys] = React.useState<string[]>([]);
 
   const {
     globalFilterGroupBy,
@@ -248,8 +255,13 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     scope: 'entity',
     serviceType,
   });
-  const { getGlobalSelectedDashboard, getGlobalFilterData, getGlobalGroupBy } =
-    useCloudPulseContext();
+  const {
+    getGlobalSelectedDashboard,
+    getGlobalFilterData,
+    getGlobalGroupBy,
+    isExporting,
+    setWidgetLoading,
+  } = useCloudPulseContext();
   // Determine which fetch object is relevant for linodes
   const activeLinodeFetch =
     serviceType === 'blockstorage' ? linodeFromVolumes : linodesFetch;
@@ -376,13 +388,18 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     []
   );
   const handleGroupByChange = React.useCallback(
-    (selectedGroupBy: string[], savePreferences?: boolean) => {
+    (
+      selectedGroupBy: string[],
+      selectGroupByLabels: string[],
+      savePreferences?: boolean
+    ) => {
       if (savePreferences) {
         updatePreferences(widget.label, {
           [GROUP_BY]: selectedGroupBy,
         });
       }
       setGroupBy(selectedGroupBy);
+      setGroupByLabels(selectGroupByLabels);
     },
     []
   );
@@ -421,6 +438,13 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
       setZoomRange({ left, right });
     },
     []
+  );
+
+  const onHiddenAreasChange = React.useCallback(
+    (hiddenKeys: string[]) => {
+      setHiddenLegendKeys(hiddenKeys);
+    },
+    [setHiddenLegendKeys]
   );
   const {
     data: metricsList,
@@ -497,6 +521,11 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     return `custom:${start},${end},${timeZone}`;
   }, [props.duration]);
 
+  const widgetLoading =
+    isLoading ||
+    metricsApiCallError === jweTokenExpiryError ||
+    isJweTokenFetching;
+
   React.useEffect(() => {
     if (
       filteredSelections.length !== (dimensionFilters?.length ?? 0) &&
@@ -514,168 +543,273 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     vpcFetch.isLoading,
     linodeFromVolumes.isLoading,
   ]);
+  React.useEffect(() => {
+    setWidgetLoading(widget.label, widgetLoading);
+  }, [widgetLoading, setWidgetLoading, widget.label]);
   const filterData = getGlobalFilterData();
+  const description = widget.description?.trim()
+    ? widget.description
+    : convertStringToCamelCasesWithSpaces(widget.label);
+
+  const isMaximizedWidget = widget.size === 12;
+
+  // Build comprehensive filter string for widget
+  const filterString = buildWidgetFilterString({
+    widget,
+    groupBy: groupByLabels,
+    dimensionFilters,
+    filteredDimensions,
+    serviceType,
+    zoomRange,
+    timezone,
+  });
+
+  // Determine if there's an error to display
+  const hasError =
+    status === 'error' && metricsApiCallError !== jweTokenExpiryError;
+  const errorText = hasError
+    ? (metricsApiCallError ?? 'Error while rendering graph')
+    : undefined;
+  const resourceLabels = resources
+    .filter((resource) => entityIds.includes(resource.id.toString()))
+    .map((resource) => resource.label);
   return (
-    <GridLegacy container item lg={widget.size} xs={12}>
-      <Stack
-        spacing={2}
-        sx={{
-          flexGrow: 1,
-        }}
-      >
-        <Paper
-          data-qa-widget={convertStringToCamelCasesWithSpaces(widget.label)}
-          sx={{ flexGrow: 1 }}
+    <>
+      <GridLegacy container item lg={widget.size} xs={12}>
+        <Stack
+          spacing={2}
+          sx={{
+            flexGrow: 1,
+          }}
         >
-          <Stack
-            direction={{ sm: 'row' }}
-            sx={{
-              alignItems: 'center',
-              gap: { sm: 0, xs: 2 },
-              justifyContent: { sm: 'space-between' },
-              marginBottom: 1,
-              padding: 1,
-            }}
+          <Paper
+            data-qa-widget={convertStringToCamelCasesWithSpaces(widget.label)}
+            sx={{ flexGrow: 1 }}
           >
-            <Typography flex={{ sm: 2, xs: 0 }} marginLeft={1} variant="h2">
-              {convertStringToCamelCasesWithSpaces(widget.label)} (
-              {scaledWidgetUnit.current}
-              {unit.endsWith('ps') && !scaledWidgetUnit.current.endsWith('ps')
-                ? '/s'
-                : ''}
-              )
-            </Typography>
             <Stack
               direction={{ sm: 'row' }}
               sx={{
-                flex: { sm: 3, xs: 0 },
-                justifyContent: 'end',
                 alignItems: 'center',
-                gap: 1,
-                maxHeight: `calc(${theme.spacing(10)} + 5px)`,
-                overflow: 'auto',
-                width: { sm: 'inherit', xs: '100%' },
+                gap: { sm: 0, xs: 2 },
+                justifyContent: { sm: 'space-between' },
+                marginBottom: 1,
+                padding: 1,
               }}
             >
-              {availableMetrics?.scrape_interval && (
-                <CloudPulseIntervalSelect
-                  defaultInterval={widgetProp?.time_granularity}
-                  onIntervalChange={handleIntervalChange}
-                  scrapeInterval={availableMetrics.scrape_interval}
-                />
-              )}
-              {Boolean(
-                availableMetrics?.available_aggregate_functions?.length
-              ) && (
-                <CloudPulseAggregateFunction
-                  availableAggregateFunctions={
-                    availableMetrics!.available_aggregate_functions
+              <Box
+                sx={{
+                  alignItems: 'center',
+                  display: 'flex',
+                  flex: isMaximizedWidget ? '0 0 auto' : 1,
+                  gap: 1,
+                  minWidth: 0,
+                }}
+              >
+                <Typography
+                  marginLeft={1}
+                  sx={{
+                    fontSize: Font.FontSize.Xs,
+                    flex: isMaximizedWidget ? '0 0 auto' : 1,
+                    minWidth: 0,
+                    overflow: isMaximizedWidget ? 'visible' : 'hidden',
+                    textOverflow: isMaximizedWidget ? 'unset' : 'clip',
+                    whiteSpace: isMaximizedWidget ? 'nowrap' : 'normal',
+                  }}
+                  variant="h2"
+                >
+                  {convertStringToCamelCasesWithSpaces(widget.label)} (
+                  {scaledWidgetUnit.current}
+                  {unit.endsWith('ps') &&
+                  !scaledWidgetUnit.current.endsWith('ps')
+                    ? '/s'
+                    : ''}
+                  )
+                </Typography>
+                <TooltipIcon
+                  labelTooltipIconSize="small"
+                  placement="bottom-end"
+                  status="info"
+                  sxTooltipIcon={{
+                    flexShrink: 0,
+                    p: 0,
+                  }}
+                  text={
+                    <Typography
+                      sx={{
+                        whiteSpace: 'pre-line',
+                        wordBreak: 'break-word',
+                      }}
+                      variant="body2"
+                    >
+                      {description}
+                    </Typography>
                   }
-                  defaultAggregateFunction={widgetProp?.aggregate_function}
-                  onAggregateFuncChange={handleAggregateFunctionChange}
-                />
-              )}
-              <Box sx={{ display: 'flex', gap: 1, marginTop: 1 }}>
-                {flags.aclp?.showWidgetDimensionFilters && (
-                  <CloudPulseDimensionFiltersSelect
-                    dashboardId={dashboardId}
-                    dimensionOptions={filteredDimensions ?? []}
-                    drawerLabel={availableMetrics?.label ?? ''}
-                    handleSelectionChange={handleDimensionFiltersChange}
-                    selectedDimensions={filteredSelections}
-                    selectedEntities={entityIds}
-                    selectedRegions={linodeRegion ? [linodeRegion] : undefined}
-                    serviceType={serviceType}
-                  />
-                )}
-                {filterConfig && flags.aclp?.enableCSVDownload && (
-                  <CloudPulseTooltip
-                    key="csv-download-tooltip"
-                    placement="bottom-end"
-                    title="Download CSV"
-                  >
-                    <CloudPulseWidgetCSVDownloader
-                      dashboardName={getGlobalSelectedDashboard()?.label ?? ''}
-                      data={data}
-                      dimensionFilters={dimensionFilters ?? []}
-                      dimensionOptions={filteredDimensions ?? []}
-                      duration={duration}
-                      filterConfig={filterConfig}
-                      filters={
-                        !savePref // contextual view
-                          ? {
-                              ...(filterData || { id: {} }),
-                              label: {
-                                ...(filterData?.label || {}),
-                                [RESOURCE_ID]: resources
-                                  .filter((resource) =>
-                                    entityIds.includes(resource.id.toString())
-                                  )
-                                  .map((resource) => resource.label),
-                                ...(region && {
-                                  [REGION]: [
-                                    regions?.find(({ id }) => id === region)
-                                      ?.label ?? region,
-                                  ],
-                                }),
-                              },
-                            }
-                          : filterData
-                      }
-                      groupBy={[...getGlobalGroupBy(), ...(groupBy ?? [])]}
-                      isDataLoading={isLoading || isJweTokenFetching}
-                      serviceType={serviceType}
-                      widget={widget}
-                      zoomRange={zoomRange}
-                    />
-                  </CloudPulseTooltip>
-                )}
-                <WidgetFilterGroupByRenderer
-                  dashboardId={dashboardId}
-                  handleChange={handleGroupByChange}
-                  label={widget.label}
-                  metric={widget.metric}
-                  preferenceGroupBy={groupBy}
-                  savePreferences={savePref}
-                  serviceType={serviceType}
-                />
-                <ZoomIcon
-                  handleZoomToggle={handleZoomToggle}
-                  zoomIn={widget?.size === 12}
+                  width={300}
                 />
               </Box>
+              <Stack
+                direction={{ sm: 'row' }}
+                sx={(theme) => ({
+                  flex: { sm: 3, xs: 0 },
+                  justifyContent: 'end',
+                  alignItems: 'center',
+                  gap: 1,
+                  maxHeight: `calc(${theme.spacing(10)} + 5px)`,
+                  overflow: 'auto',
+                  width: { sm: 'inherit', xs: '100%' },
+                })}
+              >
+                {availableMetrics?.scrape_interval && (
+                  <CloudPulseIntervalSelect
+                    defaultInterval={widgetProp?.time_granularity}
+                    onIntervalChange={handleIntervalChange}
+                    scrapeInterval={availableMetrics.scrape_interval}
+                  />
+                )}
+                {Boolean(
+                  availableMetrics?.available_aggregate_functions?.length
+                ) && (
+                  <CloudPulseAggregateFunction
+                    availableAggregateFunctions={
+                      availableMetrics!.available_aggregate_functions
+                    }
+                    defaultAggregateFunction={widgetProp?.aggregate_function}
+                    onAggregateFuncChange={handleAggregateFunctionChange}
+                  />
+                )}
+                <Box sx={{ display: 'flex', gap: 1, marginTop: 1 }}>
+                  {flags.aclp?.showWidgetDimensionFilters && (
+                    <CloudPulseDimensionFiltersSelect
+                      dashboardId={dashboardId}
+                      dimensionOptions={filteredDimensions ?? []}
+                      drawerLabel={availableMetrics?.label ?? ''}
+                      handleSelectionChange={handleDimensionFiltersChange}
+                      selectedDimensions={filteredSelections}
+                      selectedEntities={entityIds}
+                      selectedRegions={
+                        linodeRegion ? [linodeRegion] : undefined
+                      }
+                      serviceType={serviceType}
+                    />
+                  )}
+                  {filterConfig && flags.aclp?.enableCSVDownload && (
+                    <CloudPulseTooltip
+                      key="csv-download-tooltip"
+                      placement="bottom-end"
+                      title="Download CSV"
+                    >
+                      <CloudPulseWidgetCSVDownloader
+                        dashboardName={
+                          getGlobalSelectedDashboard()?.label ?? ''
+                        }
+                        data={data}
+                        dimensionFilters={dimensionFilters ?? []}
+                        dimensionOptions={filteredDimensions ?? []}
+                        duration={duration}
+                        filterConfig={filterConfig}
+                        filters={
+                          !savePref // contextual view
+                            ? {
+                                ...(filterData || { id: {} }),
+                                label: {
+                                  ...(filterData?.label || {}),
+                                  [RESOURCE_ID]: resourceLabels ?? [],
+                                  ...(region && {
+                                    [REGION]: [
+                                      regions?.find(({ id }) => id === region)
+                                        ?.label ?? region,
+                                    ],
+                                  }),
+                                },
+                              }
+                            : filterData
+                        }
+                        groupBy={[...getGlobalGroupBy(), ...(groupBy ?? [])]}
+                        isDataLoading={isLoading || isJweTokenFetching}
+                        serviceType={serviceType}
+                        widget={widget}
+                        zoomRange={zoomRange}
+                      />
+                    </CloudPulseTooltip>
+                  )}
+                  <WidgetFilterGroupByRenderer
+                    dashboardId={dashboardId}
+                    handleChange={handleGroupByChange}
+                    label={widget.label}
+                    metric={widget.metric}
+                    preferenceGroupBy={groupBy}
+                    savePreferences={savePref}
+                    serviceType={serviceType}
+                  />
+                  <ZoomIcon
+                    handleZoomToggle={handleZoomToggle}
+                    zoomIn={widget?.size === 12}
+                  />
+                </Box>
+              </Stack>
             </Stack>
-          </Stack>
-          <CloudPulseLineGraph
+            <CloudPulseLineGraph
+              areas={areas}
+              ariaLabel={ariaLabel ? ariaLabel : ''}
+              data={data}
+              dotRadius={1.5}
+              error={
+                status === 'error' &&
+                metricsApiCallError !== jweTokenExpiryError // show the error only if the error is not related to token expiration
+                  ? (metricsApiCallError ?? 'Error while rendering graph')
+                  : undefined
+              }
+              height={424}
+              legendRows={legendRows}
+              loading={widgetLoading} // keep loading until we are trying to fetch the refresh token
+              onHiddenAreasChange={onHiddenAreasChange}
+              onZoomChange={handleZoomStateChange}
+              showDot
+              showLegend={data.length !== 0}
+              timezone={timezone}
+              unit={`${currentUnit}${unit.endsWith('ps') ? '/s' : ''}`}
+              variant={variant}
+              widgetLabel={widget.label}
+              xAxis={{ tickFormat, tickGap: 60 }}
+              zoomResetKey={
+                zoomResetKey // key to reset zoom when duration changes
+              }
+            />
+          </Paper>
+        </Stack>
+      </GridLegacy>
+      {isExporting && (
+        <Box
+          sx={{
+            position: 'absolute',
+            visibility: 'hidden',
+            width: '100%',
+          }}
+        >
+          <CloudPulseGraphPdfWrapper
             areas={areas}
-            ariaLabel={ariaLabel ? ariaLabel : ''}
+            ariaLabel={`${widget.label}-pdf`}
             data={data}
             dotRadius={1.5}
-            error={
-              status === 'error' && metricsApiCallError !== jweTokenExpiryError // show the error only if the error is not related to token expiration
-                ? (metricsApiCallError ?? 'Error while rendering graph')
-                : undefined
-            }
+            errorText={errorText}
+            filterString={filterString}
             height={424}
+            hiddenLegendRows={hiddenLegendKeys}
             legendRows={legendRows}
-            loading={
-              isLoading ||
-              metricsApiCallError === jweTokenExpiryError ||
-              isJweTokenFetching
-            } // keep loading until we are trying to fetch the refresh token
-            onZoomChange={handleZoomStateChange}
+            loading={widgetLoading} // keep loading until we are trying to fetch the refresh token
+            resourceLabels={resourceLabels?.join(', ')}
             showDot
-            showLegend={data.length !== 0}
             timezone={timezone}
             unit={`${currentUnit}${unit.endsWith('ps') ? '/s' : ''}`}
             variant={variant}
+            widgetLabel={widget.label}
+            widgetLabelWithUnit={`${convertStringToCamelCasesWithSpaces(widget.label)} (${currentUnit}${unit.endsWith('ps') && !currentUnit.endsWith('ps') ? '/s' : ''})`}
             xAxis={{ tickFormat, tickGap: 60 }}
-            zoomResetKey={
-              zoomResetKey // key to reset zoom when duration changes
-            }
+            zoomRange={zoomRange}
+            zoomResetKey="static-pdf"
           />
-        </Paper>
-      </Stack>
-    </GridLegacy>
+        </Box>
+      )}
+    </>
   );
 };

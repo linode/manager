@@ -1,7 +1,11 @@
+import {
+  convertMegabytesTo,
+  getLinodeRegionPrice,
+  UNKNOWN_PRICE,
+} from '@akamai/compute-ui-core/api';
 import { useLinodeQuery } from '@linode/queries';
 import { Chip, FormControlLabel, Radio } from '@linode/ui';
 import { Hidden } from '@linode/ui';
-import { convertMegabytesTo } from '@linode/utilities';
 import * as React from 'react';
 
 import { Currency } from 'src/components/Currency';
@@ -9,19 +13,12 @@ import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { LINODE_NETWORK_IN } from 'src/constants';
-import {
-  PRICE_ERROR_TOOLTIP_TEXT,
-  UNKNOWN_PRICE,
-} from 'src/utilities/pricing/constants';
-import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
-import {
-  formatPrice,
-  getLabelForInterval,
-} from 'src/utilities/pricing/priceInterval';
+import { PRICE_ERROR_TOOLTIP_TEXT } from 'src/utilities/pricing/constants';
 import { useComputePricing } from 'src/utilities/pricing/useComputePricing';
 
 import { DisabledPlanSelectionTooltip } from './DisabledPlanSelectionTooltip';
 import { StyledChip, StyledRadioCell } from './PlanSelection.styles';
+import { getMonthlyPriceCellContent } from './shared';
 import { getDisabledPlanReasonCopy } from './utils';
 
 import type { PlanWithAvailability } from './types';
@@ -34,6 +31,7 @@ export interface PlanSelectionProps {
   header?: string;
   idx: number;
   isCreate?: boolean;
+  isValkeyEngineSelected?: boolean;
   linodeID?: number | undefined;
   onSelect: (key: string) => void;
   plan: PlanWithAvailability;
@@ -57,6 +55,7 @@ export const PlanSelection = (props: PlanSelectionProps) => {
     selectedRegionId,
     showNetwork,
     showTransfer,
+    isValkeyEngineSelected,
     wholePanelIsDisabled,
   } = props;
   const {
@@ -77,7 +76,7 @@ export const PlanSelection = (props: PlanSelectionProps) => {
   // to specific plan classes (e.g. G8, GPU) without affecting others.
   // This means different rows in the same table can have different billing modes at the same time —
   // scoped plans resolve to 'hourly' while all other plans fall back to 'monthly'.
-  const { billing } = useComputePricing(plan.id);
+  const { billing, getPriceSubheading } = useComputePricing(plan.id);
 
   const { data: linode } = useLinodeQuery(
     linodeID ?? -1,
@@ -91,31 +90,9 @@ export const PlanSelection = (props: PlanSelectionProps) => {
     ? getLinodeRegionPrice(plan, selectedRegionId)
     : plan.price;
 
-  const getSubHeading = (price: PriceObject | undefined): string => {
-    const monthlyLabel = getLabelForInterval('monthly', 'short');
-    const hourlyLabel = getLabelForInterval('hourly', 'short');
-    const formattedHourly = `$${formatPrice(price?.hourly)}/${hourlyLabel}`;
-    const formattedMonthly = `$${formatPrice(price?.monthly)}/${monthlyLabel}`;
-    const hasMonthlyPrice = typeof price?.monthly === 'number';
-
-    if (billing === 'hourly') {
-      // Do not show monthly price in hourly billing mode when it is null.
-      // Even though formatPrice returns UNKNOWN_PRICE for null values,
-      // we avoid displaying it because monthly pricing is not applicable here.
-      if (!hasMonthlyPrice) {
-        return formattedHourly;
-      }
-      return `${formattedMonthly} (${formattedHourly})`;
-    }
-
-    if (billing === 'monthly') {
-      return `${formattedMonthly} (${formattedHourly})`;
-    }
-
-    return '';
-  };
-
-  plan.subHeadings[0] = getSubHeading(price);
+  // Hourly-scoped plans show only the hourly price (no monthly commitment).
+  // Monthly-scoped plans show the monthly price with the hourly price in parentheses.
+  plan.subHeadings[0] = getPriceSubheading(price, { format: 'short' });
 
   const rowIsDisabled =
     (!isDatabaseFlow && isSamePlan) ||
@@ -164,20 +141,6 @@ export const PlanSelection = (props: PlanSelectionProps) => {
     plan.id.includes('dedicated-edge') || plan.id.includes('nanode-edge');
 
   const networkOutGbps = plan.network_out && plan.network_out / 1000;
-
-  const renderMonthlyPriceCell = () => {
-    // Hourly-scoped plans are billed purely by the hour and have no monthly commitment,
-    // so the monthly cell is always "N/A" - even when the API happens to return a monthly value.
-    if (billing === 'hourly') {
-      return 'N/A'; // Not applicable in Hourly billing mode.
-    }
-    // Non-scoped plans use monthly billing, so display the monthly price when it is available.
-    if (typeof price?.monthly === 'number') {
-      return <Currency quantity={price.monthly} useAdaptivePrecision />;
-    }
-    // Monthly price is unexpectedly absent for a monthly-billed plan - show the error/unknown price.
-    return <Currency quantity={UNKNOWN_PRICE} />;
-  };
 
   return (
     <React.Fragment key={`tabbed-panel-${idx}`}>
@@ -248,7 +211,7 @@ export const PlanSelection = (props: PlanSelectionProps) => {
                 : undefined
             }
           >
-            {renderMonthlyPriceCell()}
+            {getMonthlyPriceCellContent(billing, price)}
           </TableCell>
           <TableCell
             data-qa-hourly
@@ -267,7 +230,9 @@ export const PlanSelection = (props: PlanSelectionProps) => {
             {plan.vcpus}
           </TableCell>
           <TableCell center data-qa-storage noWrap>
-            {convertMegabytesTo(plan.disk, true)}
+            {isValkeyEngineSelected
+              ? 'N/A'
+              : convertMegabytesTo(plan.disk, true)}
           </TableCell>
           {showTransfer ? (
             <TableCell center data-qa-transfer>

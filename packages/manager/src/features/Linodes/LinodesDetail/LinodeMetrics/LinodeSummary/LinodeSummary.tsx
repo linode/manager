@@ -1,4 +1,10 @@
 import {
+  formatNumber,
+  formatPercentage,
+  getAPIErrorOrDefault,
+  getMetrics,
+} from '@akamai/compute-ui-core/api';
+import {
   STATS_NOT_READY_API_MESSAGE,
   STATS_NOT_READY_MESSAGE,
   useLinodeStats,
@@ -6,7 +12,6 @@ import {
   useProfile,
 } from '@linode/queries';
 import { Autocomplete, ErrorState, Paper, Stack, Typography } from '@linode/ui';
-import { formatNumber, formatPercentage, getMetrics } from '@linode/utilities';
 import Grid from '@mui/material/Grid';
 import { useTheme } from '@mui/material/styles';
 import { useParams } from '@tanstack/react-router';
@@ -16,7 +21,6 @@ import * as React from 'react';
 import PendingIcon from 'src/assets/icons/pending.svg';
 import { AreaChart } from 'src/components/AreaChart/AreaChart';
 import { setUpCharts } from 'src/utilities/charts';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { getDateOptions } from './helpers';
 import { NetworkGraphs } from './NetworkGraphs';

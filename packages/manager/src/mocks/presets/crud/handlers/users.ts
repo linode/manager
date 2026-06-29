@@ -169,9 +169,7 @@ export const getUsers = (mockState: MockState) => [
         return makePaginatedResponse({
           data: users.filter(
             (user) =>
-              user.user_type === 'child' ||
-              user.user_type === 'delegate' ||
-              user.user_type === 'proxy'
+              user.user_type === 'child' || user.user_type === 'delegate'
           ),
           request,
         });

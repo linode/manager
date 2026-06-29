@@ -1,3 +1,4 @@
+import { getErrorMap } from '@akamai/compute-ui-core/api';
 import { useLinodeQuery, useLinodeUpdateMutation } from '@linode/queries';
 import { Accordion, ActionsPanel, Notice, TextField } from '@linode/ui';
 import { styled } from '@mui/material/styles';
@@ -6,7 +7,6 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { sendUpdateLinodeLabelEvent } from 'src/utilities/analytics/customEventAnalytics';
-import { getErrorMap } from 'src/utilities/errorUtils';
 
 interface Props {
   isReadOnly?: boolean;

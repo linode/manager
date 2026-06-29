@@ -1,3 +1,4 @@
+import { getErrorMap } from '@akamai/compute-ui-core/api';
 import { useLinodeBackupSnapshotMutation } from '@linode/queries';
 import {
   Box,
@@ -13,7 +14,6 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { useEventsPollingActions } from 'src/queries/events/events';
-import { getErrorMap } from 'src/utilities/errorUtils';
 
 import { CaptureSnapshotConfirmationDialog } from './CaptureSnapshotConfirmationDialog';
 

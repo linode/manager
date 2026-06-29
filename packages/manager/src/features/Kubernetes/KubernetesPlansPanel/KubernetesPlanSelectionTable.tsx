@@ -6,8 +6,12 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
+import { renderPlanTableTooltip } from 'src/features/components/PlansPanel/shared';
 import { useIsGenerationalPlansEnabled } from 'src/utilities/linodes';
-import { PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE } from 'src/utilities/pricing/constants';
+import {
+  MONTHLY_COLUMN_HOURLY_ONLY_TOOLTIP_TEXT,
+  PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE,
+} from 'src/utilities/pricing/constants';
 
 import type { LinodeTypeClass } from '@linode/api-v4';
 import type { PlanSelectionFilterOptionsTable } from 'src/features/components/PlansPanel/PlanContainer';
@@ -23,6 +27,7 @@ interface KubernetesPlanSelectionTableProps {
   planType?: LinodeTypeClass;
   renderPlanSelection?: (plans: PlanWithAvailability[]) => React.JSX.Element[];
   shouldDisplayNoRegionSelectedMessage: boolean;
+  showHourlyBillingTooltip?: boolean;
 }
 
 const tableCells = [
@@ -45,6 +50,7 @@ export const KubernetesPlanSelectionTable = (
     planType,
     renderPlanSelection,
     shouldDisplayNoRegionSelectedMessage,
+    showHourlyBillingTooltip,
   } = props;
   const { isGenerationalPlansEnabled } = useIsGenerationalPlansEnabled(
     plans,
@@ -79,6 +85,14 @@ export const KubernetesPlanSelectionTable = (
                 ) : (
                   cellName
                 )}
+                {/* Only show when a region is selected and the tab has hourly-only plans. */}
+                {cellName === 'Monthly' &&
+                  showHourlyBillingTooltip &&
+                  !shouldDisplayNoRegionSelectedMessage &&
+                  renderPlanTableTooltip(
+                    'info',
+                    MONTHLY_COLUMN_HOURLY_ONLY_TOOLTIP_TEXT
+                  )}
               </TableCell>
             );
           })}

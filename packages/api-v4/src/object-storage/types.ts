@@ -1,3 +1,5 @@
+import type { Params } from '../types';
+
 export type ObjectStorageEndpointTypes = 'E0' | 'E1' | 'E2' | 'E3';
 
 export interface ObjectStorageKeyRegions {
@@ -148,10 +150,9 @@ export interface GetObjectStorageObjectListPayload {
   regionId: string;
 }
 
-interface ObjectStorageObjectListParams {
+interface ObjectStorageObjectListParams extends Params {
   delimiter?: string;
   marker?: string;
-  page_size?: number;
   prefix?: string;
 }
 

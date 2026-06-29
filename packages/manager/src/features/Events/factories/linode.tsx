@@ -32,6 +32,14 @@ export const linode: PartialEventMap<'linode'> = {
       </>
     ),
   },
+  linode_kvmify: {
+    notification: (e) => (
+      <>
+        Linode <EventLink event={e} to="entity" /> has been{' '}
+        <strong>upgraded</strong>.
+      </>
+    ),
+  },
   linode_boot: {
     failed: (e) => (
       <>
