@@ -1,7 +1,9 @@
+import { useInferenceUsageQuery } from '@linode/queries';
 import {
   ActionsPanel,
   Box,
   Checkbox,
+  CircleProgress,
   Drawer,
   IconButton,
   TextField,
@@ -85,6 +87,43 @@ export const ApiKeyDetailsDrawer = ({
   const [isEditingLabel, setIsEditingLabel] = useState(false);
   const [isEditingDescription, setIsEditingDescription] = useState(false);
 
+  // Fetch usage data for this specific API key
+  const { data: usageData, isLoading: isUsageLoading } = useInferenceUsageQuery(
+    {
+      api_key_id: apiKey?.id,
+      granularity: 'hour',
+      group_by: 'api-key',
+      include_breakdown: false,
+      include_time_series: true,
+    },
+    open && apiKey !== null
+  );
+
+  // Transform usage data to sparkline format (hourly totals for last 24h)
+  // Always returns 24 data points, padding with zeros for missing hours
+  const usageSparklineData = useMemo(() => {
+    // Generate 24 hourly buckets for the last 24 hours
+    const now = new Date();
+    const buckets: number[] = new Array(24).fill(0);
+
+    if (!usageData?.time_series || usageData.time_series.length === 0) {
+      return buckets; // Return 24 zeros if no data
+    }
+
+    // Map data to the correct hour slots, summing tokens for same-bucket entries
+    for (const entry of usageData.time_series) {
+      const hoursAgo = Math.floor(
+        (now.getTime() - new Date(entry.bucket).getTime()) / (1000 * 60 * 60)
+      );
+      const index = 23 - hoursAgo;
+      if (index >= 0 && index < 24) {
+        buckets[index] += entry.total_tokens;
+      }
+    }
+
+    return buckets;
+  }, [usageData?.time_series]);
+
   // Memoize model IDs to prevent unnecessary re-renders
   const allModelIds = useMemo(() => models.map((model) => model.id), [models]);
 
@@ -114,6 +153,7 @@ export const ApiKeyDetailsDrawer = ({
       setIsEditingLabel(false);
       setIsEditingDescription(false);
 
+      // Set selected models based on allowed_models
       if (allModelIds.length > 0) {
         // If allowed_models is empty or ['*'], it means all models are allowed
         if (
@@ -123,6 +163,7 @@ export const ApiKeyDetailsDrawer = ({
         ) {
           setSelectedModels([...allModelIds]);
         } else {
+          // Show only the specific allowed models as checked
           setSelectedModels(apiKey.allowed_models);
         }
       }
@@ -164,7 +205,7 @@ export const ApiKeyDetailsDrawer = ({
   }
 
   return (
-    <Drawer onClose={onClose} open={open} title={`${apiKey.label} Details`}>
+    <Drawer onClose={onClose} open={open} title={apiKey.label}>
       <DetailRow
         editable={isEditable}
         isEditing={isEditingLabel}
@@ -221,7 +262,13 @@ export const ApiKeyDetailsDrawer = ({
       </DetailRow>
 
       <DetailRow label="Usage 24h">
-        <UsageSparkline data={apiKey.usage_24h ?? []} width={300} />
+        {isUsageLoading ? (
+          <Box alignItems="center" display="flex" height={40}>
+            <CircleProgress size="sm" />
+          </Box>
+        ) : (
+          <UsageSparkline data={usageSparklineData} width={300} />
+        )}
       </DetailRow>
 
       <DetailRow label="Key Prefix">

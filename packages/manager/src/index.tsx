@@ -16,6 +16,8 @@ import { getEnvLocalStorageOverrides, storage } from 'src/utilities/storage';
 
 import '@akamai/cds-tokens/tokens.css';
 import '@akamai/cds-tokens/themes/dark/tokens.css';
+// Resolved via vite alias — see vite.config.ts (@akamai/cds-components/font-family).
+import '@akamai/cds-components/font-family';
 
 import './index.css';
 import { App } from './App';

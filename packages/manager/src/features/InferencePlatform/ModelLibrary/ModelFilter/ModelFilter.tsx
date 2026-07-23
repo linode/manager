@@ -108,12 +108,14 @@ export const ModelFilter = ({
           selectedOutputModes={filterState.outputModes}
         />
 
-        {/* Languages multi-select */}
-        <LanguagesFilter
-          languages={languages}
-          onFilterChange={onFilterChange}
-          selectedLanguages={filterState.languages}
-        />
+        {/* Languages multi-select - only show if languages are available */}
+        {languages.length > 0 && (
+          <LanguagesFilter
+            languages={languages}
+            onFilterChange={onFilterChange}
+            selectedLanguages={filterState.languages}
+          />
+        )}
       </Stack>
 
       <ActiveFilters

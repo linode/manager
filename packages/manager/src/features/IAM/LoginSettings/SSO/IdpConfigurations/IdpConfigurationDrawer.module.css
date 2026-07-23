@@ -3,7 +3,7 @@
 }
 
 .nextCertificateLabel {
-  padding-top: var(--token-global-spacing-s0, 0);
+  padding-top: var(--token-global-spacing-s12, 12px);
 }
 
 .formFieldSelect {
@@ -22,8 +22,8 @@
 }
 
 .formFieldCertificate {
-  padding-top: var(--token-global-spacing-s12, 12px);
   padding-bottom: var(--token-global-spacing-s0, 0);
+  padding-top: var(--token-global-spacing-s0, 0);
 }
 
 .rootError {
@@ -47,7 +47,7 @@
 }
 
 .addCertificateButton {
-  margin-top: var(--token-global-spacing-s8, 8px);
+  margin-top: var(--token-global-spacing-s4, 4px);
   padding-top: 5px;
 }
 

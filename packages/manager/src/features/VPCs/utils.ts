@@ -14,10 +14,7 @@ import type {
   VPC,
 } from '@linode/api-v4';
 
-export const getUniqueResourcesFromSubnets = (
-  subnets: Subnet[],
-  countDatabases?: boolean
-) => {
+export const getUniqueResourcesFromSubnets = (subnets: Subnet[]) => {
   const linodes: number[] = [];
   const nodeBalancer: number[] = [];
   const databases: number[] = [];
@@ -32,21 +29,16 @@ export const getUniqueResourcesFromSubnets = (
         nodeBalancer.push(nodeBalancerInfo.id);
       }
     });
-    if (countDatabases) {
-      subnet.databases.forEach((databaseInfo) => {
-        if (!databases.includes(databaseInfo.id)) {
-          databases.push(databaseInfo.id);
-        }
-      });
-    }
+    subnet.databases.forEach((databaseInfo) => {
+      if (!databases.includes(databaseInfo.id)) {
+        databases.push(databaseInfo.id);
+      }
+    });
   }
   return linodes.length + nodeBalancer.length + databases.length;
 };
 
-export const getUniqueResourcesFromSubnet = (
-  subnet: Subnet,
-  countDatabases: boolean
-) => {
+export const getUniqueResourcesFromSubnet = (subnet: Subnet) => {
   const linodes = subnet.linodes.reduce((acc, linode) => {
     if (!acc.find((item: Linode) => item.id === linode.id)) {
       return [...acc, linode];
@@ -63,28 +55,20 @@ export const getUniqueResourcesFromSubnet = (
     }
   }, []);
 
-  if (countDatabases) {
-    const databases = subnet.databases.reduce((acc, db) => {
-      if (!acc.find((item: Database) => item.id === db.id)) {
-        return [...acc, db];
-      } else {
-        return acc;
-      }
-    }, []);
-
-    return {
-      linodes,
-      nodeBalancers,
-      databases,
-      numUniqueResources:
-        linodes.length + nodeBalancers.length + databases.length,
-    };
-  }
+  const databases = subnet.databases.reduce((acc, db) => {
+    if (!acc.find((item: Database) => item.id === db.id)) {
+      return [...acc, db];
+    } else {
+      return acc;
+    }
+  }, []);
 
   return {
     linodes,
     nodeBalancers,
-    numUniqueResources: linodes.length + nodeBalancers.length,
+    databases,
+    numUniqueResources:
+      linodes.length + nodeBalancers.length + databases.length,
   };
 };
 

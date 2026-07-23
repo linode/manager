@@ -1,12 +1,13 @@
 import { sendEvent } from '@akamai/compute-ui-core/analytics';
+import { styled } from '@mui/material/styles';
 import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
+import StorageIcon from 'src/assets/icons/entityIcons/storage.svg';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ResourcesSection } from 'src/components/EmptyLandingPageResources/ResourcesSection';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
-import { StyledBucketIcon } from 'src/features/ObjectStorage/BucketLanding/StylesBucketIcon';
 
 import {
   gettingStartedGuides,
@@ -14,6 +15,10 @@ import {
   linkAnalyticsEvent,
   youtubeLinkData,
 } from './VolumesLandingEmptyStateData';
+
+const StyledBucketIcon = styled(StorageIcon)(() => ({
+  transform: 'scale(0.80)',
+}));
 
 export const VolumesLandingEmptyState = () => {
   const navigate = useNavigate();

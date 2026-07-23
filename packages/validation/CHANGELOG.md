@@ -1,3 +1,19 @@
+## [2026-07-29] - v0.88.0
+
+
+### Added:
+
+- Validation of Bearer Token Authentication Details for Logs Destination ([#574](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/574))
+
+### Changed:
+
+- Update the Marketplace schema to support an optional phone number field ([#596](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/596))
+
+### Upcoming Features:
+
+- Update schema for Nodebalancer Create page to support Backend Connectivity and Nodebalancer Tier ([#479](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/479))
+- TFA Enforcement support ([#522](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/522))
+
 ## [2026-06-29] - v0.87.0
 
 

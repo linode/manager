@@ -2,7 +2,7 @@ import { useTheme } from '@linode/ui';
 import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
-import { getLogoUrl } from '../shared';
+import { getLogoUrl, marketplaceCatalogScrollState } from '../shared';
 import { CategorySectionView } from './CategorySectionView';
 
 import type { Category, Product } from '../shared';
@@ -35,6 +35,7 @@ export const CategorySection = (props: CategorySectionProps) => {
   const hasMoreProducts = products.length > displayCount;
 
   const handleProductClick = (productId: string) => {
+    marketplaceCatalogScrollState.lastCategory = categoryName;
     navigate({ to: `/cloud-marketplace/catalog/${productId}` });
   };
 

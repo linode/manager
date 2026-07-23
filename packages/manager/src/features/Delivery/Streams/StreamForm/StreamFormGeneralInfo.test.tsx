@@ -2,9 +2,10 @@ import { streamType } from '@linode/api-v4';
 import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
-import { describe, expect } from 'vitest';
+import { beforeEach, describe, expect } from 'vitest';
 
 import { accountFactory } from 'src/factories';
+import { mockScrollIntoView } from 'src/features/Delivery/Shared/testHelpers';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
 import { StreamFormGeneralInfo } from './StreamFormGeneralInfo';
@@ -21,7 +22,13 @@ vi.mock('@linode/queries', async () => {
   };
 });
 
+const user = userEvent.setup();
+
 describe('StreamFormGeneralInfo', () => {
+  beforeEach(() => {
+    mockScrollIntoView();
+  });
+
   describe('when in create mode', () => {
     it('should render Name input and allow to type text', async () => {
       renderWithThemeAndHookFormContext({
@@ -30,7 +37,7 @@ describe('StreamFormGeneralInfo', () => {
 
       // Type test value inside the input
       const nameInput = screen.getByLabelText('Stream Name');
-      await userEvent.type(nameInput, 'Test');
+      await user.type(nameInput, 'Test');
 
       await waitFor(() => {
         expect(nameInput.getAttribute('value')).toEqual('Test');
@@ -65,13 +72,13 @@ describe('StreamFormGeneralInfo', () => {
         expect(streamTypesAutocomplete).toHaveValue('Audit Logs');
 
         // Open the dropdown
-        await userEvent.click(streamTypesAutocomplete);
+        await user.click(streamTypesAutocomplete);
 
         // Select the "Kubernetes API Audit Logs" option
         const kubernetesApiAuditLogs = await screen.findByText(
           'Kubernetes API Audit Logs'
         );
-        await userEvent.click(kubernetesApiAuditLogs);
+        await user.click(kubernetesApiAuditLogs);
 
         await waitFor(() => {
           expect(streamTypesAutocomplete).toHaveValue(
@@ -120,7 +127,7 @@ describe('StreamFormGeneralInfo', () => {
 
       // Type test value inside the input
       const nameInput = screen.getByLabelText('Stream Name');
-      await userEvent.type(nameInput, 'Test');
+      await user.type(nameInput, 'Test');
 
       await waitFor(() => {
         expect(nameInput.getAttribute('value')).toEqual('Test');

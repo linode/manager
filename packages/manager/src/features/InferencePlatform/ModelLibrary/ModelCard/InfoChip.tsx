@@ -4,6 +4,7 @@ import React from 'react';
 interface InfoChipProps {
   description?: string;
   key?: number | string;
+  splitMetricRows?: boolean;
   title?: string;
   titlePosition?: 'after' | 'before';
   type: 'metric' | 'useCase';
@@ -16,10 +17,11 @@ const InfoChip = ({
   titlePosition = 'before',
   type,
   value,
+  splitMetricRows = false,
 }: InfoChipProps) => {
   const titleNode = title ? (
     <Box
-      component="span"
+      component={splitMetricRows ? 'div' : 'span'}
       sx={(theme) => ({
         font: theme.font.normal,
         fontSize: 12,

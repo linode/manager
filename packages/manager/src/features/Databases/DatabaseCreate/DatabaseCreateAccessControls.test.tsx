@@ -3,10 +3,8 @@ import * as React from 'react';
 
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
-import { useIsDatabasesEnabled } from '../utilities';
 import { DatabaseCreateAccessControls } from './DatabaseCreateAccessControls';
 
-import type { IsDatabasesEnabled } from '../utilities';
 import type { DatabaseCreateValues } from './DatabaseCreate';
 
 vi.mock('src/features/Databases/utilities');
@@ -17,10 +15,6 @@ describe('DatabaseCreateAccessControls', () => {
   });
 
   it('Should render enabled', () => {
-    vi.mocked(useIsDatabasesEnabled).mockReturnValue({
-      isDatabasesV2GA: true,
-    } as IsDatabasesEnabled);
-
     const ips = [{ address: '' }];
     const { container, getAllByText, getAllByTestId } =
       renderWithThemeAndHookFormContext<DatabaseCreateValues>({
@@ -46,10 +40,6 @@ describe('DatabaseCreateAccessControls', () => {
   });
 
   it('Should render ips', () => {
-    vi.mocked(useIsDatabasesEnabled).mockReturnValue({
-      isDatabasesV2GA: true,
-    } as IsDatabasesEnabled);
-
     const ips = [
       { address: '1.1.1.1/32' },
       { address: '2.2.2.2' },
@@ -79,10 +69,6 @@ describe('DatabaseCreateAccessControls', () => {
   });
 
   it('Should disable ips', async () => {
-    vi.mocked(useIsDatabasesEnabled).mockReturnValue({
-      isDatabasesV2GA: true,
-    } as IsDatabasesEnabled);
-
     const ips = [{ address: '1.1.1.1/32' }];
     const { container, getAllByText, getAllByTestId } =
       renderWithThemeAndHookFormContext<DatabaseCreateValues>({

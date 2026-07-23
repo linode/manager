@@ -7,7 +7,6 @@ import { LandingHeader } from 'src/components/LandingHeader';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { DatabaseEmptyState } from 'src/features/Databases/DatabaseLanding/DatabaseEmptyState';
 import DatabaseLandingTable from 'src/features/Databases/DatabaseLanding/DatabaseLandingTable';
-import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
@@ -27,15 +26,9 @@ export const DatabaseLanding = () => {
     globalGrantType: 'add_databases',
   });
 
-  const { isDatabasesV2GA, isUserExistingBeta, isUserNewBeta } =
-    useIsDatabasesEnabled();
-
   const { isLoading: isTypesLoading } = useDatabaseTypesQuery({
     platform: 'rdbms-default',
   });
-
-  const isDefaultEnabled =
-    isUserExistingBeta || isUserNewBeta || isDatabasesV2GA;
 
   const {
     handleOrderChange: databaseHandleOrderChange,
@@ -68,7 +61,6 @@ export const DatabaseLanding = () => {
       page_size: newDatabasesPagination.pageSize,
     },
     databasesFilter,
-    isDefaultEnabled, // TODO (UIE-8634): Determine if check is still necessary
     20000
   );
 
@@ -105,7 +97,6 @@ export const DatabaseLanding = () => {
         <DatabaseLandingTable
           data={databases?.data}
           handleOrderChange={databaseHandleOrderChange}
-          isNewDatabase={true} // TODO (UIE-8634): Remove logic around isNewDatabase flag in LandingTable component
           order={databaseOrder}
           orderBy={databaseOrderBy}
           results={databases?.results}

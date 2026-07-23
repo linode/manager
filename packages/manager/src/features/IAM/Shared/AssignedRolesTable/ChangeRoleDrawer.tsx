@@ -16,13 +16,12 @@ import { useParams } from '@tanstack/react-router';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
-import styles from 'src/features/IAM/Shared/global.module.css';
-
 import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { useIsDefaultDelegationRolesForChildAccount } from '../../hooks/useDelegationRole';
 import { Drawer, DrawerInlineActions } from '../../Shared/Drawer';
 import { AssignedPermissionsPanel } from '../AssignedPermissionsPanel/AssignedPermissionsPanel';
 import { ROLES_LEARN_MORE_LINK } from '../constants';
+import styles from '../global.module.css';
 import { Link } from '../Link/Link';
 import {
   changeUserRole,

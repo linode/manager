@@ -26,6 +26,7 @@ import {
 import { DelegateUserChip } from '../../Shared/DelegateUserChip';
 import { Drawer, DrawerInlineActions } from '../../Shared/Drawer';
 import styles from '../../Shared/global.module.css';
+import { TruncatedUsername } from '../../Shared/TruncatedUsername/TruncatedUsername';
 import { mergeAssignedRolesIntoExistingRoles } from '../../Shared/utilities';
 import { AssignSingleSelectedRole } from './AssignSingleSelectedRole';
 
@@ -239,10 +240,18 @@ export const AssignSelectedRolesDrawer = ({
                     <Box
                       data-pendo-id={getUserOptionPendoId(option.userType)}
                       direction="row"
-                      style={{ alignItems: 'center', gap: Spacing.S8 }}
+                      style={{
+                        alignItems: 'center',
+                        display: 'flex',
+                        gap: Spacing.S8,
+                        justifyContent: 'space-between',
+                      }}
                       wrap="nowrap"
                     >
-                      <p>{option.label}</p>
+                      <TruncatedUsername
+                        tooltipStyle={{ whiteSpace: 'normal' }}
+                        username={option.label}
+                      />
                       {option.userType === 'delegate' && <DelegateUserChip />}
                     </Box>
                   )}

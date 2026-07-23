@@ -52,7 +52,7 @@ export const CreateMenu = () => {
     theme.breakpoints.down('md')
   );
 
-  const { isDatabasesEnabled } = useIsDatabasesEnabled();
+  const isDatabasesEnabled = useIsDatabasesEnabled();
   const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
   const { isMarketplaceV2FeatureEnabled } = useIsMarketplaceV2Enabled();
 

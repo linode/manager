@@ -15,6 +15,15 @@ describe('getCreateLinkForEntityType', () => {
       '/placement-groups/create'
     );
     expect(getCreateLinkForEntityType('lkecluster')).toBe('/kubernetes/create');
+    expect(getCreateLinkForEntityType('mysql_database')).toBe(
+      '/databases/create'
+    );
+    expect(getCreateLinkForEntityType('postgresql_database')).toBe(
+      '/databases/create'
+    );
+    expect(getCreateLinkForEntityType('valkey_database')).toBe(
+      '/databases/create'
+    );
   });
 });
 

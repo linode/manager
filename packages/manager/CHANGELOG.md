@@ -4,6 +4,82 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2026-07-29] - v1.165.0
+
+
+### Added:
+
+- Error state to the access key edit drawer ([#432](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/432))
+- Error state to the access key hostnames drawer ([#435](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/435))
+- Error state to the bucket details drawer ([#449](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/449))
+- Add AI Frameworks to Quick Deploy Apps (NemoClaw, Haystack, Microsoft Agent Framework) ([#593](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/593))
+
+### Changed:
+
+- Volumes table ([#495](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/495))
+- Correct font imports & font rendering in Cloud Manager ([#500](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/500))
+- Provide a function that determines endpoint capabilities and use it wherever possible ([#528](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/528))
+- Components on the Volume details page to the CDS ones ([#548](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/548))
+- Components from OBJ Summary page to the CDS ones ([#561](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/561))
+- Bucket deletion modal's components to CDS ones ([#583](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/583))
+- Marketplace updates for July release ([#596](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/596))
+
+### Fixed:
+
+- Correct a bug where quota usage bar was incorrectly displayed when exceeding the limit ([#510](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/510))
+- Wrong parenthesis direction in the tooltip ([#523](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/523))
+- Flexible Placement Groups limit not honored properly ([#534](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/534))
+- Fix Model Playground metadata bar incorrectly displaying a numeric stop_reason token ID as a stop sequence warning ([#545](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/545))
+- Handle empty errorText without rendering 0 in `AlertsResources.tsx`  ([#547](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/547))
+- DOM XSS via postMessage (design.linode.com) ([#559](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/559))
+- Hide Database Name row in Valkey summary page ([#592](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/592))
+- Correct a bug when buckets returned from a search bar provided incorrect links ([#601](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/601))
+- Database Resize type-to-confirm copy ([#603](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/603))
+
+### Removed:
+
+- Clean up various database feature flags and legacy code ([#350](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/350))
+- OBJ Summary Page feature flag ([#473](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/473))
+- VolumeSummaryPage feature flag ([#540](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/540))
+
+### Tech Stories:
+
+- Bump `storybook`, `@storybook/addon-a11y`, `@storybook/addon-docs`, `@storybook/react-vite` from 10.4.6 to 10.5.3 ([#600](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/600))
+- Bump `shiki`, `@shikijs/langs`, and `@shikijs/themes` from 4.0.2 to 4.3.1 ([#600](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/600))
+- Bump `vite` from 8.0.16 to 8.1.5, `markdown-it` from 14.1.1 to 14.3.0, `@vitest/coverage-v8` from 3.2.4 to 4.1.10 ([#600](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/600))
+
+### Tests:
+
+- Fix and refactor flaky tests in Delivery catalog ([#502](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/502))
+
+### Upcoming Features:
+
+- An initial version of the AI Inference Platforms Dashboard (landing) page ([#409](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/409))
+- Add Tier and Connectivity sections in the Create Nodebalancer page ([#479](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/479))
+- Adjust description copy for Share Groups > Owned groups tab ([#488](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/488))
+- Model Playground: Add MetadataBar showing response time, TTFT, token usage, and cancellation state ([#490](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/490))
+- Premium Nodebalancer: Add Premium Tag, Tooltip for Unconfigured NBs, and Metrics Action ([#509](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/509))
+- Adds the Inference Platform Usage tab and updates shared chart behavior used by this feature ([#519](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/519)).
+- Inference Platform: Improve query cache invalidation and loading states ([#519](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/519))
+- TFA Enforcement scaffolding ([#522](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/522))
+- Model Playground: Error/cancelled states, clear context, empty state, model selector icons, streaming robustness, and thinking effort controls ([#527](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/527))
+- Connect Model Playground to official inference API hostnames across all environments ([#546](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/546))
+- Private Image Sharing: Add missing Pendo IDs in the Image Library tab ([#551](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/551))
+- Private Image Sharing: Update ImageRow and ImageSelectTableRow to use is_shared flag to check if an image is shared ([#553](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/553))
+- Display VPC type in VPCs table ([#556](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/556))
+- Support Live Chat: check availability before offering live chat in support tickets ([#558](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/558))
+- Add NAT Gateways to Primary Nav and Quick Nav alongwith feature-gating and route configuration ([#562](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/562))
+- Add tab-specific Pendo IDs to the Create Linode button in the Linode creation flow ([#563](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/563))
+- Add pendo ids for NodeBalancer pages ([#568](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/568))
+- Default time duration selection per service type in cloudpulse metrics ([#571](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/571))
+- Disable preference for impersonated user in cloudpulse metrics ([#572](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/572))
+- New authentication type for Custom HTTPS Destination - Bearer Token ([#574](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/574))
+- Adding Valkey support for Databases ACLP metrics & alerts ([#576](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/576))
+- Implement Empty Landing state for NAT Gateways ([#577](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/577))
+- Display email address along the usernames in ACLP-Alerts Notification channel Create,Edit and Show Detail flow ([#585](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/585))
+- Add pendo-ids to the parent component and shared components in ACLP-Alerts ([#588](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/588))
+- Abort live chat initialization when the support dialog closes and show the Live Chat fallback notice near the ticket fields instead of near the title ([#594](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/594))
+
 ## [2026-06-29] - v1.164.0
 
 
@@ -248,8 +324,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Quota resource metrics enum ([#13447](https://github.com/linode/manager/pull/13447))
 - Add DeepSeek-R1 and OpenClaw to Quick Deploy Apps ([#13499](https://github.com/linode/manager/pull/13499))
 - IAM: Add Pendo IDs for Parent/Child ([#13530](https://github.com/linode/manager/pull/13530))
-- sftpgo 
-([#13531](https://github.com/linode/manager/pull/13531))
+- sftpgo
+  ([#13531](https://github.com/linode/manager/pull/13531))
 
 ### Changed:
 

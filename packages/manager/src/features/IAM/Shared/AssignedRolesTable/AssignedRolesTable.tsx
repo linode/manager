@@ -18,13 +18,10 @@ import {
 import { useNavigate, useParams, useSearch } from '@tanstack/react-router';
 import React from 'react';
 
-import { DebouncedSearchField } from 'src/features/IAM/Shared/DebouncedSearchField/DebouncedSearchField';
-import globalStyles from 'src/features/IAM/Shared/global.module.css';
-import { useAllAccountEntities } from 'src/queries/entities/entities';
-
 import { useIsDefaultDelegationRolesForChildAccount } from '../../hooks/useDelegationRole';
 import { usePagination } from '../../hooks/usePagination';
 import { usePermissions } from '../../hooks/usePermissions';
+import { useAllAccountEntities } from '../../queries/entities/entities';
 import { AssignNewRoleDrawer } from '../../Users/UserRoles/AssignNewRoleDrawer';
 import { Box } from '../Box/Box';
 import { CircleProgress } from '../CircleProgress/CircleProgress';
@@ -32,6 +29,8 @@ import {
   ASSIGNED_ROLES_TABLE_PREFERENCE_KEY,
   IAM_ROLES_PENDO_IDS,
 } from '../constants';
+import { DebouncedSearchField } from '../DebouncedSearchField/DebouncedSearchField';
+import globalStyles from '../global.module.css';
 import { RemoveAssignmentConfirmationDialog } from '../RemoveAssignmentConfirmationDialog/RemoveAssignmentConfirmationDialog';
 import {
   getFilteredRoles,

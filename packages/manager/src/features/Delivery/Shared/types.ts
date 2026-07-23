@@ -82,6 +82,10 @@ export const authenticationTypeOptions: AutocompleteOption[] = [
     label: 'Basic',
   },
   {
+    value: authenticationType.BearerToken,
+    label: 'Bearer Token',
+  },
+  {
     value: authenticationType.None,
     label: 'None',
   },

@@ -202,6 +202,7 @@ export const ImagesView = (props: Props) => {
                 tooltipText: !canCreateImage
                   ? config.buttonProps.disabledToolTipText
                   : undefined,
+                pendoId: config.buttonProps.pendoId,
               }
             : undefined,
           docsLink: config.docsLink,

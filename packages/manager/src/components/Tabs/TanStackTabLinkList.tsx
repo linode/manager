@@ -30,6 +30,7 @@ export const TanStackTabLinkList = ({
           <Tab
             // @ts-expect-error - Tab accepts 'as' prop at runtime but it's not in the types
             as={noLink ? undefined : TanstackLink}
+            data-pendo-id={tab?.pendoId}
             data-testid={tab.title}
             fontSize={fontSize}
             key={`tab-${_index}`}

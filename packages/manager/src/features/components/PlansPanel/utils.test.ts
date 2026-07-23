@@ -335,112 +335,6 @@ describe('extractPlansInformation', () => {
     ]);
   });
 
-  it('should return correct information when all plans are disabled', () => {
-    const result = extractPlansInformation({
-      disableLargestGbPlansFlag: false,
-      disabledSmallerPlans: [g7Standard1],
-      isLegacyDatabase: true,
-      plans: [g6Standard1, g6Nanode1, g7Standard1],
-      regionAvailabilities: [
-        regionAvailabilityFactory.build({
-          available: false,
-          plan: 'g6-standard-1',
-          region: 'us-east',
-        }),
-        regionAvailabilityFactory.build({
-          available: false,
-          plan: 'g6-nanode-1',
-          region: 'us-east',
-        }),
-        regionAvailabilityFactory.build({
-          available: true,
-          plan: 'g7-standard-1',
-          region: 'us-east',
-        }),
-      ],
-      selectedRegionId: 'us-east',
-    });
-
-    expect(result).toHaveProperty('allDisabledPlans', [
-      {
-        ...g6Standard1,
-        ...{
-          planBelongsToDisabledClass: false,
-          planHasLimitedAvailability: true,
-          planIsDisabled512Gb: false,
-          planResizeNotSupported: false,
-          planIsSmallerThanUsage: false,
-          planIsTooSmall: false,
-          planIsTooSmallForAPL: undefined,
-        },
-      },
-      {
-        ...g6Nanode1,
-        ...{
-          planBelongsToDisabledClass: false,
-          planHasLimitedAvailability: true,
-          planIsDisabled512Gb: false,
-          planResizeNotSupported: false,
-          planIsSmallerThanUsage: false,
-          planIsTooSmall: false,
-          planIsTooSmallForAPL: undefined,
-        },
-      },
-      {
-        ...g7Standard1,
-        ...{
-          planBelongsToDisabledClass: false,
-          planHasLimitedAvailability: false,
-          planIsDisabled512Gb: false,
-          planResizeNotSupported: false,
-          planIsSmallerThanUsage: false,
-          planIsTooSmall: true,
-          planIsTooSmallForAPL: undefined,
-        },
-      },
-    ]);
-    expect(result).toHaveProperty('hasDisabledPlans', true);
-    expect(result).toHaveProperty('hasMajorityOfPlansDisabled', true);
-    expect(result).toHaveProperty('plansForThisLinodeTypeClass', [
-      {
-        ...g6Standard1,
-        ...{
-          planBelongsToDisabledClass: false,
-          planHasLimitedAvailability: true,
-          planIsDisabled512Gb: false,
-          planResizeNotSupported: false,
-          planIsSmallerThanUsage: false,
-          planIsTooSmall: false,
-          planIsTooSmallForAPL: undefined,
-        },
-      },
-      {
-        ...g6Nanode1,
-        ...{
-          planBelongsToDisabledClass: false,
-          planHasLimitedAvailability: true,
-          planIsDisabled512Gb: false,
-          planResizeNotSupported: false,
-          planIsSmallerThanUsage: false,
-          planIsTooSmall: false,
-          planIsTooSmallForAPL: undefined,
-        },
-      },
-      {
-        ...g7Standard1,
-        ...{
-          planBelongsToDisabledClass: false,
-          planHasLimitedAvailability: false,
-          planIsDisabled512Gb: false,
-          planResizeNotSupported: false,
-          planIsSmallerThanUsage: false,
-          planIsTooSmall: true,
-          planIsTooSmallForAPL: undefined,
-        },
-      },
-    ]);
-  });
-
   it('should return correct information when no plans are disabled', () => {
     const result = extractPlansInformation({
       disableLargestGbPlansFlag: false,
@@ -472,7 +366,6 @@ describe('extractPlansInformation', () => {
         planIsDisabled512Gb: false,
         planResizeNotSupported: false,
         planIsSmallerThanUsage: false,
-        planIsTooSmall: false,
         planIsTooSmallForAPL: undefined,
       },
       {
@@ -482,7 +375,6 @@ describe('extractPlansInformation', () => {
         planIsDisabled512Gb: false,
         planResizeNotSupported: false,
         planIsSmallerThanUsage: false,
-        planIsTooSmall: false,
         planIsTooSmallForAPL: undefined,
       },
     ]);

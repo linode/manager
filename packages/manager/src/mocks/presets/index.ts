@@ -12,10 +12,13 @@ import { customNotificationsPreset } from './extra/account/customNotifications';
 import { customProfileAndGrantsPreset } from './extra/account/customProfileAndGrants';
 import { managedDisabledPreset } from './extra/account/managedDisabled';
 import { managedEnabledPreset } from './extra/account/managedEnabled';
+import { tfaEnforcementPreset } from './extra/account/tfaEnforcement';
 import { apiResponseTimePreset } from './extra/api/api';
 import {
   inferencePlatformApiKeysPreset,
+  inferencePlatformModelsPreset,
   inferencePlatformPreset,
+  inferencePlatformUsagePreset,
 } from './extra/inferencePlatform/inferencePlatform';
 import { linodeLimitsPreset } from './extra/limits/linode-limits';
 import { lkeLimitsPreset } from './extra/limits/lke-limits';
@@ -49,6 +52,7 @@ export const baselineMockPresets: MockPresetBaseline[] = [
 export const extraMockPresets: MockPresetExtra[] = [
   apiResponseTimePreset,
   customAccountPreset,
+  tfaEnforcementPreset,
   customProfileAndGrantsPreset,
   customEventsPreset,
   customUserAccountPermissionsPreset,
@@ -57,6 +61,8 @@ export const extraMockPresets: MockPresetExtra[] = [
   customNotificationsPreset,
   inferencePlatformPreset,
   inferencePlatformApiKeysPreset,
+  inferencePlatformUsagePreset,
+  inferencePlatformModelsPreset,
   linodeLimitsPreset,
   lkeLimitsPreset,
   managedEnabledPreset,

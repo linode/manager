@@ -1,3 +1,4 @@
+import { toast } from '@akamai/cds-components/notification-toast';
 import { getStorage, setStorage } from '@akamai/compute-ui-core/browser';
 import { truncateEnd } from '@akamai/compute-ui-core/formatting';
 import { useAccount, useProfile } from '@linode/queries';
@@ -12,7 +13,6 @@ import {
 } from '@linode/ui';
 import { styled, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { Avatar } from 'src/components/Avatar/Avatar';
@@ -37,7 +37,6 @@ export const UserMenu = React.memo(() => {
 
   const { data: account } = useAccount();
   const { data: profile } = useProfile();
-  const { enqueueSnackbar } = useSnackbar();
 
   const open = Boolean(anchorEl);
   const id = open ? 'user-menu-popover' : undefined;
@@ -68,9 +67,9 @@ export const UserMenu = React.memo(() => {
       const message = companyNameOrEmail
         ? `Account switched to ${companyNameOrEmail}.`
         : 'Account switched.';
-      enqueueSnackbar(message, { variant: 'success' });
+      toast.open({ text: message, type: 'success' });
     }
-  }, [companyNameOrEmail, enqueueSnackbar, isDelegateUserType]);
+  }, [companyNameOrEmail, isDelegateUserType]);
 
   const getEndIcon = () => {
     if (matchesSmDown) {

@@ -37,7 +37,7 @@ const isValidUrl = (input: string, checkProtocol = true): boolean => {
 
 // Logs Delivery Destination
 
-const authenticationDetailsSchema = object({
+const basicAuthenticationDetailsSchema = object({
   basic_authentication_user: string()
     .max(maxLength, maxLengthMessage)
     .required('Username is required for Basic authentication.'),
@@ -46,24 +46,46 @@ const authenticationDetailsSchema = object({
     .required('Password is required for Basic authentication.'),
 });
 
+const bearerTokenAuthenticationDetailsSchema = object({
+  bearer_token_authentication_value: string()
+    .max(8192, 'Length must be 8192 characters or less.')
+    .required('Bearer Token is required for Bearer Token authentication.'),
+  bearer_token_authentication_header_name: string()
+    .max(maxLength, maxLengthMessage)
+    .optional(),
+  bearer_token_authentication_token_prefix: string()
+    .max(maxLength, maxLengthMessage)
+    .optional(),
+});
+
 const authenticationSchema = object({
   type: string()
-    .oneOf(['basic', 'none'])
+    .oneOf(['basic', 'none', 'bearer_token'])
     .required('Authentication Type is required.'),
   details: mixed()
     .defined()
-    .when('type', {
-      is: 'basic',
-      then: () => authenticationDetailsSchema.required(),
-      otherwise: () =>
-        mixed()
-          .nullable()
-          .test(
-            'null-or-undefined',
-            'Username and password must be empty when authentication type is None.',
-            (value) => !value,
-          ),
-    }) as Schema<InferType<typeof authenticationDetailsSchema> | undefined>,
+    .when('type', ([type]) => {
+      switch (type) {
+        case 'basic':
+          return basicAuthenticationDetailsSchema.required();
+
+        case 'bearer_token':
+          return bearerTokenAuthenticationDetailsSchema.required();
+
+        default:
+          return mixed()
+            .nullable()
+            .test(
+              'null-or-undefined',
+              'Username and password must be empty when authentication type is None.',
+              (value) => !value,
+            );
+      }
+    }) as Schema<
+    | InferType<typeof basicAuthenticationDetailsSchema>
+    | InferType<typeof bearerTokenAuthenticationDetailsSchema>
+    | undefined
+  >,
 });
 
 const hasValue = (value: unknown) =>

@@ -106,7 +106,12 @@ export const PlacementGroupsRow = React.memo(
             />
           )}
           &nbsp; of{' '}
-          {region?.placement_group_limits.maximum_linodes_per_pg ?? 'unknown'}
+          {placement_group_policy === 'flexible' &&
+            (region?.placement_group_limits.maximum_linodes_per_flexible_pg ??
+              'unknown')}
+          {placement_group_policy === 'strict' &&
+            (region?.placement_group_limits.maximum_linodes_per_pg ??
+              'unknown')}
         </TableCell>
         <Hidden smDown>
           <TableCell>{region?.label}</TableCell>

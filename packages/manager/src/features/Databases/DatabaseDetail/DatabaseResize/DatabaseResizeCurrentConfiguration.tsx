@@ -84,7 +84,6 @@ export const DatabaseResizeCurrentConfiguration = ({ database }: Props) => {
               databaseEngine={database.engine}
               databaseID={database.id}
               databasePendingUpdates={database.updates.pending}
-              databasePlatform={database.platform}
               databaseVersion={database.version}
             />
           </StyledSummaryTextTypography>

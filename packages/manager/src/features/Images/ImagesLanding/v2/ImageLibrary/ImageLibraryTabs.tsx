@@ -140,7 +140,11 @@ export const ImageLibraryTabs = () => {
       <Tabs index={subTabIndex} onChange={onTabChange}>
         <TabList>
           {subTabs.map((tab) => (
-            <Tab fontSize={Font.FontSize.Xs} key={`images-${tab.type}`}>
+            <Tab
+              data-pendo-id={tab.pendoId}
+              fontSize={Font.FontSize.Xs}
+              key={`images-${tab.type}`}
+            >
               {tab.title} {tab.isBeta ? <BetaChip /> : null}
             </Tab>
           ))}

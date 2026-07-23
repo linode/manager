@@ -6,6 +6,7 @@ import {
   AUTOMATIC_IMAGES_DEFAULT_ORDER,
   AUTOMATIC_IMAGES_DEFAULT_ORDER_BY,
   AUTOMATIC_IMAGES_PREFERENCE_KEY,
+  IMAGE_LIBRARY_TAB_PENDO_IDS,
   MANUAL_IMAGES_DEFAULT_ORDER,
   MANUAL_IMAGES_DEFAULT_ORDER_BY,
   MANUAL_IMAGES_PREFERENCE_KEY,
@@ -42,6 +43,7 @@ export interface ImageConfig {
     buttonText: string;
     disabledToolTipText?: string;
     navigateTo?: string;
+    pendoId?: string;
   };
   columns: ImageViewTableColConfig[];
   description: React.ReactNode;
@@ -62,13 +64,22 @@ export interface ImageConfig {
 }
 
 export const imageLibrarySubTabs: ImageSubTab<ImageLibraryType>[] = [
-  { type: 'owned-by-me', title: 'Owned by me' },
+  {
+    type: 'owned-by-me',
+    title: 'Owned by me',
+    pendoId: IMAGE_LIBRARY_TAB_PENDO_IDS.ownedByMe,
+  },
   {
     type: 'shared-with-me',
     title: 'Shared with me',
     isBeta: true,
+    pendoId: IMAGE_LIBRARY_TAB_PENDO_IDS.sharedWithMe,
   },
-  { type: 'recovery-images', title: 'Recovery images' },
+  {
+    type: 'recovery-images',
+    title: 'Recovery images',
+    pendoId: IMAGE_LIBRARY_TAB_PENDO_IDS.recoveryImages,
+  },
 ];
 
 const CUSTOM_IMAGES_TABLE_COLUMNS: ImageViewTableColConfig[] = [
@@ -133,7 +144,10 @@ export const IMAGES_CONFIG: Record<ImageLibraryType, ImageConfig> = {
     description: (
       <>
         These are{' '}
-        <Link to="https://techdocs.akamai.com/cloud-computing/docs/capture-an-image#capture-an-image">
+        <Link
+          pendoId={OWNED_BY_ME_IMAGES_TAB_PENDO_IDS.encryptedLink}
+          to="https://techdocs.akamai.com/cloud-computing/docs/capture-an-image#capture-an-image"
+        >
           encrypted
         </Link>{' '}
         images you manually uploaded or captured from an existing compute
@@ -156,6 +170,7 @@ export const IMAGES_CONFIG: Record<ImageLibraryType, ImageConfig> = {
         isSingular: false,
         resourceType: 'Images',
       }),
+      pendoId: OWNED_BY_ME_IMAGES_TAB_PENDO_IDS.createImageButton,
     },
     eventCategory: 'Custom Images Table',
     emptyMessage: {

@@ -2,13 +2,12 @@ import { Spacing } from '@akamai/cds-tokens';
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
-import { AssignedPermissionsPanel } from 'src/features/IAM/Shared/AssignedPermissionsPanel/AssignedPermissionsPanel';
-import { Divider } from 'src/features/IAM/Shared/Divider/Divider';
-
+import { AssignedPermissionsPanel } from '../../Shared/AssignedPermissionsPanel/AssignedPermissionsPanel';
 import { Box } from '../../Shared/Box/Box';
+import { Divider } from '../../Shared/Divider/Divider';
 
-import type { RoleView } from 'src/features/IAM/Shared/types';
-import type { AssignNewRoleFormValues } from 'src/features/IAM/Shared/utilities';
+import type { RoleView } from '../../Shared/types';
+import type { AssignNewRoleFormValues } from '../../Shared/utilities';
 
 interface Props {
   hideDetails: boolean;

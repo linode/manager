@@ -118,6 +118,7 @@ export const MetricCriteriaField = (props: MetricCriteriaProps) => {
           </Stack>
           <Button
             buttonType="outlined"
+            data-pendo-id="monitor-alerts-Add-Metric"
             disabled={
               serviceType === null || metricCriteriaWatcher.length === 5
             }

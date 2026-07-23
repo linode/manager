@@ -12,20 +12,16 @@ import {
   youtubeLinkData,
 } from 'src/features/Databases/DatabaseLanding/DatabaseLandingEmptyStateData';
 import DatabaseLogo from 'src/features/Databases/DatabaseLanding/DatabaseLogo';
-import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 
 export const DatabaseEmptyState = () => {
   const navigate = useNavigate();
-  const { isDatabasesV2Enabled, isDatabasesV2GA } = useIsDatabasesEnabled();
 
   const isRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_databases',
   });
 
-  if (isDatabasesV2Enabled || isDatabasesV2GA) {
-    headers.logo = <DatabaseLogo />;
-  } // TODO (UIE-8634): Determine if condition is still necessary
+  headers.logo = <DatabaseLogo />;
 
   return (
     <ResourcesSection

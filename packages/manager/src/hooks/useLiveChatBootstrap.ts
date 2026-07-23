@@ -329,28 +329,29 @@ function attachEmbeddedMessagingLifecycleListeners() {
 
   window.addEventListener('message', handleSalesforceMessage);
 
-  const closeEvents = ['onEmbeddedMessagingWindowClosed'];
+  window.addEventListener(
+    'onEmbeddedMessagingWindowClosed',
+    handleEmbeddedMessagingWindowClosed
+  );
+}
 
-  closeEvents.forEach((eventName) => {
-    window.addEventListener(eventName, () => {
-      const iframe =
-        document.querySelector('iframe[id*="embeddedMessaging"]') ||
-        document.querySelector('iframe[title*="chat" i]');
+function handleEmbeddedMessagingWindowClosed() {
+  const iframe =
+    document.querySelector('iframe[id*="embeddedMessaging"]') ||
+    document.querySelector('iframe[title*="chat" i]');
 
-      // If the iframe is gone or hidden, treat it as closed.
-      setTimeout(() => {
-        const iframeStillVisible =
-          iframe &&
-          document.body.contains(iframe) &&
-          window.getComputedStyle(iframe).display !== 'none' &&
-          window.getComputedStyle(iframe).visibility !== 'hidden';
+  // If the iframe is gone or hidden, treat it as closed.
+  setTimeout(() => {
+    const iframeStillVisible =
+      iframe &&
+      document.body.contains(iframe) &&
+      window.getComputedStyle(iframe).display !== 'none' &&
+      window.getComputedStyle(iframe).visibility !== 'hidden';
 
-        if (!iframeStillVisible) {
-          handleChatClosed();
-        }
-      }, 300);
-    });
-  });
+    if (!iframeStillVisible) {
+      handleChatClosed();
+    }
+  }, 300);
 }
 
 function ensureEmbeddedMessagingInitialized() {
@@ -514,6 +515,8 @@ export function teardownLiveChat() {
   liveChatTornDown = true;
   hasLiveChatInitialized = false;
   hasEmbeddedMessagingInitialized = false;
+  hasEmbeddedMessagingBootstrapInitialized = false;
+  chatEventListenersAttached = false;
   clearLiveChatSessionItems();
   window.sessionStorage.removeItem('EnableLiveChat');
   window.removeEventListener(LIVE_CHAT_ENABLE_EVENT, openLiveChatOnce);
@@ -526,10 +529,27 @@ export function teardownLiveChat() {
     handleConversationOpened
   );
   window.removeEventListener('message', handleSalesforceMessage);
+  window.removeEventListener(
+    'onEmbeddedMessagingWindowClosed',
+    handleEmbeddedMessagingWindowClosed
+  );
 
   clearSalesforceSessionData();
   hideEmbeddedMessagingContainer();
   startTeardownObserver();
+}
+
+/**
+ * Re-arms live chat after a prior `teardownLiveChat()` so a fresh session can
+ * start. Teardown intentionally disables live chat (removes the enable
+ * listener and sets `liveChatTornDown`); without this reset a subsequent
+ * "Start a Live Chat" would silently do nothing.
+ */
+export function reinitializeLiveChat() {
+  stopTeardownObserver();
+  liveChatTornDown = false;
+  hasLiveChatInitialized = false;
+  initEmbeddedMessaging();
 }
 
 export const useLiveChatBootstrap = () => {

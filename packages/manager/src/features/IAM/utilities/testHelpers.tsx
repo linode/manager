@@ -22,7 +22,6 @@ import type { FieldValues, UseFormProps } from 'react-hook-form';
 import { Provider as ReduxStoreProvider } from 'react-redux';
 
 import { FeatureFlagProvider } from 'src/featureFlags';
-import { LinodeThemeWrapper } from 'src/LinodeThemeWrapper';
 import { storeFactory } from 'src/store';
 
 import type { FeatureFlagProvider as FeatureFlagProviderType } from '@akamai/compute-ui-core/feature-flags';
@@ -291,7 +290,6 @@ interface Options {
   queryClient?: QueryClientType;
   router?: AnyRouter;
   routeTree?: AnyRootRoute;
-  theme?: 'dark' | 'light';
 }
 
 const createTestQueryClient = () =>
@@ -354,11 +352,9 @@ export const wrapWithProviders = (ui: any, options: Options = {}) => {
   return (
     <ReduxStoreProvider store={storeFactory()}>
       <QueryClientProvider client={passedQueryClient || queryClient}>
-        <LinodeThemeWrapper theme={options.theme ?? 'light'}>
-          <FeatureFlagProvider client={featureFlagClient}>
-            <RouterProvider router={router} />
-          </FeatureFlagProvider>
-        </LinodeThemeWrapper>
+        <FeatureFlagProvider client={featureFlagClient}>
+          <RouterProvider router={router} />
+        </FeatureFlagProvider>
       </QueryClientProvider>
     </ReduxStoreProvider>
   );

@@ -3,8 +3,6 @@ import { isFeatureEnabledV2 } from '@linode/utilities';
 import { parse as parseIP } from 'ipaddr.js';
 import { DateTime } from 'luxon';
 
-import { useFlags } from 'src/hooks/useFlags';
-
 import type { ExtendedIP } from '@akamai/compute-ui-core/api';
 import type {
   Database,
@@ -15,21 +13,6 @@ import type {
   Engine,
   PendingUpdates,
 } from '@linode/api-v4';
-
-export interface IsDatabasesEnabled {
-  isDatabasesEnabled: boolean;
-  isDatabasesV2Beta: boolean;
-  isDatabasesV2Enabled: boolean;
-  isDatabasesV2GA: boolean;
-  /**
-   * Temporary variable to be removed post GA release
-   */
-  isUserExistingBeta: boolean;
-  /**
-   * Temporary variable to be removed post GA release
-   */
-  isUserNewBeta: boolean;
-}
 
 /**
  * A hook to determine if Databases should be visible to the user.
@@ -43,12 +26,7 @@ export interface IsDatabasesEnabled {
  * If these users can successfully fetch database types, we will
  * show databases.
  */
-export const useIsDatabasesEnabled = (): IsDatabasesEnabled => {
-  const flags = useFlags();
-  const hasV2Flag: boolean = !!flags.dbaasV2?.enabled;
-  const hasV2BetaFlag: boolean = hasV2Flag && flags.dbaasV2?.beta === true;
-  const hasV2GAFlag: boolean = hasV2Flag && flags.dbaasV2?.beta === false;
-
+export const useIsDatabasesEnabled = () => {
   const { data: account } = useAccount();
   // If we don't have permission to GET /v4/account,
   // we need to try fetching Database engines to know if the user has databases enabled.
@@ -60,53 +38,14 @@ export const useIsDatabasesEnabled = (): IsDatabasesEnabled => {
   );
 
   if (account) {
-    const isDatabasesV1Enabled = isFeatureEnabledV2(
+    return isFeatureEnabledV2(
       'Managed Databases',
       true,
       account?.capabilities ?? []
     );
-
-    const isDatabasesV2BetaEnabled =
-      isFeatureEnabledV2(
-        'Managed Databases Beta',
-        hasV2Flag,
-        account?.capabilities ?? []
-      ) && hasV2BetaFlag;
-
-    const isDatabasesV2GAEnabled =
-      isFeatureEnabledV2(
-        'Managed Databases',
-        hasV2Flag,
-        account?.capabilities ?? []
-      ) && hasV2GAFlag;
-
-    return {
-      isDatabasesEnabled:
-        isDatabasesV1Enabled ||
-        isDatabasesV2BetaEnabled ||
-        isDatabasesV2GAEnabled,
-
-      isDatabasesV2Beta: isDatabasesV2BetaEnabled,
-      isDatabasesV2Enabled: isDatabasesV2BetaEnabled || isDatabasesV2GAEnabled,
-      isDatabasesV2GA: isDatabasesV2GAEnabled,
-
-      isUserExistingBeta: isDatabasesV2BetaEnabled && isDatabasesV1Enabled,
-      isUserNewBeta: isDatabasesV2BetaEnabled && !isDatabasesV1Enabled,
-    };
   }
 
-  const hasDefaultTypes: boolean = !!types && hasV2Flag;
-
-  return {
-    isDatabasesEnabled: hasDefaultTypes,
-
-    isDatabasesV2Beta: hasDefaultTypes && hasV2BetaFlag,
-    isDatabasesV2Enabled: hasDefaultTypes,
-    isDatabasesV2GA: hasDefaultTypes && hasV2GAFlag,
-
-    isUserExistingBeta: hasDefaultTypes && hasV2BetaFlag,
-    isUserNewBeta: hasDefaultTypes && hasV2BetaFlag,
-  };
+  return !!types;
 };
 
 /**
@@ -233,23 +172,14 @@ export const getDatabasesDescription = (
 export const hasPendingUpdates = (pendingUpdates?: PendingUpdates[]) =>
   Boolean(pendingUpdates && pendingUpdates?.length > 0);
 
-export const isDefaultDatabase = (
-  database: Pick<DatabaseInstance, 'platform'>
-) => database.platform === 'rdbms-default';
-
-export const isLegacyDatabase = (
-  database: Pick<DatabaseInstance, 'platform'>
-) => !database.platform || database.platform === 'rdbms-legacy';
-
 export const upgradableVersions = (
   engine: Engine,
   version: string,
   engines?: Pick<DatabaseEngine, 'engine' | 'version'>[]
 ) => engines?.filter((e) => e.engine === engine && e.version > version);
 
-// TODO (UIE-8214) POST GA - Remove reference to secondary from this function as it is only present for legacy databases
 export const getReadOnlyHost = (database: Database | undefined) =>
-  database?.hosts?.standby ?? database?.hosts?.secondary ?? '';
+  database?.hosts?.standby ?? '';
 
 /** This function converts a private hostname string to public by replacing 'private-' at the beginning of the private hostname string with 'public-'.
  * This is used to format the hostname string returned from the backend when a VPC is configured for a database cluster

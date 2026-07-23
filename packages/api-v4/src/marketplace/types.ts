@@ -7,8 +7,8 @@ export interface MarketplacePartnerReferralPayload {
   email: string;
   name: string;
   partner_name: string;
-  phone: string;
-  phone_country_code: string;
+  phone?: string;
+  phone_country_code?: string;
   product_name: string;
   tc_consent_given: boolean;
 }

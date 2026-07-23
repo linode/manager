@@ -3,17 +3,16 @@ import { Spacing } from '@akamai/cds-tokens';
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
-import { AssignedPermissionsPanel } from 'src/features/IAM/Shared/AssignedPermissionsPanel/AssignedPermissionsPanel';
-import { getRoleByName } from 'src/features/IAM/Shared/utilities';
-
+import { AssignedPermissionsPanel } from '../../Shared/AssignedPermissionsPanel/AssignedPermissionsPanel';
 import { Box } from '../../Shared/Box/Box';
 import { Divider } from '../../Shared/Divider/Divider';
+import { getRoleByName } from '../../Shared/utilities';
 
-import type { IamAccountRoles } from '@linode/api-v4';
 import type {
   AssignNewRoleFormValues,
   RolesType,
-} from 'src/features/IAM/Shared/utilities';
+} from '../../Shared/utilities';
+import type { IamAccountRoles } from '@linode/api-v4';
 
 interface Props {
   hideDetails: boolean;

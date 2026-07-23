@@ -50,7 +50,6 @@ describe('Database Backups (v2)', () => {
     const mockDatabase = databaseFactory.build({
       id: 1234567890,
       oldest_restore_time: null,
-      platform: 'rdbms-default',
     });
 
     queriesMocks.useDatabaseQuery.mockReturnValue({
@@ -81,7 +80,6 @@ describe('Database Backups (v2)', () => {
   it('should render a date picker when it is a default database', async () => {
     const mockDatabase = databaseFactory.build({
       id: 1234567890,
-      platform: 'rdbms-default',
     });
 
     queriesMocks.useDatabaseQuery.mockReturnValue({
@@ -91,9 +89,7 @@ describe('Database Backups (v2)', () => {
     });
 
     const { container } = renderWithTheme(
-      <DatabaseDetailContext.Provider
-        value={{ database: mockDatabase, engine: 'mysql' }}
-      >
+      <DatabaseDetailContext.Provider value={{ database: mockDatabase }}>
         <DatabaseBackups />
       </DatabaseDetailContext.Provider>,
       { initialRoute: backupsTestRoute }
@@ -107,7 +103,6 @@ describe('Database Backups (v2)', () => {
   it('should render a time picker when it is a default database', async () => {
     const mockDatabase = databaseFactory.build({
       id: 1234567890,
-      platform: 'rdbms-default',
     });
 
     queriesMocks.useDatabaseQuery.mockReturnValue({
@@ -117,9 +112,7 @@ describe('Database Backups (v2)', () => {
     });
 
     const { findByText } = renderWithTheme(
-      <DatabaseDetailContext.Provider
-        value={{ database: mockDatabase, engine: 'mysql' }}
-      >
+      <DatabaseDetailContext.Provider value={{ database: mockDatabase }}>
         <DatabaseBackups />
       </DatabaseDetailContext.Provider>,
       {
@@ -134,7 +127,6 @@ describe('Database Backups (v2)', () => {
   it('should render a restore time dropdown if the engine is valkey', async () => {
     const mockDatabase = databaseFactory.build({
       id: 1234567890,
-      platform: 'rdbms-default',
       engine: 'valkey',
       oldest_restore_time: null,
       available_restore_times: [
@@ -151,9 +143,7 @@ describe('Database Backups (v2)', () => {
     });
 
     const { container } = renderWithTheme(
-      <DatabaseDetailContext.Provider
-        value={{ database: mockDatabase, engine: 'valkey' }}
-      >
+      <DatabaseDetailContext.Provider value={{ database: mockDatabase }}>
         <DatabaseBackups />
       </DatabaseDetailContext.Provider>,
       {

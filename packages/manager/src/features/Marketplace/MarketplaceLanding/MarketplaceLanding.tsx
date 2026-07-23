@@ -18,7 +18,10 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 
 import { PRODUCTS } from '../products';
-import { marketplaceContainerStyles } from '../shared';
+import {
+  marketplaceCatalogScrollState,
+  marketplaceContainerStyles,
+} from '../shared';
 import { CategorySection } from './CategorySection';
 import { filterProducts } from './utils';
 
@@ -191,6 +194,20 @@ export const MarketplaceLanding = () => {
 
   // Show empty state if there are no products to display (either no products exist, or filters return no results)
   const showEmptyState = filteredProducts.length === 0;
+
+  // If the user navigated here from a product card click, scroll back to the
+  // category they came from instead of the top of the page.
+  React.useEffect(() => {
+    const lastCategory = marketplaceCatalogScrollState.lastCategory;
+    if (!lastCategory) {
+      return;
+    }
+    marketplaceCatalogScrollState.lastCategory = undefined;
+    const target = document.querySelector(
+      `[data-qa-product-category="${lastCategory}"]`
+    );
+    target?.scrollIntoView();
+  }, []);
 
   return (
     <Box sx={marketplaceContainerStyles}>

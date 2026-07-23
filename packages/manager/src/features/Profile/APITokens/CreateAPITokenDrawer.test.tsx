@@ -3,14 +3,15 @@ import { waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
-import { appTokenFactory } from 'src/factories';
+import { accountFactory, appTokenFactory } from 'src/factories';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { CreateAPITokenDrawer } from './CreateAPITokenDrawer';
 
-// Mock the useProfile and useGrants hooks to immediately return the expected data, circumventing the HTTP request and loading state.
+// Mock the useProfile, useGrants, and useAccount hooks to immediately return the expected data, circumventing the HTTP request and loading state.
 const queryMocks = vi.hoisted(() => ({
+  useAccount: vi.fn().mockReturnValue({}),
   useGrants: vi.fn().mockReturnValue({}),
   useProfile: vi.fn().mockReturnValue({}),
 }));
@@ -19,8 +20,15 @@ vi.mock('@linode/queries', async () => {
   const actual = await vi.importActual<any>('@linode/queries');
   return {
     ...actual,
+    useAccount: queryMocks.useAccount,
     useProfile: queryMocks.useProfile,
   };
+});
+
+// The account factory includes the 'AI Inference' capability by default, which
+// is required (along with the feature flag) for the Inference scope to render.
+beforeEach(() => {
+  queryMocks.useAccount.mockReturnValue({ data: accountFactory.build() });
 });
 
 const props = {
@@ -177,5 +185,25 @@ describe('Create API Token Drawer', () => {
     expect(vpcNoAccessPermRadioButton).toBeChecked();
     expect(vpcReadOnlyPermRadioButton).not.toBeChecked();
     expect(vpcReadOnlyPermRadioButton).toBeDisabled();
+  });
+
+  describe('Inference scope visibility', () => {
+    it('should show the Inference scope when Inference Platform is enabled', () => {
+      const { getByText } = renderWithTheme(
+        <CreateAPITokenDrawer {...props} />,
+        { flags: { inferencePlatform: true } }
+      );
+      const inferenceScope = getByText('Inference');
+      expect(inferenceScope).toBeInTheDocument();
+    });
+
+    it('should not show the Inference scope when Inference Platform is disabled', () => {
+      const { queryByText } = renderWithTheme(
+        <CreateAPITokenDrawer {...props} />,
+        { flags: { inferencePlatform: false } }
+      );
+      const inferenceScope = queryByText('Inference');
+      expect(inferenceScope).not.toBeInTheDocument();
+    });
   });
 });

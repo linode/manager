@@ -4,12 +4,16 @@ import { vi } from 'vitest';
 import * as inferenceService from '../inferenceService';
 import { useInferenceStream } from './useInferenceStream';
 
+const MOCK_API_KEY = 'test-api-key';
+
 const mockCallbacks = () => ({
   onChunk: vi.fn(),
   onComplete: vi.fn(),
   onError: vi.fn(),
   onStart: vi.fn(),
 });
+
+const SSE_HEADERS = new Headers({ 'content-type': 'text/event-stream' });
 
 describe('useInferenceStream — cancellation', () => {
   beforeEach(() => {
@@ -23,7 +27,7 @@ describe('useInferenceStream — cancellation', () => {
   it('calls onComplete (not onError) with partial content when cancelled', async () => {
     vi.mocked(
       inferenceService.requestInferenceChatCompletion
-    ).mockImplementation((_messages, _model, _settings, signal) => {
+    ).mockImplementation((_messages, _model, _apiKey, _options, signal) => {
       const encoder = new TextEncoder();
       let readCount = 0;
       const stream = new ReadableStream<Uint8Array>({
@@ -47,19 +51,29 @@ describe('useInferenceStream — cancellation', () => {
           );
         },
       });
-      return Promise.resolve({ body: stream } as unknown as Response);
+      return Promise.resolve({
+        body: stream,
+        headers: SSE_HEADERS,
+        ok: true,
+      } as unknown as Response);
     });
 
     const { result } = renderHook(() => useInferenceStream());
     const cbs = mockCallbacks();
 
-    const streamPromise = result.current.stream([], 'model-a', cbs);
+    const streamPromise = result.current.stream(
+      [],
+      'model-a',
+      MOCK_API_KEY,
+      cbs
+    );
     // Let the first chunk be read before cancelling.
     await new Promise((resolve) => setTimeout(resolve, 50));
     result.current.cancel();
     await streamPromise;
 
     expect(cbs.onComplete).toHaveBeenCalledOnce();
+    expect(cbs.onComplete.mock.calls[0][2]).toMatchObject({ cancelled: true });
     expect(cbs.onError).not.toHaveBeenCalled();
   });
 
@@ -69,7 +83,7 @@ describe('useInferenceStream — cancellation', () => {
     // First call: a hanging stream that responds to abort
     vi.mocked(
       inferenceService.requestInferenceChatCompletion
-    ).mockImplementationOnce((_messages, _model, _settings, signal) => {
+    ).mockImplementationOnce((_messages, _model, _apiKey, _options, signal) => {
       let readCount = 0;
       const stream = new ReadableStream<Uint8Array>({
         pull(controller): Promise<void> | void {
@@ -90,7 +104,11 @@ describe('useInferenceStream — cancellation', () => {
           );
         },
       });
-      return Promise.resolve({ body: stream } as unknown as Response);
+      return Promise.resolve({
+        body: stream,
+        headers: SSE_HEADERS,
+        ok: true,
+      } as unknown as Response);
     });
 
     // Second call: a normal completing stream
@@ -115,6 +133,8 @@ describe('useInferenceStream — cancellation', () => {
       inferenceService.requestInferenceChatCompletion
     ).mockResolvedValueOnce({
       body: makeStream(sseLines(['second'])),
+      headers: SSE_HEADERS,
+      ok: true,
     } as unknown as Response);
 
     const { result } = renderHook(() => useInferenceStream());
@@ -122,12 +142,17 @@ describe('useInferenceStream — cancellation', () => {
     const secondCbs = mockCallbacks();
 
     // Start first stream, cancel it, then immediately start second
-    const firstPromise = result.current.stream([], 'model-a', firstCbs);
+    const firstPromise = result.current.stream(
+      [],
+      'model-a',
+      MOCK_API_KEY,
+      firstCbs
+    );
     await new Promise((resolve) => setTimeout(resolve, 50));
     result.current.cancel();
     await firstPromise;
 
-    await result.current.stream([], 'model-a', secondCbs);
+    await result.current.stream([], 'model-a', MOCK_API_KEY, secondCbs);
 
     expect(secondCbs.onComplete.mock.calls[0][1]).toEqual({
       content: 'second',

@@ -16,6 +16,8 @@ export * from './payments';
 
 export * from './promos';
 
+export * from './tfaEnforcement';
+
 export * from './types';
 
 export * from './users';

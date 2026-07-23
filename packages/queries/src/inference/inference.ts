@@ -2,9 +2,12 @@ import {
   createApiKey,
   deleteApiKey,
   getApiKeys,
+  getInferenceModels,
+  getInferenceUsage,
   revokeApiKey,
   updateApiKey,
 } from '@linode/api-v4';
+import { getAll } from '@linode/utilities';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import {
   keepPreviousData,
@@ -19,20 +22,58 @@ import type {
   CreateApiKeyPayload,
   CreateApiKeyResponse,
   Filter,
+  InferenceModelsResponse,
+  InferenceUsage,
+  InferenceUsageRequest,
   Params,
   ResourcePage,
   UpdateApiKeyPayload,
 } from '@linode/api-v4';
 
+/**
+ * Fetches all API keys by paginating through all pages.
+ */
+const getAllApiKeys = (passedParams: Params = {}, passedFilter: Filter = {}) =>
+  getAll<ApiKey>((params, filter) =>
+    getApiKeys({ ...params, ...passedParams }, { ...filter, ...passedFilter }),
+  )().then((data) => data.data);
+
 export const inferenceQueries = createQueryKeys('inference', {
+  allApiKeys: (params: Params = {}, filter: Filter = {}) => ({
+    queryFn: () => getAllApiKeys(params, filter),
+    queryKey: ['all', params, filter],
+  }),
   apiKeys: (params: Params = {}, filter: Filter = {}) => ({
     queryFn: () => getApiKeys(params, filter),
     queryKey: [params, filter],
+  }),
+  models: {
+    queryFn: getInferenceModels,
+    queryKey: null,
+  },
+  usage: (data?: InferenceUsageRequest) => ({
+    queryFn: () => getInferenceUsage(data),
+    queryKey: [data],
   }),
 });
 
 /**
  * Hook to fetch all API keys for the Inference Platform.
+ * Uses pagination to fetch all pages and returns all keys.
+ */
+export const useAllInferenceApiKeysQuery = (
+  params: Params = {},
+  filter: Filter = {},
+  enabled = true,
+) =>
+  useQuery<ApiKey[], APIError[]>({
+    ...inferenceQueries.allApiKeys(params, filter),
+    enabled,
+    placeholderData: keepPreviousData,
+  });
+
+/**
+ * Hook to fetch a single page of API keys for the Inference Platform.
  */
 export const useInferenceApiKeysQuery = (
   params: Params = {},
@@ -41,6 +82,29 @@ export const useInferenceApiKeysQuery = (
 ) =>
   useQuery<ResourcePage<ApiKey>, APIError[]>({
     ...inferenceQueries.apiKeys(params, filter),
+    enabled,
+    placeholderData: keepPreviousData,
+  });
+
+/**
+ * Hook to fetch available inference models.
+ */
+export const useInferenceModelsQuery = (enabled = true) =>
+  useQuery<InferenceModelsResponse, APIError[]>({
+    ...inferenceQueries.models,
+    enabled,
+    staleTime: 5 * 60 * 1000, // Cache for 5 minutes
+  });
+
+/**
+ * Hook to fetch usage statistics for the Inference Platform.
+ */
+export const useInferenceUsageQuery = (
+  data?: InferenceUsageRequest,
+  enabled = true,
+) =>
+  useQuery<InferenceUsage, APIError[]>({
+    ...inferenceQueries.usage(data),
     enabled,
     placeholderData: keepPreviousData,
   });
@@ -55,6 +119,9 @@ export const useCreateInferenceApiKeyMutation = () => {
     onSuccess() {
       queryClient.invalidateQueries({
         queryKey: inferenceQueries.apiKeys._def,
+      });
+      queryClient.invalidateQueries({
+        queryKey: inferenceQueries.allApiKeys._def,
       });
     },
   });
@@ -76,6 +143,9 @@ export const useUpdateInferenceApiKeyMutation = () => {
       queryClient.invalidateQueries({
         queryKey: inferenceQueries.apiKeys._def,
       });
+      queryClient.invalidateQueries({
+        queryKey: inferenceQueries.allApiKeys._def,
+      });
     },
   });
 };
@@ -92,6 +162,9 @@ export const useRevokeInferenceApiKeyMutation = () => {
       queryClient.invalidateQueries({
         queryKey: inferenceQueries.apiKeys._def,
       });
+      queryClient.invalidateQueries({
+        queryKey: inferenceQueries.allApiKeys._def,
+      });
     },
   });
 };
@@ -106,6 +179,9 @@ export const useDeleteInferenceApiKeyMutation = () => {
     onSuccess() {
       queryClient.invalidateQueries({
         queryKey: inferenceQueries.apiKeys._def,
+      });
+      queryClient.invalidateQueries({
+        queryKey: inferenceQueries.allApiKeys._def,
       });
     },
   });

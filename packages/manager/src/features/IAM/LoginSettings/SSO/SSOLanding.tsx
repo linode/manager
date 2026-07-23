@@ -5,13 +5,12 @@ import {
   Tab,
   Tabs,
 } from '@akamai/cds-components/react';
-import { Spacing } from '@akamai/cds-tokens';
 import { Outlet, useLocation, useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
-import { useIsIAMEnabled } from 'src/features/IAM/hooks/useIsIAMEnabled';
 import { useFlags } from 'src/hooks/useFlags';
 
+import { useIsIAMEnabled } from '../../hooks/useIsIAMEnabled';
 import { useTabs } from '../../hooks/useTabs';
 import { IAM_LABEL, SSO_DOCS_LINK } from '../../Shared/constants';
 import { DocsLink } from '../../Shared/DocsLink/DocsLink';
@@ -55,12 +54,8 @@ export const SSOLanding = () => {
 
   return (
     <>
-      <LandingHeader spacingBottom={Spacing.S4}>
-        <Breadcrumb
-          style={{
-            flexWrap: 'nowrap',
-          }}
-        >
+      <LandingHeader>
+        <Breadcrumb>
           <BreadcrumbItem
             onCdsBreadcrumbClick={() => navigate({ to: '/iam/users' })}
           >

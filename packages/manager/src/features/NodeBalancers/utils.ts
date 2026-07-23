@@ -75,6 +75,17 @@ export const formatAddress = (node: NodeBalancerConfigNodeFields) => ({
 });
 
 export const parseAddress = (node: NodeBalancerConfigNode) => {
+  // IPv6 addresses arrive as `[<address>]:<port>`, e.g. `[2600:3c03::1]:80`.
+  const ipv6Match = /^\[(.+)\]:(\d{1,5})$/.exec(node.address);
+  if (ipv6Match) {
+    return {
+      ...node,
+      address: ipv6Match[1],
+      port: ipv6Match[2],
+    };
+  }
+
+  // IPv4 (including VPC private ranges) arrive as `<address>:<port>`.
   const match =
     /^((10.\d{1,3}|192\.168|172\.(1[6-9]|2\d|3[0-1]))\.\d{1,3}\.\d{1,3}):(\d{1,5})$/.exec(
       node.address

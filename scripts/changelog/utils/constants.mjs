@@ -14,6 +14,7 @@ export const PACKAGES = [
   "ui",
   "utilities",
   "validation",
+  "cloudpulse",
 ];
 
 export const CHANGESET_TYPES = [
@@ -37,6 +38,7 @@ const CHANGELOG_PATHS = {
   "shared": path.join(__dirname, "../../../packages/shared/CHANGELOG.md"),
   "utilities": path.join(__dirname, "../../../packages/utilities/CHANGELOG.md"),
   "validation": path.join(__dirname, "../../../packages/validation/CHANGELOG.md"),
+  "cloudpulse": path.join(__dirname, "../../../packages/cloudpulse/CHANGELOG.md"),
 };
 
 const CHANGESET_DIRECTORIES = {
@@ -47,7 +49,7 @@ const CHANGESET_DIRECTORIES = {
   "shared": path.join(__dirname, "../../../packages/shared/.changeset"),
   "utilities": path.join(__dirname, "../../../packages/utilities/.changeset"),
   "validation": path.join(__dirname, "../../../packages/validation/.changeset"),
-  "shared": path.join(__dirname, "../../../packages/shared/.changeset"),
+  "cloudpulse": path.join(__dirname, "../../../packages/cloudpulse/.changeset"),
 };
 
 const PACKAGE_JSON_PATHS = {
@@ -59,6 +61,7 @@ const PACKAGE_JSON_PATHS = {
   "utilities": path.join(__dirname, "../../../packages/utilities/package.json"),
   "validation": path.join(__dirname, "../../../packages/validation/package.json"),
   "shared": path.join(__dirname, "../../../packages/shared/package.json"),
+  "cloudpulse": path.join(__dirname, "../../../packages/cloudpulse/package.json"),
 };
 
 export const changelogPath = (linodePackage) => {

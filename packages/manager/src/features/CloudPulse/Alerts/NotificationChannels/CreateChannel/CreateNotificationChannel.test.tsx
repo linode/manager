@@ -47,7 +47,10 @@ describe('CreateNotificationChannel', () => {
   beforeEach(() => {
     queryMocks.mutateAsync.mockResolvedValue({});
     queryMocks.useAllAccountUsersQuery.mockReturnValue({
-      data: [{ username: 'testuser1' }, { username: 'testuser2' }],
+      data: [
+        { username: 'testuser1', email: 'testuser1@mail.com' },
+        { username: 'testuser2', email: 'testuser2@mail.com' },
+      ],
       isLoading: false,
       isError: false,
     });
@@ -204,7 +207,9 @@ describe('CreateNotificationChannel', () => {
     await user.click(
       within(recipientsSelect).getByRole('button', { name: OPEN_BUTTON_LABEL })
     );
-    await user.click(screen.getByRole('option', { name: 'testuser1' }));
+    await user.click(
+      screen.getByRole('option', { name: 'testuser1 (testuser1@mail.com)' })
+    );
 
     await user.click(screen.getByRole('button', { name: 'Submit' }));
 
@@ -236,7 +241,9 @@ describe('CreateNotificationChannel', () => {
     await user.click(
       within(recipientsSelect).getByRole('button', { name: OPEN_BUTTON_LABEL })
     );
-    await user.click(screen.getByRole('option', { name: 'testuser1' }));
+    await user.click(
+      screen.getByRole('option', { name: 'testuser1 (testuser1@mail.com)' })
+    );
     await user.click(screen.getByRole('button', { name: 'Submit' }));
 
     await screen.findByText('There is an error');

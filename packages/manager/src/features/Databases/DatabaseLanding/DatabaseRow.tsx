@@ -18,10 +18,7 @@ import { DatabaseStatusDisplay } from 'src/features/Databases/DatabaseDetail/Dat
 import { DatabaseEngineVersion } from 'src/features/Databases/DatabaseEngineVersion';
 import { DatabaseActionMenu } from 'src/features/Databases/DatabaseLanding/DatabaseActionMenu';
 import { useBreakpoint } from 'src/features/Databases/hooks/useBreakpoint';
-import {
-  getIsLinkInactive,
-  useIsDatabasesEnabled,
-} from 'src/features/Databases/utilities';
+import { getIsLinkInactive } from 'src/features/Databases/utilities';
 
 import { StyledActionMenuWrapper } from '../shared.styles';
 
@@ -35,27 +32,16 @@ import type { ActionHandlers } from 'src/features/Databases/DatabaseLanding/Data
 interface Props {
   database: DatabaseInstance;
   events?: Event[];
-  /**
-   * Not used for V1, will be required once migration is complete
-   * @since DBaaS V2 GA
-   */
-  handlers?: ActionHandlers;
-  isNewDatabase?: boolean;
+  handlers: ActionHandlers;
 }
 
-export const DatabaseRow = ({
-  database,
-  events,
-  handlers,
-  isNewDatabase,
-}: Props) => {
+export const DatabaseRow = ({ database, events, handlers }: Props) => {
   const {
     cluster_size,
     created,
     engine,
     id,
     label,
-    platform,
     region,
     status,
     type,
@@ -71,7 +57,7 @@ export const DatabaseRow = ({
   const plan = types?.find((t: DatabaseType) => t.id === type);
   const formattedPlan = plan && formatStorageUnits(plan.label);
   const actualRegion = regions?.find((r) => r.id === region);
-  const { isDatabasesV2GA } = useIsDatabasesEnabled();
+
   const showFromSmUp = useBreakpoint('up', 'sm');
   const showFromMdUp = useBreakpoint('up', 'md');
   const showFromLgUp = useBreakpoint('up', 'lg');
@@ -97,7 +83,7 @@ export const DatabaseRow = ({
           flex: '0 1 20.5%',
         }}
       >
-        {isDatabasesV2GA && getIsLinkInactive(status) ? (
+        {getIsLinkInactive(status) ? (
           label
         ) : (
           <Link to={`/databases/${engine}/${id}`}>{label}</Link>
@@ -106,14 +92,13 @@ export const DatabaseRow = ({
       <TableCell>
         <DatabaseStatusDisplay database={database} events={events} />
       </TableCell>
-      {isNewDatabase && <TableCell>{formattedPlan}</TableCell>}
+      <TableCell>{formattedPlan}</TableCell>
       {showFromSmUp && <TableCell>{configuration}</TableCell>}
       <TableCell>
         <DatabaseEngineVersion
           databaseEngine={engine}
           databaseID={id}
           databasePendingUpdates={updates.pending}
-          databasePlatform={platform}
           databaseVersion={version}
         />
       </TableCell>
@@ -127,17 +112,15 @@ export const DatabaseRow = ({
               })}
         </TableCell>
       )}
-      {isDatabasesV2GA && isNewDatabase && (
-        <StyledActionMenuWrapper>
-          <DatabaseActionMenu
-            databaseEngine={engine}
-            databaseId={id}
-            databaseLabel={label}
-            databaseStatus={status}
-            handlers={handlers!}
-          />
-        </StyledActionMenuWrapper>
-      )}
+      <StyledActionMenuWrapper>
+        <DatabaseActionMenu
+          databaseEngine={engine}
+          databaseId={id}
+          databaseLabel={label}
+          databaseStatus={status}
+          handlers={handlers}
+        />
+      </StyledActionMenuWrapper>
     </TableRow>
   );
 };

@@ -2,6 +2,7 @@ import { TableCell, TableRow } from '@akamai/cds-components/react';
 import { Spacing } from '@akamai/cds-tokens';
 import React from 'react';
 
+import { useHasTableStripingEnabled } from '../hooks/useHasTableStripingEnabled';
 import { usePermissions } from '../hooks/usePermissions';
 import { IAM_PARENT_USERS_PENDO_IDS } from '../Shared/constants';
 import { InlineMenuAction } from '../Shared/InlineMenuAction/InlineMenuAction';
@@ -27,6 +28,7 @@ export const AccountDelegationsTableRow = ({
   onUpdateDelegations,
 }: Props) => {
   const { columnWidths, showUsers } = useAccountDelegationsTableColumns();
+  const hasTableStripingEnabled = useHasTableStripingEnabled();
 
   const { data: permissions } = usePermissions('account', [
     'update_delegate_users',
@@ -36,7 +38,7 @@ export const AccountDelegationsTableRow = ({
     <TableRow
       data-qa-table-row={delegation.euuid}
       key={`delegation-${delegation.euuid}-${index}`}
-      zebra
+      zebra={hasTableStripingEnabled}
     >
       <TableCell
         style={getAccountDelegationsTableCellStyle(columnWidths.account)}

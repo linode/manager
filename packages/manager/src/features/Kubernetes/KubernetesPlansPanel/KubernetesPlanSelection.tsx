@@ -92,8 +92,6 @@ export const KubernetesPlanSelection = (
     planBelongsToDisabledClass,
     planHasLimitedAvailability,
     planIsDisabled512Gb,
-    // So far, planIsTooSmall only applies to DbaaS plans (resize)
-    planIsTooSmall: false,
     planIsTooSmallForAPL,
     planResizeNotSupported,
     wholePanelIsDisabled,

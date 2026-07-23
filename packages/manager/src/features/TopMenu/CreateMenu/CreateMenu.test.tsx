@@ -66,7 +66,7 @@ describe('CreateMenu', () => {
     );
 
     const { getByText, queryByText } = renderWithTheme(<CreateMenu />, {
-      flags: { databases: false, dbaasV2: { beta: false, enabled: false } },
+      flags: { databases: false },
     });
 
     const createButton = getByText('Create');

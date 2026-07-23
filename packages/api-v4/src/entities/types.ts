@@ -6,9 +6,12 @@ export type EntityType =
   | 'linode'
   | 'lkecluster'
   | 'longview'
+  | 'mysql_database'
   | 'nodebalancer'
   | 'placement_group'
+  | 'postgresql_database'
   | 'stackscript'
+  | 'valkey_database'
   | 'volume'
   | 'vpc';
 

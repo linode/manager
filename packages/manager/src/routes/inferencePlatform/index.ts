@@ -11,7 +11,7 @@ const inferencePlatformRoute = createRoute({
 
 const inferencePlatformIndexRoute = createRoute({
   beforeLoad: async () => {
-    throw redirect({ to: '/inference-platform/inference-hub' });
+    throw redirect({ to: '/inference-platform/dashboard' });
   },
   getParentRoute: () => inferencePlatformRoute,
   path: '/',
@@ -21,7 +21,19 @@ const inferencePlatformIndexRoute = createRoute({
   )
 );
 
+const inferencePlatformDashboardRoute = createRoute({
+  getParentRoute: () => inferencePlatformRoute,
+  path: 'dashboard',
+}).lazy(() =>
+  import('src/features/InferencePlatform/inferencePlatformLazyRoute').then(
+    (m) => m.inferencePlatformLazyRoute
+  )
+);
+
 const inferencePlatformInferenceHubRoute = createRoute({
+  beforeLoad: async () => {
+    throw redirect({ to: '/inference-platform/dashboard' });
+  },
   getParentRoute: () => inferencePlatformRoute,
   path: 'inference-hub',
 }).lazy(() =>
@@ -73,9 +85,10 @@ const inferencePlatformUsageRoute = createRoute({
 
 export const inferencePlatformRouteTree = inferencePlatformRoute.addChildren([
   inferencePlatformIndexRoute,
+  inferencePlatformDashboardRoute,
   inferencePlatformInferenceHubRoute,
+  inferencePlatformModelLibraryRoute,
   inferencePlatformModelPlaygroundRoute,
   inferencePlatformApiKeyManagementRoute,
-  inferencePlatformModelLibraryRoute,
   inferencePlatformUsageRoute,
 ]);

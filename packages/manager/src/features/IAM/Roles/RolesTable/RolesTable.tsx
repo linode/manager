@@ -20,18 +20,9 @@ import { capitalizeAllWords } from '@akamai/compute-ui-core/formatting';
 import { useLocation, useNavigate, useSearch } from '@tanstack/react-router';
 import React, { useState } from 'react';
 
-import { AssignSelectedRolesDrawer } from 'src/features/IAM/Roles/RolesTable/AssignSelectedRolesDrawer';
-import { RolesTableActionMenu } from 'src/features/IAM/Roles/RolesTable/RolesTableActionMenu';
-import { RolesTableExpandedRow } from 'src/features/IAM/Roles/RolesTable/RolesTableExpandedRow';
-import { DebouncedSearchField } from 'src/features/IAM/Shared/DebouncedSearchField/DebouncedSearchField';
-import globalStyles from 'src/features/IAM/Shared/global.module.css';
-import {
-  getFacadeRoleDescription,
-  mapEntityTypesForSelect,
-} from 'src/features/IAM/Shared/utilities';
-
 import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { useDelegationRole } from '../../hooks/useDelegationRole';
+import { useHasTableStripingEnabled } from '../../hooks/useHasTableStripingEnabled';
 import { usePagination } from '../../hooks/usePagination';
 import { usePermissions } from '../../hooks/usePermissions';
 import { Box } from '../../Shared/Box/Box';
@@ -40,7 +31,16 @@ import {
   ROLES_LEARN_MORE_LINK,
   ROLES_TABLE_PREFERENCE_KEY,
 } from '../../Shared/constants';
+import { DebouncedSearchField } from '../../Shared/DebouncedSearchField/DebouncedSearchField';
+import globalStyles from '../../Shared/global.module.css';
 import { Link } from '../../Shared/Link/Link';
+import {
+  getFacadeRoleDescription,
+  mapEntityTypesForSelect,
+} from '../../Shared/utilities';
+import { AssignSelectedRolesDrawer } from './AssignSelectedRolesDrawer';
+import { RolesTableActionMenu } from './RolesTableActionMenu';
+import { RolesTableExpandedRow } from './RolesTableExpandedRow';
 
 import type { RoleView, SelectOption } from '../../Shared/types';
 import type { Order } from '@akamai/cds-components/react/Table';
@@ -72,6 +72,7 @@ export const RolesTable = ({ roles = [] }: Props) => {
   const { query } = useSearch({
     strict: false,
   });
+  const hasTableStripingEnabled = useHasTableStripingEnabled();
 
   const [filterableEntityType, setFilterableEntityType] =
     useState<null | SelectOption>(ALL_ROLES_OPTION);
@@ -182,7 +183,6 @@ export const RolesTable = ({ roles = [] }: Props) => {
     <>
       <Box
         style={{
-          marginTop: Spacing.S16,
           padding: 0,
         }}
       >
@@ -325,6 +325,7 @@ export const RolesTable = ({ roles = [] }: Props) => {
                   select={(event) => handleSelect(event, roleRow)}
                   selectable
                   selected={selectedRows.includes(roleRow)}
+                  zebra={hasTableStripingEnabled}
                 >
                   <TableCell
                     {...(selectedRows.includes(roleRow)

@@ -2,7 +2,6 @@ import * as React from 'react';
 
 import { cssVars } from '../shared/utilities/cssVars';
 import styles from './DatabaseDetail.module.css';
-import { StyledLabelTypography } from './DatabaseSummary/DatabaseSummaryClusterConfiguration.style';
 
 interface ConnectionDetailsRowProps {
   children: React.ReactNode;
@@ -20,7 +19,7 @@ export const ConnectionDetailsRow = (props: ConnectionDetailsRowProps) => {
   return (
     <div className={styles.summaryLabelValueContainer} style={style}>
       <div className={styles.summaryLabelColumn}>
-        <StyledLabelTypography>{label}</StyledLabelTypography>
+        <p>{label}</p>
       </div>
       <div className={styles.summaryValueColumn}>{children}</div>
     </div>

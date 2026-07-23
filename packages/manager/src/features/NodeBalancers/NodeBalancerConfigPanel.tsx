@@ -463,6 +463,9 @@ export const NodeBalancerConfigPanel = (
                 idx={nodeIdx}
                 key={`nb-node-${nodeIdx}`}
                 node={node}
+                nodeBalancerBackendConnectivity={
+                  props.nodeBalancerBackendConnectivity
+                }
                 nodeBalancerRegion={props.nodeBalancerRegion}
                 nodeBalancerSubnetId={props.nodeBalancerSubnetId}
                 nodeBalancerVpcId={props.nodeBalancerVpcId}

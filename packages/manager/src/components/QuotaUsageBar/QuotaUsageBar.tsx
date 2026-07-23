@@ -1,4 +1,3 @@
-import { Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { BarPercent } from 'src/components/BarPercent';
@@ -49,22 +48,14 @@ export const QuotaUsageBar = ({
         sx={{
           mb: 0.5,
           mt: isWide ? 0.5 : 2,
-          padding: isWide ? '4px' : '3px',
+          padding: isWide ? 'var(--token-global-spacing-s4)' : '3px',
           margin: 0,
         }}
         value={usage}
       />
-      <Typography
-        sx={(theme) => ({
-          mt: theme.spacingFunction(8),
-          font: isWide
-            ? theme.tokens.alias.Typography.Label.Bold.S
-            : theme.tokens.alias.Typography.Label.Regular.S,
-        })}
-        variant={'subtitle2'}
-      >
-        {getUsageText()}
-      </Typography>
+      <p style={{ marginTop: 'var(--token-global-spacing-s8)' }}>
+        {isWide ? <b>{getUsageText()}</b> : getUsageText()}
+      </p>
     </>
   );
 };

@@ -1,6 +1,10 @@
 import { childAccountFactory } from '@linode/utilities';
 
-import { getSeedsCountMap } from 'src/dev-tools/utils';
+import {
+  getSeedsCountMap,
+  getTfaEnforcementData,
+  saveTfaEnforcementData,
+} from 'src/dev-tools/utils';
 import { accountUserFactory } from 'src/factories';
 import { userDefaultRolesFactory } from 'src/factories/userRoles';
 import { mswDB } from 'src/mocks/indexedDB';
@@ -219,5 +223,42 @@ export const parentUsersSeeder: MockSeeder = {
     await mswDB.saveStore(updatedMockState, 'seedState');
 
     return updatedMockState;
+  },
+};
+
+/**
+ * Seeds a subset of existing users as 2FA-optional (exempt from enforcement).
+ * Requires the '2FA Enforcement' extra preset to be enabled.
+ * The seeder count controls how many users are marked as optional.
+ */
+export const tfaOptionalUsersSeeder: MockSeeder = {
+  canUpdateCount: true,
+  desc: 'Mark N existing users as 2FA-optional (exempt from enforcement). Enable the "2FA Enforcement" extra preset alongside this seeder.',
+  group: { id: 'Users' },
+  id: 'users(tfa-optional):crud',
+  label: 'TFA Optional Users',
+
+  seeder: async (mockState: MockState) => {
+    const seedsCountMap = getSeedsCountMap();
+    const count = seedsCountMap[tfaOptionalUsersSeeder.id] ?? 0;
+
+    const users = await mswDB.getAll('users');
+    const defaultUsers = (users ?? []).filter(
+      (user) => user.user_type === 'default'
+    );
+    const optionalUsernames = defaultUsers
+      .slice(0, count)
+      .map((user) => user.username);
+
+    const current = getTfaEnforcementData();
+    saveTfaEnforcementData({
+      profileSecurityQuestionsConfigured:
+        current?.profileSecurityQuestionsConfigured ?? false,
+      profileTwoFactorAuth: current?.profileTwoFactorAuth ?? false,
+      tfaEnforced: current?.tfaEnforced ?? true,
+      tfaOptionalUsers: optionalUsernames,
+    });
+
+    return mockState;
   },
 };

@@ -97,63 +97,6 @@ describe('PrimaryNav', () => {
     expect(getByTestId(queryString).getAttribute('aria-current')).toBe('false');
   });
 
-  it('should show Databases menu item if the user has the account capability V1', async () => {
-    const account = accountFactory.build({
-      capabilities: ['Managed Databases'],
-    });
-
-    queryMocks.useAccount.mockReturnValue({
-      data: account,
-      isLoading: false,
-      error: null,
-    });
-
-    const flags: Partial<Flags> = {
-      dbaasV2: {
-        beta: true,
-        enabled: true,
-      },
-    };
-
-    renderWithTheme(<PrimaryNav {...props} />, {
-      flags,
-    });
-
-    const databaseNavItem = screen.getByTestId('menu-item-Databases');
-
-    expect(databaseNavItem).toBeVisible();
-    expect(screen.queryByTestId('betaChip')).toBeNull();
-  });
-
-  it('should show Databases menu item if the user has the account capability V2 Beta', async () => {
-    const account = accountFactory.build({
-      capabilities: ['Managed Databases Beta'],
-    });
-
-    queryMocks.useAccount.mockReturnValue({
-      data: account,
-      isLoading: false,
-      error: null,
-    });
-
-    const flags: Partial<Flags> = {
-      dbaasV2: {
-        beta: true,
-        enabled: true,
-      },
-    };
-
-    const { findByTestId } = renderWithTheme(<PrimaryNav {...props} />, {
-      flags,
-    });
-
-    const databaseNavItem = await findByTestId('menu-item-Databases');
-    const betaChip = await findByTestId('betaChip');
-
-    expect(databaseNavItem).toBeVisible();
-    expect(betaChip).toBeVisible();
-  });
-
   it('should show Databases menu item if the user has the account capability V2', async () => {
     const account = accountFactory.build({
       capabilities: ['Managed Databases'],
@@ -165,47 +108,7 @@ describe('PrimaryNav', () => {
       error: null,
     });
 
-    const flags: Partial<Flags> = {
-      dbaasV2: {
-        beta: false,
-        enabled: true,
-      },
-    };
-
-    const { findByTestId, queryByTestId } = renderWithTheme(
-      <PrimaryNav {...props} />,
-      {
-        flags,
-      }
-    );
-
-    const databaseNavItem = await findByTestId('menu-item-Databases');
-
-    expect(databaseNavItem).toBeVisible();
-    expect(queryByTestId('betaChip')).toBeNull();
-  });
-
-  it('should show Databases menu item if the user has the account capability V2', async () => {
-    const account = accountFactory.build({
-      capabilities: ['Managed Databases Beta'],
-    });
-
-    queryMocks.useAccount.mockReturnValue({
-      data: account,
-      isLoading: false,
-      error: null,
-    });
-
-    const flags: Partial<Flags> = {
-      dbaasV2: {
-        beta: true,
-        enabled: true,
-      },
-    };
-
-    const { findByTestId } = renderWithTheme(<PrimaryNav {...props} />, {
-      flags,
-    });
+    const { findByTestId } = renderWithTheme(<PrimaryNav {...props} />);
 
     const databaseNavItem = await findByTestId('menu-item-Databases');
 
@@ -566,5 +469,89 @@ describe('PrimaryNav', () => {
     const reservedIpsNavItem = await findByTestId('menu-item-Reserved IPs');
 
     expect(reservedIpsNavItem).toBeVisible();
+  });
+
+  it('should show NAT Gateways menu item if the user has the account capability and the flag is enabled', async () => {
+    const account = accountFactory.build({
+      capabilities: ['NAT Gateway'],
+    });
+
+    queryMocks.useAccount.mockReturnValue({
+      data: account,
+      isLoading: false,
+      error: null,
+    });
+
+    const flags: Partial<Flags> = {
+      natgateway: {
+        beta: false,
+        enabled: true,
+        ga: true,
+      },
+    };
+
+    const { findByTestId } = renderWithTheme(<PrimaryNav {...props} />, {
+      flags,
+    });
+
+    const natGatewaysNavItem = await findByTestId('menu-item-NAT Gateways');
+
+    expect(natGatewaysNavItem).toBeVisible();
+  });
+
+  it('should not show NAT Gateways menu item if the user lacks the account capability', async () => {
+    const account = accountFactory.build({
+      capabilities: [],
+    });
+
+    queryMocks.useAccount.mockReturnValue({
+      data: account,
+      isLoading: false,
+      error: null,
+    });
+
+    const flags: Partial<Flags> = {
+      natgateway: {
+        beta: true,
+        enabled: true,
+        ga: false,
+      },
+    };
+
+    const { queryByTestId } = renderWithTheme(<PrimaryNav {...props} />, {
+      flags,
+    });
+
+    const natGatewaysNavItem = queryByTestId('menu-item-NAT Gateways');
+
+    expect(natGatewaysNavItem).toBeNull();
+  });
+
+  it('should not show NAT Gateways menu item if the feature flag is disabled', async () => {
+    const account = accountFactory.build({
+      capabilities: ['NAT Gateway'],
+    });
+
+    queryMocks.useAccount.mockReturnValue({
+      data: account,
+      isLoading: false,
+      error: null,
+    });
+
+    const flags: Partial<Flags> = {
+      natgateway: {
+        beta: false,
+        enabled: false,
+        ga: false,
+      },
+    };
+
+    const { queryByTestId } = renderWithTheme(<PrimaryNav {...props} />, {
+      flags,
+    });
+
+    const natGatewaysNavItem = queryByTestId('menu-item-NAT Gateways');
+
+    expect(natGatewaysNavItem).toBeNull();
   });
 });

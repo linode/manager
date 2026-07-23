@@ -46,3 +46,7 @@ export interface TicketRequest {
 }
 
 export type TicketSeverity = 1 | 2 | 3;
+
+export interface LiveChatAvailabilityRequest {
+  live_chat_available: boolean;
+}

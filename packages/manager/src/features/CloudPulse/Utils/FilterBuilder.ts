@@ -47,6 +47,7 @@ interface CloudPulseFilterProperties {
   config: CloudPulseServiceTypeFilters;
   dashboard: Dashboard;
   dependentFilters?: CloudPulseMetricsFilter;
+  isImpersonatedUser?: boolean;
   isServiceAnalyticsIntegration: boolean;
   preferences?: AclpConfig;
   resource_ids?: number[] | undefined;
@@ -79,6 +80,7 @@ export const getTagsProperties = (
     dependentFilters,
     isServiceAnalyticsIntegration,
     preferences,
+    isImpersonatedUser,
   } = props;
   return {
     defaultValue: preferences?.[TAGS],
@@ -94,7 +96,7 @@ export const getTagsProperties = (
     placeholder,
     region: dependentFilters?.[REGION],
     resourceType: dashboard.service_type,
-    savePreferences: !isServiceAnalyticsIntegration,
+    savePreferences: !isServiceAnalyticsIntegration && !isImpersonatedUser,
   };
 };
 
@@ -124,6 +126,7 @@ export const getRegionProperties = (
     dependentFilters,
     config,
     shouldDisable,
+    isImpersonatedUser,
   } = props;
   return {
     defaultValue: preferences?.[filterKey],
@@ -131,7 +134,7 @@ export const getRegionProperties = (
     filterKey,
     label,
     placeholder,
-    savePreferences: !isServiceAnalyticsIntegration,
+    savePreferences: !isServiceAnalyticsIntegration && !isImpersonatedUser,
     selectedDashboard: dashboard,
     disabled:
       shouldDisable ||
@@ -169,6 +172,7 @@ export const getResourcesProperties = (
     isServiceAnalyticsIntegration,
     preferences,
     shouldDisable,
+    isImpersonatedUser,
   } = props;
   return {
     defaultValue: preferences?.[RESOURCES],
@@ -184,7 +188,7 @@ export const getResourcesProperties = (
     label,
     placeholder,
     resourceType: dashboard.service_type,
-    savePreferences: !isServiceAnalyticsIntegration,
+    savePreferences: !isServiceAnalyticsIntegration && !isImpersonatedUser,
     xFilter: filterBasedOnConfig(config, dependentFilters ?? {}),
     associatedEntityType: getAssociatedEntityType(dashboard.id),
     filterFn: config.configuration.filterFn,
@@ -207,6 +211,7 @@ export const getNodeTypeProperties = (
     preferences,
     resource_ids,
     shouldDisable,
+    isImpersonatedUser,
   } = props;
   return {
     database_ids: resource_ids,
@@ -221,7 +226,7 @@ export const getNodeTypeProperties = (
     handleNodeTypeChange,
     label,
     placeholder,
-    savePreferences: !isServiceAnalyticsIntegration,
+    savePreferences: !isServiceAnalyticsIntegration && !isImpersonatedUser,
   };
 };
 
@@ -260,6 +265,7 @@ export const getCustomSelectProperties = (
     isServiceAnalyticsIntegration,
     preferences,
     shouldDisable,
+    isImpersonatedUser,
   } = props;
   return {
     apiResponseIdField: apiIdField,
@@ -287,7 +293,7 @@ export const getCustomSelectProperties = (
     options,
     placeholder,
     preferences,
-    savePreferences: !isServiceAnalyticsIntegration,
+    savePreferences: !isServiceAnalyticsIntegration && !isImpersonatedUser,
     type: options
       ? CloudPulseSelectTypes.static
       : CloudPulseSelectTypes.dynamic,
@@ -313,7 +319,8 @@ export const getTimeDurationProperties = (
   ) => void
 ): CloudPulseTimeRangeSelectProps => {
   const { name: label, placeholder } = props.config.configuration;
-  const { isServiceAnalyticsIntegration, preferences } = props;
+  const { isServiceAnalyticsIntegration, isImpersonatedUser, preferences } =
+    props;
 
   const timeDuration = preferences?.timeDuration;
   return {
@@ -321,7 +328,7 @@ export const getTimeDurationProperties = (
     handleStatsChange: handleTimeRangeChange,
     label,
     placeholder,
-    savePreferences: !isServiceAnalyticsIntegration,
+    savePreferences: !isServiceAnalyticsIntegration && !isImpersonatedUser,
   };
 };
 
@@ -350,6 +357,7 @@ export const getTextFilterProperties = (
     preferences,
     dependentFilters,
     shouldDisable,
+    isImpersonatedUser,
   } = props;
 
   return {
@@ -365,7 +373,7 @@ export const getTextFilterProperties = (
     label,
     placeholder,
     optional: isOptional,
-    savePreferences: !isServiceAnalyticsIntegration,
+    savePreferences: !isServiceAnalyticsIntegration && !isImpersonatedUser,
     filterKey: props.config.configuration.filterKey,
   };
 };
@@ -391,6 +399,7 @@ export const getEndpointsProperties = (
     isServiceAnalyticsIntegration,
     preferences,
     shouldDisable,
+    isImpersonatedUser,
   } = props;
   return {
     defaultValue: preferences?.[config.configuration.filterKey],
@@ -408,7 +417,7 @@ export const getEndpointsProperties = (
     placeholder,
     serviceType: dashboard.service_type,
     region: dependentFilters?.[REGION],
-    savePreferences: !isServiceAnalyticsIntegration,
+    savePreferences: !isServiceAnalyticsIntegration && !isImpersonatedUser,
     xFilter: filterBasedOnConfig(config, dependentFilters ?? {}),
     hasRestrictedSelections: config.configuration.hasRestrictedSelections,
   };
@@ -435,6 +444,7 @@ export const getFirewallNodebalancersProperties = (
     isServiceAnalyticsIntegration,
     preferences,
     shouldDisable,
+    isImpersonatedUser,
   } = props;
   return {
     defaultValue: preferences?.[config.configuration.filterKey],
@@ -450,7 +460,7 @@ export const getFirewallNodebalancersProperties = (
     handleNodebalancersSelection: handleFirewallNodebalancersChange,
     label,
     placeholder,
-    savePreferences: !isServiceAnalyticsIntegration,
+    savePreferences: !isServiceAnalyticsIntegration && !isImpersonatedUser,
     xFilter: filterBasedOnConfig(config, dependentFilters ?? {}),
     isOptional: config.configuration.isOptional,
   };

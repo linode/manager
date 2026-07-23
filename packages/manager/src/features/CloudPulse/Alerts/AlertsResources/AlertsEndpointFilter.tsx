@@ -46,6 +46,7 @@ export const AlertsEndpointFilter = React.memo(
       <Autocomplete
         autoHighlight
         clearOnBlur
+        data-pendo-id="monitor-alerts-entity-details-Endpoints"
         isOptionEqualToValue={(option, value) => option.label === value.label}
         label="Endpoints"
         limitTags={1}

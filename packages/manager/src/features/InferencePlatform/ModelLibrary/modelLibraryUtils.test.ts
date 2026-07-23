@@ -9,8 +9,8 @@ import {
   mergeInferenceModel,
 } from './modelLibraryUtils';
 
-import type { InferenceModel } from '../inferenceService';
 import type { Model, ModelFilterState } from './modelLibrary.types';
+import type { InferenceModel } from '@linode/api-v4';
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -19,8 +19,23 @@ import type { Model, ModelFilterState } from './modelLibrary.types';
 const makeInferenceModel = (
   overrides: Partial<InferenceModel> = {}
 ): InferenceModel => ({
+  capabilities: ['chat', 'completion'],
+  description: 'Test model description',
   id: 'unknown-model',
-  object: 'model',
+  label: 'Unknown Model',
+  lifecycle_status: 'active',
+  modalities: { input: ['text'], output: ['text'] },
+  parameters: {
+    context_window: 32768,
+    max_output_tokens: 8192,
+    parameter_count_billions: 8,
+  },
+  playground_available: true,
+  provider: { id: 'test', name: 'Test' },
+  regions: ['us-ord'],
+  tags: [],
+  type: 'text-generation',
+  use_cases: [],
   ...overrides,
 });
 
@@ -33,8 +48,7 @@ const makeModel = (overrides: Partial<Model> = {}): Model => ({
   isServerless: false,
   outputModes: [],
   parametersB: 0,
-  priceInputPerMillion: 0,
-  priceOutputPerMillion: 0,
+  playgroundAvailable: false,
   providerLogo: '',
   providerName: 'TestProvider',
   releasedAt: '',
@@ -66,16 +80,73 @@ const emptyFilters: ModelFilterState = {
 describe('mergeInferenceModel', () => {
   it('falls back to safe defaults for an unknown model id', () => {
     const result = mergeInferenceModel(
-      makeInferenceModel({ id: 'no-such-model' })
+      makeInferenceModel({ id: 'no-such-model', label: 'No Such Model' })
     );
 
     expect(result.id).toBe('no-such-model');
-    expect(result.title).toBe('no-such-model');
-    expect(result.providerName).toBe('Unknown');
+    // title comes from API label field
+    expect(result.title).toBe('No Such Model');
+    // providerName comes from API provider.name field
+    expect(result.providerName).toBe('Test');
     expect(result.isServerless).toBe(false);
+    // playgroundAvailable comes from API playground_available field
+    expect(result.playgroundAvailable).toBe(true);
+    // useCaseTags, inputModes, outputModes come from API
     expect(result.useCaseTags).toEqual([]);
-    expect(result.inputModes).toEqual([]);
-    expect(result.outputModes).toEqual([]);
+    expect(result.inputModes).toEqual([{ description: '', label: 'Text' }]);
+    expect(result.outputModes).toEqual([{ description: '', label: 'Text' }]);
+  });
+
+  it('maps playground_available from API correctly', () => {
+    const resultTrue = mergeInferenceModel(
+      makeInferenceModel({ playground_available: true })
+    );
+    expect(resultTrue.playgroundAvailable).toBe(true);
+
+    const resultFalse = mergeInferenceModel(
+      makeInferenceModel({ playground_available: false })
+    );
+    expect(resultFalse.playgroundAvailable).toBe(false);
+  });
+
+  it('uses API data for fields when no supplementary data exists', () => {
+    const result = mergeInferenceModel(
+      makeInferenceModel({
+        description: 'A test model',
+        id: 'new-model-from-api',
+        label: 'New Model',
+        modalities: { input: ['text', 'image'], output: ['text'] },
+        parameters: {
+          context_window: 65536,
+          max_output_tokens: 8192,
+          parameter_count_billions: 12,
+        },
+        provider: { id: 'acme', name: 'Acme Corp' },
+        use_cases: ['coding', 'general'],
+      })
+    );
+
+    expect(result.id).toBe('new-model-from-api');
+    expect(result.title).toBe('New Model');
+    expect(result.description).toBe('A test model');
+    expect(result.providerName).toBe('Acme Corp');
+    expect(result.contextLengthK).toBe(66); // 65536 / 1000 rounded
+    expect(result.parametersB).toBe(12);
+    expect(result.inputModes).toEqual([
+      { description: '', label: 'Text' },
+      { description: '', label: 'Image' },
+    ]);
+    expect(result.outputModes).toEqual([{ description: '', label: 'Text' }]);
+    expect(result.useCaseTags).toEqual([
+      {
+        description: 'Code generation, completion, and programming assistance',
+        label: 'Coding',
+      },
+      {
+        description: 'General-purpose text generation and conversation',
+        label: 'General',
+      },
+    ]);
   });
 
   it('always uses the id from the InferenceModel, not supplementary data', () => {

@@ -199,6 +199,108 @@ describe('getSupportedRegionIds', () => {
   });
 });
 
+describe('getFilteredResources with engineType additionalFilter', () => {
+  const regions = regionFactory.buildList(3);
+  const regionsIdToRegionMap = getRegionsIdRegionMap(regions);
+
+  const data: CloudPulseResources[] = [
+    { id: '1', label: 'mysql-db', region: regions[0].id, engineType: 'mysql' },
+    {
+      id: '2',
+      label: 'valkey-db-1',
+      region: regions[1].id,
+      engineType: 'valkey',
+    },
+    {
+      id: '3',
+      label: 'valkey-db-2',
+      region: regions[2].id,
+      engineType: 'valkey',
+    },
+    {
+      id: '4',
+      label: 'pg-db',
+      region: regions[0].id,
+      engineType: 'postgresql',
+    },
+  ];
+
+  const resourceIds = data.map((d) => d.id);
+
+  it('should return only Valkey resources when engineType filter is valkey', () => {
+    const result = getFilteredResources({
+      additionalFilters: {
+        endpoint: undefined,
+        engineType: 'valkey',
+        tags: undefined,
+      },
+      data,
+      regionsIdToRegionMap,
+      resourceIds,
+    });
+    expect(result.length).toBe(2);
+    expect(result.every((r) => r.engineType === 'valkey')).toBe(true);
+  });
+
+  it('should return only MySQL resources when engineType filter is mysql', () => {
+    const result = getFilteredResources({
+      additionalFilters: {
+        endpoint: undefined,
+        engineType: 'mysql',
+        tags: undefined,
+      },
+      data,
+      regionsIdToRegionMap,
+      resourceIds,
+    });
+    expect(result.length).toBe(1);
+    expect(result[0].engineType).toBe('mysql');
+  });
+
+  it('should return only PostgreSQL resources when engineType filter is postgresql', () => {
+    const result = getFilteredResources({
+      additionalFilters: {
+        endpoint: undefined,
+        engineType: 'postgresql',
+        tags: undefined,
+      },
+      data,
+      regionsIdToRegionMap,
+      resourceIds,
+    });
+    expect(result.length).toBe(1);
+    expect(result[0].engineType).toBe('postgresql');
+  });
+
+  it('should return all resources when engineType filter is undefined', () => {
+    const result = getFilteredResources({
+      additionalFilters: {
+        endpoint: undefined,
+        engineType: undefined,
+        tags: undefined,
+      },
+      data,
+      regionsIdToRegionMap,
+      resourceIds,
+    });
+    expect(result.length).toBe(4);
+  });
+
+  it('should return empty when engineType filter does not match any resource', () => {
+    const result = getFilteredResources({
+      additionalFilters: {
+        endpoint: undefined,
+        engineType: 'redis',
+        tags: undefined,
+      },
+      data,
+      regionsIdToRegionMap,
+      resourceIds,
+    });
+    expect(result.length).toBe(0);
+  });
+});
+
 describe('getEndpointOptions', () => {
   const mockResources: CloudPulseResources[] = [
     { id: '1', endpoint: 'endpoint-a', region: 'us-east', label: 'r1' },

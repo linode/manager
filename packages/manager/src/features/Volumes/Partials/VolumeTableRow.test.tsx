@@ -204,7 +204,7 @@ describe('Volume table row - for linodes detail page', () => {
     const highPerformanceIcon = getByLabelText('High Performance');
 
     expect(highPerformanceIcon).toBeVisible();
-    await userEvent.click(highPerformanceIcon);
+    await userEvent.hover(highPerformanceIcon);
     await waitFor(() => expect(getByText('High Performance')).toBeVisible());
   });
 });

@@ -158,11 +158,13 @@ export const getInitialDefaultSelections = (
     );
     return initialSelection;
   }
-  const selectedValues = options.filter(({ id }) =>
-    (Array.isArray(defaultValue) ? defaultValue : [defaultValue]).includes(
-      String(id)
-    )
-  );
+  const selectedValues = savePreferences
+    ? options.filter(({ id }) =>
+        (Array.isArray(defaultValue) ? defaultValue : [defaultValue]).includes(
+          String(id)
+        )
+      )
+    : undefined;
 
   handleSelectionChange(
     filterKey,

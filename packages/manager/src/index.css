@@ -10,7 +10,7 @@ html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-stretch: normal;
-  font-optical-sizing: auto;
+  font-synthesis: none;
 }
 
 body {

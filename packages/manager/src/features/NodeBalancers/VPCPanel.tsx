@@ -55,7 +55,7 @@ export const VPCPanel = (props: Props) => {
 
   const {
     data: vpcs,
-    error: error,
+    error: vpcQueryError,
     isLoading: isVPCLoading,
   } = useAllVPCsQuery({
     enabled: regionSupportsVPC,
@@ -70,9 +70,15 @@ export const VPCPanel = (props: Props) => {
     return subnet?.label || '';
   };
 
-  const vpcError = error
-    ? getAPIErrorOrDefault(error, 'Unable to load VPCs')[0].reason
+  const vpcError = vpcQueryError
+    ? getAPIErrorOrDefault(vpcQueryError, 'Unable to load VPCs')?.[0].reason
     : undefined;
+
+  const vpcErrors = errors?.find((err) => err.field?.includes('vpcs'))?.reason;
+
+  const subnetErrors = errors?.find((err) =>
+    err.field?.includes('subnet_id')
+  )?.reason;
 
   return (
     <Paper>
@@ -83,6 +89,9 @@ export const VPCPanel = (props: Props) => {
             Complete this section to allow this NodeBalancer to communicate with
             backend nodes in a VPC.
           </Typography>
+          {vpcErrors && (
+            <Notice spacingTop={8} text={vpcErrors} variant="error" />
+          )}
           <Autocomplete
             data-testid="vpc-select"
             disabled={disabled || vpcSelectDisabled}
@@ -92,7 +101,7 @@ export const VPCPanel = (props: Props) => {
                 ? 'VPC is not available in the selected region.'
                 : undefined
             }
-            label="VPC"
+            label=""
             loading={isVPCLoading}
             noMarginTop
             noOptionsText={
@@ -129,10 +138,7 @@ export const VPCPanel = (props: Props) => {
                 variant="warning"
               />
               <Autocomplete
-                errorText={
-                  errors?.find((err) => err.field?.includes('subnet_id'))
-                    ?.reason
-                }
+                errorText={subnetErrors}
                 getOptionLabel={(subnet) => `${subnet.label} (${subnet.ipv4})`}
                 label="Subnet"
                 noMarginTop

@@ -4,6 +4,7 @@ import { createRoute, createRouter, redirect } from '@tanstack/react-router';
 import React from 'react';
 
 import { ErrorComponent } from 'src/features/ErrorBoundary/ErrorComponent';
+// DISTRIBUTION: remove this import and iamRouteTree from routeTree.addChildren below.
 import { iamRouteTree } from 'src/features/IAM/routes';
 
 import { accountRouteTree } from './account';
@@ -32,6 +33,7 @@ import { maintenanceRouteTree } from './maintenance';
 import { managedRouteTree } from './managed';
 import { marketplaceRouteTree } from './marketplace';
 import { cloudPulseMetricsRouteTree } from './metrics';
+import { natGatewaysRouteTree } from './natgateways';
 import { networkLoadBalancersRouteTree } from './networkLoadBalancer';
 import { nodeBalancersRouteTree } from './nodeBalancers';
 import { objectStorageRouteTree } from './objectStorage';
@@ -85,6 +87,7 @@ export const routeTree = rootRoute.addChildren([
   maintenanceRouteTree,
   managedRouteTree,
   marketplaceRouteTree,
+  natGatewaysRouteTree,
   networkLoadBalancersRouteTree,
   nodeBalancersRouteTree,
   objectStorageRouteTree,

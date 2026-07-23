@@ -12,11 +12,6 @@ const queryMocks = vi.hoisted(() => ({
   useProfile: vi.fn().mockReturnValue({ data: { restricted: false } }),
 }));
 
-vi.mock('src/OAuth/oauthClient', () => ({
-  getIsAdminToken: vi.fn(),
-  oauthClient: {},
-}));
-
 vi.mock('@linode/queries', async () => {
   const actual = await vi.importActual('@linode/queries');
   return {

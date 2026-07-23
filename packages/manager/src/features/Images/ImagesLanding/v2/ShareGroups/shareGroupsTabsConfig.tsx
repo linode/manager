@@ -1,11 +1,13 @@
 import React from 'react';
 
+import { Link } from 'src/components/Link';
 import {
   SHARE_GROUPS_JOINED_TAB_PENDO_IDS,
   SHARE_GROUPS_MEMBERSHIP_REQUESTS_TAB_PENDO_IDS,
   SHARE_GROUPS_OWNED_TAB_PENDO_IDS,
 } from 'src/features/Images/constants';
 
+import { ACCESS_BILLING_INFO_LINK } from '../constants';
 import { TABLE_CELL_BASE_STYLES } from './ShareGroupTable.styles';
 
 import type { APIError } from '@linode/api-v4';
@@ -162,10 +164,10 @@ export const SHAREGROUPS_CONFIG: Record<
     description: (
       <>
         These are share groups you own. Other group members can deploy compute
-        instances from images shared within these groups.
-        <br />
-        Shared images are not additionally billed on top of existing original
-        and replicated images.
+        instances from images shared within these groups. Shared images are free
+        of charge, but instances deployed from shared images are billed on a
+        regular basis. For details, see{' '}
+        <Link to={ACCESS_BILLING_INFO_LINK}>Access billing information</Link>.
       </>
     ),
     docsLink: {

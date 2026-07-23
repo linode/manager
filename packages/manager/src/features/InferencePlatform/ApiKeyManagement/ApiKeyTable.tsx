@@ -1,5 +1,5 @@
 import {
-  useInferenceApiKeysQuery,
+  useAllInferenceApiKeysQuery,
   useUpdateInferenceApiKeyMutation,
 } from '@linode/queries';
 import { Box, CircleProgress, ErrorState, Typography } from '@linode/ui';
@@ -35,12 +35,6 @@ const ExpiresDisplay = ({ expiry }: { expiry: null | string }) => {
   return <DateTimeDisplay humanizeCutoff="month" value={expiry} />;
 };
 
-const PAGE_SIZE_OPTIONS = [
-  { label: 'Show 10', value: 10 },
-  { label: 'Show 20', value: 20 },
-  { label: 'Show 30', value: 30 },
-];
-
 interface ApiKeyTableProps {
   filter: string;
   showPlaygroundKeys?: boolean;
@@ -59,11 +53,14 @@ export const ApiKeyTable = ({
   const [selectedApiKey, setSelectedApiKey] = useState<ApiKey | null>(null);
 
   // Use React Query for data fetching - provides caching, automatic refetching, and cross-component sync
-  const { data: apiKeysData, error, isLoading } = useInferenceApiKeysQuery();
+  // Uses getAll utility to fetch all pages for client-side pagination
+  const {
+    data: apiKeys = [],
+    error,
+    isLoading,
+  } = useAllInferenceApiKeysQuery();
 
   const { mutateAsync: updateApiKey } = useUpdateInferenceApiKeyMutation();
-
-  const apiKeys = useMemo(() => apiKeysData?.data ?? [], [apiKeysData]);
 
   const handleOpenDetails = (apiKey: ApiKey) => {
     setSelectedApiKey(apiKey);
@@ -160,6 +157,30 @@ export const ApiKeyTable = ({
       return aValue < bValue ? 1 : -1;
     });
   }, [filteredKeys, orderBy, order]);
+
+  // Generate dynamic page size options based on total count
+  const pageSizeOptions = useMemo(() => {
+    const count = sortedKeys.length;
+    // Filter options to only show sizes smaller than total count
+    const options = [10, 25, 50, 100, 250]
+      .filter((size) => size < count)
+      .map((size) => ({
+        label: `Show ${size}`,
+        value: size,
+      }));
+
+    // Always add an "All" option if there are items
+    if (count > 0) {
+      options.push({ label: `Show All (${count})`, value: count });
+    }
+
+    // Ensure we have at least the minimum option
+    if (options.length === 0) {
+      options.push({ label: 'Show 10', value: 10 });
+    }
+
+    return options;
+  }, [sortedKeys.length]);
 
   const pagination = usePaginationV2({
     clientSidePaginationData: sortedKeys,
@@ -280,7 +301,7 @@ export const ApiKeyTable = ({
       </LinodeTable>
       <PaginationFooter
         count={sortedKeys.length}
-        customOptions={PAGE_SIZE_OPTIONS}
+        customOptions={pageSizeOptions}
         handlePageChange={pagination.handlePageChange}
         handleSizeChange={pagination.handlePageSizeChange}
         minPageSize={10}

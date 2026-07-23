@@ -2296,7 +2296,7 @@ export const oneClickApps: Record<number, OCA> = {
     summary: 'AI Agent Platform',
     website: 'https://hermes-agent.nousresearch.com',
   },
-    2141983: {
+  2141983: {
     alt_description: 'Visual AI App Builder',
     alt_name:
       'Open-source visual framework for building AI agents and workflows without writing code.',
@@ -2317,5 +2317,71 @@ export const oneClickApps: Record<number, OCA> = {
     ],
     summary: 'Visual AI Agent Framework',
     website: 'https://www.langflow.org/',
+  },
+  2164119: {
+    alt_description: 'Enterprise-Grade Secure AI Agent Stack',
+    alt_name:
+      'Open-source reference stack from NVIDIA for running always-on AI agents more safely inside hardened OpenShell sandboxes.',
+    categories: ['AI Agent', 'AI Framework', 'AI'],
+    colors: {
+      end: '00B140',
+      start: '76B900',
+    },
+    description:
+      'NVIDIA NemoClaw is an open-source stack that adds privacy and security guardrails to autonomous AI agents, combining the OpenShell sandbox runtime, Nemotron local models, and policy-based routing for safer always-on deployments.',
+    isNew: true,
+    logo_url: 'nemoclaw.svg',
+    related_guides: [
+      {
+        href: 'https://www.linode.com/docs/marketplace-docs/guides/nemoclaw/',
+        title: 'Deploy NemoClaw',
+      },
+    ],
+    summary: 'Secure AI Agent Runtime',
+    website: 'https://www.nvidia.com/en-us/ai/nemoclaw/',
+  },
+  2165521: {
+    alt_description: 'Open-Source LLM Orchestration Framework',
+    alt_name:
+      'Open-source AI orchestration framework by deepset for building production-ready agents, RAG systems, and search applications.',
+    categories: ['AI Framework', 'AI Agent', 'AI'],
+    colors: {
+      end: 'F6E14D',
+      start: '2E1EFF',
+    },
+    description:
+      "Haystack is deepset's open-source AI orchestration framework for building production-ready AI agents, advanced RAG systems, and search applications through modular, composable pipelines.",
+    isNew: true,
+    logo_url: 'haystack.svg',
+    related_guides: [
+      {
+        href: 'https://www.linode.com/docs/marketplace-docs/guides/haystack/',
+        title: 'Deploy Haystack',
+      },
+    ],
+    summary: 'Production-Ready RAG & Agent Framework',
+    website: 'https://haystack.deepset.ai/',
+  },
+  2165612: {
+    alt_description: 'Unified Multi-Agent Orchestration SDK',
+    alt_name:
+      'Open-source SDK and runtime from Microsoft for building, deploying, and managing multi-agent AI systems, unifying Semantic Kernel and AutoGen.',
+    categories: ['AI Framework', 'AI Agent', 'AI'],
+    colors: {
+      end: '00A4EF',
+      start: '7FBA00',
+    },
+    description:
+      'Microsoft Agent Framework is an open-source SDK and runtime for building, deploying, and managing multi-agent AI systems, combining the enterprise-ready foundations of Semantic Kernel with the multi-agent orchestration of AutoGen, and supporting Python and .NET.',
+    isNew: true,
+    logo_url: 'agentframework.svg',
+    related_guides: [
+      {
+        href: 'https://www.linode.com/docs/marketplace-docs/guides/microsoft-agent-framework/',
+        title: 'Deploy Microsoft Agent Framework',
+      },
+    ],
+    summary: 'Multi-Agent Orchestration Framework',
+    website: 'https://learn.microsoft.com/en-us/agent-framework/',
   },
 };

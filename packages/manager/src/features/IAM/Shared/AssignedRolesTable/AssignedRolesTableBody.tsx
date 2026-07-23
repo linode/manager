@@ -6,6 +6,7 @@ import {
 import { Spacing, Typography } from '@akamai/cds-tokens';
 import React from 'react';
 
+import { useHasTableStripingEnabled } from '../../hooks/useHasTableStripingEnabled';
 import { AssignedEntities } from '../../Users/UserRoles/AssignedEntities';
 import { ROLES_LEARN_MORE_LINK } from '../constants';
 import { Link } from '../Link/Link';
@@ -51,6 +52,7 @@ export const AssignedRolesTableBody = ({
   permissions,
 }: Props) => {
   const { columnWidths, showEntities } = useAssignedRolesTableColumns();
+  const hasTableStripingEnabled = useHasTableStripingEnabled();
 
   const fullWidthCellStyle = getAssignedRolesTableCellStyle('100%');
 
@@ -67,7 +69,13 @@ export const AssignedRolesTableBody = ({
   return (
     <>
       {paginatedData.map((role) => (
-        <TableRow expandable hoverable key={role.id} rowborder>
+        <TableRow
+          expandable
+          hoverable
+          key={role.id}
+          rowborder
+          zebra={hasTableStripingEnabled}
+        >
           <TableCell style={getAssignedRolesTableCellStyle(columnWidths.role)}>
             <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
               {role.name}

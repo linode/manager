@@ -106,6 +106,7 @@ export const EditAlertResources = (props: EditAlertProps) => {
     <>
       <Breadcrumb crumbOverrides={overrides} pathname={newPathname} />
       <Box
+        data-pendo-id="monitor-alerts-system-edit-page"
         sx={{
           display: 'flex',
           flexDirection: 'column',

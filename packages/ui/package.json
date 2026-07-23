@@ -2,7 +2,7 @@
   "name": "@linode/ui",
   "author": "Linode",
   "description": "Linode UI component library",
-  "version": "0.28.0",
+  "version": "0.29.0",
   "type": "module",
   "main": "src/index.ts",
   "module": "src/index.ts",
@@ -46,7 +46,7 @@
   },
   "devDependencies": {
     "@linode/tsconfig": "workspace:*",
-    "@storybook/react-vite": "^10.4.6",
+    "@storybook/react-vite": "^10.5.3",
     "@testing-library/dom": "^10.1.0",
     "@testing-library/jest-dom": "~6.9.1",
     "@testing-library/react": "~16.0.0",
@@ -54,7 +54,7 @@
     "@types/luxon": "3.4.2",
     "@types/react": "^19.1.6",
     "@types/react-dom": "^19.1.6",
-    "storybook": "^10.4.6",
+    "storybook": "^10.5.3",
     "vite-plugin-svgr": "^5.2.0"
   }
 }

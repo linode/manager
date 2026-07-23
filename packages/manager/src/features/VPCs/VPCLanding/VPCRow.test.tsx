@@ -31,12 +31,7 @@ describe('VPC Table Row', () => {
 
     const { getByText, getByLabelText } = renderWithTheme(
       wrapWithTableBody(
-        <VPCRow
-          displayVPCDBaaSResources
-          handleDeleteVPC={vi.fn()}
-          handleEditVPC={vi.fn()}
-          vpc={vpc}
-        />
+        <VPCRow handleDeleteVPC={vi.fn()} handleEditVPC={vi.fn()} vpc={vpc} />
       )
     );
 
@@ -57,7 +52,6 @@ describe('VPC Table Row', () => {
     const { getByTestId, getByLabelText } = renderWithTheme(
       wrapWithTableBody(
         <VPCRow
-          displayVPCDBaaSResources
           handleDeleteVPC={handleDelete}
           handleEditVPC={vi.fn()}
           vpc={vpc}
@@ -78,7 +72,6 @@ describe('VPC Table Row', () => {
     const { getByTestId, getByLabelText } = renderWithTheme(
       wrapWithTableBody(
         <VPCRow
-          displayVPCDBaaSResources
           handleDeleteVPC={vi.fn()}
           handleEditVPC={handleEdit}
           vpc={vpc}
@@ -105,7 +98,6 @@ describe('VPC Table Row', () => {
     const { getByTestId, getByLabelText } = renderWithTheme(
       wrapWithTableBody(
         <VPCRow
-          displayVPCDBaaSResources
           handleDeleteVPC={vi.fn()}
           handleEditVPC={handleEdit}
           vpc={vpc}
@@ -132,7 +124,6 @@ describe('VPC Table Row', () => {
     const { getByTestId, getByLabelText } = renderWithTheme(
       wrapWithTableBody(
         <VPCRow
-          displayVPCDBaaSResources
           handleDeleteVPC={vi.fn()}
           handleEditVPC={handleEdit}
           vpc={vpc}

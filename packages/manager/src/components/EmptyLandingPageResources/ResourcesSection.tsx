@@ -157,6 +157,7 @@ export const ResourcesSection = (props: ResourcesSectionProps) => {
                   linkAnalyticsEvent,
                   youtubeMoreLinkLabel
                 )}
+                pendoId={youtubeLinkData?.moreInfo.pendoId}
                 to={youtubeChannelLink}
                 {...props}
               >

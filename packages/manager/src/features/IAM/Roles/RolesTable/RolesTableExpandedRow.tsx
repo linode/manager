@@ -1,7 +1,7 @@
 import { Spacing } from '@akamai/cds-tokens';
 import * as React from 'react';
 
-import { Permissions } from 'src/features/IAM/Shared/Permissions/Permissions';
+import { Permissions } from '../../Shared/Permissions/Permissions';
 
 import type { PermissionType } from '@linode/api-v4';
 

@@ -1,5 +1,4 @@
 import {
-  getDatabaseBackups,
   getDatabaseConnectionPool,
   getDatabaseConnectionPools,
   getDatabaseCredentials,
@@ -24,10 +23,6 @@ export const databaseQueries = createQueryKeys('databases', {
   }),
   database: (engine: Engine, id: number) => ({
     contextQueries: {
-      backups: {
-        queryFn: () => getDatabaseBackups(engine, id),
-        queryKey: null,
-      },
       credentials: {
         queryFn: () => getDatabaseCredentials(engine, id),
         queryKey: null,

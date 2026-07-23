@@ -49,8 +49,8 @@ const mockEntities = [
   }),
 ];
 
-vi.mock('src/queries/entities/entities', async () => {
-  const actual = await vi.importActual('src/queries/entities/entities');
+vi.mock('../../queries/entities/entities', async () => {
+  const actual = await vi.importActual('../../queries/entities/entities');
   return {
     ...actual,
     useAllAccountEntities: queryMocks.useAllAccountEntities,

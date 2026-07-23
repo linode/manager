@@ -1,7 +1,6 @@
 import { Button, NotificationBanner } from '@akamai/cds-components/react';
 import { Spacing } from '@akamai/cds-tokens';
 import {
-  ipFieldPlaceholder,
   ipV6FieldPlaceholder,
   stringToExtendedIP,
   validateIPs,
@@ -14,13 +13,9 @@ import { Link } from 'src/components/Link';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
 import {
   ACCESS_CONTROLS_DRAWER_TEXT,
-  ACCESS_CONTROLS_DRAWER_TEXT_LEGACY,
   ACCESS_CONTROLS_IP_VALIDATION_ERROR_TEXT,
-  ACCESS_CONTROLS_IP_VALIDATION_ERROR_TEXT_LEGACY,
   LEARN_MORE_LINK,
-  LEARN_MORE_LINK_LEGACY,
 } from 'src/features/Databases/constants';
-import { isDefaultDatabase } from 'src/features/Databases/utilities';
 import { enforceIPMasks } from 'src/features/Firewalls/FirewallDetail/Rules/FirewallRuleDrawer.utils';
 
 import { Drawer } from '../shared/Drawer';
@@ -49,9 +44,7 @@ export const ManageAccessControlDrawer = (props: Props) => {
 
     const validatedIPs = validateIPs(_ipsWithMasks, {
       allowEmptyAddress: false,
-      errorMessage: isDefaultDB
-        ? ACCESS_CONTROLS_IP_VALIDATION_ERROR_TEXT
-        : ACCESS_CONTROLS_IP_VALIDATION_ERROR_TEXT_LEGACY,
+      errorMessage: ACCESS_CONTROLS_IP_VALIDATION_ERROR_TEXT,
     });
 
     setValue('allow_list', validatedIPs);
@@ -61,8 +54,6 @@ export const ManageAccessControlDrawer = (props: Props) => {
     database.engine,
     database.id
   );
-
-  const isDefaultDB = isDefaultDatabase(database);
 
   const onSubmit = async (values: ManageAccessControlValues) => {
     handleValidateIPs(values.allow_list);
@@ -124,8 +115,6 @@ export const ManageAccessControlDrawer = (props: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, reset]);
 
-  const learnMoreLink = isDefaultDB ? LEARN_MORE_LINK : LEARN_MORE_LINK_LEGACY;
-
   return (
     <Drawer onClose={onClose} open={open}>
       <span slot="header">Manage Access</span>
@@ -146,10 +135,8 @@ export const ManageAccessControlDrawer = (props: Props) => {
           />
         ))}
         <p style={{ marginBottom: Spacing.S32, marginTop: 0 }}>
-          {isDefaultDB
-            ? ACCESS_CONTROLS_DRAWER_TEXT
-            : ACCESS_CONTROLS_DRAWER_TEXT_LEGACY}{' '}
-          <Link to={learnMoreLink}>Learn more</Link>.
+          {ACCESS_CONTROLS_DRAWER_TEXT}{' '}
+          <Link to={LEARN_MORE_LINK}>Learn more</Link>.
         </p>
         <FormProvider {...form}>
           <form onSubmit={handleSubmit(onSubmit)}>
@@ -169,9 +156,7 @@ export const ManageAccessControlDrawer = (props: Props) => {
                   ips={field.value}
                   onBlur={handleValidateIPs}
                   onChange={field.onChange}
-                  placeholder={
-                    isDefaultDB ? ipV6FieldPlaceholder : ipFieldPlaceholder
-                  }
+                  placeholder={ipV6FieldPlaceholder}
                   title="Allowed IP Addresses or Ranges"
                 />
               )}

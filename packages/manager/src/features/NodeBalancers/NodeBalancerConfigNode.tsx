@@ -19,7 +19,10 @@ import type {
   NodeBalancerConfigNodeFields,
   NodeBalancerConfigurationsPermissions,
 } from './types';
-import type { NodeBalancerConfigNodeMode } from '@linode/api-v4';
+import type {
+  NodeBalancerBackendConnectivity,
+  NodeBalancerConfigNodeMode,
+} from '@linode/api-v4';
 
 export interface NodeBalancerConfigNodeProps {
   configIdx: number;
@@ -28,6 +31,7 @@ export interface NodeBalancerConfigNodeProps {
   hideModeSelect: boolean;
   idx: number;
   node: NodeBalancerConfigNodeFields;
+  nodeBalancerBackendConnectivity?: NodeBalancerBackendConnectivity;
   nodeBalancerRegion?: string;
   nodeBalancerSubnetId?: number;
   nodeBalancerVpcId?: number;
@@ -69,6 +73,7 @@ export const NodeBalancerConfigNode = React.memo(
       hideModeSelect,
       idx,
       node,
+      nodeBalancerBackendConnectivity,
       nodeBalancerRegion,
       nodeBalancerVpcId,
       nodeBalancerSubnetId,
@@ -164,6 +169,7 @@ export const NodeBalancerConfigNode = React.memo(
               }}
             >
               <ConfigNodeIPSelect
+                backendConnectivity={nodeBalancerBackendConnectivity}
                 disabled={disabled}
                 errorText={nodesErrorMap.address}
                 handleChange={onNodeAddressChange}

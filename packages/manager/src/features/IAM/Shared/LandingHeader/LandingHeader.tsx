@@ -9,8 +9,8 @@ export interface LandingHeaderProps {
 
 export const LandingHeader = ({
   children,
-  spacingBottom = Spacing.S24,
-  spacingTop = Spacing.S24,
+  spacingBottom = Spacing.S4,
+  spacingTop = Spacing.S0,
 }: LandingHeaderProps) => (
   <div
     data-qa-entity-header

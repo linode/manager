@@ -1,10 +1,9 @@
-import { Badge, Button, Icon, Tooltip } from '@akamai/cds-components/react';
+import { Button, Icon, Tooltip } from '@akamai/cds-components/react';
 import { Spacing } from '@akamai/cds-tokens';
 import { useAllVPCsQuery } from '@linode/queries';
 import React from 'react';
 
 import { Link } from 'src/components/Link';
-import { useFlags } from 'src/hooks/useFlags';
 
 import { MANAGE_NETWORKING_LEARN_MORE_LINK } from '../../constants';
 import { makeSettingsItemStyles } from '../../shared.styles';
@@ -12,7 +11,6 @@ import { CircleProgress } from '../../shared/CircleProgress/CircleProgress';
 import { ErrorState } from '../../shared/ErrorState/ErrorState';
 import { Stack } from '../../shared/Stack/Stack';
 import { ConnectionDetailsHostRows } from '../ConnectionDetailsHostRows';
-import { ConnectionDetailsHostRows2 } from '../ConnectionDetailsHostRows2';
 import { ConnectionDetailsRow } from '../ConnectionDetailsRow';
 import DatabaseManageNetworkingDrawer from './DatabaseManageNetworkingDrawer';
 import { DatabaseNetworkingUnassignVPCDialog } from './DatabaseNetworkingUnassignVPCDialog';
@@ -25,7 +23,6 @@ interface Props {
 }
 
 export const DatabaseManageNetworking = ({ database }: Props) => {
-  const flags = useFlags();
   const { classes } = makeSettingsItemStyles();
   const [isManageNetworkingDrawerOpen, setIsManageNetworkingDrawerOpen] =
     React.useState(false);
@@ -76,23 +73,10 @@ export const DatabaseManageNetworking = ({ database }: Props) => {
         <Stack spacing={Spacing.S4}>
           <div style={{ display: 'flex' }}>
             <h3 style={{ margin: 0 }}>Manage Networking</h3>
-            {flags.databaseVpcBeta && (
-              <Badge
-                color="neutral"
-                style={{ marginLeft: Spacing.S8 }}
-                variant="solid"
-              >
-                BETA
-              </Badge>
-            )}
           </div>
           <p style={{ maxWidth: '500px', margin: 0 }}>
             Update access settings or the VPC assignment.{' '}
-            <Link
-              to={`${MANAGE_NETWORKING_LEARN_MORE_LINK + (flags.databaseVpcBeta ? '-beta' : '')}`}
-            >
-              Learn more.
-            </Link>
+            <Link to={MANAGE_NETWORKING_LEARN_MORE_LINK}>Learn more.</Link>
             <br />
             Note that a change of VPC assignment settings can disrupt service
             availability. Avoid writing data to the database while a change is
@@ -129,11 +113,7 @@ export const DatabaseManageNetworking = ({ database }: Props) => {
             </ConnectionDetailsRow>
           </>
         )}
-        {flags.hostnameEndpoints ? (
-          <ConnectionDetailsHostRows2 database={database} />
-        ) : (
-          <ConnectionDetailsHostRows database={database} />
-        )}
+        <ConnectionDetailsHostRows database={database} />
         {hasVPCConfigured && (
           <ConnectionDetailsRow label="Public Access">
             {database?.private_network?.public_access ? 'Yes' : 'No'}

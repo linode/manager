@@ -63,12 +63,15 @@ declare const PermissionByAccessKnown: {
   linode: LinodeAdmin | LinodeContributor | LinodeViewer;
   lkecluster: never; // TODO: add lkecluster permissions
   longview: never; // TODO: add longview permissions
+  mysql_database: never; // TODO: add MySQL database permissions
   nodebalancer:
     | NodeBalancerAdmin
     | NodeBalancerContributor
     | NodeBalancerViewer;
   placement_group: never; // TODO: add placement_group permissions
+  postgresql_database: never; // TODO: add PostgreSQL database permissions
   stackscript: never; // TODO: add stackscript permissions
+  valkey_database: never; // TODO: add Valkey database permissions
   volume: VolumeAdmin | VolumeContributor | VolumeViewer;
   vpc: VPCAdmin | VPCContributor | VPCViewer;
 };

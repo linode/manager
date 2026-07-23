@@ -3,12 +3,11 @@ import { Spacing, Typography } from '@akamai/cds-tokens';
 import { useGetDefaultDelegationAccessQuery } from '@linode/queries';
 import * as React from 'react';
 
-import { ErrorState } from 'src/features/IAM/Shared/ErrorState/ErrorState';
-
 import { usePermissions } from '../../hooks/usePermissions';
 import { AssignedRolesTable } from '../../Shared/AssignedRolesTable/AssignedRolesTable';
 import { CircleProgress } from '../../Shared/CircleProgress/CircleProgress';
 import { NO_ASSIGNED_DEFAULT_ROLES_TEXT } from '../../Shared/constants';
+import { ErrorState } from '../../Shared/ErrorState/ErrorState';
 import { NoAssignedRoles } from '../../Shared/NoAssignedRoles/NoAssignedRoles';
 import { Paper } from '../../Shared/Paper/Paper';
 
@@ -51,7 +50,7 @@ export const DefaultRoles = () => {
     <Paper>
       {hasAssignedRoles ? (
         <>
-          <h2 style={{ font: Typography.Heading.M }}>
+          <h2 style={{ font: Typography.Heading.S }}>
             Default Roles for Delegate Users
           </h2>
           <p style={{ marginTop: Spacing.S16 }}>

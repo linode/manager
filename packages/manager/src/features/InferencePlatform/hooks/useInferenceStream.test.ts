@@ -39,7 +39,11 @@ const sseLines = (deltas: string[]): string[] => [
 ];
 
 const mockResponse = (lines: string[]): Response =>
-  ({ body: makeStream(lines) }) as unknown as Response;
+  ({
+    body: makeStream(lines),
+    headers: new Headers({ 'content-type': 'text/event-stream' }),
+    ok: true,
+  }) as unknown as Response;
 
 const mockCallbacks = () => ({
   onChunk: vi.fn(),
@@ -47,6 +51,8 @@ const mockCallbacks = () => ({
   onError: vi.fn(),
   onStart: vi.fn(),
 });
+
+const MOCK_API_KEY = 'test-playground-api-key';
 
 // ---------------------------------------------------------------------------
 // Tests
@@ -70,7 +76,7 @@ describe('useInferenceStream', () => {
       const { result } = renderHook(() => useInferenceStream());
       const cbs = mockCallbacks();
 
-      await result.current.stream([], 'model-a', cbs);
+      await result.current.stream([], 'model-a', MOCK_API_KEY, cbs);
 
       expect(cbs.onStart).toHaveBeenCalledOnce();
       // Verify the ID is a non-empty string (crypto.randomUUID format)
@@ -88,7 +94,7 @@ describe('useInferenceStream', () => {
       const { result } = renderHook(() => useInferenceStream());
       const cbs = mockCallbacks();
 
-      await result.current.stream([], 'model-a', cbs);
+      await result.current.stream([], 'model-a', MOCK_API_KEY, cbs);
 
       expect(cbs.onComplete).toHaveBeenCalledOnce();
       expect(cbs.onComplete.mock.calls[0][1]).toEqual({
@@ -105,7 +111,7 @@ describe('useInferenceStream', () => {
       const { result } = renderHook(() => useInferenceStream());
       const cbs = mockCallbacks();
 
-      await result.current.stream([], 'model-a', cbs);
+      await result.current.stream([], 'model-a', MOCK_API_KEY, cbs);
 
       const id = cbs.onStart.mock.calls[0][0];
       expect(cbs.onChunk.mock.calls[0][0]).toBe(id);
@@ -122,7 +128,7 @@ describe('useInferenceStream', () => {
       const { result } = renderHook(() => useInferenceStream());
       const cbs = mockCallbacks();
 
-      await result.current.stream([], 'model-a', cbs);
+      await result.current.stream([], 'model-a', MOCK_API_KEY, cbs);
 
       expect(cbs.onComplete.mock.calls[0][1]).toEqual({
         content: 'The answer.',
@@ -144,7 +150,7 @@ describe('useInferenceStream', () => {
       const { result } = renderHook(() => useInferenceStream());
       const cbs = mockCallbacks();
 
-      await result.current.stream([], 'model-a', cbs);
+      await result.current.stream([], 'model-a', MOCK_API_KEY, cbs);
 
       expect(cbs.onComplete.mock.calls[0][1]).toEqual({
         content: 'The answer.',
@@ -165,7 +171,7 @@ describe('useInferenceStream', () => {
       const { result } = renderHook(() => useInferenceStream());
       const cbs = mockCallbacks();
 
-      await result.current.stream([], 'model-a', cbs);
+      await result.current.stream([], 'model-a', MOCK_API_KEY, cbs);
 
       expect(cbs.onComplete.mock.calls[0][1]).toEqual({ content: 'hello' });
     });
@@ -179,7 +185,7 @@ describe('useInferenceStream', () => {
       const { result } = renderHook(() => useInferenceStream());
       const cbs = mockCallbacks();
 
-      await result.current.stream([], 'model-a', cbs);
+      await result.current.stream([], 'model-a', MOCK_API_KEY, cbs);
 
       expect(cbs.onError).not.toHaveBeenCalled();
       expect(cbs.onComplete.mock.calls[0][1]).toEqual({ content: 'valid' });
@@ -197,7 +203,7 @@ describe('useInferenceStream', () => {
       const { result } = renderHook(() => useInferenceStream());
       const cbs = mockCallbacks();
 
-      await result.current.stream([], 'model-a', cbs);
+      await result.current.stream([], 'model-a', MOCK_API_KEY, cbs);
 
       expect(cbs.onComplete.mock.calls[0][1]).toEqual({
         content: 'real content',
@@ -224,14 +230,32 @@ describe('useInferenceStream', () => {
 
       vi.mocked(
         inferenceService.requestInferenceChatCompletion
-      ).mockResolvedValue({ body: stream } as unknown as Response);
+      ).mockResolvedValue({
+        body: stream,
+        headers: new Headers({ 'content-type': 'text/event-stream' }),
+        ok: true,
+      } as unknown as Response);
 
       const { result } = renderHook(() => useInferenceStream());
       const cbs = mockCallbacks();
 
-      await result.current.stream([], 'model-a', cbs);
+      await result.current.stream([], 'model-a', MOCK_API_KEY, cbs);
 
       expect(cbs.onComplete.mock.calls[0][1]).toEqual({ content: 'split' });
+    });
+
+    it('does not include cancelled in metadata on normal completion', async () => {
+      vi.mocked(
+        inferenceService.requestInferenceChatCompletion
+      ).mockResolvedValue(mockResponse(sseLines(['hello'])));
+
+      const { result } = renderHook(() => useInferenceStream());
+      const cbs = mockCallbacks();
+
+      await result.current.stream([], 'model-a', MOCK_API_KEY, cbs);
+
+      const metadata = cbs.onComplete.mock.calls[0][2];
+      expect(metadata?.cancelled).toBeUndefined();
     });
   });
 
@@ -244,10 +268,142 @@ describe('useInferenceStream', () => {
       const { result } = renderHook(() => useInferenceStream());
       const cbs = mockCallbacks();
 
-      await result.current.stream([], 'model-a', cbs);
+      await result.current.stream([], 'model-a', MOCK_API_KEY, cbs);
 
       expect(cbs.onError).toHaveBeenCalledOnce();
       expect(cbs.onComplete).not.toHaveBeenCalled();
+    });
+
+    it('surfaces the error message when response.ok is false', async () => {
+      vi.mocked(
+        inferenceService.requestInferenceChatCompletion
+      ).mockResolvedValue(
+        new Response(JSON.stringify({ message: 'API key is missing' }), {
+          headers: { 'content-type': 'application/json' },
+          status: 401,
+        }) as unknown as Response
+      );
+
+      const { result } = renderHook(() => useInferenceStream());
+      const cbs = mockCallbacks();
+
+      await result.current.stream([], 'model-a', MOCK_API_KEY, cbs);
+
+      expect(cbs.onError).toHaveBeenCalledOnce();
+      expect(cbs.onError.mock.calls[0][1]).toBe('API key is missing');
+      expect(cbs.onComplete).not.toHaveBeenCalled();
+    });
+
+    it('calls onError when a 200 response has a non-event-stream content-type', async () => {
+      // Some gateways return 200 with a JSON error body instead of a 4xx.
+      vi.mocked(
+        inferenceService.requestInferenceChatCompletion
+      ).mockResolvedValue(
+        new Response(JSON.stringify({ message: 'Validation failed' }), {
+          headers: { 'content-type': 'application/json' },
+          status: 200,
+        }) as unknown as Response
+      );
+
+      const { result } = renderHook(() => useInferenceStream());
+      const cbs = mockCallbacks();
+
+      await result.current.stream([], 'model-a', MOCK_API_KEY, cbs);
+
+      expect(cbs.onError).toHaveBeenCalledOnce();
+      expect(cbs.onError.mock.calls[0][1]).toBe('Validation failed');
+      expect(cbs.onComplete).not.toHaveBeenCalled();
+    });
+
+    it('calls onError when an inline SSE chunk contains an error field', async () => {
+      const errorChunk = JSON.stringify({
+        error: { message: 'model overloaded', type: 'server_error' },
+      });
+      const lines = [`data: ${errorChunk}\n`, 'data: [DONE]\n'];
+
+      vi.mocked(
+        inferenceService.requestInferenceChatCompletion
+      ).mockResolvedValue(mockResponse(lines));
+
+      const { result } = renderHook(() => useInferenceStream());
+      const cbs = mockCallbacks();
+
+      await result.current.stream([], 'model-a', MOCK_API_KEY, cbs);
+
+      expect(cbs.onError).toHaveBeenCalledOnce();
+      expect(cbs.onError.mock.calls[0][1]).toContain('model overloaded');
+      expect(cbs.onComplete).not.toHaveBeenCalled();
+    });
+
+    it('calls onError with "empty response" when [DONE] is received with no content', async () => {
+      vi.mocked(
+        inferenceService.requestInferenceChatCompletion
+      ).mockResolvedValue(mockResponse(['data: [DONE]\n']));
+
+      const { result } = renderHook(() => useInferenceStream());
+      const cbs = mockCallbacks();
+
+      await result.current.stream([], 'model-a', MOCK_API_KEY, cbs);
+
+      expect(cbs.onError).toHaveBeenCalledOnce();
+      expect(cbs.onError.mock.calls[0][1]).toMatch(/empty response/i);
+      expect(cbs.onComplete).not.toHaveBeenCalled();
+    });
+
+    it('calls onError with a friendly message for a TypeError (network failure)', async () => {
+      vi.mocked(
+        inferenceService.requestInferenceChatCompletion
+      ).mockRejectedValue(new TypeError('Failed to fetch'));
+
+      const { result } = renderHook(() => useInferenceStream());
+      const cbs = mockCallbacks();
+
+      await result.current.stream([], 'model-a', MOCK_API_KEY, cbs);
+
+      expect(cbs.onError).toHaveBeenCalledOnce();
+      expect(cbs.onError.mock.calls[0][1]).toBe(
+        'Unable to reach the inference service. Check your network connection.'
+      );
+    });
+
+    it('calls onError with "timed out" when the request timeout fires', async () => {
+      vi.useFakeTimers();
+
+      vi.mocked(
+        inferenceService.requestInferenceChatCompletion
+      ).mockImplementation((_messages, _model, _apiKey, _settings, signal) => {
+        return new Promise<Response>((_resolve, _reject) => {
+          signal?.addEventListener('abort', () => {
+            _reject(
+              new DOMException('The user aborted a request.', 'AbortError')
+            );
+          });
+          // Never resolves naturally — waits for abort.
+        });
+      });
+
+      const { result } = renderHook(() => useInferenceStream());
+      const cbs = mockCallbacks();
+
+      const streamPromise = result.current.stream(
+        [],
+        'model-a',
+        MOCK_API_KEY,
+        cbs
+      );
+
+      // Advance past INFERENCE_REQUEST_TIMEOUT_MS (320 000 ms)
+      await vi.advanceTimersByTimeAsync(
+        inferenceService.INFERENCE_REQUEST_TIMEOUT_MS + 1
+      );
+
+      await streamPromise;
+
+      expect(cbs.onError).toHaveBeenCalledOnce();
+      expect(cbs.onError.mock.calls[0][1]).toMatch(/timed out/i);
+      expect(cbs.onComplete).not.toHaveBeenCalled();
+
+      vi.useRealTimers();
     });
 
     it('calls onError when response.body is null', async () => {
@@ -258,7 +414,7 @@ describe('useInferenceStream', () => {
       const { result } = renderHook(() => useInferenceStream());
       const cbs = mockCallbacks();
 
-      await result.current.stream([], 'model-a', cbs);
+      await result.current.stream([], 'model-a', MOCK_API_KEY, cbs);
 
       expect(cbs.onError).toHaveBeenCalledOnce();
       expect(cbs.onComplete).not.toHaveBeenCalled();

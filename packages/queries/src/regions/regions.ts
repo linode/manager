@@ -60,7 +60,7 @@ export const regionQueries = createQueryKeys('regions', {
 
 export const useRegionQuery = (regionId: string) => {
   const queryClient = useQueryClient();
-  return useQuery<Region, APIError>({
+  return useQuery<Region, APIError[]>({
     ...regionQueries.region(regionId),
     enabled: Boolean(regionId),
     initialData() {

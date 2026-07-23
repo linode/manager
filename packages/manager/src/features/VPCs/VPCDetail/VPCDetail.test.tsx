@@ -82,7 +82,7 @@ describe('VPC Detail Summary section', () => {
     });
 
     const { getByText } = renderWithTheme(<VPCDetail />, {
-      flags: { nodebalancerVpc: true, vpcDbaasResources: true },
+      flags: { nodebalancerVpc: true },
     });
 
     // there is 1 subnet with 11 resources (5 Linodes, 3 nbs, 3 dbs)

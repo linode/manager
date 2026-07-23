@@ -125,7 +125,7 @@ export const CloudPulseNodeTypeFilter = React.memo(
 
     React.useEffect(() => {
       // when savePreferences is false, we retain the primary selection as default selected value
-      if (!savePreferences) {
+      if (!savePreferences && !disabled) {
         setSelectedNodeType(primaryNode ?? nodeTypeOptionsList[0]);
         handleNodeTypeChange(primaryNode?.id ?? 'primary', [
           primaryNode?.label ?? 'primary',

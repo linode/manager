@@ -13,6 +13,7 @@ export const createUser = (overrides: Partial<User> = {}): User => ({
   restricted: true,
   ssh_keys: [],
   tfa_enabled: false,
+  tfa_enforced: false,
   user_type: 'default',
   username: `user-${_counter++}`,
   verified_phone_number: null,

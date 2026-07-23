@@ -9,6 +9,7 @@ import type { IamUserRoles } from '@linode/api-v4';
 
 const queryMocks = vi.hoisted(() => ({
   useProfile: vi.fn().mockReturnValue({}),
+  useSearch: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('@linode/queries', async () => {
@@ -16,6 +17,14 @@ vi.mock('@linode/queries', async () => {
   return {
     ...actual,
     useProfile: queryMocks.useProfile,
+  };
+});
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+  return {
+    ...actual,
+    useSearch: queryMocks.useSearch,
   };
 });
 

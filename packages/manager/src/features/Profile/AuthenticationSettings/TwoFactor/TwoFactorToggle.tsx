@@ -1,6 +1,8 @@
 import { FormControl, FormControlLabel, Toggle } from '@linode/ui';
 import * as React from 'react';
 
+import { PROFILE_AUTH_PENDO_IDS } from '../../constants';
+
 interface ToggleProps {
   disabled?: boolean;
   onChange: (value: boolean) => void;
@@ -32,6 +34,11 @@ export const TwoFactorToggle = (props: ToggleProps) => {
         control={
           <Toggle
             checked={twoFactorEnabled}
+            data-pendo-id={
+              twoFactorEnabled
+                ? PROFILE_AUTH_PENDO_IDS.enable2FA
+                : PROFILE_AUTH_PENDO_IDS.disable2FA
+            }
             data-qa-toggle-tfa={twoFactorEnabled}
             disabled={disabled}
             onChange={handleChange}

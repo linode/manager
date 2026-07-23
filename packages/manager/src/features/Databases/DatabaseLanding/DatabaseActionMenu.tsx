@@ -9,8 +9,6 @@ import * as React from 'react';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 
-import { useIsDatabasesEnabled } from '../utilities';
-
 import type { Action } from '../shared/types';
 import type { DatabaseStatus, Engine } from '@linode/api-v4';
 import type { ActionType } from 'src/features/Account/utils';
@@ -39,7 +37,6 @@ export const DatabaseActionMenu = (props: Props) => {
     handlers,
   } = props;
 
-  const { isDatabasesV2GA } = useIsDatabasesEnabled();
   const { mutateAsync: resumeDatabase } = useResumeDatabaseMutation(
     databaseEngine,
     databaseId
@@ -122,25 +119,23 @@ export const DatabaseActionMenu = (props: Props) => {
     },
   ];
 
-  if (isDatabasesV2GA) {
-    actions.unshift({
-      disabled: databaseStatus !== 'active' || isDatabaseReadOnly,
-      onClick: () => {
-        handlers.handleSuspend();
-      },
-      title: 'Suspend',
-      tooltip: getTooltipText('suspend'),
-    });
+  actions.unshift({
+    disabled: databaseStatus !== 'active' || isDatabaseReadOnly,
+    onClick: () => {
+      handlers.handleSuspend();
+    },
+    title: 'Suspend',
+    tooltip: getTooltipText('suspend'),
+  });
 
-    actions.splice(4, 0, {
-      disabled: !isDatabaseSuspended || isDatabaseReadOnly,
-      onClick: () => {
-        handleResume();
-      },
-      title: 'Resume',
-      tooltip: getTooltipText('resume'),
-    });
-  }
+  actions.splice(4, 0, {
+    disabled: !isDatabaseSuspended || isDatabaseReadOnly,
+    onClick: () => {
+      handleResume();
+    },
+    title: 'Resume',
+    tooltip: getTooltipText('resume'),
+  });
 
   return (
     <Menu

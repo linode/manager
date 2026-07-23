@@ -18,6 +18,7 @@ import {
   getDestinationFormPendoId,
   mapAutocompleteOptionsWithPendo,
   renderOptionsWithPendo,
+  useACLPLogsFlags,
 } from 'src/features/Delivery/deliveryUtils';
 import { CustomHeaders } from 'src/features/Delivery/Shared/CustomHeaders';
 import {
@@ -37,6 +38,9 @@ interface DestinationCustomHttpsDetailsFormProps {
     authenticationType: string;
     basicAuthenticationPassword: string;
     basicAuthenticationUser: string;
+    bearerTokenAuthenticationHeaderName: string;
+    bearerTokenAuthenticationTokenPrefix: string;
+    bearerTokenAuthenticationValue: string;
     clientCaCertificate: string;
     clientCertificate: string;
     clientPrivateKey: string;
@@ -55,6 +59,7 @@ export const DestinationCustomHttpsDetailsForm = (
 ) => {
   const { controlPaths, mode, entity } = props;
   const theme = useTheme();
+  const { isACLPLogsBearerTokenAuthEnabled } = useACLPLogsFlags();
 
   const { control, setValue } = useFormContext();
 
@@ -66,12 +71,20 @@ export const DestinationCustomHttpsDetailsForm = (
   const pendoIdPrefix = `${getDestinationFormPendoId(entity, mode)}-`;
   const pendoIds = {
     [authenticationType.Basic]: `${pendoIdPrefix}Authentication Basic`,
+    [authenticationType.BearerToken]: `${pendoIdPrefix}Authentication Bearer Token`,
     [authenticationType.None]: `${pendoIdPrefix}Authentication None`,
     [contentType.Json]: `${pendoIdPrefix}Json`,
     [contentType.JsonUtf8]: `${pendoIdPrefix}Json Utf8`,
   };
   const authenticationTypeOptionsWithPendos: AutocompleteOption[] =
-    mapAutocompleteOptionsWithPendo(authenticationTypeOptions, pendoIds);
+    mapAutocompleteOptionsWithPendo(
+      isACLPLogsBearerTokenAuthEnabled
+        ? authenticationTypeOptions
+        : authenticationTypeOptions.filter(
+            ({ value }) => value != authenticationType.BearerToken
+          ),
+      pendoIds
+    );
 
   const contentTypeOptionsWithPendo: AutocompleteOption[] =
     mapAutocompleteOptionsWithPendo(contentTypeOptions, pendoIds);
@@ -146,6 +159,71 @@ export const DestinationCustomHttpsDetailsForm = (
           />
         </>
       )}
+      {isACLPLogsBearerTokenAuthEnabled &&
+        selectedAuthenticationType === authenticationType.BearerToken && (
+          <>
+            <Controller
+              control={control}
+              name={controlPaths.bearerTokenAuthenticationValue}
+              render={({ field, fieldState }) => (
+                <HideShowText
+                  aria-required
+                  errorText={fieldState.error?.message}
+                  inputProps={{
+                    'data-pendo-id': `${pendoIdPrefix}Bearer Token`,
+                  }}
+                  label="Bearer Token"
+                  labelTooltipText={
+                    'This token is securely stored and can’t be viewed after it’s saved. Keep a copy in a secure location, as you’ll need to provide it again whenever you edit this destination.'
+                  }
+                  onBlur={field.onBlur}
+                  onChange={(value) => field.onChange(value)}
+                  value={field.value}
+                />
+              )}
+            />
+            <Controller
+              control={control}
+              name={controlPaths.bearerTokenAuthenticationHeaderName}
+              render={({ field, fieldState }) => (
+                <TextField
+                  errorText={fieldState.error?.message}
+                  inputProps={{
+                    'data-pendo-id': `${pendoIdPrefix}Bearer Header Name`,
+                  }}
+                  label="Header Name"
+                  labelTooltipText="The HTTP header used to send the token. If left blank, Authorization is used."
+                  onBlur={field.onBlur}
+                  onChange={(value) => {
+                    field.onChange(value);
+                  }}
+                  optional={true}
+                  placeholder="Authorization"
+                  value={field.value}
+                />
+              )}
+            />
+            <Controller
+              control={control}
+              name={controlPaths.bearerTokenAuthenticationTokenPrefix}
+              render={({ field, fieldState }) => (
+                <TextField
+                  errorText={fieldState.error?.message}
+                  inputProps={{
+                    'data-pendo-id': `${pendoIdPrefix}Bearer Token Prefix`,
+                  }}
+                  label="Token Prefix"
+                  labelTooltipText="The text placed before the authentication token in the HTTP header. If left blank, Bearer is used."
+                  onBlur={field.onBlur}
+                  onChange={(value) => field.onChange(value)}
+                  optional={true}
+                  placeholder="Bearer"
+                  value={field.value}
+                />
+              )}
+            />
+          </>
+        )}
       <Controller
         control={control}
         name={controlPaths.endpointUrl}
@@ -183,7 +261,7 @@ export const DestinationCustomHttpsDetailsForm = (
           labelTooltipIconSize="small"
           status="info"
           sxTooltipIcon={{ p: 1 }}
-          text="Certificate details are used to authenticate the audit log delivery service and verify the HTTPs destination during mutual TLS (mTLS( connections. This section is required only if the destination enforces client certificate authentication."
+          text="Certificate details are used to authenticate the audit log delivery service and verify the HTTPs destination during mutual TLS (mTLS) connections. This section is required only if the destination enforces client certificate authentication."
         />
       </Stack>
       <Controller

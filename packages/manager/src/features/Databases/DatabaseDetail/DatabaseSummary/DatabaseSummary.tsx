@@ -4,7 +4,6 @@ import * as React from 'react';
 
 import ClusterConfiguration from 'src/features/Databases/DatabaseDetail/DatabaseSummary/DatabaseSummaryClusterConfiguration';
 import ConnectionDetails from 'src/features/Databases/DatabaseDetail/DatabaseSummary/DatabaseSummaryConnectionDetails';
-import { useFlags } from 'src/hooks/useFlags';
 
 import { Paper } from '../../shared/Paper/Paper';
 import styles from '../DatabaseDetail.module.css';
@@ -14,10 +13,8 @@ import { DatabaseCaCert } from './DatabaseCaCert';
 
 export const DatabaseSummary = () => {
   const { database } = useDatabaseDetailContext();
-  const flags = useFlags();
 
-  const pgBouncerEnabled =
-    flags.databasePgBouncer && database.engine === 'postgresql';
+  const pgBouncerEnabled = database.engine === 'postgresql';
 
   const { data: connectionPools } = useDatabaseConnectionPoolsQuery(
     database.id,
@@ -35,7 +32,7 @@ export const DatabaseSummary = () => {
     <Paper>
       <ClusterConfiguration database={database} />
       <ConnectionDetails database={database} />
-      {flags.hostnameEndpoints && showPgBouncerConnectionDetails && (
+      {showPgBouncerConnectionDetails && (
         <>
           <h3>PgBouncer Connection Details</h3>
           <div className={styles.summaryLabelValueContainer}>

@@ -43,8 +43,8 @@ vi.mock('@linode/queries', async () => {
   };
 });
 
-vi.mock('src/queries/entities/entities', async () => {
-  const actual = await vi.importActual('src/queries/entities/entities');
+vi.mock('../../queries/entities/entities', async () => {
+  const actual = await vi.importActual('../../queries/entities/entities');
   return {
     ...actual,
     useAllAccountEntities: queryMocks.useAllAccountEntities,
@@ -67,7 +67,7 @@ vi.mock('../../hooks/useDelegationRole', () => ({
 }));
 
 vi.mock('../../hooks/usePermissions', async () => {
-  const actual = await vi.importActual('src/features/IAM/hooks/usePermissions');
+  const actual = await vi.importActual('../../hooks/usePermissions');
   return {
     ...actual,
     usePermissions: queryMocks.usePermissions,

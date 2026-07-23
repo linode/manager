@@ -5,7 +5,6 @@ import {
   Tab,
   Tabs,
 } from '@akamai/cds-components/react';
-import { Spacing } from '@akamai/cds-tokens';
 import {
   Outlet,
   useLoaderData,
@@ -14,11 +13,12 @@ import {
 } from '@tanstack/react-router';
 import React from 'react';
 
-import { useIsIAMEnabled } from 'src/features/IAM/hooks/useIsIAMEnabled';
 import { useFlags } from 'src/hooks/useFlags';
 
 import { useDelegationRole } from '../hooks/useDelegationRole';
+import { useIsIAMEnabled } from '../hooks/useIsIAMEnabled';
 import { useTabs } from '../hooks/useTabs';
+import { IAM_USERS_PENDO_IDS } from '../LoginSettings/constants';
 import {
   IAM_LABEL,
   USER_DETAILS_LINK,
@@ -53,19 +53,23 @@ export const UserDetailsLanding = () => {
         to: `/iam/users/$username/details`,
         title: 'User Details',
         hide: isDelegateUserForChildAccount,
+        pendoId: IAM_USERS_PENDO_IDS.userDetailsTab,
       },
       {
         to: `/iam/users/$username/roles`,
         title: 'Assigned Roles',
+        pendoId: IAM_USERS_PENDO_IDS.assignedRolesTab,
       },
       {
         to: `/iam/users/$username/entities`,
         title: 'Entity Access',
+        pendoId: IAM_USERS_PENDO_IDS.entityAccessTab,
       },
       {
         to: `/iam/users/$username/delegations`,
         title: 'Account Delegations',
         hide: !isParentUserType,
+        pendoId: IAM_USERS_PENDO_IDS.accountDelegationsTab,
       },
     ],
     tabsRef
@@ -76,7 +80,7 @@ export const UserDetailsLanding = () => {
 
   return (
     <>
-      <LandingHeader spacingBottom={Spacing.S4}>
+      <LandingHeader>
         <Breadcrumb
           style={{
             flexWrap: 'nowrap',
@@ -103,7 +107,7 @@ export const UserDetailsLanding = () => {
             ) : null}
           </BreadcrumbItem>
         </Breadcrumb>
-        <DocsLink href={docsLink} />
+        <DocsLink href={docsLink} pendoId={IAM_USERS_PENDO_IDS.docs} />
       </LandingHeader>
       <Tabs
         border={false}
@@ -114,6 +118,7 @@ export const UserDetailsLanding = () => {
         {tabs.map((tab, i) => (
           <Tab
             active={i === tabIndex || undefined}
+            data-pendo-id={tab.pendoId}
             key={String(tab.to)}
             label={tab.title}
           >

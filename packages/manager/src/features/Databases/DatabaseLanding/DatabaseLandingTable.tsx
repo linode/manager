@@ -18,7 +18,6 @@ import { ManageAccessControlDrawer } from 'src/features/Databases/DatabaseDetail
 import DatabaseLogo from 'src/features/Databases/DatabaseLanding/DatabaseLogo';
 import DatabaseRow from 'src/features/Databases/DatabaseLanding/DatabaseRow';
 import { useBreakpoint } from 'src/features/Databases/hooks/useBreakpoint';
-import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { useInProgressEvents } from 'src/queries/events/events';
 
@@ -32,7 +31,6 @@ const preferenceKey = 'databases';
 interface Props {
   data: DatabaseInstance[] | undefined;
   handleOrderChange: (newOrderBy: string, newOrder: Order) => void;
-  isNewDatabase?: boolean;
   order: 'asc' | 'desc';
   orderBy: string;
   results: number | undefined;
@@ -40,7 +38,6 @@ interface Props {
 const DatabaseLandingTable = ({
   data,
   handleOrderChange,
-  isNewDatabase,
   order,
   orderBy,
   results,
@@ -50,9 +47,8 @@ const DatabaseLandingTable = ({
   const showFromMdUp = useBreakpoint('up', 'md');
   const showFromLgUp = useBreakpoint('up', 'lg');
   const { data: events } = useInProgressEvents();
-  const { isDatabasesV2GA } = useIsDatabasesEnabled();
 
-  const dbPlatformType = isNewDatabase ? 'new' : 'legacy';
+  const dbPlatformType = 'new';
   const pagination = usePaginationV2({
     currentRoute: '/databases',
     initialPage: 1,
@@ -101,7 +97,7 @@ const DatabaseLandingTable = ({
     <>
       <div style={{ overflowX: 'auto', width: '100%' }}>
         <Table
-          aria-label={`List of ${isNewDatabase ? 'New' : 'Legacy'} Database Clusters`}
+          aria-label={'List of New Database Clusters'}
           style={
             {
               border: `1px solid ${theme.tokens.alias.Border.Normal}`,
@@ -140,17 +136,15 @@ const DatabaseLandingTable = ({
               >
                 Status
               </TableHeaderCell>
-              {isNewDatabase && (
-                <TableHeaderCell
-                  onSort={() =>
-                    handleOrderChange('type', order === 'asc' ? 'desc' : 'asc')
-                  }
-                  sortable
-                  sorted={orderBy === 'type' ? order : undefined}
-                >
-                  Plan
-                </TableHeaderCell>
-              )}
+              <TableHeaderCell
+                onSort={() =>
+                  handleOrderChange('type', order === 'asc' ? 'desc' : 'asc')
+                }
+                sortable
+                sorted={orderBy === 'type' ? order : undefined}
+              >
+                Plan
+              </TableHeaderCell>
               {showFromSmUp && (
                 <TableHeaderCell
                   onSort={() =>
@@ -162,7 +156,7 @@ const DatabaseLandingTable = ({
                   sortable
                   sorted={orderBy === 'cluster_size' ? order : undefined}
                 >
-                  {isNewDatabase ? 'Nodes' : 'Configuration'}
+                  Nodes
                 </TableHeaderCell>
               )}
               <TableHeaderCell
@@ -202,9 +196,7 @@ const DatabaseLandingTable = ({
                   Created
                 </TableHeaderCell>
               )}
-              {isDatabasesV2GA && isNewDatabase && (
-                <TableHeaderCell style={{ maxWidth: 40 }} />
-              )}
+              <TableHeaderCell style={{ maxWidth: 40 }} />
             </TableRow>
           </TableHead>
           <TableBody>
@@ -212,9 +204,7 @@ const DatabaseLandingTable = ({
               <TableRowEmpty
                 colSpan={8}
                 message={
-                  isNewDatabase
-                    ? 'You don’t have any Aiven Database Clusters created yet. Click Create Database Cluster to create one.'
-                    : ''
+                  'You don’t have any Aiven Database Clusters created yet. Click Create Database Cluster to create one.'
                 }
               />
             ) : (
@@ -229,7 +219,6 @@ const DatabaseLandingTable = ({
                     handleResetPassword: () => handleResetPassword(database),
                     handleSuspend: () => handleSuspend(database),
                   }}
-                  isNewDatabase={isNewDatabase}
                   key={database.id}
                 />
               ))
@@ -256,27 +245,22 @@ const DatabaseLandingTable = ({
           }}
         />
       )}
-
-      {isNewDatabase && (
+      <DatabaseLogo />
+      {selectedDatabase && (
         <>
-          <DatabaseLogo />
-          {selectedDatabase && (
-            <>
-              <DatabaseSettingsDeleteClusterDialog
-                databaseEngine={selectedDatabase.engine}
-                databaseID={selectedDatabase.id}
-                databaseLabel={selectedDatabase?.label}
-                onClose={() => setIsDeleteDialogOpen(false)}
-                open={isDeleteDialogOpen}
-              />
-              <DatabaseSettingsResetPasswordDialog
-                databaseEngine={selectedDatabase.engine}
-                databaseID={selectedDatabase.id}
-                onClose={() => setIsResetPasswordsDialogOpen(false)}
-                open={isResetPasswordsDialogOpen}
-              />
-            </>
-          )}
+          <DatabaseSettingsDeleteClusterDialog
+            databaseEngine={selectedDatabase.engine}
+            databaseID={selectedDatabase.id}
+            databaseLabel={selectedDatabase?.label}
+            onClose={() => setIsDeleteDialogOpen(false)}
+            open={isDeleteDialogOpen}
+          />
+          <DatabaseSettingsResetPasswordDialog
+            databaseEngine={selectedDatabase.engine}
+            databaseID={selectedDatabase.id}
+            onClose={() => setIsResetPasswordsDialogOpen(false)}
+            open={isResetPasswordsDialogOpen}
+          />
         </>
       )}
       <DatabaseSettingsSuspendClusterDialog

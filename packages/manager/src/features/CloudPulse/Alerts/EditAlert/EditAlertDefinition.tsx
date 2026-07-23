@@ -198,7 +198,10 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
   }, [formState.errors, formState.submitCount]);
 
   return (
-    <Paper sx={{ paddingLeft: 1, paddingRight: 1, paddingTop: 2 }}>
+    <Paper
+      data-pendo-id="monitor-alerts-edit-page"
+      sx={{ paddingLeft: 1, paddingRight: 1, paddingTop: 2 }}
+    >
       <Breadcrumb crumbOverrides={overrides} pathname={'/Definitions/Edit'} />
       {hasAPIError && (
         <Notice
@@ -278,6 +281,7 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
               loading: formState.isSubmitting,
               type: 'submit',
               disabled: hasAPIError,
+              'data-pendo-id': 'monitor-alerts-edit-Submit',
             }}
             secondaryButtonProps={{
               label: 'Cancel',

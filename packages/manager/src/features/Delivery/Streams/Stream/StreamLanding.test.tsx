@@ -7,6 +7,8 @@ import {
   streamFactory,
 } from 'src/factories';
 import { StreamLanding } from 'src/features/Delivery/Streams/Stream/StreamLanding';
+import { makeResourcePage } from 'src/mocks/serverHandlers';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 const queryMocks = vi.hoisted(() => ({
@@ -44,14 +46,21 @@ describe('StreamLanding', () => {
         data: mockStream,
         isLoading: false,
       });
+
+      // The Summary tab renders StreamEdit, which fetches destinations.
+      server.use(
+        http.get('*/monitor/streams/destinations', () => {
+          return HttpResponse.json(makeResourcePage(mockDestinations));
+        })
+      );
     });
 
     describe('and metrics are enabled', () => {
       it('should render the summary tab and metrics tab', async () => {
         renderComponent();
 
-        screen.getByText('Summary');
-        expect(screen.queryByText('Metrics')).toBeInTheDocument();
+        expect(await screen.findByText('Summary')).toBeInTheDocument();
+        expect(await screen.findByText('Metrics')).toBeInTheDocument();
       });
     });
   });
@@ -66,11 +75,9 @@ describe('StreamLanding', () => {
     it('should render loading spinner', async () => {
       renderComponent();
 
+      expect(await screen.findByTestId('circle-progress')).toBeInTheDocument();
       expect(screen.queryByText('Summary')).not.toBeInTheDocument();
       expect(screen.queryByText('Metrics')).not.toBeInTheDocument();
-
-      const loadingElement = screen.queryByTestId('circle-progress');
-      expect(loadingElement).toBeInTheDocument();
     });
   });
 
@@ -86,10 +93,9 @@ describe('StreamLanding', () => {
     it('should render error state with message', async () => {
       renderComponent();
 
+      expect(await screen.findByText(streamErrorMessage)).toBeInTheDocument();
       expect(screen.queryByText('Summary')).not.toBeInTheDocument();
       expect(screen.queryByText('Metrics')).not.toBeInTheDocument();
-
-      expect(screen.queryByText(streamErrorMessage)).toBeInTheDocument();
     });
   });
 });

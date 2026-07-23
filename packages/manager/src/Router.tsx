@@ -20,7 +20,7 @@ export const Router = () => {
 
   const { data: profile } = useProfile();
   const { data: accountSettings } = useAccountSettings();
-  const { isDatabasesEnabled } = useIsDatabasesEnabled();
+  const isDatabasesEnabled = useIsDatabasesEnabled();
   const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
   const { isACLPEnabled } = useIsACLPEnabled();
   const { isPrivateImageSharingEnabled } = useIsPrivateImageSharingEnabled();

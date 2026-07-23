@@ -3,10 +3,9 @@ import { Box } from '@linode/ui';
 import { regions } from '@linode/utilities';
 import React, { useState } from 'react';
 
-// @todo: modularization - Move `SelectedRegionsList` to the `/data` directory in the `@linode/shared` package.
-import { SelectedRegionsList } from 'src/features/ObjectStorage/AccessKeyLanding/AccessKeyRegions/SelectedRegionsList';
-
 import { RegionMultiSelect } from './RegionMultiSelect';
+// @todo: modularization - Move `SelectedRegionsList` to the `/data` directory in the `@linode/shared` package.
+import { SelectedRegionsList } from './SelectedRegionsList';
 
 import type { RegionMultiSelectProps } from './RegionSelect.types';
 import type { Region } from '@linode/api-v4';

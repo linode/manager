@@ -1,19 +1,11 @@
-import { formatDate } from '@akamai/compute-ui-core/datetime';
-import { capitalize } from '@akamai/compute-ui-core/formatting';
 import { screen, waitForElementToBeRemoved } from '@testing-library/react';
-import { DateTime } from 'luxon';
 import * as React from 'react';
 
 import { accountFactory, databaseInstanceFactory } from 'src/factories';
 import { DatabaseLanding } from 'src/features/Databases/DatabaseLanding/DatabaseLanding';
-import DatabaseRow from 'src/features/Databases/DatabaseLanding/DatabaseRow';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
-import {
-  mockMatchMedia,
-  renderWithTheme,
-  wrapWithTableBody,
-} from 'src/utilities/testHelpers';
+import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import { openActionMenu } from '../shared/utilities/testHelpers';
 
@@ -29,8 +21,6 @@ vi.mock('@linode/queries', async () => {
   };
 });
 
-const defaultFlags = { dbaasV2: { beta: false, enabled: true } };
-
 beforeAll(() => mockMatchMedia());
 
 const loadingTestId = 'circle-progress';
@@ -38,29 +28,6 @@ const accountEndpoint = '*/account';
 const databaseInstancesEndpoint = '*/databases/instances';
 
 const managedDBCapability = 'Managed Databases';
-
-describe('Database Table Row', () => {
-  it('should render a database row', async () => {
-    const database = databaseInstanceFactory.build();
-    const { getByText } = renderWithTheme(
-      wrapWithTableBody(<DatabaseRow database={database} />)
-    );
-    // Check to see if the row rendered some data
-    getByText(database.label);
-    getByText(formatDate(database.created));
-    getByText(capitalize(database.status));
-  });
-  it('should render a relative time in the created column if the database was created in the last 3 days', async () => {
-    const database = databaseInstanceFactory.build({
-      created: DateTime.local().minus({ days: 1 }).toISO(),
-    });
-    const { getByText } = renderWithTheme(
-      wrapWithTableBody(<DatabaseRow database={database} />)
-    );
-    // Check to see if the row rendered the relative date
-    getByText('1 day ago');
-  });
-});
 
 describe('Database Table', () => {
   it('should render database landing table with items', async () => {
@@ -74,15 +41,12 @@ describe('Database Table', () => {
       http.get(databaseInstancesEndpoint, () => {
         const databases = databaseInstanceFactory.buildList(1, {
           status: 'active',
-          platform: 'rdbms-default',
         });
         return HttpResponse.json(makeResourcePage(databases));
       })
     );
     const { getAllByText, getByTestId, queryAllByText, queryByText } =
-      renderWithTheme(<DatabaseLanding />, {
-        flags: defaultFlags,
-      });
+      renderWithTheme(<DatabaseLanding />);
     // Loading state should render
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
     await waitForElementToBeRemoved(getByTestId(loadingTestId), {
@@ -113,9 +77,7 @@ describe('Database Table', () => {
         return HttpResponse.json(makeResourcePage([]));
       })
     );
-    const { getByTestId, getByText } = renderWithTheme(<DatabaseLanding />, {
-      flags: defaultFlags,
-    });
+    const { getByTestId, getByText } = renderWithTheme(<DatabaseLanding />);
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
     expect(
       getByText(
@@ -160,7 +122,6 @@ describe('Database Landing', () => {
 
   it('should render a single new database table with action menu ', async () => {
     const databases = databaseInstanceFactory.buildList(5, {
-      platform: 'rdbms-default',
       status: 'active',
     });
     server.use(
@@ -170,10 +131,7 @@ describe('Database Landing', () => {
     );
 
     const { getByLabelText, getByTestId } = renderWithTheme(
-      <DatabaseLanding />,
-      {
-        flags: defaultFlags,
-      }
+      <DatabaseLanding />
     );
 
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
@@ -191,7 +149,6 @@ describe('Database Landing', () => {
 
   it('should open an action menu', async () => {
     const databases = databaseInstanceFactory.buildList(5, {
-      platform: 'rdbms-default',
       status: 'active',
     });
     server.use(
@@ -201,10 +158,7 @@ describe('Database Landing', () => {
     );
 
     const { getByTestId, getAllByTestId } = renderWithTheme(
-      <DatabaseLanding />,
-      {
-        flags: defaultFlags,
-      }
+      <DatabaseLanding />
     );
 
     expect(getByTestId(loadingTestId)).toBeInTheDocument();

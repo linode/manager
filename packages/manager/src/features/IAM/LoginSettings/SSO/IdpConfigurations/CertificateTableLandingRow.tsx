@@ -9,12 +9,12 @@ import { Spacing } from '@akamai/cds-tokens';
 import { truncateMiddle } from '@akamai/compute-ui-core/formatting';
 import React from 'react';
 
-import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
-import { CopyTooltip } from 'src/features/IAM/Shared/CopyTooltip/CopyTooltip';
-import { DateTimeDisplay } from 'src/features/IAM/Shared/DateTimeDisplay/DateTimeDisplay';
-import globalStyles from 'src/features/IAM/Shared/global.module.css';
-import { StatusIcon } from 'src/features/IAM/Shared/StatusIcon/StatusIcon';
-
+import { useHasTableStripingEnabled } from '../../../hooks/useHasTableStripingEnabled';
+import { usePermissions } from '../../../hooks/usePermissions';
+import { CopyTooltip } from '../../../Shared/CopyTooltip/CopyTooltip';
+import { DateTimeDisplay } from '../../../Shared/DateTimeDisplay/DateTimeDisplay';
+import globalStyles from '../../../Shared/global.module.css';
+import { StatusIcon } from '../../../Shared/StatusIcon/StatusIcon';
 import {
   DELETE_PERMISSION_ERROR,
   IAM_SSO_IDP_PENDO_IDS,
@@ -24,8 +24,8 @@ import {
 } from '../../constants';
 import styles from './CertificatesTable.module.css';
 
+import type { Status } from '../../../Shared/StatusIcon/StatusIcon';
 import type { IdpCertificate } from '@linode/api-v4';
-import type { Status } from 'src/features/IAM/Shared/StatusIcon/StatusIcon';
 
 interface CertificateTableLandingProps {
   activeCertificateCount?: null | number;
@@ -54,6 +54,7 @@ export const CertificateTableLandingRow = ({
     'view_idp_config_certs',
     'delete_idp_config_cert',
   ]);
+  const hasTableStripingEnabled = useHasTableStripingEnabled();
 
   const isSsoEnabled = !!ssoEnabled;
   const activeCount = activeCertificateCount ?? 0;
@@ -77,11 +78,11 @@ export const CertificateTableLandingRow = ({
   const deleteDisabled = !canDelete || ssoBlocksDelete;
 
   return (
-    <TableRow hoverable key={cert.id} rowborder>
+    <TableRow hoverable key={cert.id} rowborder zebra={hasTableStripingEnabled}>
       <TableCell className={styles.certCellLanding}>
         {truncateMiddle(
           cert.certificate,
-          isSmallScreen ? (isMobileScreen ? 18 : 24) : 46
+          isSmallScreen ? (isMobileScreen ? 12 : 24) : 46
         )}
         <CopyTooltip
           pendoId={IAM_SSO_IDP_PENDO_IDS.copyCertificate}
@@ -99,7 +100,10 @@ export const CertificateTableLandingRow = ({
         </TableCell>
       )}
 
-      <TableCell className={globalStyles.actionsCell}>
+      <TableCell
+        className={globalStyles.actionsCell}
+        style={{ minWidth: '50px' }}
+      >
         <Tooltip
           className={styles.actionButton}
           disabled={permissions?.view_idp_config_certs}
@@ -125,6 +129,7 @@ export const CertificateTableLandingRow = ({
         <Tooltip
           className={styles.actionButton}
           disabled={!deleteDisabled}
+          style={{ minWidth: '50px' }}
           tooltipPlacement="bottom"
           tooltipText={
             !canDelete
@@ -149,8 +154,14 @@ export const CertificateTableLandingRow = ({
             variant="link"
           >
             Delete
-            {deleteDisabled && <Icon icon="info-outline" size="s" />}
           </Button>
+          {deleteDisabled && (
+            <Icon
+              icon="info-outline"
+              size="s"
+              style={{ marginLeft: 'var(--token-global-spacing-s4, 4px)' }}
+            />
+          )}
         </Tooltip>
       </TableCell>
     </TableRow>

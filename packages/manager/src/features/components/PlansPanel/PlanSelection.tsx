@@ -67,7 +67,6 @@ export const PlanSelection = (props: PlanSelectionProps) => {
     planDBaaSResizeFromPremiumNotSupported,
     planDBaaSResizeToPremiumNotSupported,
     planIsSmallerThanUsage,
-    planIsTooSmall,
   } = plan;
 
   const isSamePlan = plan.heading === currentPlanHeading;
@@ -96,7 +95,6 @@ export const PlanSelection = (props: PlanSelectionProps) => {
 
   const rowIsDisabled =
     (!isDatabaseFlow && isSamePlan) ||
-    planIsTooSmall ||
     planIsSmallerThanUsage ||
     planBelongsToDisabledClass ||
     planIsDisabled512Gb ||
@@ -116,7 +114,6 @@ export const PlanSelection = (props: PlanSelectionProps) => {
     planDBaaSResizeFromPremiumNotSupported,
     planDBaaSResizeToPremiumNotSupported,
     planIsSmallerThanUsage,
-    planIsTooSmall,
     wholePanelIsDisabled,
   });
 
@@ -133,7 +130,6 @@ export const PlanSelection = (props: PlanSelectionProps) => {
       // @TODO remove dbaas resize class type restriction sometime post-release when we support resizing across different plans
       planDBaaSResizeFromPremiumNotSupported ||
       planDBaaSResizeToPremiumNotSupported ||
-      planIsTooSmall ||
       planIsSmallerThanUsage ||
       planResizeNotSupported);
 

@@ -19,7 +19,6 @@ import type {
   ConnectionPool,
   CreateDatabasePayload,
   Database,
-  DatabaseBackup,
   DatabaseBackupsPayload,
   DatabaseCredentials,
   DatabaseEngine,
@@ -197,51 +196,6 @@ export const deleteDatabase = (engine: Engine, databaseID: number) =>
       )}/instances/${encodeURIComponent(databaseID)}`,
     ),
     setMethod('DELETE'),
-  );
-
-/**
- * getDatabaseBackups
- *
- * Return backups information for a database
- *
- */
-export const getDatabaseBackups = (
-  engine: Engine,
-  databaseID: number,
-  params?: Params,
-  filter?: Filter,
-) =>
-  Request<Page<DatabaseBackup>>(
-    setURL(
-      `${API_ROOT}/databases/${encodeURIComponent(
-        engine,
-      )}/instances/${encodeURIComponent(databaseID)}/backups`,
-    ),
-    setMethod('GET'),
-    setParams(params),
-    setXFilter(filter),
-  );
-
-/**
- * getDatabaseBackups
- *
- * Return details for a specific database backup
- *
- */
-export const getDatabaseBackup = (
-  engine: Engine,
-  databaseID: number,
-  backupID: number,
-) =>
-  Request<DatabaseBackup>(
-    setURL(
-      `${API_ROOT}/databases/${encodeURIComponent(
-        engine,
-      )}/instances/${encodeURIComponent(
-        databaseID,
-      )}/backups/${encodeURIComponent(backupID)}`,
-    ),
-    setMethod('GET'),
   );
 
 /**

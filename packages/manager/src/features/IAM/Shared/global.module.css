@@ -20,3 +20,17 @@
     justify-content: flex-end;
   }
 }
+
+cds-breadcrumb{
+  flex-wrap: nowrap;
+  height: 34px;
+  display: flex;
+  align-items: center;
+}
+
+@media (max-width: 600px) {
+  cds-breadcrumb {
+    flex-wrap: wrap;
+    height: auto;
+  }
+}

@@ -3,12 +3,11 @@ import { useAccountUser, useUserRoles } from '@linode/queries';
 import { useParams } from '@tanstack/react-router';
 import React from 'react';
 
-import { DocumentTitleSegment } from 'src/features/IAM/Shared/DocumentTitleSegment/DocumentTitleSegment';
-import { ErrorState } from 'src/features/IAM/Shared/ErrorState/ErrorState';
-import { NotFound } from 'src/features/IAM/Shared/NotFound/NotFound';
-
 import { usePermissions } from '../../hooks/usePermissions';
 import { CircleProgress } from '../../Shared/CircleProgress/CircleProgress';
+import { DocumentTitleSegment } from '../../Shared/DocumentTitleSegment/DocumentTitleSegment';
+import { ErrorState } from '../../Shared/ErrorState/ErrorState';
+import { NotFound } from '../../Shared/NotFound/NotFound';
 import { UserDetailsPanel } from './UserDetailsPanel';
 
 export const UserProfile = () => {

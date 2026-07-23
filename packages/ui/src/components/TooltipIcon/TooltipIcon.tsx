@@ -52,6 +52,10 @@ export interface TooltipIconBaseProps
    */
   leaveDelay?: number;
   /**
+   * An optional pendoId for the tooltip icon
+   */
+  pendoId?: string;
+  /**
    * Pass specific styles to the Tooltip
    */
   sx?: SxProps<Theme>;
@@ -102,6 +106,7 @@ export const TooltipIcon = (props: TooltipIconProps) => {
     icon,
     status,
     sxTooltipIcon,
+    pendoId,
     text,
     tooltipAnalyticsEvent,
     tooltipPosition,
@@ -158,6 +163,7 @@ export const TooltipIcon = (props: TooltipIconProps) => {
     <StyledTooltip
       classes={classes}
       componentsProps={props.componentsProps}
+      data-pendo-id={pendoId}
       data-qa-help-tooltip
       data-testid={dataTestId}
       enterTouchDelay={0}

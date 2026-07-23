@@ -50,6 +50,7 @@ export const LKEClusterInfo = ({ nodebalancer }: LKEClusterInfoProps) => {
               <>
                 <Link
                   accessibleAriaLabel={`Cluster ${nodebalancer.lke_cluster.label}`}
+                  pendoId="NodeBalancers Details-LKE Cluster"
                   to={`/kubernetes/clusters/${nodebalancer.lke_cluster.id}/summary`}
                 >
                   {nodebalancer.lke_cluster.label}

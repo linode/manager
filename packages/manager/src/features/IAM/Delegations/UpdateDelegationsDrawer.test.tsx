@@ -28,7 +28,7 @@ vi.mock('@linode/queries', async () => {
   };
 });
 
-vi.mock('src/features/IAM/hooks/usePermissions', async () => ({
+vi.mock('../hooks/usePermissions', async () => ({
   usePermissions: mocks.usePermissions,
 }));
 
@@ -40,6 +40,7 @@ const mockUsers: User[] = [
     restricted: false,
     ssh_keys: [],
     tfa_enabled: false,
+    tfa_enforced: false,
     user_type: 'default',
     username: 'user1',
     verified_phone_number: null,

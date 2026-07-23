@@ -48,6 +48,7 @@ export const AlertsTagFilter = React.memo((props: AlertsTagFilterProps) => {
     <Autocomplete
       autoHighlight
       clearOnBlur
+      data-pendo-id="monitor-alerts-entity-details-Tags"
       isOptionEqualToValue={(option, value) => option.label === value.label}
       label="Tags"
       limitTags={1}

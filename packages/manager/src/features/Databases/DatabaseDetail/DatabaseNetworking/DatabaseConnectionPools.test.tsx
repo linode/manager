@@ -9,13 +9,13 @@ import {
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import {
   getShadowRootElement,
+  mockMatchMedia,
   renderWithTheme,
 } from 'src/utilities/testHelpers';
 
 import { DatabaseConnectionPools } from './DatabaseConnectionPools';
 
 const mockDatabase = databaseFactory.build({
-  platform: 'rdbms-default',
   private_network: null,
   hosts: {
     primary: 'db-primary-0.b.linodeb.net',
@@ -60,19 +60,6 @@ vi.mock('@linode/queries', async () => {
     useDatabaseConnectionPoolsQuery: queryMocks.useDatabaseConnectionPoolsQuery,
   };
 });
-
-function mockMatchMedia() {
-  window.matchMedia = vi.fn().mockImplementation((query: string) => ({
-    matches: true,
-    media: query,
-    addEventListener: vi.fn(),
-    removeEventListener: vi.fn(),
-    addListener: vi.fn(),
-    removeListener: vi.fn(),
-    dispatchEvent: vi.fn(),
-    onchange: null,
-  })) as unknown as typeof window.matchMedia;
-}
 
 describe('DatabaseConnectionPools Component', () => {
   beforeEach(() => {
@@ -143,15 +130,13 @@ describe('DatabaseConnectionPools Component', () => {
     expect(errorStateText).toBeInTheDocument();
   });
 
-  it('should render service URI component if there are connection pools and hostnameEndpoints flag is true', () => {
+  it('should render service URI component if there are connection pools', () => {
     queryMocks.useDatabaseConnectionPoolsQuery.mockReturnValue({
       data: makeResourcePage([mockConnectionPool]),
       isLoading: false,
     });
 
-    renderWithTheme(<DatabaseConnectionPools database={mockDatabase} />, {
-      flags: { hostnameEndpoints: true },
-    });
+    renderWithTheme(<DatabaseConnectionPools database={mockDatabase} />);
     const serviceURIText = screen.getByText('Service URI');
     expect(serviceURIText).toBeInTheDocument();
   });
@@ -169,7 +154,6 @@ describe('DatabaseConnectionPools Component', () => {
 
   it('should disable the Add Pool button when the database cluster is not active', async () => {
     const provisioningDatabase = databaseFactory.build({
-      platform: 'rdbms-default',
       private_network: null,
       engine: 'postgresql',
       id: 1,

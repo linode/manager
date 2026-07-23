@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { oauthClient } from 'src/OAuth/oauthClient';
+
 import { CloudPulseErrorPlaceholder } from '../shared/CloudPulseErrorPlaceholder';
 import {
   PARENT_ENTITY_REGION,
@@ -86,7 +88,7 @@ export const CloudPulseDashboardRenderer = React.memo(
               ? [filterValue[RESOURCE_ID]]
               : []
         }
-        savePref={true}
+        savePref={!oauthClient.getIsLoggedInAsCustomer()}
         serviceType={dashboard.service_type}
         tags={
           filterValue[TAGS] && Array.isArray(filterValue[TAGS])

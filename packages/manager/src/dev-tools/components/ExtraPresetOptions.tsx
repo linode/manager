@@ -10,6 +10,7 @@ import { ExtraPresetNotifications } from './ExtraPresetNotifications';
 import { ExtraPresetOptionCheckbox } from './ExtraPresetOptionCheckbox';
 import { ExtraPresetOptionSelect } from './ExtraPresetOptionSelect';
 import { ExtraPresetProfileAndGrants } from './ExtraPresetProfileAndGrants';
+import { ExtraPresetTfaEnforcement } from './ExtraPresetTfaEnforcement';
 import { ExtraPresetUserAccountPermissions } from './ExtraPresetUserAccountPermissions';
 import { ExtraPresetUserEntityPermissions } from './ExtraPresetUserEntityPermissions';
 
@@ -22,6 +23,7 @@ import type {
   PermissionType,
   Profile,
 } from '@linode/api-v4';
+import type { TfaEnforcementMockData } from 'src/mocks/presets/extra/account/tfaEnforcement';
 
 export interface ExtraPresetOptionsProps {
   customAccountData?: Account | null;
@@ -51,8 +53,12 @@ export interface ExtraPresetOptionsProps {
   ) => void;
   onPresetCountChange: (e: React.ChangeEvent, presetId: string) => void;
   onSelectChange: (e: React.ChangeEvent, presetId: string) => void;
+  onTfaEnforcementChange?: (
+    data: null | TfaEnforcementMockData | undefined
+  ) => void;
   onTogglePreset: (e: React.ChangeEvent, presetId: string) => void;
   presetsCountMap: { [key: string]: number };
+  tfaEnforcementData?: null | TfaEnforcementMockData;
 }
 
 /**
@@ -65,6 +71,7 @@ export const ExtraPresetOptions = ({
   customGrantsData,
   customMaintenanceData,
   customNotificationsData,
+  tfaEnforcementData,
   customUserAccountPermissionsData,
   customUserEntityPermissionsData,
   handlers,
@@ -74,6 +81,7 @@ export const ExtraPresetOptions = ({
   onCustomGrantsChange,
   onCustomMaintenanceChange,
   onCustomNotificationsChange,
+  onTfaEnforcementChange,
   onCustomUserAccountPermissionsChange,
   onCustomUserEntityPermissionsChange,
   onPresetCountChange,
@@ -118,12 +126,20 @@ export const ExtraPresetOptions = ({
               />
             )}
             {currentGroupType === 'account' && (
-              <ExtraPresetAccount
-                customAccountData={customAccountData}
-                handlers={handlers}
-                onFormChange={onCustomAccountChange}
-                onTogglePreset={onTogglePreset}
-              />
+              <>
+                <ExtraPresetAccount
+                  customAccountData={customAccountData}
+                  handlers={handlers}
+                  onFormChange={onCustomAccountChange}
+                  onTogglePreset={onTogglePreset}
+                />
+                <ExtraPresetTfaEnforcement
+                  handlers={handlers}
+                  onFormChange={onTfaEnforcementChange}
+                  onTogglePreset={onTogglePreset}
+                  tfaEnforcementData={tfaEnforcementData}
+                />
+              </>
             )}
             {currentGroupType === 'profile & grants' && (
               <ExtraPresetProfileAndGrants

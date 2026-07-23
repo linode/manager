@@ -232,6 +232,18 @@ export const createDestinations = (mockState: MockState) => [
 
       const created = DateTime.now().toISO({ includeOffset: false });
       const updated = DateTime.now().toISO({ includeOffset: false });
+      const authDetails = (details as CustomHTTPSDetailsExtended)
+        ?.authentication?.details
+        ? omitProps(
+            (details as CustomHTTPSDetailsExtended).authentication!
+              .details! as unknown as Record<string, unknown>,
+            [
+              'basic_authentication_password',
+              'basic_authentication_user',
+              'bearer_token_authentication_value',
+            ]
+          )
+        : undefined;
 
       const destination =
         type === destinationType.AkamaiObjectStorage
@@ -256,7 +268,10 @@ export const createDestinations = (mockState: MockState) => [
                 ...details,
                 authentication: {
                   ...(details as CustomHTTPSDetailsExtended).authentication,
-                  details: undefined,
+                  details:
+                    authDetails && Object.keys(authDetails).length === 0
+                      ? undefined
+                      : authDetails,
                 },
               },
               created,

@@ -22,10 +22,11 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { ISO_DATETIME_NO_TZ_FORMAT } from 'src/constants';
-import { AccessCell } from 'src/features/ObjectStorage/AccessKeyLanding/AccessCell';
+import { useIsInferencePlatformEnabled } from 'src/features/InferencePlatform/utils';
 import { VPC_READ_ONLY_TOOLTIP } from 'src/features/VPCs/constants';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 
+import { AccessCell } from './AccessCell';
 import {
   StyledAccessCell,
   StyledPermissionsCell,
@@ -117,9 +118,14 @@ export const CreateAPITokenDrawer = (props: Props) => {
     globalGrantType: 'child_account_access',
   });
 
+  const { isInferencePlatformEnabled } = useIsInferencePlatformEnabled();
+
   // Visually hide the "Child Account Access" permission even though it's still part of the base perms.
   const hideChildAccountAccessScope =
     profile?.user_type !== 'parent' || isChildAccountAccessRestricted;
+
+  // Hide Inference scope when the feature is not enabled
+  const hideInferenceScope = !isInferencePlatformEnabled;
 
   const form = useFormik<{
     expiry: string;
@@ -128,13 +134,17 @@ export const CreateAPITokenDrawer = (props: Props) => {
   }>({
     initialValues,
     async onSubmit(values) {
+      const excludedScopes: Array<'child_account' | 'inference'> = [];
+      if (hideChildAccountAccessScope) {
+        excludedScopes.push('child_account');
+      }
+      if (hideInferenceScope) {
+        excludedScopes.push('inference');
+      }
       const { token } = await createPersonalAccessToken({
         expiry: values.expiry,
         label: values.label,
-        scopes: permTuplesToScopeString(
-          values.scopes,
-          hideChildAccountAccessScope ? ['child_account'] : []
-        ),
+        scopes: permTuplesToScopeString(values.scopes, excludedScopes),
       });
       onClose();
       showSecret(token ?? 'Secret not available');
@@ -199,6 +209,19 @@ export const CreateAPITokenDrawer = (props: Props) => {
               levelMap.none,
             ],
             name: 'child_account',
+          },
+        ]
+      : []),
+    ...(hideInferenceScope
+      ? [
+          {
+            defaultAccessLevel: levelMap.hidden,
+            invalidAccessLevels: [
+              levelMap.read_only,
+              levelMap.read_write,
+              levelMap.none,
+            ],
+            name: 'inference',
           },
         ]
       : []),
@@ -304,7 +327,9 @@ export const CreateAPITokenDrawer = (props: Props) => {
             if (
               !basePermNameMap[scopeTup[0]] ||
               (hideChildAccountAccessScope &&
-                basePermNameMap[scopeTup[0]] === 'Child Account Access')
+                basePermNameMap[scopeTup[0]] === 'Child Account Access') ||
+              (hideInferenceScope &&
+                basePermNameMap[scopeTup[0]] === 'Inference')
             ) {
               return null;
             }
@@ -363,10 +388,10 @@ export const CreateAPITokenDrawer = (props: Props) => {
       <ActionsPanel
         primaryButtonProps={{
           'data-testid': 'create-button',
-          disabled: !hasAccessBeenSelectedForAllScopes(
-            form.values.scopes,
-            hideChildAccountAccessScope ? ['child_account'] : []
-          ),
+          disabled: !hasAccessBeenSelectedForAllScopes(form.values.scopes, [
+            ...(hideChildAccountAccessScope ? ['child_account'] : []),
+            ...(hideInferenceScope ? ['inference'] : []),
+          ] as Array<'child_account' | 'inference'>),
           label: 'Create Token',
           loading: isPending,
           onClick: () => form.handleSubmit(),

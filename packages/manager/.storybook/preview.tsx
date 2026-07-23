@@ -1,5 +1,5 @@
 import React from 'react';
-import { Preview } from '@storybook/react-vite';
+import { Decorator, Preview } from '@storybook/react-vite';
 import { storybookWorker } from '../src/mocks/mswWorkers';
 import { DocsContainer as BaseContainer } from '@storybook/addon-docs/blocks';
 import {
@@ -56,13 +56,49 @@ export const DocsContainer = ({
   );
 };
 
+/**
+ * Props that inject raw HTML when spread onto native DOM elements. Story args
+ * can be received through Storybook's `postMessage` channel, which does not
+ * enforce origin checks, so an attacker could pass these as args, causing
+ * components that spread `{...rest}` onto DOM elements to render
+ * attacker-controlled HTML and potentially execute scripts (XSS). None of these
+ * props are used by stories in this codebase, so stripping them is safe.
+ */
+const UNSAFE_ARG_KEYS = ['dangerouslySetInnerHTML', 'innerHTML', 'outerHTML'];
+
+/**
+ * Removes potentially unsafe HTML injection props from story args.
+ */
+const sanitizeStoryArgs = (args: Record<string, unknown>) => {
+  const safeArgs: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(args)) {
+    if (!UNSAFE_ARG_KEYS.includes(key)) {
+      safeArgs[key] = value;
+    }
+  }
+  return safeArgs;
+};
+
+/**
+ * Security decorator: strips unsafe HTML-injecting args before any component
+ * renders. Declared first so args are sanitized before the theme decorator or
+ * the story consume them.
+ */
+const withSanitizedArgs: Decorator = (Story, context) => (
+  <Story args={sanitizeStoryArgs(context.args)} />
+);
+
+/**
+ * Presentation decorator: wraps the story in the active (light/dark) theme.
+ */
+const withTheme: Decorator = (Story) => {
+  const isDark = useDarkMode();
+  return wrapWithTheme(<Story />, { theme: isDark ? 'dark' : 'light' });
+};
+
 const preview: Preview = {
-  decorators: [
-    (Story) => {
-      const isDark = useDarkMode();
-      return wrapWithTheme(<Story />, { theme: isDark ? 'dark' : 'light' });
-    },
-  ],
+  // See https://storybook.js.org/docs/writing-stories/decorators
+  decorators: [withSanitizedArgs, withTheme],
   parameters: {
     options: {
       storySort: {

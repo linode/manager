@@ -56,11 +56,24 @@ describe('CloudPulseTextFilter for port', () => {
     const propsWithDefault = {
       ...defaultPropsPort,
       defaultValue: '80,443',
+      savePreferences: true,
     };
     renderWithTheme(<CloudPulseTextFilter {...propsWithDefault} />);
 
     const input = screen.getByLabelText('Port (optional)');
     expect(input).toHaveValue('80,443');
+  });
+
+  it('should not initialize with default value when savePreferences is false', () => {
+    const propsWithDefault = {
+      ...defaultPropsPort,
+      defaultValue: '80,443',
+      savePreferences: false,
+    };
+    renderWithTheme(<CloudPulseTextFilter {...propsWithDefault} />);
+
+    const input = screen.getByLabelText('Port (optional)');
+    expect(input).toHaveValue('');
   });
 
   it('should not show error for valid digits and commas', async () => {
@@ -121,11 +134,24 @@ describe('CloudPulseTextFilter for interface_id', () => {
     const propsWithDefaultValue = {
       ...defaultPropsInterfaceId,
       defaultValue: '0,2',
+      savePreferences: true,
     };
     renderWithTheme(<CloudPulseTextFilter {...propsWithDefaultValue} />);
 
     const input = screen.getByLabelText('Interface IDs (optional)');
     expect(input).toHaveValue('0,2');
+  });
+
+  it('should not initialize with default value when savePreferences is false', () => {
+    const propsWithDefaultValue = {
+      ...defaultPropsInterfaceId,
+      defaultValue: '0,2',
+      savePreferences: false,
+    };
+    renderWithTheme(<CloudPulseTextFilter {...propsWithDefaultValue} />);
+
+    const input = screen.getByLabelText('Interface IDs (optional)');
+    expect(input).toHaveValue('');
   });
 
   it('should not show error for valid digits and commas', async () => {

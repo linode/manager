@@ -30,7 +30,7 @@ import { Link } from 'src/components/Link';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { ImageUploader } from 'src/components/Uploaders/ImageUploader/ImageUploader';
-import { MAX_FILE_SIZE_IN_BYTES } from 'src/components/Uploaders/reducer';
+import { MAX_FILE_SIZE_IN_BYTES } from 'src/components/Uploaders/ImageUploader/ImageUploader';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useFlags } from 'src/hooks/useFlags';
 import { usePendingUpload } from 'src/hooks/usePendingUpload';

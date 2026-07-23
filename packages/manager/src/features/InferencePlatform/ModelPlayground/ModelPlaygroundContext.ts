@@ -4,17 +4,31 @@ import { DEFAULT_PLAYGROUND_SETTINGS } from './types';
 
 import type { PlaygroundSettings } from './types';
 
+export interface MessageMetadata {
+  cancelled?: boolean;
+  completionTokens?: number;
+  durationMs: number;
+  finishReason?: string;
+  promptTokens?: number;
+  stopReason?: string;
+}
+
 export interface Message {
   content: string;
+  error?: string;
   id: string;
+  metadata?: MessageMetadata;
   role: 'assistant' | 'user';
+  startedAt?: number;
   thinking?: string;
+  timeToFirstTokenMs?: number;
 }
 
 export interface ModelPlaygroundInputContextValue {
   inputValue: string;
   isLoading: boolean;
   onCancel: () => void;
+  onClearMessages: () => void;
   onInputChange: (value: string) => void;
   onSend: () => void;
 }
@@ -37,6 +51,7 @@ export const ModelPlaygroundInputContext =
     inputValue: '',
     isLoading: false,
     onCancel: () => undefined,
+    onClearMessages: () => undefined,
     onInputChange: () => undefined,
     onSend: () => undefined,
   });

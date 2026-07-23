@@ -16,12 +16,9 @@ import { getAPIFilterFromQuery } from '@linode/search';
 import { useNavigate, useSearch } from '@tanstack/react-router';
 import React from 'react';
 
-import { DebouncedSearchField } from 'src/features/IAM/Shared/DebouncedSearchField/DebouncedSearchField';
-import globalStyles from 'src/features/IAM/Shared/global.module.css';
-import { usePaginationV2 } from 'src/hooks/usePaginationV2';
-
 import { useDelegationRole } from '../../hooks/useDelegationRole';
 import { useOrder } from '../../hooks/useOrder';
+import { usePagination } from '../../hooks/usePagination';
 import { usePermissions } from '../../hooks/usePermissions';
 import { Box } from '../../Shared/Box/Box';
 import {
@@ -29,12 +26,15 @@ import {
   IAM_DELEGATE_USERS_PENDO_IDS,
   IAM_PARENT_USERS_PENDO_IDS,
 } from '../../Shared/constants';
+import { DebouncedSearchField } from '../../Shared/DebouncedSearchField/DebouncedSearchField';
+import globalStyles from '../../Shared/global.module.css';
 import { Paper } from '../../Shared/Paper/Paper';
 import { UserDeleteConfirmation } from '../../Shared/UserDeleteConfirmation';
 import { CreateUserDrawer } from './CreateUserDrawer';
 import { UsersLandingTableBody } from './UsersLandingTableBody';
 import { UsersLandingTableHead } from './UsersLandingTableHead';
 
+import type { IAMAction } from '../../routes';
 import type { SelectOption } from '../../Shared/types';
 import type { Filter } from '@linode/api-v4';
 
@@ -50,18 +50,19 @@ export const UsersLanding = () => {
 
   const { isChildUserType, isDelegateUserType } = useDelegationRole();
 
-  const { query, users: usersParam } = useSearch({
-    from: '/iam',
+  const {
+    action,
+    query,
+    username: selectedUsername,
+    users: usersParam,
+  } = useSearch({
+    from: '/iam/users',
   });
-  const [isCreateDrawerOpen, setIsCreateDrawerOpen] =
-    React.useState<boolean>(false);
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
-  const [selectedUsername, setSelectedUsername] = React.useState('');
   const { data: permissions } = usePermissions('account', [
     'create_user',
     'view_user',
   ]);
-  const pagination = usePaginationV2({
+  const pagination = usePagination({
     currentRoute: '/iam/users',
     initialPage: 1,
     preferenceKey: 'iam-account-users-pagination',
@@ -155,19 +156,51 @@ export const UsersLanding = () => {
     [navigate]
   );
 
+  const actionHandler = (action: IAMAction, username?: string) => {
+    navigate({
+      to: '/iam/users',
+      search: (prev) => ({
+        ...prev,
+        action,
+        username,
+      }),
+    });
+  };
+
+  const handleAddUser = () => {
+    actionHandler('add-user');
+  };
+
+  const clearDialogAction = (expectedAction?: IAMAction) => {
+    // Both overlays share the same `action` search param. Guard ensures a close
+    // event from one overlay cannot wipe the other's URL state.
+    if (expectedAction && action !== expectedAction) {
+      return;
+    }
+
+    navigate({
+      to: '/iam/users',
+      search: (prev) => ({
+        ...prev,
+        action: undefined,
+        username: undefined,
+      }),
+    });
+  };
+
   const handleDelete = (username: string) => {
-    setIsDeleteDialogOpen(true);
-    setSelectedUsername(username);
+    actionHandler('delete-user', username);
   };
 
   const handleDeleteDialogClose = () => {
     const removedLastOnPage =
       users && users?.data.length % pagination.pageSize === 1;
 
-    setIsDeleteDialogOpen(false);
     if (removedLastOnPage) {
       pagination.handlePageChange(pagination.page - 1);
     }
+
+    clearDialogAction('delete-user');
   };
 
   const canCreateUser = permissions.create_user;
@@ -245,7 +278,7 @@ export const UsersLanding = () => {
                     : IAM_PARENT_USERS_PENDO_IDS.addUserButton
               }
               disabled={!canCreateUser}
-              onClick={() => setIsCreateDrawerOpen(true)}
+              onClick={handleAddUser}
               variant="primary"
             >
               Add a User
@@ -281,13 +314,13 @@ export const UsersLanding = () => {
         ) : null}
       </Paper>
       <CreateUserDrawer
-        onClose={() => setIsCreateDrawerOpen(false)}
-        open={isCreateDrawerOpen}
+        onClose={() => clearDialogAction('add-user')}
+        open={action === 'add-user'}
       />
       <UserDeleteConfirmation
         onClose={handleDeleteDialogClose}
-        open={isDeleteDialogOpen}
-        username={selectedUsername}
+        open={action === 'delete-user' && Boolean(selectedUsername)}
+        username={selectedUsername ?? ''}
       />
     </React.Fragment>
   );

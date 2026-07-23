@@ -69,9 +69,16 @@ describe('delivery utils functions', () => {
       expect(result).toEqual(authenticationTypeOptions[0]);
     });
 
+    it('should return option for bearer token authentication', () => {
+      const result = getAuthenticationTypeOption(
+        authenticationType.BearerToken
+      );
+      expect(result).toEqual(authenticationTypeOptions[1]);
+    });
+
     it('should return option for none authentication', () => {
       const result = getAuthenticationTypeOption(authenticationType.None);
-      expect(result).toEqual(authenticationTypeOptions[1]);
+      expect(result).toEqual(authenticationTypeOptions[2]);
     });
 
     it('should return undefined when no option is a match', () => {

@@ -2,6 +2,7 @@ import {
   closeSupportTicket,
   createReply,
   createSupportTicket,
+  getLiveChatAvailability,
   getTicket,
   getTicketReplies,
   getTickets,
@@ -16,8 +17,10 @@ import {
 } from '@tanstack/react-query';
 
 import { accountQueries } from '../account';
+import { queryPresets } from '../base';
 
 import type {
+  LiveChatAvailabilityRequest,
   ReplyRequest,
   SupportReply,
   SupportTicket,
@@ -26,6 +29,10 @@ import type {
 import type { APIError, Filter, Params, ResourcePage } from '@linode/api-v4';
 
 export const supportQueries = createQueryKeys('support', {
+  liveChatAvailability: {
+    queryFn: () => getLiveChatAvailability(),
+    queryKey: null,
+  },
   ticket: (id: number) => ({
     contextQueries: {
       replies: {
@@ -47,6 +54,16 @@ export const useSupportTicketsQuery = (params: Params, filter: Filter) =>
   useQuery<ResourcePage<SupportTicket>, APIError[]>({
     ...supportQueries.tickets(params, filter),
     placeholderData: keepPreviousData,
+  });
+
+export const useLiveChatAvailabilityQuery = (enabled: boolean = true) =>
+  useQuery<LiveChatAvailabilityRequest, APIError[], boolean>({
+    ...supportQueries.liveChatAvailability,
+    ...queryPresets.noRetry,
+    enabled,
+    refetchOnWindowFocus: false,
+    select: (data) => data.live_chat_available,
+    staleTime: 30_000,
   });
 
 export const useSupportTicketQuery = (id: number) =>

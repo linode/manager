@@ -6,6 +6,14 @@ import type { SxProps, Theme } from '@mui/material/styles';
 
 export const MAIN_CONTENT_VERTICAL_PADDING = 56; // 24px top + 32px bottom
 
+/**
+ * In-memory (non-persisted) record of which category the user last clicked a
+ * product card from, so that navigating back to the catalog (e.g. via the
+ * "Catalog" breadcrumb) can scroll back to that category instead of the top
+ * of the page. This resets on a full page reload, which is expected.
+ */
+export const marketplaceCatalogScrollState: { lastCategory?: Category } = {};
+
 export type Category =
   | 'AI'
   | 'CDN Affiliated'

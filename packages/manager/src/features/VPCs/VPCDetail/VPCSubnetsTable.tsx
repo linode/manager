@@ -28,7 +28,6 @@ import { TableSortCell } from 'src/components/TableSortCell';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { PowerActionsDialog } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
 import { SubnetActionMenu } from 'src/features/VPCs/VPCDetail/SubnetActionMenu';
-import { useFlags } from 'src/hooks/useFlags';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { useVPCDualStack } from 'src/hooks/useVPCDualStack';
@@ -91,7 +90,6 @@ export const VPCSubnetsTable = (props: Props) => {
   const { query } = search;
 
   const { isDualStackEnabled } = useVPCDualStack();
-  const flags = useFlags();
 
   const { data: permissions } = usePermissions(
     'vpc',
@@ -315,10 +313,7 @@ export const VPCSubnetsTable = (props: Props) => {
 
   const getTableItems = (): TableItem[] => {
     return subnets.data.map((subnet) => {
-      const uniqueResourcesFromSubnet = getUniqueResourcesFromSubnet(
-        subnet,
-        Boolean(flags.vpcDbaasResources)
-      );
+      const uniqueResourcesFromSubnet = getUniqueResourcesFromSubnet(subnet);
 
       const OuterTableCells = (
         <>
@@ -400,7 +395,7 @@ export const VPCSubnetsTable = (props: Props) => {
               </TableBody>
             </Table>
           )}
-          {flags.vpcDbaasResources && subnet.databases?.length > 0 && (
+          {subnet.databases?.length > 0 && (
             <SubnetDatabasesTable subnetDatabasesData={subnet.databases} />
           )}
         </>

@@ -44,6 +44,7 @@ import type {
 } from '../types';
 import type {
   APIError,
+  NodeBalancerBackendConnectivity,
   NodeBalancerConfig,
   NodeBalancerConfigNode,
 } from '@linode/api-v4';
@@ -76,6 +77,7 @@ const StyledConfigsButton = styled(Button, {
 interface Props {
   configId: number | undefined;
   configs: NodeBalancerConfigFieldsWithStatus[];
+  nodeBalancerBackendConnectivity?: NodeBalancerBackendConnectivity;
   nodeBalancerId: number;
   nodeBalancerLabel: string;
   nodeBalancerRegion: string;
@@ -646,6 +648,9 @@ export class NodeBalancerConfigurations extends React.Component<Props, State> {
             healthCheckInterval={view(L.healthCheckIntervalLens, this.state)}
             healthCheckTimeout={view(L.healthCheckTimeoutLens, this.state)}
             healthCheckType={view(L.healthCheckTypeLens, this.state)}
+            nodeBalancerBackendConnectivity={
+              this.props.nodeBalancerBackendConnectivity
+            }
             nodeBalancerRegion={this.props.nodeBalancerRegion}
             nodeBalancerSubnetId={this.props.nodeBalancerSubnetId}
             nodeBalancerVpcId={this.props.nodeBalancerVpcId}

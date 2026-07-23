@@ -22,8 +22,6 @@ import { isSmallerOrEqualCurrentPlan } from './DatabaseResize.utils';
 
 import type { PlanSelectionWithDatabaseType } from 'src/features/components/PlansPanel/types';
 
-const engine = 'mysql';
-const isResizeEnabled = true;
 const loadingTestId = 'circle-progress';
 
 const mockDedicatedTypes = [
@@ -86,7 +84,6 @@ describe('database resize', () => {
   const mockDatabase = databaseFactory.build({
     cluster_size: 3,
     engine: 'mysql',
-    platform: 'rdbms-default',
     type: 'g6-nanode-1',
     used_disk_size_gb: 0,
   });
@@ -118,9 +115,7 @@ describe('database resize', () => {
 
   it('should render a loading state', async () => {
     const { getByTestId } = renderWithTheme(
-      <DatabaseDetailContext.Provider
-        value={{ database, engine, isResizeEnabled }}
-      >
+      <DatabaseDetailContext.Provider value={{ database }}>
         <DatabaseResize />
       </DatabaseDetailContext.Provider>
     );
@@ -130,9 +125,7 @@ describe('database resize', () => {
 
   it('should render configuration, summary sections and input field to choose a plan', async () => {
     const { getByTestId, getByText } = renderWithTheme(
-      <DatabaseDetailContext.Provider
-        value={{ database, engine, isResizeEnabled }}
-      >
+      <DatabaseDetailContext.Provider value={{ database }}>
         <DatabaseResize />
       </DatabaseDetailContext.Provider>
     );
@@ -142,23 +135,17 @@ describe('database resize', () => {
 
     getByText('Current Configuration');
     getByText('Choose a Plan');
-    getByText('Summary');
+    getByText(`Summary ${database.label}`);
   });
 
   describe('On rendering of page', () => {
     const flags = {
-      dbaasV2: {
-        beta: false,
-        enabled: true,
-      },
       databasePremium: true,
     };
 
     it('resize button should be disabled when no input is provided in the form', async () => {
       const { getByTestId } = renderWithTheme(
-        <DatabaseDetailContext.Provider
-          value={{ database, engine, isResizeEnabled }}
-        >
+        <DatabaseDetailContext.Provider value={{ database }}>
           <DatabaseResize />
         </DatabaseDetailContext.Provider>
       );
@@ -171,10 +158,8 @@ describe('database resize', () => {
     });
 
     it('when a plan is selected, resize button should be enabled and on click of it, it should show a confirmation dialog', async () => {
-      const { getByTestId, getByText } = renderWithTheme(
-        <DatabaseDetailContext.Provider
-          value={{ database: mockDatabase, engine, isResizeEnabled }}
-        >
+      const { getByText, getByTestId } = renderWithTheme(
+        <DatabaseDetailContext.Provider value={{ database: mockDatabase }}>
           <DatabaseResize />
         </DatabaseDetailContext.Provider>,
         {
@@ -202,9 +187,7 @@ describe('database resize', () => {
 
     it('Should disable the "Resize Database Cluster" button when disabled = true', async () => {
       const { getByTestId } = renderWithTheme(
-        <DatabaseDetailContext.Provider
-          value={{ database, engine, disabled: true, isResizeEnabled }}
-        >
+        <DatabaseDetailContext.Provider value={{ database, disabled: true }}>
           <DatabaseResize />
         </DatabaseDetailContext.Provider>
       );
@@ -217,14 +200,7 @@ describe('database resize', () => {
     });
   });
 
-  describe('on rendering of page and isDatabasesV2GA is true and the Shared CPU tab is preselected ', () => {
-    const flags = {
-      dbaasV2: {
-        beta: false,
-        enabled: true,
-      },
-    };
-
+  describe('on rendering of page and the Shared CPU tab is preselected ', () => {
     beforeEach(() => {
       // Mock database types
       const standardTypes = [
@@ -245,7 +221,7 @@ describe('database resize', () => {
         }),
         http.get('*/account', () => {
           const account = accountFactory.build({
-            capabilities: ['Managed Databases', 'Managed Databases Beta'],
+            capabilities: ['Managed Databases'],
           });
           return HttpResponse.json(account);
         })
@@ -254,12 +230,9 @@ describe('database resize', () => {
 
     it('should render set node section', async () => {
       const { getByTestId, getByText } = renderWithTheme(
-        <DatabaseDetailContext.Provider
-          value={{ database: mockDatabase, engine, isResizeEnabled }}
-        >
+        <DatabaseDetailContext.Provider value={{ database: mockDatabase }}>
           <DatabaseResize />
-        </DatabaseDetailContext.Provider>,
-        { flags }
+        </DatabaseDetailContext.Provider>
       );
 
       expect(getByTestId(loadingTestId)).toBeInTheDocument();
@@ -273,12 +246,9 @@ describe('database resize', () => {
 
     it('should render the correct number of node radio buttons, associated costs, and summary', async () => {
       const { getByTestId } = renderWithTheme(
-        <DatabaseDetailContext.Provider
-          value={{ database: mockDatabase, engine, isResizeEnabled }}
-        >
+        <DatabaseDetailContext.Provider value={{ database: mockDatabase }}>
           <DatabaseResize />
-        </DatabaseDetailContext.Provider>,
-        { flags }
+        </DatabaseDetailContext.Provider>
       );
       await waitForElementToBeRemoved(getByTestId(loadingTestId));
       const nodeRadioBtns = getByTestId('database-nodes');
@@ -301,12 +271,9 @@ describe('database resize', () => {
 
     it('should preselect cluster size in Set Number of Nodes', async () => {
       const { getByTestId } = renderWithTheme(
-        <DatabaseDetailContext.Provider
-          value={{ database: mockDatabase, engine, isResizeEnabled }}
-        >
+        <DatabaseDetailContext.Provider value={{ database: mockDatabase }}>
           <DatabaseResize />
-        </DatabaseDetailContext.Provider>,
-        { flags }
+        </DatabaseDetailContext.Provider>
       );
       await waitForElementToBeRemoved(getByTestId(loadingTestId));
       const selectedNodeRadioButton = getByTestId(
@@ -318,16 +285,12 @@ describe('database resize', () => {
     it('should set price, enable resize button, and update resize summary when a new number of nodes is selected', async () => {
       const mockDatabase = databaseFactory.build({
         cluster_size: 1,
-        platform: 'rdbms-default',
         type: 'g6-nanode-1',
       });
       const { getByTestId } = renderWithTheme(
-        <DatabaseDetailContext.Provider
-          value={{ database: mockDatabase, engine, isResizeEnabled }}
-        >
+        <DatabaseDetailContext.Provider value={{ database: mockDatabase }}>
           <DatabaseResize />
-        </DatabaseDetailContext.Provider>,
-        { flags }
+        </DatabaseDetailContext.Provider>
       );
       await waitForElementToBeRemoved(getByTestId(loadingTestId));
       // Mock clicking 3 Nodes option
@@ -354,16 +317,12 @@ describe('database resize', () => {
     it('should disable the resize button if node selection is set back to current', async () => {
       const mockDatabase = databaseFactory.build({
         cluster_size: 1,
-        platform: 'rdbms-default',
         type: 'g6-nanode-1',
       });
       const { getByTestId } = renderWithTheme(
-        <DatabaseDetailContext.Provider
-          value={{ database: mockDatabase, engine, isResizeEnabled }}
-        >
+        <DatabaseDetailContext.Provider value={{ database: mockDatabase }}>
           <DatabaseResize />
-        </DatabaseDetailContext.Provider>,
-        { flags }
+        </DatabaseDetailContext.Provider>
       );
       await waitForElementToBeRemoved(getByTestId(loadingTestId));
       // Mock clicking 3 Nodes option
@@ -391,7 +350,7 @@ describe('database resize', () => {
     });
   });
 
-  describe('on rendering of page and isDatabasesV2GA is true and the Dedicated CPU tab is preselected', () => {
+  describe('on rendering of page and the Dedicated CPU tab is preselected', () => {
     beforeEach(() => {
       // Mock database types
       const standardTypes = [
@@ -411,7 +370,7 @@ describe('database resize', () => {
         }),
         http.get('*/account', () => {
           const account = accountFactory.build({
-            capabilities: ['Managed Databases', 'Managed Databases Beta'],
+            capabilities: ['Managed Databases'],
           });
           return HttpResponse.json(account);
         })
@@ -421,24 +380,13 @@ describe('database resize', () => {
     it('should render node selection for dedicated tab with default summary', async () => {
       const mockDatabase = databaseFactory.build({
         cluster_size: 3,
-        platform: 'rdbms-default',
         type: 'g6-dedicated-2',
       });
 
-      const flags = {
-        dbaasV2: {
-          beta: false,
-          enabled: true,
-        },
-      };
-
       const { getByRole, getByTestId } = renderWithTheme(
-        <DatabaseDetailContext.Provider
-          value={{ database: mockDatabase, engine, isResizeEnabled }}
-        >
+        <DatabaseDetailContext.Provider value={{ database: mockDatabase }}>
           <DatabaseResize />
-        </DatabaseDetailContext.Provider>,
-        { flags }
+        </DatabaseDetailContext.Provider>
       );
       expect(getByTestId(loadingTestId)).toBeInTheDocument();
       await waitForElementToBeRemoved(getByTestId(loadingTestId));
@@ -480,8 +428,7 @@ describe('database resize', () => {
     const disabledTypes = isSmallerOrEqualCurrentPlan(
       'g6-dedicated-8',
       3,
-      dedicatedTypes,
-      true
+      dedicatedTypes
     );
 
     it('disabled smaller plans', async () => {
@@ -525,12 +472,11 @@ describe('database resize', () => {
 
       const sharedPlanDatabase = databaseFactory.build({
         type: 'g6-nanode-1',
-        platform: 'rdbms-default',
       });
 
       const { getByTestId, getByText } = renderWithTheme(
         <DatabaseDetailContext.Provider
-          value={{ database: sharedPlanDatabase, engine, isResizeEnabled }}
+          value={{ database: sharedPlanDatabase }}
         >
           <DatabaseResize />
         </DatabaseDetailContext.Provider>,
@@ -547,12 +493,11 @@ describe('database resize', () => {
 
       const dedicatedPlanDatabase = databaseFactory.build({
         type: 'g6-dedicated-2',
-        platform: 'rdbms-default',
       });
 
       const { getByTestId, getByText } = renderWithTheme(
         <DatabaseDetailContext.Provider
-          value={{ database: dedicatedPlanDatabase, engine, isResizeEnabled }}
+          value={{ database: dedicatedPlanDatabase }}
         >
           <DatabaseResize />
         </DatabaseDetailContext.Provider>,
@@ -569,12 +514,11 @@ describe('database resize', () => {
 
       const premiumPlanDatabase = databaseFactory.build({
         type: 'premium-32',
-        platform: 'rdbms-default',
       });
 
       const { getByTestId, getByText } = renderWithTheme(
         <DatabaseDetailContext.Provider
-          value={{ database: premiumPlanDatabase, engine, isResizeEnabled }}
+          value={{ database: premiumPlanDatabase }}
         >
           <DatabaseResize />
         </DatabaseDetailContext.Provider>,
@@ -615,7 +559,7 @@ describe('database resize', () => {
         }),
         http.get('*/account', () => {
           const account = accountFactory.build({
-            capabilities: ['Managed Databases', 'Managed Databases Beta'],
+            capabilities: ['Managed Databases'],
           });
           return HttpResponse.json(account);
         })
@@ -630,10 +574,6 @@ describe('database resize', () => {
       };
 
       const flags = {
-        dbaasV2: {
-          beta: false,
-          enabled: true,
-        },
         databasePremium: true,
       };
 
@@ -641,8 +581,6 @@ describe('database resize', () => {
         <DatabaseDetailContext.Provider
           value={{
             database: databaseWithPremiumSelection,
-            engine,
-            isResizeEnabled,
           }}
         >
           <DatabaseResize />

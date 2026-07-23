@@ -21,10 +21,11 @@ import {
 } from 'src/components/PrimaryNav/constants';
 import { useIsACLPEnabled } from 'src/features/CloudPulse/Utils/utils';
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
-import { useIsACLPLogsNew } from 'src/features/Delivery/deliveryUtils';
+import { useACLPLogsFlags } from 'src/features/Delivery/deliveryUtils';
 import { useIsIAMEnabled } from 'src/features/IAM/hooks/useIsIAMEnabled';
 import { useIsInferencePlatformEnabled } from 'src/features/InferencePlatform/utils';
 import { useIsMarketplaceV2Enabled } from 'src/features/Marketplace/shared';
+import { useIsNATGatewaysEnabled } from 'src/features/NATGateways/utils';
 import { useIsNetworkLoadBalancerEnabled } from 'src/features/NetworkLoadBalancers/utils';
 import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils';
 import {
@@ -65,6 +66,7 @@ export type NavEntity =
   | 'Marketplace' // TODO: Cloud Manager Marketplace - Remove marketplace references once 'Quick Deploy Apps' is fully rolled out
   | 'Metrics'
   | 'Monitor'
+  | 'NAT Gateways'
   | 'Network Load Balancer'
   | 'NodeBalancers'
   | 'Object Storage'
@@ -129,7 +131,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
   const isManaged = accountSettings?.managed ?? false;
 
   const { isACLPEnabled } = useIsACLPEnabled();
-  const isACLPLogsNew = useIsACLPLogsNew();
+  const { isACLPLogsNew } = useACLPLogsFlags();
 
   const isAlertsEnabled =
     isACLPEnabled &&
@@ -140,11 +142,13 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
   const { limitsEvolution } = flags;
 
   const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
-  const { isDatabasesEnabled, isDatabasesV2Beta } = useIsDatabasesEnabled();
+  const isDatabasesEnabled = useIsDatabasesEnabled();
 
   const { isIAMEnabled } = useIsIAMEnabled();
 
   const { isInferencePlatformEnabled } = useIsInferencePlatformEnabled();
+
+  const { isNATGatewaysEnabled, isNATGatewaysBeta } = useIsNATGatewaysEnabled();
 
   const { isNetworkLoadBalancerEnabled } = useIsNetworkLoadBalancerEnabled();
 
@@ -249,8 +253,17 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
                 to: '/netloadbalancers',
               },
               {
+                attr: {
+                  'data-pendo-id': 'menu-item-NodeBalancers',
+                },
                 display: 'NodeBalancers',
                 to: '/nodebalancers',
+              },
+              {
+                display: 'NAT Gateways',
+                hide: !isNATGatewaysEnabled,
+                to: '/natgateways',
+                isBeta: isNATGatewaysEnabled && isNATGatewaysBeta,
               },
               {
                 attr: {
@@ -286,7 +299,6 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
                 display: 'Databases',
                 hide: !isDatabasesEnabled,
                 to: '/databases',
-                isBeta: isDatabasesV2Beta,
               },
             ],
             name: 'Databases',
@@ -384,7 +396,6 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
       // eslint-disable-next-line react-hooks/exhaustive-deps
       [
         isDatabasesEnabled,
-        isDatabasesV2Beta,
         isManaged,
         isPlacementGroupsEnabled,
         isACLPEnabled,
@@ -392,6 +403,8 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
         isIAMEnabled,
         isMarketplaceV2FeatureEnabled,
         isNetworkLoadBalancerEnabled,
+        isNATGatewaysEnabled,
+        isNATGatewaysBeta,
         isReserveIpEnabled,
         isReserveIpNewBadgeEnabled,
         isInferencePlatformEnabled,

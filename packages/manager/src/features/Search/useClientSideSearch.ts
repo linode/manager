@@ -12,7 +12,7 @@ import {
   useReservedIPsQuery,
 } from '@linode/queries';
 
-import { useObjectStorageBuckets } from 'src/features/ObjectStorage/hooks/useObjectStorageBuckets';
+import { useObjectStorageBuckets } from 'src/features/ObjectStorage/Buckets/hooks/useObjectStorageBuckets';
 import { useIsReserveIpEnabled } from 'src/features/ReservedIps/utils';
 import { useAllKubernetesClustersQuery } from 'src/queries/kubernetes';
 import {

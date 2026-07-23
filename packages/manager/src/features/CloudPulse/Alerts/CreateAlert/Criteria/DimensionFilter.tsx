@@ -54,6 +54,7 @@ export const DimensionFilters = (props: DimensionFilterProps) => {
       </Stack>
       <Button
         compactX
+        data-pendo-id="monitor-alerts-Add-Dimension"
         data-qa-buttons="true"
         disabled={
           serviceTypeWatcher === null ||

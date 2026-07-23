@@ -9,6 +9,9 @@ import VPCLanding from './VPCLanding';
 beforeAll(() => mockMatchMedia());
 
 const queryMocks = vi.hoisted(() => ({
+  useIsGpuRdmaPlanEnabled: vi.fn().mockReturnValue({
+    isGpuRdmaPlanEnabled: true,
+  }),
   useVPCsQuery: vi.fn().mockReturnValue({}),
   userPermissions: vi.fn(() => ({
     data: {
@@ -24,6 +27,9 @@ vi.mock('@linode/queries', async () => {
     useVPCsQuery: queryMocks.useVPCsQuery,
   };
 });
+vi.mock('src/hooks/useIsGpuRdmaPlanEnabled', () => ({
+  useIsGpuRdmaPlanEnabled: queryMocks.useIsGpuRdmaPlanEnabled,
+}));
 vi.mock('src/features/IAM/hooks/usePermissions', () => ({
   usePermissions: queryMocks.userPermissions,
 }));
@@ -46,6 +52,7 @@ describe('VPC Landing Table', () => {
     expect(getByText('Label')).toBeVisible();
     expect(getByText('Region')).toBeVisible();
     expect(getByText('VPC ID')).toBeVisible();
+    expect(getByText('VPC Type')).toBeVisible();
     expect(getByText('Subnets')).toBeVisible();
     expect(getByText('Resources')).toBeVisible();
   });
@@ -62,9 +69,7 @@ describe('VPC Landing Table', () => {
 
     const { getByText } = renderWithTheme(<VPCLanding />);
 
-    expect(
-      getByText('Create a private and isolated network')
-    ).toBeInTheDocument();
+    getByText('Create a private and isolated network');
   });
 
   it('should render vpc landing with loading state', async () => {

@@ -3,12 +3,11 @@ import { useGetDelegatedChildAccountsForUserQuery } from '@linode/queries';
 import { useParams } from '@tanstack/react-router';
 import React from 'react';
 
-import { DocumentTitleSegment } from 'src/features/IAM/Shared/DocumentTitleSegment/DocumentTitleSegment';
-import { ErrorState } from 'src/features/IAM/Shared/ErrorState/ErrorState';
-
 import { usePermissions } from '../../hooks/usePermissions';
 import { CircleProgress } from '../../Shared/CircleProgress/CircleProgress';
 import { NO_ACCOUNT_DELEGATIONS_TEXT } from '../../Shared/constants';
+import { DocumentTitleSegment } from '../../Shared/DocumentTitleSegment/DocumentTitleSegment';
+import { ErrorState } from '../../Shared/ErrorState/ErrorState';
 import { NoAssignedRoles } from '../../Shared/NoAssignedRoles/NoAssignedRoles';
 import { UserDelegationsTable } from './UserDelegationsTable';
 

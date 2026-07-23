@@ -9,6 +9,8 @@ import {
   Radio,
   RadioGroup,
   Stack,
+  SxProps,
+  Theme,
   TooltipIcon,
   Typography,
 } from '@linode/ui';
@@ -38,10 +40,7 @@ export interface IPAddressSelectionProps {
   /**
    * Header label for the selection component
    */
-  label?: {
-    fontSize?: string;
-    text: string;
-  };
+  label?: string;
   /**
    * Controlled value for IP mode - drives the radio selection
    */
@@ -83,6 +82,10 @@ export interface IPAddressSelectionProps {
   /**
    * Custom tooltip text for auto and reserved options
    */
+  /**
+   * Optional sx prop for the label
+   */
+  sxLabel?: SxProps<Theme>;
   tooltipText?: {
     auto: string;
     reserved: string;
@@ -99,7 +102,8 @@ export interface IPAddressSelectionProps {
 export const IPAddressSelection = ({
   disabled = false,
   error,
-  label = { fontSize: '14px', text: 'IP Address' },
+  label = 'IP Address',
+  sxLabel,
   mode = 'auto',
   onIPModeChange,
   onReservedIPSelect,
@@ -145,8 +149,8 @@ export const IPAddressSelection = ({
   return (
     <FormControl>
       <Box alignItems="center" display="flex" flexDirection="row">
-        <FormLabel id="ip-address-label" sx={{ fontSize: label.fontSize }}>
-          {label.text} {showNewBadge && <Badge type="new">New</Badge>}
+        <FormLabel id="ip-address-label" sx={sxLabel}>
+          {label} {showNewBadge && <Badge type="new">New</Badge>}
         </FormLabel>
       </Box>
       <RadioGroup

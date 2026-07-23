@@ -14,19 +14,18 @@ import {
 import { useNavigate, useSearch } from '@tanstack/react-router';
 import React from 'react';
 
-import { DebouncedSearchField } from 'src/features/IAM/Shared/DebouncedSearchField/DebouncedSearchField';
-import globalStyles from 'src/features/IAM/Shared/global.module.css';
-import { useAllAccountEntities } from 'src/queries/entities/entities';
-
 import { useIsDefaultDelegationRolesForChildAccount } from '../../hooks/useDelegationRole';
 import { usePagination } from '../../hooks/usePagination';
 import { usePermissions } from '../../hooks/usePermissions';
+import { useAllAccountEntities } from '../../queries/entities/entities';
 import {
   addEntityNamesToRoles,
   getSearchableFields,
 } from '../../Users/UserEntities/utils';
 import { Box } from '../Box/Box';
 import { ENTITIES_TABLE_PREFERENCE_KEY } from '../constants';
+import { DebouncedSearchField } from '../DebouncedSearchField/DebouncedSearchField';
+import globalStyles from '../global.module.css';
 import { RemoveAssignmentConfirmationDialog } from '../RemoveAssignmentConfirmationDialog/RemoveAssignmentConfirmationDialog';
 import {
   getFilteredRoles,

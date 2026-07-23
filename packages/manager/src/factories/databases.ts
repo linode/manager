@@ -7,8 +7,6 @@ import {
   type DatabaseStatus,
   type DatabaseType,
   type Engine,
-  type MySQLReplicationType,
-  type PostgresReplicationType,
 } from '@linode/api-v4';
 import { pickRandom } from '@linode/utilities';
 import { Factory } from '@linode/utilities';
@@ -24,18 +22,6 @@ export const possibleStatuses: DatabaseStatus[] = [
   'resuming',
   'suspended',
   'suspending',
-];
-
-export const possibleMySQLReplicationTypes: MySQLReplicationType[] = [
-  'none',
-  'semi_synch',
-  'asynch',
-];
-
-export const possiblePostgresReplicationTypes: PostgresReplicationType[] = [
-  'none',
-  'synch',
-  'asynch',
 ];
 
 export const possibleTypes: string[] = [
@@ -189,9 +175,7 @@ export const databaseInstanceFactory =
         ? ([1, 3][i % 2] as ClusterSize)
         : ([1, 2, 3][i % 3] as ClusterSize)
     ),
-    connection_strings: [],
     created: '2021-12-09T17:15:12',
-    encrypted: false,
     engine: Factory.each(
       (i) => ['mysql', 'postgresql', 'valkey'][i % 3] as Engine
     ),
@@ -260,14 +244,7 @@ export const databaseFactory = Factory.Sync.makeFactory<Database>({
   allow_list: [...IPv4List],
   available_restore_times: null,
   cluster_size: Factory.each(() => pickRandom([1, 3])),
-  connection_strings: [
-    {
-      driver: 'python',
-      value: 'Testing',
-    },
-  ],
   created: '2021-12-09T17:15:12',
-  encrypted: false,
   engine: 'mysql',
   engine_config: mysqlEngineConfig,
   hosts: Factory.each((i) =>

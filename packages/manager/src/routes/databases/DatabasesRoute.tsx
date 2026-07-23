@@ -8,7 +8,7 @@ import { SuspenseLoader } from 'src/features/Databases/shared/SuspenseLoader/Sus
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
 
 export const DatabasesRoute = () => {
-  const { isDatabasesEnabled } = useIsDatabasesEnabled();
+  const isDatabasesEnabled = useIsDatabasesEnabled();
 
   if (!isDatabasesEnabled) {
     return <NotFound />;

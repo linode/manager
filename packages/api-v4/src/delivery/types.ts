@@ -100,7 +100,9 @@ export interface CustomHTTPSDetails {
 
 export interface CustomHTTPSDetailsExtended extends CustomHTTPSDetails {
   authentication: Authentication & {
-    details?: AuthenticationDetailsExtended;
+    details?:
+      | BasicAuthenticationDetailsExtended
+      | BearerTokenAuthenticationDetailsExtended;
   };
 }
 
@@ -114,22 +116,34 @@ interface ClientCertificateDetails {
 export const authenticationType = {
   Basic: 'basic',
   None: 'none',
+  BearerToken: 'bearer_token',
 } as const;
 
 export type AuthenticationType =
   (typeof authenticationType)[keyof typeof authenticationType];
 
 interface Authentication {
-  details?: AuthenticationDetails;
+  details?: BasicAuthenticationDetails | BearerTokenAuthenticationDetails;
   type: AuthenticationType;
 }
 
-interface AuthenticationDetails {
+interface BasicAuthenticationDetails {
   basic_authentication_user: string;
 }
 
-interface AuthenticationDetailsExtended extends AuthenticationDetails {
+interface BasicAuthenticationDetailsExtended
+  extends BasicAuthenticationDetails {
   basic_authentication_password: string;
+}
+
+export interface BearerTokenAuthenticationDetails {
+  bearer_token_authentication_header_name?: string;
+  bearer_token_authentication_token_prefix?: string;
+}
+
+interface BearerTokenAuthenticationDetailsExtended
+  extends BearerTokenAuthenticationDetails {
+  bearer_token_authentication_value: string;
 }
 
 export interface CustomHeader {

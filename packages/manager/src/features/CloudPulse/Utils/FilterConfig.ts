@@ -92,6 +92,10 @@ export const DBAAS_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
             id: 'postgresql',
             label: 'PostgreSQL',
           },
+          {
+            id: 'valkey',
+            label: 'Valkey',
+          },
         ],
         placeholder: 'Select a Database Engine',
         priority: 2,

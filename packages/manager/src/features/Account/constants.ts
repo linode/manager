@@ -13,6 +13,7 @@ export const grantTypeMap = {
   linode: 'Linodes',
   lkecluster: 'LKE Clusters',
   longview: 'Longview Clients',
+  natgateways: 'NAT Gateways',
   nodebalancer: 'NodeBalancers',
   placementGroups: 'Placement Groups',
   quotas: 'Quotas',

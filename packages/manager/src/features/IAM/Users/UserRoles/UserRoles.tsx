@@ -4,13 +4,12 @@ import { useAccountUser, useUserRoles } from '@linode/queries';
 import { useParams } from '@tanstack/react-router';
 import React from 'react';
 
-import { DocumentTitleSegment } from 'src/features/IAM/Shared/DocumentTitleSegment/DocumentTitleSegment';
-import { ErrorState } from 'src/features/IAM/Shared/ErrorState/ErrorState';
-
 import { usePermissions } from '../../hooks/usePermissions';
 import { AssignedRolesTable } from '../../Shared/AssignedRolesTable/AssignedRolesTable';
 import { CircleProgress } from '../../Shared/CircleProgress/CircleProgress';
 import { NO_ASSIGNED_ROLES_TEXT } from '../../Shared/constants';
+import { DocumentTitleSegment } from '../../Shared/DocumentTitleSegment/DocumentTitleSegment';
+import { ErrorState } from '../../Shared/ErrorState/ErrorState';
 import { NoAssignedRoles } from '../../Shared/NoAssignedRoles/NoAssignedRoles';
 import { Paper } from '../../Shared/Paper/Paper';
 
@@ -57,7 +56,7 @@ export const UserRoles = () => {
       <DocumentTitleSegment segment={`${username} - User Roles`} />
       {hasAssignedRoles ? (
         <Paper>
-          <h2 style={{ font: Typography.Heading.M }}>Assigned Roles</h2>
+          <h2 style={{ font: Typography.Heading.S }}>Assigned Roles</h2>
           <p
             style={{
               margin: `${Spacing.S12} 0 ${Spacing.S20}`,

@@ -8,34 +8,27 @@ import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
+import { useIsGpuRdmaPlanEnabled } from 'src/hooks/useIsGpuRdmaPlanEnabled';
 
 import { getUniqueResourcesFromSubnets } from '../utils';
 
 import type { VPC } from '@linode/api-v4/lib/vpcs/types';
 
 interface Props {
-  displayVPCDBaaSResources: boolean;
   handleDeleteVPC: () => void;
   handleEditVPC: () => void;
   vpc: VPC;
 }
 
-export const VPCRow = ({
-  handleDeleteVPC,
-  handleEditVPC,
-  displayVPCDBaaSResources,
-  vpc,
-}: Props) => {
-  const { id, label, subnets } = vpc;
+export const VPCRow = ({ handleDeleteVPC, handleEditVPC, vpc }: Props) => {
+  const { id, label, subnets, vpc_type } = vpc;
   const { data: regions } = useRegionsQuery();
 
   const [isOpen, setIsOpen] = React.useState<boolean>(false);
 
   const regionLabel = regions?.find((r) => r.id === vpc.region)?.label ?? '';
-  const numResources = getUniqueResourcesFromSubnets(
-    vpc.subnets,
-    displayVPCDBaaSResources
-  );
+  const numResources = getUniqueResourcesFromSubnets(vpc.subnets);
+  const { isGpuRdmaPlanEnabled } = useIsGpuRdmaPlanEnabled();
 
   const { data: permissions, isLoading } = usePermissions(
     'vpc',
@@ -71,6 +64,15 @@ export const VPCRow = ({
     },
   ];
 
+  const getVPCType = (type: 'rdma' | 'regular') => {
+    switch (type) {
+      case 'rdma':
+        return 'RDMA (E/W)';
+      case 'regular':
+        return 'Standard (N/S)';
+    }
+  };
+
   return (
     <TableRow data-qa-vpc-id={id} key={`vpc-row-${id}`}>
       <TableCell>
@@ -82,6 +84,11 @@ export const VPCRow = ({
       <Hidden mdDown>
         <TableCell>{id}</TableCell>
       </Hidden>
+      {isGpuRdmaPlanEnabled && (
+        <Hidden mdDown>
+          <TableCell>{getVPCType(vpc_type)}</TableCell>
+        </Hidden>
+      )}
       <TableCell>{subnets.length}</TableCell>
       <Hidden mdDown>
         <TableCell>{numResources}</TableCell>

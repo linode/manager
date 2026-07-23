@@ -45,6 +45,7 @@ export const NotificationChannelListing = () => {
         ref={topRef}
       >
         <DebouncedSearchTextField
+          data-pendo-id="monitor-alerts-notification-channels-Search"
           data-qa-filter="notification-channels-search"
           label=""
           noMarginTop
@@ -55,6 +56,7 @@ export const NotificationChannelListing = () => {
         />
         <Button
           buttonType="primary"
+          data-pendo-id="monitor-alerts-notification-channels-Create"
           data-qa-button="create-channel"
           data-qa-buttons="true"
           disabled={isLoading}

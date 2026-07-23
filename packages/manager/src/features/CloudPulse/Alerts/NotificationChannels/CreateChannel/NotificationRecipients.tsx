@@ -1,5 +1,12 @@
 import { useAllAccountUsersQuery } from '@linode/queries';
-import { Autocomplete, Box, SelectedIcon, StyledListItem } from '@linode/ui';
+import {
+  Autocomplete,
+  Box,
+  Chip,
+  CloseIcon,
+  SelectedIcon,
+  StyledListItem,
+} from '@linode/ui';
 import React from 'react';
 
 import { useFlags } from 'src/hooks/useFlags';
@@ -137,12 +144,31 @@ export const NotificationRecipients = React.memo(
               key={key}
             >
               <>
-                <Box sx={{ flexGrow: 1 }}>{option.label}</Box>
+                <Box sx={{ flexGrow: 1 }}>
+                  {isSelectAllORDeslectAllOption
+                    ? option.label
+                    : `${option.label} (${option.email})`}
+                </Box>
                 <SelectedIcon visible={isRecipientSelected || false} />
               </>
             </ListItem>
           );
         }}
+        renderValue={(value, getTagProps) =>
+          value.map((option, index) => {
+            const { key, ...tagProps } = getTagProps({ index });
+
+            return (
+              <Chip
+                {...tagProps}
+                deleteIcon={<CloseIcon />}
+                key={key}
+                label={`${option.label} (${option.email})`}
+                onDelete={tagProps.onDelete}
+              />
+            );
+          })
+        }
         slotProps={{
           popper: {
             placement: 'bottom',

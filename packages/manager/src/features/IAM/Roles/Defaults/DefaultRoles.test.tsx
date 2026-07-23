@@ -1,7 +1,6 @@
 import { screen } from '@testing-library/react';
 import React from 'react';
 
-import { createAccountRoles } from '../../factories';
 import {
   ERROR_STATE_TEXT,
   ERROR_STATE_TITLE,
@@ -17,9 +16,11 @@ import {
 } from '../../utilities/testHelpers';
 import { DefaultRoles } from './DefaultRoles';
 
+vi.mock('../../Shared/AssignedRolesTable/AssignedRolesTable', () => ({
+  AssignedRolesTable: () => <div>Role</div>,
+}));
+
 const queryMocks = vi.hoisted(() => ({
-  useAccountRoles: vi.fn().mockReturnValue({ isLoading: false }),
-  useAllAccountEntities: vi.fn().mockReturnValue({ isLoading: false }),
   useGetDefaultDelegationAccessQuery: vi.fn().mockReturnValue({}),
   useLocation: vi.fn().mockReturnValue({}),
   useSearch: vi.fn().mockReturnValue({}),
@@ -41,32 +42,23 @@ vi.mock('@tanstack/react-router', async () => {
 });
 
 vi.mock('@linode/queries', async () => {
-  const actual = await vi.importActual<any>('@linode/queries');
+  const actual = await vi.importActual('@linode/queries');
   return {
     ...actual,
-    useAccountRoles: queryMocks.useAccountRoles,
     useGetDefaultDelegationAccessQuery:
       queryMocks.useGetDefaultDelegationAccessQuery,
   };
 });
 
-vi.mock('src/queries/entities/entities', async () => {
-  const actual = await vi.importActual('src/queries/entities/entities');
-  return {
-    ...actual,
-    useAllAccountEntities: queryMocks.useAllAccountEntities,
-  };
-});
-
-vi.mock('src/features/IAM/hooks/usePermissions', async () => {
-  const actual = await vi.importActual('src/features/IAM/hooks/usePermissions');
+vi.mock('../../hooks/usePermissions', async () => {
+  const actual = await vi.importActual('../../hooks/usePermissions');
   return {
     ...actual,
     usePermissions: queryMocks.usePermissions,
   };
 });
 
-vi.mock('src/features/IAM/hooks/useDelegationRole', () => ({
+vi.mock('../../hooks/useDelegationRole', () => ({
   useIsDefaultDelegationRolesForChildAccount:
     queryMocks.useIsDefaultDelegationRolesForChildAccount,
 }));
@@ -95,10 +87,6 @@ describe('DefaultRoles', () => {
         ],
         entity_access: [],
       },
-      isLoading: false,
-    });
-    queryMocks.useAccountRoles.mockReturnValue({
-      data: createAccountRoles(),
       isLoading: false,
     });
     renderWithProviders(<DefaultRoles />);

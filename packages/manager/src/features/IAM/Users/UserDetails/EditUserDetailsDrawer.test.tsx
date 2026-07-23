@@ -2,8 +2,6 @@ import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
-import { http, HttpResponse, server } from 'src/mocks/testServer';
-
 import { createProfile, createUser } from '../../factories';
 import {
   changeCdsTextField,
@@ -56,6 +54,10 @@ const getDrawerInputs = async () => {
 };
 
 describe('EditUserDetailsDrawer', () => {
+  beforeEach(() => {
+    queryMocks.useProfile.mockReturnValue({});
+  });
+
   describe('Username field', () => {
     it("initializes the form with the user's username and email", async () => {
       const user = createUser();
@@ -166,11 +168,9 @@ describe('EditUserDetailsDrawer', () => {
       const profile = createProfile({ username: 'my-linode-user-1' });
       const user = createUser({ username: 'my-linode-user-2' });
 
-      server.use(
-        http.get('*/v4/profile', () => {
-          return HttpResponse.json(profile);
-        })
-      );
+      queryMocks.useProfile.mockReturnValue({
+        data: profile,
+      });
 
       renderWithProviders(
         <EditUserDetailsDrawer {...defaultProps} activeUser={user} />

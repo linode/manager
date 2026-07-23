@@ -82,6 +82,12 @@ export const CertificatesSection = (props: Props) => {
                   className={styles.formFieldCertificate}
                   error={!!fieldState.error}
                   label-position="top"
+                  style={{
+                    paddingTop:
+                      isEdit && index === 0
+                        ? 'var(--token-global-spacing-s12, 12px)'
+                        : 'var(--token-global-spacing-s0, 0)',
+                  }}
                 >
                   <FormLabel
                     className={

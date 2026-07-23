@@ -167,10 +167,14 @@ export const CreateNotificationChannel = () => {
               label: 'Submit',
               loading: isSubmitting,
               type: 'submit',
+              'data-pendo-id':
+                'monitor-alerts-notification-channels-create-Submit',
             }}
             secondaryButtonProps={{
               label: 'Cancel',
               onClick: createChannelExit,
+              'data-pendo-id':
+                'monitor-alerts-notification-channels-create-Cancel',
             }}
             sx={{ display: 'flex', justifyContent: 'flex-end' }}
           />

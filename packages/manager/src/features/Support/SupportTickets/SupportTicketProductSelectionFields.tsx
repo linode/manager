@@ -11,7 +11,7 @@ import { Autocomplete, Box, FormHelperText, TextField } from '@linode/ui';
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
-import { useObjectStorageBuckets } from 'src/features/ObjectStorage/hooks/useObjectStorageBuckets';
+import { useObjectStorageBuckets } from 'src/features/ObjectStorage/Buckets/hooks/useObjectStorageBuckets';
 import { useAllKubernetesClustersQuery } from 'src/queries/kubernetes';
 
 import {

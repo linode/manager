@@ -62,7 +62,6 @@ const databaseWithNoVPC = databaseFactory.build({
       },
     ],
   },
-  platform: 'rdbms-default',
   private_network: null, // No VPC configured
   status: 'active',
 });
@@ -94,7 +93,6 @@ const databaseWithPrivateVPC = databaseFactory.build({
       },
     ],
   },
-  platform: 'rdbms-default',
   private_network: {
     public_access: false,
     subnet_id: 1,
@@ -149,7 +147,6 @@ const databaseWithPublicVPC = databaseFactory.build({
       },
     ],
   },
-  platform: 'rdbms-default',
   private_network: {
     public_access: true,
     subnet_id: 1,

@@ -80,9 +80,90 @@ export interface UpdateApiKeyPayload {
   label?: string;
 }
 
-// Model types
-export interface Model {
+// Inference Model types from /v4beta/inference/models
+export interface InferenceModelProvider {
+  id: string;
+  name: string;
+}
+
+export interface InferenceModelModalities {
+  input: string[];
+  output: string[];
+}
+
+export interface InferenceModelParameters {
+  context_window: number;
+  max_output_tokens: number;
+  parameter_count_billions: number;
+}
+
+export interface InferenceModel {
+  capabilities: string[];
+  description: string;
   id: string;
   label: string;
-  provider: string;
+  lifecycle_status: string;
+  modalities: InferenceModelModalities;
+  parameters: InferenceModelParameters;
+  playground_available: boolean;
+  price_input_per_million?: number;
+  price_output_per_million?: number;
+  provider: InferenceModelProvider;
+  regions: string[];
+  tags: string[];
+  type: string;
+  use_cases: string[];
+}
+
+export interface InferenceModelsResponse {
+  data: InferenceModel[];
+}
+
+// Usage types
+export interface InferenceUsageSummary {
+  avg_latency_ms: number;
+  failed_requests: number;
+  input_tokens: number;
+  output_tokens: number;
+  successful_requests: number;
+  total_requests: number;
+  total_tokens: number;
+}
+
+export interface InferenceUsageTimeSeries {
+  bucket: string;
+  group_id: string;
+  group_label: string;
+  input_tokens: number;
+  output_tokens: number;
+  request_count: number;
+  total_tokens: number;
+}
+
+export interface InferenceUsageBreakdown {
+  id: string;
+  input_tokens: number;
+  label: string;
+  output_tokens: number;
+  percentage: number;
+  request_count: number;
+  total_tokens: number;
+}
+
+export interface InferenceUsage {
+  breakdown: InferenceUsageBreakdown[];
+  summary: InferenceUsageSummary;
+  time_series: InferenceUsageTimeSeries[];
+}
+
+export interface InferenceUsageRequest {
+  api_key_id?: number;
+  end_date?: string;
+  granularity?: string;
+  group_by?: string;
+  include_breakdown?: boolean;
+  include_time_series?: boolean;
+  model_id?: string;
+  start_date?: string;
+  top_n?: number;
 }

@@ -24,14 +24,6 @@ const loadingTestId = 'circle-progress';
 beforeAll(() => mockMatchMedia());
 
 describe('database summary section', () => {
-  const flags = {
-    dbaasV2: {
-      beta: false,
-      enabled: true,
-    },
-    databaseVpc: true,
-  };
-
   it('should render the correct number of node radio buttons, associated costs, vpc label and summary', async () => {
     const standardTypes = databaseTypeFactory.buildList(7, {
       class: 'standard',
@@ -60,10 +52,7 @@ describe('database summary section', () => {
     );
 
     const { getByTestId, findAllByText, findByText } = renderWithTheme(
-      <DatabaseCreate />,
-      {
-        flags,
-      }
+      <DatabaseCreate />
     );
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
@@ -102,22 +91,16 @@ describe('database summary section', () => {
     const mockDatabase = databaseFactory.build({
       cluster_size: 3,
       engine: 'mysql',
-      platform: 'rdbms-default',
       type: 'g6-nanode-1',
     });
     const { getByTestId } = renderWithTheme(
       <DatabaseDetailContext.Provider
         value={{
           database: mockDatabase,
-          engine: 'mysql',
-          isResizeEnabled: true,
         }}
       >
         <DatabaseResize />
-      </DatabaseDetailContext.Provider>,
-      {
-        flags,
-      }
+      </DatabaseDetailContext.Provider>
     );
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
@@ -138,22 +121,16 @@ describe('database summary section', () => {
     const mockDatabase = databaseFactory.build({
       cluster_size: 1,
       engine: 'mysql',
-      platform: 'rdbms-default',
       type: 'g6-nanode-1',
     });
     const { getByTestId } = renderWithTheme(
       <DatabaseDetailContext.Provider
         value={{
           database: mockDatabase,
-          engine: 'mysql',
-          isResizeEnabled: true,
         }}
       >
         <DatabaseResize />
-      </DatabaseDetailContext.Provider>,
-      {
-        flags,
-      }
+      </DatabaseDetailContext.Provider>
     );
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
     await waitForElementToBeRemoved(getByTestId(loadingTestId));

@@ -51,4 +51,42 @@ describe('PlacementGroups Summary', () => {
     expect(getByText('Placement Group Type')).toBeInTheDocument();
     expect(getByText('Region')).toBeInTheDocument();
   });
+
+  it('shows maximum_linodes_per_pg limit for strict placement groups', () => {
+    const { getByText } = renderWithTheme(
+      <PlacementGroupsSummary
+        placementGroup={placementGroupFactory.build({
+          members: [{ is_compliant: true, linode_id: 1 }],
+          placement_group_policy: 'strict',
+        })}
+        region={regionFactory.build({
+          placement_group_limits: {
+            maximum_linodes_per_flexible_pg: 250,
+            maximum_linodes_per_pg: 5,
+          },
+        })}
+      />
+    );
+
+    expect(getByText('1 of 5')).toBeVisible();
+  });
+
+  it('shows maximum_linodes_per_flexible_pg limit for flexible placement groups', () => {
+    const { getByText } = renderWithTheme(
+      <PlacementGroupsSummary
+        placementGroup={placementGroupFactory.build({
+          members: [{ is_compliant: true, linode_id: 1 }],
+          placement_group_policy: 'flexible',
+        })}
+        region={regionFactory.build({
+          placement_group_limits: {
+            maximum_linodes_per_flexible_pg: 250,
+            maximum_linodes_per_pg: 5,
+          },
+        })}
+      />
+    );
+
+    expect(getByText('1 of 250')).toBeVisible();
+  });
 });

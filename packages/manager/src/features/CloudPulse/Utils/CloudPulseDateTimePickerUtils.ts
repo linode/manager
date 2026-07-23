@@ -5,23 +5,66 @@
 import { DateTimeRangePicker } from '@linode/ui';
 import { DateTime } from 'luxon';
 
+import { PRESET_TO_DURATION_MAP } from './constants';
+
 import type { DateTimeWithPreset } from '@linode/api-v4';
+import type { DurationLike } from 'luxon';
 
 /**
- * Returns the default time duration, which is the last 30 minutes from the current time.
+ * Returns the default time duration, which is the last 1 hour from the current time.
  *
  * @param timezone Optional timezone to use. If not provided, the local timezone is used.
  * @returns An object containing start time, end time, preset, and timezone.
  */
-export const defaultTimeDuration = (timezone?: string): DateTimeWithPreset => {
+export const defaultTimeDuration = (
+  timezone?: string,
+  defaultTimeDurationPreset?: string
+): DateTimeWithPreset => {
   const date = DateTime.now()
     .set({ second: 0 })
     .setZone(timezone ?? DateTime.local().zoneName);
 
+  let duration: DurationLike = {
+    hours: 1, // default to last 1 hour if no preset is provided
+  };
+
+  if (defaultTimeDurationPreset) {
+    duration = PRESET_TO_DURATION_MAP[defaultTimeDurationPreset] ?? {
+      hours: 1,
+    };
+  }
+
+  if (
+    defaultTimeDurationPreset === DateTimeRangePicker.PRESET_LABELS.LAST_MONTH
+  ) {
+    // return directly
+    return {
+      preset: DateTimeRangePicker.PRESET_LABELS.LAST_MONTH,
+      start: date.minus({ months: 1 }).startOf('month').toISO() ?? '',
+      end: date.minus({ months: 1 }).endOf('month').toISO() ?? '',
+      timeZone: timezone,
+    };
+  }
+
+  if (
+    defaultTimeDurationPreset === DateTimeRangePicker.PRESET_LABELS.THIS_MONTH
+  ) {
+    return {
+      preset: DateTimeRangePicker.PRESET_LABELS.THIS_MONTH,
+      start: date.startOf('month').toISO() ?? '',
+      end: date.toISO() ?? '',
+      timeZone: timezone,
+    };
+  }
+
   return {
+    preset:
+      defaultTimeDurationPreset &&
+      PRESET_TO_DURATION_MAP[defaultTimeDurationPreset]
+        ? defaultTimeDurationPreset
+        : DateTimeRangePicker.PRESET_LABELS.LAST_HOUR,
+    start: date.minus(duration).toISO() ?? '',
     end: date.toISO() ?? '',
-    preset: DateTimeRangePicker.PRESET_LABELS.LAST_HOUR,
-    start: date.minus({ hours: 1 }).toISO() ?? '',
     timeZone: timezone,
   };
 };

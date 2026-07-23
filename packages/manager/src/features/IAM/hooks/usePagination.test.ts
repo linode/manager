@@ -1,13 +1,13 @@
 import { queryClientFactory } from '@linode/queries';
 import { act, renderHook, waitFor } from '@testing-library/react';
 
-import { MIN_PAGE_SIZE } from 'src/components/PaginationFooter/PaginationFooter.constants';
-
 import { wrapWithProviders } from '../utilities/testHelpers';
 import { usePagination } from './usePagination';
 
+import type { TableSearchParams } from '../utilities/utilities.types';
 import type { UsePaginationProps } from './usePagination';
-import type { TableSearchParams } from 'src/routes/types';
+
+const MIN_PAGE_SIZE = 25;
 
 const mockNavigate = vi.fn();
 const mockUseSearch = vi.fn();

@@ -543,7 +543,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
             />
           </GridLegacy>
         )}
-        {errorText?.length && (
+        {errorText && (
           <GridLegacy item xs={12}>
             <AlertListNoticeMessages
               errorMessage={errorText}

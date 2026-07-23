@@ -445,6 +445,9 @@ export const getFormattedEntityType = (entityType: string): string => {
     nodebalancer: 'NodeBalancer',
     placement_group: 'Placement Group',
     stackscript: 'StackScript',
+    mysql_database: 'MySQL Database',
+    postgresql_database: 'PostgreSQL Database',
+    valkey_database: 'Valkey Database',
     vpc: 'VPC',
   };
 

@@ -138,19 +138,18 @@ interface AclpFlag {
   showWidgetDimensionFilters?: boolean;
 }
 
-interface AclpLogsFlag extends BetaFeatureFlag {
+interface AclpFlagPerServiceType extends Pick<AclpFlag, 'beta' | 'enabled'> {
   /**
-   * This property indicates whether to bypass account capabilities check or not
+   * The optional default time duration preset for the service type, e.g., last 7 days, last 30 minutes, etc.
    */
-  bypassAccountCapabilities?: boolean;
+  defaultPreset?: string;
+}
+
+interface AclpLogsFlag {
   /**
-   * This property indicates whether to show Custom HTTPS destination type
+   * This property indicates whether Custom HTTPS destination allows bearer authorization type
    */
-  customHttpsEnabled?: boolean;
-  /**
-   * This property indicates whether to show the "Metrics" tab on Logs Stream details page or not
-   */
-  metricsEnabled?: boolean;
+  bearerTokenAuthEnabled?: boolean;
   /**
    * This property indicates whether the feature is new or not
    */
@@ -277,28 +276,21 @@ export interface Flags {
   cloudManagerDesignUpdatesBanner: DesignUpdatesBannerFlag;
   cloudNat: CloudNatFlag;
   computePricing: ComputePricing;
-  databaseAdvancedConfig: boolean;
   databaseBeta: boolean;
-  databasePgBouncer: boolean;
   databasePremium: boolean;
-  databaseResize: boolean;
   databaseResizeGenerationalPlans: boolean;
   databaseRestrictPlanResize: boolean;
   databases: boolean;
   databaseValkey: BetaFeatureFlag;
-  databaseVpc: boolean;
-  databaseVpcBeta: boolean;
-  dbaasV2: BetaFeatureFlag;
-  dbaasV2MonitorMetrics: BetaFeatureFlag;
   disableLargestGbPlans: boolean;
   fwRulesetsPrefixLists: FirewallRulesetsAndPrefixLists;
   gecko2: GeckoFeatureFlag;
   generationalPlansv2: GenerationalPlansFlag;
   gpuv2: GpuV2;
-  hostnameEndpoints: boolean;
   iam: BaseFeatureFlag;
   iamFederation: boolean;
   iamNewBadge: boolean;
+  iamTfaEnforcement: boolean;
   inferencePlatform: boolean;
   ipv6Sharing: boolean;
   kubernetesBlackwellPlans: boolean;
@@ -315,14 +307,15 @@ export interface Flags {
   marketplaceV2GlobalBanner: boolean;
   metadata: boolean;
   mtc: MTC;
+  natgateway: NATGatewaysFlag;
   networkLoadBalancer: boolean;
+  nitro: BaseFeatureFlag;
   nodebalancerIpv6: boolean;
   nodebalancerVpc: boolean;
   objectStorageContextualMetrics: boolean;
   objectStorageGen2: BaseFeatureFlag;
   objectStorageGlobalQuotas: boolean;
   objectStorageSummaryPageLinks: boolean;
-  objSummaryPage: boolean;
   passwordlessLinodes: boolean;
   placementGroupPolicyUpdate: boolean;
   premiumNodebalancer: boolean;
@@ -345,8 +338,6 @@ export interface Flags {
   tpaProviders: Provider[];
   udp: boolean;
   vmHostMaintenance: VMHostMaintenanceFlag;
-  volumeSummaryPage: boolean;
-  vpcDbaasResources: boolean;
   vpcIpv6: boolean;
 }
 
@@ -432,6 +423,12 @@ interface SecureVMCopy {
   linodeCreate?: BannerContent;
 }
 
+interface NATGatewaysFlag {
+  beta: boolean;
+  enabled: boolean;
+  ga: boolean;
+}
+
 export type ProductInformationBannerLocation =
   | 'Account'
   | 'Betas'
@@ -448,6 +445,7 @@ export type ProductInformationBannerLocation =
   | 'Longview'
   | 'Managed'
   | 'Marketplace'
+  | 'NAT Gateways'
   | 'Network LoadBalancers'
   | 'NodeBalancers'
   | 'Object Storage'
@@ -491,8 +489,8 @@ export interface AclpAlertServiceTypeConfig {
 
 export type AclpServices = {
   [serviceType in CloudPulseServiceType]: {
-    alerts?: AclpFlag;
-    metrics?: AclpFlag;
+    alerts?: AclpFlagPerServiceType;
+    metrics?: AclpFlagPerServiceType;
   };
 };
 

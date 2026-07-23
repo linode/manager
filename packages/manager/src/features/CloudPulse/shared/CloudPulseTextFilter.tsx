@@ -68,7 +68,7 @@ export const CloudPulseTextFilter = React.memo(
     } = props;
 
     const [value, setValue] = React.useState<string>(
-      typeof defaultValue === 'string' ? defaultValue : ''
+      typeof defaultValue === 'string' && savePreferences ? defaultValue : ''
     );
     const [errorText, setErrorText] = React.useState<string | undefined>(
       undefined
@@ -77,7 +77,7 @@ export const CloudPulseTextFilter = React.memo(
 
     // Initialize filterData on mount if there's a default value
     React.useEffect(() => {
-      if (defaultValue && typeof defaultValue === 'string') {
+      if (defaultValue && typeof defaultValue === 'string' && savePreferences) {
         handleTextFilterChange(defaultValue, [defaultValue], filterKey);
       }
     }, [defaultValue, handleTextFilterChange, filterKey, savePreferences]);

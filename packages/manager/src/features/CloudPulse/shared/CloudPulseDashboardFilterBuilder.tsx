@@ -6,6 +6,7 @@ import KeyboardCaretDownIcon from 'src/assets/icons/caret_down.svg';
 import KeyboardCaretRightIcon from 'src/assets/icons/caret_right.svg';
 import InfoIcon from 'src/assets/icons/info.svg';
 import NullComponent from 'src/components/NullComponent';
+import { oauthClient } from 'src/OAuth/oauthClient';
 
 import RenderComponent from '../shared/CloudPulseComponentRenderer';
 import {
@@ -123,6 +124,8 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
       isLoading,
       LOADING_DELAYS.LARGE_DATASET
     );
+
+    const isImpersonatedUser = oauthClient.getIsLoggedInAsCustomer();
 
     const checkAndUpdateDependentFilters = React.useCallback(
       (filterKey: string, value: FilterValueType) => {
@@ -320,6 +323,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
               dashboard,
               dependentFilters: dependentFilterReference.current,
               isServiceAnalyticsIntegration,
+              isImpersonatedUser,
               preferences,
               shouldDisable: isError || isLoading,
             },
@@ -334,6 +338,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
               preferences,
               dependentFilters: dependentFilterReference.current,
               shouldDisable: isError || isLoading,
+              isImpersonatedUser,
             },
             handleRegionChange
           );
@@ -348,6 +353,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
                 ? { [RESOURCE_ID]: resource_ids.map(String) }
                 : dependentFilterReference.current,
               shouldDisable: isError || isLoading,
+              isImpersonatedUser,
             },
             handleRegionChange
           );
@@ -363,6 +369,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
               isServiceAnalyticsIntegration,
               preferences,
               shouldDisable: isError || isLoading,
+              isImpersonatedUser,
             },
             handleResourceChange
           );
@@ -384,6 +391,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
                     ).filter((id) => !Number.isNaN(id))
                   : [],
               shouldDisable: isError || isLoading,
+              isImpersonatedUser,
             },
             handleNodeTypeChange
           );
@@ -400,6 +408,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
               preferences,
               dependentFilters: dependentFilterReference.current,
               shouldDisable: isError || isLoading,
+              isImpersonatedUser,
             },
             handleTextFilterChange
           );
@@ -412,6 +421,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
               isServiceAnalyticsIntegration,
               preferences,
               shouldDisable: isError || isLoading,
+              isImpersonatedUser,
             },
             handleEndpointsChange
           );
@@ -429,6 +439,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
               isServiceAnalyticsIntegration,
               preferences,
               shouldDisable: isError || isLoading,
+              isImpersonatedUser,
             },
             handleFirewallNodebalancersChange
           );
@@ -441,6 +452,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
               isServiceAnalyticsIntegration,
               preferences,
               shouldDisable: isError || isLoading,
+              isImpersonatedUser,
             },
             handleCustomSelectChange
           );

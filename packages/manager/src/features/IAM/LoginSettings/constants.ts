@@ -11,6 +11,7 @@ export const IAM_LANDING_PENDO_IDS = {
 export const IAM_SETTINGS_PENDO_IDS = {
   learnMore: 'IAM Settings-Learn more',
   manageSSOEnforcement: 'IAM Settings-Manage SSO Enforcement',
+  manageTFAEnforcement: 'IAM Settings-Manage 2FA Enforcement',
 };
 
 // Pendo IDs for IAM SSO - IDP Configuration tab
@@ -136,3 +137,39 @@ export const ADD_CERTIFICATE_PERMISSION_ERROR =
 export const METADATA_HREF = 'https://login.linode.com/saml/sp/metadata';
 
 export const DUPLICATED_SSO_USER = `User's can't be SSO-required and an SSO exception at the same time. Remove any duplicated users from either list.`;
+
+// Pendo IDs for IAM TFA Enforcement
+export const IAM_TFA_ENFORCE_PENDO_IDS = {
+  docs: 'IAM Settings 2FA Enforce-Docs',
+  enforce2FA: 'IAM Settings 2FA-Enforce 2FA on this account',
+  searchUsernameOrEmail: 'IAM Settings 2FA Enforce-Search username or email',
+  sortByUsers: 'IAM Settings 2FA Enforce-Sort by users',
+  refreshSorting: 'IAM Settings 2FA Enforce-Refresh sorting',
+  bulkSelectAllPages:
+    'IAM Settings 2FA Enforce-Bulk select account users in all pages',
+  bulkDeselect: 'IAM Settings 2FA Enforce-Bulk deselect account users',
+  selectAllCurrentPage:
+    'IAM Settings 2FA Enforce-Select all account users in current page',
+  selectSingleUser: 'IAM Settings 2FA Enforce-Select single account users',
+  pageSize: 'IAM Settings 2FA Enforce-Page size',
+  consentChecked: 'IAM Settings 2FA Enforce-Consent checked',
+  updateTFAEnforcement:
+    'IAM Settings 2FA Enforce-Update Two-Factor Authentication Enforcement',
+};
+
+// Pendo IDs for IAM Users
+export const IAM_USERS_PENDO_IDS = {
+  docs: 'IAM Users-Docs',
+  userDetailsTab: 'IAM Users-User Details',
+  assignedRolesTab: 'IAM Users-Assigned Roles',
+  entityAccessTab: 'IAM Users-Entity Access',
+  accountDelegationsTab: 'IAM Users-Account Delegations',
+};
+
+// Pendo IDs for IAM Users - User Details tab
+export const IAM_USERS_USER_DETAILS_PENDO_IDS = {
+  editDetails: 'IAM Users User Details-Edit Details',
+  deleteUser: 'IAM Users User Details-Delete User',
+  editDetailsCancel: 'IAM Users User Details Edit Details-Cancel',
+  editDetailsEdit: 'IAM Users User Details Edit Details-Edit',
+};

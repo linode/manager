@@ -4,24 +4,14 @@ import React from 'react';
 import { Link } from 'src/components/Link';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 
-import {
-  getDatabasesDescription,
-  hasPendingUpdates,
-  isDefaultDatabase,
-  useIsDatabasesEnabled,
-} from './utilities';
+import { getDatabasesDescription, hasPendingUpdates } from './utilities';
 
-import type {
-  Engine,
-  PendingUpdates,
-  Platform,
-} from '@linode/api-v4/lib/databases';
+import type { Engine, PendingUpdates } from '@linode/api-v4/lib/databases';
 
 interface Props {
   databaseEngine: Engine;
   databaseID: number;
   databasePendingUpdates?: PendingUpdates[];
-  databasePlatform?: Platform;
   databaseVersion: string;
 }
 
@@ -30,19 +20,16 @@ export const DatabaseEngineVersion = (props: Props) => {
     databaseEngine: engine,
     databaseID,
     databasePendingUpdates,
-    databasePlatform: platform,
     databaseVersion: version,
   } = props;
-  const engineVersion = getDatabasesDescription({ engine, version });
 
-  const { isDatabasesV2GA } = useIsDatabasesEnabled();
-  const isDefaultGA = isDatabasesV2GA && isDefaultDatabase({ platform });
+  const engineVersion = getDatabasesDescription({ engine, version });
   const hasUpdates = hasPendingUpdates(databasePendingUpdates);
 
   return (
     <>
       {engineVersion}
-      {isDefaultGA && hasUpdates && (
+      {hasUpdates && (
         <StyledLink
           accessibleAriaLabel="Database Engine"
           data-testid="maintenance-link"

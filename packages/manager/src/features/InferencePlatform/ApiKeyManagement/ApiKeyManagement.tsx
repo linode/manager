@@ -26,11 +26,7 @@ export const ApiKeyManagement = () => {
   const [isCreateDrawerOpen, setIsCreateDrawerOpen] = React.useState(false);
 
   return (
-    <Stack
-      direction="row"
-      gap={3}
-      sx={{ height: 'calc(100vh - 300px)', minHeight: 400 }}
-    >
+    <Stack direction="row" gap={3} sx={{ minHeight: 400 }}>
       <Stack sx={{ flex: 1, minWidth: 0 }}>
         <Stack direction="row" justifyContent="space-between" sx={{ mb: 2 }}>
           <Stack alignItems="center" direction="row" gap={2}>

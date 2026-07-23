@@ -16,6 +16,7 @@ import { SHARED_IMAGE_ICON_TOOLTIP } from '../constants';
 import { ImagesActionMenu } from './ImagesActionMenu';
 import { ImageStatus } from './ImageStatus';
 
+import type { OWNED_BY_ME_IMAGES_TAB_PENDO_IDS } from '../constants';
 import type { Handlers } from './ImagesActionMenu';
 import type { Event, Image } from '@linode/api-v4';
 
@@ -23,16 +24,18 @@ interface Props {
   event?: Event;
   handlers: Handlers;
   image: Image;
+  pendoIDs?: typeof OWNED_BY_ME_IMAGES_TAB_PENDO_IDS;
 }
 
 export const ImageRow = (props: Props) => {
-  const { event, handlers, image } = props;
+  const { event, handlers, image, pendoIDs } = props;
 
   const {
     capabilities,
     created,
     expiry,
     id,
+    is_shared,
     label,
     regions,
     size,
@@ -45,9 +48,6 @@ export const ImageRow = (props: Props) => {
 
   const isFailedUpload =
     image.status === 'pending_upload' && event?.status === 'failed';
-
-  const shareGroupCount =
-    image.image_sharing?.shared_with?.sharegroup_count ?? 0;
 
   const getSizeForImage = (
     size: number,
@@ -75,6 +75,7 @@ export const ImageRow = (props: Props) => {
       <TableCell data-qa-image-label noWrap>
         <Stack
           alignItems="center"
+          data-pendo-id={pendoIDs?.sharedImageLabel}
           direction="row"
           gap={2}
           justifyContent="space-between"
@@ -97,15 +98,17 @@ export const ImageRow = (props: Props) => {
             {type === 'manual' && capabilities.includes('cloud-init') && (
               <TooltipIcon
                 icon={<CloudInitIcon />}
+                pendoId={pendoIDs?.metadataSupportedIcon}
                 sxTooltipIcon={{
                   padding: 0,
                 }}
                 text="This image supports our Metadata service via cloud-init."
               />
             )}
-            {shareGroupCount > 0 && (
+            {is_shared && (
               <TooltipIcon
                 icon={<CoreSharedIcon />}
+                pendoId={pendoIDs?.sharedImageIcon}
                 sxTooltipIcon={{
                   padding: 0,
                 }}
@@ -122,7 +125,7 @@ export const ImageRow = (props: Props) => {
       </Hidden>
       {type === 'manual' && (
         <Hidden smDown>
-          <TableCell>
+          <TableCell data-pendo-id={pendoIDs?.replicatedRegionPopover}>
             {regions.length > 0 ? (
               <LinkButton onClick={() => handlers.onManageRegions?.(image)}>
                 {pluralize('Region', 'Regions', regions.length)}
@@ -166,7 +169,7 @@ export const ImageRow = (props: Props) => {
           <TableCell>{id}</TableCell>
         </Hidden>
       )}
-      <TableCell actionCell>
+      <TableCell actionCell data-pendo-id={pendoIDs?.actionMenuLabel}>
         <ImagesActionMenu {...props} />
       </TableCell>
     </TableRow>

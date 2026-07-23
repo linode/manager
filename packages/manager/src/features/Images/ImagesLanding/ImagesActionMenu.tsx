@@ -4,8 +4,12 @@ import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 
-import type { SHARED_WITH_ME_IMAGES_TAB_PENDO_IDS } from '../constants';
-import type { JOINED_GROUP_DETAILS_PENDO_IDS } from './v2/constants';
+import {
+  OWNED_BY_ME_IMAGES_TAB_PENDO_IDS,
+  SHARED_WITH_ME_IMAGES_TAB_PENDO_IDS,
+} from '../constants';
+import { JOINED_GROUP_DETAILS_PENDO_IDS } from './v2/constants';
+
 import type { Event, Image } from '@linode/api-v4';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
@@ -19,7 +23,6 @@ export interface Handlers {
   onView?: (image: Image) => void;
   onViewShareGroups?: (image: Image) => void;
 }
-
 interface Props {
   event?: Event;
   handlers: Handlers;
@@ -27,6 +30,7 @@ interface Props {
   isSharedImageRow?: boolean;
   pendoIDs?:
     | typeof JOINED_GROUP_DETAILS_PENDO_IDS
+    | typeof OWNED_BY_ME_IMAGES_TAB_PENDO_IDS
     | typeof SHARED_WITH_ME_IMAGES_TAB_PENDO_IDS;
 }
 
@@ -68,9 +72,7 @@ export const ImagesActionMenu = (props: Props) => {
     const deployAction = {
       disabled: !linodeAccountPermissions.create_linode || isDisabled,
       onClick: () => onDeploy?.(id),
-      pendoId: isSharedImageRow
-        ? pendoIDs?.actionMenu.deployNewLinode
-        : undefined,
+      pendoId: pendoIDs?.actionMenu.deployNewLinode,
       title: 'Deploy to New Linode',
       tooltip: !linodeAccountPermissions.create_linode
         ? getRestrictedResourceText({
@@ -86,9 +88,7 @@ export const ImagesActionMenu = (props: Props) => {
     const rebuildAction = {
       disabled: isDisabled,
       onClick: () => onRebuild?.(image),
-      pendoId: isSharedImageRow
-        ? pendoIDs?.actionMenu.rebuildLinode
-        : undefined,
+      pendoId: pendoIDs?.actionMenu.rebuildLinode,
       title: 'Rebuild an Existing Linode',
       tooltip: isDisabled ? 'Image is not yet available for use.' : undefined,
     };
@@ -98,7 +98,11 @@ export const ImagesActionMenu = (props: Props) => {
         {
           title: 'View Image Details',
           onClick: () => onView?.(image),
-          pendoId: pendoIDs?.actionMenu.viewImageDetails,
+          pendoId:
+            pendoIDs === JOINED_GROUP_DETAILS_PENDO_IDS ||
+            pendoIDs === SHARED_WITH_ME_IMAGES_TAB_PENDO_IDS
+              ? pendoIDs?.actionMenu.viewImageDetails
+              : undefined,
         },
         { ...deployAction },
         { ...rebuildAction },
@@ -109,6 +113,10 @@ export const ImagesActionMenu = (props: Props) => {
       {
         disabled: !imagePermissions.update_image || isDisabled,
         onClick: () => onEdit?.(image),
+        pendoId:
+          pendoIDs === OWNED_BY_ME_IMAGES_TAB_PENDO_IDS
+            ? pendoIDs?.actionMenu.editImageDetails
+            : undefined,
         title: 'Edit',
         tooltip: !imagePermissions.update_image
           ? getRestrictedResourceText({
@@ -124,6 +132,10 @@ export const ImagesActionMenu = (props: Props) => {
         ? [
             {
               onClick: () => onViewShareGroups?.(image),
+              pendoId:
+                pendoIDs === OWNED_BY_ME_IMAGES_TAB_PENDO_IDS
+                  ? pendoIDs?.actionMenu.viewImageShareGroups
+                  : undefined,
               title: `View Image Share Groups`,
             },
           ]
@@ -133,6 +145,10 @@ export const ImagesActionMenu = (props: Props) => {
             {
               disabled: !imagePermissions.replicate_image || isDisabled,
               onClick: () => onManageRegions(image),
+              pendoId:
+                pendoIDs === OWNED_BY_ME_IMAGES_TAB_PENDO_IDS
+                  ? pendoIDs?.actionMenu.manageReplicas
+                  : undefined,
               title: 'Manage Replicas',
               tooltip: !imagePermissions.replicate_image
                 ? getRestrictedResourceText({
@@ -149,6 +165,10 @@ export const ImagesActionMenu = (props: Props) => {
       {
         disabled: !imagePermissions.delete_image || isSharedImage,
         onClick: () => onDelete?.(image),
+        pendoId:
+          pendoIDs === OWNED_BY_ME_IMAGES_TAB_PENDO_IDS
+            ? pendoIDs?.actionMenu.deleteImage
+            : undefined,
         title: isAvailable ? 'Delete' : 'Cancel',
         tooltip: !imagePermissions.delete_image
           ? getRestrictedResourceText({

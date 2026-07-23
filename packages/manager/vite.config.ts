@@ -33,6 +33,10 @@ export default defineConfig({
   resolve: {
     alias: {
       src: `${DIRNAME}/src`,
+      // @akamai/cds-components only exports "./theme" (font-family.css + reboot.css).
+      // We need the @font-face rules alone so Nunito Sans matches CDS components without
+      // Bootstrap reboot resets conflicting with MUI CssBaseline and index.css.
+      '@akamai/cds-components/font-family': `${DIRNAME}/node_modules/@akamai/cds-components/dist/theme/theme/font-family.css`,
       // In test mode, stub out msw/browser so Vite never tries to resolve the
       // real subpath export. `vitest related` scans the full source tree and
       // hits mswWorkers.ts → msw/browser, which fails under Node conditions in

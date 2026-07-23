@@ -27,7 +27,6 @@ import type {
   ConnectionPool,
   CreateDatabasePayload,
   Database,
-  DatabaseBackup,
   DatabaseBackupsPayload,
   DatabaseCredentials,
   DatabaseEngine,
@@ -54,12 +53,10 @@ export const useDatabaseQuery = (engine: Engine, id: number) =>
 export const useDatabasesQuery = (
   params: Params,
   filter: Filter,
-  isEnabled: boolean | undefined,
   refetchInterval?: number,
 ) =>
   useQuery<ResourcePage<DatabaseInstance>, APIError[]>({
     ...databaseQueries.databases._ctx.paginated(params, filter),
-    enabled: isEnabled,
     placeholderData: keepPreviousData,
     // @TODO Consider removing polling
     refetchInterval,
@@ -187,16 +184,6 @@ export const useResumeDatabaseMutation = (engine: Engine, id: number) => {
     },
   });
 };
-
-export const useDatabaseBackupsQuery = (
-  engine: Engine,
-  id: number,
-  enabled: boolean = false,
-) =>
-  useQuery<ResourcePage<DatabaseBackup>, APIError[]>({
-    ...databaseQueries.database(engine, id)._ctx.backups,
-    enabled,
-  });
 
 export const useDatabaseConnectionPoolQuery = (
   databaseId: number,

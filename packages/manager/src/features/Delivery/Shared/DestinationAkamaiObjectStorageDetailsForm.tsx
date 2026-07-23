@@ -17,7 +17,7 @@ import { HideShowText } from 'src/components/PasswordInput/HideShowText';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { getDestinationFormPendoId } from 'src/features/Delivery/deliveryUtils';
 import { PathSample } from 'src/features/Delivery/Shared/PathSample';
-import { useObjectStorageBuckets } from 'src/features/ObjectStorage/hooks/useObjectStorageBuckets';
+import { useObjectStorageBuckets } from 'src/features/ObjectStorage/Buckets/hooks/useObjectStorageBuckets';
 import { useFlags } from 'src/hooks/useFlags';
 
 import type { FormMode, FormType } from 'src/features/Delivery/Shared/types';

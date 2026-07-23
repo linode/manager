@@ -19,9 +19,9 @@ export const KeyTypeBadge = ({ keyType }: KeyTypeBadgeProps) => {
   > = {
     playground: {
       backgroundColor: isDarkMode
-        ? theme.tokens.color.Violet[40]
-        : theme.tokens.color.Violet[30],
-      color: theme.tokens.color.Violet[90],
+        ? theme.tokens.color.Violet[90]
+        : theme.tokens.color.Violet[70],
+      color: theme.palette.common.white,
     },
     user: {
       backgroundColor: isDarkMode
@@ -31,11 +31,11 @@ export const KeyTypeBadge = ({ keyType }: KeyTypeBadgeProps) => {
     },
   };
 
-  const label = keyType === 'playground' ? 'Playground Key' : 'User Key';
+  const label = keyType === 'playground' ? 'Playground' : 'User Key';
 
   return (
     <Chip
-      icon={<LockIcon sx={{ fontSize: 14 }} />}
+      icon={<LockIcon sx={{ height: 12, width: 12 }} />}
       label={label}
       size="small"
       sx={{
@@ -44,7 +44,7 @@ export const KeyTypeBadge = ({ keyType }: KeyTypeBadgeProps) => {
           color: 'inherit',
           marginRight: 0.125,
         },
-        fontSize: '0.95rem',
+        fontSize: '0.75rem',
         height: 24,
       }}
     />

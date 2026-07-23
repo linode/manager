@@ -126,6 +126,7 @@ export const NotificationChannelDetail = () => {
               maxHeight={sectionMaxHeight}
               sx={{
                 ...getAlertBoxStyles(theme),
+                scrollbarWidth: 'thin',
                 overflow: 'auto',
               }}
             >

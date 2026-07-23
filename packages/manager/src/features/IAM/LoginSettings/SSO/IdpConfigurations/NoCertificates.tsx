@@ -10,8 +10,7 @@ import {
 } from '@akamai/cds-components/react';
 import * as React from 'react';
 
-import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
-
+import { usePermissions } from '../../../hooks/usePermissions';
 import {
   ADD_CERTIFICATE_PERMISSION_ERROR,
   IAM_SSO_IDP_PENDO_IDS,

@@ -14,7 +14,9 @@ interface Props {
    * Optional Styles
    */
   style?: React.CSSProperties;
-  /** The username to truncate
+  tooltipStyle?: React.CSSProperties;
+  /**
+   * The username to truncate
    */
   username: string;
 }
@@ -43,7 +45,7 @@ const useWindowWidth = () => {
  * this is mainly used for delegate usernames that has format: {delegate-parentUsername-HASH}.
  */
 export const TruncatedUsername = (props: Props) => {
-  const { maxWindowWidth, style, username } = props;
+  const { maxWindowWidth, style, tooltipStyle, username } = props;
   const windowWidth = useWindowWidth();
   const isTruncated =
     username.length > 32 && (!maxWindowWidth || windowWidth <= maxWindowWidth);
@@ -51,6 +53,7 @@ export const TruncatedUsername = (props: Props) => {
   return (
     <Tooltip
       disabled={!isTruncated}
+      style={tooltipStyle}
       tooltipPlacement="bottom"
       tooltipText={username}
     >

@@ -5,6 +5,7 @@ import * as React from 'react';
 
 import { useIsDatabasesEnabled } from './features/Databases/utilities';
 import { useIsMarketplaceV2Enabled } from './features/Marketplace/shared';
+import { useIsNATGatewaysEnabled } from './features/NATGateways/utils';
 import { useIsNetworkLoadBalancerEnabled } from './features/NetworkLoadBalancers/utils';
 import { useIsPlacementGroupsEnabled } from './features/PlacementGroups/utils';
 import { useIsReserveIpEnabled } from './features/ReservedIps/utils';
@@ -20,8 +21,9 @@ export const GoTo = React.memo(() => {
   const isManagedAccount = accountSettings?.managed ?? false;
 
   const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
-  const { isDatabasesEnabled } = useIsDatabasesEnabled();
+  const isDatabasesEnabled = useIsDatabasesEnabled();
   const { isMarketplaceV2FeatureEnabled } = useIsMarketplaceV2Enabled();
+  const { isNATGatewaysEnabled } = useIsNATGatewaysEnabled();
   const { isNetworkLoadBalancerEnabled } = useIsNetworkLoadBalancerEnabled();
   const { isReserveIpEnabled } = useIsReserveIpEnabled();
 
@@ -64,6 +66,11 @@ export const GoTo = React.memo(() => {
       {
         display: 'NodeBalancers',
         href: '/nodebalancers',
+      },
+      {
+        display: 'NAT Gateways',
+        hide: !isNATGatewaysEnabled,
+        href: '/natgateways',
       },
       {
         display: 'Reserved IPs',
@@ -135,6 +142,7 @@ export const GoTo = React.memo(() => {
       isDatabasesEnabled,
       isManagedAccount,
       isMarketplaceV2FeatureEnabled,
+      isNATGatewaysEnabled,
       isNetworkLoadBalancerEnabled,
       isPlacementGroupsEnabled,
       isReserveIpEnabled,

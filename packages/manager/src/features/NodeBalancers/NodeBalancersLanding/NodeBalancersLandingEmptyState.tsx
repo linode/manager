@@ -30,6 +30,8 @@ export const NodeBalancerLandingEmptyState = () => {
           {
             children: 'Create NodeBalancer',
             disabled: !permissions.create_nodebalancer,
+            'data-pendo-id':
+              'NodeBalancers Landing Empty-Create NodeBalancer Start Flow',
             onClick: () => {
               sendEvent({
                 action: 'Click:button',

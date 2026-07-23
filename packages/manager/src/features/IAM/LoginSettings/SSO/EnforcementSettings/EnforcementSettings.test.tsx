@@ -2,11 +2,7 @@ import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
-import {
-  ERROR_STATE_TEXT,
-  ERROR_STATE_TITLE,
-} from 'src/features/IAM/Shared/constants';
-
+import { ERROR_STATE_TEXT, ERROR_STATE_TITLE } from '../../../Shared/constants';
 import {
   getCdsButtonByText,
   getSwitchControl,

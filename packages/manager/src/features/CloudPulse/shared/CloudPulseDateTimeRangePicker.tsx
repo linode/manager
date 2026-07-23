@@ -4,12 +4,18 @@ import { useTheme } from '@mui/material/styles';
 import { DateTime } from 'luxon';
 import React from 'react';
 
+import { useFlags } from 'src/hooks/useFlags';
+
 import {
   defaultTimeDuration,
   getTimeFromPreset,
 } from '../Utils/CloudPulseDateTimePickerUtils';
 
-import type { DateTimeWithPreset, FilterValue } from '@linode/api-v4';
+import type {
+  CloudPulseServiceType,
+  DateTimeWithPreset,
+  FilterValue,
+} from '@linode/api-v4';
 
 interface DateChangeProps {
   endDate: null | string;
@@ -26,12 +32,16 @@ export interface CloudPulseDateTimeRangePickerProps {
     savePref?: boolean
   ) => void;
   savePreferences?: boolean;
+
+  serviceType: CloudPulseServiceType | undefined;
 }
 
 export const CloudPulseDateTimeRangePicker = React.memo(
   (props: CloudPulseDateTimeRangePickerProps) => {
-    const { defaultValue, handleStatsChange, savePreferences } = props;
+    const { defaultValue, handleStatsChange, savePreferences, serviceType } =
+      props;
     const { data: profile } = useProfile();
+    const flags = useFlags();
     let defaultSelected = defaultValue as DateTimeWithPreset;
     const RESET = 'Reset';
     const theme = useTheme();
@@ -42,7 +52,10 @@ export const CloudPulseDateTimeRangePicker = React.memo(
         : (profile?.timezone ?? DateTime.local().zoneName));
 
     if (!defaultSelected) {
-      defaultSelected = defaultTimeDuration(timezone);
+      const preset = serviceType
+        ? flags.aclpServices?.[serviceType]?.metrics?.defaultPreset
+        : undefined;
+      defaultSelected = defaultTimeDuration(timezone, preset);
     } else {
       defaultSelected = getTimeFromPreset(defaultSelected, timezone);
     }

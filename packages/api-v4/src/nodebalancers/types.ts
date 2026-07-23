@@ -10,9 +10,9 @@ type UDPStickiness = 'none' | 'session' | 'source_ip';
 
 export type Stickiness = TCPStickiness | UDPStickiness;
 
-type NodeBalancerType = 'common' | 'premium' | 'premium_40gb';
+export type NodeBalancerType = 'common' | 'premium' | 'premium_40gb';
 
-type NodeBalancerBackendConnectivity =
+export type NodeBalancerBackendConnectivity =
   | 'ipv6'
   | 'ipv6_and_vpc'
   | 'legacy'
@@ -28,6 +28,7 @@ export interface LKEClusterInfo {
 
 export interface NodeBalancer {
   backend_connectivity?: NodeBalancerBackendConnectivity;
+  backend_ipv6_prefix?: string;
   /**
    * Maximum number of new TCP connections that a client (identified by a specific source IP)
    * is allowed to initiate every second.

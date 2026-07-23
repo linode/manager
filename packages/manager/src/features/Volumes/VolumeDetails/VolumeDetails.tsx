@@ -1,5 +1,5 @@
+import { Badge } from '@akamai/cds-components/react';
 import { useRegionQuery, useVolumeQuery } from '@linode/queries';
-import { BetaChip, CircleProgress, ErrorState } from '@linode/ui';
 import { Outlet, useNavigate, useParams } from '@tanstack/react-router';
 import * as React from 'react';
 
@@ -12,14 +12,15 @@ import { useTabs } from 'src/hooks/useTabs';
 import { useCloudPulseServiceByServiceType } from 'src/queries/cloudpulse/services';
 
 import { BLOCK_STORAGE_METRICS_KEY } from '../constants';
+import { CircleProgress } from '../Partials/CircleProgress';
+import { ErrorState } from '../Partials/ErrorState';
 import { VolumeDrawers } from '../VolumeDrawers/VolumeDrawers';
 import { VolumeDetailsHeader } from './VolumeDetailsHeader';
 
 export const VolumeDetails = () => {
   const navigate = useNavigate();
 
-  const { volumeSummaryPage, aclpServices, blockStorageContextualMetrics } =
-    useFlags();
+  const { aclpServices, blockStorageContextualMetrics } = useFlags();
   const { isError: aclpServiceError, isLoading: aclServiceLoading } =
     useCloudPulseServiceByServiceType('blockstorage', true);
 
@@ -55,12 +56,17 @@ export const VolumeDetails = () => {
       to: '/volumes/$volumeId/metrics',
       title: 'Metrics',
       hide: isVolumeMetricsTabHidden,
-      chip: aclpServices?.blockstorage?.metrics?.beta ? <BetaChip /> : null,
+      chip: aclpServices?.blockstorage?.metrics?.beta ? (
+        <Badge
+          style={{ marginLeft: 'var(--token-global-spacing-s8)' }}
+          type="beta"
+        />
+      ) : null,
     },
   ]);
 
-  if (!volumeSummaryPage || volumeError) {
-    return <ErrorState errorText={volumeError?.[0].reason ?? 'Not found'} />;
+  if (volumeError) {
+    return <ErrorState errorText={volumeError?.[0].reason} heightPx="300px" />;
   }
 
   if (volumeLoading || regionLoading || aclServiceLoading || !volume) {

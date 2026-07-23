@@ -3,12 +3,11 @@ import { Spacing } from '@akamai/cds-tokens';
 import { truncateMiddle } from '@akamai/compute-ui-core/formatting';
 import * as React from 'react';
 
-import { useBreakpoint } from 'src/features/IAM/hooks/useBreakpoint';
-import { CopyTooltip } from 'src/features/IAM/Shared/CopyTooltip/CopyTooltip';
-import { DateTimeDisplay } from 'src/features/IAM/Shared/DateTimeDisplay/DateTimeDisplay';
-import { StatusIcon } from 'src/features/IAM/Shared/StatusIcon/StatusIcon';
-
+import { useBreakpoint } from '../../../hooks/useBreakpoint';
+import { CopyTooltip } from '../../../Shared/CopyTooltip/CopyTooltip';
+import { DateTimeDisplay } from '../../../Shared/DateTimeDisplay/DateTimeDisplay';
 import { Drawer, DrawerInlineActions } from '../../../Shared/Drawer';
+import { StatusIcon } from '../../../Shared/StatusIcon/StatusIcon';
 import { IAM_SSO_IDP_PENDO_IDS } from '../../constants';
 import { getCertificateStatus } from './idpConfigurationDrawer.utils';
 import styles from './ViewCertificateDrawer.module.css';

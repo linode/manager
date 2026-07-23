@@ -1,6 +1,6 @@
 import { createContext, useContext } from 'react';
 
-import type { InferenceModel } from './inferenceService';
+import type { InferenceModel } from '@linode/api-v4';
 
 export interface InferencePlatformContextValue {
   isModelsLoading: boolean;

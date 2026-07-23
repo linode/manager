@@ -114,12 +114,12 @@ describe('NotificationRecipients component tests', () => {
     // Verify users are initially selected
     expect(
       await screen.findByRole('option', {
-        name: mockUsers[0].username,
+        name: `${mockUsers[0].username} (${mockUsers[0].email})`,
       })
     ).toHaveAttribute(ARIA_SELECTED, 'true');
     expect(
       screen.getByRole('option', {
-        name: mockUsers[1].username,
+        name: `${mockUsers[1].username} (${mockUsers[1].email})`,
       })
     ).toHaveAttribute(ARIA_SELECTED, 'true');
 
@@ -199,7 +199,7 @@ describe('NotificationRecipients component tests', () => {
 
     // Check that unselected options are disabled
     const unselectedOption = await screen.findByRole('option', {
-      name: mockUsers[5].username,
+      name: `${mockUsers[5].username} (${mockUsers[5].email})`,
     });
     expect(unselectedOption).toHaveAttribute('aria-disabled', 'true');
   });
@@ -241,5 +241,57 @@ describe('NotificationRecipients component tests', () => {
 
     renderWithTheme(<NotificationRecipients {...props} />);
     expect(screen.getByText('Failed to fetch the users.')).toBeVisible();
+  });
+
+  it('should display email alongside username in dropdown options', async () => {
+    const mockUsers = [
+      accountUserFactory.build({
+        email: 'alice@example.com',
+        username: 'alice',
+      }),
+      accountUserFactory.build({ email: 'bob@example.com', username: 'bob' }),
+    ];
+
+    queryMocks.useAllAccountUsersQuery.mockReturnValue({
+      data: mockUsers,
+      isLoading: false,
+      isError: false,
+    });
+
+    renderWithTheme(<NotificationRecipients {...props} />);
+
+    await userEvent.click(screen.getByRole('button', { name: 'Open' }));
+
+    for (const user of mockUsers) {
+      expect(
+        await screen.findByText(`${user.username} (${user.email})`)
+      ).toBeVisible();
+    }
+  });
+
+  it('should display email alongside username in selected value chips', async () => {
+    const mockUsers = [
+      accountUserFactory.build({
+        email: 'alice@example.com',
+        username: 'alice',
+      }),
+      accountUserFactory.build({ email: 'bob@example.com', username: 'bob' }),
+    ];
+    const selectedUsernames = mockUsers.map((user) => user.username);
+
+    queryMocks.useAllAccountUsersQuery.mockReturnValue({
+      data: mockUsers,
+      isLoading: false,
+      isError: false,
+    });
+
+    renderWithTheme(
+      <NotificationRecipients {...props} value={selectedUsernames} />
+    );
+
+    // limitTags={1} means only the first chip is visible; the rest are collapsed
+    expect(
+      screen.getByText(`${mockUsers[0].username} (${mockUsers[0].email})`)
+    ).toBeVisible();
   });
 });

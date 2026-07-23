@@ -1,6 +1,7 @@
 import type {
   Algorithm,
   APIError,
+  NodeBalancerBackendConnectivity,
   NodeBalancerConfigNode,
   NodeBalancerProxyProtocol,
   PermissionType,
@@ -55,6 +56,7 @@ export interface NodeBalancerConfigPanelProps {
   healthCheckTimeout: number;
 
   healthCheckType: 'connection' | 'http' | 'http_body' | 'none';
+  nodeBalancerBackendConnectivity?: NodeBalancerBackendConnectivity;
   nodeBalancerRegion?: string;
 
   nodeBalancerSubnetId?: number;

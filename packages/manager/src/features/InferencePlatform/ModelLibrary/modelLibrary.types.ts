@@ -12,8 +12,9 @@ export interface Model {
   isServerless: boolean;
   outputModes: ModelCapability[];
   parametersB: number;
-  priceInputPerMillion: number;
-  priceOutputPerMillion: number;
+  playgroundAvailable: boolean;
+  priceInputPerMillion?: number;
+  priceOutputPerMillion?: number;
   providerLogo: string;
   providerName: string;
   releasedAt: string;

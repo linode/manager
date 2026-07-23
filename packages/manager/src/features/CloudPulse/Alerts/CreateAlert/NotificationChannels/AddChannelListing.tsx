@@ -200,6 +200,7 @@ export const AddChannelListing = (props: AddChannelListingProps) => {
           )}
           <Button
             buttonType="outlined"
+            data-pendo-id="monitor-alerts-Add-Notification-Channel"
             data-qa-buttons="true"
             disabled={notificationChannelWatcher.length === 5 || !serviceType}
             onClick={handleOpenDrawer}

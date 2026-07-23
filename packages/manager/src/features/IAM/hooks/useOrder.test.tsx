@@ -1,8 +1,6 @@
 import { queryClientFactory } from '@linode/queries';
 import { act, renderHook, waitFor } from '@testing-library/react';
 
-import { http, HttpResponse, server } from 'src/mocks/testServer';
-
 import { wrapWithProviders } from '../utilities/testHelpers';
 import { useOrder } from './useOrder';
 
@@ -11,12 +9,27 @@ import type { UseOrderProps } from './useOrder';
 const mockNavigate = vi.fn();
 const mockUseSearch = vi.fn(() => ({}));
 
+const queryMocks = vi.hoisted(() => ({
+  mutateAsync: vi.fn(),
+  useMutatePreferences: vi.fn(),
+  usePreferences: vi.fn(),
+}));
+
 vi.mock('@tanstack/react-router', async () => {
   const actual = await vi.importActual('@tanstack/react-router');
   return {
     ...actual,
     useNavigate: vi.fn(() => mockNavigate),
     useSearch: vi.fn(() => mockUseSearch()),
+  };
+});
+
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
+  return {
+    ...actual,
+    useMutatePreferences: queryMocks.useMutatePreferences,
+    usePreferences: queryMocks.usePreferences,
   };
 });
 
@@ -36,6 +49,12 @@ describe('useOrderV2', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     queryClient.clear();
+
+    queryMocks.usePreferences.mockReturnValue({ data: undefined });
+    queryMocks.mutateAsync.mockResolvedValue(undefined);
+    queryMocks.useMutatePreferences.mockReturnValue({
+      mutateAsync: queryMocks.mutateAsync,
+    });
   });
 
   it('should use URL params with prefix', async () => {
@@ -62,18 +81,14 @@ describe('useOrderV2', () => {
   it('should use preferences when present and no URL params are provided', async () => {
     mockUseSearch.mockReturnValue({});
 
-    server.use(
-      http.get('*/profile/preferences', () => {
-        return HttpResponse.json({
-          sortKeys: {
-            volumes: {
-              order: 'desc',
-              orderBy: 'size',
-            },
-          },
-        });
-      })
-    );
+    queryMocks.usePreferences.mockReturnValue({
+      data: {
+        volumes: {
+          order: 'desc',
+          orderBy: 'size',
+        },
+      },
+    });
 
     const { result } = renderHook(() => useOrder(defaultProps), {
       wrapper: (ui) => wrapWithProviders(ui.children, { queryClient }),
@@ -90,11 +105,7 @@ describe('useOrderV2', () => {
   it('should use default values as last priority', async () => {
     mockUseSearch.mockReturnValue({});
 
-    server.use(
-      http.get('*/profile/preferences', () => {
-        return HttpResponse.json({ sortKeys: {} });
-      })
-    );
+    queryMocks.usePreferences.mockReturnValue({ data: {} });
 
     const { result } = renderHook(() => useOrder(defaultProps), {
       wrapper: (ui) => wrapWithProviders(ui.children, { queryClient }),
@@ -113,18 +124,11 @@ describe('useOrderV2', () => {
   });
 
   it('should update URL and preferences when handleOrderChange is called', async () => {
-    const mutatePreferencesMock = vi.fn();
-    server.use(
-      http.put('*/profile/preferences', async ({ request }) => {
-        const body = await request.json();
-        mutatePreferencesMock(body);
-        return HttpResponse.json(body);
-      })
-    );
-
     mockUseSearch.mockReturnValue({});
 
-    const { result } = renderHook(() => useOrder(defaultProps), {
+    queryMocks.usePreferences.mockReturnValue({ data: {} });
+
+    const { rerender, result } = renderHook(() => useOrder(defaultProps), {
       wrapper: (ui) => wrapWithProviders(ui.children, { queryClient }),
     });
 
@@ -136,6 +140,7 @@ describe('useOrderV2', () => {
       order: 'desc',
       orderBy: 'size',
     });
+    rerender();
 
     await waitFor(() => {
       expect(mockNavigate).toHaveBeenCalledWith(
@@ -146,7 +151,7 @@ describe('useOrderV2', () => {
       );
     });
     await waitFor(() => {
-      expect(mutatePreferencesMock).toHaveBeenCalledWith(
+      expect(queryMocks.mutateAsync).toHaveBeenCalledWith(
         expect.objectContaining({
           sortKeys: expect.objectContaining({
             volumes: {

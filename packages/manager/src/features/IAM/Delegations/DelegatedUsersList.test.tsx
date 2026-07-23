@@ -8,11 +8,6 @@ import { DelegatedUsersList } from './DelegatedUsersList';
 const getVisibleEllipsis = (container: HTMLElement) =>
   container.querySelector('[data-slrtl-visible-ellipsis]');
 
-vi.mock('src/OAuth/oauthClient', () => ({
-  getIsAdminToken: vi.fn(),
-  oauthClient: {},
-}));
-
 describe('DelegatedUsersList', () => {
   it('renders comma-separated usernames when all fit', () => {
     const { container } = renderWithProviders(
