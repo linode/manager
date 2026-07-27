@@ -5,23 +5,21 @@
   "bugs": {
     "url": "https://github.com/linode/manager/issues"
   },
-  "keywords": [
-    "linode",
-    "api",
-    "sdk",
-    "api-v4"
-  ],
+  "license": "Apache-2.0",
+  "author": "Linode",
   "repository": {
     "type": "git",
     "url": "https://github.com/linode/manager/tree/develop/packages/api-v4"
   },
-  "description": "JavaScript wrapper around the Linode APIv4",
-  "author": "Linode",
-  "license": "Apache-2.0",
-  "private": false,
+  "files": [
+    "lib"
+  ],
   "type": "module",
   "main": "lib/index.cjs",
   "module": "lib/index.js",
+  "browser": "./lib/index.global.js",
+  "types": "./lib/index.d.ts",
+  "unpkg": "./lib/index.global.js",
   "exports": {
     ".": {
       "import": "./lib/index.js",
@@ -36,16 +34,6 @@
       "require": "./lib/index.cjs"
     }
   },
-  "types": "./lib/index.d.ts",
-  "browser": "./lib/index.global.js",
-  "unpkg": "./lib/index.global.js",
-  "dependencies": {
-    "@akamai/compute-ui-core": "0.0.0-20260615155722",
-    "@linode/validation": "workspace:*",
-    "axios": "~1.18.0",
-    "ipaddr.js": "^2.0.0",
-    "yup": "^1.4.0"
-  },
   "scripts": {
     "start": "concurrently --raw \"tsc -w --preserveWatchOutput\" \"tsup --watch\"",
     "build": "concurrently --raw \"tsc\" \"tsup\"",
@@ -53,15 +41,19 @@
     "lint": "eslint . --quiet --ext .js,.ts,.tsx",
     "typecheck": "tsc --noEmit true --emitDeclarationOnly false"
   },
-  "files": [
-    "lib"
-  ],
+  "dependencies": {
+    "@akamai/compute-ui-core": "1.0.2",
+    "@linode/validation": "workspace:*",
+    "axios": "~1.18.0",
+    "ipaddr.js": "^2.0.0",
+    "yup": "^1.4.0"
+  },
   "devDependencies": {
     "@linode/tsconfig": "workspace:*",
+    "@types/node": "^22.13.14",
     "axios-mock-adapter": "^1.22.0",
     "concurrently": "^10.0.3",
-    "tsup": "^8.5.1",
-    "@types/node": "^22.13.14"
+    "tsup": "^8.5.1"
   },
   "lint-staged": {
     "*.{ts,tsx,js}": [

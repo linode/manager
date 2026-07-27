@@ -36,7 +36,7 @@ h3.sectionHeading {
   flex-wrap: wrap;
 }
 
-.metadataLink{
+.metadataLink {
   margin-top: 0;
   margin-bottom: var(--token-global-spacing-s24, 24px);
 }

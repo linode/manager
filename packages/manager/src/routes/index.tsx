@@ -10,12 +10,7 @@ import { iamRouteTree } from 'src/features/IAM/routes';
 import { accountRouteTree } from './account';
 import { accountSettingsRouteTree, settingsRouteTree } from './accountSettings';
 import { cloudPulseAlertsRouteTree } from './alerts';
-import {
-  cancelLandingRoute,
-  loginAsCustomerCallbackRoute,
-  logoutRoute,
-  oauthCallbackRoute,
-} from './auth';
+import { cancelLandingRoute, logoutRoute, oauthCallbackRoute } from './auth';
 import { betaRouteTree } from './betas';
 import { billingRouteTree } from './billing';
 import { databasesRouteTree } from './databases';
@@ -64,9 +59,7 @@ export const routeTree = rootRoute.addChildren([
   indexRoute,
   accountSettingsRouteTree,
   cancelLandingRoute,
-  loginAsCustomerCallbackRoute,
   logoutRoute,
-  oauthCallbackRoute,
   accountRouteTree,
   billingRouteTree,
   betaRouteTree,
@@ -90,6 +83,7 @@ export const routeTree = rootRoute.addChildren([
   natGatewaysRouteTree,
   networkLoadBalancersRouteTree,
   nodeBalancersRouteTree,
+  oauthCallbackRoute,
   objectStorageRouteTree,
   placementGroupsRouteTree,
   profileRouteTree,
@@ -112,6 +106,7 @@ export const router = createRouter({
     globalErrors: {},
     isACLPEnabled: false,
     isDatabasesEnabled: false,
+    isIAMEnabled: false,
     isPlacementGroupsEnabled: false,
     isPrivateImageSharingEnabled: false,
     profile: undefined,

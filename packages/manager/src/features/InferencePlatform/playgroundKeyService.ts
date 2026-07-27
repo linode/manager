@@ -126,7 +126,7 @@ export const rotatePlaygroundKey = async (
 
 /**
  * Gets an existing valid playground key, rotates if expired, or creates a new one.
- * - If REACT_APP_INFERENCE_API_KEY env var is set, uses that directly
+ * - If COMPUTE_INFERENCE_API_KEY env var is set, uses that directly
  * - If a valid (non-expired) key exists in session storage, returns it
  * - If the key is expired/expiring, rotates it to get fresh credentials
  * - If no key exists, creates a new one
@@ -137,7 +137,7 @@ export const getOrCreatePlaygroundKey = async (
   username: string
 ): Promise<string> => {
   // If a static API key is configured via env, use it directly
-  const envApiKey = import.meta.env.REACT_APP_INFERENCE_API_KEY;
+  const envApiKey = import.meta.env.COMPUTE_INFERENCE_API_KEY;
   if (envApiKey) {
     return envApiKey;
   }

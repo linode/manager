@@ -34,7 +34,6 @@ import { createRoute, redirect } from '@tanstack/react-router';
  * boundary before IAM can fully leave the monolith repo.
  */
 import { rootRoute } from '../../../routes/root';
-import { checkIAMEnabled } from '../hooks/useIsIAMEnabled';
 import { IAMRoute } from './IAMRoute';
 
 import type { TableSearchParams } from '../../../routes/types';
@@ -72,6 +71,11 @@ const iamActions = {
 export type IAMAction = (typeof iamActions)[keyof typeof iamActions];
 
 const iamRoute = createRoute({
+  beforeLoad: ({ context }) => {
+    if (!context.isIAMEnabled) {
+      throw redirect({ to: '/users', replace: true });
+    }
+  },
   component: IAMRoute,
   getParentRoute: () => rootRoute,
   validateSearch: (search: IamUsersSearchParams) => search,
@@ -96,20 +100,6 @@ const iamTabsRoute = createRoute({
 const iamUsersRoute = createRoute({
   getParentRoute: () => iamTabsRoute,
   path: 'users',
-  beforeLoad: async ({ context }) => {
-    const isIAMEnabled = await checkIAMEnabled(
-      context.queryClient,
-      context.flags,
-      context.profile
-    );
-
-    if (!isIAMEnabled) {
-      throw redirect({
-        to: '/users',
-        replace: true,
-      });
-    }
-  },
 }).lazy(() =>
   import('../Users/UsersTable/usersLandingLazyRoute').then(
     (m) => m.usersLandingLazyRoute
@@ -128,20 +118,6 @@ const iamRolesRoute = createRoute({
   getParentRoute: () => iamTabsRoute,
   path: 'roles',
   validateSearch: (search: IamUserRolesSearchParams) => search,
-  beforeLoad: async ({ context }) => {
-    const isIAMEnabled = await checkIAMEnabled(
-      context.queryClient,
-      context.flags,
-      context.profile
-    );
-
-    if (!isIAMEnabled) {
-      throw redirect({
-        to: '/users',
-        replace: true,
-      });
-    }
-  },
 }).lazy(() =>
   import('../Roles/rolesLandingLazyRoute').then((m) => m.rolesLandingLazyRoute)
 );
@@ -149,17 +125,12 @@ const iamRolesRoute = createRoute({
 const iamDefaultsTabsRoute = createRoute({
   getParentRoute: () => iamRoute,
   path: 'roles/defaults',
-  beforeLoad: async ({ context }) => {
-    const profile = context?.profile;
-    const userType = profile?.user_type;
-
+  beforeLoad: ({ context }) => {
+    const userType = context.profile?.user_type;
     const isChildOrDelegate = userType === 'child' || userType === 'delegate';
 
     if (!isChildOrDelegate) {
-      throw redirect({
-        to: '/iam/roles',
-        replace: true,
-      });
+      throw redirect({ to: '/iam/roles', replace: true });
     }
   },
 }).lazy(() =>
@@ -199,30 +170,12 @@ const iamRolesCatchAllRoute = createRoute({
 const iamDelegationsRoute = createRoute({
   getParentRoute: () => iamTabsRoute,
   path: 'delegations',
-  beforeLoad: async ({ context }) => {
-    const profile = context?.profile;
+  beforeLoad: ({ context }) => {
+    const userType = context.profile?.user_type;
+    const isChildOrDelegate = userType === 'child' || userType === 'delegate';
 
-    const isIAMEnabled = await checkIAMEnabled(
-      context.queryClient,
-      context.flags,
-      context.profile
-    );
-
-    if (!isIAMEnabled) {
-      throw redirect({
-        to: '/users',
-        replace: true,
-      });
-    }
-
-    const isChildAccount = profile?.user_type === 'child';
-    const isDelegateAccount = profile?.user_type === 'delegate';
-    const isChildOrDelegate = isChildAccount || isDelegateAccount;
     if (isChildOrDelegate) {
-      throw redirect({
-        to: '/iam/users',
-        replace: true,
-      });
+      throw redirect({ to: '/iam/users', replace: true });
     }
   },
 }).lazy(() =>
@@ -243,14 +196,9 @@ const iamUserNameRoute = createRoute({
   getParentRoute: () => iamRoute,
   path: '/users/$username',
   loader: async ({ context, params, location }) => {
-    const isIAMEnabled = await checkIAMEnabled(
-      context.queryClient,
-      context.flags,
-      context.profile
-    );
     const { username } = params;
 
-    if (isIAMEnabled && username) {
+    if (username) {
       const profile = await context.queryClient.ensureQueryData(
         queryOptions(profileQueries.profile())
       );
@@ -299,7 +247,6 @@ const iamUserNameRoute = createRoute({
     }
 
     return {
-      isIAMEnabled,
       username,
     };
   },
@@ -328,21 +275,6 @@ const iamUserNameIndexRoute = createRoute({
 const iamUserNameDetailsRoute = createRoute({
   getParentRoute: () => iamUserNameRoute,
   path: 'details',
-  beforeLoad: async ({ context, params }) => {
-    const isIAMEnabled = await checkIAMEnabled(
-      context.queryClient,
-      context.flags,
-      context.profile
-    );
-    const { username } = params;
-    if (!isIAMEnabled && username) {
-      throw redirect({
-        to: '/account/users/$username/profile',
-        params: { username },
-        replace: true,
-      });
-    }
-  },
 }).lazy(() =>
   import('../Users/UserDetails/userProfileLazyRoute').then(
     (m) => m.userProfileLazyRoute
@@ -353,21 +285,6 @@ const iamUserNameRolesRoute = createRoute({
   getParentRoute: () => iamUserNameRoute,
   path: 'roles',
   validateSearch: (search: IamUserRolesSearchParams) => search,
-  beforeLoad: async ({ context, params }) => {
-    const isIAMEnabled = await checkIAMEnabled(
-      context.queryClient,
-      context.flags,
-      context.profile
-    );
-    const { username } = params;
-
-    if (!isIAMEnabled && username) {
-      throw redirect({
-        to: '/account/users/$username/permissions',
-        params: { username },
-      });
-    }
-  },
 }).lazy(() =>
   import('../Users/UserRoles/userRolesLazyRoute').then(
     (m) => m.userRolesLazyRoute
@@ -378,22 +295,6 @@ const iamUserNameEntitiesRoute = createRoute({
   getParentRoute: () => iamUserNameRoute,
   path: 'entities',
   validateSearch: (search: IamEntitiesSearchParams) => search,
-  beforeLoad: async ({ context, params }) => {
-    const isIAMEnabled = await checkIAMEnabled(
-      context.queryClient,
-      context.flags,
-      context.profile
-    );
-    const { username } = params;
-
-    if (!isIAMEnabled && username) {
-      throw redirect({
-        to: '/account/users/$username',
-        params: { username },
-        replace: true,
-      });
-    }
-  },
 }).lazy(() =>
   import('../Users/UserEntities/userEntitiesLazyRoute').then(
     (m) => m.userEntitiesLazyRoute
@@ -403,15 +304,11 @@ const iamUserNameEntitiesRoute = createRoute({
 const iamUserNameDelegationsRoute = createRoute({
   getParentRoute: () => iamUserNameRoute,
   path: 'delegations',
-  beforeLoad: async ({ context, params }) => {
-    const profile = context?.profile;
-    const userType = profile?.user_type;
-    const { username } = params;
-
-    if (userType !== 'parent') {
+  beforeLoad: ({ context, params }) => {
+    if (context.profile?.user_type !== 'parent') {
       throw redirect({
         to: '/iam/users/$username/details',
-        params: { username },
+        params: { username: params.username },
         replace: true,
       });
     }
@@ -455,9 +352,7 @@ const iamSsoRoute = createRoute({
   getParentRoute: () => iamRoute,
   path: '/settings/sso',
   beforeLoad: ({ context }) => {
-    const isFederationEnabled = Boolean(context?.flags?.iamFederation);
-
-    if (!isFederationEnabled) {
+    if (!context.flags?.iamFederation) {
       throw redirect({ to: '/iam/users', replace: true });
     }
   },

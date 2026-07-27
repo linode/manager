@@ -9,21 +9,23 @@ interface Props {
   title: string;
 }
 
-export const TopMenuTooltip = React.memo(({ children, title }: Props) => {
-  return (
-    <Tooltip
-      describeChild={true}
-      disableTouchListener
-      enterDelay={500}
-      leaveDelay={0}
-      title={title}
-    >
-      <div>{children}</div>
-    </Tooltip>
-  );
-});
+export const NotificationMenuTooltip = React.memo(
+  ({ children, title }: Props) => {
+    return (
+      <Tooltip
+        describeChild={true}
+        disableTouchListener
+        enterDelay={500}
+        leaveDelay={0}
+        title={title}
+      >
+        <div>{children}</div>
+      </Tooltip>
+    );
+  }
+);
 
-export const topMenuIconButtonSx = (theme: Theme) => ({
+export const notificationMenuIconButtonSx = (theme: Theme) => ({
   '&:active': {
     color: theme.tokens.component.GlobalHeader.Icon.Active,
   },

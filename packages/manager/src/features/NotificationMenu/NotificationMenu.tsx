@@ -23,7 +23,10 @@ import {
   useMarkEventsAsSeen,
 } from 'src/queries/events/events';
 
-import { topMenuIconButtonSx, TopMenuTooltip } from '../TopMenuTooltip';
+import {
+  notificationMenuIconButtonSx,
+  NotificationMenuTooltip,
+} from './NotificationMenuTooltip';
 
 export const NotificationMenu = () => {
   const { dismissNotifications } = useDismissibleNotifications();
@@ -82,7 +85,7 @@ export const NotificationMenu = () => {
 
   return (
     <>
-      <TopMenuTooltip title="Notifications">
+      <NotificationMenuTooltip title="Notifications">
         <IconButton
           aria-describedby={id}
           aria-haspopup="true"
@@ -92,7 +95,7 @@ export const NotificationMenu = () => {
           onClick={handleNotificationMenuToggle}
           ref={anchorRef}
           sx={(theme) => ({
-            ...topMenuIconButtonSx(theme),
+            ...notificationMenuIconButtonSx(theme),
             color: notificationContext.menuOpen
               ? theme.tokens.component.GlobalHeader.Icon.Active
               : theme.tokens.component.GlobalHeader.Icon.Default,
@@ -116,7 +119,7 @@ export const NotificationMenu = () => {
             />
           )}
         </IconButton>
-      </TopMenuTooltip>
+      </NotificationMenuTooltip>
       <Popover
         anchorEl={anchorRef.current}
         anchorOrigin={{

@@ -87,6 +87,9 @@ describe('UnassignRoleConfirmationDialog', () => {
       mutateAsync: vi.fn(),
       reset: vi.fn(),
     });
+    queryMocks.useIsDefaultDelegationRolesForChildAccount.mockReturnValue({
+      isDefaultDelegationRolesForChildAccount: false,
+    });
   });
 
   afterEach(() => {

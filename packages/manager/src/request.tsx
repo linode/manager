@@ -169,16 +169,17 @@ export const injectEuuidToProfile = (
   return response;
 };
 
+let interceptorsConfigured = false;
+
 export const setupInterceptors = (store: ApplicationStore) => {
+  if (interceptorsConfigured) {
+    return;
+  }
+
+  interceptorsConfigured = true;
+
   baseRequest.interceptors.request.use(async (config) => {
-    if (
-      window.location.pathname === '/oauth/callback' ||
-      window.location.pathname === '/admin/callback'
-    ) {
-      throw new Error(
-        'API calls blocked during authentication callback processing'
-      );
-    }
+    await oauthClient.ensureAuthCallbacksHandled();
 
     const url = getURL(config);
 

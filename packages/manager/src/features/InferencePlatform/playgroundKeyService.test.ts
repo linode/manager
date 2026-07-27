@@ -226,13 +226,13 @@ describe('rotatePlaygroundKey', () => {
 // ---------------------------------------------------------------------------
 
 // Check if env var is set at test time
-const ENV_API_KEY = import.meta.env.REACT_APP_INFERENCE_API_KEY;
+const ENV_API_KEY = import.meta.env.COMPUTE_INFERENCE_API_KEY;
 
 describe('getOrCreatePlaygroundKey', () => {
   if (ENV_API_KEY) {
-    // When REACT_APP_INFERENCE_API_KEY env var is set,
+    // When COMPUTE_INFERENCE_API_KEY env var is set,
     // the function returns it directly without creating/rotating keys.
-    it('returns env API key directly when REACT_APP_INFERENCE_API_KEY is set', async () => {
+    it('returns env API key directly when COMPUTE_INFERENCE_API_KEY is set', async () => {
       const result = await getOrCreatePlaygroundKey('testuser');
 
       expect(result).toBe(ENV_API_KEY);

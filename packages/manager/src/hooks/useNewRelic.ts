@@ -6,11 +6,11 @@ import React from 'react';
  *
  * New Relic will load if
  * - You are using a Cloud Manager production build
- * - It is not explictly disabled with `REACT_APP_DISABLE_NEW_RELIC`
+ * - It is not explictly disabled with `COMPUTE_DISABLE_NEW_RELIC`
  */
 export const useNewRelic = () => {
   React.useEffect(() => {
-    if (import.meta.env.PROD && !import.meta.env.REACT_APP_DISABLE_NEW_RELIC) {
+    if (import.meta.env.PROD && !import.meta.env.COMPUTE_DISABLE_NEW_RELIC) {
       loadScript('/new-relic.js');
     }
   }, []);

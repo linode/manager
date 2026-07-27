@@ -1,26 +1,42 @@
 {
-  "name": "@linode/cloud-manager",
-  "author": "Linode",
-  "description": "The Linode Manager website",
+  "name": "@linode/cloud-manager-distributed",
   "version": "1.165.0",
   "private": false,
-  "type": "module",
-  "files": [
-    "build"
-  ],
+  "description": "The Linode Manager website",
   "bugs": {
     "url": "https://github.com/Linode/manager/issues"
   },
   "license": "Apache-2.0",
+  "author": "Linode",
   "repository": {
     "type": "git",
     "url": "https://github.com/Linode/manager.git"
+  },
+  "files": [
+    "build"
+  ],
+  "type": "module",
+  "scripts": {
+    "start": "concurrently --raw \"NODE_OPTIONS='--max-old-space-size=4096' vite\" \"NODE_OPTIONS='--max-old-space-size=4096' tsc --watch --preserveWatchOutput\"",
+    "start:expose": "concurrently --raw \"vite --host\" \"tsc --watch --preserveWatchOutput\"",
+    "start:ci": "vite preview --port 3000 --host",
+    "lint": "eslint . --ext .js,.ts,.tsx --quiet",
+    "build": "vite build",
+    "build:analyze": "bunx vite-bundle-visualizer",
+    "test": "NODE_OPTIONS='--max-old-space-size=4096' vitest run",
+    "test:ui": "vitest --ui",
+    "storybook": "NODE_OPTIONS='--max-old-space-size=4096' storybook dev -p 6006",
+    "storybook-static": "storybook build -c .storybook -o .out",
+    "build-storybook": "storybook build",
+    "typecheck": "tsc",
+    "coverage": "vitest run --coverage && open coverage/index.html",
+    "coverage:summary": "vitest run --coverage.enabled --reporter=junit --coverage.reporter=json-summary"
   },
   "dependencies": {
     "@akamai/cds-components": "0.0.0-20260622084103",
     "@akamai/cds-icons": "0.0.0-20260622084103",
     "@akamai/cds-tokens": "0.0.0-20260622084103",
-    "@akamai/compute-ui-core": "0.0.0-20260615155722",
+    "@akamai/compute-ui-core": "1.0.2",
     "@braintree/sanitize-url": "^7.1.0",
     "@dnd-kit/core": "^6.1.0",
     "@dnd-kit/sortable": "^8.0.0",
@@ -96,32 +112,9 @@
     "yup": "^1.4.0",
     "zxcvbn": "^4.4.2"
   },
-  "scripts": {
-    "start": "concurrently --raw \"NODE_OPTIONS='--max-old-space-size=4096' vite\" \"NODE_OPTIONS='--max-old-space-size=4096' tsc --watch --preserveWatchOutput\"",
-    "start:expose": "concurrently --raw \"vite --host\" \"tsc --watch --preserveWatchOutput\"",
-    "start:ci": "vite preview --port 3000 --host",
-    "lint": "eslint . --ext .js,.ts,.tsx --quiet",
-    "build": "vite build",
-    "build:analyze": "bunx vite-bundle-visualizer",
-    "test": "NODE_OPTIONS='--max-old-space-size=4096' vitest run",
-    "test:ui": "vitest --ui",
-    "storybook": "NODE_OPTIONS='--max-old-space-size=4096' storybook dev -p 6006",
-    "storybook-static": "storybook build -c .storybook -o .out",
-    "build-storybook": "storybook build",
-    "typecheck": "tsc",
-    "coverage": "vitest run --coverage && open coverage/index.html",
-    "coverage:summary": "vitest run --coverage.enabled --reporter=junit --coverage.reporter=json-summary"
-  },
-  "lint-staged": {
-    "*.{ts,tsx,js}": [
-      "prettier --write",
-      "eslint --ext .js,.ts,.tsx --quiet"
-    ],
-    "*.{ts,tsx}": [
-      "sh -c 'pnpm typecheck'"
-    ]
-  },
   "devDependencies": {
+    "@akamai/compute-ui-portal": "1.0.2",
+    "@akamai/compute-ui-portal-menu": "1.0.0",
     "@storybook/addon-a11y": "^10.5.3",
     "@storybook/addon-docs": "^10.5.3",
     "@storybook/react-vite": "^10.5.3",
@@ -169,6 +162,15 @@
     "storybook": "^10.5.3",
     "vite": "^8.1.5",
     "vite-plugin-svgr": "^5.2.0"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js}": [
+      "prettier --write",
+      "eslint --ext .js,.ts,.tsx --quiet"
+    ],
+    "*.{ts,tsx}": [
+      "sh -c 'pnpm typecheck'"
+    ]
   },
   "browserslist": [
     ">1%",

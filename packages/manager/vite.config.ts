@@ -1,3 +1,8 @@
+import {
+  computeUiPortalProxy,
+  externalComputeUiPortalScript,
+  injectPortalConfig,
+} from '@akamai/compute-ui-portal/vite';
 import react from '@vitejs/plugin-react';
 import { URL } from 'url';
 import svgr from 'vite-plugin-svgr';
@@ -22,13 +27,19 @@ const cdsDarkTokensScope = (): Plugin => ({
 export default defineConfig({
   build: {
     outDir: 'build',
+    rollupOptions: {
+      external: [/^\/libs\/compute-ui-portal\//],
+    },
   },
-  envPrefix: 'REACT_APP_',
+  envPrefix: 'COMPUTE_',
   plugins: [
     cdsDarkTokensScope(),
     react(),
     svgr({ svgrOptions: { exportType: 'default' }, include: '**/*.svg' }),
     urlCanParsePolyfill(),
+    computeUiPortalProxy(),
+    externalComputeUiPortalScript(),
+    injectPortalConfig(),
   ],
   resolve: {
     alias: {
@@ -52,7 +63,7 @@ export default defineConfig({
   },
   test: {
     env: {
-      REACT_APP_CLIENT_ID: 'test-client-id',
+      COMPUTE_CLIENT_ID: 'test-client-id',
     },
     // Limit parallelism in CI to prevent resource exhaustion on shared agents.
     maxWorkers: process.env.CI ? '50%' : undefined,

@@ -1,12 +1,5 @@
-*,
-*::before,
-*::after {
-  box-sizing: inherit;
-}
-
 html {
   height: 100%;
-  box-sizing: border-box;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-stretch: normal;
@@ -109,6 +102,7 @@ body.searchOverlay #main-content {
 
 #root {
   height: 100%;
+  width: 100%;
 }
 
 #main-content {
@@ -285,25 +279,6 @@ button::-moz-focus-inner {
 
 .overflow-hidden {
   overflow: hidden !important;
-}
-
-.skip-link {
-  display: flex;
-  justify-content: center;
-  background: #3683dc;
-  color: white;
-  font-size: 14px;
-  font-family: 'Nunito Sans', sans-serif;
-  font-weight: 700;
-  padding: 8px;
-  position: absolute;
-  top: -40px;
-  width: 190px;
-  z-index: 9999;
-}
-
-.skip-link:focus {
-  top: 0;
 }
 
 /*

@@ -6,7 +6,7 @@
 4. Enter a label, set the callback URL to `http://localhost:3000/oauth/callback`, and check the "Public" checkbox.
 5. After your OAuth App has been created, copy the ID (not the secret).
 6. In `packages/manager`, copy the contents of `.env.example` and paste them into a new file called `.env`.
-7. In `.env` set `REACT_APP_CLIENT_ID` to the ID from step 5.
+7. In `.env` set `COMPUTE_CLIENT_ID` to the ID from step 5.
 8. Install Node.js 22.19 LTS. We recommend using [Volta](https://volta.sh/):
 
    ```bash

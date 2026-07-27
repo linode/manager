@@ -1,11 +1,37 @@
 import { usePreferences } from '@linode/queries';
 import { dark, light } from '@linode/ui';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import * as React from 'react';
 
 import type { ThemeName } from '@linode/ui';
+import type { ThemeChoice } from '@linode/utilities';
 import type { Theme } from '@mui/material/styles';
 
 export const themes: Record<ThemeName, Theme> = { dark, light };
+
+export const THEME_PREFERENCE_STORAGE_KEY = 'manager-theme-preference';
+
+export const isValidThemeChoice = (value: unknown): value is ThemeChoice =>
+  value === 'dark' || value === 'light' || value === 'system';
+
+/** Synchronous read for first paint before preferences are in the React Query cache. */
+export const getStoredThemePreference = (): ThemeChoice | undefined => {
+  try {
+    const value = localStorage.getItem(THEME_PREFERENCE_STORAGE_KEY);
+
+    return isValidThemeChoice(value) ? value : undefined;
+  } catch {
+    return undefined;
+  }
+};
+
+export const setStoredThemePreference = (theme: ThemeChoice) => {
+  try {
+    localStorage.setItem(THEME_PREFERENCE_STORAGE_KEY, theme);
+  } catch {
+    // Ignore storage errors (private mode, quota, etc.)
+  }
+};
 
 /**
  * If you need to toggle Cloud Manager's theme, use this function
@@ -58,8 +84,16 @@ export const useColorMode = () => {
 
   const isSystemInDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
 
+  const resolvedPreference = themePreference ?? getStoredThemePreference();
+
+  React.useEffect(() => {
+    if (themePreference !== undefined) {
+      setStoredThemePreference(themePreference);
+    }
+  }, [themePreference]);
+
   const colorMode = getThemeFromPreferenceValue(
-    themePreference,
+    resolvedPreference,
     isSystemInDarkMode
   );
 

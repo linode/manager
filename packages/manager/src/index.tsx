@@ -30,8 +30,8 @@ const store = storeFactory();
 
 setupInterceptors(store);
 
-if (import.meta.env.REACT_APP_ACCESS_TOKEN) {
-  storage.authentication.token.set(import.meta.env.REACT_APP_ACCESS_TOKEN);
+if (import.meta.env.COMPUTE_ACCESS_TOKEN) {
+  storage.authentication.token.set(import.meta.env.COMPUTE_ACCESS_TOKEN);
 }
 
 computeUiCoreApi.configure({
