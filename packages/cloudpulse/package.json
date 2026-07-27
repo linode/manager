@@ -64,7 +64,7 @@
   },
   "devDependencies": {
     "@linode/api-v4": "workspace:*",
-    "@linode/cloud-manager": "workspace:*",
+    "@linode/cloud-manager-distributed": "workspace:*",
     "@linode/queries": "workspace:*",
     "@linode/search": "workspace:*",
     "@linode/shared": "workspace:*",

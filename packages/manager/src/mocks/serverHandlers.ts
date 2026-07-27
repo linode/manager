@@ -2468,7 +2468,7 @@ export const handlers = [
 
     const proxyToken = appTokenFactory.build({
       expiry: expiry.toISOString(),
-      token: `Bearer ${import.meta.env.REACT_APP_PROXY_PAT}`,
+      token: `Bearer ${import.meta.env.COMPUTE_PROXY_PAT}`,
     });
     return HttpResponse.json(proxyToken);
   }),

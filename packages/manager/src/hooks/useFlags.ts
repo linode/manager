@@ -28,14 +28,18 @@ export const useFlags = () => {
   const [flags, setFlags] = useState(featureFlagClient.getFlags() ?? {});
 
   useEffect(() => {
-    const cleanup = featureFlagClient.subscribe((newFlags) => {
-      setFlags(newFlags);
-    });
+    const updateFlags = () => {
+      setFlags(featureFlagClient.getFlags() ?? {});
+    };
+
+    updateFlags();
+
+    const cleanup = featureFlagClient.subscribe(updateFlags);
 
     return () => {
       cleanup();
     };
-  }, []);
+  }, [featureFlagClient]);
 
   return {
     ...flags,

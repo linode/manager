@@ -1,17 +1,10 @@
 import { createRoute } from '@tanstack/react-router';
 
 import { CancelLanding } from 'src/features/CancelLanding/CancelLanding';
-import { LoginAsCustomerCallback } from 'src/OAuth/LoginAsCustomerCallback';
 import { Logout } from 'src/OAuth/Logout';
 import { OAuthCallback } from 'src/OAuth/OAuthCallback';
 
 import { rootRoute } from '../root';
-
-interface OAuthCallbackSearch {
-  code?: string;
-  returnTo?: string;
-  state?: string;
-}
 
 const cancelLandingRoute = createRoute({
   getParentRoute: () => rootRoute,
@@ -25,22 +18,10 @@ const logoutRoute = createRoute({
   component: Logout,
 });
 
-const loginAsCustomerCallbackRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: 'admin/callback',
-  component: LoginAsCustomerCallback,
-});
-
 const oauthCallbackRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: 'oauth/callback',
   component: OAuthCallback,
-  validateSearch: (search: OAuthCallbackSearch) => search,
 });
 
-export {
-  cancelLandingRoute,
-  loginAsCustomerCallbackRoute,
-  logoutRoute,
-  oauthCallbackRoute,
-};
+export { cancelLandingRoute, logoutRoute, oauthCallbackRoute };

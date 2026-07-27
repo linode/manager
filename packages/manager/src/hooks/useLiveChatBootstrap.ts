@@ -64,11 +64,11 @@ const getEmbeddedMessagingBootstrap = () =>
   ).embeddedservice_bootstrap;
 
 const embeddedMessagingConfig = {
-  bootstrapJsUrl: import.meta.env.REACT_APP_CHAT_BOOTSTRAP_JS_URL ?? '',
-  deploymentName: import.meta.env.REACT_APP_CHAT_DEPLOYMENT_NAME ?? '',
-  deploymentUrl: import.meta.env.REACT_APP_CHAT_DEPLOYMENT_URL ?? '',
-  orgId: import.meta.env.REACT_APP_CHAT_ORG_ID ?? '',
-  scrt2Url: import.meta.env.REACT_APP_CHAT_SCRT2_URL ?? '',
+  bootstrapJsUrl: import.meta.env.COMPUTE_CHAT_BOOTSTRAP_JS_URL ?? '',
+  deploymentName: import.meta.env.COMPUTE_CHAT_DEPLOYMENT_NAME ?? '',
+  deploymentUrl: import.meta.env.COMPUTE_CHAT_DEPLOYMENT_URL ?? '',
+  orgId: import.meta.env.COMPUTE_CHAT_ORG_ID ?? '',
+  scrt2Url: import.meta.env.COMPUTE_CHAT_SCRT2_URL ?? '',
 };
 
 function getAllowedMessageOrigins(): Set<string> {

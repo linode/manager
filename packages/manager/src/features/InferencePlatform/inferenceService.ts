@@ -5,11 +5,11 @@
  * These calls use native `fetch` rather than the axios-based `Request()`
  * helper in `@linode/api-v4` because of the different base URL.
  *
- * Set REACT_APP_INFERENCE_BASE_URL in your .env file, e.g.:
- *   REACT_APP_INFERENCE_BASE_URL=https://api.alpha.akamai-inference.com/v1
+ * Set COMPUTE_INFERENCE_BASE_URL in your .env file, e.g.:
+ *   COMPUTE_INFERENCE_BASE_URL=https://api.alpha.akamai-inference.com/v1
  */
 
-const INFERENCE_BASE_URL = import.meta.env.REACT_APP_INFERENCE_BASE_URL;
+const INFERENCE_BASE_URL = import.meta.env.COMPUTE_INFERENCE_BASE_URL;
 
 /**
  * Client-side request timeout in milliseconds. Set slightly above the

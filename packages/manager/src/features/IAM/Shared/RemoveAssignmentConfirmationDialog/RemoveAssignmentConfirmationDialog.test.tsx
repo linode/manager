@@ -73,6 +73,9 @@ describe('RemoveAssignmentConfirmationDialog', () => {
       mutateAsync: vi.fn(),
       reset: vi.fn(),
     });
+    queryMocks.useIsDefaultDelegationRolesForChildAccount.mockReturnValue({
+      isDefaultDelegationRolesForChildAccount: false,
+    });
   });
 
   afterEach(() => {

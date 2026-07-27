@@ -10,7 +10,7 @@ import { MaskableTextAreaCopy } from 'src/components/MaskableText/MaskableTextAr
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { EDIT_BILLING_CONTACT } from 'src/features/Billing/constants';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
-import { StyledAutorenewIcon } from 'src/features/TopMenu/NotificationMenu/NotificationMenu';
+import { StyledAutorenewIcon } from 'src/features/NotificationMenu/NotificationMenu';
 
 import {
   BillingActionButton,

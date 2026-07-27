@@ -14,25 +14,25 @@ interface EnvironmentOption {
 
 // Parse a node env to collect environment options. Set environment variables as follows:
 //
-// REACT_APP_DEV_TOOLS_ENV_1_LABEL="Prod"
-// REACT_APP_DEV_TOOLS_ENV_1_API_ROOT="https://api.linode.com/v4"
-// REACT_APP_DEV_TOOLS_ENV_1_LOGIN_ROOT="https://login.linode.com"
-// REACT_APP_DEV_TOOLS_ENV_1_CLIENT_ID=<YOUR_CLIENT_ID>
+// COMPUTE_DEV_TOOLS_ENV_1_LABEL="Prod"
+// COMPUTE_DEV_TOOLS_ENV_1_API_ROOT="https://api.linode.com/v4"
+// COMPUTE_DEV_TOOLS_ENV_1_LOGIN_ROOT="https://login.linode.com"
+// COMPUTE_DEV_TOOLS_ENV_1_CLIENT_ID=<YOUR_CLIENT_ID>
 //
 // Repeat for each desired environment, incrementing the "1" to "2", e.g.:
 //
-// REACT_APP_DEV_TOOLS_ENV_2_LABEL+"Another environment"
+// COMPUTE_DEV_TOOLS_ENV_2_LABEL+"Another environment"
 export const getOptions = (env: Partial<ImportMetaEnv>) => {
   const envVariables = Object.keys(env);
 
   return envVariables.reduce<EnvironmentOption[]>((acc, thisEnvVariable) => {
-    const parsed = /REACT_APP_DEV_TOOLS_ENV_(.)_LABEL/.exec(thisEnvVariable);
+    const parsed = /COMPUTE_DEV_TOOLS_ENV_(.)_LABEL/.exec(thisEnvVariable);
     if (!parsed) {
       return acc;
     }
 
     const num = parsed[1];
-    const base = `REACT_APP_DEV_TOOLS_ENV_${num}`;
+    const base = `COMPUTE_DEV_TOOLS_ENV_${num}`;
 
     return [
       ...acc,

@@ -1,7 +1,11 @@
 import {
   getNextThemeValue,
+  getStoredThemePreference,
   getThemeFromPreferenceValue,
   isValidTheme,
+  isValidThemeChoice,
+  setStoredThemePreference,
+  THEME_PREFERENCE_STORAGE_KEY,
 } from './theme';
 
 describe('getNextThemeValue', () => {
@@ -61,5 +65,48 @@ describe('getThemeFromPreferenceValue', () => {
   });
   it('should default to light if some crazy preference value is passed', () => {
     expect(getThemeFromPreferenceValue({ omg: 'test' }, false)).toBe('light');
+  });
+});
+
+describe('theme preference localStorage', () => {
+  const store = new Map<string, string>();
+
+  beforeEach(() => {
+    store.clear();
+    vi.stubGlobal('localStorage', {
+      getItem: (key: string) => store.get(key) ?? null,
+      setItem: (key: string, value: string) => {
+        store.set(key, value);
+      },
+      removeItem: (key: string) => {
+        store.delete(key);
+      },
+    });
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it('returns undefined when nothing is stored', () => {
+    expect(getStoredThemePreference()).toBeUndefined();
+  });
+
+  it('reads and writes a valid theme preference', () => {
+    setStoredThemePreference('dark');
+    expect(store.get(THEME_PREFERENCE_STORAGE_KEY)).toBe('dark');
+    expect(getStoredThemePreference()).toBe('dark');
+  });
+
+  it('ignores invalid stored values', () => {
+    store.set(THEME_PREFERENCE_STORAGE_KEY, 'invalid');
+    expect(getStoredThemePreference()).toBeUndefined();
+  });
+
+  it('validates theme choices', () => {
+    expect(isValidThemeChoice('dark')).toBe(true);
+    expect(isValidThemeChoice('light')).toBe(true);
+    expect(isValidThemeChoice('system')).toBe(true);
+    expect(isValidThemeChoice('invalid')).toBe(false);
   });
 });

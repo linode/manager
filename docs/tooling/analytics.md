@@ -20,7 +20,7 @@ Important notes:
 
 ### Locally Testing Page Views & Custom Events and/or Troubleshooting Pendo
 
-1. Set the `REACT_APP_PENDO_API_KEY` environment variable in `.env`.
+1. Set the `COMPUTE_PENDO_API_KEY` environment variable in `.env`.
 2. Use the browser tools Network tab, filter requests by "psp.cloud", and check that successful network requests have been made to load Pendo scripts (also visible in the browser tools Sources tab).
 3. In the browser console, type `pendo.validateEnvironment()`.
 4. You should see command output in the console, and it should include an `accountId` and a `visitorId` that correspond with your APIv4 account `euuid` and profile `uid`, respectively. Each page view change or custom event that fires should be visible as a request in the Network tab.
@@ -84,7 +84,7 @@ See the `LinodeCreateForm` form events as an example.
 
 ### Locally Testing Page Views & Custom Events and/or Troubleshooting Adobe Analytics
 
-1. Set the `REACT_APP_ADOBE_ANALYTICS_URL` environment variable in `.env`.
+1. Set the `COMPUTE_ADOBE_ANALYTICS_URL` environment variable in `.env`.
 2. Use the browser tools Network tab, filter requests by "adobe", and check that successful network requests have been made to load the launch script and its extensions.
 3. In the browser console, type `_satellite.setDebug(true)`.
 4. Refresh the page. You should see Adobe debug log output in the console. Each page view change or custom event that fires should be visible in the logs.

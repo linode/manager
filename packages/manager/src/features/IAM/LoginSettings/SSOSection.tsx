@@ -30,10 +30,11 @@ interface Props {
 export const SSOSection = ({ error, idpConfigs }: Props) => {
   const navigate = useNavigate();
 
-  const { data: permissions, error: permissionsError, isLoading: isPermissionsLoading } = usePermissions(
-    'account',
-    ['view_idp_config']
-  );
+  const {
+    data: permissions,
+    error: permissionsError,
+    isLoading: isPermissionsLoading,
+  } = usePermissions('account', ['view_idp_config']);
 
   const idpConfig =
     idpConfigs && idpConfigs?.results > 0 ? idpConfigs.data[0] : null;

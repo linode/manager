@@ -13,6 +13,10 @@ pipeline {
         VITEST_JUNIT_OUT = "${WORKSPACE}/reports/vitest-junit.xml"
     }
 
+    parameters {
+        booleanParam(name: 'SKIP_TESTS', defaultValue: false, description: 'Skip running tests on release/* branches')
+    }
+
     stages {
         // Core CI only for protected branches and open PRs — not for every feature-branch push.
         // (Lunabuild must trigger the multibranch *PR* job so CHANGE_ID / BITBUCKET_PR_ID is set;
@@ -21,8 +25,10 @@ pipeline {
             when {
                 anyOf {
                     branch 'develop'
+                    branch 'release/*'
                     branch 'staging'
                     branch 'master'
+                    branch 'master-cloud-manager-distributed'
                     expression { env.CHANGE_ID != null }
                     expression { env.BITBUCKET_PR_ID != null }
                 }
@@ -41,8 +47,10 @@ pipeline {
             when {
                 anyOf {
                     branch 'develop'
+                    branch 'release/*'
                     branch 'staging'
                     branch 'master'
+                    branch 'master-cloud-manager-distributed'
                     expression { env.CHANGE_ID != null }
                     expression { env.BITBUCKET_PR_ID != null }
                 }
@@ -59,8 +67,10 @@ pipeline {
             when {
                 anyOf {
                     branch 'develop'
+                    branch 'release/*'
                     branch 'staging'
                     branch 'master'
+                    branch 'master-cloud-manager-distributed'
                     expression { env.CHANGE_ID != null }
                     expression { env.BITBUCKET_PR_ID != null }
                 }
@@ -87,10 +97,16 @@ pipeline {
           when {
             anyOf {
               branch 'develop'
+              branch 'release/*'
               branch 'staging'
               branch 'master'
+              branch 'master-cloud-manager-distributed'
               expression { env.CHANGE_ID != null }
               expression { env.BITBUCKET_PR_ID != null }
+              allOf {
+                  branch pattern: "release/*"
+                  expression { return !params.SKIP_TESTS }
+              }
             }
           }
           steps {
@@ -118,19 +134,19 @@ pipeline {
                 }
             }
             environment {
-                REACT_APP_API_MAX_PAGE_SIZE = "500"
-                REACT_APP_API_ROOT = "https://api.devcloud.linode.com/v4"
-                REACT_APP_APP_ROOT = "https://cloud.devcloud.linode.com"
-                REACT_APP_CHAT_BOOTSTRAP_JS_URL = "https://akamai--qa.sandbox.my.site.com/ESWAkaChatCompute1778779688044/assets/js/bootstrap.min.js"
-                REACT_APP_CHAT_DEPLOYMENT_NAME = "AkaChat_Compute"
-                REACT_APP_CHAT_DEPLOYMENT_URL = "https://akamai--qa.sandbox.my.site.com/ESWAkaChatCompute1778779688044"
-                REACT_APP_CHAT_ORG_ID = "00DWr00000BiC8n"
-                REACT_APP_CHAT_SCRT2_URL = "https://akamai--qa.sandbox.my.salesforce-scrt.com"
-                REACT_APP_CLIENT_ID = "4bd20531408b51e73313"
-                REACT_APP_INFERENCE_BASE_URL = "https://api.dev.akamai-inference.com/v1"
-                REACT_APP_LAUNCH_DARKLY_ID = "67ed97f93736be0c14fa0ea2"
-                REACT_APP_LKE_HIGH_AVAILABILITY_PRICE = "60"
-                REACT_APP_LOGIN_ROOT = "https://login.devcloud.linode.com"
+                COMPUTE_API_MAX_PAGE_SIZE = "500"
+                COMPUTE_API_ROOT = "https://api.devcloud.linode.com/v4"
+                COMPUTE_APP_ROOT = "https://cloud.devcloud.linode.com"
+                COMPUTE_CHAT_BOOTSTRAP_JS_URL = "https://akamai--qa.sandbox.my.site.com/ESWAkaChatCompute1778779688044/assets/js/bootstrap.min.js"
+                COMPUTE_CHAT_DEPLOYMENT_NAME = "AkaChat_Compute"
+                COMPUTE_CHAT_DEPLOYMENT_URL = "https://akamai--qa.sandbox.my.site.com/ESWAkaChatCompute1778779688044"
+                COMPUTE_CHAT_ORG_ID = "00DWr00000BiC8n"
+                COMPUTE_CHAT_SCRT2_URL = "https://akamai--qa.sandbox.my.salesforce-scrt.com"
+                COMPUTE_CLIENT_ID = "4bd20531408b51e73313"
+                COMPUTE_LAUNCHDARKLY_CLIENT_ID = "67ed97f93736be0c14fa0ea2"
+                COMPUTE_LKE_HIGH_AVAILABILITY_PRICE = "60"
+                COMPUTE_LOGIN_ROOT = "https://login.devcloud.linode.com"
+                COMPUTE_INFERENCE_BASE_URL = "https://api.dev.akamai-inference.com/v1"
             }
             steps {
                 nodejs(configId: "npmrc-ro", nodeJSInstallationName: "v22") {
@@ -144,33 +160,34 @@ pipeline {
         stage("Build staging") {
             when {
                 anyOf {
+                    branch pattern: "release/*"
                     branch pattern: "staging"
                 }
             }
             environment {
-                REACT_APP_PAYPAL_CLIENT_ID = "AWdnFJ_Yx5X9uqKZQdbdkLfCnEJwtauQJ2tyesKf3S0IxSrkRLmB2ZN2ACSwy37gxY_AZoTagHWlZCOA"
-                REACT_APP_GPAY_MERCHANT_ID = "BCR2DN6TZ6OMNHTP"
-                REACT_APP_ALGOLIA_APPLICATION_ID = "KGUN8FAIPF"
-                REACT_APP_ALGOLIA_SEARCH_KEY = "d4847002cd30392fe0fbd00a1da933ed"
-                REACT_APP_API_ROOT = "https://cloud.staging.linode.com/api/v4"
-                REACT_APP_APP_ROOT = "https://cloud.staging.linode.com"
+                COMPUTE_PAYPAL_CLIENT_ID = "AWdnFJ_Yx5X9uqKZQdbdkLfCnEJwtauQJ2tyesKf3S0IxSrkRLmB2ZN2ACSwy37gxY_AZoTagHWlZCOA"
+                COMPUTE_GPAY_MERCHANT_ID = "BCR2DN6TZ6OMNHTP"
+                COMPUTE_ALGOLIA_APPLICATION_ID = "KGUN8FAIPF"
+                COMPUTE_ALGOLIA_SEARCH_KEY = "d4847002cd30392fe0fbd00a1da933ed"
+                COMPUTE_API_ROOT = "https://cloud.staging.linode.com/api/v4"
+                COMPUTE_APP_ROOT = "https://cloud.staging.linode.com"
                 // TODO(SD-966): Replace these AkaChat values with staging-specific endpoints when they are available.
-                REACT_APP_CHAT_BOOTSTRAP_JS_URL = "https://akamai.my.site.com/ESWAkaChatCompute1778779688044/assets/js/bootstrap.min.js"
-                REACT_APP_CHAT_DEPLOYMENT_NAME = "AkaChat_Compute"
-                REACT_APP_CHAT_DEPLOYMENT_URL = "https://akamai.my.site.com/ESWAkaChatCompute1778779688044"
-                REACT_APP_CHAT_ORG_ID = "00DA0000000Hu5a"
-                REACT_APP_CHAT_SCRT2_URL = "https://akamai.my.salesforce-scrt.com"
-                REACT_APP_CLIENT_ID = "6714f4f895cbe13a5781"
-                REACT_APP_INFERENCE_BASE_URL = "https://api-staging.akamai-inference.com/v1"
-                REACT_APP_ENVIRONMENT_NAME = "staging"
-                REACT_APP_LISH_ROOT = "webconsole.linode.com"
-                REACT_APP_LOGIN_ROOT = "https://login.staging.linode.com"
-                REACT_APP_ADOBE_ANALYTICS_URL = "https://assets.adobedtm.com/fcfd3580c848/15e23aa7fce2/launch-5bda4b7a1db9-staging.min.js"
-                REACT_APP_PENDO_API_KEY = "46f744c8-8628-4dc4-55f9-83fdd3bf2eef"
-                REACT_APP_SENTRY_URL = "https://ec5fcee0daee4bc9bb74e5b614e27ee0@o83654.ingest.sentry.io/182732"
-                REACT_APP_LAUNCH_DARKLY_ID = "5ed11a54d310ac0a0e542702"
-                REACT_APP_API_MAX_PAGE_SIZE = "500"
-                REACT_APP_STATUS_PAGE_URL = "https://status.linode.com/api/v2"
+                COMPUTE_CHAT_BOOTSTRAP_JS_URL = "https://akamai.my.site.com/ESWAkaChatCompute1778779688044/assets/js/bootstrap.min.js"
+                COMPUTE_CHAT_DEPLOYMENT_NAME = "AkaChat_Compute"
+                COMPUTE_CHAT_DEPLOYMENT_URL = "https://akamai.my.site.com/ESWAkaChatCompute1778779688044"
+                COMPUTE_CHAT_ORG_ID = "00DA0000000Hu5a"
+                COMPUTE_CHAT_SCRT2_URL = "https://akamai.my.salesforce-scrt.com"
+                COMPUTE_CLIENT_ID = "6714f4f895cbe13a5781"
+                COMPUTE_ENVIRONMENT_NAME = "staging"
+                COMPUTE_LISH_ROOT = "webconsole.linode.com"
+                COMPUTE_LOGIN_ROOT = "https://login.staging.linode.com"
+                COMPUTE_ADOBE_ANALYTICS_URL = "https://assets.adobedtm.com/fcfd3580c848/15e23aa7fce2/launch-5bda4b7a1db9-staging.min.js"
+                COMPUTE_PENDO_API_KEY = "46f744c8-8628-4dc4-55f9-83fdd3bf2eef"
+                COMPUTE_SENTRY_URL = "https://ec5fcee0daee4bc9bb74e5b614e27ee0@o83654.ingest.sentry.io/182732"
+                COMPUTE_LAUNCHDARKLY_CLIENT_ID = "5ed11a54d310ac0a0e542702"
+                COMPUTE_API_MAX_PAGE_SIZE = "500"
+                COMPUTE_STATUS_PAGE_URL = "https://status.linode.com/api/v2"
+                COMPUTE_INFERENCE_BASE_URL = "https://api-staging.akamai-inference.com/v1"
             }
             steps {
                 nodejs(configId: "npmrc-ro", nodeJSInstallationName: "v22") {
@@ -185,26 +202,27 @@ pipeline {
             when {
                 anyOf {
                     branch pattern: "master"
+                    branch pattern: "master-cloud-manager-distributed"
                 }
             }
             environment {
-                REACT_APP_ADOBE_ANALYTICS_URL = "https://assets.adobedtm.com/fcfd3580c848/15e23aa7fce2/launch-9ea21650035a.min.js"
-                REACT_APP_ALGOLIA_APPLICATION_ID = "KGUN8FAIPF"
-                REACT_APP_ALGOLIA_SEARCH_KEY = "d4847002cd30392fe0fbd00a1da933ed"
-                REACT_APP_API_MAX_PAGE_SIZE = "500"
-                REACT_APP_API_ROOT = "https://cloud.linode.com/api/v4"
-                REACT_APP_APP_ROOT = "https://cloud.linode.com"
-                REACT_APP_CLIENT_ID = "04b4276a4094ce378d27"
-                REACT_APP_ENVIRONMENT_NAME = "production"
-                REACT_APP_GPAY_MERCHANT_ID = "BCR2DN6TZ6OMNHTP"
-                REACT_APP_INFERENCE_BASE_URL = "https://api.akamai-inference.com/v1"
-                REACT_APP_LAUNCH_DARKLY_ID = "5cd5be32283709081fd70fbc"
-                REACT_APP_LISH_ROOT = "webconsole.linode.com"
-                REACT_APP_LOGIN_ROOT = "https://login.linode.com"
-                REACT_APP_PAYPAL_CLIENT_ID = "AWdnFJ_Yx5X9uqKZQdbdkLfCnEJwtauQJ2tyesKf3S0IxSrkRLmB2ZN2ACSwy37gxY_AZoTagHWlZCOA"
-                REACT_APP_PENDO_API_KEY = '46f744c8-8628-4dc4-55f9-83fdd3bf2eef'
-                REACT_APP_SENTRY_URL = "https://ec5fcee0daee4bc9bb74e5b614e27ee0@o83654.ingest.sentry.io/182732"
-                REACT_APP_STATUS_PAGE_URL = "https://status.linode.com/api/v2"
+                COMPUTE_ADOBE_ANALYTICS_URL = "https://assets.adobedtm.com/fcfd3580c848/15e23aa7fce2/launch-9ea21650035a.min.js"
+                COMPUTE_ALGOLIA_APPLICATION_ID = "KGUN8FAIPF"
+                COMPUTE_ALGOLIA_SEARCH_KEY = "d4847002cd30392fe0fbd00a1da933ed"
+                COMPUTE_API_MAX_PAGE_SIZE = "500"
+                COMPUTE_API_ROOT = "https://cloud.linode.com/api/v4"
+                COMPUTE_APP_ROOT = "https://cloud.linode.com"
+                COMPUTE_CLIENT_ID = "04b4276a4094ce378d27"
+                COMPUTE_ENVIRONMENT_NAME = "production"
+                COMPUTE_GPAY_MERCHANT_ID = "BCR2DN6TZ6OMNHTP"
+                COMPUTE_LAUNCHDARKLY_CLIENT_ID = "5cd5be32283709081fd70fbc"
+                COMPUTE_LISH_ROOT = "webconsole.linode.com"
+                COMPUTE_LOGIN_ROOT = "https://login.linode.com"
+                COMPUTE_PAYPAL_CLIENT_ID = "AWdnFJ_Yx5X9uqKZQdbdkLfCnEJwtauQJ2tyesKf3S0IxSrkRLmB2ZN2ACSwy37gxY_AZoTagHWlZCOA"
+                COMPUTE_PENDO_API_KEY = '46f744c8-8628-4dc4-55f9-83fdd3bf2eef'
+                COMPUTE_SENTRY_URL = "https://ec5fcee0daee4bc9bb74e5b614e27ee0@o83654.ingest.sentry.io/182732"
+                COMPUTE_STATUS_PAGE_URL = "https://status.linode.com/api/v2"
+                COMPUTE_INFERENCE_BASE_URL = "https://api.akamai-inference.com/v1"
             }
             steps {
                 nodejs(configId: "npmrc-ro", nodeJSInstallationName: "v22") {
@@ -219,13 +237,15 @@ pipeline {
             when {
                 anyOf {
                     branch pattern: "develop"
+                    branch pattern: "release/*"
                     branch pattern: "staging"
                     branch pattern: "master"
+                    branch pattern: "master-cloud-manager-distributed"
                 }
             }
             steps {
-                pulsarBlackduck(bdApplicationId: "cloud-manager", jobType: "FRONTEND")
-                pulsarSonar(jobType: "FREESTYLE", projectName: "cloud-manager", customSrc: true)
+                pulsarBlackduck(bdApplicationId: "cloud-manager-distributed", jobType: "FRONTEND")
+                pulsarSonar(jobType: "FREESTYLE", projectName: "cloud-manager-distributed", customSrc: true)
             }
         }
     }

@@ -7,15 +7,29 @@ import {
   Typography,
 } from '@linode/ui';
 import { isOSMac } from '@linode/utilities';
-import React from 'react';
+import React, { ChangeEvent } from 'react';
 
 import { Code } from 'src/components/Code/Code';
+import { setStoredThemePreference } from 'src/utilities/theme';
 
 import type { ThemeChoice } from '@linode/utilities';
 
 export const Theme = () => {
   const { data: theme } = usePreferences((preferences) => preferences?.theme);
   const { mutateAsync: updatePreferences } = useMutatePreferences();
+
+  const handleUpdatePreferences = (e: ChangeEvent<HTMLInputElement>) => {
+    const theme = e.target.value as ThemeChoice;
+    setStoredThemePreference(theme);
+    e.currentTarget.dispatchEvent(
+      new CustomEvent('theme-preference-changed', {
+        detail: { theme },
+        bubbles: true,
+        composed: true,
+      })
+    );
+    updatePreferences({ theme });
+  };
 
   return (
     <Paper>
@@ -28,9 +42,7 @@ export const Theme = () => {
         <Code>D</Code>.
       </Typography>
       <RadioGroup
-        onChange={(e) =>
-          updatePreferences({ theme: e.target.value as ThemeChoice })
-        }
+        onChange={handleUpdatePreferences}
         row
         style={{ marginBottom: 0 }}
         value={theme ?? 'system'}

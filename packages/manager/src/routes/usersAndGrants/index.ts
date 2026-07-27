@@ -1,11 +1,32 @@
 import { createRoute, redirect } from '@tanstack/react-router';
 
-import { checkIAMEnabled } from 'src/features/IAM/hooks/useIsIAMEnabled';
-
 import { rootRoute } from '../root';
 import { UsersAndGrantsRoute } from './UsersAndGrantsRoute';
 
 const usersAndGrantsRoute = createRoute({
+  beforeLoad: ({ context, location }) => {
+    if (!context.isIAMEnabled) {
+      return;
+    }
+
+    const { pathname } = location;
+
+    if (pathname === '/users' || pathname === '/users/') {
+      throw redirect({ to: '/iam/users', replace: true });
+    }
+
+    const match = pathname.match(/^\/users\/([^/]+)/);
+
+    if (match) {
+      throw redirect({
+        to: pathname.endsWith('/permissions')
+          ? '/iam/users/$username/roles'
+          : '/iam/users/$username/details',
+        params: { username: match[1] },
+        replace: true,
+      });
+    }
+  },
   component: UsersAndGrantsRoute,
   getParentRoute: () => rootRoute,
   path: 'users',
@@ -14,20 +35,6 @@ const usersAndGrantsRoute = createRoute({
 const usersAndGrantsIndexRoute = createRoute({
   getParentRoute: () => usersAndGrantsRoute,
   path: '/',
-  beforeLoad: async ({ context }) => {
-    const isIAMEnabled = await checkIAMEnabled(
-      context.queryClient,
-      context.flags,
-      context.profile
-    );
-
-    if (isIAMEnabled) {
-      throw redirect({
-        to: '/iam/users',
-        replace: true,
-      });
-    }
-  },
 }).lazy(() =>
   import('src/features/UsersAndGrants/usersAndGrantsLandingLazyRoute').then(
     (m) => m.usersAndGrantsLandingLazyRoute
@@ -37,25 +44,6 @@ const usersAndGrantsIndexRoute = createRoute({
 const usersAndGrantsUsernameRoute = createRoute({
   getParentRoute: () => usersAndGrantsRoute,
   path: '$username',
-  beforeLoad: async ({ context, params, location }) => {
-    const { username } = params;
-    const isIAMEnabled = await checkIAMEnabled(
-      context.queryClient,
-      context.flags,
-      context.profile
-    );
-
-    if (isIAMEnabled) {
-      const url = location.pathname.endsWith('/permissions')
-        ? '/iam/users/$username/roles'
-        : '/iam/users/$username/details';
-      throw redirect({
-        to: url,
-        params: { username },
-        replace: true,
-      });
-    }
-  },
 }).lazy(() =>
   import('src/features/UsersAndGrants/usersAndGrantsUserProfileLazyRoute').then(
     (m) => m.usersAndGrantsUserProfileLazyRoute

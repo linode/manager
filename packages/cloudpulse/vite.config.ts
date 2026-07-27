@@ -27,7 +27,7 @@ export default defineConfig({
     ],
     test: {
         env: {
-            REACT_APP_CLIENT_ID: 'test-client-id',
+            COMPUTE_CLIENT_ID: 'test-client-id',
         },
         maxWorkers: process.env.CI ? '50%' : undefined,
         testTimeout: 30000,
@@ -51,7 +51,7 @@ export default defineConfig({
             fileName: (format) => `cloudpulse.${format}.js`,
         },
         rollupOptions: {
-            input: resolve(__dirname, 'src/index.ts'),            
+            input: resolve(__dirname, 'src/index.ts'),
             external: (id) => {
                 // externalize all dependencies and peerDependencies to avoid bundling them into the library
                 return externalDeps.some(dep => id === dep || id.startsWith(`${dep}/`));

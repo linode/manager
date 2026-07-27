@@ -11,7 +11,6 @@ import { useEffect, useState } from 'react';
 import { ISO_DATETIME_NO_TZ_FORMAT, POLLING_INTERVALS } from 'src/constants';
 import { EVENTS_LIST_FILTER } from 'src/features/Events/constants';
 import { useEventHandlers } from 'src/hooks/useEventHandlers';
-import { useToastNotifications } from 'src/hooks/useToastNotifications';
 import {
   doesEventMatchAPIFilter,
   generatePollingFilter,
@@ -138,7 +137,6 @@ export const useInProgressEvents = () => {
  * *Warning* This hook should only be mounted once!
  */
 export const useEventsPoller = () => {
-  const { handleGlobalToast } = useToastNotifications();
   const { handleEvent } = useEventHandlers();
 
   const queryClient = useQueryClient();
@@ -197,7 +195,6 @@ export const useEventsPoller = () => {
       updateEventsQueries(events, queryClient);
 
       for (const event of events) {
-        handleGlobalToast(event);
         handleEvent(event);
       }
     }

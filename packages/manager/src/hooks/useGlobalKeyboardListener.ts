@@ -2,7 +2,10 @@ import { useMutatePreferences, usePreferences } from '@linode/queries';
 import { isOSMac } from '@linode/utilities';
 import React from 'react';
 
-import { getNextThemeValue } from 'src/utilities/theme';
+import {
+  getNextThemeValue,
+  setStoredThemePreference,
+} from 'src/utilities/theme';
 
 export const useGlobalKeyboardListener = () => {
   const { data: theme } = usePreferences((preferences) => preferences?.theme);
@@ -22,6 +25,7 @@ export const useGlobalKeyboardListener = () => {
           case letterForThemeShortcut:
             const newTheme = getNextThemeValue(theme);
 
+            setStoredThemePreference(newTheme);
             updateUserPreferences({ theme: newTheme });
             break;
         }
