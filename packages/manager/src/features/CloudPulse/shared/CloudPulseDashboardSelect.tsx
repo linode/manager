@@ -199,7 +199,7 @@ export const CloudPulseDashboardSelect = React.memo(
           </Box>
         )}
         renderOption={({ key, ...props }, option) => (
-          <li key={key} {...props}>
+          <li key={key} {...props} data-pendo-id={option.label}>
             {option.label}
           </li>
         )}
