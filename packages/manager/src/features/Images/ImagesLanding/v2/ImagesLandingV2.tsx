@@ -33,6 +33,7 @@ export const ImagesLandingV2 = () => {
           removeCrumbX: 1,
         }}
         docsLink="https://techdocs.akamai.com/cloud-computing/docs/images"
+        docsPendoId="Images Landing-Docs"
         spacingBottom={16}
         title="Images"
       />

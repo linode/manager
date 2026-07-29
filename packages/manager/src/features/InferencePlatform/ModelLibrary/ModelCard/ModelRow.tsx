@@ -77,7 +77,7 @@ export const ModelRow = ({ model }: ModelRowProps) => {
         </Stack>
 
         {/* Playground link */}
-        {model.isServerless && <PlaygroundLink modelId={model.id} />}
+        {model.playgroundAvailable && <PlaygroundLink modelId={model.id} />}
       </Stack>
 
       {/* Stats row */}

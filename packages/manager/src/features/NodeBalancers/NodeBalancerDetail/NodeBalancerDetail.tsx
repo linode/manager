@@ -53,20 +53,24 @@ export const NodeBalancerDetail = () => {
     {
       title: 'Summary',
       to: '/nodebalancers/$id/summary',
+      pendoId: 'NodeBalancers Details-Summary',
     },
     {
       title: 'Configurations',
       to: '/nodebalancers/$id/configurations',
+      pendoId: 'NodeBalancers Details-Configurations',
     },
     {
       title: 'Metrics',
       to: '/nodebalancers/$id/metrics',
       hide: !aclpNbMetricsIntegration,
       chip: getFeatureChip(aclp ?? {}),
+      pendoId: 'NodeBalancers Details-Metrics',
     },
     {
       title: 'Settings',
       to: '/nodebalancers/$id/settings',
+      pendoId: 'NodeBalancers Details-Settings',
     },
   ]);
 
@@ -107,6 +111,7 @@ export const NodeBalancerDetail = () => {
         disabledBreadcrumbEditButton={!permissions.update_nodebalancer}
         docsLabel="Docs"
         docsLink="https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-nodebalancers"
+        docsPendoId="NodeBalancers Details-Docs"
         spacingBottom={4}
         title={nodebalancer.label}
       />

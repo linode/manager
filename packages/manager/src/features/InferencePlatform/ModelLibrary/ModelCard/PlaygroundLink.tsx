@@ -1,8 +1,7 @@
 import { Box, Typography } from '@linode/ui';
-import { useTheme } from '@mui/material/styles';
 import React from 'react';
 
-import Playground from 'src/assets/icons/ai/playground.svg';
+import LeftArrowIcon from 'src/assets/icons/arrow-left.svg';
 import { Link } from 'src/components/Link';
 
 interface PlaygroundLinkProps {
@@ -10,8 +9,6 @@ interface PlaygroundLinkProps {
 }
 
 export const PlaygroundLink = ({ modelId }: PlaygroundLinkProps) => {
-  const cmTheme = useTheme();
-
   return (
     <Link
       search={{ model: modelId }}
@@ -22,20 +19,22 @@ export const PlaygroundLink = ({ modelId }: PlaygroundLinkProps) => {
       }}
       to="/inference-platform/model-playground"
     >
-      <Box alignItems="center" component="span" display="flex" gap={0.5}>
-        <Box
+      <Box alignItems="center" component="span" display="flex" gap={0.2}>
+        {/* <Box
           component={Playground}
           height={22}
+          mr={0.6}
           style={
             {
-              '--playground-icon':
+              '--color-a':
                 cmTheme.palette.mode === 'light'
                   ? 'hsl(210,100%,60%)'
                   : 'hsl(210,100%,65%)',
             } as React.CSSProperties
           }
           width={22}
-        />
+        /> */}
+
         <Typography
           sx={(theme) => ({
             color:
@@ -46,8 +45,14 @@ export const PlaygroundLink = ({ modelId }: PlaygroundLinkProps) => {
             fontSize: 13,
           })}
         >
-          Playground →
+          Playground
         </Typography>
+
+        <LeftArrowIcon
+          height={17}
+          style={{ transform: 'rotate(180deg)' }}
+          width={17}
+        />
       </Box>
     </Link>
   );

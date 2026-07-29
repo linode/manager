@@ -54,18 +54,9 @@ const mockProps = {
 beforeAll(() => mockMatchMedia());
 
 describe('database node selector', () => {
-  const flags = {
-    dbaasV2: {
-      beta: false,
-      enabled: true,
-    },
-  };
   it('should render 3 node options for dedicated tab', () => {
     const { getByTestId } = renderWithTheme(
-      <DatabaseNodeSelector {...mockProps} selectedTab={0} />,
-      {
-        flags,
-      }
+      <DatabaseNodeSelector {...mockProps} selectedTab={0} />
     );
 
     expect(getByTestId('database-node-1')).toBeInTheDocument();
@@ -75,10 +66,7 @@ describe('database node selector', () => {
 
   it('should render 2 node options for shared tab', () => {
     const { getByTestId } = renderWithTheme(
-      <DatabaseNodeSelector {...mockProps} selectedTab={1} />,
-      {
-        flags,
-      }
+      <DatabaseNodeSelector {...mockProps} selectedTab={1} />
     );
 
     expect(getByTestId('database-node-1')).toBeInTheDocument();
@@ -87,10 +75,7 @@ describe('database node selector', () => {
 
   it('should render 3 node options for premium tab', () => {
     const { getByTestId } = renderWithTheme(
-      <DatabaseNodeSelector {...mockProps} selectedTab={2} />,
-      {
-        flags,
-      }
+      <DatabaseNodeSelector {...mockProps} selectedTab={2} />
     );
 
     expect(getByTestId('database-node-1')).toBeInTheDocument();
@@ -100,10 +85,7 @@ describe('database node selector', () => {
 
   it('should disable 3 node options when disabled is true', async () => {
     const { getByTestId } = renderWithTheme(
-      <DatabaseNodeSelector {...mockProps} disabled />,
-      {
-        flags,
-      }
+      <DatabaseNodeSelector {...mockProps} disabled />
     );
 
     const radioGroupEl = getByTestId('database-nodes');

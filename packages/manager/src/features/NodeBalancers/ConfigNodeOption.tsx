@@ -1,4 +1,4 @@
-import { SelectedIcon, Stack, Typography } from '@linode/ui';
+import { Stack, Typography } from '@linode/ui';
 import { Box } from '@mui/material';
 import React from 'react';
 
@@ -7,15 +7,23 @@ import type { NodeOption } from './ConfigNodeIPSelect';
 interface NodeOptionProps {
   listItemProps: React.HTMLAttributes<HTMLLIElement>;
   option: NodeOption;
-  selected: boolean;
 }
 
 export const ConfigNodeOption = ({
   option,
   listItemProps,
-  selected,
 }: NodeOptionProps) => {
   const vpcIPEnabled = 'subnet' in option;
+  const ipType = React.useMemo(() => {
+    if (vpcIPEnabled) {
+      return 'VPC IPv4';
+    }
+    if (option.label.includes(':')) {
+      return 'Public';
+    }
+    return 'Private';
+  }, [vpcIPEnabled, option.label]);
+
   return (
     <li {...listItemProps}>
       <Box
@@ -33,14 +41,15 @@ export const ConfigNodeOption = ({
               font: theme.font.bold,
             })}
           >
-            {option.label}
+            {option.linode.label}
           </Typography>
-          <Typography color="inherit">{option.linode.label}</Typography>
+          {vpcIPEnabled && (
+            <Typography color="inherit">{option.subnet?.label}</Typography>
+          )}
+          <Typography color="inherit">{option.label}</Typography>
         </Stack>
         <Box flexGrow={1} />
-        {vpcIPEnabled
-          ? `${option.subnet?.label}`
-          : selected && <SelectedIcon visible />}
+        {ipType}
       </Box>
     </li>
   );

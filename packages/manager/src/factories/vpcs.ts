@@ -10,6 +10,7 @@ export const vpcFactory = Factory.Sync.makeFactory<VPC>({
   region: 'us-east',
   subnets: [],
   updated: '2023-07-12T16:08:53',
+  vpc_type: 'regular',
 });
 
 export const vpcIPv4Factory = Factory.Sync.makeFactory<VPCIP>({

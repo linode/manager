@@ -9,6 +9,7 @@ export const accountUserFactory = Factory.Sync.makeFactory<User>({
   restricted: true,
   ssh_keys: [],
   tfa_enabled: false,
+  tfa_enforced: false,
   user_type: 'default',
   username: Factory.each((i) => `user-${i}`),
   verified_phone_number: null,

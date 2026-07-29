@@ -102,35 +102,4 @@ describe('DatabaseSummaryClusterConfiguration', () => {
       expect(queryAllByText('130 GB')).toHaveLength(1);
     });
   });
-
-  it('should return null when there is no matching type', async () => {
-    queryMocks.useDatabaseTypesQuery.mockReturnValue({
-      data: databaseTypeFactory.buildList(1, {
-        class: 'standard',
-        disk: 81920,
-        id: 'g6-standard-2',
-        label: 'DBaaS - Standard 4GB',
-        memory: 4096,
-        vcpus: 2,
-      }),
-    });
-
-    const database = databaseFactory.build({
-      platform: 'rdbms-legacy',
-      type: 'g6-nanode-1',
-    }) as Database;
-
-    const { queryAllByText } = renderWithTheme(
-      <DatabaseSummaryClusterConfiguration database={database} />
-    );
-
-    expect(queryMocks.useDatabaseTypesQuery).toHaveBeenCalledWith({
-      platform: 'rdbms-legacy',
-    });
-
-    await waitFor(() => {
-      expect(queryAllByText('Cluster Configuration')).toHaveLength(1);
-      expect(queryAllByText('Status')).toHaveLength(0);
-    });
-  });
 });

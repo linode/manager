@@ -11,8 +11,8 @@ import {
 import { Font, Spacing } from '@akamai/cds-tokens';
 import React from 'react';
 
-import { useBreakpoint } from 'src/features/IAM/hooks/useBreakpoint';
-
+import { useBreakpoint } from '../../hooks/useBreakpoint';
+import { useHasTableStripingEnabled } from '../../hooks/useHasTableStripingEnabled';
 import { CircleProgress } from '../CircleProgress/CircleProgress';
 
 export interface SelectableOption {
@@ -109,6 +109,7 @@ export const SelectionPanel = ({
   totalCount,
 }: SelectionPanelProps) => {
   const isSmUp = useBreakpoint('up', 'sm');
+  const hasTableStripingEnabled = useHasTableStripingEnabled();
 
   const handlePaginationPageChange = (e: CustomEvent<unknown>) => {
     if (typeof e.detail === 'number') {
@@ -274,6 +275,7 @@ export const SelectionPanel = ({
                   }}
                   rowborder
                   selected={!!selectionMap[p.rank]}
+                  zebra={hasTableStripingEnabled}
                 >
                   <TableCell style={{ gap: 0, paddingLeft: 0 }}>
                     <Checkbox

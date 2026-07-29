@@ -158,12 +158,16 @@ export const EditNotificationChannel = (
           <ActionsPanel
             primaryButtonProps={{
               'data-testid': 'save-edit-channel',
+              'data-pendo-id':
+                'monitor-alerts-notification-channels-edit-Submit',
               label: 'Save',
               loading: formState.isSubmitting,
               type: 'submit',
             }}
             secondaryButtonProps={{
               'data-testid': 'cancel-edit-channel',
+              'data-pendo-id':
+                'monitor-alerts-notification-channels-edit-Cancel',
               label: 'Cancel',
               onClick: handleCancel,
             }}

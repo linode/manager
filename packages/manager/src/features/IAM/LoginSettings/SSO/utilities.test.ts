@@ -243,7 +243,7 @@ describe('getSummaryStatus', () => {
         included_users_count: 3,
       })
     ).toBe(
-      'SSO is enforced for 3 users. All remaining users can log in using alternative methods.'
+      'SSO is enforced for 3 users. All remaining users log in using alternative methods.'
     );
   });
 
@@ -259,7 +259,7 @@ describe('getSummaryStatus', () => {
         true
       )
     ).toBe(
-      'SSO is enabled and required for 3 users. All remaining users can log in using alternative methods.'
+      'SSO is enabled and required for 3 users. All remaining users log in using alternative methods.'
     );
   });
 

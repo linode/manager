@@ -9,11 +9,6 @@ import {
   renderWithProviders,
 } from '../../utilities/testHelpers';
 
-vi.mock('src/OAuth/oauthClient', () => ({
-  getIsAdminToken: vi.fn(),
-  oauthClient: {},
-}));
-
 const queryMocks = vi.hoisted(() => ({
   useAllAccountEntities: vi.fn().mockReturnValue({}),
   useIsDefaultDelegationRolesForChildAccount: vi
@@ -31,28 +26,28 @@ const queryMocks = vi.hoisted(() => ({
 beforeAll(() => mockMatchMedia());
 
 vi.mock('@linode/queries', async () => {
-  const actual = await vi.importActual<any>('@linode/queries');
+  const actual = await vi.importActual('@linode/queries');
   return {
     ...actual,
     useUserRoles: queryMocks.useUserRoles,
   };
 });
 
-vi.mock('src/queries/entities/entities', async () => {
-  const actual = await vi.importActual('src/queries/entities/entities');
+vi.mock('../../queries/entities/entities', async () => {
+  const actual = await vi.importActual('../../queries/entities/entities');
   return {
     ...actual,
     useAllAccountEntities: queryMocks.useAllAccountEntities,
   };
 });
 
-vi.mock('src/features/IAM/hooks/useDelegationRole', () => ({
+vi.mock('../../hooks/useDelegationRole', () => ({
   useIsDefaultDelegationRolesForChildAccount:
     queryMocks.useIsDefaultDelegationRolesForChildAccount,
 }));
 
-vi.mock('src/features/IAM/hooks/usePermissions', async () => {
-  const actual = await vi.importActual('src/features/IAM/hooks/usePermissions');
+vi.mock('../../hooks/usePermissions', async () => {
+  const actual = await vi.importActual('../../hooks/usePermissions');
   return {
     ...actual,
     usePermissions: queryMocks.usePermissions,

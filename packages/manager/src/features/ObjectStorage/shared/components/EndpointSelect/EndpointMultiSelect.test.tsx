@@ -1,0 +1,92 @@
+import React from 'react';
+
+import { renderWithTheme } from 'src/utilities/testHelpers';
+
+import { EndpointMultiSelect } from './EndpointMultiSelect';
+
+import type { EndpointMultiselectValue } from './EndpointMultiSelect';
+
+const queryMocks = vi.hoisted(() => ({
+  useObjectStorageEndpointsQuery: vi.fn().mockReturnValue([]),
+}));
+
+vi.mock('src/queries/object-storage/queries', async () => {
+  const actual = await vi.importActual('src/queries/object-storage/queries');
+  return {
+    ...actual,
+    useObjectStorageEndpointsQuery: queryMocks.useObjectStorageEndpointsQuery,
+  };
+});
+
+const endpointsMock = [
+  {
+    region: 'br-gru',
+    endpoint_type: 'E1',
+    s3_endpoint: 'br-gru-1.linodeobjects.com',
+  },
+  {
+    region: 'es-mad',
+    endpoint_type: 'E1',
+    s3_endpoint: 'es-mad-1.linodeobjects.com',
+  },
+  {
+    region: 'gb-lon',
+    endpoint_type: 'E3',
+    s3_endpoint: null,
+  },
+];
+
+const onChangeMock = vi.fn();
+
+describe('EndpointMultiSelect', () => {
+  it('should show loading text while fetching endpoints', () => {
+    queryMocks.useObjectStorageEndpointsQuery.mockReturnValue({
+      data: [],
+      isFetching: true,
+    });
+
+    const selectedEndpoints: EndpointMultiselectValue[] = [];
+
+    const { getByPlaceholderText } = renderWithTheme(
+      <EndpointMultiSelect onChange={onChangeMock} values={selectedEndpoints} />
+    );
+
+    expect(getByPlaceholderText('Loading S3 endpoints...')).toBeVisible();
+  });
+
+  it('should show proper placeholder after fetching endpoints', () => {
+    queryMocks.useObjectStorageEndpointsQuery.mockReturnValue({
+      data: endpointsMock,
+      isFetching: false,
+    });
+
+    const selectedEndpoints: EndpointMultiselectValue[] = [];
+
+    const { getByPlaceholderText } = renderWithTheme(
+      <EndpointMultiSelect onChange={onChangeMock} values={selectedEndpoints} />
+    );
+
+    expect(
+      getByPlaceholderText('Select an Object Storage S3 endpoint')
+    ).toBeVisible();
+  });
+
+  it('should show label if showLabel property set to true', () => {
+    queryMocks.useObjectStorageEndpointsQuery.mockReturnValue({
+      data: endpointsMock,
+      isFetching: false,
+    });
+
+    const selectedEndpoints: EndpointMultiselectValue[] = [];
+
+    const { getByText } = renderWithTheme(
+      <EndpointMultiSelect
+        onChange={onChangeMock}
+        showLabel={true}
+        values={selectedEndpoints}
+      />
+    );
+
+    expect(getByText('Endpoints')).toBeVisible();
+  });
+});

@@ -2,13 +2,19 @@ import { destinationType, streamType } from '@linode/api-v4';
 import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
-import { describe, expect } from 'vitest';
+import { beforeEach, describe, expect } from 'vitest';
 
 import { akamaiObjectStorageDestinationFactory } from 'src/factories';
+import {
+  fillOutAkamaiObjectStorageDestinationFields,
+  mockScrollIntoView,
+} from 'src/features/Delivery/Shared/testHelpers';
 import { StreamCreate } from 'src/features/Delivery/Streams/StreamForm/StreamCreate';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
+
+const user = userEvent.setup({ delay: null });
 
 const mockDestinations = [
   akamaiObjectStorageDestinationFactory.build({
@@ -18,6 +24,10 @@ const mockDestinations = [
 ];
 
 describe('StreamCreate', () => {
+  beforeEach(() => {
+    mockScrollIntoView();
+  });
+
   const renderStreamCreate = () => {
     renderWithThemeAndHookFormContext({
       component: <StreamCreate />,
@@ -38,178 +48,116 @@ describe('StreamCreate', () => {
     });
   };
 
-  describe(
-    'given Test Connection and Create Stream buttons',
-    { timeout: 30000 }, // Increased for CI stability
-    () => {
-      const testConnectionButtonText = 'Test Connection';
-      const createStreamButtonText = 'Create Stream';
+  describe('given Test Connection and Create Stream buttons', () => {
+    const testConnectionButtonText = 'Test Connection';
+    const createStreamButtonText = 'Create Stream';
 
-      const fillOutFormWithNewDestination = async () => {
-        const streamNameInput = screen.getByLabelText('Stream Name');
-        await userEvent.type(streamNameInput, 'Test');
-        const destinationNameInput = screen.getByLabelText('Destination Name');
-        await userEvent.type(destinationNameInput, 'Test destination name');
-        const createNewTestDestination = await screen.findByText(
-          'Test destination name',
-          { exact: false }
-        );
-        await userEvent.click(createNewTestDestination);
+    const fillOutFormWithNewDestination = async () => {
+      const streamNameInput = screen.getByLabelText('Stream Name');
+      await user.type(streamNameInput, 'Test');
+      const destinationNameInput =
+        await screen.findByLabelText('Destination Name');
+      await user.type(destinationNameInput, 'Test destination name');
+      const createNewTestDestination = await screen.findByText(
+        'Test destination name',
+        { exact: false }
+      );
+      await user.click(createNewTestDestination);
 
-        const manualRadio = screen.getByLabelText(
-          'Enter Bucket details manually'
-        );
-        await userEvent.click(manualRadio);
+      await fillOutAkamaiObjectStorageDestinationFields(user);
+    };
 
-        const endpointInput = screen.getByLabelText('Endpoint');
-        await waitFor(() => {
-          expect(endpointInput).toBeDefined();
-        });
-        await userEvent.type(endpointInput, 'test.com');
-        const bucketInput = screen.getByLabelText('Bucket');
-        await userEvent.type(bucketInput, 'test');
-        const accessKeyIDInput = screen.getByLabelText('Access Key');
-        await userEvent.type(accessKeyIDInput, 'Test');
-        const secretAccessKeyInput = screen.getByLabelText('Secret Key');
-        await userEvent.type(secretAccessKeyInput, 'Test');
-        const logPathPrefixInput = screen.getByLabelText(
-          'Log Path Prefix (optional)'
-        );
-        await userEvent.type(logPathPrefixInput, 'Test');
-      };
-
-      describe('when form properly filled out and Test Connection button clicked and connection verified positively', () => {
-        describe('and creating new destination', () => {
-          const createStreamSpy = vi.fn();
-          const createDestinationSpy = vi.fn();
-          const verifyDestinationSpy = vi.fn();
-
-          it("should enable Create Stream button and perform proper calls when it's clicked", async () => {
-            server.use(
-              http.get('*/monitor/streams/destinations', () => {
-                return HttpResponse.json(makeResourcePage(mockDestinations));
-              }),
-              http.post('*/monitor/streams/destinations/verify', () => {
-                verifyDestinationSpy();
-                return HttpResponse.json({});
-              }),
-              http.post('*/monitor/streams/destinations', () => {
-                createDestinationSpy();
-                return HttpResponse.json(mockDestinations[0]);
-              }),
-              http.post('*/monitor/streams', () => {
-                createStreamSpy();
-                return HttpResponse.json({});
-              })
-            );
-
-            renderStreamCreate();
-            await fillOutFormWithNewDestination();
-
-            const testConnectionButton = screen.getByRole('button', {
-              name: testConnectionButtonText,
-            });
-            const createStreamButton = screen.getByRole('button', {
-              name: createStreamButtonText,
-            });
-            expect(createStreamButton).toBeDisabled();
-
-            // Test connection
-            await userEvent.click(testConnectionButton);
-
-            // Wait for async verification to complete
-            await waitFor(() => {
-              expect(verifyDestinationSpy).toHaveBeenCalled();
-            });
-
-            await waitFor(() => {
-              expect(createStreamButton).toBeEnabled();
-            });
-
-            // Create stream
-            await userEvent.click(createStreamButton);
-
-            // Wait for destination creation to complete
-            await waitFor(() => {
-              expect(createDestinationSpy).toHaveBeenCalled();
-            });
-
-            await waitFor(() => {
-              expect(createStreamSpy).toHaveBeenCalled();
-            });
-          });
-        });
-
-        describe('and selected existing destination', () => {
-          const createStreamSpy = vi.fn();
-          const createDestinationSpy = vi.fn();
-
-          it("should enable Create Stream button and perform proper calls when it's clicked", async () => {
-            server.use(
-              http.get('*/monitor/streams/destinations', () => {
-                return HttpResponse.json(makeResourcePage(mockDestinations));
-              }),
-              http.post('*/monitor/streams/destinations', () => {
-                createDestinationSpy();
-                return HttpResponse.json(mockDestinations[0]);
-              }),
-              http.post('*/monitor/streams', () => {
-                createStreamSpy();
-                return HttpResponse.json({});
-              })
-            );
-
-            renderStreamCreate();
-
-            // Fill out form and select existing destination
-            const streamNameInput = screen.getByLabelText('Stream Name');
-            await userEvent.type(streamNameInput, 'Test');
-            const destinationNameInput =
-              screen.getByLabelText('Destination Name');
-            await userEvent.click(destinationNameInput);
-            const existingDestination = screen.getByText('Destination 1');
-            await userEvent.click(existingDestination);
-
-            const testConnectionButton = screen.getByRole('button', {
-              name: testConnectionButtonText,
-            });
-            const createStreamButton = screen.getByRole('button', {
-              name: createStreamButtonText,
-            });
-
-            // Create stream button should not be disabled with existing destination selected
-            expect(createStreamButton).toBeEnabled();
-
-            // Test connection should be disabled when using existing destination
-            expect(testConnectionButton).toBeDisabled();
-
-            // Create stream
-            await userEvent.click(createStreamButton);
-
-            // New destination should not be created with existing destination selected
-            expect(createDestinationSpy).not.toHaveBeenCalled();
-            await waitFor(() => {
-              expect(createStreamSpy).toHaveBeenCalled();
-            });
-          });
-        });
-      });
-
-      describe('when form properly filled out and Test Connection button clicked and connection verified negatively', () => {
+    describe('when form properly filled out and Test Connection button clicked and connection verified positively', () => {
+      describe('and creating new destination', () => {
+        const createStreamSpy = vi.fn();
+        const createDestinationSpy = vi.fn();
         const verifyDestinationSpy = vi.fn();
 
-        it('should not enable Create Stream button', async () => {
+        it("should enable Create Stream button and perform proper calls when it's clicked", async () => {
           server.use(
             http.get('*/monitor/streams/destinations', () => {
               return HttpResponse.json(makeResourcePage(mockDestinations));
             }),
             http.post('*/monitor/streams/destinations/verify', () => {
               verifyDestinationSpy();
-              return HttpResponse.error();
+              return HttpResponse.json({});
+            }),
+            http.post('*/monitor/streams/destinations', () => {
+              createDestinationSpy();
+              return HttpResponse.json(mockDestinations[0]);
+            }),
+            http.post('*/monitor/streams', () => {
+              createStreamSpy();
+              return HttpResponse.json({});
             })
           );
 
           renderStreamCreate();
+          await fillOutFormWithNewDestination();
+
+          const testConnectionButton = screen.getByRole('button', {
+            name: testConnectionButtonText,
+          });
+          const createStreamButton = screen.getByRole('button', {
+            name: createStreamButtonText,
+          });
+          expect(createStreamButton).toBeDisabled();
+
+          // Test connection
+          await user.click(testConnectionButton);
+
+          // Wait for async verification to complete
+          await waitFor(() => {
+            expect(verifyDestinationSpy).toHaveBeenCalled();
+          });
+
+          await waitFor(() => {
+            expect(createStreamButton).toBeEnabled();
+          });
+
+          // Create stream
+          await user.click(createStreamButton);
+
+          // Wait for destination creation to complete
+          await waitFor(() => {
+            expect(createDestinationSpy).toHaveBeenCalled();
+          });
+
+          await waitFor(() => {
+            expect(createStreamSpy).toHaveBeenCalled();
+          });
+        });
+      });
+
+      describe('and selected existing destination', () => {
+        const createStreamSpy = vi.fn();
+        const createDestinationSpy = vi.fn();
+
+        it("should enable Create Stream button and perform proper calls when it's clicked", async () => {
+          server.use(
+            http.get('*/monitor/streams/destinations', () => {
+              return HttpResponse.json(makeResourcePage(mockDestinations));
+            }),
+            http.post('*/monitor/streams/destinations', () => {
+              createDestinationSpy();
+              return HttpResponse.json(mockDestinations[0]);
+            }),
+            http.post('*/monitor/streams', () => {
+              createStreamSpy();
+              return HttpResponse.json({});
+            })
+          );
+
+          renderStreamCreate();
+
+          // Fill out form and select existing destination
+          const streamNameInput = screen.getByLabelText('Stream Name');
+          await user.type(streamNameInput, 'Test');
+          const destinationNameInput =
+            await screen.findByLabelText('Destination Name');
+          await user.click(destinationNameInput);
+          const existingDestination = screen.getByText('Destination 1');
+          await user.click(existingDestination);
 
           const testConnectionButton = screen.getByRole('button', {
             name: testConnectionButtonText,
@@ -218,16 +166,56 @@ describe('StreamCreate', () => {
             name: createStreamButtonText,
           });
 
-          await fillOutFormWithNewDestination();
+          // Create stream button should not be disabled with existing destination selected
+          expect(createStreamButton).toBeEnabled();
 
-          expect(createStreamButton).toBeDisabled();
+          // Test connection should be disabled when using existing destination
+          expect(testConnectionButton).toBeDisabled();
 
-          await userEvent.click(testConnectionButton);
+          // Create stream
+          await user.click(createStreamButton);
 
-          expect(verifyDestinationSpy).toHaveBeenCalled();
-          expect(createStreamButton).toBeDisabled();
+          // New destination should not be created with existing destination selected
+          expect(createDestinationSpy).not.toHaveBeenCalled();
+          await waitFor(() => {
+            expect(createStreamSpy).toHaveBeenCalled();
+          });
         });
       });
-    }
-  );
+    });
+
+    describe('when form properly filled out and Test Connection button clicked and connection verified negatively', () => {
+      const verifyDestinationSpy = vi.fn();
+
+      it('should not enable Create Stream button', async () => {
+        server.use(
+          http.get('*/monitor/streams/destinations', () => {
+            return HttpResponse.json(makeResourcePage(mockDestinations));
+          }),
+          http.post('*/monitor/streams/destinations/verify', () => {
+            verifyDestinationSpy();
+            return HttpResponse.error();
+          })
+        );
+
+        renderStreamCreate();
+
+        const testConnectionButton = screen.getByRole('button', {
+          name: testConnectionButtonText,
+        });
+        const createStreamButton = screen.getByRole('button', {
+          name: createStreamButtonText,
+        });
+
+        await fillOutFormWithNewDestination();
+
+        expect(createStreamButton).toBeDisabled();
+
+        await user.click(testConnectionButton);
+
+        expect(verifyDestinationSpy).toHaveBeenCalled();
+        expect(createStreamButton).toBeDisabled();
+      });
+    });
+  });
 });

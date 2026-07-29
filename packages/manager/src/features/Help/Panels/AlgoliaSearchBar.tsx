@@ -19,7 +19,7 @@ interface SelectedItem {
 
 /**
  * For Algolia search to work locally, ensure you have valid values set for
- * REACT_APP_ALGOLIA_APPLICATION_ID and REACT_APP_ALGOLIA_SEARCH_KEY in your .env file.
+ * COMPUTE_ALGOLIA_APPLICATION_ID and COMPUTE_ALGOLIA_SEARCH_KEY in your .env file.
  */
 const AlgoliaSearchBar = (props: AlgoliaProps) => {
   const [inputValue, setInputValue] = React.useState('');

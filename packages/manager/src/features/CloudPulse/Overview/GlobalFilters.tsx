@@ -6,6 +6,7 @@ import * as React from 'react';
 import DownloadIcon from 'src/assets/icons/lke-download.svg';
 import Reload from 'src/assets/icons/refresh.svg';
 import { useFlags } from 'src/hooks/useFlags';
+import { oauthClient } from 'src/OAuth/oauthClient';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 
 import { useCloudPulseContext } from '../Context/useCloudPulseContext';
@@ -142,6 +143,7 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
       (error instanceof Array &&
         error.length > 0 &&
         error[0]?.reason === 'Unauthorized'));
+  const isImpersonatedUser = oauthClient.getIsLoggedInAsCustomer();
 
   return (
     <GridLegacy container>
@@ -157,7 +159,7 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
           <CloudPulseDashboardSelect
             defaultValue={preferences?.dashboardId}
             handleDashboardChange={onDashboardChange}
-            savePreferences
+            savePreferences={!isImpersonatedUser} // no need to save preferences impersonated user, as it is disabled
           />
           <Box
             display="flex"
@@ -168,7 +170,8 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
             <CloudPulseDateTimeRangePicker
               defaultValue={preferences?.[TIME_DURATION]}
               handleStatsChange={handleTimeRangeChange}
-              savePreferences
+              savePreferences={!isImpersonatedUser} // no need to save preferences impersonated user, as it is disabled
+              serviceType={selectedDashboard?.service_type}
             />
 
             <CloudPulseTooltip placement="bottom-end" title="Refresh">
@@ -213,7 +216,7 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
             <GlobalFilterGroupByRenderer
               handleChange={onGroupByChange}
               preferenceGroupBy={preferences?.[GROUP_BY]}
-              savePreferences
+              savePreferences={!isImpersonatedUser} // no need to save preferences impersonated user, as it is disabled
               selectedDashboard={
                 preferences?.[DASHBOARD_ID] === selectedDashboard?.id // wait for dashboard id in preference to match selected dashboard id
                   ? selectedDashboard

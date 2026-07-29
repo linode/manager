@@ -41,7 +41,6 @@ const options: { flag: keyof Flags; label: string }[] = [
   },
   { flag: 'gecko2', label: 'Gecko' },
   { flag: 'generationalPlansv2', label: 'Generational compute plans' },
-  { flag: 'hostnameEndpoints', label: 'Hostname Endpoints' },
   { flag: 'inferencePlatform', label: 'Inference Platform' },
   { flag: 'kubernetesBlackwellPlans', label: 'Kubernetes Blackwell Plans' },
   { flag: 'limitsEvolution', label: 'Limits Evolution' },
@@ -51,6 +50,7 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'lkeEnterprise2', label: 'LKE-Enterprise' },
   { flag: 'marketplaceV2', label: 'MarketplaceV2' },
   { flag: 'networkLoadBalancer', label: 'Network Load Balancer' },
+  { flag: 'nitro', label: 'Nitro' },
   { flag: 'nodebalancerIpv6', label: 'NodeBalancer Dual Stack (IPv6)' },
   { flag: 'nodebalancerVpc', label: 'NodeBalancer-VPC Integration' },
   { flag: 'premiumNodebalancer', label: 'Premium Nodebalancer' },
@@ -65,17 +65,10 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'resourceLock', label: 'Resource Lock' },
   { flag: 'selfServeBetas', label: 'Self Serve Betas' },
   { flag: 'supportTicketSeverity', label: 'Support Ticket Severity' },
-  { flag: 'dbaasV2', label: 'Databases V2 Beta' },
-  { flag: 'dbaasV2MonitorMetrics', label: 'Databases V2 Monitor' },
   {
     flag: 'databaseResizeGenerationalPlans',
     label: 'Database Resize Generational Plans',
   },
-  { flag: 'databasePgBouncer', label: 'Database PgBouncer' },
-  { flag: 'databaseResize', label: 'Database Resize' },
-  { flag: 'databaseAdvancedConfig', label: 'Database Advanced Config' },
-  { flag: 'databaseVpc', label: 'Database VPC' },
-  { flag: 'databaseVpcBeta', label: 'Database VPC Beta' },
   { flag: 'databasePremium', label: 'Database Premium' },
   {
     flag: 'databaseRestrictPlanResize',
@@ -96,6 +89,10 @@ const options: { flag: keyof Flags; label: string }[] = [
     label: 'IAM Federation',
   },
   {
+    flag: 'iamTfaEnforcement',
+    label: 'IAM 2FA Enforcement',
+  },
+  {
     flag: 'linodeCloneFirewall',
     label: 'Linode Clone Firewall',
   },
@@ -103,7 +100,6 @@ const options: { flag: keyof Flags; label: string }[] = [
     flag: 'vmHostMaintenance',
     label: 'VM Host Maintenance Policy',
   },
-  { flag: 'volumeSummaryPage', label: 'Volume Summary Page' },
   {
     flag: 'blockStorageContextualMetrics',
     label: 'Block Storage Contextual Metrics',
@@ -112,13 +108,12 @@ const options: { flag: keyof Flags; label: string }[] = [
     flag: 'objectStorageContextualMetrics',
     label: 'Object Storage Contextual Metrics',
   },
-  { flag: 'objSummaryPage', label: 'OBJ Summary Page' },
   { flag: 'objectStorageSummaryPageLinks', label: 'OBJ Summary Page Links' },
-  { flag: 'vpcDbaasResources', label: 'VPC DBaaS Resources' },
   { flag: 'vpcIpv6', label: 'VPC IPv6' },
   { flag: 'reserveIp', label: 'Reserve IP' },
   { flag: 'reserveIpNewBadge', label: 'Reserve IP New Badge' },
   { flag: 'marketplaceV2GlobalBanner', label: 'Marketplace V2 Global Banner' },
+  { flag: 'natgateway', label: 'NAT Gateways' },
 ];
 
 interface RenderFlagItemProps {

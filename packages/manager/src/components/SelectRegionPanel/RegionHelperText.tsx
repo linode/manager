@@ -8,10 +8,11 @@ import type { BoxProps } from '@linode/ui';
 interface RegionHelperTextProps extends BoxProps {
   onClick?: () => void;
   showCoreHelperText?: boolean;
+  speedTestPendoId?: string;
 }
 
 export const RegionHelperText = (props: RegionHelperTextProps) => {
-  const { onClick, showCoreHelperText, sx, ...rest } = props;
+  const { onClick, showCoreHelperText, speedTestPendoId, sx, ...rest } = props;
 
   return (
     <Box {...rest} component="span" sx={{ ...sx, display: 'block' }}>
@@ -24,7 +25,11 @@ export const RegionHelperText = (props: RegionHelperTextProps) => {
           `Data centers in central locations support a robust set of cloud computing services. `}
         You can use
         {` `}
-        <Link onClick={onClick} to="https://www.linode.com/speed-test/">
+        <Link
+          onClick={onClick}
+          pendoId={speedTestPendoId}
+          to="https://www.linode.com/speed-test/"
+        >
           our speedtest page
         </Link>
         {` `}

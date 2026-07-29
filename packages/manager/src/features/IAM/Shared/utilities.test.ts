@@ -732,6 +732,14 @@ describe('getFormattedEntityType', () => {
     expect(getFormattedEntityType('nodebalancer')).toBe('NodeBalancer');
   });
 
+  it('returns overridden capitalization for different types of databases', () => {
+    expect(getFormattedEntityType('mysql_database')).toBe('MySQL Database');
+    expect(getFormattedEntityType('postgresql_database')).toBe(
+      'PostgreSQL Database'
+    );
+    expect(getFormattedEntityType('valkey_database')).toBe('Valkey Database');
+  });
+
   it('returns default capitalization for other entity types', () => {
     expect(getFormattedEntityType('linode')).toBe('Linode');
     expect(getFormattedEntityType('database')).toBe('Database');

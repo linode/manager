@@ -7,9 +7,10 @@ import { useDropzone } from 'react-dropzone';
 import type { DropzoneProps } from 'react-dropzone';
 
 import { BarPercent } from 'src/components/BarPercent';
-import { MAX_FILE_SIZE_IN_BYTES } from 'src/components/Uploaders/reducer';
 
 import type { AxiosProgressEvent } from 'axios';
+
+export const MAX_FILE_SIZE_IN_BYTES = 5 * 1024 * 1024 * 1024;
 
 interface Props extends Partial<DropzoneProps> {
   /**

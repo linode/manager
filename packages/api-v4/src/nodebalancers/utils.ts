@@ -13,7 +13,10 @@ export const combineConfigNodeAddressAndPort = (data: any) => ({
 export const combineConfigNodeAddressAndPortBeta = (data: any) => ({
   ...data,
   nodes: data.nodes.map((n: any) => ({
-    address: `${n.address}:${n.port}`,
+    // If the address is an IPv6 address, we need to wrap it in brackets to avoid confusion with the port number.
+    address: n.address.includes(':')
+      ? `[${n.address}]:${n.port}`
+      : `${n.address}:${n.port}`,
     label: n.label,
     mode: n.mode,
     weight: n.weight,
@@ -26,7 +29,10 @@ export const combineNodeBalancerConfigNodeAddressAndPort = (data: any) => ({
   configs: data.configs.map((c: any) => ({
     ...c,
     nodes: c.nodes.map((n: any) => ({
-      address: `${n.address}:${n.port}`,
+      // If the address is an IPv6 address, we need to wrap it in brackets to avoid confusion with the port number.
+      address: n.address.includes(':')
+        ? `[${n.address}]:${n.port}`
+        : `${n.address}:${n.port}`,
       label: n.label,
       mode: n.mode,
       weight: n.weight,
@@ -39,7 +45,10 @@ export const combineNodeBalancerConfigNodeAddressAndPortBeta = (data: any) => ({
   configs: data.configs.map((c: any) => ({
     ...c,
     nodes: c.nodes.map((n: any) => ({
-      address: `${n.address}:${n.port}`,
+      // If the address is an IPv6 address, we need to wrap it in brackets to avoid confusion with the port number.
+      address: n.address.includes(':')
+        ? `[${n.address}]:${n.port}`
+        : `${n.address}:${n.port}`,
       label: n.label,
       mode: n.mode,
       weight: n.weight,
@@ -50,5 +59,8 @@ export const combineNodeBalancerConfigNodeAddressAndPortBeta = (data: any) => ({
 
 export const mergeAddressAndPort = (node: NodeBalancerConfigNodeWithPort) => ({
   ...node,
-  address: `${node.address}:${node.port}`,
+  // If the address is an IPv6 address, we need to wrap it in brackets to avoid confusion with the port number.
+  address: node.address.includes(':')
+    ? `[${node.address}]:${node.port}`
+    : `${node.address}:${node.port}`,
 });

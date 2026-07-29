@@ -66,6 +66,12 @@ const customHttpsDetailsControlPaths = {
     'destination.details.authentication.details.basic_authentication_password',
   basicAuthenticationUser:
     'destination.details.authentication.details.basic_authentication_user',
+  bearerTokenAuthenticationValue:
+    'destination.details.authentication.details.bearer_token_authentication_value',
+  bearerTokenAuthenticationHeaderName:
+    'destination.details.authentication.details.bearer_token_authentication_header_name',
+  bearerTokenAuthenticationTokenPrefix:
+    'destination.details.authentication.details.bearer_token_authentication_token_prefix',
   clientCertificateDetails: 'destination.details.client_certificate_details',
   clientCaCertificate:
     'destination.details.client_certificate_details.client_ca_certificate',

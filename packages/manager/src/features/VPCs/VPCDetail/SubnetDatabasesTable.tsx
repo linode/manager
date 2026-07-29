@@ -49,8 +49,7 @@ export const SubnetDatabasesTable = ({ subnetDatabasesData }: Props) => {
     },
     {
       '+or': databaseIDsToFilter,
-    },
-    true
+    }
   );
 
   const DatabasesTableWrapper = ({

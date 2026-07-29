@@ -18,7 +18,10 @@ import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { SHARED_WITH_ME_IMAGES_TAB_PENDO_IDS } from 'src/features/Images/constants';
+import {
+  OWNED_BY_ME_IMAGES_TAB_PENDO_IDS,
+  SHARED_WITH_ME_IMAGES_TAB_PENDO_IDS,
+} from 'src/features/Images/constants';
 
 import { ImageRow } from '../../ImageRow';
 import { SharedImageRow } from '../../SharedImageRow';
@@ -42,6 +45,7 @@ interface HeaderProps {
     buttonText: string;
     disabled?: boolean;
     onButtonClick: () => void;
+    pendoId?: string;
     tooltipText?: string;
   };
   description?: React.ReactNode;
@@ -123,6 +127,7 @@ export const ImagesTable = (props: ImagesTableProps) => {
               {headerProps.buttonProps && (
                 <Button
                   buttonType="primary"
+                  data-pendo-id={headerProps.buttonProps?.pendoId}
                   disabled={headerProps.buttonProps?.disabled}
                   onClick={headerProps.buttonProps?.onButtonClick}
                   tooltipText={headerProps.buttonProps?.tooltipText}
@@ -215,6 +220,7 @@ export const ImagesTable = (props: ImagesTableProps) => {
                   handlers={handlers}
                   image={image}
                   key={image.id}
+                  pendoIDs={OWNED_BY_ME_IMAGES_TAB_PENDO_IDS}
                 />
               )
             )}

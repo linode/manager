@@ -4,6 +4,10 @@ export const DEFAULT_PAGE_SIZES = [25, 50, 75, 100];
 export const JOINED_GROUP_DETAILS_PATH =
   '/images/share-groups/joined-groups/$tokenUuid';
 
+// Docs links
+export const ACCESS_BILLING_INFO_LINK =
+  'https://techdocs.akamai.com/cloud-computing/docs/access-billing-information';
+
 export const CREATE_SHARE_GROUP_PENDO_IDS = {
   landingHeader: 'Images Share Groups Create-Landing Header',
   label: 'Share Groups Create Images-Label',

@@ -20,7 +20,6 @@ vi.mock('@linode/queries', async (importOriginal) => ({
 }));
 
 vi.mock('./useBlockStorageFetchOptions', () => ({
-  ...vi.importActual('./useBlockStorageFetchOptions'),
   useBlockStorageFetchOptions: queryMocks.useBlockStorageFetchOptions,
 }));
 

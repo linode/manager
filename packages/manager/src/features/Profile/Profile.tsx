@@ -10,6 +10,8 @@ import { Tabs } from 'src/components/Tabs/Tabs';
 import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
 import { useTabs } from 'src/hooks/useTabs';
 
+import { PROFILE_PENDO_IDS } from './constants';
+
 export const Profile = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -18,35 +20,42 @@ export const Profile = () => {
     {
       to: `/profile/display`,
       title: 'Display',
+      pendoId: PROFILE_PENDO_IDS.displayTab,
     },
     {
       to: `/profile/auth`,
       title: 'Login & Authentication',
+      pendoId: PROFILE_PENDO_IDS.authTab,
     },
     {
       to: `/profile/keys`,
       title: 'SSH Keys',
+      pendoId: PROFILE_PENDO_IDS.sshKeysTab,
     },
     {
       to: `/profile/lish`,
       title: 'LISH Console Settings',
+      pendoId: PROFILE_PENDO_IDS.lishSettingsTab,
     },
     {
       to: `/profile/tokens`,
       title: 'API Tokens',
+      pendoId: PROFILE_PENDO_IDS.apiTokensTab,
     },
     {
       to: `/profile/clients`,
       title: 'OAuth Apps',
+      pendoId: PROFILE_PENDO_IDS.oauthAppsTab,
     },
     {
       to: `/profile/preferences`,
-
       title: 'Preferences',
+      pendoId: PROFILE_PENDO_IDS.preferencesTab,
     },
     {
       to: `/profile/referrals`,
       title: 'Referrals',
+      pendoId: PROFILE_PENDO_IDS.referralsTab,
     },
   ]);
 

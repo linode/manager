@@ -1,4 +1,7 @@
-import { useNodeBalancerQuery, useNodeBalancersQuery } from '@linode/queries';
+import {
+  useNodeBalancerQuery,
+  useNodebalancersBetaQuery,
+} from '@linode/queries';
 import { CircleProgress, ErrorState } from '@linode/ui';
 import { Hidden } from '@linode/ui';
 import { useMatch, useNavigate, useParams } from '@tanstack/react-router';
@@ -56,7 +59,7 @@ export const NodeBalancersLanding = () => {
     ['+order_by']: orderBy,
   };
 
-  const { data, error, isLoading } = useNodeBalancersQuery(
+  const { data, error, isLoading } = useNodebalancersBetaQuery(
     {
       page: pagination.page,
       page_size: pagination.pageSize,
@@ -101,9 +104,12 @@ export const NodeBalancersLanding = () => {
             isSingular: false,
             resourceType: 'NodeBalancers',
           }),
+          'data-pendo-id':
+            'NodeBalancers Landing-Create NodeBalancer Start Flow',
         }}
         disabledCreateButton={!permissions.create_nodebalancer}
         docsLink="https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-nodebalancers"
+        docsPendoId="NodeBalancers Landing-Docs"
         entity="NodeBalancer"
         onButtonClick={() => navigate({ to: '/nodebalancers/create' })}
         title="NodeBalancers"
@@ -127,6 +133,9 @@ export const NodeBalancersLanding = () => {
               <TableCell>Ports</TableCell>
             </Hidden>
             <TableCell>Frontend IP</TableCell>
+            <Hidden mdDown>
+              <TableCell>Backend</TableCell>
+            </Hidden>
             <Hidden smDown>
               <TableSortCell
                 active={orderBy === 'region'}

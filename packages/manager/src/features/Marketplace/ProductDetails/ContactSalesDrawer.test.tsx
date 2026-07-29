@@ -37,8 +37,6 @@ describe('ContactSalesDrawer', () => {
       email: 'user@akamai.com',
       name: 'My User',
       partner_name: 'Linode',
-      phone: '5555555555',
-      phone_country_code: '+1',
       product_name: 'Linode Kubernetes Engine',
       tc_consent_given: true,
     };
@@ -70,6 +68,34 @@ describe('ContactSalesDrawer', () => {
         additional_emails: ['first@akamai.com'],
         comments: 'interested in pricing',
         company_name: 'Example Corp',
+      });
+    });
+
+    it('omits phone and phone_country_code when phone is blank', () => {
+      const payload = {
+        ...basePayload,
+        phone: '   ',
+        phone_country_code: '+1',
+      };
+
+      expect(cleanUpPayload(payload)).toEqual(basePayload);
+    });
+
+    it('omits phone_country_code when phone is not provided', () => {
+      expect(cleanUpPayload(basePayload)).toEqual(basePayload);
+    });
+
+    it('trims and keeps phone when it is provided', () => {
+      const payload = {
+        ...basePayload,
+        phone: ' 5555555555 ',
+        phone_country_code: '+1',
+      };
+
+      expect(cleanUpPayload(payload)).toEqual({
+        ...basePayload,
+        phone: '5555555555',
+        phone_country_code: '+1',
       });
     });
   });
@@ -362,7 +388,7 @@ describe('ContactSalesDrawer', () => {
 
     fireEvent.click(consentCheckbox);
 
-    // Submit should still be disabled because required fields (region, phone) are not filled
+    // Submit should still be disabled because required field region is not filled
     expect(getByText('Submit')).toBeDisabled();
   });
 

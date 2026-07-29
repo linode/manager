@@ -2,8 +2,6 @@ import type { BaseType } from '../linodes/types';
 
 export type DatabaseTypeClass = 'dedicated' | 'nanode' | 'premium' | 'standard';
 
-export type Platform = 'rdbms-default' | 'rdbms-legacy';
-
 export interface DatabasePriceObject {
   hourly: number;
   monthly: number;
@@ -45,15 +43,6 @@ export type DatabaseStatus =
   | 'resuming'
   | 'suspended'
   | 'suspending';
-/** @deprecated TODO (UIE-8214) remove after migration */
-export type DatabaseBackupType = 'auto' | 'snapshot';
-/** @deprecated TODO (UIE-8214) remove after migration */
-export interface DatabaseBackup {
-  created: string;
-  id: number;
-  label: string;
-  type: DatabaseBackupType;
-}
 
 export interface ConfigurationItem {
   description?: string;
@@ -125,10 +114,7 @@ export interface DatabaseInstance {
   allow_list: string[];
   available_restore_times: null | string[]; // Used by the Valkey database engine, will be returned as null for PostgreSQL and MySQL database engines
   cluster_size: ClusterSize;
-  connection_strings: ConnectionStrings[];
   created: string;
-  /** @Deprecated used by rdbms-legacy only, rdbms-default always encrypts */
-  encrypted: boolean;
   engine: Engine;
   engine_config: DatabaseInstanceAdvancedConfig;
   hosts: DatabaseHosts | null;
@@ -140,7 +126,7 @@ export interface DatabaseInstance {
    */
   members: Record<string, MemberType>;
   oldest_restore_time?: null | string; // Used by PostgreSQL and MySQL database engines, will be returned as null for the Valkey database engine
-  platform?: Platform;
+  platform?: 'rdbms-default';
   readonly_count?: ReadonlyCount;
   region: string;
   status: DatabaseStatus;
@@ -160,32 +146,14 @@ export interface PrivateNetwork {
 
 type ReadonlyCount = 0 | 2;
 
-/** @deprecated TODO (UIE-8214) remove POST GA */
-export type MySQLReplicationType = 'asynch' | 'none' | 'semi_synch';
-
 export interface CreateDatabasePayload {
   allow_list: string[];
   cluster_size?: ClusterSize;
-  /** @Deprecated used by rdbms-legacy only, rdbms-default always encrypts */
-  encrypted?: boolean;
   engine?: Engine;
   label: string;
   private_network?: null | PrivateNetwork; //  TODO (UIE-8831): Remove optional (?) post VPC release, since it will always be in create payload
   region: string;
-  /** @Deprecated used by rdbms-legacy only */
-  replication_type?: MySQLReplicationType | PostgresReplicationType;
-  /** @Deprecated used by rdbms-legacy only, rdbms-default always uses TLS */
-  ssl_connection?: boolean;
   type: string;
-}
-
-/** @deprecated TODO (UIE-8214) remove POST GA */
-type DriverTypes = 'jdbc' | 'node.js' | 'odbc' | 'php' | 'python' | 'ruby';
-
-/** @deprecated TODO (UIE-8214) remove POST GA */
-interface ConnectionStrings {
-  driver: DriverTypes;
-  value: string;
 }
 
 export interface UpdatesSchedule {
@@ -217,47 +185,13 @@ export interface PendingUpdates {
 }
 
 // Database is the base interface for the shape of data returned by /databases/{engine}/instances
-interface BaseDatabase extends DatabaseInstance {
+export interface Database extends DatabaseInstance {
   port: number;
   private_network?: null | PrivateNetwork; //  TODO (UIE-8831): Confirm whether this still needs to be optional (?) post VPC release.
-  /** @Deprecated used by rdbms-legacy only, rdbms-default always uses TLS */
   ssl_connection: boolean;
   total_disk_size_gb: number;
   used_disk_size_gb: null | number;
 }
-
-/** @deprecated TODO (UIE-8214) remove POST GA */
-export interface MySQLDatabase extends BaseDatabase {
-  /** @Deprecated used by rdbms-legacy only */
-  replication_type?: MySQLReplicationType;
-}
-
-/** @deprecated TODO (UIE-8214) remove POST GA */
-export type PostgresReplicationType = 'asynch' | 'none' | 'synch';
-
-/** @deprecated TODO (UIE-8214) remove POST GA */
-export type ReplicationCommitTypes =
-  | 'local'
-  | 'off'
-  | 'on'
-  | 'remote_apply'
-  | 'remote_write';
-
-/** @deprecated TODO (UIE-8214) remove POST GA */
-export interface PostgresDatabase extends BaseDatabase {
-  /** @Deprecated used by rdbms-legacy only */
-  replication_commit_type?: ReplicationCommitTypes;
-  /** @Deprecated used by rdbms-legacy only */
-  replication_type?: PostgresReplicationType;
-}
-
-/** @deprecated TODO (UIE-8214) remove POST GA */
-export type ComprehensiveReplicationType = MySQLReplicationType &
-  PostgresReplicationType;
-
-export type Database = BaseDatabase &
-  Partial<MySQLDatabase> &
-  Partial<PostgresDatabase>;
 
 export interface UpdateDatabasePayload {
   allow_list?: string[];

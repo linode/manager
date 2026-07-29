@@ -37,7 +37,7 @@ export const accountFactory = Factory.Sync.makeFactory<Account>({
   balance_uninvoiced: 0.0,
   billing_source: 'linode',
   capabilities: [
-    'AI',
+    'AI Inference',
     'Akamai Cloud Pulse',
     'Block Storage',
     'Cloud Firewall',
@@ -47,7 +47,6 @@ export const accountFactory = Factory.Sync.makeFactory<Account>({
     'LKE HA Control Planes',
     'Machine Images',
     'Managed Databases',
-    'Managed Databases Beta',
     'NETINT Quadra T1U',
     'Network LoadBalancer',
     'NodeBalancers',

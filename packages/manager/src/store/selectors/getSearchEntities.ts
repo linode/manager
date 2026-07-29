@@ -156,16 +156,16 @@ export const bucketToSearchableItem = (
   bucket: ObjectStorageBucket
 ): SearchableItem => ({
   data: {
-    cluster: bucket.cluster,
+    region: bucket.region,
     created: bucket.created,
     description: readableBytes(bucket.size, { base10: true }).formatted,
     icon: 'storage',
     label: bucket.label,
-    path: `/object-storage/buckets/${bucket.cluster}/${bucket.label}`,
+    path: `/object-storage/buckets/${bucket.region}/${bucket.label}`,
   },
   entityType: 'bucket',
   label: bucket.label,
-  value: `${bucket.cluster}/${bucket.label}`,
+  value: `${bucket.region}/${bucket.label}`,
 });
 
 export const firewallToSearchableItem = (

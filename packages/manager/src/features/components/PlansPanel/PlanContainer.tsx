@@ -10,7 +10,6 @@ import {
   STORAGE_PLAN_COPY,
   VALKEY_STORAGE_TOOLTIP_COPY,
 } from 'src/features/Databases/constants';
-import { useFlags } from 'src/hooks/useFlags';
 import { useIsGenerationalPlansEnabled } from 'src/utilities/linodes';
 import { PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE } from 'src/utilities/pricing/constants';
 import { useComputePricing } from 'src/utilities/pricing/useComputePricing';
@@ -120,7 +119,6 @@ export const PlanContainer = (props: PlanContainerProps) => {
     wholePanelIsDisabled,
   } = props;
   const location = useLocation();
-  const flags = useFlags();
   const { isGenerationalPlansEnabled } = useIsGenerationalPlansEnabled(
     plans,
     planType
@@ -149,13 +147,10 @@ export const PlanContainer = (props: PlanContainerProps) => {
     !selectedRegionId && !isDatabaseResizeFlow && isGenerationalPlansEnabled
   );
 
-  const isDatabaseGA =
-    !flags.dbaasV2?.beta &&
-    flags.dbaasV2?.enabled &&
-    (isDatabaseCreateFlow || isDatabaseResizeFlow);
+  const isDatabaseFlow = isDatabaseCreateFlow || isDatabaseResizeFlow;
 
   const isValkeyEngineSelected =
-    isDatabaseGA && plans.every((plan) => plan.engines?.['valkey']);
+    isDatabaseFlow && plans.every((plan) => plan.engines?.['valkey']);
 
   /**
    * This features allows us to divide the GPU plans into two separate tables.
@@ -300,7 +295,7 @@ export const PlanContainer = (props: PlanContainerProps) => {
     return (
       <Grid container spacing={2}>
         <Hidden lgUp={isCreate} mdUp={!isCreate}>
-          {isDatabaseGA && (
+          {isDatabaseFlow && (
             <Grid size={12}>
               <Typography
                 sx={(theme: Theme) => ({
@@ -435,7 +430,7 @@ export const PlanContainer = (props: PlanContainerProps) => {
               )}
 
               <Hidden lgUp={isCreate} mdUp={!isCreate}>
-                {isDatabaseGA && (
+                {isDatabaseFlow && (
                   <Grid size={12}>
                     <Typography
                       sx={(theme: Theme) => ({

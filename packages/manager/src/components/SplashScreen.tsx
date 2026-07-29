@@ -12,7 +12,7 @@ export const SplashScreen = () => {
       alignItems="center"
       aria-label="Loading Cloud Manager"
       display="flex"
-      height="100vh"
+      height="100%"
       justifyContent="center"
     >
       <CircleProgress />

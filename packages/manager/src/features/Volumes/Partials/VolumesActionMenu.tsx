@@ -1,12 +1,22 @@
+import { Icon, Menu, MenuItem, Tooltip } from '@akamai/cds-components/react';
+import { Spacing } from '@linode/design-language-system';
 import * as React from 'react';
 
-import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 
 import type { Volume } from '@linode/api-v4';
-import type { Action } from 'src/components/ActionMenu/ActionMenu';
+
+interface Action {
+  disabled?: boolean;
+  hidden?: boolean;
+  id?: string;
+  onClick: () => void;
+  pendoId?: string;
+  title: string;
+  tooltip?: string;
+}
 
 export interface ActionHandlers {
   handleAttach: () => void;
@@ -188,14 +198,51 @@ export const VolumesActionMenu = (props: Props) => {
             />
           );
         })}
-      <ActionMenu
-        actionsList={actions}
-        ariaLabel={`Action menu for Volume ${volume.label}`}
-        loading={isLoading}
-        onOpen={() => {
-          setIsOpen(true);
-        }}
-      />
+
+      <Menu
+        aria-label={`Action menu for Volume ${volume.label}`}
+        icon={isLoading ? 'pending' : 'actions'}
+        onClick={() => setIsOpen(!isOpen)}
+        position="bottom-right"
+      >
+        {actions.map((action, index) => (
+          <MenuItem
+            data-testid={action.title}
+            disabled={action.disabled}
+            key={index}
+            onSelect={action.onClick}
+            style={{
+              minWidth: '210px',
+              paddingRight: Spacing.S4,
+            }}
+            title={action.title}
+            value={action.title}
+          >
+            <span
+              style={{
+                alignItems: 'center',
+                display: 'flex',
+                justifyContent: 'space-between',
+                minWidth: '210px',
+              }}
+            >
+              {action.title}
+              {action.disabled && action.tooltip ? (
+                <Tooltip
+                  disabled={!action.disabled}
+                  key={action.title}
+                  noArrow={true}
+                  style={{ textAlign: 'left', whiteSpace: 'normal' }}
+                  tooltipPlacement="left"
+                  tooltipText={action.tooltip}
+                >
+                  <Icon icon="info-outline" size="m" />
+                </Tooltip>
+              ) : null}
+            </span>
+          </MenuItem>
+        ))}
+      </Menu>
     </div>
   );
 };

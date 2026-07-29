@@ -10,6 +10,7 @@ export type RouterContext = {
   };
   isACLPEnabled?: boolean;
   isDatabasesEnabled?: boolean;
+  isIAMEnabled?: boolean;
   isPlacementGroupsEnabled?: boolean;
   isPrivateImageSharingEnabled?: boolean;
   profile?: Profile;

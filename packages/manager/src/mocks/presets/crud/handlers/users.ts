@@ -157,7 +157,6 @@ export const getUsers = (mockState: MockState) => [
         });
       }
 
-      // In parent/child context, return only parent users (including the real acting user)
       if (userTypeFromProfile === 'parent') {
         return makePaginatedResponse({
           data: users.filter((user) => user.user_type === 'parent'),

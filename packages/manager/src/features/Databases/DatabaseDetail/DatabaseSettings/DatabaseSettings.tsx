@@ -3,27 +3,16 @@ import { useProfile } from '@linode/queries';
 import * as React from 'react';
 
 import {
-  ACCESS_CONTROLS_IN_SETTINGS_TEXT,
-  ACCESS_CONTROLS_IN_SETTINGS_TEXT_LEGACY,
   DELETE_CLUSTER_TEXT,
-  DELETE_CLUSTER_TEXT_LEGACY,
   RESET_ROOT_PASSWORD_TEXT,
-  RESET_ROOT_PASSWORD_TEXT_LEGACY,
   SUSPEND_CLUSTER_TEXT,
 } from 'src/features/Databases/constants';
 import { DatabaseSettingsReviewUpdatesDialog } from 'src/features/Databases/DatabaseDetail/DatabaseSettings/DatabaseSettingsReviewUpdatesDialog';
 import { DatabaseSettingsUpgradeVersionDialog } from 'src/features/Databases/DatabaseDetail/DatabaseSettings/DatabaseSettingsUpgradeVersionDialog';
-import {
-  isDefaultDatabase,
-  isLegacyDatabase,
-  useIsDatabasesEnabled,
-} from 'src/features/Databases/utilities';
-import { useFlags } from 'src/hooks/useFlags';
 
 import { Divider } from '../../shared/Divider/Divider';
 import { Paper } from '../../shared/Paper/Paper';
 import { Stack } from '../../shared/Stack/Stack';
-import AccessControls from '../AccessControls';
 import { useDatabaseDetailContext } from '../DatabaseDetailContext';
 import { DatabaseSettingsDeleteClusterDialog } from './DatabaseSettingsDeleteClusterDialog';
 import { DatabaseSettingsMaintenance } from './DatabaseSettingsMaintenance';
@@ -35,28 +24,6 @@ import { MaintenanceWindow } from './MaintenanceWindow';
 export const DatabaseSettings = () => {
   const { database, disabled } = useDatabaseDetailContext();
   const { data: profile } = useProfile();
-  const { isDatabasesV2GA } = useIsDatabasesEnabled();
-  const flags = useFlags();
-  const isDefaultDB = isDefaultDatabase(database);
-  const isVPCEnabled = flags.databaseVpc;
-
-  const accessControlCopy = (
-    <p>
-      {!isDefaultDB
-        ? ACCESS_CONTROLS_IN_SETTINGS_TEXT_LEGACY
-        : ACCESS_CONTROLS_IN_SETTINGS_TEXT}
-    </p>
-  );
-
-  const suspendClusterCopy = SUSPEND_CLUSTER_TEXT;
-
-  const resetRootPasswordCopy = !isDefaultDB
-    ? RESET_ROOT_PASSWORD_TEXT_LEGACY
-    : RESET_ROOT_PASSWORD_TEXT;
-
-  const deleteClusterCopy = !isDefaultDB
-    ? DELETE_CLUSTER_TEXT_LEGACY
-    : DELETE_CLUSTER_TEXT;
 
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
   const [isResetRootPasswordDialogOpen, setIsResetRootPasswordDialogOpen] =
@@ -117,45 +84,34 @@ export const DatabaseSettings = () => {
           divider={<Divider marginBottom={0} marginTop={0} />}
           spacing={Spacing.S24}
         >
-          {isDatabasesV2GA && isDefaultDB && (
-            <DatabaseSettingsMenuItem
-              buttonText={'Suspend Cluster'}
-              descriptiveText={suspendClusterCopy}
-              disabled={disabled || database.status !== 'active'}
-              onClick={onSuspendCluster}
-              sectionTitle={'Suspend Cluster'}
-            />
-          )}
-          {(!isVPCEnabled || isLegacyDatabase(database)) && (
-            <AccessControls
-              database={database}
-              description={accessControlCopy}
-              disabled={disabled}
-            />
-          )}
+          <DatabaseSettingsMenuItem
+            buttonText={'Suspend Cluster'}
+            descriptiveText={SUSPEND_CLUSTER_TEXT}
+            disabled={disabled || database.status !== 'active'}
+            onClick={onSuspendCluster}
+            sectionTitle={'Suspend Cluster'}
+          />
           <DatabaseSettingsMenuItem
             buttonText="Reset Root Password"
-            descriptiveText={resetRootPasswordCopy}
+            descriptiveText={RESET_ROOT_PASSWORD_TEXT}
             disabled={disabled}
             onClick={onResetRootPassword}
             sectionTitle="Reset the Root Password"
           />
           <DatabaseSettingsMenuItem
             buttonText="Delete Cluster"
-            descriptiveText={deleteClusterCopy}
+            descriptiveText={DELETE_CLUSTER_TEXT}
             disabled={disabled}
             onClick={onDeleteCluster}
             sectionTitle="Delete the Cluster"
           />
-          {isDatabasesV2GA && isDefaultDB && (
-            <DatabaseSettingsMaintenance
-              databaseEngine={database.engine}
-              databasePendingUpdates={database.updates.pending}
-              databaseVersion={database.version}
-              onReviewUpdates={onReviewUpdates}
-              onUpgradeVersion={onUpgradeVersion}
-            />
-          )}
+          <DatabaseSettingsMaintenance
+            databaseEngine={database.engine}
+            databasePendingUpdates={database.updates.pending}
+            databaseVersion={database.version}
+            onReviewUpdates={onReviewUpdates}
+            onUpgradeVersion={onUpgradeVersion}
+          />
           <MaintenanceWindow
             database={database}
             disabled={disabled}

@@ -77,6 +77,10 @@ export const ERROR_STATE_TITLE = 'An unexpected error occurred.';
 
 export const ERROR_STATE_TEXT = 'Refresh the page or try again later.';
 
+export const RESTRICTED_FIELD_TOOLTIP = 'This field can\u{2019}t be modified.';
+
+export const PARENT_USER = 'parent user';
+
 // Delegation error messages
 export const NO_ITEMS_TO_DISPLAY_TEXT = 'No items to display.';
 
@@ -99,8 +103,17 @@ export const USER_ENTITIES_LINK =
 export const SSO_ENFORCEMENT_LINK =
   'https://techdocs.akamai.com/cloud-computing/v1_sk/docs/sso-cm-configuration';
 
+export const TFA_ENFORCEMENT_LINK =
+  'https://techdocs.akamai.com/cloud-computing/docs/two-factor-authentication-for-akamai-cloud';
+
+export const TFA_ENFORCEMENT_LEARN_MORE_LINK =
+  'https://techdocs.akamai.com/cloud-computing/docs/enforce-two-factor-authentication';
+
 export const SSO_DOCS_LINK =
   'https://techdocs.akamai.com/cloud-computing/docs/single-sign-on-cm';
+
+export const PARENT_CHILD_IAM_LINK =
+  'https://techdocs.akamai.com/cloud-computing/docs/parent-child-iam';
 
 export const SSO_RECOMMENDATIONS_LINK =
   'https://techdocs.akamai.com/home#why-should-you-configure-an-emergency-access-account';

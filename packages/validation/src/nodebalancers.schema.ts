@@ -439,6 +439,10 @@ export const NodeBalancerSchema = object({
     }),
 
   ipv4: string().optional(),
+
+  backend_connectivity: string().oneOf(['ipv6', 'legacy', 'vpc']).optional(),
+
+  type: string().oneOf(['common', 'premium']).optional(),
 });
 
 export const UpdateNodeBalancerSchema = object({

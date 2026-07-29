@@ -102,7 +102,7 @@ async function generateChangeset() {
   const changesetFile = `${changesetPath}/pr-${pullRequestId}-${type
     .toLowerCase()
     .replace(/\s/g, "-")}-${Date.now()}.md`;
-  const changesetContent = `---\n"@linode/${linodePackage}": ${type}\n---\n\n${description} ([#${pullRequestId}](${prLink}))\n`;
+  const changesetContent = `---\n"${linodePackage === 'cloudpulse' ? `@akamai/${linodePackage}` : `@linode/${linodePackage}`}": ${type}\n---\n\n${description} ([#${pullRequestId}](${prLink}))\n`;
 
   /**
    * Create the changeset file.

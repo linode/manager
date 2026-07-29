@@ -1,7 +1,20 @@
+import {
+  Table,
+  TableBody,
+  TableHead,
+  TableHeaderCell,
+  TableRow,
+} from '@akamai/cds-components/react/Table';
+import {
+  ZeroErrorDescription,
+  ZeroErrorIcon,
+  ZeroErrorState,
+  ZeroErrorTitle,
+} from '@akamai/cds-components/react/ZeroErrorState';
 import { getAPIErrorOrDefault } from '@akamai/compute-ui-core/api';
 import { useVolumesQuery } from '@linode/queries';
 import { getAPIFilterFromQuery } from '@linode/search';
-import { CircleProgress, ErrorState, Stack } from '@linode/ui';
+import { CircleProgress, Stack } from '@linode/ui';
 import { useNavigate, useSearch } from '@tanstack/react-router';
 import React from 'react';
 
@@ -9,15 +22,8 @@ import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextFiel
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { useIsBlockStorageEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
 import { LandingHeader } from 'src/components/LandingHeader';
+import { Link } from 'src/components/Link';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import { Table } from 'src/components/Table';
-import { TableBody } from 'src/components/TableBody';
-import { TableCell } from 'src/components/TableCell';
-import { TableHead } from 'src/components/TableHead';
-import { TableRow } from 'src/components/TableRow';
-import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
-import { TableRowError } from 'src/components/TableRowError/TableRowError';
-import { TableSortCell } from 'src/components/TableSortCell';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
@@ -29,6 +35,7 @@ import {
 import { VOLUME_TABLE_PREFERENCE_KEY } from 'src/routes/volumes/constants';
 
 import { useVolumeActionHandlers } from './hooks/useVolumeActionHandlers';
+import { ErrorState } from './Partials/ErrorState';
 import { VolumeTableRow } from './Partials/VolumeTableRow';
 import { VolumeDrawers } from './VolumeDrawers/VolumeDrawers';
 import { VolumesLandingEmptyState } from './VolumesLandingEmptyState';
@@ -115,8 +122,6 @@ export const VolumesLanding = () => {
     });
   };
 
-  const numberOfColumns = isBlockStorageEncryptionFeatureEnabled ? 7 : 6;
-
   if (isLoading) {
     return <CircleProgress />;
   }
@@ -127,6 +132,7 @@ export const VolumesLanding = () => {
         errorText={
           getAPIErrorOrDefault(error, 'Error loading your volumes.')[0].reason
         }
+        heightPx="300px"
       />
     );
   }
@@ -166,66 +172,99 @@ export const VolumesLanding = () => {
         placeholder="Search Volumes"
         value={search?.query ?? ''}
       />
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableSortCell
-              active={orderBy === 'label'}
-              direction={order}
-              handleClick={handleOrderChange}
-              label="label"
+
+      <div style={{ overflowX: 'auto', width: '100%' }}>
+        <Table
+          style={
+            {
+              border: '1px solid var(--token-alias-border-normal)',
+              marginTop: '10px',
+              minWidth: '800px',
+              '--token-component-table-header-outlined-border':
+                '--token-component-table-row-border',
+            } as React.CSSProperties
+          }
+        >
+          <TableHead>
+            <TableRow
+              headerbackground="var(--token-component-table-header-nested-background)"
+              headerborder
             >
-              Label
-            </TableSortCell>
-            <TableSortCell
-              active={orderBy === 'status'}
-              direction={order}
-              handleClick={handleOrderChange}
-              label="status"
-            >
-              Status
-            </TableSortCell>
-            <TableCell>Region</TableCell>
-            <TableSortCell
-              active={orderBy === 'size'}
-              direction={order}
-              handleClick={handleOrderChange}
-              label="size"
-            >
-              Size
-            </TableSortCell>
-            <TableCell>Attached To</TableCell>
-            {isBlockStorageEncryptionFeatureEnabled && (
-              <TableCell>Encryption</TableCell>
+              <TableHeaderCell
+                onSort={() =>
+                  handleOrderChange('label', order === 'asc' ? 'desc' : 'asc')
+                }
+                sortable
+                sorted={orderBy === 'label' ? order : undefined}
+                style={{ flex: '0 1 25%' }}
+              >
+                Label
+              </TableHeaderCell>
+
+              <TableHeaderCell
+                onSort={() =>
+                  handleOrderChange('status', order === 'asc' ? 'desc' : 'asc')
+                }
+                sortable
+                sorted={orderBy === 'status' ? order : undefined}
+                style={{ flex: '0 1 12%' }}
+              >
+                Status
+              </TableHeaderCell>
+
+              <TableHeaderCell>Region</TableHeaderCell>
+
+              <TableHeaderCell
+                onSort={() =>
+                  handleOrderChange('size', order === 'asc' ? 'desc' : 'asc')
+                }
+                sortable
+                sorted={orderBy === 'size' ? order : undefined}
+                style={{ flex: '0 1 12%' }}
+              >
+                Size
+              </TableHeaderCell>
+
+              <TableHeaderCell style={{ flex: '0 1 15%' }}>
+                Attached To
+              </TableHeaderCell>
+
+              {isBlockStorageEncryptionFeatureEnabled && (
+                <TableHeaderCell style={{ flex: '0 1 15%' }}>
+                  Encryption
+                </TableHeaderCell>
+              )}
+
+              <TableHeaderCell style={{ maxWidth: 40 }} />
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {search?.query && error && (
+              <ErrorState errorText={error[0].reason} />
             )}
-            <TableCell />
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {search?.query && error && (
-            <TableRowError
-              colSpan={numberOfColumns}
-              message={error[0].reason}
-            />
-          )}
-          {volumes?.data.length === 0 && (
-            <TableRowEmpty
-              colSpan={numberOfColumns}
-              message="No volume found"
-            />
-          )}
-          {volumes?.data.map((volume) => (
-            <VolumeTableRow
-              handlers={getActionHandlers(volume.id)}
-              isBlockStorageEncryptionFeatureEnabled={
-                isBlockStorageEncryptionFeatureEnabled
-              }
-              key={volume.id}
-              volume={volume}
-            />
-          ))}
-        </TableBody>
-      </Table>
+            {volumes?.data.length === 0 && (
+              <ZeroErrorState>
+                <ZeroErrorIcon icon="doc-no-selection" />
+                <ZeroErrorTitle>No data to display</ZeroErrorTitle>
+                <ZeroErrorDescription>
+                  Create a new <Link to="/volumes/create">volume</Link>
+                </ZeroErrorDescription>
+              </ZeroErrorState>
+            )}
+            {volumes?.data.map((volume) => (
+              <VolumeTableRow
+                handlers={getActionHandlers(volume.id)}
+                isBlockStorageEncryptionFeatureEnabled={
+                  isBlockStorageEncryptionFeatureEnabled
+                }
+                key={volume.id}
+                volume={volume}
+              />
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+
       <PaginationFooter
         count={volumes?.results ?? 0}
         eventCategory="Volumes Table"

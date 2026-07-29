@@ -1,9 +1,9 @@
 import type { ReactNode } from 'react';
 import React, { createContext, useContext, useState } from 'react';
 
-import type { EndpointMultiselectValue } from 'src/features/ObjectStorage/Partials/EndpointMultiselect';
+import type { EndpointMultiselectValue } from './shared/components/EndpointSelect/EndpointMultiSelect';
 
-// TODO: EndpointMultiselect must be modified to work directly on ObjectStorageEndpoint objects
+// TODO: EndpointMultiSelect must be modified to work directly on ObjectStorageEndpoint objects
 //  rather than EndpointMultiselectValue objects
 export interface ObjectStorageSelectionContext {
   selectedSummaryEndpoints: EndpointMultiselectValue[];

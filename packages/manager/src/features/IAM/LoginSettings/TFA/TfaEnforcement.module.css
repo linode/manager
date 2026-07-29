@@ -1,0 +1,62 @@
+/* AccountUsersTableToolbar */
+.toolbarContainer {
+  padding-top: var(--token-global-spacing-s12, 12px);
+  padding-bottom: var(--token-global-spacing-s16, 16px);
+  align-items: center;
+}
+
+.toolbarSortingContainer {
+  align-items: center;
+
+  p {
+    font: var(--token-alias-typography-label-bold-s, 700 0.875rem/1rem 'Nunito Sans');
+  }
+
+  cds-select {
+    min-width: 218px;
+  }
+}
+
+.toolbarTooltip {
+  &, cds-button {
+    align-items: center;
+    display: flex;
+  }
+}
+
+/* AccountUsersTableControls */
+.controlsContainer {
+  width: 100%;
+  align-items: center;
+  border-top: 1px solid var(--token-component-pagination-border, light-dark(#d6d6dd, #515157));
+  font-size: var(--token-global-font-font-size-xs, 0.875rem);
+  min-height: 40px;
+  padding: var(--token-global-spacing-s4, 4px) var(--token-global-spacing-s12, 12px);
+  gap: var(--token-global-spacing-s8, 8px);
+
+  div {
+    align-items: center;
+  }
+}
+
+.controlsSelectedUsersContainer {
+  max-width: max-content;
+  width: 100%;
+
+  span {
+    max-width: max-content;
+  }
+}
+
+.controlsButtonsContainer {
+  gap: var(--token-global-spacing-s8, 8px);
+}
+
+/* AccountUsersTableControls Divider */
+.divider {
+  background:
+    var(--token-component-divider-border, light-dark(#d6d6dd, #515157));
+  flex-shrink: 0;
+  height: 24px;
+  width: 1px;
+}

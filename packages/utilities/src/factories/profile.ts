@@ -25,6 +25,7 @@ export const profileFactory = Factory.Sync.makeFactory<Profile>({
   restricted: false,
   timezone: 'America/New_York',
   two_factor_auth: false,
+  tfa_enforced: false,
   uid: 9999,
   user_type: 'default',
   username: 'mock-user',

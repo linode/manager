@@ -43,10 +43,10 @@ Cypress tests are parallelized across four containers, and tests are automatical
 | USER_2                     | Cloud Manager access token for test user 2 |
 | USER_3                     | Cloud Manager access token for test user 3 |
 | USER_4                     | Cloud Manager access token for test user 4 |
-| REACT_APP_LAUNCH_DARKLY_ID | LaunchDarkly client ID                     |
-| REACT_APP_CLIENT_ID        | Linode OAuth app client ID                 |
-| REACT_APP_API_ROOT         | Linode API root URL                        |
-| REACT_APP_APP_ROOT         | Linode Cloud Manager instance root URL     |
+| COMPUTE_LAUNCHDARKLY_CLIENT_ID | LaunchDarkly client ID                     |
+| COMPUTE_CLIENT_ID        | Linode OAuth app client ID                 |
+| COMPUTE_API_ROOT         | Linode API root URL                        |
+| COMPUTE_APP_ROOT         | Linode Cloud Manager instance root URL     |
 
 ## See Also
 * [_Understanding GitHub Actions_](https://docs.github.com/en/actions/learn-github-actions/understanding-github-actions) (`docs.github.com`)

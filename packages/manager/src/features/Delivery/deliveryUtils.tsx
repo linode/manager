@@ -36,10 +36,16 @@ import type {
 /**
  * Hook to determine if the ACLP Logs feature is new for the current user.
  */
-export const useIsACLPLogsNew = (): boolean => {
+export const useACLPLogsFlags = (): {
+  isACLPLogsBearerTokenAuthEnabled: boolean;
+  isACLPLogsNew: boolean;
+} => {
   const flags = useFlags();
 
-  return !!flags.aclpLogs?.new;
+  return {
+    isACLPLogsBearerTokenAuthEnabled: !!flags.aclpLogs?.bearerTokenAuthEnabled,
+    isACLPLogsNew: !!flags.aclpLogs?.new,
+  };
 };
 
 export const getDestinationTypeOption = (

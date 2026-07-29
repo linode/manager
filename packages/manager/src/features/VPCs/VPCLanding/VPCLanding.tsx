@@ -21,7 +21,7 @@ import {
   VPC_LANDING_TABLE_PREFERENCE_KEY,
 } from 'src/features/VPCs/constants';
 import { VPC_DOCS_LINK, VPC_LABEL } from 'src/features/VPCs/constants';
-import { useFlags } from 'src/hooks/useFlags';
+import { useIsGpuRdmaPlanEnabled } from 'src/hooks/useIsGpuRdmaPlanEnabled';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
@@ -68,6 +68,7 @@ const VPCLanding = () => {
 
   const navigate = useNavigate();
   const params = useParams({ strict: false });
+  const { isGpuRdmaPlanEnabled } = useIsGpuRdmaPlanEnabled();
 
   const handleEditVPC = (vpc: VPC) => {
     navigate({
@@ -97,8 +98,6 @@ const VPCLanding = () => {
     isFetching: isFetchingVPC,
     error: selectedVPCError,
   } = useVPCQuery(params.vpcId ?? -1, !!params.vpcId);
-
-  const flags = useFlags();
 
   if (error) {
     return (
@@ -166,6 +165,18 @@ const VPCLanding = () => {
                 VPC ID
               </TableSortCell>
             </Hidden>
+            {isGpuRdmaPlanEnabled && (
+              <Hidden mdDown>
+                <TableSortCell
+                  active={orderBy === 'vpc_type'}
+                  direction={order}
+                  handleClick={handleOrderChange}
+                  label="vpc_type"
+                >
+                  VPC Type
+                </TableSortCell>
+              </Hidden>
+            )}
             <TableCell>Subnets</TableCell>
             <Hidden mdDown>
               <TableCell>Resources</TableCell>
@@ -176,7 +187,6 @@ const VPCLanding = () => {
         <TableBody>
           {vpcs?.data.map((vpc: VPC) => (
             <VPCRow
-              displayVPCDBaaSResources={Boolean(flags.vpcDbaasResources)}
               handleDeleteVPC={() => handleDeleteVPC(vpc)}
               handleEditVPC={() => handleEditVPC(vpc)}
               key={vpc.id}

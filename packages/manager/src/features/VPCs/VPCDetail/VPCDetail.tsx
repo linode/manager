@@ -18,7 +18,6 @@ import { LandingHeader } from 'src/components/LandingHeader';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { LKE_ENTERPRISE_AUTOGEN_VPC_WARNING } from 'src/features/Kubernetes/constants';
 import { VPC_DOCS_LINK, VPC_LABEL } from 'src/features/VPCs/constants';
-import { useFlags } from 'src/hooks/useFlags';
 
 import {
   getIsVPCLKEEnterpriseCluster,
@@ -49,8 +48,6 @@ const VPCDetail = () => {
     isFetching: isFetchingVPC,
     isLoading,
   } = useVPCQuery(Number(vpcId) || -1, Boolean(vpcId));
-
-  const flags = useFlags();
 
   const { data: regions } = useRegionsQuery();
 
@@ -103,10 +100,7 @@ const VPCDetail = () => {
   const regionLabel =
     regions?.find((r) => r.id === vpc.region)?.label ?? vpc.region;
 
-  const numResources = getUniqueResourcesFromSubnets(
-    vpc.subnets,
-    Boolean(flags.vpcDbaasResources)
-  );
+  const numResources = getUniqueResourcesFromSubnets(vpc.subnets);
 
   const summaryData = [
     [

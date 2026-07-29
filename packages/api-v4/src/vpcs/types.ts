@@ -15,6 +15,7 @@ export interface VPC {
   region: string;
   subnets: Subnet[];
   updated: string;
+  vpc_type: 'rdma' | 'regular';
 }
 
 export interface CreateVPCPayload {

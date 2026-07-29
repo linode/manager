@@ -96,10 +96,18 @@ export const CloudPulseDashboardLanding = () => {
           id: {},
           label: {},
         }); // clear the filter values on dashboard change
-        setTimeDuration(defaultTimeDuration(timezone)); // clear time duration on dashboard change
+
+        // before setting the time duration to default, check if the dashboard has a default time duration preset defined in the feature flags
+        const serviceType = dashboardObj.service_type;
+        const defaultTimeDurationPreset =
+          flags.aclpServices?.[serviceType]?.metrics?.defaultPreset;
+
+        setTimeDuration(
+          defaultTimeDuration(timezone, defaultTimeDurationPreset)
+        ); // clear time duration on dashboard change
       }
     },
-    [timezone, setGlobalSelectedDashboard]
+    [setGlobalSelectedDashboard, flags.aclpServices, timezone]
   );
   const onTimeDurationChange = React.useCallback(
     (timeDurationObj: DateTimeWithPreset) => {

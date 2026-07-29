@@ -1,21 +1,19 @@
-import {
-  screen,
-  waitFor,
-  waitForElementToBeRemoved,
-} from '@testing-library/react';
+import { Destination } from '@linode/api-v4';
+import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { describe, expect } from 'vitest';
 
 import {
   akamaiObjectStorageDestinationFactory,
+  customHttpsDestinationFactory,
   objectStorageBucketFactory,
 } from 'src/factories';
 import { DestinationEdit } from 'src/features/Delivery/Destinations/DestinationForm/DestinationEdit';
+import { waitForLoadingToComplete } from 'src/features/Delivery/Shared/testHelpers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
-const loadingTestId = 'circle-progress';
 const destinationId = 123;
 const mockDestination = akamaiObjectStorageDestinationFactory.build({
   id: destinationId,
@@ -46,10 +44,10 @@ const queryMocks = vi.hoisted(() => ({
 }));
 
 vi.mock(
-  'src/features/ObjectStorage/hooks/useObjectStorageBuckets',
+  'src/features/ObjectStorage/Buckets/hooks/useObjectStorageBuckets',
   async () => {
     const actual = await vi.importActual(
-      'src/features/ObjectStorage/hooks/useObjectStorageBuckets'
+      'src/features/ObjectStorage/Buckets/hooks/useObjectStorageBuckets'
     );
     return {
       ...actual,
@@ -89,9 +87,7 @@ describe('DestinationEdit', () => {
       component: <DestinationEdit />,
     });
 
-    const loadingElement = screen.queryByTestId(loadingTestId);
-    expect(loadingElement).toBeInTheDocument();
-    await waitForElementToBeRemoved(loadingElement);
+    await waitForLoadingToComplete();
 
     assertInputHasValue('Destination Type', 'Akamai Object Storage');
     await waitFor(() => {
@@ -116,8 +112,7 @@ describe('DestinationEdit', () => {
         component: <DestinationEdit />,
       });
 
-      const loadingElement = screen.queryByTestId(loadingTestId);
-      await waitForElementToBeRemoved(loadingElement);
+      await waitForLoadingToComplete();
     };
 
     it('should default to "Enter Bucket details manually" radio in edit mode', async () => {
@@ -222,6 +217,88 @@ describe('DestinationEdit', () => {
     });
   });
 
+  describe('Bearer Token authentication load in edit mode', () => {
+    const mockCustomHttpsDestination = customHttpsDestinationFactory.build({
+      id: destinationId,
+      label: `Destination ${destinationId}`,
+    });
+
+    const renderEditWithMockDestination = async (destination: Destination) => {
+      server.use(
+        http.get(`*/monitor/streams/destinations/${destinationId}`, () => {
+          return HttpResponse.json(destination);
+        })
+      );
+
+      renderWithThemeAndHookFormContext({
+        component: <DestinationEdit />,
+        options: {
+          flags: { aclpLogs: { bearerTokenAuthEnabled: true } },
+        },
+      });
+
+      await waitForLoadingToComplete();
+    };
+
+    it('should have all Bearer Token Authentication fields empty when no details were provided', async () => {
+      await renderEditWithMockDestination({
+        ...mockCustomHttpsDestination,
+        details: {
+          ...mockCustomHttpsDestination.details,
+          authentication: {
+            type: 'bearer_token',
+          },
+        },
+      });
+
+      const authenticationTypeSelect = screen.getByLabelText(
+        'Authentication Type'
+      );
+      expect(authenticationTypeSelect).toHaveValue('Bearer Token');
+
+      const bearerTokenInput = screen.getByLabelText('Bearer Token');
+      const headerNameInput = screen.getByLabelText('Header Name (optional)');
+      const tokenPrefixInput = screen.getByLabelText('Token Prefix (optional)');
+
+      expect(bearerTokenInput).toHaveValue('');
+      expect(headerNameInput).toHaveValue('');
+      expect(headerNameInput).toHaveAttribute('placeholder', 'Authorization');
+      expect(tokenPrefixInput).toHaveValue('');
+      expect(tokenPrefixInput).toHaveAttribute('placeholder', 'Bearer');
+    });
+
+    it('should have all Bearer Token Authentication fields filled with provided details', async () => {
+      await renderEditWithMockDestination({
+        ...mockCustomHttpsDestination,
+        details: {
+          ...mockCustomHttpsDestination.details,
+          authentication: {
+            type: 'bearer_token',
+            details: {
+              bearer_token_authentication_header_name: 'X-Authorization',
+              bearer_token_authentication_token_prefix: 'CustomBearer',
+            },
+          },
+        },
+      });
+
+      const authenticationTypeSelect = screen.getByLabelText(
+        'Authentication Type'
+      );
+      expect(authenticationTypeSelect).toHaveValue('Bearer Token');
+
+      const bearerTokenInput = screen.getByLabelText('Bearer Token');
+      const headerNameInput = screen.getByLabelText('Header Name (optional)');
+      const tokenPrefixInput = screen.getByLabelText('Token Prefix (optional)');
+
+      expect(bearerTokenInput).toHaveValue('');
+      expect(headerNameInput).toHaveValue('X-Authorization');
+      expect(headerNameInput).toHaveAttribute('placeholder', 'Authorization');
+      expect(tokenPrefixInput).toHaveValue('CustomBearer');
+      expect(tokenPrefixInput).toHaveAttribute('placeholder', 'Bearer');
+    });
+  });
+
   describe('given Test Connection and Save Changes buttons', () => {
     const testConnectionButtonText = 'Test Connection';
     const saveDestinationButtonText = 'Save Changes';
@@ -271,8 +348,7 @@ describe('DestinationEdit', () => {
         renderWithThemeAndHookFormContext({
           component: <DestinationEdit />,
         });
-        const loadingElement = screen.queryByTestId(loadingTestId);
-        await waitForElementToBeRemoved(loadingElement);
+        await waitForLoadingToComplete();
 
         const testConnectionButton = screen.getByRole('button', {
           name: testConnectionButtonText,
@@ -322,8 +398,7 @@ describe('DestinationEdit', () => {
           component: <DestinationEdit />,
         });
 
-        const loadingElement = screen.queryByTestId(loadingTestId);
-        await waitForElementToBeRemoved(loadingElement);
+        await waitForLoadingToComplete();
         const testConnectionButton = screen.getByRole('button', {
           name: testConnectionButtonText,
         });

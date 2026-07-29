@@ -10,12 +10,11 @@ import { useGetChildAccountsQuery } from '@linode/queries';
 import { useNavigate, useSearch } from '@tanstack/react-router';
 import React, { useCallback } from 'react';
 
-import { DebouncedSearchField } from 'src/features/IAM/Shared/DebouncedSearchField/DebouncedSearchField';
-import globalStyles from 'src/features/IAM/Shared/global.module.css';
-
 import { useOrder } from '../hooks/useOrder';
 import { usePagination } from '../hooks/usePagination';
 import { usePermissions } from '../hooks/usePermissions';
+import { DebouncedSearchField } from '../Shared/DebouncedSearchField/DebouncedSearchField';
+import globalStyles from '../Shared/global.module.css';
 import { Paper } from '../Shared/Paper/Paper';
 import { AccountDelegationsTable } from './AccountDelegationsTable';
 

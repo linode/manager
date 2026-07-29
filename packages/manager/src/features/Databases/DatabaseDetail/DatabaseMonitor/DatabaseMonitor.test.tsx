@@ -16,10 +16,8 @@ describe('database monitor', () => {
   const database = databaseFactory.build({ id: 12 });
   it('should render a loading state', async () => {
     renderWithTheme(
-      <DatabaseDetailContext.Provider
-        value={{ database, engine: 'mysql', isMonitorEnabled: true }}
-      >
-        <DatabaseMonitor />)
+      <DatabaseDetailContext.Provider value={{ database }}>
+        <DatabaseMonitor />
       </DatabaseDetailContext.Provider>
     );
 
@@ -30,10 +28,8 @@ describe('database monitor', () => {
 
   it('should render CloudPulseDashboardWithFilters', async () => {
     renderWithTheme(
-      <DatabaseDetailContext.Provider
-        value={{ database, engine: 'mysql', isMonitorEnabled: true }}
-      >
-        <DatabaseMonitor />)
+      <DatabaseDetailContext.Provider value={{ database }}>
+        <DatabaseMonitor />
       </DatabaseDetailContext.Provider>
     );
     const loadingElement = screen.getByTestId(loadingTestId);

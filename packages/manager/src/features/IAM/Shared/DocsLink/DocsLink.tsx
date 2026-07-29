@@ -2,7 +2,7 @@ import { Button, Icon } from '@akamai/cds-components/react';
 import * as React from 'react';
 import type { JSX } from 'react';
 
-import { sendHelpButtonClickEvent } from 'src/utilities/analytics/customEventAnalytics';
+import { sendHelpButtonClickEvent } from '../../utilities/analytics';
 
 export interface DocsLinkProps {
   analyticsLabel?: string;

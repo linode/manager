@@ -3,12 +3,11 @@ import { Spacing, Typography } from '@akamai/cds-tokens';
 import { useGetDefaultDelegationAccessQuery } from '@linode/queries';
 import * as React from 'react';
 
-import { ErrorState } from 'src/features/IAM/Shared/ErrorState/ErrorState';
-
 import { usePermissions } from '../../hooks/usePermissions';
 import { AssignedEntitiesTable } from '../../Shared/AssignedEntitiesTable/AssignedEntitiesTable';
 import { CircleProgress } from '../../Shared/CircleProgress/CircleProgress';
 import { NO_ASSIGNED_DEFAULT_ENTITIES_TEXT } from '../../Shared/constants';
+import { ErrorState } from '../../Shared/ErrorState/ErrorState';
 import { NoAssignedRoles } from '../../Shared/NoAssignedRoles/NoAssignedRoles';
 import { Paper } from '../../Shared/Paper/Paper';
 
@@ -50,7 +49,7 @@ export const DefaultEntityAccess = () => {
     <Paper>
       {hasAssignedEntities ? (
         <>
-          <h2 style={{ font: Typography.Heading.M }}>
+          <h2 style={{ font: Typography.Heading.S }}>
             Default Entity Access for Delegate Users
           </h2>
           <p style={{ marginTop: Spacing.S16, marginBottom: Spacing.S16 }}>

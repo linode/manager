@@ -46,6 +46,11 @@ export interface AreaProps {
    * datakey for the area
    */
   dataKey: string;
+
+  /**
+   * optional stack id; areas with the same id are stacked together
+   */
+  stackId?: string;
 }
 
 interface ZoomCallbacks {
@@ -114,6 +119,12 @@ export interface AreaChartProps {
    * connect nulls value between two data points
    */
   connectNulls?: boolean;
+
+  /**
+   * curve type for the area chart
+   * @default monotone
+   */
+  curveType?: 'linear' | 'monotone' | 'natural';
 
   /**
    * data to be displayed on the graph
@@ -256,6 +267,7 @@ export const AreaChart = (props: AreaChartProps) => {
     areas,
     ariaLabel,
     connectNulls,
+    curveType = 'monotone',
     data,
     dotRadius = 3,
     fillOpacity,
@@ -438,7 +450,7 @@ export const AreaChart = (props: AreaChartProps) => {
               x2={referenceEnd}
             />
           )}
-          {areas.map(({ color, dataKey }) => (
+          {areas.map(({ color, dataKey, stackId }) => (
             <Area
               connectNulls={connectNulls}
               dataKey={dataKey}
@@ -448,8 +460,9 @@ export const AreaChart = (props: AreaChartProps) => {
               hide={activeSeries.includes(dataKey)}
               isAnimationActive={false}
               key={dataKey}
+              stackId={stackId}
               stroke={color}
-              type="monotone"
+              type={curveType}
               zIndex={1000} // the x-axis and y-axis have z-index of 500, so we need higher z-index for the area to be above the axes in 3.8.1
             />
           ))}

@@ -83,6 +83,57 @@ describe('hasPlacementGroupReachedCapacity', () => {
       })
     ).toBe(false);
   });
+
+  it('returns true for flexible policy when members reach maximum_linodes_per_flexible_pg', () => {
+    expect(
+      hasPlacementGroupReachedCapacity({
+        placementGroup: placementGroupFactory.build({
+          members: initialLinodeData,
+          placement_group_policy: 'flexible',
+        }),
+        region: regionFactory.build({
+          placement_group_limits: {
+            maximum_linodes_per_flexible_pg: 3,
+            maximum_linodes_per_pg: 10,
+          },
+        }),
+      })
+    ).toBe(true);
+  });
+
+  it('returns false for flexible policy when members are below maximum_linodes_per_flexible_pg', () => {
+    expect(
+      hasPlacementGroupReachedCapacity({
+        placementGroup: placementGroupFactory.build({
+          members: initialLinodeData,
+          placement_group_policy: 'flexible',
+        }),
+        region: regionFactory.build({
+          placement_group_limits: {
+            maximum_linodes_per_flexible_pg: 5,
+            maximum_linodes_per_pg: 10,
+          },
+        }),
+      })
+    ).toBe(false);
+  });
+
+  it('returns false for flexible policy when maximum_linodes_per_flexible_pg is null', () => {
+    expect(
+      hasPlacementGroupReachedCapacity({
+        placementGroup: placementGroupFactory.build({
+          members: initialLinodeData,
+          placement_group_policy: 'flexible',
+        }),
+        region: regionFactory.build({
+          placement_group_limits: {
+            maximum_linodes_per_flexible_pg: null,
+            maximum_linodes_per_pg: 10,
+          },
+        }),
+      })
+    ).toBe(false);
+  });
 });
 
 describe('getLinodesFromAllPlacementGroups', () => {

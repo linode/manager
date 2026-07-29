@@ -1,5 +1,5 @@
 import { getTickets } from '@linode/api-v4/lib/support';
-import { useAccount } from '@linode/queries';
+import { useAccount, useLiveChatAvailabilityQuery } from '@linode/queries';
 import { isFeatureEnabled, isFeatureEnabledV2 } from '@linode/utilities';
 
 import { useFlags } from 'src/hooks/useFlags';
@@ -83,6 +83,22 @@ export const useLiveChatCapability = () => {
     Boolean(flags.liveChat),
     account?.capabilities ?? []
   );
+};
+
+/**
+ * useLiveChatAvailability
+ *
+ * Determines whether Support Live Chat is currently available.
+ * @param enabled - only query when Live Chat is otherwise available
+ */
+export const useLiveChatAvailability = (enabled: boolean = true) => {
+  const { data, isLoading, refetch } = useLiveChatAvailabilityQuery(enabled);
+
+  return {
+    isLiveChatAvailable: data === true, // fail-closed: undefined/error => false
+    isAvailabilityLoading: enabled && isLoading,
+    refetchAvailability: refetch,
+  };
 };
 
 /**

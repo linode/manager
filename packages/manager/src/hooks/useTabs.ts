@@ -21,6 +21,10 @@ export interface Tab {
    */
   icon?: React.ReactNode;
   /**
+   * The pendo ID to use for the tab.
+   */
+  pendoId?: string;
+  /**
    * The title of the tab.
    */
   title: string;

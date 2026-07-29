@@ -58,7 +58,6 @@ export interface PlansPanelProps {
   handleTabChange?: (index: number) => void;
   header?: string;
   isCreate?: boolean;
-  isLegacyDatabase?: boolean;
   isResize?: boolean;
   linodeID?: number | undefined;
   onSelect: (key: string) => void;
@@ -96,7 +95,6 @@ export const PlansPanel = (props: PlansPanelProps) => {
     handleTabChange,
     header,
     isCreate,
-    isLegacyDatabase,
     isResize,
     linodeID,
     onSelect,
@@ -194,7 +192,6 @@ export const PlansPanel = (props: PlansPanelProps) => {
         // @TODO remove dbaas resize class type restriction sometime post-release when we support resizing across different plans
         disabledResizeFromPremiumPlans,
         disabledResizeToPremiumPlans,
-        isLegacyDatabase,
         isDatabaseResize,
         isResize: isDatabaseResize ? false : isResize,
         plans: plansMap,

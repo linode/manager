@@ -14,7 +14,6 @@ import {
 import { DefaultEntityAccess } from './DefaultEntityAccess';
 
 const queryMocks = vi.hoisted(() => ({
-  useAllAccountEntities: vi.fn().mockReturnValue({}),
   useParams: vi.fn().mockReturnValue({}),
   useSearch: vi.fn().mockReturnValue({}),
   useGetDefaultDelegationAccessQuery: vi.fn().mockReturnValue({}),
@@ -24,13 +23,13 @@ const queryMocks = vi.hoisted(() => ({
   usePermissions: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('src/features/IAM/hooks/useDelegationRole', () => ({
+vi.mock('../../hooks/useDelegationRole', () => ({
   useIsDefaultDelegationRolesForChildAccount:
     queryMocks.useIsDefaultDelegationRolesForChildAccount,
 }));
 
 vi.mock('@linode/queries', async () => {
-  const actual = await vi.importActual<any>('@linode/queries');
+  const actual = await vi.importActual('@linode/queries');
   return {
     ...actual,
     useGetDefaultDelegationAccessQuery:
@@ -38,16 +37,8 @@ vi.mock('@linode/queries', async () => {
   };
 });
 
-vi.mock('src/queries/entities/entities', async () => {
-  const actual = await vi.importActual('src/queries/entities/entities');
-  return {
-    ...actual,
-    useAllAccountEntities: queryMocks.useAllAccountEntities,
-  };
-});
-
-vi.mock('src/features/IAM/hooks/usePermissions', async () => {
-  const actual = await vi.importActual('src/features/IAM/hooks/usePermissions');
+vi.mock('../../hooks/usePermissions', async () => {
+  const actual = await vi.importActual('../../hooks/usePermissions');
   return {
     ...actual,
     usePermissions: queryMocks.usePermissions,

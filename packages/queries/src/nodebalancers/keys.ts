@@ -1,7 +1,9 @@
 import {
   getNodeBalancer,
+  getNodeBalancerBeta,
   getNodeBalancerFirewalls,
   getNodeBalancers,
+  getNodeBalancersBeta,
   getNodeBalancerStats,
   getNodeBalancerVPCConfigsBeta,
 } from '@linode/api-v4';
@@ -18,6 +20,10 @@ import type { Filter, Params } from '@linode/api-v4';
 export const nodebalancerQueries = createQueryKeys('nodebalancers', {
   nodebalancer: (id: number) => ({
     contextQueries: {
+      beta: {
+        queryFn: () => getNodeBalancerBeta(id),
+        queryKey: null,
+      },
       configurations: {
         queryFn: () => getAllNodeBalancerConfigs(id),
         queryKey: null,
@@ -54,6 +60,10 @@ export const nodebalancerQueries = createQueryKeys('nodebalancers', {
       }),
       paginated: (params: Params = {}, filter: Filter = {}) => ({
         queryFn: () => getNodeBalancers(params, filter),
+        queryKey: [params, filter],
+      }),
+      paginatedBeta: (params: Params = {}, filter: Filter = {}) => ({
+        queryFn: () => getNodeBalancersBeta(params, filter),
         queryKey: [params, filter],
       }),
     },

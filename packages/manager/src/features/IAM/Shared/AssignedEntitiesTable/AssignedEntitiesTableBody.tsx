@@ -1,6 +1,7 @@
 import { TableCell, TableRow } from '@akamai/cds-components/react';
 import React from 'react';
 
+import { useHasTableStripingEnabled } from '../../hooks/useHasTableStripingEnabled';
 import { CircleProgress } from '../CircleProgress/CircleProgress';
 import { getFormattedEntityType } from '../utilities';
 import { AssignedEntitiesActionMenu } from './AssignedEntitiesActionMenu';
@@ -41,6 +42,7 @@ export const AssignedEntitiesTableBody = ({
 }: Props) => {
   const { columnWidths, showEntityType, showRole } =
     useAssignedEntitiesTableColumns();
+  const hasTableStripingEnabled = useHasTableStripingEnabled();
 
   const fullWidthCellStyle = getAssignedEntitiesTableCellStyle('100%');
 
@@ -82,7 +84,7 @@ export const AssignedEntitiesTableBody = ({
   return (
     <>
       {paginatedData.map((el) => (
-        <TableRow key={el.id} zebra>
+        <TableRow key={el.id} zebra={hasTableStripingEnabled}>
           <TableCell
             style={getAssignedEntitiesTableCellStyle(columnWidths.entity)}
           >

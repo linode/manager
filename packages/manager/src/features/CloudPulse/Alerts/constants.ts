@@ -32,6 +32,10 @@ export const engineTypeOptions: Item<string, string>[] = [
     label: 'PostgreSQL',
     value: 'postgresql',
   },
+  {
+    label: 'Valkey',
+    value: 'valkey',
+  },
 ];
 
 export const metricOperatorOptions: Item<string, MetricOperatorType>[] = [

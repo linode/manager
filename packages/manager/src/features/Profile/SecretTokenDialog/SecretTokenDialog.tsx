@@ -1,18 +1,11 @@
-import { getRegionsByRegionId } from '@akamai/compute-ui-core/api';
-import { useRegionsQuery } from '@linode/queries';
 import { ActionsPanel, Box, Notice } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { CopyableTextField } from 'src/components/CopyableTextField/CopyableTextField';
-import { CopyAllHostnames } from 'src/features/ObjectStorage/AccessKeyLanding/CopyAllHostnames';
-import { HostNamesList } from 'src/features/ObjectStorage/AccessKeyLanding/HostNamesList';
-
-import type { ObjectStorageKey } from '@linode/api-v4/lib/object-storage';
 
 interface Props {
-  objectStorageKey?: null | ObjectStorageKey;
   onClose: () => void;
   open: boolean;
   title: string;
@@ -32,16 +25,10 @@ const renderActions = (
   />
 );
 
-// TODO: separate Access Key secret specific logic into a separate component and move it to ObjectStorage package
 export const SecretTokenDialog = (props: Props) => {
-  const { objectStorageKey, onClose, open, title, value } = props;
+  const { onClose, open, title, value } = props;
 
-  const { data: regionsData } = useRegionsQuery();
-  const regionsLookup = regionsData && getRegionsByRegionId(regionsData);
-
-  const modalConfirmationButtonText = objectStorageKey
-    ? 'I Have Saved My Secret Key'
-    : `I Have Saved My ${title}`;
+  const modalConfirmationButtonText = `I Have Saved My ${title}`;
 
   const actions = renderActions(onClose, modalConfirmationButtonText);
 
@@ -62,54 +49,11 @@ export const SecretTokenDialog = (props: Props) => {
     >
       <StyledNotice
         spacingTop={8}
-        text={`${
-          objectStorageKey ? 'Your keys have been generated.' : ''
-        } For security purposes, we can only display your ${
-          objectStorageKey ? 'secret key' : title.toLowerCase()
-        } once, after which it can\u{2019}t be recovered. Be sure to keep it in a safe place.`}
+        text={`For security purposes, we can only display your ${title.toLowerCase()} once, after which it can\u{2019}t be recovered. Be sure to keep it in a safe place.`}
         variant="warning"
       />
-      {objectStorageKey && (
-        <>
-          <div>
-            <CopyAllHostnames
-              hideShowAll={objectStorageKey?.regions?.length <= 1}
-              text={
-                objectStorageKey?.regions
-                  .map(
-                    (region) =>
-                      `${regionsLookup?.[region.id]?.label}: ${region.s3_endpoint}`
-                  )
-                  .join('\n') ?? ''
-              }
-            />
-          </div>
-          <HostNamesList objectStorageKey={objectStorageKey} />
-        </>
-      )}
 
-      {objectStorageKey ? (
-        <>
-          <Box marginBottom="16px">
-            <CopyableTextField
-              expand
-              label={'Access Key'}
-              showDownloadIcon
-              spellCheck={false}
-              value={objectStorageKey.access_key || ''}
-            />
-          </Box>
-          <Box marginBottom="16px">
-            <CopyableTextField
-              expand
-              label={'Secret Key'}
-              showDownloadIcon
-              spellCheck={false}
-              value={objectStorageKey.secret_key || ''}
-            />
-          </Box>
-        </>
-      ) : value ? (
+      {value ? (
         <Box marginBottom="16px">
           <CopyableTextField
             expand

@@ -2,18 +2,18 @@ import { listToItemsByID } from '@linode/queries';
 
 import type { Linode, Subnet, VPCIP } from '@linode/api-v4';
 
-export interface PrivateIPOption {
+export interface LinodeIPOption {
   /**
-   * A private IPv4 address
+   * A private IPv4/ public IPv6 address
    */
   label: string;
   /**
-   * The Linode associated with the private IPv4 address
+   * The Linode associated with the private IPv4/ public IPv6 address
    */
   linode: Linode;
 }
 
-export interface VPCIPOption extends PrivateIPOption {
+export interface VPCIPOption extends LinodeIPOption {
   /**
    * The Subnet associated with the VPC IPv4 address
    */
@@ -29,7 +29,7 @@ export const getPrivateIPOptions = (linodes: Linode[] | undefined) => {
     return [];
   }
 
-  const options: PrivateIPOption[] = [];
+  const options: LinodeIPOption[] = [];
 
   for (const linode of linodes) {
     for (const ip of linode.ipv4) {
@@ -75,5 +75,25 @@ export const getVPCIPOptions = (
     });
   }
 
+  return options;
+};
+
+/**
+ * Given an array of Linodes, this function returns an array of
+ * public IPv6 options intended to be used in a Select component.
+ */
+export const getIPv6Options = (linodes: Linode[] | undefined) => {
+  if (!linodes) {
+    return [];
+  }
+
+  const options: LinodeIPOption[] = [];
+
+  for (const linode of linodes) {
+    if (linode.ipv6) {
+      const [address] = linode.ipv6.split('/');
+      options.push({ label: address, linode });
+    }
+  }
   return options;
 };

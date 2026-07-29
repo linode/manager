@@ -1,5 +1,8 @@
+import { DateTimeRangePicker } from '@linode/ui';
+
 import type { AssociatedEntityType } from '../shared/types';
 import type { Filter } from '@linode/api-v4';
+import type { DurationLike } from 'luxon';
 
 export const DASHBOARD_ID = 'dashboardId';
 
@@ -189,4 +192,25 @@ export const LOADING_DELAYS = {
   DEFAULT: 5000,
   /** Extended delay for large dataset operations */
   LARGE_DATASET: 10000,
+};
+
+export const PRESET_TO_DURATION_MAP: Record<string, DurationLike> = {
+  [DateTimeRangePicker.PRESET_LABELS.LAST_30_MINUTES]: {
+    minutes: 30,
+  },
+  [DateTimeRangePicker.PRESET_LABELS.LAST_HOUR]: {
+    hours: 1,
+  },
+  [DateTimeRangePicker.PRESET_LABELS.LAST_12_HOURS]: {
+    hours: 12,
+  },
+  [DateTimeRangePicker.PRESET_LABELS.LAST_DAY]: {
+    days: 1,
+  },
+  [DateTimeRangePicker.PRESET_LABELS.LAST_7_DAYS]: {
+    days: 7,
+  },
+  [DateTimeRangePicker.PRESET_LABELS.LAST_30_DAYS]: {
+    days: 30,
+  },
 };

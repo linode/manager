@@ -21,7 +21,8 @@
   p {
     font-weight: var(--token-global-font-font-weight-bold, 700);
     margin: 0;
-    padding: var(--token-global-spacing-s4, 0.25rem) var(--token-global-spacing-s8, 0.5rem);
+    color: light-dark(var(--token-alias-content-text-primary-default, #343438), #a3a3ab);
+    padding: var(--token-global-spacing-s4, 0.25rem) var(--token-global-spacing-s14, 14px);
   }
 }
 
@@ -31,6 +32,7 @@
   overflow-x: auto;
   padding: 0 var(--token-global-spacing-s8, 0.5rem);
   border: 1px solid var(--token-alias-background-neutral, light-dark(#f7f7fa, #343438));
+  color: light-dark(var(--token-alias-content-text-primary-default, #343438), rgb(214, 214, 221));
   border-left: 0;
   border-bottom: 0;
 }

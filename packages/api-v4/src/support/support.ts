@@ -14,6 +14,7 @@ import Request, {
 
 import type { Filter, ResourcePage as Page, Params } from '../types';
 import type {
+  LiveChatAvailabilityRequest,
   ReplyRequest,
   SupportReply,
   SupportTicket,
@@ -164,4 +165,13 @@ export const getLiveChatToken = (params?: Params, filter?: Filter) =>
     setMethod('GET'),
     setParams(params),
     setXFilter(filter),
+  );
+
+/**
+ * Determine whether Support Live Chat is currently available.
+ */
+export const getLiveChatAvailability = () =>
+  Request<LiveChatAvailabilityRequest>(
+    setURL(`${BETA_API_ROOT}/support`),
+    setMethod('GET'),
   );

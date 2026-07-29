@@ -1,6 +1,5 @@
 import { Button } from '@akamai/cds-components/react';
 import { Spacing } from '@akamai/cds-tokens';
-import { useNavigate } from '@tanstack/react-router';
 import React from 'react';
 
 import { Link } from 'src/components/Link';
@@ -10,14 +9,11 @@ import { Paper } from '../../shared/Paper/Paper';
 import { cssVars } from '../../shared/utilities/cssVars';
 import styles from '../DatabaseDetail.module.css';
 import { useDatabaseDetailContext } from '../DatabaseDetailContext';
-import { StyledLabelTypography } from '../DatabaseSummary/DatabaseSummaryClusterConfiguration.style';
 import { DatabaseAdvancedConfigurationDrawer } from './DatabaseAdvancedConfigurationDrawer';
 import { formatConfigValue } from './utilities';
 
 export const DatabaseAdvancedConfiguration = () => {
-  const navigate = useNavigate();
-  const { database, isAdvancedConfigEnabled, engine } =
-    useDatabaseDetailContext();
+  const { database } = useDatabaseDetailContext();
   const [advancedConfigurationDrawerOpen, setAdvancedConfigurationDrawerOpen] =
     React.useState<boolean>(false);
 
@@ -26,17 +22,6 @@ export const DatabaseAdvancedConfiguration = () => {
   });
 
   const engineConfigs = database.engine_config;
-
-  if (!isAdvancedConfigEnabled) {
-    navigate({
-      to: `/databases/$engine/$databaseId/summary`,
-      params: {
-        engine,
-        databaseId: database.id,
-      },
-    });
-    return null;
-  }
 
   return (
     <Paper paddingBottom={Spacing.S40}>
@@ -70,7 +55,7 @@ export const DatabaseAdvancedConfiguration = () => {
               Object.entries(value!).map(([configLabel, configValue]) => (
                 <React.Fragment key={`${key}-${configLabel}`}>
                   <div className={styles.summaryLabelColumn}>
-                    <StyledLabelTypography>{`${key}.${configLabel}`}</StyledLabelTypography>
+                    <p>{`${key}.${configLabel}`}</p>
                   </div>
                   <div className={styles.summaryValueColumn}>
                     {formatConfigValue(String(configValue))}
@@ -80,7 +65,7 @@ export const DatabaseAdvancedConfiguration = () => {
             ) : (
               <React.Fragment key={key}>
                 <div className={styles.summaryLabelColumn}>
-                  <StyledLabelTypography>{`${key}`}</StyledLabelTypography>
+                  <p>{`${key}`}</p>
                 </div>
                 <div className={styles.summaryValueColumn}>
                   {formatConfigValue(String(value))}

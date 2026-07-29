@@ -36,7 +36,6 @@ vi.mock('@tanstack/react-router', async () => {
 describe('DatabaseNetworking Component', () => {
   // Mock Database with no VPC configuration for DatbaseNetworking content rendering test
   const mockDatabase = databaseFactory.build({
-    platform: 'rdbms-default',
     private_network: null,
   });
 
@@ -53,9 +52,7 @@ describe('DatabaseNetworking Component', () => {
 
   it('Should render both the Manage Access and Manage Networking sections when all VPCs query response is successful', () => {
     renderWithTheme(
-      <DatabaseDetailContext.Provider
-        value={{ database: mockDatabase, engine: 'mysql', isVPCEnabled: true }}
-      >
+      <DatabaseDetailContext.Provider value={{ database: mockDatabase }}>
         <DatabaseNetworking />
       </DatabaseDetailContext.Provider>
     );

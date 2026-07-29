@@ -209,6 +209,11 @@ export const useUpdateAccessKeyMutation = () => {
         queryKey: objectStorageQueries.accessKeys._def,
       });
 
+      // Invalidate access key query
+      queryClient.invalidateQueries({
+        queryKey: objectStorageQueries.accessKey._def,
+      });
+
       // @analytics
       sendEditAccessKeyEvent();
     },

@@ -39,10 +39,10 @@ export const UserDeleteConfirmation = (props: Props) => {
       text: `User ${username} has been successfully deleted.`,
       type: 'success',
     });
+    onClose();
     if (onSuccess) {
       onSuccess();
     }
-    onClose();
   };
 
   return (

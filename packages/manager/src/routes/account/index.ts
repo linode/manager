@@ -1,7 +1,5 @@
 import { createRoute, redirect } from '@tanstack/react-router';
 
-import { checkIAMEnabled } from 'src/features/IAM/hooks/useIsIAMEnabled';
-
 import { rootRoute } from '../root';
 import { AccountRoute } from './AccountRoute';
 
@@ -46,14 +44,8 @@ const accountBillingRoute = createRoute({
 const accountUsersRoute = createRoute({
   getParentRoute: () => accountTabsRoute,
   path: '/users',
-  beforeLoad: async ({ context }) => {
-    const isIAMEnabled = await checkIAMEnabled(
-      context.queryClient,
-      context.flags,
-      context.profile
-    );
-
-    if (isIAMEnabled) {
+  beforeLoad: ({ context }) => {
+    if (context.isIAMEnabled) {
       throw redirect({ to: '/iam/users' });
     }
   },
@@ -141,26 +133,18 @@ const accountSettingsRoute = createRoute({
 const accountUsersUsernameRoute = createRoute({
   getParentRoute: () => accountRoute,
   path: '/users/$username',
-  beforeLoad: async ({ context, params, location }) => {
+  beforeLoad: ({ context, params, location }) => {
     const { username } = params;
-
-    const isIAMEnabled = await checkIAMEnabled(
-      context.queryClient,
-      context.flags,
-      context.profile
-    );
 
     if (!username) {
       return;
     }
 
-    if (isIAMEnabled) {
-      const url = location.pathname.endsWith('/permissions')
-        ? '/iam/users/$username/roles'
-        : '/iam/users/$username/details';
-
+    if (context.isIAMEnabled) {
       throw redirect({
-        to: url,
+        to: location.pathname.endsWith('/permissions')
+          ? '/iam/users/$username/roles'
+          : '/iam/users/$username/details',
         params: { username },
         replace: true,
       });

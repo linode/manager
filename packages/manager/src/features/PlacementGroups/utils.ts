@@ -32,24 +32,27 @@ interface HasPlacementGroupReachedCapacityOptions {
 /**
  * Helper to determine if a Placement Group has reached its linode capacity.
  *
- * based on the region's `maximum_linodes_per_pg`.
+ * For `flexible` policy, checks the region's `maximum_linodes_per_flexible_pg`.
+ * For `strict` policy, checks the region's `maximum_linodes_per_pg`.
  */
 export const hasPlacementGroupReachedCapacity = ({
   placementGroup,
   region,
 }: HasPlacementGroupReachedCapacityOptions): boolean => {
-  if (
-    !placementGroup ||
-    !region ||
-    region.placement_group_limits.maximum_linodes_per_pg === null
-  ) {
+  if (!placementGroup || !region) {
     return false;
   }
 
-  return (
-    placementGroup.members.length >=
-    region.placement_group_limits.maximum_linodes_per_pg
-  );
+  const isFlexible = placementGroup.placement_group_policy === 'flexible';
+  const limit = isFlexible
+    ? region.placement_group_limits.maximum_linodes_per_flexible_pg
+    : region.placement_group_limits.maximum_linodes_per_pg;
+
+  if (limit === null) {
+    return false;
+  }
+
+  return placementGroup.members.length >= limit;
 };
 
 interface HasRegionReachedPlacementGroupCapacityOptions {

@@ -1,19 +1,13 @@
 import { renderHook, waitFor } from '@testing-library/react';
 import { DateTime } from 'luxon';
 
-import {
-  accountFactory,
-  databaseFactory,
-  databaseTypeFactory,
-} from 'src/factories';
+import { databaseFactory, databaseTypeFactory } from 'src/factories';
 import {
   convertPrivateToPublicHostname,
   getDatabasesDescription,
   getReadOnlyHost,
   hasPendingUpdates,
   isDateOutsideBackup,
-  isDefaultDatabase,
-  isLegacyDatabase,
   isTimeOutsideBackup,
   toFormattedDate,
   toISOString,
@@ -24,26 +18,11 @@ import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 
 import type {
-  AccountCapability,
   Database,
   Engine,
   HostEndpointRole,
   PendingUpdates,
 } from '@linode/api-v4';
-
-const setup = (capabilities: AccountCapability[], flags: any) => {
-  const account = accountFactory.build({ capabilities });
-
-  server.use(
-    http.get('*/v4*/account', () => {
-      return HttpResponse.json(account);
-    })
-  );
-
-  return renderHook(() => useIsDatabasesEnabled(), {
-    wrapper: (ui) => wrapWithTheme(ui, { flags }),
-  });
-};
 
 const queryMocks = vi.hoisted(() => ({
   useDatabaseTypesQuery: vi.fn().mockReturnValue({}),
@@ -58,175 +37,6 @@ vi.mock(import('@linode/queries'), async (importOriginal) => {
 });
 
 describe('useIsDatabasesEnabled', () => {
-  it('should return correctly for non V1/V2 user', async () => {
-    const { result } = setup([], { dbaasV2: { beta: true, enabled: true } });
-    await waitFor(() => {
-      expect(result.current.isDatabasesEnabled).toBe(false);
-      expect(result.current.isDatabasesV2Enabled).toBe(false);
-
-      expect(result.current.isDatabasesV2Beta).toBe(false);
-      expect(result.current.isUserExistingBeta).toBe(false);
-      expect(result.current.isUserNewBeta).toBe(false);
-
-      expect(result.current.isDatabasesV2GA).toBe(false);
-    });
-  });
-
-  it('should return correctly for V1 user', async () => {
-    const { result } = setup(['Managed Databases'], {
-      dbaasV2: { beta: false, enabled: false },
-    });
-
-    await waitFor(() => {
-      expect(result.current.isDatabasesEnabled).toBe(true);
-      expect(result.current.isDatabasesV2Enabled).toBe(false);
-
-      expect(result.current.isDatabasesV2Beta).toBe(false);
-      expect(result.current.isUserExistingBeta).toBe(false);
-      expect(result.current.isUserNewBeta).toBe(false);
-
-      expect(result.current.isDatabasesV2GA).toBe(false);
-    });
-  });
-
-  it('should return correctly for V2 new user beta', async () => {
-    const { result } = setup(['Managed Databases Beta'], {
-      dbaasV2: { beta: true, enabled: true },
-    });
-
-    await waitFor(() => {
-      expect(result.current.isDatabasesEnabled).toBe(true);
-      expect(result.current.isDatabasesV2Enabled).toBe(true);
-
-      expect(result.current.isDatabasesV2Beta).toBe(true);
-      expect(result.current.isUserExistingBeta).toBe(false);
-      expect(result.current.isUserNewBeta).toBe(true);
-
-      expect(result.current.isDatabasesV2GA).toBe(false);
-    });
-  });
-
-  it('should return correctly for V2 new user no beta', async () => {
-    const { result } = setup(['Managed Databases Beta'], {
-      dbaasV2: { beta: false, enabled: false },
-    });
-
-    await waitFor(() => {
-      expect(result.current.isDatabasesEnabled).toBe(false);
-      expect(result.current.isDatabasesV2Enabled).toBe(false);
-
-      expect(result.current.isDatabasesV2Beta).toBe(false);
-      expect(result.current.isUserExistingBeta).toBe(false);
-      expect(result.current.isUserNewBeta).toBe(false);
-
-      expect(result.current.isDatabasesV2GA).toBe(false);
-    });
-  });
-
-  it('should return correctly for V1 & V2 existing user beta', async () => {
-    const { result } = setup(['Managed Databases', 'Managed Databases Beta'], {
-      dbaasV2: { beta: true, enabled: true },
-    });
-
-    await waitFor(() => {
-      expect(result.current.isDatabasesEnabled).toBe(true);
-      expect(result.current.isDatabasesV2Enabled).toBe(true);
-
-      expect(result.current.isDatabasesV2Beta).toBe(true);
-      expect(result.current.isUserExistingBeta).toBe(true);
-      expect(result.current.isUserNewBeta).toBe(false);
-
-      expect(result.current.isDatabasesV2GA).toBe(false);
-    });
-  });
-
-  it('should return correctly for V1 existing user GA', async () => {
-    const { result } = setup(['Managed Databases'], {
-      dbaasV2: { beta: false, enabled: true },
-    });
-
-    await waitFor(() => {
-      expect(result.current.isDatabasesEnabled).toBe(true);
-      expect(result.current.isDatabasesV2Enabled).toBe(true);
-
-      expect(result.current.isDatabasesV2Beta).toBe(false);
-      expect(result.current.isUserExistingBeta).toBe(false);
-      expect(result.current.isUserNewBeta).toBe(false);
-
-      expect(result.current.isDatabasesV2GA).toBe(true);
-    });
-  });
-
-  it('should return correctly for V2 restricted user existing beta', async () => {
-    server.use(
-      http.get('*/v4*/account', () => {
-        return HttpResponse.json({}, { status: 403 });
-      })
-    );
-
-    // default
-    queryMocks.useDatabaseTypesQuery.mockReturnValueOnce({
-      data: databaseTypeFactory.buildList(1),
-    });
-
-    const flags = { dbaasV2: { beta: true, enabled: true } };
-
-    const { result } = renderHook(() => useIsDatabasesEnabled(), {
-      wrapper: (ui) => wrapWithTheme(ui, { flags }),
-    });
-
-    expect(queryMocks.useDatabaseTypesQuery).toHaveBeenNthCalledWith(
-      1,
-      ...[{ platform: 'rdbms-default' }, true]
-    );
-
-    await waitFor(() => {
-      expect(result.current.isDatabasesEnabled).toBe(true);
-      expect(result.current.isDatabasesV2Enabled).toBe(true);
-
-      expect(result.current.isDatabasesV2Beta).toBe(true);
-      expect(result.current.isUserExistingBeta).toBe(true);
-      expect(result.current.isUserNewBeta).toBe(true);
-
-      expect(result.current.isDatabasesV2GA).toBe(false);
-    });
-  });
-
-  it('should return correctly for V2 restricted user new beta', async () => {
-    server.use(
-      http.get('*/v4*/account', () => {
-        return HttpResponse.json({}, { status: 403 });
-      })
-    );
-
-    // default
-    queryMocks.useDatabaseTypesQuery.mockReturnValueOnce({
-      data: databaseTypeFactory.buildList(1),
-    });
-
-    const flags = { dbaasV2: { beta: true, enabled: true } };
-
-    const { result } = renderHook(() => useIsDatabasesEnabled(), {
-      wrapper: (ui) => wrapWithTheme(ui, { flags }),
-    });
-
-    expect(queryMocks.useDatabaseTypesQuery).toHaveBeenNthCalledWith(
-      1,
-      ...[{ platform: 'rdbms-default' }, true]
-    );
-
-    await waitFor(() => {
-      expect(result.current.isDatabasesEnabled).toBe(true);
-      expect(result.current.isDatabasesV2Enabled).toBe(true);
-
-      expect(result.current.isDatabasesV2Beta).toBe(true);
-      expect(result.current.isUserExistingBeta).toBe(true);
-      expect(result.current.isUserNewBeta).toBe(true);
-
-      expect(result.current.isDatabasesV2GA).toBe(false);
-    });
-  });
-
   it('should return correctly for V2 restricted user GA', async () => {
     server.use(
       http.get('*/v4*/account', () => {
@@ -239,10 +49,8 @@ describe('useIsDatabasesEnabled', () => {
       data: databaseTypeFactory.buildList(1),
     });
 
-    const flags = { dbaasV2: { beta: false, enabled: true } };
-
     const { result } = renderHook(() => useIsDatabasesEnabled(), {
-      wrapper: (ui) => wrapWithTheme(ui, { flags }),
+      wrapper: (ui) => wrapWithTheme(ui),
     });
 
     expect(queryMocks.useDatabaseTypesQuery).toHaveBeenNthCalledWith(
@@ -251,14 +59,7 @@ describe('useIsDatabasesEnabled', () => {
     );
 
     await waitFor(() => {
-      expect(result.current.isDatabasesEnabled).toBe(true);
-      expect(result.current.isDatabasesV2Enabled).toBe(true);
-
-      expect(result.current.isDatabasesV2Beta).toBe(false);
-      expect(result.current.isUserExistingBeta).toBe(false);
-      expect(result.current.isUserNewBeta).toBe(false);
-
-      expect(result.current.isDatabasesV2GA).toBe(true);
+      expect(result.current).toBe(true);
     });
   });
 });
@@ -448,39 +249,6 @@ describe('hasPendingUpdates', () => {
   });
 });
 
-describe('isDefaultDatabase', () => {
-  it('should return true for default platform database', () => {
-    const db: Database = databaseFactory.build({
-      platform: 'rdbms-default',
-    });
-    const result = isDefaultDatabase(db);
-    expect(result).toBe(true);
-  });
-
-  it('should return false for legacy platform database', () => {
-    const db: Database = databaseFactory.build({
-      platform: 'rdbms-legacy',
-    });
-    const result = isDefaultDatabase(db);
-    expect(result).toBe(false);
-    expect(isDefaultDatabase({ platform: undefined })).toBe(false);
-  });
-});
-
-describe('isLegacyDatabase', () => {
-  it('should return true for legacy databases', () => {
-    expect(isLegacyDatabase({ platform: 'rdbms-legacy' })).toBe(true);
-  });
-
-  it('should return true fro undefined platform', () => {
-    expect(isLegacyDatabase({ platform: undefined })).toBe(true);
-  });
-
-  it('should return false for non-legacy databases', () => {
-    expect(isLegacyDatabase({ platform: 'rdbms-default' })).toBe(false);
-  });
-});
-
 describe('upgradableVersions', () => {
   const mockEngines = [
     {
@@ -553,26 +321,6 @@ describe('getReadOnlyHost', () => {
     db.hosts = mockHosts;
     const result = getReadOnlyHost(db);
     expect(result).toBe(mockHosts.standby);
-  });
-
-  // TODO (UIE-8214) POST GA - Remove this test as secondary is only present for legacy databases
-  it('should return the secondary host from the database if standby is not present', () => {
-    const db: Database = databaseFactory.build();
-    const mockHosts = {
-      primary: 'primary.example.com',
-      secondary: 'secondary.example.com',
-      endpoints: [
-        {
-          address: 'public-primary.example.com',
-          role: 'primary' as HostEndpointRole,
-          public_access: true,
-          port: 12345,
-        },
-      ],
-    };
-    db.hosts = mockHosts;
-    const result = getReadOnlyHost(db);
-    expect(result).toBe(mockHosts.secondary);
   });
 
   it('should return an empty string when no database data is provided', () => {

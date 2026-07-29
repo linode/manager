@@ -1,14 +1,14 @@
 import { Button, Icon, Tooltip } from '@akamai/cds-components/react';
 import { Color, Font, Spacing, Typography } from '@akamai/cds-tokens';
-import { useNavigate } from '@tanstack/react-router';
+import { useNavigate, useSearch } from '@tanstack/react-router';
 import React from 'react';
-
-import { PARENT_USER } from 'src/features/Account/constants';
 
 import { useActiveBreakpointIndex } from '../../hooks/useBreakpoint';
 import { useDelegationRole } from '../../hooks/useDelegationRole';
+import { useIsIAMTfaEnforcementEnabled } from '../../hooks/useIsIAMTfaEnforcementEnabled';
+import { IAM_USERS_USER_DETAILS_PENDO_IDS } from '../../LoginSettings/constants';
 import { Box } from '../../Shared/Box/Box';
-import { EMAIL_MAX_LENGTH } from '../../Shared/constants';
+import { EMAIL_MAX_LENGTH, PARENT_USER } from '../../Shared/constants';
 import { DateTimeDisplay } from '../../Shared/DateTimeDisplay/DateTimeDisplay';
 import { Divider } from '../../Shared/Divider/Divider';
 import { MaskableText } from '../../Shared/MaskableText/MaskableText';
@@ -18,8 +18,9 @@ import { truncateEnd } from '../../Shared/truncate';
 import { UserDeleteConfirmation } from '../../Shared/UserDeleteConfirmation';
 import { EditUserDetailsDrawer } from './EditUserDetailsDrawer';
 import styles from './UserDetailsPanel.module.css';
-import { getTotalAssignedRoles } from './utils';
+import { getTfaStatus, getTotalAssignedRoles } from './utils';
 
+import type { IAMAction } from '../../routes';
 import type { IamUserRoles, User } from '@linode/api-v4';
 
 interface ItemsGridStyle extends React.CSSProperties {
@@ -42,11 +43,17 @@ export const UserDetailsPanel = ({
   activeUser,
   permissions,
 }: Props) => {
-  const [isEditDrawerOpen, setIsEditDrawerOpen] = React.useState(false);
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
-
   const navigate = useNavigate();
+  const { action } = useSearch({
+    from: '/iam/users/$username/details',
+  });
   const { profileUserName } = useDelegationRole();
+  const { isIAMTfaEnforcementEnabled } = useIsIAMTfaEnforcementEnabled();
+  const { iconStatus: tfaIconStatus, label: tfaLabel } = getTfaStatus(
+    activeUser.tfa_enabled,
+    activeUser.tfa_enforced,
+    isIAMTfaEnforcementEnabled
+  );
 
   const isDelegateUserType = activeUser.user_type === 'delegate';
 
@@ -84,6 +91,39 @@ export const UserDetailsPanel = ({
   const assignRolesCount = assignedRoles
     ? getTotalAssignedRoles(assignedRoles)
     : 0;
+
+  const actionHandler = (action: IAMAction, username: string) => {
+    navigate({
+      to: `/iam/users/${username}/details`,
+      search: (prev) => ({
+        ...prev,
+        action,
+      }),
+    });
+  };
+
+  const handleDeleteUser = (username: string) => {
+    actionHandler('delete-user', username);
+  };
+
+  const handleEditUser = (username: string) => {
+    actionHandler('edit-user', username);
+  };
+
+  const handleCloseDialog = (expectedAction?: IAMAction) => {
+    if (expectedAction && action !== expectedAction) {
+      return;
+    }
+
+    navigate({
+      params: { username: activeUser.username },
+      search: (prev) => ({
+        ...prev,
+        action: undefined,
+      }),
+      to: '/iam/users/$username/details',
+    });
+  };
 
   const items = [
     {
@@ -197,7 +237,8 @@ export const UserDetailsPanel = ({
       value: (
         <Box direction="row">
           <StatusIcon
-            status={activeUser.tfa_enabled ? 'active' : 'inactive'}
+            pulse={false}
+            status={tfaIconStatus}
             style={{ alignSelf: 'center' }}
           />
           <p
@@ -206,7 +247,7 @@ export const UserDetailsPanel = ({
               fontWeight: Font.FontWeight.Bold,
             }}
           >
-            {activeUser.tfa_enabled ? 'Enabled' : 'Disabled'}
+            {tfaLabel}
           </p>
         </Box>
       ),
@@ -259,45 +300,44 @@ export const UserDetailsPanel = ({
 
   return (
     <Paper>
-      <div style={{ padding: `${Spacing.S8} ${Spacing.S0}` }}>
-        <Box
-          direction="row"
-          style={{
-            alignItems: 'center',
-            gap: 24,
-          }}
-        >
-          <p style={{ flex: 1, font: Typography.Heading.M }}>User Details</p>
-          <Tooltip disabled={!isEditUserDisabled} tooltipText={editTooltipText}>
-            <Button
-              disabled={isEditUserDisabled}
-              onClick={() => setIsEditDrawerOpen(true)}
-              variant="link"
-            >
-              Edit Details
-              {isEditUserDisabled ? (
-                <Icon icon="info-outline" size="m" />
-              ) : null}
-            </Button>
-          </Tooltip>
-          <Tooltip
-            disabled={!isDeleteUserDisabled}
-            tooltipText={deleteTooltipText}
+      <Box
+        direction="row"
+        style={{
+          alignItems: 'center',
+          gap: 24,
+        }}
+      >
+        <h2 style={{ flex: 1, font: Typography.Heading.S }}>User Details</h2>
+        <Tooltip disabled={!isEditUserDisabled} tooltipText={editTooltipText}>
+          <Button
+            data-pendo-id={IAM_USERS_USER_DETAILS_PENDO_IDS.editDetails}
+            disabled={isEditUserDisabled}
+            onClick={() => handleEditUser(activeUser.username)}
+            variant="link"
           >
-            <Button
-              disabled={isDeleteUserDisabled}
-              onClick={() => setIsDeleteDialogOpen(true)}
-              variant="link"
-            >
-              Delete User
-              {isDeleteUserDisabled ? (
-                <Icon icon="info-outline" size="m" />
-              ) : null}
-            </Button>
-          </Tooltip>
-        </Box>
-        <Divider spacingBottom={Spacing.S16} spacingTop={Spacing.S24} />
-      </div>
+            Edit Details
+            {isEditUserDisabled ? <Icon icon="info-outline" size="m" /> : null}
+          </Button>
+        </Tooltip>
+        <Tooltip
+          disabled={!isDeleteUserDisabled}
+          tooltipText={deleteTooltipText}
+        >
+          <Button
+            data-pendo-id={IAM_USERS_USER_DETAILS_PENDO_IDS.deleteUser}
+            disabled={isDeleteUserDisabled}
+            onClick={() => handleDeleteUser(activeUser.username)}
+            variant="link"
+          >
+            Delete User
+            {isDeleteUserDisabled ? (
+              <Icon icon="info-outline" size="m" />
+            ) : null}
+          </Button>
+        </Tooltip>
+      </Box>
+      <Divider spacingBottom={Spacing.S16} spacingTop={Spacing.S16} />
+
       <div className={styles.itemsGrid} style={itemsGridStyle}>
         {items.map((item) => (
           <Box className={styles.itemBox} key={item.label}>
@@ -309,13 +349,13 @@ export const UserDetailsPanel = ({
       <EditUserDetailsDrawer
         activeUser={activeUser}
         canUpdateUser={permissions?.update_user}
-        onClose={() => setIsEditDrawerOpen(false)}
-        open={isEditDrawerOpen}
+        onClose={() => handleCloseDialog('edit-user')}
+        open={action === 'edit-user'}
       />
       <UserDeleteConfirmation
-        onClose={() => setIsDeleteDialogOpen(false)}
+        onClose={() => handleCloseDialog('delete-user')}
         onSuccess={() => navigate({ to: '/iam/users' })}
-        open={isDeleteDialogOpen}
+        open={action === 'delete-user'}
         username={activeUser.username}
       />
     </Paper>

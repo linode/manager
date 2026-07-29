@@ -82,7 +82,7 @@ export const getSummaryStatus = (
 
   // enabled = true and enforce = false and included_users_count > 0
   if (!idpConfig.enforce && idpConfig.included_users_count > 0) {
-    return `${isSummary ? 'SSO is enabled and required' : 'SSO is enforced'} for ${idpConfig.included_users_count} user${idpConfig.included_users_count > 1 ? 's' : ''}. All remaining users can log in using alternative methods.`;
+    return `${isSummary ? 'SSO is enabled and required' : 'SSO is enforced'} for ${idpConfig.included_users_count} user${idpConfig.included_users_count > 1 ? 's' : ''}. All remaining users log in using alternative methods.`;
   }
 
   // enabled = true and enforce = false and included_users_count = 0

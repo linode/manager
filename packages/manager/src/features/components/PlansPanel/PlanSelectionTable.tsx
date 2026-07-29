@@ -8,7 +8,6 @@ import {
   STORAGE_PLAN_COPY,
   VALKEY_STORAGE_TOOLTIP_COPY,
 } from 'src/features/Databases/constants';
-import { useFlags } from 'src/hooks/useFlags';
 import { useIsGenerationalPlansEnabled } from 'src/utilities/linodes';
 import {
   MONTHLY_COLUMN_HOURLY_ONLY_TOOLTIP_TEXT,
@@ -68,7 +67,6 @@ export const PlanSelectionTable = (props: PlanSelectionTableProps) => {
     showTransfer: shouldShowTransfer,
     showUsableStorage,
   } = props;
-  const flags = useFlags();
   const { isGenerationalPlansEnabled } = useIsGenerationalPlansEnabled(
     plans,
     planType
@@ -114,12 +112,7 @@ export const PlanSelectionTable = (props: PlanSelectionTableProps) => {
             ) {
               return null;
             }
-            if (
-              showUsableStorage &&
-              !flags.dbaasV2?.beta &&
-              flags.dbaasV2?.enabled &&
-              cellName === 'Storage'
-            ) {
+            if (showUsableStorage && cellName === 'Storage') {
               cellName = 'Usable Storage';
             }
             if (isPlanCell && planType === 'accelerated') {

@@ -76,7 +76,7 @@ describe('VPC Subnets table', () => {
         vpcRegion=""
       />,
       {
-        flags: { nodebalancerVpc: true, vpcDbaasResources: true },
+        flags: { nodebalancerVpc: true },
       }
     );
 
@@ -270,7 +270,7 @@ describe('VPC Subnets table', () => {
           vpcId={3}
           vpcRegion=""
         />,
-        { flags: { nodebalancerVpc: true, vpcDbaasResources: true } }
+        { flags: { nodebalancerVpc: true } }
       );
 
       const expandTableButton = getByLabelText(`expand ${subnet.label} row`);

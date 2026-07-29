@@ -32,6 +32,11 @@ export interface User {
   restricted: boolean;
   ssh_keys: string[];
   tfa_enabled: boolean;
+  /**
+   * Whether MFA is enforced for this user.
+   * Differs from `tfa_enabled`, which indicates whether the user has MFA configured.
+   */
+  tfa_enforced: boolean;
   user_type: UserType;
   username: string;
   verified_phone_number: null | string;
@@ -63,7 +68,7 @@ export interface Account {
 export type BillingSource = 'akamai' | 'linode';
 
 export const accountCapabilities = [
-  'AI',
+  'AI Inference',
   'Akamai Cloud Load Balancer',
   'Akamai Cloud Pulse',
   'Akamai Cloud Pulse Logs',
@@ -74,6 +79,7 @@ export const accountCapabilities = [
   'Cloud Firewall Rule Set',
   'CloudPulse',
   'Disk Encryption',
+  'GPUDirect RDMA',
   'Kubernetes',
   'Kubernetes Enterprise',
   'Kubernetes Enterprise BYO VPC',
@@ -84,8 +90,8 @@ export const accountCapabilities = [
   'LKE Network Access Control List (IP ACL)',
   'Machine Images',
   'Managed Databases',
-  'Managed Databases Beta',
   'NETINT Quadra T1U',
+  'NAT Gateway',
   'Network LoadBalancer',
   'NodeBalancers',
   'Object Storage Access Key Regions',
@@ -125,6 +131,21 @@ export interface AccountSettings {
   managed: boolean;
   network_helper: boolean;
   object_storage: 'active' | 'disabled' | 'suspended';
+  tfa_enforced: boolean;
+}
+
+export interface TfaOptionalUser {
+  url: string;
+  username: string;
+}
+
+export interface UpdateTfaOptionalUsersPayload {
+  usernames: string[];
+}
+
+export interface UpdateTfaOptionalUsersResponse {
+  tfa_optional_users_count: number;
+  url: string;
 }
 
 export interface ActivePromotion {

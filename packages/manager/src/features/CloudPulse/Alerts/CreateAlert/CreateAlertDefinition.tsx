@@ -192,7 +192,10 @@ export const CreateAlertDefinition = () => {
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Create an Alert" />
-      <Paper sx={{ paddingLeft: 1, paddingRight: 1, paddingTop: 2 }}>
+      <Paper
+        data-pendo-id="monitor-alerts-create-page"
+        sx={{ paddingLeft: 1, paddingRight: 1, paddingTop: 2 }}
+      >
         <Breadcrumb crumbOverrides={overrides} pathname="/Definitions/Create" />
         <FormProvider {...formMethods}>
           <form onSubmit={onSubmit}>
@@ -270,10 +273,12 @@ export const CreateAlertDefinition = () => {
                 label: 'Submit',
                 loading: isSubmitting,
                 type: 'submit',
+                'data-pendo-id': 'monitor-alerts-create-Submit',
               }}
               secondaryButtonProps={{
                 label: 'Cancel',
                 onClick: alertCreateExit,
+                'data-pendo-id': 'monitor-alerts-create-Cancel',
               }}
               sx={{ display: 'flex', justifyContent: 'flex-end' }}
             />

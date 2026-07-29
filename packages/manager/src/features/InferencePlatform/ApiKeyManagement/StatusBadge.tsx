@@ -18,21 +18,21 @@ export const StatusBadge = ({ status }: StatusBadgeProps) => {
   > = {
     active: {
       backgroundColor: isDarkMode
-        ? theme.tokens.color.Green[40]
-        : theme.tokens.color.Green[30],
-      color: theme.tokens.color.Green[90],
+        ? theme.tokens.color.Green[80]
+        : theme.tokens.color.Green[70],
+      color: theme.palette.common.white,
     },
     expired: {
       backgroundColor: isDarkMode
-        ? theme.tokens.color.Orange[40]
-        : theme.tokens.color.Orange[30],
-      color: theme.tokens.color.Orange[90],
+        ? theme.tokens.color.Orange[80]
+        : theme.tokens.color.Orange[70],
+      color: theme.palette.common.white,
     },
     revoked: {
       backgroundColor: isDarkMode
         ? theme.tokens.color.Neutrals[40]
         : theme.tokens.color.Neutrals[30],
-      color: theme.tokens.color.Neutrals[80],
+      color: theme.tokens.color.Neutrals.Black,
     },
   };
 
@@ -42,7 +42,7 @@ export const StatusBadge = ({ status }: StatusBadgeProps) => {
       size="small"
       sx={{
         ...statusStyles[status],
-        fontSize: '0.95rem',
+        fontSize: '0.75rem',
         height: 24,
         textTransform: 'capitalize',
       }}

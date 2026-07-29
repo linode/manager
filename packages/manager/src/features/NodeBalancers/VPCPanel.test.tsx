@@ -1,5 +1,5 @@
 import { regionFactory } from '@linode/utilities';
-import { screen, waitFor } from '@testing-library/react';
+import { screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
@@ -24,7 +24,9 @@ describe('VPCPanel', () => {
   it('should render no options for the VPC select if no region is selected', async () => {
     renderWithTheme(<VPCPanel {...props} />);
 
-    const vpcSelect = screen.getByLabelText('VPC');
+    const vpcSelect = within(screen.getByTestId('vpc-select')).getByRole(
+      'combobox'
+    );
 
     expect(vpcSelect).toBeVisible();
     await userEvent.click(vpcSelect);
@@ -86,7 +88,9 @@ describe('VPCPanel', () => {
 
     renderWithTheme(<VPCPanel {..._props} />);
 
-    const vpcSelect = screen.getByLabelText('VPC');
+    const vpcSelect = within(screen.getByTestId('vpc-select')).getByRole(
+      'combobox'
+    );
     expect(vpcSelect).toHaveValue(vpcWithSubnet.label);
 
     expect(screen.getByLabelText('Subnet')).toBeVisible();
@@ -127,7 +131,9 @@ describe('VPCPanel', () => {
 
     renderWithTheme(<VPCPanel {..._props} />);
 
-    const vpcSelect = screen.getByLabelText('VPC');
+    const vpcSelect = within(screen.getByTestId('vpc-select')).getByRole(
+      'combobox'
+    );
     expect(vpcSelect).toHaveValue(vpcWithSubnet.label);
 
     const subnetSelect = screen.getByLabelText('Subnet');
@@ -171,7 +177,9 @@ describe('VPCPanel', () => {
 
     renderWithTheme(<VPCPanel {..._props} />);
 
-    const vpcSelect = screen.getByLabelText('VPC');
+    const vpcSelect = within(screen.getByTestId('vpc-select')).getByRole(
+      'combobox'
+    );
     expect(vpcSelect).toHaveValue(vpcWithSubnet.label);
 
     const subnetSelect = screen.getByLabelText('Subnet');
@@ -222,7 +230,9 @@ describe('VPCPanel', () => {
 
     renderWithTheme(<VPCPanel {..._props} />);
 
-    const vpcSelect = screen.getByLabelText('VPC');
+    const vpcSelect = within(screen.getByTestId('vpc-select')).getByRole(
+      'combobox'
+    );
     expect(vpcSelect).toHaveValue(vpcWithSubnet.label);
 
     const subnetSelect = screen.getByLabelText('Subnet');
@@ -279,7 +289,9 @@ describe('VPCPanel', () => {
 
     renderWithTheme(<VPCPanel {..._props} />);
 
-    const vpcSelect = screen.getByLabelText('VPC');
+    const vpcSelect = within(screen.getByTestId('vpc-select')).getByRole(
+      'combobox'
+    );
     expect(vpcSelect).toHaveValue(vpcWithSubnet.label);
 
     const subnetSelect = screen.getByLabelText('Subnet');

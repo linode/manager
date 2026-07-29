@@ -149,9 +149,16 @@ const CloudPulseDashboardWithFiltersRenderer = React.memo(
       (dashboard: Dashboard | undefined) => {
         setFilterData({ id: {}, label: {} });
         setDashboard(dashboard);
-        setTimeDuration(defaultTimeDuration(timezone)); // clear time duration on dashboard change
+        // before setting the time duration to default, check if the dashboard has a default time duration preset defined in the feature flags
+        const serviceType = dashboard?.service_type;
+        const defaultTimeDurationPreset = serviceType
+          ? flags.aclpServices?.[serviceType]?.metrics?.defaultPreset
+          : undefined;
+        setTimeDuration(
+          defaultTimeDuration(timezone, defaultTimeDurationPreset)
+        ); // clear time duration on dashboard change
       },
-      [timezone]
+      [timezone, flags.aclpServices]
     );
 
     const handleTimeRangeChange = React.useCallback(
@@ -254,6 +261,7 @@ const CloudPulseDashboardWithFiltersRenderer = React.memo(
                     defaultValue={timeDuration}
                     handleStatsChange={handleTimeRangeChange}
                     savePreferences
+                    serviceType={currentDashboard.service_type}
                   />
                   <CloudPulseTooltip placement="bottom-end" title="Refresh">
                     <IconButton

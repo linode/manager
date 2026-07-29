@@ -4,6 +4,25 @@ import { expect } from 'vitest';
 
 import { server } from './mocks/testServer';
 
+// Mock OAuth client BEFORE any other imports so axios interceptors don't run real auth
+// callback logic (ensureAuthCallbacksHandled) during tests.
+vi.mock('src/OAuth/oauthClient', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('src/OAuth/oauthClient')>();
+  const realClient = actual.oauthClient;
+
+  return {
+    ...actual,
+    oauthClient: {
+      getIsLoggedInAsCustomer: () => realClient.getIsLoggedInAsCustomer(),
+      getToken: () => realClient.getToken(),
+      clearAuthDataFromStorage: vi.fn(),
+      ensureAuthCallbacksHandled: vi.fn().mockResolvedValue(undefined),
+      login: vi.fn(),
+      logout: vi.fn().mockResolvedValue(undefined),
+    },
+  };
+});
+
 // Mock LaunchDarkly provider BEFORE any other imports to prevent "window is not defined" errors
 // The real launchDarklyProvider tries to access window in async callbacks which can
 // cause intermittent test failures when those timeouts fire at inopportune moments
@@ -104,6 +123,11 @@ vi.mock('highlight.js/lib/highlight', () => ({
     registerLanguage: vi.fn(),
   },
 }));
+
+// JSDOM does not implement scroll/prompt; stub to avoid noisy stderr in CI.
+window.scroll = vi.fn();
+window.scrollTo = vi.fn();
+window.prompt = vi.fn();
 
 // Mock ResizeObserver for tests
 global.ResizeObserver = class ResizeObserver {

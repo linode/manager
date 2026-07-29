@@ -10,10 +10,9 @@ import { Spacing } from '@akamai/cds-tokens';
 import { useDeleteIdpConfigMutation, usePreferences } from '@linode/queries';
 import * as React from 'react';
 
-import { CircleProgress } from 'src/features/IAM/Shared/CircleProgress/CircleProgress';
-import { ErrorState } from 'src/features/IAM/Shared/ErrorState/ErrorState';
-import { Link } from 'src/features/IAM/Shared/Link/Link';
-
+import { CircleProgress } from '../../../Shared/CircleProgress/CircleProgress';
+import { ErrorState } from '../../../Shared/ErrorState/ErrorState';
+import { Link } from '../../../Shared/Link/Link';
 import styles from '../../../Shared/RemoveAssignmentConfirmationDialog/RemoveAssignmentConfirmationDialog.module.css';
 import { IAM_SSO_IDP_PENDO_IDS } from '../../constants';
 

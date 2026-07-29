@@ -9,7 +9,7 @@ env:
   USER_2: ${{ secrets.USER_2 }}
   USER_3: ${{ secrets.USER_3 }}
   USER_4: ${{ secrets.USER_4 }}
-  CLIENT_ID: ${{ secrets.REACT_APP_CLIENT_ID }}
+  CLIENT_ID: ${{ secrets.COMPUTE_CLIENT_ID }}
   CY_TEST_FAIL_ON_MANAGED: 1
   CY_TEST_RESET_PREFERENCES: 1
   CY_TEST_SPLIT_RUN: 1
@@ -47,12 +47,12 @@ jobs:
       - run: |
           echo "GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
       - run: |
-          echo "REACT_APP_LAUNCH_DARKLY_ID=${{ secrets.REACT_APP_LAUNCH_DARKLY_ID }}" >> ./packages/manager/.env
-          echo "REACT_APP_CLIENT_ID=$CLIENT_ID" >> ./packages/manager/.env
-          echo "REACT_APP_LOGIN_ROOT=${{ secrets.REACT_APP_LOGIN_ROOT }}" >> ./packages/manager/.env
-          echo "REACT_APP_API_ROOT=${{ secrets.REACT_APP_API_ROOT }}" >> ./packages/manager/.env
-          echo "REACT_APP_APP_ROOT=${{ secrets.REACT_APP_APP_ROOT }}" >> ./packages/manager/.env
-          echo "REACT_APP_DISABLE_NEW_RELIC=1" >> ./packages/manager/.env
+          echo "COMPUTE_LAUNCHDARKLY_CLIENT_ID=${{ secrets.COMPUTE_LAUNCHDARKLY_CLIENT_ID }}" >> ./packages/manager/.env
+          echo "COMPUTE_CLIENT_ID=$CLIENT_ID" >> ./packages/manager/.env
+          echo "COMPUTE_LOGIN_ROOT=${{ secrets.COMPUTE_LOGIN_ROOT }}" >> ./packages/manager/.env
+          echo "COMPUTE_API_ROOT=${{ secrets.COMPUTE_API_ROOT }}" >> ./packages/manager/.env
+          echo "COMPUTE_APP_ROOT=${{ secrets.COMPUTE_APP_ROOT }}" >> ./packages/manager/.env
+          echo "COMPUTE_DISABLE_NEW_RELIC=1" >> ./packages/manager/.env
           echo "MANAGER_OAUTH=${{ env[matrix.user.name] }}" >> ./packages/manager/.env
           echo "CY_TEST_SPLIT_RUN_INDEX=${{ matrix.user.index }}" >> ./packages/manager/.env
       - run: pnpm install --frozen-lockfile

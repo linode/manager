@@ -1,5 +1,5 @@
 import { destinationType } from '@linode/api-v4';
-import { screen, waitForElementToBeRemoved } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { beforeEach, describe, expect } from 'vitest';
@@ -7,8 +7,11 @@ import { beforeEach, describe, expect } from 'vitest';
 import {
   akamaiObjectStorageDestinationFactory,
   customHttpsDestinationFactory,
-  objectStorageBucketFactory,
 } from 'src/factories';
+import {
+  mockObjectStorageBuckets,
+  waitForLoadingToComplete,
+} from 'src/features/Delivery/Shared/testHelpers';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
@@ -17,27 +20,11 @@ import { StreamFormDelivery } from './StreamFormDelivery';
 
 import type { DestinationType } from '@linode/api-v4';
 
-const loadingTestId = 'circle-progress';
-
 const user = userEvent.setup({ delay: null });
 
 const mockDestinations = [
   ...akamaiObjectStorageDestinationFactory.buildList(2),
   ...customHttpsDestinationFactory.buildList(2),
-];
-
-const mockBuckets = [
-  objectStorageBucketFactory.build({
-    hostname: 'bucket-with-hostname.us-east-1.linodeobjects.com',
-    label: 'bucket-with-hostname',
-    region: 'us-east',
-  }),
-  objectStorageBucketFactory.build({
-    hostname: 'bucket-with-s3-endpoint.eu-central-1.linodeobjects.com',
-    label: 'bucket-with-s3-endpoint',
-    region: 'eu-central',
-    s3_endpoint: 'eu-central-1.linodeobjects.com',
-  }),
 ];
 
 const queryMocks = vi.hoisted(() => ({
@@ -61,7 +48,7 @@ describe('StreamFormDelivery', () => {
 
   beforeEach(async () => {
     queryMocks.useObjectStorageBuckets.mockReturnValue({
-      data: { buckets: mockBuckets },
+      data: { buckets: mockObjectStorageBuckets },
       error: null,
       isPending: false,
     });
@@ -96,9 +83,7 @@ describe('StreamFormDelivery', () => {
       },
     });
 
-    const loadingElement = screen.queryByTestId(loadingTestId);
-    expect(loadingElement).toBeInTheDocument();
-    await waitForElementToBeRemoved(loadingElement);
+    await waitForLoadingToComplete();
 
     if (destinationTypeToSet === destinationType.CustomHttps) {
       const destinationTypeAutocomplete =
@@ -145,9 +130,7 @@ describe('StreamFormDelivery', () => {
       },
     });
 
-    const loadingElement = screen.queryByTestId(loadingTestId);
-    expect(loadingElement).toBeInTheDocument();
-    await waitForElementToBeRemoved(loadingElement);
+    await waitForLoadingToComplete();
 
     const destinationTypeAutocomplete =
       screen.getByLabelText('Destination Type');
@@ -179,9 +162,7 @@ describe('StreamFormDelivery', () => {
         },
       });
 
-      const loadingElement = screen.queryByTestId(loadingTestId);
-      expect(loadingElement).toBeInTheDocument();
-      await waitForElementToBeRemoved(loadingElement);
+      await waitForLoadingToComplete();
 
       const destinationNameAutocomplete =
         screen.getByLabelText('Destination Name');

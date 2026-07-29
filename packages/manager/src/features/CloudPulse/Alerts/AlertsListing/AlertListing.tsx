@@ -225,6 +225,7 @@ export const AlertListing = () => {
           gap={2}
         >
           <DebouncedSearchTextField
+            data-pendo-id="monitor-alerts-Search"
             data-qa-filter="alert-search"
             label=""
             noMarginTop
@@ -299,6 +300,7 @@ export const AlertListing = () => {
         </Box>
         <Button
           buttonType="primary"
+          data-pendo-id="monitor-alerts-Create-Alert"
           data-qa-button="create-alert"
           data-qa-buttons="true"
           disabled={isLoading || isAlertLimitReached || isMetricLimitReached}

@@ -9,6 +9,7 @@ import { Spacing } from '@akamai/cds-tokens';
 import { capitalize, truncateEnd } from '@akamai/compute-ui-core/formatting';
 import React from 'react';
 
+import { useHasTableStripingEnabled } from '../../hooks/useHasTableStripingEnabled';
 import { usePermissions } from '../../hooks/usePermissions';
 import { Avatar } from '../../Shared/Avatar/Avatar';
 import { Box } from '../../Shared/Box/Box';
@@ -41,6 +42,7 @@ export const UserRow = ({ onDelete, user }: Props) => {
     showLastLogin,
     showUserType,
   } = useUsersTableColumns();
+  const hasTableStripingEnabled = useHasTableStripingEnabled();
 
   const { data: permissions } = usePermissions('account', [
     'delete_user',
@@ -51,7 +53,11 @@ export const UserRow = ({ onDelete, user }: Props) => {
   const canViewUser = permissions.view_user;
 
   return (
-    <TableRow data-qa-table-row={user.username} key={user.username} zebra>
+    <TableRow
+      data-qa-table-row={user.username}
+      key={user.username}
+      zebra={hasTableStripingEnabled}
+    >
       <TableCell style={getUsersTableCellStyle(columnWidths.username)}>
         <Box direction="row" style={{ alignItems: 'center', gap: Spacing.S12 }}>
           <Avatar username={user.username} />

@@ -3,6 +3,7 @@ import { Spacing } from '@akamai/cds-tokens';
 import { useProfile } from '@linode/queries';
 import React from 'react';
 
+import { useHasTableStripingEnabled } from '../../hooks/useHasTableStripingEnabled';
 import { CircleProgress } from '../../Shared/CircleProgress/CircleProgress';
 import { UserRow } from './UserRow';
 
@@ -18,6 +19,7 @@ interface Props {
 export const UsersLandingTableBody = (props: Props) => {
   const { error, isLoading, onDelete, users } = props;
   const { data: profile } = useProfile();
+  const hasTableStripingEnabled = useHasTableStripingEnabled();
 
   if (isLoading) {
     return (
@@ -44,7 +46,7 @@ export const UsersLandingTableBody = (props: Props) => {
 
   if (!users || users.length === 0) {
     return (
-      <TableRow>
+      <TableRow zebra={hasTableStripingEnabled}>
         <TableCell style={{ textAlign: 'center', flexBasis: '100%' }}>
           <p style={{ width: '100%' }}>
             {profile?.restricted ? (

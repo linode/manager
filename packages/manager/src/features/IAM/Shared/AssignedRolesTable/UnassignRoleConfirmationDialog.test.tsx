@@ -40,7 +40,7 @@ const queryMocks = vi.hoisted(() => ({
     .mockReturnValue({ isDefaultDelegationRolesForChildAccount: false }),
 }));
 
-vi.mock('src/features/IAM/hooks/useDelegationRole', () => ({
+vi.mock('../../hooks/useDelegationRole', () => ({
   useIsDefaultDelegationRolesForChildAccount:
     queryMocks.useIsDefaultDelegationRolesForChildAccount,
 }));
@@ -86,6 +86,9 @@ describe('UnassignRoleConfirmationDialog', () => {
       isPending: false,
       mutateAsync: vi.fn(),
       reset: vi.fn(),
+    });
+    queryMocks.useIsDefaultDelegationRolesForChildAccount.mockReturnValue({
+      isDefaultDelegationRolesForChildAccount: false,
     });
   });
 

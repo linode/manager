@@ -1,5 +1,48 @@
 import { createUserRoles } from '../../factories';
-import { getTotalAssignedRoles } from './utils';
+import { getTfaStatus, getTotalAssignedRoles } from './utils';
+
+describe('getTfaStatus', () => {
+  describe('when enforcement feature flag is enabled', () => {
+    it('should return "Enforced, active" when TFA is enabled and enforced', () => {
+      const result = getTfaStatus(true, true, true);
+      expect(result).toEqual({
+        iconStatus: 'active',
+        label: 'Enforced, active',
+      });
+    });
+
+    it('should return "Enforced, awaiting user configuration" when TFA is enforced but not enabled', () => {
+      const result = getTfaStatus(false, true, true);
+      expect(result).toEqual({
+        iconStatus: 'other',
+        label: 'Enforced, awaiting user configuration',
+      });
+    });
+
+    it('should return "Active" when TFA is enabled but not enforced', () => {
+      const result = getTfaStatus(true, false, true);
+      expect(result).toEqual({ iconStatus: 'active', label: 'Active' });
+    });
+
+    it('should return "Inactive" when TFA is neither enabled nor enforced', () => {
+      const result = getTfaStatus(false, false, true);
+      expect(result).toEqual({ iconStatus: 'inactive', label: 'Inactive' });
+    });
+  });
+
+  // TODO: Remove this describe block once 2FA enforcement is fully released.
+  describe('when enforcement feature flag is disabled', () => {
+    it('should return "Enabled" when TFA is enabled', () => {
+      const result = getTfaStatus(true, true, false);
+      expect(result).toEqual({ iconStatus: 'active', label: 'Enabled' });
+    });
+
+    it('should return "Disabled" when TFA is not enabled', () => {
+      const result = getTfaStatus(false, true, false);
+      expect(result).toEqual({ iconStatus: 'inactive', label: 'Disabled' });
+    });
+  });
+});
 
 describe('getTotalAssignedRoles', () => {
   it('should return the correct total number of assigned roles', () => {

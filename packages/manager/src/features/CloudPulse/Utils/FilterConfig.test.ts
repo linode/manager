@@ -1,4 +1,5 @@
 import {
+  DBAAS_CONFIG,
   getAssociatedEntityType,
   getResourcesFilterConfig,
   isEndpointsOnlyDashboard,
@@ -44,5 +45,31 @@ describe('isEndpointsOnlyDashboard', () => {
   it('should return false when the dashboard is not an endpoints only dashboard', () => {
     // Dashboard ID 6 is not an endpoints only dashboard, rather a buckets dashboard
     expect(isEndpointsOnlyDashboard(6)).toBe(false);
+  });
+});
+
+describe('DBAAS_CONFIG engine options', () => {
+  const engineFilter = DBAAS_CONFIG.filters.find((f) => f.name === 'DB Engine');
+  const options = engineFilter?.configuration.options;
+
+  it('should define engine options for the DBaaS dashboard', () => {
+    expect(options).toBeDefined();
+  });
+
+  it('should include MySQL, PostgreSQL, and Valkey as engine options', () => {
+    const ids = options?.map((o) => o.id);
+    expect(ids).toContain('mysql');
+    expect(ids).toContain('postgresql');
+    expect(ids).toContain('valkey');
+  });
+
+  it('should have Valkey with the correct label', () => {
+    const valkey = options?.find((o) => o.id === 'valkey');
+    expect(valkey).toBeDefined();
+    expect(valkey?.label).toBe('Valkey');
+  });
+
+  it('should have exactly 3 engine options', () => {
+    expect(options?.length).toBe(3);
   });
 });

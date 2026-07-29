@@ -1,0 +1,869 @@
+{
+  "_comment": "TEMPORARY: This is placeholder data. Remove once the token usage API is integrated.",
+  "timePoints": [
+    {
+      "time": "00:00",
+      "date": "10/06/2026",
+      "models": [
+        {
+          "modelName": "Llama-3.1-8B",
+          "input_tokens": 84,
+          "request_count": 4,
+          "output_tokens": 756
+        },
+        {
+          "modelName": "Mistral-Large-2411",
+          "input_tokens": 62,
+          "request_count": 3,
+          "output_tokens": 558
+        },
+        {
+          "modelName": "gemma-3-27b-it",
+          "input_tokens": 33,
+          "request_count": 1,
+          "output_tokens": 297
+        },
+        {
+          "modelName": "DeepSeek-V3-0324",
+          "input_tokens": 42,
+          "request_count": 2,
+          "output_tokens": 378
+        },
+        {
+          "modelName": "Qwen3-8B",
+          "input_tokens": 42,
+          "request_count": 2,
+          "output_tokens": 378
+        }
+      ]
+    },
+    {
+      "time": "01:00",
+      "date": "10/06/2026",
+      "models": [
+        {
+          "modelName": "Llama-3.1-8B",
+          "input_tokens": 26,
+          "request_count": 1,
+          "output_tokens": 234
+        },
+        {
+          "modelName": "Mistral-Large-2411",
+          "input_tokens": 56,
+          "request_count": 2,
+          "output_tokens": 504
+        },
+        {
+          "modelName": "gemma-3-27b-it",
+          "input_tokens": 30,
+          "request_count": 1,
+          "output_tokens": 270
+        },
+        {
+          "modelName": "DeepSeek-V3-0324",
+          "input_tokens": 39,
+          "request_count": 1,
+          "output_tokens": 351
+        },
+        {
+          "modelName": "Qwen3-8B",
+          "input_tokens": 39,
+          "request_count": 1,
+          "output_tokens": 351
+        }
+      ]
+    },
+    {
+      "time": "02:00",
+      "date": "10/06/2026",
+      "models": [
+        {
+          "modelName": "Llama-3.1-8B",
+          "input_tokens": 12,
+          "request_count": 0,
+          "output_tokens": 108
+        },
+        {
+          "modelName": "Mistral-Large-2411",
+          "input_tokens": 32,
+          "request_count": 1,
+          "output_tokens": 288
+        },
+        {
+          "modelName": "gemma-3-27b-it",
+          "input_tokens": 29,
+          "request_count": 1,
+          "output_tokens": 261
+        },
+        {
+          "modelName": "DeepSeek-V3-0324",
+          "input_tokens": 36,
+          "request_count": 1,
+          "output_tokens": 324
+        },
+        {
+          "modelName": "Qwen3-8B",
+          "input_tokens": 36,
+          "request_count": 1,
+          "output_tokens": 324
+        }
+      ]
+    },
+    {
+      "time": "03:00",
+      "date": "10/06/2026",
+      "models": [
+        {
+          "modelName": "Llama-3.1-8B",
+          "input_tokens": 69,
+          "request_count": 3,
+          "output_tokens": 621
+        },
+        {
+          "modelName": "Mistral-Large-2411",
+          "input_tokens": 49,
+          "request_count": 2,
+          "output_tokens": 441
+        },
+        {
+          "modelName": "gemma-3-27b-it",
+          "input_tokens": 27,
+          "request_count": 1,
+          "output_tokens": 243
+        },
+        {
+          "modelName": "DeepSeek-V3-0324",
+          "input_tokens": 34,
+          "request_count": 1,
+          "output_tokens": 306
+        },
+        {
+          "modelName": "Qwen3-8B",
+          "input_tokens": 34,
+          "request_count": 1,
+          "output_tokens": 306
+        }
+      ]
+    },
+    {
+      "time": "04:00",
+      "date": "10/06/2026",
+      "models": [
+        {
+          "modelName": "Llama-3.1-8B",
+          "input_tokens": 71,
+          "request_count": 3,
+          "output_tokens": 639
+        },
+        {
+          "modelName": "Mistral-Large-2411",
+          "input_tokens": 10,
+          "request_count": 0,
+          "output_tokens": 90
+        },
+        {
+          "modelName": "gemma-3-27b-it",
+          "input_tokens": 28,
+          "request_count": 1,
+          "output_tokens": 252
+        },
+        {
+          "modelName": "DeepSeek-V3-0324",
+          "input_tokens": 95,
+          "request_count": 4,
+          "output_tokens": 855
+        },
+        {
+          "modelName": "Qwen3-8B",
+          "input_tokens": 95,
+          "request_count": 4,
+          "output_tokens": 855
+        }
+      ]
+    },
+    {
+      "time": "05:00",
+      "date": "10/06/2026",
+      "models": [
+        {
+          "modelName": "Llama-3.1-8B",
+          "input_tokens": 78,
+          "request_count": 3,
+          "output_tokens": 702
+        },
+        {
+          "modelName": "Mistral-Large-2411",
+          "input_tokens": 55,
+          "request_count": 2,
+          "output_tokens": 495
+        },
+        {
+          "modelName": "gemma-3-27b-it",
+          "input_tokens": 32,
+          "request_count": 1,
+          "output_tokens": 288
+        },
+        {
+          "modelName": "DeepSeek-V3-0324",
+          "input_tokens": 38,
+          "request_count": 1,
+          "output_tokens": 342
+        },
+        {
+          "modelName": "Qwen3-8B",
+          "input_tokens": 38,
+          "request_count": 1,
+          "output_tokens": 342
+        }
+      ]
+    },
+    {
+      "time": "06:00",
+      "date": "10/06/2026",
+      "models": [
+        {
+          "modelName": "Llama-3.1-8B",
+          "input_tokens": 91,
+          "request_count": 4,
+          "output_tokens": 819
+        },
+        {
+          "modelName": "Mistral-Large-2411",
+          "input_tokens": 41,
+          "request_count": 2,
+          "output_tokens": 369
+        },
+        {
+          "modelName": "gemma-3-27b-it",
+          "input_tokens": 38,
+          "request_count": 1,
+          "output_tokens": 342
+        },
+        {
+          "modelName": "DeepSeek-V3-0324",
+          "input_tokens": 43,
+          "request_count": 2,
+          "output_tokens": 387
+        },
+        {
+          "modelName": "Qwen3-8B",
+          "input_tokens": 43,
+          "request_count": 2,
+          "output_tokens": 387
+        }
+      ]
+    },
+    {
+      "time": "07:00",
+      "date": "10/06/2026",
+      "models": [
+        {
+          "modelName": "Llama-3.1-8B",
+          "input_tokens": 108,
+          "request_count": 5,
+          "output_tokens": 972
+        },
+        {
+          "modelName": "Mistral-Large-2411",
+          "input_tokens": 74,
+          "request_count": 3,
+          "output_tokens": 666
+        },
+        {
+          "modelName": "gemma-3-27b-it",
+          "input_tokens": 146,
+          "request_count": 7,
+          "output_tokens": 1314
+        },
+        {
+          "modelName": "DeepSeek-V3-0324",
+          "input_tokens": 50,
+          "request_count": 2,
+          "output_tokens": 450
+        },
+        {
+          "modelName": "Qwen3-8B",
+          "input_tokens": 50,
+          "request_count": 2,
+          "output_tokens": 450
+        }
+      ]
+    },
+    {
+      "time": "08:00",
+      "date": "10/06/2026",
+      "models": [
+        {
+          "modelName": "Llama-3.1-8B",
+          "input_tokens": 52,
+          "request_count": 2,
+          "output_tokens": 468
+        },
+        {
+          "modelName": "Mistral-Large-2411",
+          "input_tokens": 89,
+          "request_count": 4,
+          "output_tokens": 801
+        },
+        {
+          "modelName": "gemma-3-27b-it",
+          "input_tokens": 59,
+          "request_count": 2,
+          "output_tokens": 531
+        },
+        {
+          "modelName": "DeepSeek-V3-0324",
+          "input_tokens": 62,
+          "request_count": 3,
+          "output_tokens": 558
+        },
+        {
+          "modelName": "Qwen3-8B",
+          "input_tokens": 62,
+          "request_count": 3,
+          "output_tokens": 558
+        }
+      ]
+    },
+    {
+      "time": "09:00",
+      "date": "10/06/2026",
+      "models": [
+        {
+          "modelName": "Llama-3.1-8B",
+          "input_tokens": 78,
+          "request_count": 3,
+          "output_tokens": 702
+        },
+        {
+          "modelName": "Mistral-Large-2411",
+          "input_tokens": 104,
+          "request_count": 5,
+          "output_tokens": 936
+        },
+        {
+          "modelName": "gemma-3-27b-it",
+          "input_tokens": 71,
+          "request_count": 3,
+          "output_tokens": 639
+        },
+        {
+          "modelName": "DeepSeek-V3-0324",
+          "input_tokens": 76,
+          "request_count": 3,
+          "output_tokens": 684
+        },
+        {
+          "modelName": "Qwen3-8B",
+          "input_tokens": 76,
+          "request_count": 3,
+          "output_tokens": 684
+        }
+      ]
+    },
+    {
+      "time": "10:00",
+      "date": "10/06/2026",
+      "models": [
+        {
+          "modelName": "Llama-3.1-8B",
+          "input_tokens": 71,
+          "request_count": 3,
+          "output_tokens": 639
+        },
+        {
+          "modelName": "Mistral-Large-2411",
+          "input_tokens": 116,
+          "request_count": 5,
+          "output_tokens": 1044
+        },
+        {
+          "modelName": "gemma-3-27b-it",
+          "input_tokens": 78,
+          "request_count": 3,
+          "output_tokens": 702
+        },
+        {
+          "modelName": "DeepSeek-V3-0324",
+          "input_tokens": 85,
+          "request_count": 4,
+          "output_tokens": 765
+        },
+        {
+          "modelName": "Qwen3-8B",
+          "input_tokens": 85,
+          "request_count": 4,
+          "output_tokens": 765
+        }
+      ]
+    },
+    {
+      "time": "11:00",
+      "date": "10/06/2026",
+      "models": [
+        {
+          "modelName": "Llama-3.1-8B",
+          "input_tokens": 165,
+          "request_count": 8,
+          "output_tokens": 1485
+        },
+        {
+          "modelName": "Mistral-Large-2411",
+          "input_tokens": 122,
+          "request_count": 6,
+          "output_tokens": 1098
+        },
+        {
+          "modelName": "gemma-3-27b-it",
+          "input_tokens": 82,
+          "request_count": 4,
+          "output_tokens": 738
+        },
+        {
+          "modelName": "DeepSeek-V3-0324",
+          "input_tokens": 91,
+          "request_count": 4,
+          "output_tokens": 819
+        },
+        {
+          "modelName": "Qwen3-8B",
+          "input_tokens": 91,
+          "request_count": 4,
+          "output_tokens": 819
+        }
+      ]
+    },
+    {
+      "time": "12:00",
+      "date": "10/06/2026",
+      "models": [
+        {
+          "modelName": "Llama-3.1-8B",
+          "input_tokens": 174,
+          "request_count": 8,
+          "output_tokens": 1566
+        },
+        {
+          "modelName": "Mistral-Large-2411",
+          "input_tokens": 126,
+          "request_count": 6,
+          "output_tokens": 1134
+        },
+        {
+          "modelName": "gemma-3-27b-it",
+          "input_tokens": 114,
+          "request_count": 5,
+          "output_tokens": 1026
+        },
+        {
+          "modelName": "DeepSeek-V3-0324",
+          "input_tokens": 94,
+          "request_count": 4,
+          "output_tokens": 846
+        },
+        {
+          "modelName": "Qwen3-8B",
+          "input_tokens": 94,
+          "request_count": 4,
+          "output_tokens": 846
+        }
+      ]
+    },
+    {
+      "time": "13:00",
+      "date": "10/06/2026",
+      "models": [
+        {
+          "modelName": "Llama-3.1-8B",
+          "input_tokens": 166,
+          "request_count": 8,
+          "output_tokens": 1494
+        },
+        {
+          "modelName": "Mistral-Large-2411",
+          "input_tokens": 120,
+          "request_count": 6,
+          "output_tokens": 1080
+        },
+        {
+          "modelName": "gemma-3-27b-it",
+          "input_tokens": 191,
+          "request_count": 9,
+          "output_tokens": 1719
+        },
+        {
+          "modelName": "DeepSeek-V3-0324",
+          "input_tokens": 90,
+          "request_count": 4,
+          "output_tokens": 810
+        },
+        {
+          "modelName": "Qwen3-8B",
+          "input_tokens": 90,
+          "request_count": 4,
+          "output_tokens": 810
+        }
+      ]
+    },
+    {
+      "time": "14:00",
+      "date": "10/06/2026",
+      "models": [
+        {
+          "modelName": "Llama-3.1-8B",
+          "input_tokens": 69,
+          "request_count": 3,
+          "output_tokens": 621
+        },
+        {
+          "modelName": "Mistral-Large-2411",
+          "input_tokens": 111,
+          "request_count": 5,
+          "output_tokens": 999
+        },
+        {
+          "modelName": "gemma-3-27b-it",
+          "input_tokens": 76,
+          "request_count": 3,
+          "output_tokens": 684
+        },
+        {
+          "modelName": "DeepSeek-V3-0324",
+          "input_tokens": 214,
+          "request_count": 10,
+          "output_tokens": 1926
+        },
+        {
+          "modelName": "Qwen3-8B",
+          "input_tokens": 214,
+          "request_count": 10,
+          "output_tokens": 1926
+        }
+      ]
+    },
+    {
+      "time": "15:00",
+      "date": "10/06/2026",
+      "models": [
+        {
+          "modelName": "Llama-3.1-8B",
+          "input_tokens": 145,
+          "request_count": 7,
+          "output_tokens": 1305
+        },
+        {
+          "modelName": "Mistral-Large-2411",
+          "input_tokens": 106,
+          "request_count": 5,
+          "output_tokens": 954
+        },
+        {
+          "modelName": "gemma-3-27b-it",
+          "input_tokens": 73,
+          "request_count": 3,
+          "output_tokens": 657
+        },
+        {
+          "modelName": "DeepSeek-V3-0324",
+          "input_tokens": 81,
+          "request_count": 4,
+          "output_tokens": 729
+        },
+        {
+          "modelName": "Qwen3-8B",
+          "input_tokens": 81,
+          "request_count": 4,
+          "output_tokens": 729
+        }
+      ]
+    },
+    {
+      "time": "16:00",
+      "date": "10/06/2026",
+      "models": [
+        {
+          "modelName": "Llama-3.1-8B",
+          "input_tokens": 151,
+          "request_count": 7,
+          "output_tokens": 1359
+        },
+        {
+          "modelName": "Mistral-Large-2411",
+          "input_tokens": 112,
+          "request_count": 5,
+          "output_tokens": 1008
+        },
+        {
+          "modelName": "gemma-3-27b-it",
+          "input_tokens": 77,
+          "request_count": 3,
+          "output_tokens": 693
+        },
+        {
+          "modelName": "DeepSeek-V3-0324",
+          "input_tokens": 86,
+          "request_count": 4,
+          "output_tokens": 774
+        },
+        {
+          "modelName": "Qwen3-8B",
+          "input_tokens": 86,
+          "request_count": 4,
+          "output_tokens": 774
+        }
+      ]
+    },
+    {
+      "time": "17:00",
+      "date": "10/06/2026",
+      "models": [
+        {
+          "modelName": "Llama-3.1-8B",
+          "input_tokens": 164,
+          "request_count": 8,
+          "output_tokens": 1476
+        },
+        {
+          "modelName": "Mistral-Large-2411",
+          "input_tokens": 121,
+          "request_count": 6,
+          "output_tokens": 1089
+        },
+        {
+          "modelName": "gemma-3-27b-it",
+          "input_tokens": 153,
+          "request_count": 7,
+          "output_tokens": 1377
+        },
+        {
+          "modelName": "DeepSeek-V3-0324",
+          "input_tokens": 94,
+          "request_count": 4,
+          "output_tokens": 846
+        },
+        {
+          "modelName": "Qwen3-8B",
+          "input_tokens": 94,
+          "request_count": 4,
+          "output_tokens": 846
+        }
+      ]
+    },
+    {
+      "time": "18:00",
+      "date": "10/06/2026",
+      "models": [
+        {
+          "modelName": "Llama-3.1-8B",
+          "input_tokens": 126,
+          "request_count": 6,
+          "output_tokens": 1134
+        },
+        {
+          "modelName": "Mistral-Large-2411",
+          "input_tokens": 130,
+          "request_count": 6,
+          "output_tokens": 1170
+        },
+        {
+          "modelName": "gemma-3-27b-it",
+          "input_tokens": 239,
+          "request_count": 11,
+          "output_tokens": 2151
+        },
+        {
+          "modelName": "DeepSeek-V3-0324",
+          "input_tokens": 102,
+          "request_count": 5,
+          "output_tokens": 918
+        },
+        {
+          "modelName": "Qwen3-8B",
+          "input_tokens": 102,
+          "request_count": 5,
+          "output_tokens": 918
+        }
+      ]
+    },
+    {
+      "time": "19:00",
+      "date": "10/06/2026",
+      "models": [
+        {
+          "modelName": "Llama-3.1-8B",
+          "input_tokens": 169,
+          "request_count": 8,
+          "output_tokens": 1521
+        },
+        {
+          "modelName": "Mistral-Large-2411",
+          "input_tokens": 124,
+          "request_count": 6,
+          "output_tokens": 1116
+        },
+        {
+          "modelName": "gemma-3-27b-it",
+          "input_tokens": 86,
+          "request_count": 4,
+          "output_tokens": 774
+        },
+        {
+          "modelName": "DeepSeek-V3-0324",
+          "input_tokens": 98,
+          "request_count": 4,
+          "output_tokens": 882
+        },
+        {
+          "modelName": "Qwen3-8B",
+          "input_tokens": 98,
+          "request_count": 4,
+          "output_tokens": 882
+        }
+      ]
+    },
+    {
+      "time": "20:00",
+      "date": "10/06/2026",
+      "models": [
+        {
+          "modelName": "Llama-3.1-8B",
+          "input_tokens": 51,
+          "request_count": 2,
+          "output_tokens": 459
+        },
+        {
+          "modelName": "Mistral-Large-2411",
+          "input_tokens": 112,
+          "request_count": 5,
+          "output_tokens": 1008
+        },
+        {
+          "modelName": "gemma-3-27b-it",
+          "input_tokens": 77,
+          "request_count": 3,
+          "output_tokens": 693
+        },
+        {
+          "modelName": "DeepSeek-V3-0324",
+          "input_tokens": 89,
+          "request_count": 4,
+          "output_tokens": 801
+        },
+        {
+          "modelName": "Qwen3-8B",
+          "input_tokens": 89,
+          "request_count": 4,
+          "output_tokens": 801
+        }
+      ]
+    },
+    {
+      "time": "21:00",
+      "date": "10/06/2026",
+      "models": [
+        {
+          "modelName": "Llama-3.1-8B",
+          "input_tokens": 128,
+          "request_count": 6,
+          "output_tokens": 1152
+        },
+        {
+          "modelName": "Mistral-Large-2411",
+          "input_tokens": 96,
+          "request_count": 4,
+          "output_tokens": 864
+        },
+        {
+          "modelName": "gemma-3-27b-it",
+          "input_tokens": 65,
+          "request_count": 3,
+          "output_tokens": 585
+        },
+        {
+          "modelName": "DeepSeek-V3-0324",
+          "input_tokens": 76,
+          "request_count": 3,
+          "output_tokens": 684
+        },
+        {
+          "modelName": "Qwen3-8B",
+          "input_tokens": 76,
+          "request_count": 3,
+          "output_tokens": 684
+        }
+      ]
+    },
+    {
+      "time": "22:00",
+      "date": "10/06/2026",
+      "models": [
+        {
+          "modelName": "Llama-3.1-8B",
+          "input_tokens": 106,
+          "request_count": 5,
+          "output_tokens": 954
+        },
+        {
+          "modelName": "Mistral-Large-2411",
+          "input_tokens": 82,
+          "request_count": 4,
+          "output_tokens": 738
+        },
+        {
+          "modelName": "gemma-3-27b-it",
+          "input_tokens": 56,
+          "request_count": 2,
+          "output_tokens": 504
+        },
+        {
+          "modelName": "DeepSeek-V3-0324",
+          "input_tokens": 65,
+          "request_count": 3,
+          "output_tokens": 585
+        },
+        {
+          "modelName": "Qwen3-8B",
+          "input_tokens": 65,
+          "request_count": 3,
+          "output_tokens": 585
+        }
+      ]
+    },
+    {
+      "time": "23:00",
+      "date": "10/06/2026",
+      "models": [
+        {
+          "modelName": "Llama-3.1-8B",
+          "input_tokens": 92,
+          "request_count": 4,
+          "output_tokens": 828
+        },
+        {
+          "modelName": "Mistral-Large-2411",
+          "input_tokens": 70,
+          "request_count": 3,
+          "output_tokens": 630
+        },
+        {
+          "modelName": "gemma-3-27b-it",
+          "input_tokens": 46,
+          "request_count": 2,
+          "output_tokens": 414
+        },
+        {
+          "modelName": "DeepSeek-V3-0324",
+          "input_tokens": 52,
+          "request_count": 2,
+          "output_tokens": 468
+        },
+        {
+          "modelName": "Qwen3-8B",
+          "input_tokens": 52,
+          "request_count": 2,
+          "output_tokens": 468
+        }
+      ]
+    }
+  ]
+}

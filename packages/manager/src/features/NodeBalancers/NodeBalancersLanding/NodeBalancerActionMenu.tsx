@@ -7,6 +7,7 @@ import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
+import { useFlags } from 'src/hooks/useFlags';
 
 import { useIsNodebalancerVPCEnabled } from '../utils';
 
@@ -32,6 +33,7 @@ export const NodeBalancerActionMenu = (props: Props) => {
     isOpen
   );
 
+  const { premiumNodebalancer } = useFlags();
   const { isNodebalancerVPCEnabled } = useIsNodebalancerVPCEnabled();
 
   const actions: Action[] = [
@@ -44,6 +46,7 @@ export const NodeBalancerActionMenu = (props: Props) => {
           to: `/nodebalancers/$id/configurations`,
         });
       },
+      pendoId: 'NodeBalancers Landing-Configurations',
       title: 'Configurations',
     },
     {
@@ -55,7 +58,21 @@ export const NodeBalancerActionMenu = (props: Props) => {
           to: `/nodebalancers/$id/settings`,
         });
       },
+      pendoId: 'NodeBalancers Landing-Settings',
       title: 'Settings',
+    },
+    {
+      hidden: !premiumNodebalancer,
+      onClick: () => {
+        navigate({
+          params: {
+            id: String(nodeBalancerId),
+          },
+          to: `/nodebalancers/$id/metrics`,
+        });
+      },
+      pendoId: 'NodeBalancers Landing-Metrics',
+      title: 'Metrics',
     },
     {
       disabled: !permissions.delete_nodebalancer,
@@ -67,6 +84,7 @@ export const NodeBalancerActionMenu = (props: Props) => {
           to: `/nodebalancers/$id/delete`,
         });
       },
+      pendoId: 'NodeBalancers Landing-Delete',
       title: 'Delete',
       tooltip: !permissions.delete_nodebalancer
         ? getRestrictedResourceText({
@@ -98,6 +116,7 @@ export const NodeBalancerActionMenu = (props: Props) => {
       ariaLabel={`Action menu for NodeBalancer ${nodeBalancerId}`}
       loading={isLoading}
       onOpen={() => setIsOpen(true)}
+      pendoId="NodeBalancers Landing-Action Menu"
     />
   );
 };

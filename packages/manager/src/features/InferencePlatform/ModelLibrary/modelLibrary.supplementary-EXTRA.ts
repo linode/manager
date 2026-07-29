@@ -1,5 +1,5 @@
-import type { InferenceModel } from '../inferenceService';
 import type { Model } from './modelLibrary.types';
+import type { InferenceModel } from '@linode/api-v4';
 
 const TEXT_INPUT_DESCRIPTION =
   'Natural language prompts, instructions, and context';
@@ -12,20 +12,43 @@ const TEXT_OUTPUT_DESCRIPTION =
  */
 export const INFERENCE_MODEL_STUBS: InferenceModel[] = [
   {
-    created: 1754352000, // 2025-08-05T00:00:00Z
+    capabilities: ['chat', 'completion'],
+    description:
+      "OpenAI's gpt-oss-120b is an open-weight mixture-of-experts reasoning model.",
     id: 'gpt-oss-120b',
-    max_model_len: 131072, // 128 K tokens
-    object: 'model',
-    owned_by: 'vllm',
-    root: 'openai/gpt-oss-120b',
+    label: 'GPT-OSS 120B',
+    lifecycle_status: 'active',
+    modalities: { input: ['text'], output: ['text'] },
+    parameters: {
+      context_window: 131072,
+      max_output_tokens: 16384,
+      parameter_count_billions: 120,
+    },
+    playground_available: true,
+    provider: { id: 'openai', name: 'OpenAI' },
+    regions: ['us-ord'],
+    tags: [],
+    type: 'text-generation',
+    use_cases: ['general', 'coding', 'reasoning'],
   },
   {
-    created: 1776643200, // 2026-04-20T00:00:00Z
+    capabilities: ['chat', 'completion'],
+    description: 'Kimi K2.6 is a large-scale reasoning model from Moonshot AI.',
     id: 'kimi-k2.6',
-    max_model_len: 262144, // 256 K tokens
-    object: 'model',
-    owned_by: 'vllm',
-    root: 'moonshotai/Kimi-K2.6',
+    label: 'Kimi K2.6',
+    lifecycle_status: 'active',
+    modalities: { input: ['text'], output: ['text'] },
+    parameters: {
+      context_window: 262144,
+      max_output_tokens: 16384,
+      parameter_count_billions: 1000,
+    },
+    playground_available: true,
+    provider: { id: 'moonshot', name: 'Moonshot AI' },
+    regions: ['us-ord'],
+    tags: [],
+    type: 'text-generation',
+    use_cases: ['general', 'reasoning'],
   },
 ];
 

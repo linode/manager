@@ -7,6 +7,7 @@ import * as React from 'react';
 
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
+import { PROFILE_AUTH_PENDO_IDS } from '../../constants';
 import { DisableTwoFactorDialog } from './DisableTwoFactorDialog';
 import { EnableTwoFactorForm } from './EnableTwoFactorForm';
 import { ScratchCodeDialog } from './ScratchCodeDialog';
@@ -21,6 +22,7 @@ import type { APIError } from '@linode/api-v4/lib/types';
 
 export interface TwoFactorProps {
   disabled?: boolean;
+  isTfaEnforced?: boolean;
   twoFactor?: boolean;
   username?: string;
 }
@@ -28,7 +30,7 @@ export interface TwoFactorProps {
 export const TwoFactor = (props: TwoFactorProps) => {
   const needSecurityQuestionsCopy =
     'To use two-factor authentication you must set up your security questions listed below.';
-  const { disabled, twoFactor, username } = props;
+  const { disabled, isTfaEnforced, twoFactor, username } = props;
   const queryClient = useQueryClient();
   const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
   const [loading, setLoading] = React.useState<boolean>(false);
@@ -151,6 +153,7 @@ export const TwoFactor = (props: TwoFactorProps) => {
 
   const [disable2FAOpen, setDisable2FAOpen] = React.useState(false);
   const [scratchDialogOpen, setScratchDialogOpen] = React.useState(false);
+  const isToggleDisabled = disabled || (isTfaEnforced && twoFactorConfirmed);
 
   const toggleDisable2FA = () => {
     setDisable2FAOpen((prev) => !prev);
@@ -191,7 +194,7 @@ export const TwoFactor = (props: TwoFactorProps) => {
         {(hasSecurityQuestions && !twoFactor) || twoFactor ? (
           typeof twoFactorConfirmed !== 'undefined' && (
             <TwoFactorToggle
-              disabled={disabled}
+              disabled={isToggleDisabled}
               onChange={toggleTwoFactorEnabled}
               toggleDisableDialog={toggleDisable2FA}
               twoFactorConfirmed={twoFactorConfirmed}
@@ -206,9 +209,20 @@ export const TwoFactor = (props: TwoFactorProps) => {
             variant="warning"
           />
         )}
+        {isTfaEnforced && twoFactorConfirmed && (
+          <Typography variant="body1">
+            Your company policy enforces two-factor authentication.
+          </Typography>
+        )}
         {twoFactorEnabled && (
           <StyledCTAWrapper>
-            <LinkButton data-qa-hide-show-code onClick={toggleHidden}>
+            <LinkButton
+              data-pendo-id={
+                twoFactorConfirmed ? PROFILE_AUTH_PENDO_IDS.reset2FA : undefined
+              }
+              data-qa-hide-show-code
+              onClick={toggleHidden}
+            >
               {showQRCode
                 ? 'Hide QR Code'
                 : twoFactorConfirmed

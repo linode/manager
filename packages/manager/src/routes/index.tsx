@@ -4,17 +4,13 @@ import { createRoute, createRouter, redirect } from '@tanstack/react-router';
 import React from 'react';
 
 import { ErrorComponent } from 'src/features/ErrorBoundary/ErrorComponent';
+// DISTRIBUTION: remove this import and iamRouteTree from routeTree.addChildren below.
 import { iamRouteTree } from 'src/features/IAM/routes';
 
 import { accountRouteTree } from './account';
 import { accountSettingsRouteTree, settingsRouteTree } from './accountSettings';
 import { cloudPulseAlertsRouteTree } from './alerts';
-import {
-  cancelLandingRoute,
-  loginAsCustomerCallbackRoute,
-  logoutRoute,
-  oauthCallbackRoute,
-} from './auth';
+import { cancelLandingRoute, logoutRoute, oauthCallbackRoute } from './auth';
 import { betaRouteTree } from './betas';
 import { billingRouteTree } from './billing';
 import { databasesRouteTree } from './databases';
@@ -32,6 +28,7 @@ import { maintenanceRouteTree } from './maintenance';
 import { managedRouteTree } from './managed';
 import { marketplaceRouteTree } from './marketplace';
 import { cloudPulseMetricsRouteTree } from './metrics';
+import { natGatewaysRouteTree } from './natgateways';
 import { networkLoadBalancersRouteTree } from './networkLoadBalancer';
 import { nodeBalancersRouteTree } from './nodeBalancers';
 import { objectStorageRouteTree } from './objectStorage';
@@ -62,9 +59,7 @@ export const routeTree = rootRoute.addChildren([
   indexRoute,
   accountSettingsRouteTree,
   cancelLandingRoute,
-  loginAsCustomerCallbackRoute,
   logoutRoute,
-  oauthCallbackRoute,
   accountRouteTree,
   billingRouteTree,
   betaRouteTree,
@@ -85,8 +80,10 @@ export const routeTree = rootRoute.addChildren([
   maintenanceRouteTree,
   managedRouteTree,
   marketplaceRouteTree,
+  natGatewaysRouteTree,
   networkLoadBalancersRouteTree,
   nodeBalancersRouteTree,
+  oauthCallbackRoute,
   objectStorageRouteTree,
   placementGroupsRouteTree,
   profileRouteTree,
@@ -109,6 +106,7 @@ export const router = createRouter({
     globalErrors: {},
     isACLPEnabled: false,
     isDatabasesEnabled: false,
+    isIAMEnabled: false,
     isPlacementGroupsEnabled: false,
     isPrivateImageSharingEnabled: false,
     profile: undefined,

@@ -179,12 +179,6 @@ export const OptionsSidebar = () => {
           value={settings[config.field]}
         />
       ))}
-      <EffortControl
-        label="Thinking Effort"
-        onChange={(value) => onSettingsChange({ reasoning_effort: value })}
-        tooltip="How much internal reasoning the model does before answering. Higher effort improves quality on complex tasks but increases response time and cost."
-        value={settings.reasoning_effort}
-      />
       <StopSequencesControl
         onChange={(value) => onSettingsChange({ stop: value })}
         value={settings.stop}
@@ -199,17 +193,31 @@ export const OptionsSidebar = () => {
         label="Stream response"
         sx={{ mt: 1 }}
       />
-      <FormControlLabel
-        control={
-          <Checkbox
-            checked={settings.enableThinking}
-            onChange={() =>
-              onSettingsChange({ enableThinking: !settings.enableThinking })
-            }
-          />
-        }
-        label="Enable thinking"
-      />
+      <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={settings.enableThinking}
+              onChange={() =>
+                onSettingsChange({ enableThinking: !settings.enableThinking })
+              }
+            />
+          }
+          label="Enable thinking"
+        />
+        <Collapse in={settings.enableThinking}>
+          <Box sx={{ pt: 2 }}>
+            <EffortControl
+              label="Thinking Effort"
+              onChange={(value) =>
+                onSettingsChange({ reasoning_effort: value })
+              }
+              tooltip="How much internal reasoning the model does before answering. Higher effort improves quality on complex tasks but increases response time and cost."
+              value={settings.reasoning_effort}
+            />
+          </Box>
+        </Collapse>
+      </Box>
       <Box sx={{ display: 'flex', flexDirection: 'column' }}>
         <Box
           aria-controls="advanced-options-panel"

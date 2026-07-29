@@ -16,6 +16,8 @@ import { getEnvLocalStorageOverrides, storage } from 'src/utilities/storage';
 
 import '@akamai/cds-tokens/tokens.css';
 import '@akamai/cds-tokens/themes/dark/tokens.css';
+// Resolved via vite alias — see vite.config.ts (@akamai/cds-components/font-family).
+import '@akamai/cds-components/font-family';
 
 import './index.css';
 import { App } from './App';
@@ -28,8 +30,8 @@ const store = storeFactory();
 
 setupInterceptors(store);
 
-if (import.meta.env.REACT_APP_ACCESS_TOKEN) {
-  storage.authentication.token.set(import.meta.env.REACT_APP_ACCESS_TOKEN);
+if (import.meta.env.COMPUTE_ACCESS_TOKEN) {
+  storage.authentication.token.set(import.meta.env.COMPUTE_ACCESS_TOKEN);
 }
 
 computeUiCoreApi.configure({

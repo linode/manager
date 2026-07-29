@@ -12,6 +12,10 @@ const engineOptions: EngineType[] = [
     id: 'postgresql',
     label: 'PostgreSQL',
   },
+  {
+    id: 'valkey',
+    label: 'Valkey',
+  },
 ];
 
 export interface AlertsEngineOptionProps {
@@ -32,6 +36,7 @@ export const AlertsEngineTypeFilter = React.memo(
       <Autocomplete
         autoHighlight
         clearOnBlur
+        data-pendo-id="monitor-alerts-entity-details-Engine"
         label="Database Engine"
         onChange={(e, engineOption) =>
           handleSelection(engineOption?.id, 'engineType')

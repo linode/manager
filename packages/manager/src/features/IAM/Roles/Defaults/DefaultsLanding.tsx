@@ -5,7 +5,6 @@ import {
   Tab,
   Tabs,
 } from '@akamai/cds-components/react';
-import { Spacing } from '@akamai/cds-tokens';
 import { Outlet, useLocation, useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
@@ -47,7 +46,7 @@ export const DefaultsLanding = () => {
 
   return (
     <>
-      <LandingHeader spacingBottom={Spacing.S4}>
+      <LandingHeader>
         <Breadcrumb>
           <BreadcrumbItem onCdsBreadcrumbClick={() => navigate({ to: '/iam' })}>
             {IAM_LABEL}

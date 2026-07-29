@@ -7,13 +7,13 @@ export const isProductionBuild = import.meta.env.PROD;
 
 // allow us to explicity enable dev tools
 export const ENABLE_DEV_TOOLS =
-  import.meta.env.REACT_APP_ENABLE_DEV_TOOLS === undefined
+  import.meta.env.COMPUTE_ENABLE_DEV_TOOLS === undefined
     ? import.meta.env.DEV
-    : getBooleanEnv(import.meta.env.REACT_APP_ENABLE_DEV_TOOLS);
+    : getBooleanEnv(import.meta.env.COMPUTE_ENABLE_DEV_TOOLS);
 
 // allow us to explicity enable maintenance mode
 export const ENABLE_MAINTENANCE_MODE = getBooleanEnv(
-  import.meta.env.REACT_APP_ENABLE_MAINTENANCE_MODE
+  import.meta.env.COMPUTE_ENABLE_MAINTENANCE_MODE
 );
 
 /**
@@ -21,19 +21,19 @@ export const ENABLE_MAINTENANCE_MODE = getBooleanEnv(
  * size, we have this environment variable which allows us to force Cloud Manager to use
  * a desired implementation.
  *
- * @example REACT_APP_FORCE_SEARCH_TYPE=api
+ * @example COMPUTE_FORCE_SEARCH_TYPE=api
  */
-export const FORCE_SEARCH_TYPE = import.meta.env.REACT_APP_FORCE_SEARCH_TYPE;
+export const FORCE_SEARCH_TYPE = import.meta.env.COMPUTE_FORCE_SEARCH_TYPE;
 
 export const API_ROOT =
-  import.meta.env.REACT_APP_API_ROOT || 'https://api.linode.com/v4';
+  import.meta.env.COMPUTE_API_ROOT || 'https://api.linode.com/v4';
 
 /**
  * A display name for the current environment.
  * This exists so we can dynamically set our Sentry environment.
  */
 export const ENVIRONMENT_NAME =
-  import.meta.env.REACT_APP_ENVIRONMENT_NAME ?? 'local';
+  import.meta.env.COMPUTE_ENVIRONMENT_NAME ?? 'local';
 
 /** All of the following used specifically for Algolia search */
 export const DOCS_BASE_URL = 'https://linode.com';
@@ -43,14 +43,13 @@ export const DOCS_SEARCH_URL =
 export const COMMUNITY_SEARCH_URL =
   'https://linode.com/community/questions/search?query=';
 export const ALGOLIA_APPLICATION_ID =
-  import.meta.env.REACT_APP_ALGOLIA_APPLICATION_ID || '';
+  import.meta.env.COMPUTE_ALGOLIA_APPLICATION_ID || '';
 export const ALGOLIA_SEARCH_KEY =
-  import.meta.env.REACT_APP_ALGOLIA_SEARCH_KEY || '';
+  import.meta.env.COMPUTE_ALGOLIA_SEARCH_KEY || '';
 export const LAUNCH_DARKLY_API_KEY =
-  import.meta.env.REACT_APP_LAUNCH_DARKLY_ID || '67ed97f93736be0c14fa0ea2';
+  import.meta.env.COMPUTE_LAUNCHDARKLY_CLIENT_ID || '67ed97f93736be0c14fa0ea2';
 export const LINODE_STATUS_PAGE_URL =
-  import.meta.env.REACT_APP_STATUS_PAGE_URL ||
-  'https://status.linode.com/api/v2';
+  import.meta.env.COMPUTE_STATUS_PAGE_URL || 'https://status.linode.com/api/v2';
 
 // Having more of a single entity than this number classifies you as having
 // a "large account".
@@ -58,29 +57,27 @@ export const LARGE_ACCOUNT_THRESHOLD = 1500;
 
 // PayPal Client ID
 export const PAYPAL_CLIENT_ID =
-  import.meta.env.REACT_APP_PAYPAL_CLIENT_ID || 'sb';
+  import.meta.env.COMPUTE_PAYPAL_CLIENT_ID || 'sb';
 
 // Google Pay Merchant ID
-export const GPAY_MERCHANT_ID = import.meta.env.REACT_APP_GPAY_MERCHANT_ID;
+export const GPAY_MERCHANT_ID = import.meta.env.COMPUTE_GPAY_MERCHANT_ID;
 
 // Google Pay Environment: 'TEST|PRODUCTION'
-export const GPAY_CLIENT_ENV =
-  import.meta.env.REACT_APP_GPAY_ENV || 'PRODUCTION';
+export const GPAY_CLIENT_ENV = import.meta.env.COMPUTE_GPAY_ENV || 'PRODUCTION';
 
 export const LONGVIEW_ROOT = 'https://longview.linode.com/fetch';
 
 /** optional variables */
-export const SENTRY_URL = import.meta.env.REACT_APP_SENTRY_URL;
+export const SENTRY_URL = import.meta.env.COMPUTE_SENTRY_URL;
 
 /** Adobe Analytics */
-export const ADOBE_ANALYTICS_URL = import.meta.env
-  .REACT_APP_ADOBE_ANALYTICS_URL;
+export const ADOBE_ANALYTICS_URL = import.meta.env.COMPUTE_ADOBE_ANALYTICS_URL;
 
 /** Pendo */
-export const PENDO_API_KEY = import.meta.env.REACT_APP_PENDO_API_KEY;
+export const PENDO_API_KEY = import.meta.env.COMPUTE_PENDO_API_KEY;
 
 /** for hard-coding token used for API Requests. Example: "Bearer 1234" */
-export const ACCESS_TOKEN = import.meta.env.REACT_APP_ACCESS_TOKEN;
+export const ACCESS_TOKEN = import.meta.env.COMPUTE_ACCESS_TOKEN;
 
 // read about luxon formats https://moment.github.io/luxon/docs/manual/formatting.html
 // this format is not ISO

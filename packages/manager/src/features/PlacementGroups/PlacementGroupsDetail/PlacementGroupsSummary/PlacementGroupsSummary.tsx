@@ -26,6 +26,10 @@ export const PlacementGroupsSummary = (props: Props) => {
   const { placementGroup, region } = props;
   const theme = useTheme();
   const linodesCount = placementGroup.members.length;
+  const isFlexible = placementGroup.placement_group_policy === 'flexible';
+  const maxLinodesLimit = isFlexible
+    ? region?.placement_group_limits.maximum_linodes_per_flexible_pg
+    : region?.placement_group_limits.maximum_linodes_per_pg;
 
   return (
     <Box sx={{ mb: 3, mt: 1 }}>
@@ -58,7 +62,7 @@ export const PlacementGroupsSummary = (props: Props) => {
             gridProps={{ columns: 2 }}
             items={[
               {
-                description: `${linodesCount} of ${region?.placement_group_limits.maximum_linodes_per_pg}`,
+                description: `${linodesCount} of ${maxLinodesLimit}`,
                 title: 'Linodes',
                 tooltip: { text: PLACEMENT_GROUP_TOOLTIP_TEXT, width: 275 },
               },

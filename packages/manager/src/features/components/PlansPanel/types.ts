@@ -37,7 +37,6 @@ export interface PlanSelectionAvailabilityTypes {
   planHasLimitedAvailability: boolean;
   planIsDisabled512Gb: boolean;
   planIsSmallerThanUsage?: boolean;
-  planIsTooSmall: boolean;
   planIsTooSmallForAPL?: boolean;
   planResizeNotSupported?: boolean;
 }

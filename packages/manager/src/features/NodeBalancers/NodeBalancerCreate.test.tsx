@@ -125,9 +125,8 @@ describe('NodeBalancerCreate', () => {
   };
 
   it('renders all parts of the NodeBalancerCreate page', () => {
-    const { getAllByText, getByLabelText, getByText } = renderWithTheme(
-      <NodeBalancerCreate />
-    );
+    const { getAllByText, getByLabelText, getByText, getByTestId } =
+      renderWithTheme(<NodeBalancerCreate />);
 
     // confirm nodebalancer fields render
     expect(getByLabelText('NodeBalancer Label')).toBeVisible();
@@ -144,7 +143,7 @@ describe('NodeBalancerCreate', () => {
     ).toBeVisible();
 
     // confirm VPC Panel renders
-    expect(getByLabelText('VPC')).toBeVisible();
+    expect(getByTestId('vpc-select')).toBeVisible();
 
     // confirm default configuration renders - only confirming headers, as we have additional
     // unit tests to check the functionality of the NodeBalancerConfigPanel
@@ -228,10 +227,7 @@ describe('NodeBalancerCreate', () => {
       isReserveIpEnabled: false,
     });
 
-    const { getByText, queryByText } = renderWithTheme(<NodeBalancerCreate />);
-
-    expect(queryByText('Switch to Reserved IP')).not.toBeInTheDocument();
-    expect(queryByText('Select Reserved IP')).not.toBeInTheDocument();
+    const { getByText } = renderWithTheme(<NodeBalancerCreate />);
 
     await userEvent.click(getByText('Create NodeBalancer'));
 

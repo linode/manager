@@ -11,5 +11,6 @@ export * from './payment';
 export * from './queries';
 export * from './requests';
 export * from './settings';
+export * from './tfaEnforcement';
 export * from './transfer';
 export * from './users';

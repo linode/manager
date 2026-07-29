@@ -1,7 +1,7 @@
 import { profileFactory } from '@linode/utilities';
 import * as React from 'react';
 
-import { appTokenFactory } from 'src/factories';
+import { accountFactory, appTokenFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { basePerms } from './utils';
@@ -9,8 +9,9 @@ import { ViewAPITokenDrawer } from './ViewAPITokenDrawer';
 
 import type { UserType } from '@linode/api-v4';
 
-// Mock the useProfile hooks to immediately return the expected data, circumventing the HTTP request and loading state.
+// Mock the useProfile and useAccount hooks to immediately return the expected data, circumventing the HTTP request and loading state.
 const queryMocks = vi.hoisted(() => ({
+  useAccount: vi.fn().mockReturnValue({}),
   useProfile: vi.fn().mockReturnValue({}),
 }));
 
@@ -18,8 +19,15 @@ vi.mock('@linode/queries', async () => {
   const actual = await vi.importActual<any>('@linode/queries');
   return {
     ...actual,
+    useAccount: queryMocks.useAccount,
     useProfile: queryMocks.useProfile,
   };
+});
+
+// The account factory includes the 'AI Inference' capability by default, which
+// is required (along with the feature flag) for the Inference scope to render.
+beforeEach(() => {
+  queryMocks.useAccount.mockReturnValue({ data: accountFactory.build() });
 });
 
 // TODO: Parent/Child - add back after API code is in prod. Replace basePerms with nonParentPerms.
@@ -52,7 +60,9 @@ describe('View API Token Drawer', () => {
       data: profileFactory.build({ user_type: 'parent' }),
     });
 
-    const { getByTestId } = renderWithTheme(<ViewAPITokenDrawer {...props} />);
+    const { getByTestId } = renderWithTheme(<ViewAPITokenDrawer {...props} />, {
+      flags: { inferencePlatform: true },
+    });
     for (const permissionName of basePerms) {
       expect(getByTestId(`perm-${permissionName}`)).toHaveAttribute(
         ariaLabel,
@@ -68,7 +78,8 @@ describe('View API Token Drawer', () => {
     });
 
     const { getByTestId } = renderWithTheme(
-      <ViewAPITokenDrawer {...props} token={limitedToken} />
+      <ViewAPITokenDrawer {...props} token={limitedToken} />,
+      { flags: { inferencePlatform: true } }
     );
     for (const permissionName of basePerms) {
       expect(getByTestId(`perm-${permissionName}`)).toHaveAttribute(
@@ -88,7 +99,8 @@ describe('View API Token Drawer', () => {
       <ViewAPITokenDrawer
         {...props}
         token={appTokenFactory.build({ scopes: 'account:read_write' })}
-      />
+      />,
+      { flags: { inferencePlatform: true } }
     );
     for (const permissionName of basePerms) {
       // We only expect account to have read/write for this test
@@ -113,7 +125,8 @@ describe('View API Token Drawer', () => {
           scopes:
             'databases:read_only domains:read_write child_account:read_write events:read_write firewall:read_write images:read_write ips:read_write linodes:read_only lke:read_only longview:read_write monitor:read_only nodebalancers:read_write object_storage:read_only stackscripts:read_write volumes:read_only vpc:read_write',
         })}
-      />
+      />,
+      { flags: { inferencePlatform: true } }
     );
 
     const expectedScopeLevels = {
@@ -124,6 +137,7 @@ describe('View API Token Drawer', () => {
       events: 2,
       firewall: 2,
       images: 2,
+      inference: 0,
       ips: 2,
       linodes: 1,
       lke: 1,
@@ -170,6 +184,36 @@ describe('View API Token Drawer', () => {
 
     it('should not display the Child Account Access scope for "child" user type', () => {
       testChildScopeNotDisplayed('child');
+    });
+  });
+
+  describe('Inference scope visibility', () => {
+    it('should show the Inference scope when Inference Platform is enabled', () => {
+      const tokenWithInference = appTokenFactory.build({
+        label: 'token-with-inference',
+        scopes: 'inference:read_write',
+      });
+
+      const { getByText } = renderWithTheme(
+        <ViewAPITokenDrawer {...props} token={tokenWithInference} />,
+        { flags: { inferencePlatform: true } }
+      );
+      const inferenceScope = getByText('Inference');
+      expect(inferenceScope).toBeInTheDocument();
+    });
+
+    it('should not show the Inference scope when Inference Platform is disabled', () => {
+      const tokenWithInference = appTokenFactory.build({
+        label: 'token-with-inference',
+        scopes: 'inference:read_write',
+      });
+
+      const { queryByText } = renderWithTheme(
+        <ViewAPITokenDrawer {...props} token={tokenWithInference} />,
+        { flags: { inferencePlatform: false } }
+      );
+      const inferenceScope = queryByText('Inference');
+      expect(inferenceScope).not.toBeInTheDocument();
     });
   });
 });

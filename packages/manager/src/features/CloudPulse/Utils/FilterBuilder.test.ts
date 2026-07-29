@@ -359,7 +359,7 @@ it('test getCustomSelectProperties method', () => {
     );
 
     expect(options).toBeDefined();
-    expect(options?.length).toEqual(2);
+    expect(options?.length).toEqual(3);
     expect(savePreferences).toEqual(false);
     expect(isMultiSelect).toEqual(false);
     expect(label).toEqual(customSelectEngineConfig.configuration.name);

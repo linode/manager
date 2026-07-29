@@ -17,7 +17,6 @@ import {
   PLAN_IS_TOO_SMALL_FOR_APL_COPY,
   PLAN_NOT_AVAILABLE_IN_REGION_COPY,
   PREMIUM_512_GB_PLAN,
-  SMALLER_PLAN_DISABLED_COPY,
 } from './constants';
 
 import type {
@@ -324,7 +323,6 @@ interface ExtractPlansInformationProps {
   disableLargestGbPlansFlag: Flags['disableLargestGbPlans'] | undefined;
   isAPLEnabled?: boolean;
   isDatabaseResize?: boolean;
-  isLegacyDatabase?: boolean;
   isResize?: boolean;
   plans: PlanSelectionType[];
   regionAvailabilities: RegionAvailability[] | undefined;
@@ -348,7 +346,6 @@ export const extractPlansInformation = ({
   disabledClasses,
   disabledSmallerPlans,
   isAPLEnabled,
-  isLegacyDatabase,
   // @TODO remove dbaas resize class type restriction sometime post-release when we support resizing across different plans
   disabledResizeFromPremiumPlans,
   disabledResizeToPremiumPlans,
@@ -406,10 +403,7 @@ export const extractPlansInformation = ({
           (disabledPlan) => disabledPlan.id === plan.id
         )
       );
-      const planIsTooSmall = Boolean(isLegacyDatabase && disabledPlans);
-      const planIsSmallerThanUsage = Boolean(
-        !isLegacyDatabase && disabledPlans
-      );
+      const planIsSmallerThanUsage = disabledPlans;
 
       const planIsTooSmallForAPL =
         isAPLEnabled && Boolean(plan.memory < 8000 || plan.vcpus < 4);
@@ -421,7 +415,6 @@ export const extractPlansInformation = ({
         planIsDisabled512Gb,
         planResizeNotSupported,
         planIsSmallerThanUsage,
-        planIsTooSmall,
         planIsTooSmallForAPL,
         // @TODO remove dbaas resize class type restriction sometime post-release when we support resizing across different plans
         planDBaaSResizeFromPremiumNotSupported,
@@ -465,7 +458,6 @@ export const getIsPlanDisabled = (plan: PlanWithAvailability) => {
     planIsDisabled512Gb,
     planResizeNotSupported,
     planIsSmallerThanUsage,
-    planIsTooSmall,
     planIsTooSmallForAPL,
     // @TODO remove dbaas resize class type restriction sometime post-release when we support resizing across different plans
     planDBaaSResizeFromPremiumNotSupported,
@@ -478,7 +470,6 @@ export const getIsPlanDisabled = (plan: PlanWithAvailability) => {
     planIsDisabled512Gb ||
     planResizeNotSupported ||
     planIsSmallerThanUsage ||
-    planIsTooSmall ||
     planIsTooSmallForAPL ||
     // @TODO remove dbaas resize class type restriction sometime post-release when we support resizing across different plans
     planDBaaSResizeFromPremiumNotSupported ||
@@ -499,7 +490,6 @@ export const getDisabledPlanReasonCopy = ({
   planDBaaSResizeFromPremiumNotSupported,
   planDBaaSResizeToPremiumNotSupported,
   planIsSmallerThanUsage,
-  planIsTooSmall,
   planIsTooSmallForAPL,
   wholePanelIsDisabled,
 }: {
@@ -510,7 +500,6 @@ export const getDisabledPlanReasonCopy = ({
   planHasLimitedAvailability: DisabledTooltipReasons['planHasLimitedAvailability'];
   planIsDisabled512Gb: DisabledTooltipReasons['planIsDisabled512Gb'];
   planIsSmallerThanUsage?: DisabledTooltipReasons['planIsSmallerThanUsage'];
-  planIsTooSmall: DisabledTooltipReasons['planIsTooSmall'];
   planIsTooSmallForAPL?: DisabledTooltipReasons['planIsTooSmallForAPL'];
   planResizeNotSupported?: DisabledTooltipReasons['planResizeNotSupported'];
   wholePanelIsDisabled?: DisabledTooltipReasons['wholePanelIsDisabled'];
@@ -523,9 +512,7 @@ export const getDisabledPlanReasonCopy = ({
     return PLAN_IS_CURRENTLY_UNAVAILABLE_COPY;
   }
 
-  if (planIsTooSmall) {
-    return SMALLER_PLAN_DISABLED_COPY;
-  } else if (planIsSmallerThanUsage) {
+  if (planIsSmallerThanUsage) {
     return PLAN_IS_SMALLER_THAN_USAGE_COPY;
   }
 

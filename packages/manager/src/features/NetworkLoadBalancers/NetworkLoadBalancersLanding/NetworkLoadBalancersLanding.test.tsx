@@ -117,16 +117,7 @@ describe('NetworkLoadBalancersLanding', () => {
 
     server.use(
       http.get('*/v4beta/netloadbalancers', () => {
-        return HttpResponse.json(
-          {
-            errors: [
-              {
-                reason: 'Internal Server Error',
-              },
-            ],
-          },
-          { status: 500 }
-        );
+        return HttpResponse.json({}, { status: 500 });
       })
     );
 

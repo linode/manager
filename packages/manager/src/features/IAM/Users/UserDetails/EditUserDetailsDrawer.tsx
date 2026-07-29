@@ -19,10 +19,10 @@ import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
-import { RESTRICTED_FIELD_TOOLTIP } from 'src/features/Account/constants';
-
 import { useDelegationRole } from '../../hooks/useDelegationRole';
+import { IAM_USERS_USER_DETAILS_PENDO_IDS } from '../../LoginSettings/constants';
 import { Box } from '../../Shared/Box/Box';
+import { RESTRICTED_FIELD_TOOLTIP } from '../../Shared/constants';
 import { Drawer, DrawerInlineActions } from '../../Shared/Drawer';
 
 import type { User } from '@linode/api-v4';
@@ -91,7 +91,9 @@ export const EditUserDetailsDrawer = (props: Props) => {
       }
     }
 
-    if (!hasError) {
+    // If the username changed, navigation already handled routing to the new URL.
+    // Calling handleClose() would navigate back to the old username URL via onClose().
+    if (!hasError && values.username === activeUser.username) {
       handleClose();
     }
   };
@@ -249,6 +251,7 @@ export const EditUserDetailsDrawer = (props: Props) => {
         </Box>
         <DrawerInlineActions>
           <Button
+            data-pendo-id={IAM_USERS_USER_DETAILS_PENDO_IDS.editDetailsCancel}
             data-testid="cancel"
             onClick={handleClose}
             variant="secondary"
@@ -256,6 +259,7 @@ export const EditUserDetailsDrawer = (props: Props) => {
             Cancel
           </Button>
           <Button
+            data-pendo-id={IAM_USERS_USER_DETAILS_PENDO_IDS.editDetailsEdit}
             data-testid="submit"
             disabled={!isDirty}
             processing={isSubmitting || isUpdatingUsername || isUpdatingEmail}

@@ -94,6 +94,13 @@ describe('NodeBalancersLanding', () => {
   });
 
   it('should disable the "Create NodeBalancer" button if the user does not have permission', async () => {
+    server.use(
+      http.get('*/nodebalancers', () => {
+        const nodebalancers = nodeBalancerFactory.buildList(1);
+        return HttpResponse.json(makeResourcePage(nodebalancers));
+      })
+    );
+
     const { getByRole } = renderWithTheme(<NodeBalancersLanding />);
 
     await waitFor(() => {
@@ -112,6 +119,13 @@ describe('NodeBalancersLanding', () => {
         create_nodebalancer: true,
       },
     });
+
+    server.use(
+      http.get('*/nodebalancers', () => {
+        const nodebalancers = nodeBalancerFactory.buildList(1);
+        return HttpResponse.json(makeResourcePage(nodebalancers));
+      })
+    );
 
     const { getByRole } = renderWithTheme(<NodeBalancersLanding />);
 

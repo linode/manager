@@ -120,8 +120,6 @@ import {
   paymentFactory,
   paymentMethodFactory,
   placementGroupFactory,
-  possibleMySQLReplicationTypes,
-  possiblePostgresReplicationTypes,
   postgresConfigResponse,
   promoFactory,
   serviceAlertFactory,
@@ -196,29 +194,12 @@ export const makeResourcePage = <T>(
 });
 
 const makeMockDatabase = (params: PathParams): Database => {
-  const isDefault = Number(params.id) % 2 !== 0;
   const db: Record<string, boolean | number | string | undefined> = {
     engine: params.engine as 'mysql',
     id: Number(params.id),
     label: `database-${params.id}`,
-    platform: isDefault ? 'rdbms-default' : 'rdbms-legacy',
+    platform: 'rdbms-default',
   };
-  if (!isDefault) {
-    db.replication_commit_type =
-      params.engine === 'postgresql' ? 'local' : undefined;
-
-    db.replication_type =
-      params.engine === 'mysql'
-        ? pickRandom(possibleMySQLReplicationTypes)
-        : undefined;
-
-    db.replication_type =
-      params.engine === 'postgresql'
-        ? pickRandom(possiblePostgresReplicationTypes)
-        : undefined;
-
-    db.ssl_connection = true;
-  }
 
   const database = databaseFactory.build(db);
 
@@ -384,6 +365,8 @@ const databases = [
       return databaseInstanceFactory.build({
         id,
         label: `databases-instance-${id}`,
+        engine: id === 1 ? 'mysql' : id <= 3 ? 'valkey' : 'postgresql',
+        region: 'ap-west',
       });
     });
     return HttpResponse.json(makeResourcePage(databases));
@@ -1799,14 +1782,24 @@ export const handlers = [
     return HttpResponse.json(newFirewall);
   }),
   http.get('*/v4/nodebalancers', () => {
-    const nodeBalancers = nodeBalancerFactory.buildList(3);
-    nodeBalancers.push(
+    const nodeBalancers = [
+      ...nodeBalancerFactory.buildList(3),
       nodeBalancerFactory.build({
         id: 333,
         label: 'NodeBalancer-33',
         region: 'ap-west',
-      })
-    );
+      }),
+      nodeBalancerFactory.build({
+        id: 334,
+        label: 'nodebalancer-with-no-configs',
+      }),
+      nodeBalancerFactory.build({
+        id: 335,
+        label: 'premium-nodebalancer-with-no-configs',
+        type: 'premium',
+      }),
+    ];
+
     return HttpResponse.json(makeResourcePage(nodeBalancers));
   }),
   http.get('*/v4/nodebalancers/types', () => {
@@ -1833,9 +1826,16 @@ export const handlers = [
     return HttpResponse.json(nodeBalancer);
   }),
   http.get('*/nodebalancers/:nodeBalancerID/configs', ({ params }) => {
-    const configs = nodeBalancerConfigFactory.buildList(2, {
-      nodebalancer_id: Number(params.nodeBalancerID),
-    });
+    // Mocked IDs of NodeBalancers that have no configs
+    const isNodeBalancerWithNoConfigs = [334, 335].includes(
+      Number(params.nodeBalancerID)
+    );
+
+    const configs = isNodeBalancerWithNoConfigs
+      ? []
+      : nodeBalancerConfigFactory.buildList(2, {
+          nodebalancer_id: Number(params.nodeBalancerID),
+        });
     return HttpResponse.json(makeResourcePage(configs));
   }),
   http.get('*/nodebalancers/:nodeBalancerID/configs/:configID/nodes', () => {
@@ -2468,7 +2468,7 @@ export const handlers = [
 
     const proxyToken = appTokenFactory.build({
       expiry: expiry.toISOString(),
-      token: `Bearer ${import.meta.env.REACT_APP_PROXY_PAT}`,
+      token: `Bearer ${import.meta.env.COMPUTE_PROXY_PAT}`,
     });
     return HttpResponse.json(proxyToken);
   }),
@@ -2839,6 +2839,7 @@ export const handlers = [
       maintenance_policy: 'linode/migrate',
       network_helper: true,
       object_storage: 'active',
+      tfa_enforced: false,
     });
   }),
   http.put('*/account/settings/*', async ({ request }) => {

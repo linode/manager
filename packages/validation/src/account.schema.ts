@@ -179,6 +179,7 @@ export const UpdateAccountSettingsSchema = object({
   longview_subscription: string().nullable(),
   object_storage: string(),
   interfaces_for_new_linodes: string(),
+  tfa_enforced: boolean(),
 });
 
 export const PromoCodeSchema = object({

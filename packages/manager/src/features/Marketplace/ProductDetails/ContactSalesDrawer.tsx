@@ -86,6 +86,14 @@ export const cleanUpPayload = (values: MarketplacePartnerReferralPayload) => {
     cleaned.additional_emails = cleanedAdditionalEmails;
   }
 
+  // Phone is optional. When it's blank, omit it along with its dialing code.
+  if (!cleaned.phone?.trim()) {
+    delete cleaned.phone;
+    delete cleaned.phone_country_code;
+  } else {
+    cleaned.phone = cleaned.phone.trim();
+  }
+
   const OPTIONAL_PAYLOAD_STRING_FIELDS: Array<
     'account_executive_email' | 'comments' | 'company_name'
   > = ['account_executive_email', 'comments', 'company_name'];
@@ -158,13 +166,11 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
 
   const tcConsent = watch('tc_consent_given');
   const countryCode = watch('country_code');
-  const phone = watch('phone');
 
   const isSubmitDisabled =
     isSubmitting ||
     !tcConsent ||
     !countryCode ||
-    !phone ||
     !!errors.country_code ||
     !!errors.phone ||
     !!errors.phone_country_code;
@@ -383,9 +389,7 @@ export const ContactSalesDrawer = (props: ContactSalesDrawerProps) => {
             />
           </FormControl>
           <FormControl>
-            <FormLabel htmlFor="phone_number">
-              Phone number <Typography component="span">(required)</Typography>
-            </FormLabel>
+            <FormLabel htmlFor="phone_number">Phone number</FormLabel>
             <Stack direction="row" sx={{ marginTop: 0, width: '100%' }}>
               <Controller
                 control={control}

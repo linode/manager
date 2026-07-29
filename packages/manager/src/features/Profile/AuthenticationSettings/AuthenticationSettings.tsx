@@ -12,6 +12,7 @@ import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Link } from 'src/components/Link';
+import { useIsIAMTfaEnforcementEnabled } from 'src/features/IAM/hooks/useIsIAMTfaEnforcementEnabled';
 
 import { PhoneVerification } from './PhoneVerification/PhoneVerification';
 import { ResetPassword } from './ResetPassword';
@@ -29,6 +30,10 @@ export const AuthenticationSettings = () => {
   } = useProfile();
   const authType = profile?.authentication_type ?? 'password';
   const twoFactor = Boolean(profile?.two_factor_auth);
+  const { isIAMTfaEnforcementEnabled } = useIsIAMTfaEnforcementEnabled();
+  // TODO: UIE-12191 - Remove `isIAMTfaEnforcementEnabled` check once 2FA enforcement is fully released.
+  const isTfaEnforced =
+    isIAMTfaEnforcementEnabled && Boolean(profile?.tfa_enforced);
   const username = profile?.username;
   const isThirdPartyAuthEnabled = authType !== 'password';
   const { focusSecurityQuestions, focusTel } = useSearch({
@@ -92,7 +97,11 @@ export const AuthenticationSettings = () => {
           <>
             <ResetPassword username={username} />
             <Divider spacingBottom={16} spacingTop={22} />
-            <TwoFactor twoFactor={twoFactor} username={username} />
+            <TwoFactor
+              isTfaEnforced={isTfaEnforced}
+              twoFactor={twoFactor}
+              username={username}
+            />
             <Divider spacingBottom={16} spacingTop={22} />
           </>
         ) : null}

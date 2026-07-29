@@ -25,10 +25,6 @@ import {
 import { DatabaseNodeSelector } from 'src/features/Databases/DatabaseCreate/DatabaseNodeSelector';
 import { DatabaseSummarySection } from 'src/features/Databases/DatabaseCreate/DatabaseSummarySection';
 import { DatabaseResizeCurrentConfiguration } from 'src/features/Databases/DatabaseDetail/DatabaseResize/DatabaseResizeCurrentConfiguration';
-import {
-  isDefaultDatabase,
-  useIsDatabasesEnabled,
-} from 'src/features/Databases/utilities';
 import { typeLabelDetails } from 'src/features/Linodes/presentation';
 import { useFlags } from 'src/hooks/useFlags';
 import { useIsGenerationalPlansEnabled } from 'src/utilities/linodes';
@@ -59,8 +55,7 @@ import type {
 import type { PlanSelectionWithDatabaseType } from 'src/features/components/PlansPanel/types';
 
 export const DatabaseResize = () => {
-  const { database, disabled, isResizeEnabled, engine } =
-    useDatabaseDetailContext();
+  const { database, disabled } = useDatabaseDetailContext();
   const navigate = useNavigate();
 
   const [selectedPlanId, setSelectedPlanId] = React.useState<
@@ -71,10 +66,8 @@ export const DatabaseResize = () => {
     React.useState(false);
 
   const [selectedTab, setSelectedTab] = React.useState(0);
-  const { isDatabasesV2GA } = useIsDatabasesEnabled();
   const flags = useFlags();
-  const isNewDatabaseGA =
-    isDatabasesV2GA && database.platform !== 'rdbms-legacy';
+
   const [clusterSize, setClusterSize] = React.useState<ClusterSize | undefined>(
     database.cluster_size
   );
@@ -108,8 +101,7 @@ export const DatabaseResize = () => {
     priceLabel: selectedPlanPriceLabel,
   } = useComputePricing(selectedPlanId);
 
-  const shouldProvideRegions =
-    flags.databasePremium && isDefaultDatabase(database);
+  const shouldProvideRegions = flags.databasePremium;
 
   // When databasePremium flag is enabled for a new database cluster, provide the database region ID to perform queries and enable additional behavior for the PlansPanel
   const databaseRegion = shouldProvideRegions ? database.region : '';
@@ -204,7 +196,7 @@ export const DatabaseResize = () => {
   const onResize = () => {
     const payload: UpdateDatabasePayload = {};
 
-    if (clusterSize && isDatabasesV2GA) {
+    if (clusterSize) {
       payload.cluster_size = clusterSize;
     }
 
@@ -233,9 +225,8 @@ export const DatabaseResize = () => {
         Resize a Database Cluster
       </h3>
       <p style={{ marginTop: Spacing.S4 }}>
-        {isNewDatabaseGA
-          ? 'Adapt the cluster to your needs by resizing it to a smaller or larger plan.'
-          : 'Adapt the cluster to your needs by resizing to a larger plan. Clusters cannot be resized to smaller plans.'}
+        Adapt the cluster to your needs by resizing it to a smaller or larger
+        plan.
       </p>
     </>
   );
@@ -381,8 +372,7 @@ export const DatabaseResize = () => {
   const disabledPlansDueToDiskSize = isSmallerOrEqualCurrentPlan(
     currentPlan?.id,
     database?.used_disk_size_gb,
-    displayTypes,
-    isNewDatabaseGA
+    displayTypes
   );
 
   // @TODO remove dbaas resize class type restriction sometime post-release when we support resizing across different plans
@@ -436,14 +426,12 @@ export const DatabaseResize = () => {
       currentPlan?.heading
     );
 
-    if (isNewDatabaseGA) {
-      if (initialTab === index) {
-        setSelectedPlanId(database.type);
-        setClusterSize(database.cluster_size);
-      } else {
-        setClusterSize(3);
-        setSelectedPlanId(undefined);
-      }
+    if (initialTab === index) {
+      setSelectedPlanId(database.type);
+      setClusterSize(database.cluster_size);
+    } else {
+      setClusterSize(3);
+      setSelectedPlanId(undefined);
     }
     setSelectedTab(index);
   };
@@ -453,17 +441,6 @@ export const DatabaseResize = () => {
     setClusterName('');
     resetMutation?.();
   };
-
-  if (!isResizeEnabled) {
-    navigate({
-      to: `/databases/$engine/$databaseId/summary`,
-      params: {
-        engine,
-        databaseId: database.id,
-      },
-    });
-    return null;
-  }
 
   if (typesLoading || regionsLoading) {
     return <CircleProgress />;
@@ -499,7 +476,6 @@ export const DatabaseResize = () => {
           flow="database"
           handleTabChange={handleTabChange}
           header="Choose a Plan"
-          isLegacyDatabase={!isNewDatabaseGA}
           isResize
           onSelect={(selected: string) => setSelectedPlanId(selected)}
           regionsData={shouldProvideRegions ? regionsData : undefined}
@@ -507,28 +483,24 @@ export const DatabaseResize = () => {
           selectedRegionID={databaseRegion}
           types={displayTypes}
         />
-        {isNewDatabaseGA && (
-          <>
-            <Divider marginBottom={Spacing.S20} marginTop={Spacing.S20} />
-            <DatabaseNodeSelector
-              currentClusterSize={database.cluster_size}
-              currentPlan={currentPlan}
-              disabled={
-                isCurrentPlanUnavailable && currentPlan?.id === selectedPlanId
-              }
-              displayTypes={displayTypes}
-              handleNodeChange={(size: ClusterSize) => {
-                handleNodeChange(size);
-              }}
-              selectedClusterSize={clusterSize}
-              selectedEngine={selectedEngine}
-              selectedPlan={displayTypes?.find(
-                (type) => type.id === selectedPlanId
-              )}
-              selectedTab={selectedTab}
-            />
-          </>
-        )}
+        <Divider marginBottom={Spacing.S20} marginTop={Spacing.S20} />
+        <DatabaseNodeSelector
+          currentClusterSize={database.cluster_size}
+          currentPlan={currentPlan}
+          disabled={
+            isCurrentPlanUnavailable && currentPlan?.id === selectedPlanId
+          }
+          displayTypes={displayTypes}
+          handleNodeChange={(size: ClusterSize) => {
+            handleNodeChange(size);
+          }}
+          selectedClusterSize={clusterSize}
+          selectedEngine={selectedEngine}
+          selectedPlan={displayTypes?.find(
+            (type) => type.id === selectedPlanId
+          )}
+          selectedTab={selectedTab}
+        />
       </Paper>
       <Paper marginTop={Spacing.S16}>
         <DatabaseSummarySection
@@ -574,7 +546,7 @@ export const DatabaseResize = () => {
           {isTypeToConfirmEnabled ? (
             <>
               <p>
-                To confirm deletion, type the name of the Database Cluster{' '}
+                To confirm resizing, type the name of the Database Cluster{' '}
                 <strong>({database.label})</strong> in the field below:
               </p>
               <FormField>

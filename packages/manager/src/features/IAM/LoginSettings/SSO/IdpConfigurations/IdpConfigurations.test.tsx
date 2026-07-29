@@ -33,8 +33,8 @@ const queryMocks = vi.hoisted(() => ({
   useSnackbar: vi.fn().mockReturnValue({ enqueueSnackbar: vi.fn() }),
 }));
 
-vi.mock('src/features/IAM/hooks/usePermissions', async () => {
-  const actual = await vi.importActual('src/features/IAM/hooks/usePermissions');
+vi.mock('../../../hooks/usePermissions', async () => {
+  const actual = await vi.importActual('../../../hooks/usePermissions');
   return { ...actual, usePermissions: queryMocks.usePermissions };
 });
 

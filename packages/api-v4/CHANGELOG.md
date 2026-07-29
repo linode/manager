@@ -1,3 +1,26 @@
+## [2026-07-29] - v0.163.0
+
+
+### Added:
+
+- Nodebalancer Tier and Backend Connectivity types ([#479](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/479))
+- Bearer Token Authentication Details interface for Logs Destination model ([#574](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/574))
+
+### Changed:
+
+- Make phone and phone_country_code optional in MarketplacePartnerReferralPayload ([#596](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/596))
+
+### Removed:
+
+- Clean up legacy database types ([#350](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/350))
+
+### Upcoming Features:
+
+- TFA Enforcement types & queries ([#522](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/522))
+- Updated VPC type to support new field 'vpc_type' ([#556](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/556))
+- Support Live Chat: add an endpoint to check whether live chat is available ([#558](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/558))
+- Support for IPv6 addresses in Create Nodebalancer APIs ([#554](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/554))
+
 ## [2026-06-29] - v0.162.0
 
 

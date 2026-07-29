@@ -17,9 +17,9 @@ export const createPartnerReferralSchema = object({
     .max(2, 'You can only provide up to 2 emails')
     .optional(),
   country_code: string().required('Please select your region'),
-  phone_country_code: string().required('Please select your dialing code.'),
+  phone_country_code: string().optional(),
   phone: string()
-    .required('Phone number is required.')
+    .optional()
     .when('phone_country_code', () =>
       string().test(
         'is-phone-number',
@@ -27,7 +27,12 @@ export const createPartnerReferralSchema = object({
         (phone_number, context) => {
           const { phone_country_code } = context.parent;
 
-          if (!phone_number || !phone_country_code) {
+          // Phone number is optional, so an empty value is considered valid.
+          if (!phone_number) {
+            return true;
+          }
+
+          if (!phone_country_code) {
             return false;
           }
 

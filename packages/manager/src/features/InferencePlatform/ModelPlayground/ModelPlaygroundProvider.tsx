@@ -1,4 +1,5 @@
 import { createChatCompletion } from '@linode/api-v4';
+import { useProfile } from '@linode/queries';
 import { useNavigate, useSearch } from '@tanstack/react-router';
 import React, {
   useCallback,
@@ -12,9 +13,19 @@ import React, {
 import { getExtraPresets, isMSWEnabled } from 'src/dev-tools/utils';
 
 import { useInferenceStream } from '../hooks/useInferenceStream';
-import { requestInferenceChatCompletion } from '../inferenceService';
+import {
+  classifyNetworkError,
+  extractApiErrorMessage,
+  parseErrorBody,
+} from '../inferenceErrors';
+import {
+  INFERENCE_REQUEST_TIMEOUT_MS,
+  requestInferenceChatCompletion,
+} from '../inferenceService';
+import { getOrCreatePlaygroundKey } from '../playgroundKeyService';
 import {
   type Message,
+  type MessageMetadata,
   ModelPlaygroundInputContext,
   ModelPlaygroundModelContext,
   ModelPlaygroundOptionsContext,
@@ -30,10 +41,10 @@ interface Props {
 }
 
 export const ModelPlaygroundProvider = ({ children }: Props) => {
-  const { model: modelFromUrl } = useSearch({
-    from: '/inference-platform/model-playground',
-  });
+  const search = useSearch({ strict: false }) as { model?: string };
+  const modelFromUrl = search.model;
   const navigate = useNavigate();
+  const { data: profile } = useProfile();
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
@@ -49,7 +60,7 @@ export const ModelPlaygroundProvider = ({ children }: Props) => {
     (model: string) => {
       setSelectedModel(model);
       navigate({
-        search: (prev) => ({ ...prev, model }),
+        search: (prev) => ({ ...prev, model: model || undefined }),
         to: '/inference-platform/model-playground',
       });
     },
@@ -57,11 +68,13 @@ export const ModelPlaygroundProvider = ({ children }: Props) => {
   );
 
   const { cancel, stream } = useInferenceStream();
+  const nonStreamAbortRef = useRef<AbortController | null>(null);
 
-  // Abort any in-flight stream if the user navigates away from the playground.
+  // Abort any in-flight request if the user navigates away from the playground.
   useEffect(() => {
     return () => {
       cancel();
+      nonStreamAbortRef.current?.abort();
     };
   }, [cancel]);
 
@@ -78,24 +91,45 @@ export const ModelPlaygroundProvider = ({ children }: Props) => {
   selectedModelRef.current = selectedModel;
   settingsRef.current = settings;
 
-  const applyStreamStart = useCallback((id: string) => {
-    setMessages((prev) => [...prev, { content: '', id, role: 'assistant' }]);
+  const applyStreamStart = useCallback((id: string, startedAt: number) => {
+    setMessages((prev) => [
+      ...prev,
+      { content: '', id, role: 'assistant', startedAt },
+    ]);
     setStreamingMessageId(id);
   }, []);
 
   const applyStreamChunk = useCallback(
-    (id: string, parsed: { content: string; thinking?: string }) => {
+    (
+      id: string,
+      parsed: { content: string; thinking?: string },
+      timeToFirstTokenMs?: number
+    ) => {
       setMessages((prev) =>
-        prev.map((m) => (m.id === id ? { ...m, ...parsed } : m))
+        prev.map((m) =>
+          m.id === id
+            ? {
+                ...m,
+                ...parsed,
+                ...(timeToFirstTokenMs !== undefined && { timeToFirstTokenMs }),
+              }
+            : m
+        )
       );
     },
     []
   );
 
   const applyStreamComplete = useCallback(
-    (id: string, final: { content: string; thinking?: string }) => {
+    (
+      id: string,
+      final: { content: string; thinking?: string },
+      metadata?: MessageMetadata
+    ) => {
       setMessages((prev) =>
-        prev.map((m) => (m.id === id ? { ...m, ...final } : m))
+        prev.map((m) =>
+          m.id === id ? { ...m, ...final, ...(metadata && { metadata }) } : m
+        )
       );
       setStreamingMessageId(null);
       setIsLoading(false);
@@ -103,10 +137,22 @@ export const ModelPlaygroundProvider = ({ children }: Props) => {
     []
   );
 
-  const applyStreamError = useCallback((id: string) => {
-    // If the stream fails before completion, remove the empty placeholder row
-    // so users do not see a stuck assistant bubble.
-    setMessages((prev) => prev.filter((m) => m.id !== id));
+  const applyStreamError = useCallback((id: string, errorMessage?: string) => {
+    const error = errorMessage ?? 'There was an error generating a response.';
+    const now = Date.now();
+    setMessages((prev) =>
+      prev.map((m) =>
+        m.id !== id
+          ? m
+          : {
+              ...m,
+              error,
+              ...(m.startedAt !== undefined && {
+                metadata: { durationMs: now - m.startedAt },
+              }),
+            }
+      )
+    );
     setStreamingMessageId(null);
     setIsLoading(false);
   }, []);
@@ -125,18 +171,36 @@ export const ModelPlaygroundProvider = ({ children }: Props) => {
     setInputValue('');
     setIsLoading(true);
 
-    const conversationMessages = [...messagesRef.current, userMessage].map(
-      ({ content, role }) => ({ content, role })
-    );
+    // Include all user messages; exclude errored/empty assistant responses. thinking is dropped.
+    const conversationMessages = [...messagesRef.current, userMessage]
+      .filter((m) => m.role === 'user' || (Boolean(m.content) && !m.error))
+      .map(({ content, role }) => ({ content, role }));
 
     if (
       !isMSWEnabled ||
       !getExtraPresets().includes('inferencePlatform:chat-completions')
     ) {
+      // Get or create a playground API key for authentication
+      let apiKey: string;
+      try {
+        if (!profile?.username) {
+          // Cannot create playground key without a valid username
+          setIsLoading(false);
+          return;
+        }
+        apiKey = await getOrCreatePlaygroundKey(profile.username);
+      } catch {
+        // TODO: Handle API key creation failure
+        setIsLoading(false);
+        return;
+      }
+
+      // Streaming path
       if (settingsRef.current.stream) {
         await stream(
           conversationMessages,
           selectedModelRef.current,
+          apiKey,
           {
             onChunk: applyStreamChunk,
             onComplete: applyStreamComplete,
@@ -150,7 +214,15 @@ export const ModelPlaygroundProvider = ({ children }: Props) => {
 
       // Non-streaming path
       const assistantId = crypto.randomUUID();
-      applyStreamStart(assistantId);
+      const startTime = Date.now();
+      applyStreamStart(assistantId, startTime);
+      const nonStreamAbort = new AbortController();
+      nonStreamAbortRef.current = nonStreamAbort;
+
+      const nonStreamTimeoutId = setTimeout(() => {
+        nonStreamAbort.abort('timeout');
+      }, INFERENCE_REQUEST_TIMEOUT_MS);
+
       try {
         const apiOptions = mapSettingsToApiOptions(settingsRef.current);
         const requestMessages = settingsRef.current.systemPrompt
@@ -162,30 +234,93 @@ export const ModelPlaygroundProvider = ({ children }: Props) => {
               ...conversationMessages,
             ]
           : conversationMessages;
+
         const response = await requestInferenceChatCompletion(
           requestMessages,
           selectedModelRef.current,
-          apiOptions
+          apiKey,
+          apiOptions,
+          nonStreamAbort.signal
         );
+
+        // A non-ok status or a 200 with a non-JSON content-type (e.g. a
+        // gateway HTML error page) both indicate an error body.
+        const contentType = response.headers.get('content-type') ?? '';
+        if (!response.ok || !contentType.includes('application/json')) {
+          const msg = await extractApiErrorMessage(response);
+          throw new Error(msg);
+        }
+
         const data = await response.json();
+        const durationMs = Date.now() - startTime;
+
+        // Some gateways return 200 with an error body instead of a 4xx status.
+        const bodyError = parseErrorBody(data);
+        if (bodyError) {
+          throw new Error(bodyError);
+        }
+
         const raw = data.choices?.[0]?.message?.content ?? '';
         const rawReasoning = data.choices?.[0]?.message?.reasoning ?? '';
+
+        if (!raw && !rawReasoning) {
+          throw new Error('The inference service returned an empty response.');
+        }
+
+        const completionTokens: number | undefined =
+          data.usage?.completion_tokens ?? undefined;
+        const finishReason: string | undefined =
+          data.choices?.[0]?.finish_reason ?? undefined;
+        const stopReason: string | undefined =
+          data.choices?.[0]?.stop_reason ?? undefined;
+        const promptTokens: number | undefined =
+          data.usage?.prompt_tokens ?? undefined;
         const { content: assistantContent, thinking } = rawReasoning
           ? { content: raw, thinking: rawReasoning }
           : parseThinking(raw);
-        applyStreamComplete(assistantId, {
-          content: assistantContent,
-          thinking,
-        });
-      } catch {
-        // No response if the inference endpoint is unreachable.
-        // TODO: Error handling in future Jira case: HELIX-39
-        applyStreamError(assistantId);
+
+        applyStreamComplete(
+          assistantId,
+          { content: assistantContent, thinking },
+          {
+            completionTokens,
+            durationMs,
+            finishReason,
+            promptTokens,
+            stopReason,
+          }
+        );
+      } catch (err) {
+        if (nonStreamAbort.signal.aborted) {
+          if (nonStreamAbort.signal.reason === 'timeout') {
+            applyStreamError(
+              assistantId,
+              'Request timed out. Please try again.'
+            );
+          } else {
+            applyStreamComplete(
+              assistantId,
+              { content: '' },
+              {
+                cancelled: true,
+                durationMs: Date.now() - startTime,
+              }
+            );
+          }
+        } else {
+          applyStreamError(assistantId, classifyNetworkError(err));
+        }
+      } finally {
+        clearTimeout(nonStreamTimeoutId);
+        nonStreamAbortRef.current = null;
       }
       return;
     }
 
     // MSW mock path
+    const assistantId = crypto.randomUUID();
+    const startTime = Date.now();
+    applyStreamStart(assistantId, startTime);
     try {
       const response = await createChatCompletion({
         messages: conversationMessages,
@@ -194,38 +329,40 @@ export const ModelPlaygroundProvider = ({ children }: Props) => {
       });
       const raw = response.choices[0]?.message.content ?? '';
       const { content: assistantContent, thinking } = parseThinking(raw);
-      setMessages((prev) => [
-        ...prev,
+      applyStreamComplete(
+        assistantId,
+        { content: assistantContent, thinking },
         {
-          content: assistantContent,
-          id: crypto.randomUUID(),
-          role: 'assistant',
-          thinking,
-        },
-      ]);
+          durationMs: Date.now() - startTime,
+        }
+      );
     } catch {
-      // No response when MSW is not active or the API is unavailable.
-      // TODO: Error handling in future Jira case: HELIX-39
-    } finally {
-      setIsLoading(false);
+      applyStreamError(assistantId);
     }
   }, [
     applyStreamChunk,
     applyStreamComplete,
     applyStreamError,
     applyStreamStart,
+    profile?.username,
     stream,
   ]);
+
+  const onClearMessages = useCallback(() => setMessages([]), []);
 
   const inputContextValue = useMemo(
     () => ({
       inputValue,
       isLoading,
-      onCancel: cancel,
+      onCancel: () => {
+        cancel();
+        nonStreamAbortRef.current?.abort();
+      },
+      onClearMessages,
       onInputChange: setInputValue,
       onSend,
     }),
-    [cancel, inputValue, isLoading, onSend]
+    [cancel, inputValue, isLoading, onClearMessages, onSend]
   );
 
   const modelContextValue = useMemo(

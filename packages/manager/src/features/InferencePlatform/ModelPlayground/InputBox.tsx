@@ -13,6 +13,7 @@ import { useInferencePlatform } from '../InferencePlatformContext';
 import {
   ModelPlaygroundInputContext,
   ModelPlaygroundModelContext,
+  ModelPlaygroundOutputContext,
 } from './ModelPlaygroundContext';
 
 export const InputBox = () => {
@@ -20,6 +21,7 @@ export const InputBox = () => {
     ModelPlaygroundInputContext
   );
   const { selectedModel } = useContext(ModelPlaygroundModelContext);
+  const { messages } = useContext(ModelPlaygroundOutputContext);
   const { isModelsLoading } = useInferencePlatform();
   const theme = useTheme();
   const inputRef = useRef<HTMLInputElement>(null);
@@ -27,6 +29,12 @@ export const InputBox = () => {
   const isDisabled = isLoading || isModelsLoading || !selectedModel;
   const hasInput = Boolean(inputValue.trim());
   const canSend = hasInput && !isDisabled;
+
+  useEffect(() => {
+    if (messages.length === 0) {
+      inputRef.current?.focus();
+    }
+  }, [messages.length]);
 
   useEffect(() => {
     if (!isModelsLoading && selectedModel) {

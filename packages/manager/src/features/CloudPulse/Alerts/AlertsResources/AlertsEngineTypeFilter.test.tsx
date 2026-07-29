@@ -27,6 +27,12 @@ describe('AlertsEngineOptionFilter', () => {
     expect(getByRole('option', { name: 'PostgreSQL' })).toBeInTheDocument();
     // Select an option
     await userEvent.click(getByRole('option', { name: 'PostgreSQL' }));
-    expect(handleSelection).toHaveBeenCalledWith('mysql', 'engineType');
+    expect(handleSelection).toHaveBeenCalledWith('postgresql', 'engineType');
+
+    await userEvent.click(getByRole('button', { name: 'Open' }));
+    expect(getByRole('option', { name: 'Valkey' })).toBeInTheDocument();
+    // Select an option
+    await userEvent.click(getByRole('option', { name: 'Valkey' }));
+    expect(handleSelection).toHaveBeenCalledWith('valkey', 'engineType');
   });
 });

@@ -1,11 +1,9 @@
 import { Spacing } from '@akamai/cds-tokens';
 import React from 'react';
 
-import { useFlags } from 'src/hooks/useFlags';
 import { useComputePricing } from 'src/utilities/pricing/useComputePricing';
 
 import { StyledPlanSummarySpan } from '../DatabaseDetail/DatabaseResize/DatabaseResize.style';
-import { useIsDatabasesEnabled } from '../utilities';
 import { StyledSpan } from './DatabaseCreate.style';
 import { getSuffix } from './utilities';
 
@@ -42,16 +40,11 @@ export const DatabaseSummarySection = (props: Props) => {
     selectedVPC,
     label,
     mode,
-    platform,
     resizeData,
   } = props;
-  const { isDatabasesV2GA } = useIsDatabasesEnabled();
-  const flags = useFlags();
-  const isVPCEnabled = flags.databaseVpc;
   const isResize = mode === 'resize';
   const isCreate = mode === 'create';
   const isVPCSelected = Boolean(selectedVPC);
-  const displayVPC = isCreate && isVPCEnabled;
 
   const currentPrice = currentPlan?.engines[currentEngine]?.find(
     (cluster: DatabaseClusterSizeObject) =>
@@ -69,24 +62,18 @@ export const DatabaseSummarySection = (props: Props) => {
   const currentNodePrice = `$${formatPrice(currentPrice)}/${priceLabel}`;
   const currentPlanPrice = `$${formatPrice(currentBasePrice)}/${priceLabel}`;
 
-  const isNewDatabase = isDatabasesV2GA && platform !== 'rdbms-legacy';
-
   const currentSummary = currentPlan ? (
     <div data-testid="currentSummary">
       <StyledPlanSummarySpan>
         {isResize && 'Current Cluster: '}
         {currentPlan?.heading}
       </StyledPlanSummarySpan>{' '}
-      {isDatabasesV2GA ? (
-        <StyledSpan>{currentPlanPrice}</StyledSpan>
-      ) : (
-        <span>{currentPlanPrice}</span>
-      )}
-      {displayVPC ? (
+      <StyledSpan>{currentPlanPrice}</StyledSpan>
+      {isCreate ? (
         <>
           <StyledPlanSummarySpan>
             {currentClusterSize} Node
-            {getSuffix(isNewDatabase, currentClusterSize)}
+            {getSuffix(currentClusterSize)}
           </StyledPlanSummarySpan>
           <StyledSpan
             style={{ borderRight: !isVPCSelected ? 'none' : undefined }}
@@ -103,7 +90,7 @@ export const DatabaseSummarySection = (props: Props) => {
         <>
           <span>
             {currentClusterSize} Node
-            {getSuffix(isNewDatabase, currentClusterSize)}
+            {getSuffix(currentClusterSize)}
           </span>
           {currentNodePrice}
         </>
@@ -123,24 +110,20 @@ export const DatabaseSummarySection = (props: Props) => {
       {resizeData ? (
         <>
           <StyledPlanSummarySpan>
-            {isNewDatabase
-              ? 'Resized Cluster: ' + resizeData.plan
-              : resizeData.plan}
+            {'Resized Cluster: ' + resizeData.plan}
           </StyledPlanSummarySpan>{' '}
-          {isNewDatabase && <StyledSpan>{resizeData.basePrice}</StyledSpan>}
+          <StyledSpan>{resizeData.basePrice}</StyledSpan>
           <span>
             {resizeData.numberOfNodes} Node
-            {getSuffix(isNewDatabase, resizeData.numberOfNodes)}
+            {getSuffix(resizeData.numberOfNodes)}
           </span>
           {resizeData.price}
         </>
-      ) : isNewDatabase ? (
+      ) : (
         <>
           <StyledPlanSummarySpan>Resized Cluster:</StyledPlanSummarySpan> Please
           select a plan or set the number of nodes.
         </>
-      ) : (
-        'Please select a plan.'
       )}
     </div>
   );
@@ -149,13 +132,13 @@ export const DatabaseSummarySection = (props: Props) => {
     <>
       <h3
         style={{
-          marginBottom: isDatabasesV2GA ? Spacing.S16 : 0,
+          marginBottom: Spacing.S16,
           marginTop: 0,
         }}
       >
-        Summary {isNewDatabase && label}
+        Summary {label}
       </h3>
-      {isNewDatabase && currentSummary}
+      {currentSummary}
       {isResize && resizeSummary}
     </>
   );

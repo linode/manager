@@ -409,7 +409,7 @@ export const capabilityServiceTypeMapping: Record<
   lke: 'Kubernetes',
   netloadbalancer: 'Network LoadBalancer',
   logs: 'Akamai Cloud Pulse Logs',
-  ai: 'AI',
+  ai: 'AI Inference',
 };
 
 /**

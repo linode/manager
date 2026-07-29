@@ -1,4 +1,4 @@
-import { dataCompressionType } from '@linode/api-v4';
+import { type CustomHTTPSDetails, dataCompressionType } from '@linode/api-v4';
 import { screen } from '@testing-library/react';
 import React from 'react';
 import { expect } from 'vitest';
@@ -6,8 +6,6 @@ import { expect } from 'vitest';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { DestinationCustomHTTPSDetailsSummary } from './DestinationCustomHTTPSDetailsSummary';
-
-import type { CustomHTTPSDetails } from '@linode/api-v4';
 
 describe('DestinationCustomHTTPSDetailsSummary', () => {
   it('renders basic authentication details correctly', () => {
@@ -57,6 +55,56 @@ describe('DestinationCustomHTTPSDetailsSummary', () => {
     expect(screen.queryByText('Username')).not.toBeInTheDocument();
     // Password:
     expect(screen.queryByTestId('password')).not.toBeInTheDocument();
+  });
+
+  describe('Bearer Token authentication details load in edit mode', () => {
+    it('render only hidden Bearer Token field when no details provided', async () => {
+      const details: CustomHTTPSDetails = {
+        authentication: {
+          type: 'bearer_token',
+        },
+        endpoint_url: 'https://example.com/',
+        data_compression: dataCompressionType.Gzip,
+      };
+      renderWithTheme(<DestinationCustomHTTPSDetailsSummary {...details} />);
+
+      // Bearer Token hidden:
+      expect(screen.getByTestId('bearer-token')).toHaveTextContent(
+        '*****************'
+      );
+      // Header Name empty not rendered:
+      expect(
+        screen.queryByTestId('bearer-header-name')
+      ).not.toBeInTheDocument();
+      // Token Prefix empty not rendered:
+      expect(
+        screen.queryByTestId('bearer-token-prefix')
+      ).not.toBeInTheDocument();
+    });
+
+    it('redner all provided details', async () => {
+      const details: CustomHTTPSDetails = {
+        authentication: {
+          type: 'bearer_token',
+          details: {
+            bearer_token_authentication_header_name: 'X-Authorization',
+            bearer_token_authentication_token_prefix: 'CustomBearer',
+          },
+        },
+        endpoint_url: 'https://example.com/',
+        data_compression: dataCompressionType.Gzip,
+      };
+      renderWithTheme(<DestinationCustomHTTPSDetailsSummary {...details} />);
+
+      // Bearer Token hidden:
+      expect(screen.getByTestId('bearer-token')).toHaveTextContent(
+        '*****************'
+      );
+      // Header Name:
+      expect(screen.getByText('X-Authorization')).toBeVisible();
+      // Token Prefix:
+      expect(screen.getByText('CustomBearer')).toBeVisible();
+    });
   });
 
   it('renders Client Certificate Authentication details when provided', () => {

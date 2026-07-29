@@ -12,9 +12,9 @@ import { Tab, useTabs } from 'src/hooks/useTabs';
 
 import { InferencePlatformProvider } from './InferencePlatformProvider';
 
-const InferenceHub = React.lazy(() =>
-  import('./InferenceHub/InferenceHub').then((m) => ({
-    default: m.InferenceHub,
+const Dashboard = React.lazy(() =>
+  import('./Dashboard/Dashboard').then((m) => ({
+    default: m.Dashboard,
   }))
 );
 
@@ -48,9 +48,9 @@ export const InferencePlatform = () => {
   useLocation();
 
   const tabs: Tab[] = [
-    { title: 'Inference Hub', to: '/inference-platform/inference-hub' },
-    { title: 'Model Playground', to: '/inference-platform/model-playground' },
+    { title: 'Dashboard', to: '/inference-platform/dashboard' },
     { title: 'Model Library', to: '/inference-platform/model-library' },
+    { title: 'Model Playground', to: '/inference-platform/model-playground' },
     {
       title: 'API Key Management',
       to: '/inference-platform/api-key-management',
@@ -67,6 +67,7 @@ export const InferencePlatform = () => {
         <LandingHeader
           breadcrumbProps={{ pathname: '/inference-platform' }}
           removeCrumbX={1}
+          spacingBottom={4}
           title="Inference Platform"
         />
         <Tabs index={tabIndex} onChange={handleTabChange}>
@@ -74,13 +75,13 @@ export const InferencePlatform = () => {
           <React.Suspense fallback={<SuspenseLoader />}>
             <TabPanels>
               <SafeTabPanel index={0}>
-                <InferenceHub />
+                <Dashboard />
               </SafeTabPanel>
               <SafeTabPanel index={1}>
-                <ModelPlayground />
+                <ModelLibrary />
               </SafeTabPanel>
               <SafeTabPanel index={2}>
-                <ModelLibrary />
+                <ModelPlayground />
               </SafeTabPanel>
               <SafeTabPanel index={3}>
                 <ApiKeyManagement />

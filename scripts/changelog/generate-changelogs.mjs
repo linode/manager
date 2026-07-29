@@ -44,7 +44,7 @@ try {
       // If only README.md in there, no changeset(s)
       if (files.length === 1) {
         logger.success({
-          message: `No Changeset file(s) found for @linode/${linodePackage}. Skipping...`,
+          message: `No Changeset file(s) found for ${linodePackage === 'cloudpulse' ? `@akamai/${linodePackage}` : `@linode/${linodePackage}`}. Skipping...`,
         });
       } else {
         /**
@@ -81,7 +81,7 @@ try {
             const filePath = changesetDirectory(linodePackage) + path.sep + file;
             const content = fs.readFileSync(filePath, "utf-8");
             const matches = content.match(
-              new RegExp(`"@linode/${linodePackage}": ([^\n]+)`)
+              new RegExp(`"${linodePackage === 'cloudpulse' ? `@akamai/${linodePackage}` : `@linode/${linodePackage}`}": ([^\n]+)`)
             );
             const changesetType = matches ? matches[1].trim() : "";
 

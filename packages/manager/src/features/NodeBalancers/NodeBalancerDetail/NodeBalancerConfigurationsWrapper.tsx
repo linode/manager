@@ -1,5 +1,5 @@
 import {
-  useNodeBalancerQuery,
+  useNodeBalancerBetaQuery,
   useNodeBalancerVPCConfigsBetaQuery,
 } from '@linode/queries';
 import { CircleProgress, ErrorState } from '@linode/ui';
@@ -41,7 +41,7 @@ export const NodeBalancerConfigurationsWrapper = () => {
     Number(nodeBalancerId)
   );
 
-  const { data: nodeBalancer } = useNodeBalancerQuery(+nodeBalancerId);
+  const { data: nodeBalancer } = useNodeBalancerBetaQuery(+nodeBalancerId);
   const { isNodebalancerVPCEnabled } = useIsNodebalancerVPCEnabled();
 
   const { data: vpcConfigData } = useNodeBalancerVPCConfigsBetaQuery(
@@ -77,6 +77,9 @@ export const NodeBalancerConfigurationsWrapper = () => {
     <NodeBalancerConfigurations
       configId={configId ? +configId : undefined}
       configs={data}
+      nodeBalancerBackendConnectivity={
+        nodeBalancer?.backend_connectivity ?? 'legacy'
+      }
       nodeBalancerId={+nodeBalancerId}
       nodeBalancerLabel={nodeBalancer?.label ?? ''}
       nodeBalancerRegion={nodeBalancer?.region ?? ''}

@@ -1,3 +1,14 @@
+## [2026-07-29] - v0.29.0
+
+
+### Added:
+
+- Add an optional pendoId for the tooltip icon ([#551](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/551))
+
+### Tech Stories:
+
+- Bump storybook, @storybook/react-vite from 10.4.6 to 10.5.3 ([#600](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/600))
+
 ## [2026-06-29] - v0.28.0
 
 

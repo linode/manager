@@ -20,6 +20,10 @@ export interface Profile {
   lish_auth_method: 'disabled' | 'keys_only' | 'password_keys';
   referrals: Referrals;
   restricted: boolean;
+  /**
+   * Whether MFA is enforced for this user. Not editable via PUT /profile.
+   */
+  tfa_enforced: boolean;
   timezone: string;
   two_factor_auth: boolean;
   uid: number;

@@ -1,18 +1,6 @@
-import { Icon, Tooltip } from '@akamai/cds-components/react';
-import { Spacing } from '@akamai/cds-tokens';
 import * as React from 'react';
 
-import {
-  SUMMARY_HOST_TOOLTIP_COPY,
-  SUMMARY_PRIVATE_HOST_COPY,
-  SUMMARY_PRIVATE_HOST_LEGACY_COPY,
-} from '../constants';
-import { CopyTooltip } from '../shared/CopyTooltip/CopyTooltip';
-import {
-  convertPrivateToPublicHostname,
-  getReadOnlyHost,
-  isLegacyDatabase,
-} from '../utilities';
+import { ConnectionDetailsHostDisplay } from './ConnectionDetailsHostDisplay';
 import { ConnectionDetailsRow } from './ConnectionDetailsRow';
 import { useStyles } from './DatabaseSummary/DatabaseSummaryConnectionDetails.style';
 
@@ -23,11 +11,7 @@ interface ConnectionDetailsHostRowsProps {
   isSummaryTab?: boolean;
 }
 
-type HostContentMode = 'default' | 'private' | 'public';
-
 /**
- * @deprecated Delete this file in favor of ConnectionDetailsHostRows2 after the API releases hostname endpoint changes.
- *
  * This component is responsible for conditionally rendering the Private Host, Public Host, and Read-only Host rows that get displayed in
  * the Connection Details tables that appear in the Database Summary and Networking tabs */
 export const ConnectionDetailsHostRows = (
@@ -36,101 +20,40 @@ export const ConnectionDetailsHostRows = (
   const { database, isSummaryTab } = props;
   const { classes } = useStyles();
 
-  const isLegacy = isLegacyDatabase(database); // TODO (UIE-8214) POST GA - Remove legacy check and legacy content as it is no longer necessary
   const hasVPC = Boolean(database?.private_network?.vpc_id);
   const hasPublicVPC = hasVPC && database?.private_network?.public_access;
 
-  const getHostContent = (mode: HostContentMode = 'default') => {
-    let primaryHostName = database.hosts?.primary;
+  const getPrimaryHostContent = (mode?: 'private' | 'public') => {
+    const isPublic = mode === 'private' ? false : true;
+    const primaryHost = database.hosts?.endpoints.find(
+      (endpoint) =>
+        endpoint.role === 'primary' && endpoint.public_access === isPublic
+    );
 
-    if (mode === 'public' && primaryHostName) {
-      primaryHostName = convertPrivateToPublicHostname(primaryHostName);
-    }
-
-    if (primaryHostName) {
+    if (!primaryHost) {
       return (
-        <>
-          {primaryHostName}
-          <CopyTooltip
-            className={classes.inlineCopyToolTip}
-            text={primaryHostName}
-          />
-          {!isLegacy && (
-            <Tooltip
-              tooltipPlacement="bottom"
-              tooltipText={
-                mode === 'private'
-                  ? SUMMARY_PRIVATE_HOST_COPY
-                  : SUMMARY_HOST_TOOLTIP_COPY
-              }
-            >
-              <Icon
-                icon="info-outline"
-                size="m"
-                style={{ marginLeft: Spacing.S4 }}
-              />
-            </Tooltip>
-          )}
-        </>
+        <span className={classes.provisioningText}>
+          Your hostname will appear here once it is available.
+        </span>
       );
     }
 
-    return (
-      <span className={classes.provisioningText}>
-        Your hostname will appear here once it is available.
-      </span>
-    );
+    return <ConnectionDetailsHostDisplay host={primaryHost} />;
   };
 
-  const getReadOnlyHostContent = (mode: HostContentMode = 'default') => {
-    const defaultValue = isLegacy ? '-' : 'N/A';
-    const hostValue = getReadOnlyHost(database) || defaultValue;
-    const hasHost = hostValue !== '-' && hostValue !== 'N/A';
-    const displayedHost =
-      mode === 'public' && hasHost
-        ? convertPrivateToPublicHostname(hostValue)
-        : hostValue;
-    return (
-      <>
-        {displayedHost}
-        {displayedHost && hasHost && (
-          <CopyTooltip
-            className={classes.inlineCopyToolTip}
-            text={displayedHost}
-          />
-        )}
-        {isLegacy && (
-          <Tooltip
-            tooltipPlacement="bottom"
-            tooltipText={SUMMARY_PRIVATE_HOST_LEGACY_COPY}
-          >
-            <Icon
-              icon="info-outline"
-              size="m"
-              style={{ marginLeft: Spacing.S4 }}
-            />
-          </Tooltip>
-        )}
-        {!isLegacy && hasHost && (
-          <Tooltip
-            style={{ marginLeft: Spacing.S4 }}
-            tooltipPlacement="bottom"
-            tooltipText={
-              mode === 'private'
-                ? SUMMARY_PRIVATE_HOST_COPY
-                : SUMMARY_HOST_TOOLTIP_COPY
-            }
-          >
-            <Icon icon="info-outline" size="m" />
-          </Tooltip>
-        )}
-      </>
+  const getReadOnlyHostContent = (mode?: 'private' | 'public') => {
+    const isPublic = mode === 'private' ? false : true;
+    const readOnlyHost = database.hosts?.endpoints.find(
+      (endpoint) =>
+        endpoint.role === 'standby' && endpoint.public_access === isPublic
     );
-  };
 
-  const readonlyHostLabel = isLegacy
-    ? 'Private Network Host'
-    : 'Read-only Host';
+    if (!readOnlyHost) {
+      return 'N/A';
+    }
+
+    return <ConnectionDetailsHostDisplay host={readOnlyHost} />;
+  };
 
   return (
     <>
@@ -138,18 +61,18 @@ export const ConnectionDetailsHostRows = (
         isSummaryTab={isSummaryTab}
         label={hasVPC ? 'Private Host' : 'Host'}
       >
-        {getHostContent(hasVPC ? 'private' : 'default')}
+        {getPrimaryHostContent(hasVPC ? 'private' : 'public')}
       </ConnectionDetailsRow>
       {hasPublicVPC && (
         <ConnectionDetailsRow isSummaryTab={isSummaryTab} label="Public Host">
-          {getHostContent('public')}
+          {getPrimaryHostContent('public')}
         </ConnectionDetailsRow>
       )}
       <ConnectionDetailsRow
         isSummaryTab={isSummaryTab}
-        label={hasVPC ? 'Private Read-only Host' : readonlyHostLabel}
+        label={hasVPC ? 'Private Read-only Host' : 'Read-only Host'}
       >
-        {getReadOnlyHostContent(hasVPC ? 'private' : 'default')}
+        {getReadOnlyHostContent(hasVPC ? 'private' : 'public')}
       </ConnectionDetailsRow>
       {hasPublicVPC && (
         <ConnectionDetailsRow

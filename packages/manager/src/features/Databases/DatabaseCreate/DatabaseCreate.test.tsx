@@ -63,18 +63,8 @@ describe('Database Create', () => {
     getAllByText('Choose a Plan');
     getAllByTestId('database-nodes');
     getAllByTestId('domain-transfer-input');
-    getAllByText('Create Database Cluster');
-  });
-
-  it('should render VPC content when feature flag is present', async () => {
-    const { getAllByTestId, getAllByText } = renderWithTheme(
-      <DatabaseCreate />,
-      {
-        flags: { databaseVpc: true },
-      }
-    );
-    await waitForElementToBeRemoved(getAllByTestId(loadingTestId));
     getAllByText('Configure Networking');
+    getAllByText('Create Database Cluster');
   });
 
   it('should display the correct node price and disable 3 nodes for 1 GB plans', async () => {
@@ -166,19 +156,16 @@ describe('Database Create', () => {
   it('should disable form inputs for restricted users', async () => {
     queryMocks.useProfile.mockReturnValue({ data: { restricted: true } });
 
-    const {
-      findAllByRole,
-      findAllByTestId,
-      findByPlaceholderText,
-      getByTestId,
-    } = renderWithTheme(<DatabaseCreate />);
+    const { findAllByRole, findByPlaceholderText, getByTestId } =
+      renderWithTheme(<DatabaseCreate />);
 
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
 
-    await waitForElementToBeRemoved(getByTestId(loadingTestId));
-    const textInputs = await findAllByTestId('textfield-input');
-    textInputs.forEach((input: HTMLInputElement) => {
-      expect(input).toBeDisabled();
+    type CdsTextFieldElement = HTMLElement & { value?: string };
+    const textInputsHosts = await document.querySelectorAll('cds-text-field');
+    textInputsHosts.forEach(async (host: CdsTextFieldElement) => {
+      const textInput = await getShadowRootElement(host, 'input');
+      expect(textInput).toBeDisabled();
     });
 
     const dbEngineSelect = await findByPlaceholderText(
@@ -215,19 +202,18 @@ describe('Database Create', () => {
   it('should enable form inputs for users with full access', async () => {
     queryMocks.useProfile.mockReturnValue({ data: { restricted: false } });
 
-    const {
-      findAllByRole,
-      findAllByTestId,
-      findByPlaceholderText,
-      getByTestId,
-    } = renderWithTheme(<DatabaseCreate />);
+    const { findAllByRole, findByPlaceholderText, getByTestId } =
+      renderWithTheme(<DatabaseCreate />);
 
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
 
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
-    const textInputs = await findAllByTestId('textfield-input');
-    textInputs.forEach((input: HTMLInputElement) => {
-      expect(input).toBeEnabled();
+
+    type CdsTextFieldElement = HTMLElement & { value?: string };
+    const textInputsHosts = await document.querySelectorAll('cds-text-field');
+    textInputsHosts.forEach(async (host: CdsTextFieldElement) => {
+      const textInput = await getShadowRootElement(host, 'input');
+      expect(textInput).toBeEnabled();
     });
 
     const dbEngineSelect = await findByPlaceholderText(

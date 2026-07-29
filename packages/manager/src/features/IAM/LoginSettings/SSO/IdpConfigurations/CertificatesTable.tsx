@@ -12,6 +12,7 @@ import { truncateMiddle } from '@akamai/compute-ui-core/formatting';
 import * as React from 'react';
 
 import { useBreakpoint } from '../../../hooks/useBreakpoint';
+import { useHasTableStripingEnabled } from '../../../hooks/useHasTableStripingEnabled';
 import { useOrder } from '../../../hooks/useOrder';
 import { DateTimeDisplay } from '../../../Shared/DateTimeDisplay/DateTimeDisplay';
 import globalStyles from '../../../Shared/global.module.css';
@@ -56,6 +57,7 @@ type CombinedProps = Props & ExtraProps;
 export const CertificatesTable = (props: CombinedProps) => {
   const { certificates, mode } = props;
   const isLandingMode = mode === 'landing';
+  const hasTableStripingEnabled = useHasTableStripingEnabled();
 
   const preferenceKey = isLandingMode
     ? 'iam-idp-certificates-landing-order'
@@ -195,6 +197,7 @@ export const CertificatesTable = (props: CombinedProps) => {
                   hoverable
                   key={cert.id}
                   rowborder={!(allDeleted && isLastRow)}
+                  zebra={hasTableStripingEnabled}
                 >
                   <TableCell
                     className={`${styles.certCell} ${

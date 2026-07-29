@@ -199,7 +199,10 @@ export const CloneAlertDefinition = ({
   }, [formState.errors, formState.submitCount]);
 
   return (
-    <Paper sx={{ paddingLeft: 1, paddingRight: 1, paddingTop: 2 }}>
+    <Paper
+      data-pendo-id="monitor-alerts-clone-page"
+      sx={{ paddingLeft: 1, paddingRight: 1, paddingTop: 2 }}
+    >
       <DocumentTitleSegment segment="Clone an Alert" />
       <Breadcrumb crumbOverrides={overrides} pathname={'/Definitions/Clone'} />
       {hasAPIError && (

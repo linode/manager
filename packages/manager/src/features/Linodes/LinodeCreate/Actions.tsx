@@ -16,10 +16,24 @@ import {
 } from './utilities';
 
 import type { LinodeCreateFormValues } from './utilities';
+import type { LinodeCreateType } from '@akamai/compute-ui-core/api';
 
 interface ActionProps {
   isAclpAlertsMode?: boolean;
 }
+
+/**
+ * Maps each Linode Create tab to the label used in its `data-pendo-id`, e.g.
+ * `OS` -> `Linodes Create OS-Create Linode`.
+ */
+const createTypeToPendoLabelMap: Record<LinodeCreateType, string> = {
+  Backups: 'Backups',
+  'Clone Linode': 'Clone',
+  Images: 'Images',
+  'One-Click': 'Quick Deploy Apps',
+  OS: 'OS',
+  StackScripts: 'Stackscripts',
+};
 
 export const Actions = ({ isAclpAlertsMode }: ActionProps) => {
   const createType = useGetLinodeCreateType();
@@ -64,6 +78,8 @@ export const Actions = ({ isAclpAlertsMode }: ActionProps) => {
       interfaceGeneration
     );
 
+  const createLinodeButtonPendoId = `Linodes Create ${createTypeToPendoLabelMap[createType]}-Create Linode`;
+
   const onOpenAPIAwareness = async () => {
     sendApiAwarenessClickEvent('Button', 'View Code Snippets');
     sendLinodeCreateFormInputEvent({
@@ -90,6 +106,7 @@ export const Actions = ({ isAclpAlertsMode }: ActionProps) => {
       </Button>
       <Button
         buttonType="primary"
+        data-pendo-id={createLinodeButtonPendoId}
         disabled={isDisabled || userNeedsToAssignFirewall}
         loading={formState.isSubmitting}
         type="submit"

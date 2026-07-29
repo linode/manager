@@ -1,11 +1,7 @@
 import { screen } from '@testing-library/react';
 import * as React from 'react';
 
-import {
-  ERROR_STATE_TEXT,
-  ERROR_STATE_TITLE,
-} from 'src/features/IAM/Shared/constants';
-
+import { ERROR_STATE_TEXT, ERROR_STATE_TITLE } from '../../../Shared/constants';
 import { getCdsButtonByText } from '../../../utilities/testHelpers';
 import {
   mockMatchMedia,
@@ -61,8 +57,8 @@ vi.mock('@linode/queries', async () => {
   };
 });
 
-vi.mock('src/features/IAM/hooks/usePermissions', async () => {
-  const actual = await vi.importActual('src/features/IAM/hooks/usePermissions');
+vi.mock('../../../hooks/usePermissions', async () => {
+  const actual = await vi.importActual('../../../hooks/usePermissions');
   return {
     ...actual,
     usePermissions: queryMocks.usePermissions,

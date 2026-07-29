@@ -82,7 +82,6 @@ describe('PlanInformation', () => {
       planHasLimitedAvailability: true,
       planIsDisabled512Gb: false,
       planIsSmallerThanUsage: false,
-      planIsTooSmall: false,
     });
     renderWithTheme(
       <PlanInformation
@@ -108,7 +107,6 @@ describe('PlanInformation', () => {
       planHasLimitedAvailability: true,
       planIsDisabled512Gb: false,
       planIsSmallerThanUsage: false,
-      planIsTooSmall: false,
     });
     renderWithTheme(
       <PlanInformation
@@ -134,7 +132,6 @@ describe('PlanInformation', () => {
       planHasLimitedAvailability: false,
       planIsDisabled512Gb: false,
       planIsSmallerThanUsage: false,
-      planIsTooSmall: false,
     });
     renderWithTheme(
       <PlanInformation

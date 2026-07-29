@@ -6,10 +6,9 @@ import {
 } from '@akamai/cds-components/react';
 import * as React from 'react';
 
-import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
-import { CopyTooltip } from 'src/features/IAM/Shared/CopyTooltip/CopyTooltip';
-import { Paper } from 'src/features/IAM/Shared/Paper/Paper';
-
+import { usePermissions } from '../../../hooks/usePermissions';
+import { CopyTooltip } from '../../../Shared/CopyTooltip/CopyTooltip';
+import { Paper } from '../../../Shared/Paper/Paper';
 import {
   ADD_CERTIFICATE_PERMISSION_ERROR,
   IAM_SSO_IDP_PENDO_IDS,

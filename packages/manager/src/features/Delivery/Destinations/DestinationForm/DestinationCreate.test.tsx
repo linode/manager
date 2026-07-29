@@ -1,5 +1,3 @@
-// Please break down this test file into smaller files, it's too large and difficult to maintain.
-// It is responsible for flakes and pipeline issues. Please align your testing techniques with the rest of the codebase.
 import { destinationType } from '@linode/api-v4';
 import { profileFactory } from '@linode/utilities';
 import { screen, waitFor } from '@testing-library/react';
@@ -7,60 +5,55 @@ import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { accountFactory, objectStorageBucketFactory } from 'src/factories';
+import { accountFactory } from 'src/factories';
+import {
+  fillOutAkamaiObjectStorageDestinationFields,
+  mockObjectStorageBuckets,
+  mockScrollIntoView,
+} from 'src/features/Delivery/Shared/testHelpers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
 import { DestinationCreate } from './DestinationCreate';
 
 import type { CreateDestinationPayload } from '@linode/api-v4';
-
-const mockBuckets = [
-  objectStorageBucketFactory.build({
-    hostname: 'bucket-with-hostname.us-east-1.linodeobjects.com',
-    label: 'bucket-with-hostname',
-    region: 'us-east',
-  }),
-  objectStorageBucketFactory.build({
-    hostname: 'bucket-with-s3-endpoint.eu-central-1.linodeobjects.com',
-    label: 'bucket-with-s3-endpoint',
-    region: 'eu-central',
-    s3_endpoint: 'eu-central-1.linodeobjects.com',
-  }),
-];
+import type { Flags } from 'src/featureFlags';
 
 const queryMocks = vi.hoisted(() => ({
   useObjectStorageBuckets: vi.fn().mockReturnValue({
     data: undefined,
     error: null,
+    isLoading: true,
     isPending: true,
   }),
 }));
 
-vi.mock('src/queries/object-storage/queries', async () => {
-  const actual = await vi.importActual('src/queries/object-storage/queries');
-  return {
-    ...actual,
+vi.mock(
+  'src/features/ObjectStorage/Buckets/hooks/useObjectStorageBuckets',
+  () => ({
     useObjectStorageBuckets: queryMocks.useObjectStorageBuckets,
-  };
-});
+  })
+);
 
 const user = userEvent.setup({ delay: null });
 
 const testConnectionButtonText = 'Test Connection';
 const createDestinationButtonText = 'Create Destination';
-const addCustomHeaderButtonText = 'Add Custom Header';
 
-describe.skip('DestinationCreate', () => {
+describe('DestinationCreate', () => {
   beforeEach(() => {
+    mockScrollIntoView();
+
     queryMocks.useObjectStorageBuckets.mockReturnValue({
-      data: { buckets: mockBuckets },
+      data: mockObjectStorageBuckets,
       error: null,
+      isLoading: false,
       isPending: false,
     });
   });
 
   const renderDestinationCreate = (
+    flags?: Partial<Flags>,
     defaultValues?: Partial<CreateDestinationPayload>
   ) => {
     renderWithThemeAndHookFormContext({
@@ -71,7 +64,15 @@ describe.skip('DestinationCreate', () => {
           ...defaultValues,
         },
       },
+      options: { flags },
     });
+  };
+
+  const selectCustomHttpsDestinationType = async () => {
+    const destinationTypeAutocomplete =
+      screen.getByLabelText('Destination Type');
+    await user.click(destinationTypeAutocomplete);
+    await user.click(await screen.findByText('Custom HTTPS'));
   };
 
   it('should render enabled Destination Type input with Akamai Object Storage selected and allow to select Custom HTTPS', async () => {
@@ -83,87 +84,12 @@ describe.skip('DestinationCreate', () => {
     expect(destinationTypeAutocomplete).toBeEnabled();
     expect(destinationTypeAutocomplete).toHaveValue('Akamai Object Storage');
 
-    await user.click(destinationTypeAutocomplete);
-    const customHttpsOption = await screen.findByText('Custom HTTPS');
-    await user.click(customHttpsOption);
+    await selectCustomHttpsDestinationType();
 
     expect(destinationTypeAutocomplete).toHaveValue('Custom HTTPS');
   });
 
   describe('and Destination Type is set to Akamai Object Storage', () => {
-    it('should render Destination Name input and allow to type text', async () => {
-      renderDestinationCreate();
-
-      const destinationNameInput = screen.getByLabelText('Destination Name');
-      await user.type(destinationNameInput, 'Test Destination');
-
-      expect(destinationNameInput).toHaveValue('Test Destination');
-    });
-
-    it('should render Endpoint input as disabled in bucket_from_account mode', () => {
-      renderDestinationCreate();
-
-      const endpointInput = screen.getByLabelText('Endpoint');
-      expect(endpointInput).toBeDisabled();
-    });
-
-    it('should render Endpoint input and allow to type text in manual mode', async () => {
-      renderDestinationCreate();
-
-      const manualRadio = screen.getByLabelText(
-        'Enter Bucket details manually'
-      );
-      await user.click(manualRadio);
-
-      const endpointInput = screen.getByLabelText('Endpoint');
-      await user.type(endpointInput, 'test-host.com');
-
-      expect(endpointInput).toHaveValue('test-host.com');
-    });
-
-    it('should render Bucket input and allow to type text in manual mode', async () => {
-      renderDestinationCreate();
-
-      const manualRadio = screen.getByLabelText(
-        'Enter Bucket details manually'
-      );
-      await user.click(manualRadio);
-
-      const bucketInput = screen.getByLabelText('Bucket');
-      await user.type(bucketInput, 'test-bucket');
-
-      expect(bucketInput).toHaveValue('test-bucket');
-    });
-
-    it('should render Access Key input and allow to type text', async () => {
-      renderDestinationCreate();
-
-      const accessKeyIdInput = screen.getByLabelText('Access Key');
-      await user.type(accessKeyIdInput, 'test-access-key');
-
-      expect(accessKeyIdInput).toHaveValue('test-access-key');
-    });
-
-    it('should render Secret Key input and allow to type text', async () => {
-      renderDestinationCreate();
-
-      const secretAccessKeyInput = screen.getByLabelText('Secret Key');
-      await user.type(secretAccessKeyInput, 'test-secret-key');
-
-      expect(secretAccessKeyInput).toHaveValue('test-secret-key');
-    });
-
-    it('should render Log Path Prefix input and allow to type text', async () => {
-      renderDestinationCreate();
-
-      const logPathPrefixInput = screen.getByLabelText(
-        'Log Path Prefix (optional)'
-      );
-      await user.type(logPathPrefixInput, 'test-path');
-
-      expect(logPathPrefixInput).toHaveValue('test-path');
-    });
-
     it('should render Sample Destination Object Name and change its value according to Log Path Prefix input', async () => {
       const accountEuuid = 'XYZ-123';
       const [month, day, year] = new Date().toLocaleDateString().split('/');
@@ -177,132 +103,75 @@ describe.skip('DestinationCreate', () => {
 
       renderDestinationCreate();
 
-      let samplePath;
-      await waitFor(() => {
-        samplePath = screen.getByText(
-          `/audit_logs/com.akamai.audit/${accountEuuid}/${year}/${month}/${day}/akamai_log-000166-1756015362-319597-login.gz`
-        );
-        expect(samplePath).toBeInTheDocument();
-      });
-      // Type the test value inside the input
+      const initialPath = `/audit_logs/com.akamai.audit/${accountEuuid}/${year}/${month}/${day}/akamai_log-000166-1756015362-319597-login.gz`;
+      await screen.findByText(initialPath);
+
       const logPathPrefixInput = screen.getByLabelText(
         'Log Path Prefix (optional)'
       );
 
       await user.type(logPathPrefixInput, 'test');
-      // sample path should be created based on *log path* value
-      expect(samplePath!.textContent).toEqual(
+      await screen.findByText(
         '/test/akamai_log-000166-1756015362-319597-login.gz'
       );
 
       await user.clear(logPathPrefixInput);
       await user.type(logPathPrefixInput, '/test');
-      expect(samplePath!.textContent).toEqual(
+      await screen.findByText(
         '/test/akamai_log-000166-1756015362-319597-login.gz'
       );
 
       await user.clear(logPathPrefixInput);
       await user.type(logPathPrefixInput, '/');
-      expect(samplePath!.textContent).toEqual(
-        '/akamai_log-000166-1756015362-319597-login.gz'
-      );
+      await screen.findByText('/akamai_log-000166-1756015362-319597-login.gz');
     });
 
     describe('Bucket selection behavior', () => {
-      it('should default to "Select Bucket associated with the account" radio in create mode', () => {
+      const manualRadioLabel = 'Enter Bucket details manually';
+      const bucketFromAccountRadioLabel =
+        'Select Bucket associated with the account';
+
+      it('should default to "Select Bucket associated with the account" radio with a disabled Endpoint field', () => {
         renderDestinationCreate();
 
-        const bucketFromAccountRadio = screen.getByLabelText(
-          'Select Bucket associated with the account'
-        );
-        expect(bucketFromAccountRadio).toBeChecked();
-      });
-
-      it('should disable the Endpoint field when "Select Bucket associated with the account" is selected', () => {
-        renderDestinationCreate();
-
-        const endpointInput = screen.getByLabelText('Endpoint');
-        expect(endpointInput).toBeDisabled();
+        expect(
+          screen.getByLabelText(bucketFromAccountRadioLabel)
+        ).toBeChecked();
+        expect(screen.getByLabelText('Endpoint')).toBeDisabled();
       });
 
       it('should enable the Endpoint field when "Enter Bucket details manually" is selected', async () => {
         renderDestinationCreate();
 
-        const manualRadio = screen.getByLabelText(
-          'Enter Bucket details manually'
-        );
-        await user.click(manualRadio);
+        await user.click(screen.getByLabelText(manualRadioLabel));
 
-        const endpointInput = screen.getByLabelText('Endpoint');
-        expect(endpointInput).toBeEnabled();
+        expect(screen.getByLabelText('Endpoint')).toBeEnabled();
       });
 
-      it('should clear Bucket and Endpoint when switching to "Select Bucket associated with the account"', async () => {
+      it('should clear Bucket and Endpoint when switching back to "Select Bucket associated with the account"', async () => {
         renderDestinationCreate();
 
-        // Switch to manual mode and fill in values
-        const manualRadio = screen.getByLabelText(
-          'Enter Bucket details manually'
-        );
-        await user.click(manualRadio);
+        await user.click(screen.getByLabelText(manualRadioLabel));
 
-        const bucketInput = screen.getByLabelText('Bucket');
-        await user.type(bucketInput, 'my-manual-bucket');
-        expect(bucketInput).toHaveValue('my-manual-bucket');
+        await user.type(screen.getByLabelText('Bucket'), 'my-manual-bucket');
+        await user.type(screen.getByLabelText('Endpoint'), 'my-endpoint.com');
 
-        const endpointInput = screen.getByLabelText('Endpoint');
-        await user.type(endpointInput, 'my-endpoint.com');
-        expect(endpointInput).toHaveValue('my-endpoint.com');
+        await user.click(screen.getByLabelText(bucketFromAccountRadioLabel));
 
-        // Switch back to bucket_from_account
-        const bucketFromAccountRadio = screen.getByLabelText(
-          'Select Bucket associated with the account'
-        );
-        await user.click(bucketFromAccountRadio);
-
-        // Both fields should be cleared
-        const bucketAutocomplete = screen.getByLabelText('Bucket');
-        expect(bucketAutocomplete).toHaveValue('');
+        expect(screen.getByLabelText('Bucket')).toHaveValue('');
         expect(screen.getByLabelText('Endpoint')).toHaveValue('');
       });
 
-      it('should set Bucket and Endpoint from hostname when selecting a bucket without s3_endpoint', async () => {
+      it('should set Bucket and Endpoint from s3_endpoint when selecting a bucket', async () => {
         renderDestinationCreate();
 
-        // Open the Bucket Autocomplete and select a bucket with only hostname
         const bucketAutocomplete = screen.getByLabelText('Bucket');
         await user.click(bucketAutocomplete);
+        await user.click(await screen.findByText('bucket-with-s3-endpoint'));
 
-        const bucketOption = await screen.findByText('bucket-with-hostname');
-        await user.click(bucketOption);
-
-        // Bucket should display the selected bucket label
-        await waitFor(() => {
-          expect(bucketAutocomplete).toHaveValue('bucket-with-hostname');
-        });
-
-        // Endpoint should be auto-filled with the bucket's hostname
-        expect(screen.getByLabelText('Endpoint')).toHaveValue(
-          'us-east-1.linodeobjects.com'
-        );
-      });
-
-      it('should set Bucket and Endpoint from s3_endpoint when selecting a bucket with s3_endpoint', async () => {
-        renderDestinationCreate();
-
-        // Open the Bucket Autocomplete and select a bucket with s3_endpoint
-        const bucketAutocomplete = screen.getByLabelText('Bucket');
-        await user.click(bucketAutocomplete);
-
-        const bucketOption = await screen.findByText('bucket-with-s3-endpoint');
-        await user.click(bucketOption);
-
-        // Bucket should display the selected bucket label
         await waitFor(() => {
           expect(bucketAutocomplete).toHaveValue('bucket-with-s3-endpoint');
         });
-
-        // Endpoint should be auto-filled with the bucket's s3_endpoint (takes priority over hostname)
         expect(screen.getByLabelText('Endpoint')).toHaveValue(
           'eu-central-1.linodeobjects.com'
         );
@@ -311,412 +180,276 @@ describe.skip('DestinationCreate', () => {
 
     describe('given Test Connection and Create Destination buttons', () => {
       const fillOutAkamaiObjectStorageForm = async () => {
-        const destinationNameInput = screen.getByLabelText('Destination Name');
-        await user.type(destinationNameInput, 'Test');
-
-        // Switch to manual bucket entry to allow typing
-        const manualRadio = screen.getByLabelText(
-          'Enter Bucket details manually'
-        );
-        await user.click(manualRadio);
-
-        const endpointInput = screen.getByLabelText('Endpoint');
-        await user.type(endpointInput, 'test');
-        const bucketInput = screen.getByLabelText('Bucket');
-        await user.type(bucketInput, 'test');
-        const accessKeyIDInput = screen.getByLabelText('Access Key');
-        await user.type(accessKeyIDInput, 'Test');
-        const secretAccessKeyInput = screen.getByLabelText('Secret Key');
-        await user.type(secretAccessKeyInput, 'Test');
-        const logPathPrefixInput = screen.getByLabelText(
-          'Log Path Prefix (optional)'
-        );
-        await user.type(logPathPrefixInput, 'Test');
+        await user.type(screen.getByLabelText('Destination Name'), 'Test');
+        await fillOutAkamaiObjectStorageDestinationFields(user);
       };
 
-      describe('when form properly filled out and Test Connection button clicked and connection verified positively', () => {
+      it('should enable Create Destination button after a positive verification and perform the create call', async () => {
         const createDestinationSpy = vi.fn();
         const verifyDestinationSpy = vi.fn();
 
-        it("should enable Create Destination button and perform proper call when it's clicked", async () => {
-          server.use(
-            http.post('*/monitor/streams/destinations/verify', () => {
-              verifyDestinationSpy();
-              return HttpResponse.json({});
-            }),
-            http.post('*/monitor/streams/destinations', () => {
-              createDestinationSpy();
-              return HttpResponse.json({});
-            }),
-            http.get('*/profile', () => {
-              return HttpResponse.json(profileFactory.build());
-            })
-          );
+        server.use(
+          http.post('*/monitor/streams/destinations/verify', () => {
+            verifyDestinationSpy();
+            return HttpResponse.json({});
+          }),
+          http.post('*/monitor/streams/destinations', () => {
+            createDestinationSpy();
+            return HttpResponse.json({});
+          }),
+          http.get('*/profile', () => {
+            return HttpResponse.json(profileFactory.build());
+          })
+        );
 
-          renderDestinationCreate();
+        renderDestinationCreate();
 
-          const testConnectionButton = screen.getByRole('button', {
-            name: testConnectionButtonText,
-          });
-          const createDestinationButton = screen.getByRole('button', {
-            name: createDestinationButtonText,
-          });
-
-          await fillOutAkamaiObjectStorageForm();
-          expect(createDestinationButton).toBeDisabled();
-          await user.click(testConnectionButton);
-          expect(verifyDestinationSpy).toHaveBeenCalled();
-
-          await waitFor(() => {
-            expect(createDestinationButton).toBeEnabled();
-          });
-
-          await user.click(createDestinationButton);
-          expect(createDestinationSpy).toHaveBeenCalled();
+        const testConnectionButton = screen.getByRole('button', {
+          name: testConnectionButtonText,
         });
+        const createDestinationButton = screen.getByRole('button', {
+          name: createDestinationButtonText,
+        });
+
+        await fillOutAkamaiObjectStorageForm();
+        expect(createDestinationButton).toBeDisabled();
+
+        await user.click(testConnectionButton);
+        await waitFor(() => {
+          expect(verifyDestinationSpy).toHaveBeenCalled();
+        });
+
+        await waitFor(() => {
+          expect(createDestinationButton).toBeEnabled();
+        });
+
+        await user.click(createDestinationButton);
+        expect(createDestinationSpy).toHaveBeenCalled();
       });
 
-      describe('when form properly filled out and Test Connection button clicked and connection verified negatively', () => {
+      it('should keep Create Destination button disabled after a negative verification', async () => {
         const verifyDestinationSpy = vi.fn();
 
-        it('should not enable Create Destination button', async () => {
-          server.use(
-            http.post('*/monitor/streams/destinations/verify', () => {
-              verifyDestinationSpy();
-              return HttpResponse.error();
-            }),
-            http.get('*/profile', () => {
-              return HttpResponse.json(profileFactory.build());
-            })
-          );
+        server.use(
+          http.post('*/monitor/streams/destinations/verify', () => {
+            verifyDestinationSpy();
+            return HttpResponse.error();
+          }),
+          http.get('*/profile', () => {
+            return HttpResponse.json(profileFactory.build());
+          })
+        );
 
-          renderDestinationCreate();
+        renderDestinationCreate();
 
-          const testConnectionButton = screen.getByRole('button', {
-            name: testConnectionButtonText,
-          });
-          const createDestinationButton = screen.getByRole('button', {
-            name: createDestinationButtonText,
-          });
-
-          await fillOutAkamaiObjectStorageForm();
-          expect(createDestinationButton).toBeDisabled();
-          await user.click(testConnectionButton);
-          expect(verifyDestinationSpy).toHaveBeenCalled();
-          expect(createDestinationButton).toBeDisabled();
+        const testConnectionButton = screen.getByRole('button', {
+          name: testConnectionButtonText,
         });
+        const createDestinationButton = screen.getByRole('button', {
+          name: createDestinationButtonText,
+        });
+
+        await fillOutAkamaiObjectStorageForm();
+        expect(createDestinationButton).toBeDisabled();
+
+        await user.click(testConnectionButton);
+        await waitFor(() => {
+          expect(verifyDestinationSpy).toHaveBeenCalled();
+        });
+
+        expect(createDestinationButton).toBeDisabled();
       });
     });
   });
 
-  describe('when customHttpsEnabled feature flag is set to true', () => {
-    describe('and Destination Type is set to Custom HTTPS', () => {
-      const selectCustomHttpsDestinationType = async () => {
-        renderDestinationCreate();
+  describe('and Destination Type is set to Custom HTTPS', () => {
+    const fillOutCustomHttpsForm = async () => {
+      await selectCustomHttpsDestinationType();
+      await user.type(screen.getByLabelText('Destination Name'), 'Test');
+      await user.type(
+        screen.getByLabelText('Endpoint URL'),
+        'https://test-endpoint.com'
+      );
+    };
 
-        const destinationTypeAutocomplete =
-          screen.getByLabelText('Destination Type');
-        await user.click(destinationTypeAutocomplete);
-        const customHttpsOption = await screen.findByText('Custom HTTPS');
-        await user.click(customHttpsOption);
-      };
+    it('should enable Create Destination button after a positive verification and perform the create call', async () => {
+      const createDestinationSpy = vi.fn();
+      const verifyDestinationSpy = vi.fn();
 
-      it('should render Destination Name input and allow to type text', async () => {
-        await selectCustomHttpsDestinationType();
+      server.use(
+        http.post('*/monitor/streams/destinations/verify', () => {
+          verifyDestinationSpy();
+          return HttpResponse.json({});
+        }),
+        http.post('*/monitor/streams/destinations', () => {
+          createDestinationSpy();
+          return HttpResponse.json({});
+        }),
+        http.get('*/profile', () => {
+          return HttpResponse.json(profileFactory.build());
+        })
+      );
 
-        const destinationNameInput = screen.getByLabelText('Destination Name');
-        await user.type(destinationNameInput, 'Test Destination');
+      renderDestinationCreate();
 
-        expect(destinationNameInput).toHaveValue('Test Destination');
+      const testConnectionButton = screen.getByRole('button', {
+        name: testConnectionButtonText,
+      });
+      const createDestinationButton = screen.getByRole('button', {
+        name: createDestinationButtonText,
       });
 
-      it('should render Authentication autocomplete with None selected and allow to select Basic', async () => {
+      await fillOutCustomHttpsForm();
+      expect(createDestinationButton).toBeDisabled();
+
+      await user.click(testConnectionButton);
+      await waitFor(() => {
+        expect(verifyDestinationSpy).toHaveBeenCalled();
+      });
+
+      await waitFor(() => {
+        expect(createDestinationButton).toBeEnabled();
+      });
+
+      await user.click(createDestinationButton);
+      expect(createDestinationSpy).toHaveBeenCalled();
+    });
+
+    it('should keep Create Destination button disabled after a negative verification', async () => {
+      const verifyDestinationSpy = vi.fn();
+
+      server.use(
+        http.post('*/monitor/streams/destinations/verify', () => {
+          verifyDestinationSpy();
+          return HttpResponse.error();
+        }),
+        http.get('*/profile', () => {
+          return HttpResponse.json(profileFactory.build());
+        })
+      );
+
+      renderDestinationCreate();
+
+      const testConnectionButton = screen.getByRole('button', {
+        name: testConnectionButtonText,
+      });
+      const createDestinationButton = screen.getByRole('button', {
+        name: createDestinationButtonText,
+      });
+
+      await fillOutCustomHttpsForm();
+      expect(createDestinationButton).toBeDisabled();
+
+      await user.click(testConnectionButton);
+      await waitFor(() => {
+        expect(verifyDestinationSpy).toHaveBeenCalled();
+      });
+
+      expect(createDestinationButton).toBeDisabled();
+    });
+
+    it('should not have available Bearer Token authorization', async () => {
+      renderDestinationCreate();
+      await selectCustomHttpsDestinationType();
+
+      const authenticationAutocomplete = screen.getByLabelText(
+        'Authentication Type'
+      );
+      await user.click(authenticationAutocomplete);
+
+      expect(screen.queryByText('Bearer Token')).not.toBeInTheDocument();
+    });
+
+    describe('and bearerTokenAuthEnabled feature flag is set to true', () => {
+      const flags = {
+        aclpLogs: {
+          bearerTokenAuthEnabled: true,
+        },
+      };
+      let authenticationAutocomplete: HTMLElement;
+      let testConnectionButton: HTMLElement;
+      let createDestinationButton: HTMLElement;
+
+      beforeEach(async () => {
+        renderDestinationCreate(flags);
         await selectCustomHttpsDestinationType();
 
-        const authenticationAutocomplete = screen.getByLabelText(
+        authenticationAutocomplete = screen.getByLabelText(
           'Authentication Type'
         );
+        testConnectionButton = screen.getByRole('button', {
+          name: testConnectionButtonText,
+        });
+        createDestinationButton = screen.getByRole('button', {
+          name: createDestinationButtonText,
+        });
+      });
 
+      it('should render Authentication autocomplete with None selected and allow to select Bearer Token', async () => {
         expect(authenticationAutocomplete).toHaveValue('None');
 
         await user.click(authenticationAutocomplete);
-        const basicAuthentication = await screen.findByText('Basic');
-        await user.click(basicAuthentication);
+        const bearerTokenAuthentication =
+          await screen.findByText('Bearer Token');
+        await user.click(bearerTokenAuthentication);
 
-        expect(authenticationAutocomplete).toHaveValue('Basic');
+        expect(authenticationAutocomplete).toHaveValue('Bearer Token');
       });
 
-      describe('and Authentication is set to Basic', () => {
-        it('should render Username input and allow to type text', async () => {
-          await selectCustomHttpsDestinationType();
-
-          const authenticationAutocomplete = screen.getByLabelText(
-            'Authentication Type'
-          );
+      describe('and Bearer Token authorization is set', () => {
+        beforeEach(async () => {
           await user.click(authenticationAutocomplete);
-          const basicAuthentication = await screen.findByText('Basic');
-          await user.click(basicAuthentication);
-
-          const usernameInput = screen.getByLabelText('Username');
-          await user.type(usernameInput, 'test-user');
-
-          expect(usernameInput).toHaveValue('test-user');
+          const bearerTokenAuthentication =
+            await screen.findByText('Bearer Token');
+          await user.click(bearerTokenAuthentication);
         });
 
-        it('should render Password input and allow to type text', async () => {
-          await selectCustomHttpsDestinationType();
+        it('should render Bearer Token input and allow to type text and validate as required', async () => {
+          expect(createDestinationButton).toBeDisabled();
 
-          const authenticationAutocomplete = screen.getByLabelText(
-            'Authentication Type'
+          await user.click(testConnectionButton);
+
+          expect(
+            await screen.findByText(
+              'Bearer Token is required for Bearer Token authentication.'
+            )
+          ).toBeInTheDocument();
+
+          const bearerTokenInput = screen.getByLabelText('Bearer Token');
+          await user.type(bearerTokenInput, 'exampleTokenString');
+
+          expect(bearerTokenInput).toHaveValue('exampleTokenString');
+
+          await user.click(testConnectionButton);
+
+          expect(
+            await screen.queryByText(
+              'Bearer Token is required for Bearer Token authentication.'
+            )
+          ).not.toBeInTheDocument();
+        });
+
+        it('should render Header Name input and allow to type text', async () => {
+          const headerNameInput = screen.getByLabelText(
+            'Header Name (optional)'
           );
-          await user.click(authenticationAutocomplete);
-          const basicAuthentication = await screen.findByText('Basic');
-          await user.click(basicAuthentication);
+          await user.type(headerNameInput, 'X-Auth');
 
-          const passwordInput = screen.getByLabelText('Password');
-          await user.type(passwordInput, 'test-password');
-
-          expect(passwordInput).toHaveValue('test-password');
-        });
-      });
-
-      it('should render Endpoint URL input and allow to type text', async () => {
-        await selectCustomHttpsDestinationType();
-
-        const endpointUrlInput = screen.getByLabelText('Endpoint URL');
-        await user.type(endpointUrlInput, 'https://test-endpoint.com');
-
-        expect(endpointUrlInput).toHaveValue('https://test-endpoint.com');
-      });
-
-      describe('Client Certificate Authentication fields', () => {
-        it('should render TLS Hostname input and allow to type text', async () => {
-          await selectCustomHttpsDestinationType();
-
-          const tlsHostnameInput = screen.getByLabelText('TLS Hostname');
-          await user.type(tlsHostnameInput, 'test-tls-hostname');
-
-          expect(tlsHostnameInput).toHaveValue('test-tls-hostname');
-        });
-
-        it('should render CA Certificate input and allow to type text', async () => {
-          await selectCustomHttpsDestinationType();
-
-          const caCertificateInput = screen.getByLabelText('CA Certificate');
-          await user.type(caCertificateInput, 'test-ca-certificate');
-
-          expect(caCertificateInput).toHaveValue('test-ca-certificate');
-        });
-
-        it('should render Client Certificate input and allow to type text', async () => {
-          await selectCustomHttpsDestinationType();
-
-          const clientCertificateInput =
-            screen.getByLabelText('Client Certificate');
-          await user.type(clientCertificateInput, 'test-client-certificate');
-
-          expect(clientCertificateInput).toHaveValue('test-client-certificate');
-        });
-
-        it('should render Client Private Key input and allow to type text', async () => {
-          await selectCustomHttpsDestinationType();
-
-          const clientKeyInput = screen.getByLabelText('Client Private Key');
-          await user.type(clientKeyInput, 'test-client-key');
-
-          expect(clientKeyInput).toHaveValue('test-client-key');
-        });
-      });
-
-      describe('HTTPS Headers fields', () => {
-        it('should render Content Type autocomplete and allow to select application/json', async () => {
-          await selectCustomHttpsDestinationType();
-
-          const contentTypeAutocomplete = screen.getByLabelText('Content Type');
-          expect(contentTypeAutocomplete).toHaveValue('');
-
-          await user.click(contentTypeAutocomplete);
-          const jsonOption = await screen.findByText('application/json');
-          await user.click(jsonOption);
-
-          expect(contentTypeAutocomplete).toHaveValue('application/json');
-        });
-
-        it('should render Content Type autocomplete and allow to select application/json; charset=utf-8', async () => {
-          await selectCustomHttpsDestinationType();
-
-          const contentTypeAutocomplete = screen.getByLabelText('Content Type');
-
-          await user.click(contentTypeAutocomplete);
-          const jsonUtf8Option = await screen.findByText(
-            'application/json; charset=utf-8'
+          expect(headerNameInput).toHaveAttribute(
+            'placeholder',
+            'Authorization'
           );
-          await user.click(jsonUtf8Option);
+          expect(headerNameInput).toHaveValue('X-Auth');
+        });
 
-          expect(contentTypeAutocomplete).toHaveValue(
-            'application/json; charset=utf-8'
+        it('should render Token Prefix input and allow to type text', async () => {
+          const tokenPrefixInput = screen.getByLabelText(
+            'Token Prefix (optional)'
           );
-        });
+          await user.type(tokenPrefixInput, 'testBearer');
 
-        describe('Custom Headers', () => {
-          it('should add a custom header when clicking Add Custom Header button and allow typing in Custom Header fields', async () => {
-            await selectCustomHttpsDestinationType();
-
-            const addCustomHeaderButton = screen.getByRole('button', {
-              name: addCustomHeaderButtonText,
-            });
-            await user.click(addCustomHeaderButton);
-
-            const headerNameInput = screen.getByLabelText('Name');
-            expect(headerNameInput).toBeInTheDocument();
-
-            const headerValueInput = screen.getByLabelText('Value');
-            expect(headerValueInput).toBeInTheDocument();
-
-            await user.type(headerNameInput, 'X-Custom-Header');
-            expect(headerNameInput).toHaveValue('X-Custom-Header');
-
-            await user.type(headerValueInput, 'custom-value');
-            expect(headerValueInput).toHaveValue('custom-value');
-          });
-
-          it('should update custom header title when Name is typed', async () => {
-            await selectCustomHttpsDestinationType();
-
-            const addCustomHeaderButton = screen.getByRole('button', {
-              name: addCustomHeaderButtonText,
-            });
-            await user.click(addCustomHeaderButton);
-
-            screen.getByText('Custom Header 1');
-
-            const headerNameInput = screen.getByLabelText('Name');
-            await user.type(headerNameInput, 'Authorization');
-
-            expect(
-              screen.queryByText('Custom Header 1')
-            ).not.toBeInTheDocument();
-            screen.getByText('Authorization');
-          });
-
-          it('should remove custom header when clicking close button', async () => {
-            await selectCustomHttpsDestinationType();
-
-            const addCustomHeaderButton = screen.getByRole('button', {
-              name: addCustomHeaderButtonText,
-            });
-            await user.click(addCustomHeaderButton);
-
-            const headerNameInput = screen.getByLabelText('Name');
-            expect(headerNameInput).toBeInTheDocument();
-
-            const closeButton = screen.getByRole('button', { name: '' });
-            await user.click(closeButton);
-
-            expect(screen.queryByLabelText('Name')).not.toBeInTheDocument();
-          });
-
-          it('should allow adding multiple custom headers', async () => {
-            await selectCustomHttpsDestinationType();
-
-            const addCustomHeaderButton = screen.getByRole('button', {
-              name: addCustomHeaderButtonText,
-            });
-
-            await user.click(addCustomHeaderButton);
-            screen.getByText('Custom Header 1');
-
-            await user.click(addCustomHeaderButton);
-            expect(screen.getByText('Custom Header 2')).toBeInTheDocument();
-          });
-        });
-      });
-
-      describe('given Test Connection and Create Destination buttons', () => {
-        const fillOutCustomHttpsForm = async () => {
-          const destinationTypeAutocomplete =
-            screen.getByLabelText('Destination Type');
-          await user.click(destinationTypeAutocomplete);
-          const customHttpsOption = await screen.findByText('Custom HTTPS');
-          await user.click(customHttpsOption);
-          const destinationNameInput =
-            screen.getByLabelText('Destination Name');
-          await user.type(destinationNameInput, 'Test');
-          const endpointUrlInput = screen.getByLabelText('Endpoint URL');
-          await user.type(endpointUrlInput, 'https://test-endpoint.com');
-        };
-
-        describe('when form properly filled out and Test Connection button clicked and connection verified positively', () => {
-          const createDestinationSpy = vi.fn();
-          const verifyDestinationSpy = vi.fn();
-
-          it("should enable Create Destination button and perform proper call when it's clicked", async () => {
-            server.use(
-              http.post('*/monitor/streams/destinations/verify', () => {
-                verifyDestinationSpy();
-                return HttpResponse.json({});
-              }),
-              http.post('*/monitor/streams/destinations', () => {
-                createDestinationSpy();
-                return HttpResponse.json({});
-              }),
-              http.get('*/profile', () => {
-                return HttpResponse.json(profileFactory.build());
-              })
-            );
-
-            renderDestinationCreate();
-
-            const testConnectionButton = screen.getByRole('button', {
-              name: testConnectionButtonText,
-            });
-            const createDestinationButton = screen.getByRole('button', {
-              name: createDestinationButtonText,
-            });
-
-            await fillOutCustomHttpsForm();
-            expect(createDestinationButton).toBeDisabled();
-            await user.click(testConnectionButton);
-            expect(verifyDestinationSpy).toHaveBeenCalled();
-
-            await waitFor(() => {
-              expect(createDestinationButton).toBeEnabled();
-            });
-
-            await user.click(createDestinationButton);
-            expect(createDestinationSpy).toHaveBeenCalled();
-          });
-        });
-
-        describe('when form properly filled out and Test Connection button clicked and connection verified negatively', () => {
-          const verifyDestinationSpy = vi.fn();
-
-          it('should not enable Create Destination button', async () => {
-            server.use(
-              http.post('*/monitor/streams/destinations/verify', () => {
-                verifyDestinationSpy();
-                return HttpResponse.error();
-              }),
-              http.get('*/profile', () => {
-                return HttpResponse.json(profileFactory.build());
-              })
-            );
-
-            renderDestinationCreate();
-
-            const testConnectionButton = screen.getByRole('button', {
-              name: testConnectionButtonText,
-            });
-            const createDestinationButton = screen.getByRole('button', {
-              name: createDestinationButtonText,
-            });
-
-            await fillOutCustomHttpsForm();
-            expect(createDestinationButton).toBeDisabled();
-            await user.click(testConnectionButton);
-            expect(verifyDestinationSpy).toHaveBeenCalled();
-            expect(createDestinationButton).toBeDisabled();
-          });
+          expect(tokenPrefixInput).toHaveAttribute('placeholder', 'Bearer');
+          expect(tokenPrefixInput).toHaveValue('testBearer');
         });
       });
     });

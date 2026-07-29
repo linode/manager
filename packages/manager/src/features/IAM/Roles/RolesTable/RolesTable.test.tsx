@@ -14,16 +14,16 @@ const queryMocks = vi.hoisted(() => ({
   useSearch: vi.fn(),
 }));
 
-vi.mock('src/features/IAM/Shared/utilities', async () => {
-  const actual = await vi.importActual('src/features/IAM/Shared/utilities');
+vi.mock('../../Shared/utilities', async () => {
+  const actual = await vi.importActual('../../Shared/utilities');
   return {
     ...actual,
     mapAccountPermissionsToRoles: vi.fn(),
   };
 });
 
-vi.mock('src/features/IAM/hooks/usePermissions', async () => {
-  const actual = await vi.importActual('src/features/IAM/hooks/usePermissions');
+vi.mock('../../hooks/usePermissions', async () => {
+  const actual = await vi.importActual('../../hooks/usePermissions');
   return {
     ...actual,
     usePermissions: vi.fn().mockReturnValue({}),

@@ -20,13 +20,12 @@ import {
 import * as React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 
-import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
-import { CircleProgress } from 'src/features/IAM/Shared/CircleProgress/CircleProgress';
-import { Divider } from 'src/features/IAM/Shared/Divider/Divider';
-import { ErrorState } from 'src/features/IAM/Shared/ErrorState/ErrorState';
-import { Paper } from 'src/features/IAM/Shared/Paper/Paper';
-
+import { usePermissions } from '../../../hooks/usePermissions';
 import { Box } from '../../../Shared/Box/Box';
+import { CircleProgress } from '../../../Shared/CircleProgress/CircleProgress';
+import { Divider } from '../../../Shared/Divider/Divider';
+import { ErrorState } from '../../../Shared/ErrorState/ErrorState';
+import { Paper } from '../../../Shared/Paper/Paper';
 import { IAM_SSO_ENFORCE_PENDO_IDS } from '../../constants';
 import { getSummaryStatus, hasNoValidCertificates } from '../utilities';
 import { ActivationStatus } from './ActivationStatus';

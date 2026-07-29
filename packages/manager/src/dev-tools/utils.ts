@@ -13,6 +13,7 @@ import {
   LOCAL_STORAGE_PROFILE_FORM_DATA_KEY,
   LOCAL_STORAGE_SEEDERS_KEY,
   LOCAL_STORAGE_SEEDS_COUNT_MAP_KEY,
+  LOCAL_STORAGE_TFA_ENFORCEMENT_FORM_DATA_KEY,
   LOCAL_STORAGE_USER_ACCOUNT_PERMISSIONS_FORM_DATA_KEY,
   LOCAL_STORAGE_USER_ENTITY_PERMISSIONS_FORM_DATA_KEY,
 } from './constants';
@@ -26,6 +27,7 @@ import type {
   PermissionType,
   Profile,
 } from '@linode/api-v4';
+import type { TfaEnforcementMockData } from 'src/mocks/presets/extra/account/tfaEnforcement';
 import type {
   MockPresetBaselineId,
   MockPresetExtraId,
@@ -181,6 +183,32 @@ export const saveCustomAccountData = (data: Account | null): void => {
       LOCAL_STORAGE_ACCOUNT_FORM_DATA_KEY,
       JSON.stringify(data)
     );
+  }
+};
+
+/**
+ * Retrieves 2FA enforcement mock data from local storage.
+ */
+export const getTfaEnforcementData = (): null | TfaEnforcementMockData => {
+  const data = localStorage.getItem(
+    LOCAL_STORAGE_TFA_ENFORCEMENT_FORM_DATA_KEY
+  );
+  return data ? JSON.parse(data) : null;
+};
+
+/**
+ * Saves 2FA enforcement mock data to local storage.
+ */
+export const saveTfaEnforcementData = (
+  data: null | TfaEnforcementMockData
+): void => {
+  if (data) {
+    localStorage.setItem(
+      LOCAL_STORAGE_TFA_ENFORCEMENT_FORM_DATA_KEY,
+      JSON.stringify(data)
+    );
+  } else {
+    localStorage.removeItem(LOCAL_STORAGE_TFA_ENFORCEMENT_FORM_DATA_KEY);
   }
 };
 

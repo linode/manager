@@ -1,17 +1,24 @@
+import { NodeBalancerBackendConnectivity } from '@linode/api-v4';
 import { Autocomplete } from '@linode/ui';
 import React, { useMemo } from 'react';
 
 import { useGetLinodeIPAndVPCData } from 'src/hooks/useDataForLinodesInVPC';
+import { useFlags } from 'src/hooks/useFlags';
 
 import {
+  getIPv6Options,
   getPrivateIPOptions,
   getVPCIPOptions,
 } from './ConfigNodeIPSelect.utils';
 import { ConfigNodeOption } from './ConfigNodeOption';
 
-import type { PrivateIPOption, VPCIPOption } from './ConfigNodeIPSelect.utils';
+import type { LinodeIPOption, VPCIPOption } from './ConfigNodeIPSelect.utils';
 
 interface Props {
+  /**
+   * The backend connectivity of the NodeBalancer
+   */
+  backendConnectivity?: NodeBalancerBackendConnectivity;
   /**
    * Disables the select
    */
@@ -55,10 +62,11 @@ interface Props {
   vpcId?: number;
 }
 
-export type NodeOption = PrivateIPOption | VPCIPOption;
+export type NodeOption = LinodeIPOption | VPCIPOption;
 
 export const ConfigNodeIPSelect = React.memo((props: Props) => {
   const {
+    backendConnectivity,
     disabled,
     errorText,
     handleChange,
@@ -70,26 +78,59 @@ export const ConfigNodeIPSelect = React.memo((props: Props) => {
     subnetId,
   } = props;
 
+  const { premiumNodebalancer: isPremiumNodebalancerEnabled } = useFlags();
   const { linodes, error, isLoading, vpc, vpcIPs } = useGetLinodeIPAndVPCData({
     region,
     vpcId,
   });
 
-  let options: NodeOption[] = [];
+  // When premium isn't enabled, connectivity is inferred from whether a VPC is selected.
+  const inferredConnectivity = vpcId ? 'vpc' : 'legacy';
+  const connectivity = isPremiumNodebalancerEnabled
+    ? backendConnectivity
+    : inferredConnectivity;
 
-  if (region && !vpcId) {
-    options = getPrivateIPOptions(linodes);
-  } else if (region && vpcId && subnetId) {
-    options = getVPCIPOptions(vpcIPs, linodes, vpc?.subnets);
-  }
+  const options = useMemo(() => {
+    if (!region) {
+      return [];
+    }
+
+    switch (connectivity) {
+      case 'ipv6':
+        return getIPv6Options(linodes);
+      case 'legacy':
+        return getPrivateIPOptions(linodes);
+      case 'vpc':
+        return vpcId && subnetId
+          ? getVPCIPOptions(vpcIPs, linodes, vpc?.subnets)
+          : [];
+      default:
+        return [];
+    }
+  }, [
+    connectivity,
+    isPremiumNodebalancerEnabled,
+    linodes,
+    region,
+    subnetId,
+    vpc,
+    vpcId,
+    vpcIPs,
+  ]);
 
   const noOptionsText = useMemo(() => {
     if (!vpcId) {
-      return 'Please ensure you have at least 1 Linode with a private IP located in the selected region.';
+      if (connectivity === 'ipv6') {
+        return 'Please ensure you have at least 1 Linode with a public IPv6 address located in the selected region.';
+      }
+      if (connectivity === 'vpc') {
+        return 'Please ensure you have at least 1 Linode within a VPC located in the selected region.';
+      }
+      return 'Please ensure you have at least 1 Linode with a private IPv4 address located in the selected region.';
     } else if (vpcId && !subnetId) {
       return 'Select a subnet within the chosen VPC.';
     } else return 'The selected subnet must have at least one Linode.';
-  }, [vpcId, subnetId]);
+  }, [vpcId, subnetId, connectivity]);
 
   return (
     <Autocomplete
@@ -105,15 +146,10 @@ export const ConfigNodeIPSelect = React.memo((props: Props) => {
       }
       options={options}
       placeholder="Enter IP Address"
-      renderOption={(props, option, { selected }) => {
+      renderOption={(props, option) => {
         const { key, ...rest } = props;
         return (
-          <ConfigNodeOption
-            key={key}
-            listItemProps={rest}
-            option={option}
-            selected={selected}
-          />
+          <ConfigNodeOption key={key} listItemProps={rest} option={option} />
         );
       }}
       value={options.find((o) => o.label === nodeAddress) ?? null}

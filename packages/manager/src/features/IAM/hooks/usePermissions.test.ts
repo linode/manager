@@ -26,10 +26,8 @@ vi.mock(import('@linode/queries'), async (importOriginal) => {
   };
 });
 
-vi.mock('src/features/IAM/hooks/useIsIAMEnabled', async () => {
-  const actual = await vi.importActual(
-    'src/features/IAM/hooks/useIsIAMEnabled'
-  );
+vi.mock('./useIsIAMEnabled', async () => {
+  const actual = await vi.importActual('./useIsIAMEnabled');
   return {
     ...actual,
     useIsIAMEnabled: queryMocks.useIsIAMEnabled,

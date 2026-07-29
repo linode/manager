@@ -2,8 +2,10 @@ import { screen, within } from '@testing-library/react';
 import React from 'react';
 
 import { createUser, createUserRoles } from '../../factories';
-import { expectNotificationBannerText } from '../../utilities/testHelpers';
-import { renderWithProviders } from '../../utilities/testHelpers';
+import {
+  expectNotificationBannerText,
+  renderWithProviders,
+} from '../../utilities/testHelpers';
 import { UserProfile } from './UserProfile';
 
 const queryMocks = vi.hoisted(() => ({
@@ -11,6 +13,7 @@ const queryMocks = vi.hoisted(() => ({
   useParams: vi.fn().mockReturnValue({}),
   usePermissions: vi.fn().mockReturnValue({}),
   useUserRoles: vi.fn().mockReturnValue({}),
+  useSearch: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('@linode/queries', async () => {
@@ -27,6 +30,7 @@ vi.mock('@tanstack/react-router', async () => {
   return {
     ...actual,
     useParams: queryMocks.useParams,
+    useSearch: queryMocks.useSearch,
   };
 });
 

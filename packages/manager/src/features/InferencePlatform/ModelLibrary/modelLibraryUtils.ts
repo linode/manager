@@ -1,35 +1,122 @@
 import { MODEL_SUPPLEMENTARY } from './modelLibrary.supplementary';
 
-import type { InferenceModel } from '../inferenceService';
 import type { Model, ModelFilterState, SortKey } from './modelLibrary.types';
+import type { InferenceModel } from '@linode/api-v4';
+
+/**
+ * Descriptions for common use cases. Used for tooltips in the UI.
+ */
+const USE_CASE_DESCRIPTIONS: Record<string, string> = {
+  agentic: 'Autonomous AI agents that can plan, reason, and execute tasks',
+  chat: 'Conversational interactions and dialogue systems',
+  chatbots: 'Building conversational AI assistants and chatbots',
+  'code-assistance':
+    'Code review, debugging, refactoring, and programming help',
+  'code-generation': 'Generating code from natural language descriptions',
+  coding: 'Code generation, completion, and programming assistance',
+  'content-generation':
+    'Creating articles, marketing copy, and creative content',
+  'data-extraction': 'Extracting structured information from unstructured text',
+  embedding: 'Converting text to vector representations for similarity search',
+  'function-calling':
+    'Invoking external tools and APIs based on natural language',
+  general: 'General-purpose text generation and conversation',
+  'image-understanding': 'Analyzing and describing visual content',
+  'long-context':
+    'Processing and reasoning over large documents and extended conversations',
+  multilingual: 'Support for multiple languages and translation',
+  rag: 'Retrieval-Augmented Generation for knowledge-based responses',
+  reasoning: 'Enhanced logical reasoning and problem-solving',
+  'semantic-search': 'Finding semantically similar content and documents',
+  'structured-output': 'Generating JSON, XML, or other structured formats',
+  summarization: 'Condensing long texts into concise summaries',
+  'tool-use': 'Using external tools and executing actions',
+  vision: 'Processing and understanding images',
+};
+
+/**
+ * Convert API strings to ModelCapability format with optional descriptions.
+ */
+function toCapabilities(
+  items: string[],
+  descriptionMap: Record<string, string> = {}
+): { description: string; label: string }[] {
+  return items.map((item) => ({
+    description: descriptionMap[item] ?? '',
+    // Format label: "semantic-search" -> "Semantic Search"
+    label: item
+      .split('-')
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' '),
+  }));
+}
 
 /**
  * Merge a single InferenceModel entry with its supplementary metadata.
- * Supplementary fields fill in defaults; any field present in supplementary
- * overrides the default value.
+ * In development/mock mode, supplementary data fills in fields not provided
+ * by the API (like pricing, etc.). Provider logos are always used from
+ * supplementary data since the API doesn't provide them.
  */
 export function mergeInferenceModel(m: InferenceModel): Model {
-  const supp = MODEL_SUPPLEMENTARY[m.id] ?? {};
+  // Always get logo data (API doesn't provide logos)
+  const logoData = MODEL_SUPPLEMENTARY[m.id] ?? {};
+
+  // Only use full supplementary data in development/mock mode
+  const supp = import.meta.env.DEV ? logoData : {};
+
+  // Convert context_window from tokens to K (thousands)
+  const contextLengthK = m.parameters?.context_window
+    ? Math.round(m.parameters.context_window / 1000)
+    : 0;
+
+  // Convert use_cases strings to ModelCapability format with descriptions
+  const useCaseTags = m.use_cases
+    ? toCapabilities(m.use_cases, USE_CASE_DESCRIPTIONS)
+    : [];
+
+  // Convert modalities to ModelCapability format
+  const inputModes = m.modalities?.input
+    ? toCapabilities(m.modalities.input)
+    : [];
+  const outputModes = m.modalities?.output
+    ? toCapabilities(m.modalities.output)
+    : [];
+
+  // Exclude fields that should only come from API (not supplementary)
+  const suppFiltered = { ...supp };
+  delete suppFiltered.priceInputPerMillion;
+  delete suppFiltered.priceOutputPerMillion;
+  delete suppFiltered.supportedLanguages;
 
   return {
-    contextLengthK: 0,
-    description: '',
+    // Defaults for fields not in API
     descriptionShort: '',
-    inputModes: [],
     isServerless: false,
-    outputModes: [],
-    parametersB: 0,
-    priceInputPerMillion: 0,
-    priceOutputPerMillion: 0,
-    providerLogo: '',
-    providerName: 'Unknown',
     releasedAt: '',
     supportedLanguages: [],
-    title: m.id,
     updatedAt: '',
-    useCaseTags: [],
-    ...supp,
+    // Supplementary overrides (only in dev mode)
+    ...suppFiltered,
+    // API data takes precedence for fields it provides
+    contextLengthK: contextLengthK || suppFiltered.contextLengthK || 0,
+    description: m.description || suppFiltered.description || '',
     id: m.id,
+    inputModes:
+      inputModes.length > 0 ? inputModes : (suppFiltered.inputModes ?? []),
+    outputModes:
+      outputModes.length > 0 ? outputModes : (suppFiltered.outputModes ?? []),
+    parametersB:
+      m.parameters?.parameter_count_billions ?? suppFiltered.parametersB ?? 0,
+    playgroundAvailable: m.playground_available ?? false,
+    // Pricing only from API (not from supplementary)
+    priceInputPerMillion: m.price_input_per_million,
+    priceOutputPerMillion: m.price_output_per_million,
+    // Logo always from supplementary (API doesn't provide it)
+    providerLogo: logoData.providerLogo ?? '',
+    providerName: m.provider?.name || suppFiltered.providerName || 'Unknown',
+    title: m.label || suppFiltered.title || m.id,
+    useCaseTags:
+      useCaseTags.length > 0 ? useCaseTags : (suppFiltered.useCaseTags ?? []),
   };
 }
 

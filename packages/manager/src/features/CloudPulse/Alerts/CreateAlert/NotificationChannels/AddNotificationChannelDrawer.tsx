@@ -223,10 +223,12 @@ export const AddNotificationChannelDrawer = (
               label: 'Add channel',
               onClick: onSubmit,
               type: 'button',
+              'data-pendo-id': 'monitor-alerts-add-notification-channel-Add',
             }}
             secondaryButtonProps={{
               label: 'Cancel',
               onClick: resetDrawer,
+              'data-pendo-id': 'monitor-alerts-add-notification-channel-Cancel',
             }}
           />
         </form>

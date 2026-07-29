@@ -19,6 +19,7 @@ import {
   PlanTextTooltip,
   StyledFormattedRegionList,
 } from 'src/features/components/PlansPanel/PlansAvailabilityNotice.styles';
+import { LINODE_CREATE_SHARED_IMAGE_ICON_TOOLTIP } from 'src/features/Images/constants';
 import { getIsTableStripingEnabled } from 'src/features/Profile/Settings/TableStriping.utils';
 
 import { TABLE_CELL_BASE_STYLE } from './constants';
@@ -60,6 +61,7 @@ export const ImageSelectTableRow = (props: Props) => {
     capabilities,
     created,
     id,
+    is_shared,
     image_sharing,
     label,
     regions: _imageRegions,
@@ -95,9 +97,6 @@ export const ImageSelectTableRow = (props: Props) => {
   const imageRegions = _imageRegions ?? []; // Failsafe for manual images whose `regions` property is null
 
   const selected = selectedImageIds.includes(id);
-
-  const shareGroupCount =
-    image.image_sharing?.shared_with?.sharegroup_count ?? 0;
 
   const { data: tableStripingPreference } = usePreferences(
     (preferences) => preferences?.isTableStripingEnabled
@@ -149,17 +148,13 @@ export const ImageSelectTableRow = (props: Props) => {
             text="This image supports our Metadata service via cloud-init."
           />
         )}
-        {shareGroupCount > 0 && (
+        {is_shared && (
           <TooltipIcon
             icon={<CoreSharedIcon />}
             sxTooltipIcon={{
               padding: 0,
             }}
-            text={`This image is shared in ${pluralize(
-              'share group',
-              'share groups',
-              shareGroupCount
-            )}.`}
+            text={LINODE_CREATE_SHARED_IMAGE_ICON_TOOLTIP}
           />
         )}
       </TableCell>

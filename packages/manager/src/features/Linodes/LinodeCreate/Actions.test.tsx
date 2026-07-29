@@ -5,6 +5,7 @@ import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 import { Actions } from './Actions';
 
 const queryMocks = vi.hoisted(() => ({
+  getLinodeCreateType: vi.fn(() => 'OS'),
   useNavigate: vi.fn(),
   useParams: vi.fn(),
   useSearch: vi.fn(),
@@ -20,6 +21,13 @@ vi.mock('src/features/IAM/hooks/usePermissions', () => ({
   usePermissions: queryMocks.userPermissions,
 }));
 
+vi.mock(
+  'src/features/Linodes/LinodeCreate/Tabs/utils/useGetLinodeCreateType',
+  () => ({
+    useGetLinodeCreateType: queryMocks.getLinodeCreateType,
+  })
+);
+
 vi.mock('@tanstack/react-router', async () => {
   const actual = await vi.importActual('@tanstack/react-router');
   return {
@@ -32,6 +40,7 @@ vi.mock('@tanstack/react-router', async () => {
 
 describe('Actions', () => {
   beforeEach(() => {
+    queryMocks.getLinodeCreateType.mockReturnValue('OS');
     queryMocks.useNavigate.mockReturnValue(vi.fn());
     queryMocks.useSearch.mockReturnValue({});
     queryMocks.useParams.mockReturnValue({});
@@ -110,4 +119,26 @@ describe('Actions', () => {
     expect(button).toBeVisible();
     expect(button).toBeEnabled();
   });
+
+  it.each([
+    ['OS', 'Linodes Create OS-Create Linode'],
+    ['Clone Linode', 'Linodes Create Clone-Create Linode'],
+    ['Backups', 'Linodes Create Backups-Create Linode'],
+    ['Images', 'Linodes Create Images-Create Linode'],
+    ['StackScripts', 'Linodes Create Stackscripts-Create Linode'],
+    ['One-Click', 'Linodes Create Quick Deploy Apps-Create Linode'],
+  ])(
+    'should set the create button pendo id for %s tab',
+    (createType, expectedPendoId) => {
+      queryMocks.getLinodeCreateType.mockReturnValue(createType);
+
+      const { getByText } = renderWithThemeAndHookFormContext({
+        component: <Actions />,
+      });
+
+      const button = getByText('Create Linode').closest('button');
+
+      expect(button).toHaveAttribute('data-pendo-id', expectedPendoId);
+    }
+  );
 });

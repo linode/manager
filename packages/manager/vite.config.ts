@@ -1,3 +1,8 @@
+import {
+  computeUiPortalProxy,
+  externalComputeUiPortalScript,
+  injectPortalConfig,
+} from '@akamai/compute-ui-portal/vite';
 import react from '@vitejs/plugin-react';
 import { URL } from 'url';
 import svgr from 'vite-plugin-svgr';
@@ -22,17 +27,27 @@ const cdsDarkTokensScope = (): Plugin => ({
 export default defineConfig({
   build: {
     outDir: 'build',
+    rollupOptions: {
+      external: [/^\/libs\/compute-ui-portal\//],
+    },
   },
-  envPrefix: 'REACT_APP_',
+  envPrefix: 'COMPUTE_',
   plugins: [
     cdsDarkTokensScope(),
     react(),
     svgr({ svgrOptions: { exportType: 'default' }, include: '**/*.svg' }),
     urlCanParsePolyfill(),
+    computeUiPortalProxy(),
+    externalComputeUiPortalScript(),
+    injectPortalConfig(),
   ],
   resolve: {
     alias: {
       src: `${DIRNAME}/src`,
+      // @akamai/cds-components only exports "./theme" (font-family.css + reboot.css).
+      // We need the @font-face rules alone so Nunito Sans matches CDS components without
+      // Bootstrap reboot resets conflicting with MUI CssBaseline and index.css.
+      '@akamai/cds-components/font-family': `${DIRNAME}/node_modules/@akamai/cds-components/dist/theme/theme/font-family.css`,
       // In test mode, stub out msw/browser so Vite never tries to resolve the
       // real subpath export. `vitest related` scans the full source tree and
       // hits mswWorkers.ts → msw/browser, which fails under Node conditions in
@@ -48,7 +63,7 @@ export default defineConfig({
   },
   test: {
     env: {
-      REACT_APP_CLIENT_ID: 'test-client-id',
+      COMPUTE_CLIENT_ID: 'test-client-id',
     },
     // Limit parallelism in CI to prevent resource exhaustion on shared agents.
     maxWorkers: process.env.CI ? '50%' : undefined,

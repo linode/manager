@@ -14,7 +14,7 @@ describe('KeyTypeBadge', () => {
     const { getByText } = renderWithTheme(
       <KeyTypeBadge keyType="playground" />
     );
-    expect(getByText('Playground Key')).toBeVisible();
+    expect(getByText('Playground')).toBeVisible();
   });
 
   it('renders as a Chip component', () => {

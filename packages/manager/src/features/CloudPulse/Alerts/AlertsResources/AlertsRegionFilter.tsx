@@ -41,6 +41,7 @@ export const AlertsRegionFilter = React.memo((props: AlertsRegionProps) => {
   return (
     <RegionMultiSelect
       currentCapability={undefined} // this is a required property, no specific capability required here
+      data-pendo-id="monitor-alerts-entity-details-Regions"
       disableSelectAll
       isClearable
       isGeckoLAEnabled={isGeckoLAEnabled}

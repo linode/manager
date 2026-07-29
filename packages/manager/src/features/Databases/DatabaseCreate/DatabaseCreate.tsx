@@ -42,7 +42,6 @@ import { CircleProgress } from '../shared/CircleProgress/CircleProgress';
 import { Divider } from '../shared/Divider/Divider';
 import { ErrorState } from '../shared/ErrorState/ErrorState';
 import { Paper } from '../shared/Paper/Paper';
-import { DatabaseCreateAccessControls } from './DatabaseCreateAccessControls';
 import { DatabaseCreateNetworkingConfiguration } from './DatabaseCreateNetworkingConfiguration';
 
 import type { AccessProps } from './DatabaseCreateAccessControls';
@@ -91,7 +90,6 @@ export const DatabaseCreate = () => {
 
   const isSMDown = useBreakpoint('down', 'sm');
   const flags = useFlags();
-  const isVPCEnabled = flags.databaseVpc;
 
   const formRef = React.useRef<HTMLFormElement>(null);
   const { mutateAsync: createDatabase } = useCreateDatabaseMutation();
@@ -208,7 +206,7 @@ export const DatabaseCreate = () => {
   const accessControlsConfiguration: AccessProps = {
     disabled: isRestricted,
     errors: ipErrorsFromAPI,
-    variant: isVPCEnabled ? 'networking' : 'standard',
+    variant: 'networking',
   };
 
   const handleTabChange = (index: number) => {
@@ -243,11 +241,6 @@ export const DatabaseCreate = () => {
       allow_list: _allowList,
       private_network: hasVpc ? values.private_network : null,
     };
-
-    // TODO (UIE-8831): Remove post VPC release, since it will always be in create payload
-    if (!isVPCEnabled) {
-      setValue('private_network', undefined);
-    }
 
     try {
       const response = await createDatabase(createPayload);
@@ -386,14 +379,10 @@ export const DatabaseCreate = () => {
               )}
             />
             <Divider marginBottom={Spacing.S12} marginTop={Spacing.S24} />
-            {isVPCEnabled ? (
-              <DatabaseCreateNetworkingConfiguration
-                accessControlsConfiguration={accessControlsConfiguration}
-                onChange={setSelectedVPC}
-              />
-            ) : (
-              <DatabaseCreateAccessControls {...accessControlsConfiguration} />
-            )}
+            <DatabaseCreateNetworkingConfiguration
+              accessControlsConfiguration={accessControlsConfiguration}
+              onChange={setSelectedVPC}
+            />
           </Paper>
           <Paper marginTop={Spacing.S24}>
             <DatabaseSummarySection

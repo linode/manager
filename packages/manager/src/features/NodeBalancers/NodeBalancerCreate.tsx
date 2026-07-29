@@ -60,8 +60,9 @@ import { reportAgreementSigningError } from 'src/utilities/reportAgreementSignin
 
 import { EUAgreementCheckbox } from '../Account/Agreements/EUAgreementCheckbox';
 import { usePermissions } from '../IAM/hooks/usePermissions';
-import { IPAddressSelection } from '../ReservedIps/IPAddressSelection/IPAddressSelection';
 import { NodeBalancerConfigPanel } from './NodeBalancerConfigPanel';
+import { NodeBalancerConnectivityPanel } from './NodeBalancerConnectivityPanel';
+import { NodeBalancerTierPanel } from './NodeBalancerTierPanel';
 import {
   createNewNodeBalancerConfig,
   createNewNodeBalancerConfigNode,
@@ -74,6 +75,8 @@ import type { NodeBalancerConfigFieldsWithStatus } from './types';
 import type {
   APIError,
   IPAddress,
+  NodeBalancerBackendConnectivity,
+  NodeBalancerType,
   NodeBalancerVpcPayload,
   VPC,
 } from '@linode/api-v4';
@@ -85,13 +88,15 @@ interface NodeBalancerConfigFieldsWithStatusAndErrors
   errors?: APIError[];
 }
 
-interface NodeBalancerFieldsState {
+export interface NodeBalancerFieldsState {
+  backend_connectivity?: NodeBalancerBackendConnectivity;
   configs: NodeBalancerConfigFieldsWithStatusAndErrors[];
   firewall_id?: number;
   ipv4?: string;
   label?: string;
   region?: string;
   tags?: string[];
+  type?: NodeBalancerType;
   vpcs?: NodeBalancerVpcPayload[];
 }
 
@@ -109,12 +114,15 @@ const defaultDeleteConfigConfirmDialogState = {
   submitting: false,
 };
 
-const defaultFieldsStates = {
+const defaultFieldsStates: NodeBalancerFieldsState = {
+  type: 'common',
+  backend_connectivity: 'vpc',
   configs: [createNewNodeBalancerConfig(true)],
 };
 
 const NodeBalancerCreate = () => {
   const flags = useFlags();
+  const isPremiumNodebalancerEnabled = flags.premiumNodebalancer;
   const { isGeckoLAEnabled } = useIsGeckoEnabled(
     flags.gecko2?.enabled,
     flags.gecko2?.la
@@ -188,6 +196,8 @@ const NodeBalancerCreate = () => {
   const [ipMode, setIpMode] = React.useState<'auto' | 'reserved'>('auto');
   const [selectedIP, setSelectedIP] = React.useState<IPAddress | null>(null);
   const [reservedIPError, setReservedIPError] = React.useState<string>();
+  const [backendConnectivityError, setBackendConnectivityError] =
+    React.useState<string>();
 
   const addNodeBalancer = () => {
     if (!permissions.create_nodebalancer) {
@@ -342,6 +352,7 @@ const NodeBalancerCreate = () => {
     });
     setVPCErrors([]);
     setReservedIPError(undefined);
+    setBackendConnectivityError(undefined);
   };
 
   const onCreate = () => {
@@ -379,9 +390,16 @@ const NodeBalancerCreate = () => {
           : vpc
       );
     }
+
     if (isReserveIpEnabled && ipMode === 'reserved' && selectedIP?.address) {
       nodeBalancerRequestData.ipv4 = selectedIP.address;
     }
+
+    if (!isPremiumNodebalancerEnabled) {
+      delete nodeBalancerRequestData.backend_connectivity;
+      delete nodeBalancerRequestData.type;
+    }
+
     nodeBalancerRequestData.configs = transformConfigsForRequest(
       nodeBalancerRequestData.configs
     );
@@ -430,11 +448,22 @@ const NodeBalancerCreate = () => {
                 reason: err.reason,
               };
             }
+            if (err?.field.includes('vpcs')) {
+              return err;
+            }
             return null;
           })
           .filter((err) => err !== null);
-
         setVPCErrors(vpcErrors);
+
+        const backendConnectivityErrors = errors.filter((err) =>
+          err?.field?.includes('backend_connectivity')
+        );
+        setBackendConnectivityError(
+          backendConnectivityErrors.length > 0
+            ? backendConnectivityErrors[0].reason
+            : undefined
+        );
 
         scrollErrorIntoViewV2(formContainerRef);
       });
@@ -601,11 +630,39 @@ const NodeBalancerCreate = () => {
     (r) => r.id === nodeBalancerFields.region
   )?.label;
 
-  const price = getDCSpecificPriceByType({
-    regionId: nodeBalancerFields.region,
-    type: types?.[0],
-  });
-  const isInvalidPrice = Boolean(nodeBalancerFields.region && !price);
+  const selectedNodeBalancerType = React.useMemo(
+    () =>
+      isPremiumNodebalancerEnabled && nodeBalancerFields.type === 'premium'
+        ? types?.find((t) => t.label === 'Nodebalancer Premium')
+        : types?.find((t) => t.label === 'NodeBalancer'),
+    [isPremiumNodebalancerEnabled, nodeBalancerFields.type, types]
+  );
+
+  const hourlyPrice = React.useMemo(
+    () =>
+      getDCSpecificPriceByType({
+        decimalPrecision: 3,
+        interval: 'hourly',
+        regionId: nodeBalancerFields.region,
+        type: selectedNodeBalancerType,
+      }),
+    [nodeBalancerFields.region, selectedNodeBalancerType]
+  );
+
+  const monthlyPrice = React.useMemo(
+    () =>
+      getDCSpecificPriceByType({
+        decimalPrecision: 2,
+        interval: 'monthly',
+        regionId: nodeBalancerFields.region,
+        type: selectedNodeBalancerType,
+      }),
+    [nodeBalancerFields.region, selectedNodeBalancerType]
+  );
+
+  const activePrice = isPremiumNodebalancerEnabled ? hourlyPrice : monthlyPrice;
+
+  const isInvalidPrice = Boolean(nodeBalancerFields.region && !activePrice);
 
   const summaryItems = [];
 
@@ -635,10 +692,14 @@ const NodeBalancerCreate = () => {
   });
 
   if (nodeBalancerFields.region) {
+    const formattedMonthly = `$${renderMonthlyPriceToCorrectDecimalPlace(
+      monthlyPrice ? Number(monthlyPrice) : undefined
+    )}/month`;
+
+    const formattedHourly = `${hourlyPrice}/hour`;
+
     summaryItems.unshift({
-      title: `$${renderMonthlyPriceToCorrectDecimalPlace(
-        price ? Number(price) : undefined
-      )}/month`,
+      title: isPremiumNodebalancerEnabled ? formattedHourly : formattedMonthly,
     });
   }
 
@@ -697,6 +758,23 @@ const NodeBalancerCreate = () => {
             }
           />
         </Paper>
+        {isPremiumNodebalancerEnabled && (
+          <NodeBalancerTierPanel
+            disabled={!permissions.create_nodebalancer}
+            error={hasErrorFor('type')}
+            tierChange={(type) => {
+              setNodeBalancerFields((prev) => ({
+                ...prev,
+                type,
+                backend_connectivity:
+                  type === 'premium' && prev.backend_connectivity === 'legacy'
+                    ? 'vpc'
+                    : prev.backend_connectivity,
+              }));
+            }}
+            tierSelected={nodeBalancerFields.type ?? 'common'}
+          />
+        )}
         <Paper>
           <Stack
             alignItems="flex-start"
@@ -713,9 +791,15 @@ const NodeBalancerCreate = () => {
               isGeckoLAEnabled={isGeckoLAEnabled}
               noMarginTop
               onChange={(e, region) => regionChange(region?.id ?? '')}
+              pendoIdPrefix="NodeBalancers Create Region"
               regions={regions ?? []}
               textFieldProps={{
-                helperText: <RegionHelperText mb={2} />,
+                helperText: (
+                  <RegionHelperText
+                    mb={2}
+                    speedTestPendoId="NodeBalancers Create-Docs Speedtest"
+                  />
+                ),
                 helperTextPosition: 'top',
               }}
               value={nodeBalancerFields.region ?? ''}
@@ -723,6 +807,7 @@ const NodeBalancerCreate = () => {
             <DocsLink
               href="https://www.linode.com/pricing"
               label={DOCS_LINK_LABEL_DC_PRICING}
+              pendoId='NodeBalancers Create-Docs Pricing"'
             />
           </Stack>
         </Paper>
@@ -738,75 +823,69 @@ const NodeBalancerCreate = () => {
             <Typography>
               Assign an existing Firewall to this NodeBalancer to control
               inbound network traffic.{' '}
-              <Link to={FIREWALL_GET_STARTED_LINK}>Learn more</Link>.
+              <Link
+                pendoId="NodeBalancers Create-Docs Firewall"
+                to={FIREWALL_GET_STARTED_LINK}
+              >
+                Learn more
+              </Link>
+              .
             </Typography>
           }
           permissions={permissions}
           selectedFirewallId={nodeBalancerFields.firewall_id ?? -1}
         />
-        {isNodebalancerVPCEnabled && (
-          <VPCPanel
+        {(isPremiumNodebalancerEnabled || isReserveIpEnabled) && (
+          <NodeBalancerConnectivityPanel
+            backendConnectivityError={backendConnectivityError}
             disabled={!permissions.create_nodebalancer}
-            errors={vpcErrors}
-            ipv4Change={ipv4Change}
-            regionSelected={nodeBalancerFields.region ?? ''}
-            setVpcSelected={setVPCSelected}
-            subnetChange={subnetChange}
-            subnetsSelected={nodeBalancerFields.vpcs}
-            vpcSelected={vpcSelected}
+            frontendIPMode={ipMode}
+            isPremiumNodebalancerEnabled={isPremiumNodebalancerEnabled}
+            nodeBalancerFields={nodeBalancerFields}
+            onBackendIPModeChange={(value: NodeBalancerBackendConnectivity) => {
+              if (
+                nodeBalancerFields.backend_connectivity === 'vpc' &&
+                value !== 'vpc'
+              ) {
+                setVPCSelected(null);
+              }
+              setNodeBalancerFields((prev) => {
+                if (value !== 'vpc' && prev.vpcs) {
+                  const { vpcs, ...rest } = prev;
+                  return { ...rest, backend_connectivity: value };
+                }
+                return { ...prev, backend_connectivity: value };
+              });
+            }}
+            onFrontendIPModeChange={(mode) => {
+              setIpMode(mode);
+              setReservedIPError(undefined);
+              if (mode === 'auto') {
+                setSelectedIP(null);
+              }
+            }}
+            onReservedIPSelect={(ip) => {
+              setSelectedIP(ip);
+            }}
+            reservedIPError={reservedIPError}
+            reservedIPSectionRef={reservedIPSectionRef}
+            selectedFrontendIP={selectedIP}
+            showNewBadge={isReserveIpEnabled && isReserveIpNewBadgeEnabled}
           />
         )}
-        {isReserveIpEnabled && (
-          <Paper ref={reservedIPSectionRef}>
-            <IPAddressSelection
-              error={reservedIPError}
-              label={{ text: 'Frontend IP Address', fontSize: '18px' }}
-              mode={ipMode}
-              onIPModeChange={(mode) => {
-                setIpMode(mode);
-                setReservedIPError(undefined);
-
-                if (mode === 'auto') {
-                  setSelectedIP(null);
-                }
-              }}
-              onReservedIPSelect={(ip) => {
-                setSelectedIP(ip);
-                setReservedIPError(undefined);
-              }}
-              pendoIds={{
-                // Pendo IDS for the Reserve IP selection
-                auto: 'NodeBalancers Create Network-Auto-assigned',
-                reserved: 'NodeBalancers Create Network-Reserved',
-                reserveIPLink:
-                  'NodeBalancers Create Network Reserved-Reserve IP Start Flow',
-                reserveIPAutocomplete:
-                  'NodeBalancers Create Network-Reserved IPs open',
-                reserveIPAutocompleteOptions:
-                  'NodeBalancers Create Network-Reserved-IP Options',
-                // Pendo IDs for the Reserve IP Drawer
-                cancelReserveIPDrawer: 'NodeBalancers Create Reserve IP-Cancel',
-                closeReserveIPDrawer: 'NodeBalancers Create Reserve IP-Close',
-                submitReserveIPDrawer:
-                  'NodeBalancers Create Reserve IP-Reserve IP Address End Flow',
-              }}
-              regionId={nodeBalancerFields.region ?? ''}
-              selectedIP={selectedIP}
-              showNewBadge={isReserveIpEnabled && isReserveIpNewBadgeEnabled}
-              tooltipText={{
-                auto: "A public IPv4 address automatically assigned to your NodeBalancer’s \
-                  frontend to serve as the entry point for incoming traffic. Use this for \
-                  standard web traffic that doesn't require a permanent, static IP. \
-                  This address is included at no additional cost but will be released if the NodeBalancer is deleted.",
-                reserved:
-                  "A static public IPv4 address assigned to your NodeBalancer’s \
-                  frontend to serve as a permanent gateway for incoming traffic. \
-                  Use this for services requiring a consistent IP for DNS records or security allowlisting. \
-                  Charges apply while the IP is reserved, even if it's not assigned to a NodeBalancer.",
-              }}
+        {isNodebalancerVPCEnabled &&
+          nodeBalancerFields.backend_connectivity === 'vpc' && (
+            <VPCPanel
+              disabled={!permissions.create_nodebalancer}
+              errors={vpcErrors}
+              ipv4Change={ipv4Change}
+              regionSelected={nodeBalancerFields.region ?? ''}
+              setVpcSelected={setVPCSelected}
+              subnetChange={subnetChange}
+              subnetsSelected={nodeBalancerFields.vpcs}
+              vpcSelected={vpcSelected}
             />
-          </Paper>
-        )}
+          )}
       </Stack>
       <Box marginBottom={2} marginTop={2}>
         {nodeBalancerFields.configs.map((nodeBalancerConfig, idx) => {
@@ -843,6 +922,9 @@ const NodeBalancerCreate = () => {
                   nodeBalancerFields.configs[idx].check_timeout!
                 }
                 healthCheckType={nodeBalancerFields.configs[idx].check!}
+                nodeBalancerBackendConnectivity={
+                  nodeBalancerFields.backend_connectivity
+                }
                 nodeBalancerRegion={nodeBalancerFields.region}
                 nodeBalancerSubnetId={nodeBalancerFields?.vpcs?.[0].subnet_id}
                 nodeBalancerVpcId={vpcSelected?.id}
@@ -929,6 +1011,7 @@ const NodeBalancerCreate = () => {
       >
         <Button
           buttonType="primary"
+          data-pendo-id="NodeBalancers Create-Create NodeBalancer End Flow"
           data-qa-deploy-nodebalancer
           disabled={
             (showGDPRCheckbox && !hasSignedAgreement) ||

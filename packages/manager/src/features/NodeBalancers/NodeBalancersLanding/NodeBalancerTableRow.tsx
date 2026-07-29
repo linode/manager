@@ -1,3 +1,5 @@
+import { Badge, Icon, Tooltip } from '@akamai/cds-components/react';
+import { Spacing } from '@akamai/cds-tokens';
 import { convertMegabytesTo } from '@akamai/compute-ui-core/api';
 import { useAllNodeBalancerConfigsQuery } from '@linode/queries';
 import { Box, Hidden } from '@linode/ui';
@@ -22,12 +24,19 @@ import { NodeBalancerVPC } from './NodeBalancerVPC';
 import type { NodeBalancer } from '@linode/api-v4/lib/nodebalancers';
 
 export const NodeBalancerTableRow = (props: NodeBalancer) => {
-  const { id, ipv4, label, region, transfer } = props;
+  const { id, ipv4, label, region, transfer, type, backend_connectivity } =
+    props;
   const { isNodebalancerVPCEnabled } = useIsNodebalancerVPCEnabled();
-  const { aclpNbMetricsIntegration } = useFlags();
+  const {
+    aclpNbMetricsIntegration,
+    premiumNodebalancer: isPremiumNodebalancerEnabled,
+  } = useFlags();
 
   const { data: configs, isLoading: isConfigsLoading } =
     useAllNodeBalancerConfigsQuery(id);
+
+  const isNodeBalancerPremium = type === 'premium';
+  const hasNoConfig = !isConfigsLoading && (!configs || configs.length === 0);
 
   const nodesUp =
     configs?.reduce((result, config) => config.nodes_status.up + result, 0) ??
@@ -36,12 +45,46 @@ export const NodeBalancerTableRow = (props: NodeBalancer) => {
     configs?.reduce((result, config) => config.nodes_status.down + result, 0) ??
     0;
 
+  const backendConnectivity = React.useMemo(() => {
+    switch (backend_connectivity) {
+      case 'ipv6':
+        return 'IPv6';
+      case 'legacy':
+        return 'IPv4';
+      case 'vpc':
+        return 'VPC';
+      default:
+        return '-';
+    }
+  }, [backend_connectivity]);
+
   return (
     <TableRow key={id}>
       <TableCell>
-        <Link accessibleAriaLabel={label} to={`/nodebalancers/${id}`}>
+        <Link
+          accessibleAriaLabel={label}
+          pendoId="NodeBalancers Landing-NodeBalancer Details"
+          to={`/nodebalancers/${id}`}
+        >
           {label}
         </Link>
+
+        {/* Show a "Premium" badge for premium nodebalancers */}
+        {isPremiumNodebalancerEnabled && isNodeBalancerPremium && (
+          <Badge style={{ marginLeft: Spacing.S8 }}>Premium</Badge>
+        )}
+
+        {/* Show tooltip for any type of nodebalancer that has no configuration */}
+        {isPremiumNodebalancerEnabled && hasNoConfig && (
+          <Tooltip
+            data-testid="no-config-tooltip"
+            style={{ marginLeft: Spacing.S8 }}
+            tooltipPlacement="right"
+            tooltipText="To serve traffic, add a port configuration and at least one backend node."
+          >
+            <Icon icon="info-outline" size="m" />
+          </Tooltip>
+        )}
       </TableCell>
       <Hidden smDown>
         <TableCell noWrap>
@@ -88,6 +131,9 @@ export const NodeBalancerTableRow = (props: NodeBalancer) => {
       <TableCell>
         <IPAddress ips={[ipv4]} isHovered={true} showMore />
       </TableCell>
+      <Hidden mdDown>
+        <TableCell>{backendConnectivity}</TableCell>
+      </Hidden>
       <Hidden smDown>
         <TableCell data-qa-region>
           <RegionIndicator region={region} />

@@ -6,9 +6,10 @@ import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
-import { AccessCell } from 'src/features/ObjectStorage/AccessKeyLanding/AccessCell';
+import { useIsInferencePlatformEnabled } from 'src/features/InferencePlatform/utils';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 
+import { AccessCell } from './AccessCell';
 import {
   StyledAccessCell,
   StyledPermissionsCell,
@@ -33,11 +34,16 @@ export const ViewAPITokenDrawer = (props: Props) => {
     globalGrantType: 'child_account_access',
   });
 
+  const { isInferencePlatformEnabled } = useIsInferencePlatformEnabled();
+
   const allPermissions = scopeStringToPermTuples(token?.scopes ?? '');
 
   // Visually hide the "Child Account Access" permission even though it's still part of the base perms.
   const hideChildAccountAccessScope =
     profile?.user_type !== 'parent' || isChildAccountAccessRestricted;
+
+  // Hide Inference scope when the feature is not enabled
+  const hideInferenceScope = !isInferencePlatformEnabled;
 
   return (
     <Drawer onClose={onClose} open={open} title={token?.label ?? 'Token'}>
@@ -65,7 +71,9 @@ export const ViewAPITokenDrawer = (props: Props) => {
             if (
               !basePermNameMap[scopeTup[0]] ||
               (hideChildAccountAccessScope &&
-                basePermNameMap[scopeTup[0]] === 'Child Account Access')
+                basePermNameMap[scopeTup[0]] === 'Child Account Access') ||
+              (hideInferenceScope &&
+                basePermNameMap[scopeTup[0]] === 'Inference')
             ) {
               return null;
             }

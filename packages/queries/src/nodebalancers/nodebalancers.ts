@@ -52,9 +52,22 @@ export const useNodeBalancersQuery = (params: Params, filter: Filter) =>
     placeholderData: keepPreviousData,
   });
 
+export const useNodebalancersBetaQuery = (params: Params, filter: Filter) =>
+  useQuery<ResourcePage<NodeBalancer>, APIError[]>({
+    ...nodebalancerQueries.nodebalancers._ctx.paginatedBeta(params, filter),
+    placeholderData: keepPreviousData,
+  });
+
 export const useNodeBalancerQuery = (id: number, enabled = true) => {
   return useQuery<NodeBalancer, APIError[]>({
     ...nodebalancerQueries.nodebalancer(id),
+    enabled,
+  });
+};
+
+export const useNodeBalancerBetaQuery = (id: number, enabled = true) => {
+  return useQuery<NodeBalancer, APIError[]>({
+    ...nodebalancerQueries.nodebalancer(id)._ctx.beta,
     enabled,
   });
 };

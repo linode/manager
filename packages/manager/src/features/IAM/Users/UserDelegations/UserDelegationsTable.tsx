@@ -14,14 +14,14 @@ import { useGetDelegatedChildAccountsForUserQuery } from '@linode/queries';
 import { useNavigate, useParams, useSearch } from '@tanstack/react-router';
 import * as React from 'react';
 
-import { NO_ITEMS_TO_DISPLAY_TEXT } from 'src/features/IAM/Shared/constants';
-import { DebouncedSearchField } from 'src/features/IAM/Shared/DebouncedSearchField/DebouncedSearchField';
-import { ErrorState } from 'src/features/IAM/Shared/ErrorState/ErrorState';
-import globalStyles from 'src/features/IAM/Shared/global.module.css';
-
+import { useHasTableStripingEnabled } from '../../hooks/useHasTableStripingEnabled';
 import { useOrder } from '../../hooks/useOrder';
 import { usePagination } from '../../hooks/usePagination';
 import { CircleProgress } from '../../Shared/CircleProgress/CircleProgress';
+import { NO_ITEMS_TO_DISPLAY_TEXT } from '../../Shared/constants';
+import { DebouncedSearchField } from '../../Shared/DebouncedSearchField/DebouncedSearchField';
+import { ErrorState } from '../../Shared/ErrorState/ErrorState';
+import globalStyles from '../../Shared/global.module.css';
 import { Paper } from '../../Shared/Paper/Paper';
 
 const USER_DELEGATION_ROUTE = '/iam/users/$username/delegations';
@@ -33,6 +33,7 @@ export const UserDelegationsTable = () => {
     from: USER_DELEGATION_ROUTE,
   });
   const navigate = useNavigate();
+  const hasTableStripingEnabled = useHasTableStripingEnabled();
 
   const { handleOrderChange, order, orderBy } = useOrder({
     initialRoute: {
@@ -101,8 +102,8 @@ export const UserDelegationsTable = () => {
     <Paper>
       <h2
         style={{
-          font: Typography.Heading.M,
-          marginBottom: Spacing.S24,
+          font: Typography.Heading.S,
+          marginBottom: Spacing.S16,
         }}
       >
         Account Delegations
@@ -152,7 +153,7 @@ export const UserDelegationsTable = () => {
             </TableRow>
           )}
           {childAccounts?.data?.map((childAccount) => (
-            <TableRow key={childAccount.euuid} zebra>
+            <TableRow key={childAccount.euuid} zebra={hasTableStripingEnabled}>
               <TableCell style={{ overflowX: 'auto' }}>
                 {childAccount.company}
               </TableCell>

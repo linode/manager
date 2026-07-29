@@ -20,6 +20,9 @@ export const placeholderMap: Record<string, string> = {
   volume: 'Search Volumes',
   vpc: 'Search VPCs',
   delegates: 'Search users',
+  mysql_database: 'Search MySQL Databases',
+  postgresql_database: 'Search PostgreSQL Databases',
+  valkey_database: 'Search Valkey Databases',
 };
 
 export const getCreateLinkForEntityType = (entityType: AccessType): string => {
@@ -31,6 +34,10 @@ export const getCreateLinkForEntityType = (entityType: AccessType): string => {
 
   if (entityType === 'lkecluster') {
     return '/kubernetes/create';
+  }
+
+  if (entityType.includes('database')) {
+    return '/databases/create';
   }
 
   return `/${entityType}s/create`;

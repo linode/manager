@@ -1,0 +1,26 @@
+import {
+  ZeroErrorIcon,
+  ZeroErrorState,
+  ZeroErrorTitle,
+} from '@akamai/cds-components/react';
+import * as React from 'react';
+
+const ERROR_STATE_TITLE = 'An unexpected error occurred.';
+
+interface ErrorStateProps {
+  errorText?: string;
+  heightPx?: string;
+}
+
+export const ErrorState = (props: ErrorStateProps) => {
+  const { errorText, heightPx } = props;
+
+  return (
+    <ZeroErrorState
+      style={{ background: 'transparent', height: heightPx || 'auto' }}
+    >
+      <ZeroErrorIcon icon="error-cloud" />
+      <ZeroErrorTitle>{errorText ?? ERROR_STATE_TITLE}</ZeroErrorTitle>
+    </ZeroErrorState>
+  );
+};

@@ -1,5 +1,4 @@
 import {
-  Badge,
   Checkbox,
   Icon,
   NotificationBanner,
@@ -15,7 +14,6 @@ import { Controller } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
 import { MANAGE_NETWORKING_LEARN_MORE_LINK } from 'src/features/Databases/constants';
-import { useFlags } from 'src/hooks/useFlags';
 
 import type { PrivateNetwork, VPC } from '@linode/api-v4';
 
@@ -45,7 +43,6 @@ export const DatabaseVPC = (props: DatabaseVPCProps) => {
     subnetId,
     mode,
   } = props;
-  const flags = useFlags();
 
   const { data: selectedRegion } = useRegionQuery(region);
   const regionSupportsVPCs = selectedRegion?.capabilities.includes('VPCs');
@@ -87,23 +84,10 @@ export const DatabaseVPC = (props: DatabaseVPCProps) => {
         }}
       >
         <h4 style={{ margin: 0 }}>Assign a VPC</h4>
-        {flags.databaseVpcBeta && (
-          <Badge
-            color="neutral"
-            style={{ marginLeft: Spacing.S8 }}
-            variant="solid"
-          >
-            BETA
-          </Badge>
-        )}
       </div>
       <p style={{ margin: 0 }}>
         Assign this cluster to an existing VPC.{' '}
-        <Link
-          to={`${MANAGE_NETWORKING_LEARN_MORE_LINK + (flags.databaseVpcBeta ? '-beta' : '')}`}
-        >
-          Learn more.
-        </Link>
+        <Link to={MANAGE_NETWORKING_LEARN_MORE_LINK}>Learn more.</Link>
       </p>
       <div style={{ display: 'flex' }}>
         <Controller

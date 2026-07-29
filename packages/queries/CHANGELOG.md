@@ -1,3 +1,16 @@
+## [2026-07-29] - v0.27.0
+
+
+### Removed:
+
+- Legacy database backups query ([#350](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/350))
+
+### Upcoming Features:
+
+- TFA Enforcement queries ([#522](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/522))
+- Support Live Chat: add a query to check whether live chat is available ([#558](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/558))
+- Support for GET NodeBalancer beta endpoint queries ([#554](https://git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/554))
+
 ## [2026-06-29] - v0.26.0
 
 

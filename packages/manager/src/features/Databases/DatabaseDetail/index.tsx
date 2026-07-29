@@ -1,9 +1,4 @@
-import {
-  Badge,
-  NotificationBanner,
-  Tab,
-  Tabs,
-} from '@akamai/cds-components/react';
+import { NotificationBanner, Tab, Tabs } from '@akamai/cds-components/react';
 import { Spacing } from '@akamai/cds-tokens';
 import { getAPIErrorOrDefault } from '@akamai/compute-ui-core/api';
 import {
@@ -24,18 +19,17 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { DatabaseDetailContext } from 'src/features/Databases/DatabaseDetail/DatabaseDetailContext';
 import DatabaseLogo from 'src/features/Databases/DatabaseLanding/DatabaseLogo';
-import { useFlags } from 'src/hooks/useFlags';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 
 import { CircleProgress } from '../shared/CircleProgress/CircleProgress';
 import { ErrorState } from '../shared/ErrorState/ErrorState';
 import { useTabs } from '../shared/hooks/useTabs';
 
+import type { Tab as TabInterface } from '../shared/hooks/useTabs';
 import type { TabsElement } from '@akamai/cds-components/react';
 import type { APIError } from '@linode/api-v4/lib/types';
 
 export const DatabaseDetail = () => {
-  const flags = useFlags();
   const navigate = useNavigate();
   const location = useLocation();
   const tabsRef = React.useRef<TabsElement>(null);
@@ -62,11 +56,6 @@ export const DatabaseDetail = () => {
   const { editableLabelError, resetEditableLabel, setEditableLabelError } =
     useEditableLabelState();
 
-  const isDefault = database?.platform === 'rdbms-default';
-  const isMonitorEnabled = isDefault && flags.dbaasV2MonitorMetrics?.enabled;
-  const isVPCEnabled = isDefault && flags.databaseVpc;
-  const isAdvancedConfigEnabled = isDefault && flags.databaseAdvancedConfig;
-
   const settingsTabPath = `/databases/$engine/$databaseId/settings`;
 
   const { tabs, tabIndex, handleTabChange } = useTabs(
@@ -78,21 +67,10 @@ export const DatabaseDetail = () => {
       {
         to: `/databases/$engine/$databaseId/metrics`,
         title: 'Metrics',
-        hide: !isMonitorEnabled,
-        chip: flags.dbaasV2MonitorMetrics?.beta ? (
-          <Badge
-            color="neutral"
-            style={{ marginLeft: Spacing.S8 }}
-            variant="solid"
-          >
-            BETA
-          </Badge>
-        ) : null,
       },
       {
         to: `/databases/$engine/$databaseId/networking`,
         title: 'Networking',
-        hide: !isVPCEnabled,
       },
       {
         to: `/databases/$engine/$databaseId/backups`,
@@ -101,7 +79,6 @@ export const DatabaseDetail = () => {
       {
         to: `/databases/$engine/$databaseId/resize`,
         title: 'Resize',
-        hide: !flags.databaseResize,
       },
       {
         to: settingsTabPath,
@@ -110,9 +87,8 @@ export const DatabaseDetail = () => {
       {
         to: `/databases/$engine/$databaseId/configs`,
         title: 'Advanced Configuration',
-        hide: !isAdvancedConfigEnabled,
       },
-    ],
+    ] as TabInterface[],
     tabsRef
   );
 
@@ -162,11 +138,6 @@ export const DatabaseDetail = () => {
       value={{
         database,
         disabled: isDatabasesGrantReadOnly,
-        engine,
-        isMonitorEnabled,
-        isVPCEnabled,
-        isResizeEnabled: flags.databaseResize,
-        isAdvancedConfigEnabled,
       }}
     >
       <DocumentTitleSegment
@@ -227,7 +198,7 @@ export const DatabaseDetail = () => {
         />
       )}
       <Outlet />
-      {isDefault && <DatabaseLogo />}
+      <DatabaseLogo />
     </DatabaseDetailContext.Provider>
   );
 };

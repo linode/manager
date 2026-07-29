@@ -3,8 +3,7 @@ import { Spacing, Typography } from '@akamai/cds-tokens';
 import * as React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
-import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
-
+import { usePermissions } from '../../../hooks/usePermissions';
 import { IAM_SSO_ENFORCE_PENDO_IDS } from '../../constants';
 
 import type { EnforcementSettingsFormValues } from './EnforcementSettings';

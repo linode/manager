@@ -1,10 +1,13 @@
+import {
+  authenticationType,
+  BearerTokenAuthenticationDetails,
+  CustomHTTPSDetails,
+} from '@linode/api-v4';
 import { Divider, Typography } from '@linode/ui';
 import React from 'react';
 
 import { MASKED_VALUE } from 'src/features/Delivery/Destinations/constants';
 import { LabelValue } from 'src/features/Delivery/Shared/LabelValue';
-
-import type { CustomHTTPSDetails } from '@linode/api-v4';
 
 export const DestinationCustomHTTPSDetailsSummary = (
   props: CustomHTTPSDetails
@@ -33,6 +36,37 @@ export const DestinationCustomHTTPSDetailsSummary = (
             label="Password"
             value={MASKED_VALUE}
           />
+        </>
+      )}
+      {authentication.type === authenticationType.BearerToken && (
+        <>
+          <LabelValue
+            data-testid="bearer-token"
+            label="Bearer Token"
+            value={MASKED_VALUE}
+          />
+          {(authentication?.details as BearerTokenAuthenticationDetails)
+            ?.bearer_token_authentication_header_name && (
+            <LabelValue
+              data-testid="bearer-header-name"
+              label="Header Name"
+              value={
+                (authentication.details as BearerTokenAuthenticationDetails)
+                  .bearer_token_authentication_header_name!
+              }
+            />
+          )}
+          {(authentication?.details as BearerTokenAuthenticationDetails)
+            ?.bearer_token_authentication_token_prefix && (
+            <LabelValue
+              data-testid="bearer-token-prefix"
+              label="Token Prefix"
+              value={
+                (authentication.details as BearerTokenAuthenticationDetails)
+                  .bearer_token_authentication_token_prefix!
+              }
+            />
+          )}
         </>
       )}
       <Divider sx={{ my: 3 }} />

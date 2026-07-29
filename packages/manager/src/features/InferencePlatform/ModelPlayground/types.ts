@@ -44,8 +44,7 @@ export const DEFAULT_PLAYGROUND_SETTINGS: PlaygroundSettings = {
 /**
  * Maps UI settings to the vLLM API schema.
  * `undefined` becomes `null` to explicitly unset a field on the server.
- * `stream` is not included — pass it as the `streaming` param on
- * `requestInferenceChatCompletion` instead.
+ * `stream` and `stream_options` are included and derived from `settings.stream`.
  */
 export const mapSettingsToApiOptions = (
   settings: PlaygroundSettings
@@ -55,11 +54,12 @@ export const mapSettingsToApiOptions = (
   max_tokens: settings.max_tokens ?? null,
   min_p: settings.min_p ?? null,
   presence_penalty: settings.presence_penalty ?? null,
-  reasoning_effort: settings.reasoning_effort,
+  reasoning_effort: settings.enableThinking ? settings.reasoning_effort : null,
   repetition_penalty: settings.repetition_penalty ?? null,
   seed: settings.seed ?? null,
   stop: settings.stop ?? null,
   stream: settings.stream,
+  stream_options: settings.stream ? { include_usage: true } : null,
   temperature: settings.temperature ?? null,
   top_k: settings.top_k ?? null,
   top_p: settings.top_p ?? null,

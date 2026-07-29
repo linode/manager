@@ -39,7 +39,7 @@ describe('FirewallSelect', () => {
     const firewalls = firewallFactory.buildList(3);
 
     server.use(
-      http.get('*/v4/networking/firewalls', () => {
+      http.get('*/v4beta/networking/firewalls', () => {
         return HttpResponse.json(makeResourcePage(firewalls));
       })
     );
@@ -59,7 +59,7 @@ describe('FirewallSelect', () => {
     const firewalls = firewallFactory.buildList(2);
 
     server.use(
-      http.get('*/v4/networking/firewalls', () => {
+      http.get('*/v4beta/networking/firewalls', () => {
         return HttpResponse.json(makeResourcePage(firewalls));
       })
     );
@@ -77,7 +77,7 @@ describe('FirewallSelect', () => {
     const firewalls = firewallFactory.buildList(2);
 
     server.use(
-      http.get('*/v4/networking/firewalls', () => {
+      http.get('*/v4beta/networking/firewalls', () => {
         return HttpResponse.json(makeResourcePage(firewalls));
       })
     );
@@ -114,7 +114,7 @@ describe('FirewallSelect', () => {
 
   it('shows "No firewall" as selected when value is NO_FIREWALL_ID', async () => {
     server.use(
-      http.get('*/v4/networking/firewalls', () => {
+      http.get('*/v4beta/networking/firewalls', () => {
         return HttpResponse.json(makeResourcePage([]));
       })
     );

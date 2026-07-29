@@ -1,17 +1,30 @@
-import { Box, Stack, useTheme } from '@linode/ui';
+import { Box, keyframes, Stack, useTheme } from '@linode/ui';
 import Check from '@mui/icons-material/Check';
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import Collapse from '@mui/material/Collapse';
-import { keyframes } from '@mui/material/styles';
-import React, { memo, useContext, useEffect, useRef, useState } from 'react';
+import React, {
+  memo,
+  useCallback,
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
 
 import AI from 'src/assets/icons/entityIcons/ai.svg';
 import CoreUser from 'src/assets/icons/entityIcons/coreuser.svg';
 import { Markdown } from 'src/components/Markdown/Markdown';
 
+import { pulse } from './animations';
+import { ClearOutputButton } from './ClearOutputButton';
+import { MetadataBar } from './MetadataBar';
 import { ModelPlaygroundOutputContext } from './ModelPlaygroundContext';
+import { PlaygroundEmptyState } from './PlaygroundEmptyState';
 
 import type { Message } from './ModelPlaygroundContext';
+
+const ICON_AND_SECONDARY_COLOR = 'text.secondary' as const;
 
 const breathe = keyframes`
   0%, 100% { opacity: 0.2; transform: scale(0.8); }
@@ -28,12 +41,6 @@ const cursorBlink = keyframes`
   50% { opacity: 0; }
 `;
 
-const ripple = keyframes`
-  0% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.6); }
-  70% { box-shadow: 0 0 0 6px rgba(76, 175, 80, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0); }
-`;
-
 const DOT_SX = {
   animation: `${breathe} 1.2s ease-in-out infinite`,
   bgcolor: 'text.secondary',
@@ -41,8 +48,6 @@ const DOT_SX = {
   height: 8,
   width: 8,
 } as const;
-
-const ICON_AND_SECONDARY_COLOR = 'text.secondary' as const;
 
 const ICON_BOX_SX = {
   alignItems: 'center',
@@ -65,13 +70,18 @@ const MARKDOWN_SX = {
   '& p:last-of-type': { mb: 0 },
 } as const;
 
+// Prevents markdown-it from treating 4-space-indented lines in model reasoning as code blocks.
+const LEADING_INDENT_RE = /^ {4}/gm;
+
 const ReasoningBlock = memo(
   ({
     isStreaming,
+    onExpand,
     thinking,
     wasInterrupted,
   }: {
     isStreaming: boolean;
+    onExpand?: () => void;
     thinking: string;
     wasInterrupted: boolean;
   }) => {
@@ -80,6 +90,7 @@ const ReasoningBlock = memo(
     const [constrainHeight, setConstrainHeight] = useState(false);
     const theme = useTheme();
     const scrollRef = useRef<HTMLDivElement>(null);
+    const prevConstrainHeightRef = useRef(false);
 
     // Open when streaming begins; close when it finishes.
     // Delay removing the height constraint until after the Collapse animation (300ms).
@@ -98,6 +109,19 @@ const ReasoningBlock = memo(
       const t = setTimeout(() => setConstrainHeight(false), 300);
       return () => clearTimeout(t);
     }, [isStreaming, wasInterrupted]);
+
+    // After the height constraint is removed on cancellation, notify the parent
+    // so it can scroll the outer container to the bottom.
+    useEffect(() => {
+      if (
+        prevConstrainHeightRef.current &&
+        !constrainHeight &&
+        wasInterrupted
+      ) {
+        onExpand?.();
+      }
+      prevConstrainHeightRef.current = constrainHeight;
+    }, [constrainHeight, wasInterrupted, onExpand]);
 
     // Scroll to bottom of preview as reasoning arrives.
     useEffect(() => {
@@ -127,7 +151,7 @@ const ReasoningBlock = memo(
             <Box
               sx={{
                 animation: isStreaming
-                  ? `${ripple} 1.2s ease-out infinite`
+                  ? `${pulse} 1.2s ease-out infinite`
                   : 'none',
                 bgcolor: isStreaming
                   ? 'text.disabled'
@@ -182,12 +206,15 @@ const ReasoningBlock = memo(
               color: ICON_AND_SECONDARY_COLOR,
               fontSize: theme.tokens.font.FontSize.Xs,
               maxHeight: constrainHeight ? 120 : 'none',
+              overflowX: 'hidden',
               overflowY: constrainHeight ? 'auto' : 'visible',
               px: 1.5,
               py: 1,
             }}
           >
-            <Markdown textOrMarkdown={thinking} />
+            <Markdown
+              textOrMarkdown={thinking.replace(LEADING_INDENT_RE, '')}
+            />
           </Box>
         </Collapse>
       </Box>
@@ -226,10 +253,11 @@ const UserMessageRow = memo(({ message }: { message: Message }) => {
 interface AssistantMessageRowProps {
   isStreaming: boolean;
   message: Message;
+  onReasoningExpand?: () => void;
 }
 
 const AssistantMessageRow = memo(
-  ({ isStreaming, message }: AssistantMessageRowProps) => {
+  ({ isStreaming, message, onReasoningExpand }: AssistantMessageRowProps) => {
     const hasAnyChunk = Boolean(message.content || message.thinking);
     const hasAnswerContent = Boolean(message.content);
 
@@ -244,7 +272,7 @@ const AssistantMessageRow = memo(
               alignItems="center"
               direction="row"
               gap={0.75}
-              sx={{ pt: 2.0 }}
+              sx={{ mb: 3, pt: 2.0 }}
             >
               <Box sx={{ ...DOT_SX }} />
               <Box sx={{ ...DOT_SX, animationDelay: '0.2s' }} />
@@ -254,6 +282,7 @@ const AssistantMessageRow = memo(
           {message.thinking && (
             <ReasoningBlock
               isStreaming={isStreaming && message.content === ''}
+              onExpand={onReasoningExpand}
               thinking={message.thinking}
               wasInterrupted={!isStreaming && message.content === ''}
             />
@@ -272,6 +301,20 @@ const AssistantMessageRow = memo(
               }}
             />
           )}
+          {message.startedAt !== undefined && (
+            <Box
+              sx={{
+                mt: message.content || message.thinking ? 1.5 : 0,
+              }}
+            >
+              <MetadataBar
+                error={message.error}
+                metadata={message.metadata}
+                startedAt={message.startedAt}
+                timeToFirstTokenMs={message.timeToFirstTokenMs}
+              />
+            </Box>
+          )}
         </Box>
       </Stack>
     );
@@ -285,10 +328,13 @@ export const OutputBox = () => {
   const theme = useTheme();
   const scrollBoxRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
-  // Tracks a queued scroll RAF so frequent stream updates don't stack
-  // multiple scrollIntoView calls in consecutive frames.
-  const scrollFrameRef = useRef<null | number>(null);
   const shouldAutoScrollRef = useRef(true);
+
+  const handleReasoningExpand = useCallback(() => {
+    if (shouldAutoScrollRef.current) {
+      bottomRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    }
+  }, []);
 
   const handleScroll = () => {
     const box = scrollBoxRef.current;
@@ -303,57 +349,52 @@ export const OutputBox = () => {
     shouldAutoScrollRef.current = distanceFromBottom < 80;
   };
 
-  useEffect(() => {
+  // Scroll to bottom synchronously before paint so the MetadataBar and new
+  // content never appear displaced for even a single frame.
+  useLayoutEffect(() => {
     if (!shouldAutoScrollRef.current) {
       return;
     }
-
-    // Coalesce rapid updates into one pending frame.
-    if (scrollFrameRef.current !== null) {
-      cancelAnimationFrame(scrollFrameRef.current);
+    const box = scrollBoxRef.current;
+    if (box) {
+      box.scrollTop = box.scrollHeight;
     }
-
-    scrollFrameRef.current = requestAnimationFrame(() => {
-      bottomRef.current?.scrollIntoView({
-        behavior: streamingMessageId ? 'auto' : 'smooth',
-        block: 'end',
-      });
-      scrollFrameRef.current = null;
-    });
-
-    return () => {
-      // Prevent stale queued scroll work after dependency changes/unmount.
-      if (scrollFrameRef.current !== null) {
-        cancelAnimationFrame(scrollFrameRef.current);
-        scrollFrameRef.current = null;
-      }
-    };
-  }, [messages, streamingMessageId]);
+  }, [messages]);
 
   return (
-    <Box
-      onScroll={handleScroll}
-      ref={scrollBoxRef}
-      sx={{
-        bgcolor:
-          theme.palette.mode === 'light' ? theme.bg.white : theme.bg.offWhite,
-        flex: 1,
-        overflowY: 'auto',
-        p: 2,
-      }}
-    >
-      {messages.map((message) =>
-        message.role === 'user' ? (
-          <UserMessageRow key={message.id} message={message} />
-        ) : (
-          <AssistantMessageRow
-            isStreaming={message.id === streamingMessageId}
-            key={message.id}
-            message={message}
-          />
-        )
-      )}
-      <div ref={bottomRef} />
+    <Box sx={{ flex: 1, minHeight: 0 }}>
+      <Box
+        onScroll={handleScroll}
+        ref={scrollBoxRef}
+        sx={{
+          bgcolor:
+            theme.palette.mode === 'light' ? theme.bg.white : theme.bg.offWhite,
+          height: '100%',
+          overflowY: 'auto',
+          p: 2,
+          position: 'relative',
+        }}
+      >
+        <ClearOutputButton />
+        <PlaygroundEmptyState />
+        {messages.length > 0 && (
+          <>
+            {messages.map((message) =>
+              message.role === 'user' ? (
+                <UserMessageRow key={message.id} message={message} />
+              ) : (
+                <AssistantMessageRow
+                  isStreaming={message.id === streamingMessageId}
+                  key={message.id}
+                  message={message}
+                  onReasoningExpand={handleReasoningExpand}
+                />
+              )
+            )}
+            <div ref={bottomRef} />
+          </>
+        )}
+      </Box>
     </Box>
   );
 };
