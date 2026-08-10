@@ -6,7 +6,6 @@ import {
   Notice,
   Radio,
   RadioGroup,
-  TooltipIcon,
 } from '@linode/ui';
 import { FormLabel } from '@mui/material';
 import * as React from 'react';
@@ -15,7 +14,6 @@ import { Link } from 'src/components/Link';
 
 export interface HAControlPlaneProps {
   highAvailabilityPrice: string;
-  isAPLEnabled?: boolean;
   isErrorKubernetesTypes: boolean;
   isLoadingKubernetesTypes: boolean;
   selectedRegionId: string | undefined;
@@ -46,7 +44,6 @@ export const getRegionPriceLink = (selectedRegionId: string) => {
 export const HAControlPlane = (props: HAControlPlaneProps) => {
   const {
     highAvailabilityPrice,
-    isAPLEnabled,
     isErrorKubernetesTypes,
     isLoadingKubernetesTypes,
     selectedRegionId,
@@ -58,7 +55,7 @@ export const HAControlPlane = (props: HAControlPlaneProps) => {
   };
 
   return (
-    <FormControl data-testid="ha-control-plane-form" disabled={isAPLEnabled}>
+    <FormControl data-testid="ha-control-plane-form">
       <FormLabel
         id="ha-radio-buttons-group-label"
         sx={(theme) => ({
@@ -88,10 +85,8 @@ export const HAControlPlane = (props: HAControlPlaneProps) => {
         aria-labelledby="ha-radio-buttons-group-label"
         name="ha-radio-buttons-group"
         onChange={(e) => handleChange(e)}
-        value={isAPLEnabled ? 'yes' : undefined}
       >
         <FormControlLabel
-          checked={isAPLEnabled ? true : undefined}
           control={<Radio data-testid="ha-radio-button-yes" />}
           label={
             <Box alignItems="center" display="flex" flexDirection="row">
@@ -101,15 +96,6 @@ export const HAControlPlane = (props: HAControlPlaneProps) => {
                   ? `For this region, HA control plane costs $${highAvailabilityPrice}/month.`
                   : '(Select a region to view price information.)'}
               </Typography>
-              {isAPLEnabled && (
-                <TooltipIcon
-                  status="info"
-                  sxTooltipIcon={{ padding: '8px', marginLeft: '4px' }}
-                  text={
-                    'Enabled by default when Akamai App Platform is enabled.'
-                  }
-                />
-              )}
             </Box>
           }
           name="yes"
@@ -117,7 +103,6 @@ export const HAControlPlane = (props: HAControlPlaneProps) => {
         />
 
         <FormControlLabel
-          checked={isAPLEnabled ? false : undefined}
           control={<Radio data-testid="ha-radio-button-no" />}
           label="No"
           name="no"

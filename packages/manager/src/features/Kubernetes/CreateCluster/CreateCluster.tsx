@@ -625,7 +625,6 @@ export const CreateCluster = () => {
                       ? UNKNOWN_PRICE
                       : highAvailabilityPrice
                   }
-                  isAPLEnabled={aplEnabled}
                   isErrorKubernetesTypes={isErrorKubernetesTypes}
                   isLoadingKubernetesTypes={isLoadingKubernetesTypes}
                   selectedRegionId={selectedRegion?.id}
