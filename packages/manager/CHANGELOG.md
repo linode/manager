@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2026-08-12] - v1.165.1
+
+
+### Added:
+
+- COMPUTE_CHAT_* environment variables for live chat to the Jenkins configuration
+
+
 ## [2026-07-29] - v1.165.0
 
 
