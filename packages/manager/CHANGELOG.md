@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2026-08-12] - v1.165.2
+
+
+### Fixed:
+
+- Update Jenkins to skip publish step for "@akamai/cloudpulse" package if no changes made in it.
+
+
 ## [2026-08-12] - v1.165.1
 
 
