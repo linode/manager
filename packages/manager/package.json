@@ -1,6 +1,6 @@
 {
   "name": "@linode/cloud-manager-distributed",
-  "version": "1.165.1",
+  "version": "1.165.2",
   "private": false,
   "description": "The Linode Manager website",
   "bugs": {
