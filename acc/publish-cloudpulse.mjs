@@ -63,7 +63,7 @@ const assertVersionIsBumped = (distTag) => {
         console.log(
             `${pkg.name}: version ${currentPackageVersion} is already published. So skipping this step.`
         );
-        process.exit(1);
+        process.exit(0);
     }
 };
 
