@@ -37,7 +37,39 @@ const build = () => {
     });
 };
 
+// Fetches the currently published version for the given dist-tag.
+const getPublishedVersion = (distTag) => {
+    try {
+        const publishedVersion = execSync(
+            `npm view ${pkg.name}@${distTag} version`,
+            { encoding: "utf8", stdio: ["pipe", "pipe", "pipe"] }
+        ).trim();
+
+        return publishedVersion || null;
+    } catch (error) {
+        // npm view exits non-zero if the package/tag doesn't exist yet
+        return null;
+    }
+};
+
+// Ensures the local package.json version has actually been bumped
+// compared to whatever is currently published, so we never republish
+// (or reuse) a version that's already out there.
+const assertVersionIsBumped = (distTag) => {
+    const publishedVersion = getPublishedVersion(distTag);
+    const currentPackageVersion = pkg.version;
+
+    if (publishedVersion && currentPackageVersion === publishedVersion) {
+        console.log(
+            `${pkg.name}: version ${currentPackageVersion} is already published. So skipping this step.`
+        );
+        process.exit(1);
+    }
+};
+
 if (isDev || isStage) {
+    assertVersionIsBumped("next");
+
     console.log("Publishing develop/staging:", pkg.version);
     const baseVersion = pkg.version.split("-")[0];
     pkg.version = `${baseVersion}-${env}-${currentDate}-${gitHash}`;
@@ -51,6 +83,7 @@ if (isDev || isStage) {
     });
 
 } else if (isProd) {
+    assertVersionIsBumped("latest");
 
     console.log("Publishing production:", pkg.version);
 
