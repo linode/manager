@@ -14,6 +14,7 @@ import { NoAssignedRoles } from './NoAssignedRoles';
 
 const queryProps = vi.hoisted(() => ({
   useParams: vi.fn(),
+  useSearch: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('@tanstack/react-router', async () => {
@@ -21,6 +22,7 @@ vi.mock('@tanstack/react-router', async () => {
   return {
     ...actual,
     useParams: queryProps.useParams,
+    useSearch: queryProps.useSearch,
   };
 });
 

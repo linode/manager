@@ -1,9 +1,10 @@
-import { Stack } from '@linode/ui';
 import React from 'react';
 
+import { Stack } from '../components';
 import { useInferencePlatform } from '../InferencePlatformContext';
 import { mergeInferenceModel } from '../ModelLibrary/modelLibraryUtils';
 import { BenchmarkBannerSection } from './BenchmarkBannerSection';
+import styles from './Dashboard.module.css';
 import { FeaturedModelsSection } from './FeaturedModelsSection';
 import { LearnSection } from './LearnSection';
 import { ModelExploreCardsSection } from './ModelExploreCardsSection';
@@ -20,7 +21,7 @@ export const Dashboard = () => {
   }, [rawModels]);
 
   return (
-    <Stack gap={3} sx={{ pb: 4, pt: 2, px: 0 }}>
+    <Stack className={styles.dashboard}>
       <ModelExploreCardsSection />
       <UsageSection />
       <FeaturedModelsSection

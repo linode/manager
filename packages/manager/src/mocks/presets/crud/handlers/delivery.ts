@@ -244,6 +244,14 @@ export const createDestinations = (mockState: MockState) => [
             ]
           )
         : undefined;
+      const clientCertificateDetails = (details as CustomHTTPSDetailsExtended)
+        .client_certificate_details
+        ? omitProps(
+            (details as CustomHTTPSDetailsExtended)
+              .client_certificate_details! as any,
+            ['client_private_key_passphrase', 'client_private_key']
+          )
+        : undefined;
 
       const destination =
         type === destinationType.AkamaiObjectStorage
@@ -273,6 +281,7 @@ export const createDestinations = (mockState: MockState) => [
                       ? undefined
                       : authDetails,
                 },
+                client_certificate_details: clientCertificateDetails,
               },
               created,
               updated,

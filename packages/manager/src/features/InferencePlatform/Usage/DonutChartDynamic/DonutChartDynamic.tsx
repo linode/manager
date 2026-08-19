@@ -1,5 +1,4 @@
-import { Box, useTheme } from '@linode/ui';
-import { keyframes } from '@mui/material/styles';
+import { Box, keyframes, useTheme } from '@linode/ui';
 import React from 'react';
 
 import { DonutChart, type DonutChartProps } from 'src/components/DonutChart';

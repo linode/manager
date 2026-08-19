@@ -32,7 +32,7 @@ interface Props {
 export const AttributeMappingSection = ({ control, isEdit, watch }: Props) => {
   return (
     <>
-      <h3 className={styles.sectionHeading}>Attribute Mapping</h3>
+      <div className={styles.sectionHeading}>Attribute Mapping</div>
       <p className={styles.sectionDescription}>
         {ATTRIBUTE_MAPPING_DESCRIPTION}
       </p>

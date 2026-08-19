@@ -96,6 +96,6 @@ describe('ApiKeyTable', () => {
 
   it('shows loading state initially', () => {
     const { getByTestId } = renderWithTheme(<ApiKeyTable {...defaultProps} />);
-    expect(getByTestId('circle-progress')).toBeInTheDocument();
+    expect(getByTestId('loading-spinner')).toBeVisible();
   });
 });

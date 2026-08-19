@@ -1,6 +1,5 @@
 import { Box, Paper, Typography } from '@linode/ui';
-import { useTheme } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import { DateTime } from 'luxon';
 import React from 'react';
 import {
@@ -26,6 +25,7 @@ import {
   tooltipValueFormatter,
 } from './utils';
 
+import type { SxProps } from '@mui/material/styles';
 import type { MouseHandlerDataParam, TooltipContentProps } from 'recharts';
 import type { MetricsDisplayRow } from 'src/components/LineGraph/MetricsDisplay';
 
@@ -35,6 +35,54 @@ export interface DataSet {
 }
 
 export type ChartVariant = 'area' | 'line';
+
+export type TooltipMetricEntry = [string, number];
+
+export type TooltipEntriesByTimestamp = Map<number, TooltipMetricEntry[]>;
+
+export interface CustomTooltipOptions {
+  /**
+   * Optional prop to show the tooltip or not
+   */
+  active?: boolean;
+  /**
+   * Optional active dot interaction handlers.
+   */
+  activeDotHandlers?: ActiveDotHandlers;
+
+  /**
+   * The color mapping for each area in the chart.
+   */
+  areasColorMap?: Record<string, string>;
+
+  /**
+   * The hidden legend rows , not to be show in the tooltip. This allows the tooltip to reflect the same legend state as the on-screen graph.
+   */
+  hiddenLegendRows?: string[];
+
+  /** Controls whether tooltip content should be rendered as active. */
+  isTooltipVisible?: boolean;
+
+  /**
+   * Called after filteredTooltip state changes (e.g. after active dot click). Use this to trigger tooltip position recalculation with updated tooltip dimensions.
+   */
+  onFilteredTooltipChange?: () => void;
+
+  /**
+   * Optional precomputed tooltip metric entries keyed by timestamp.
+   */
+  tooltipEntriesByTimestamp?: TooltipEntriesByTimestamp;
+
+  /**
+   * Optional externally controlled tooltip filter.
+   */
+  tooltipFilter?: { dataKey: string };
+
+  /**
+   * Optional CSS properties to apply to the tooltip content container.
+   */
+  tooltipWrapperStyle?: SxProps;
+}
 
 export interface AreaProps {
   /**
@@ -53,15 +101,25 @@ export interface AreaProps {
   stackId?: string;
 }
 
-interface ZoomCallbacks {
+interface ChartCallbacks {
+  /**
+   * Callback fired on mouse up event on the chart
+   */
+  onClick?: (e: MouseHandlerDataParam) => void;
   /**
    * Callback fired on mouse down event on the chart
    */
   onMouseDown?: (e: MouseHandlerDataParam) => void;
   /**
+   * Callback fired on mouse leave event on the chart.
+   */
+  onMouseLeave?: () => void;
+
+  /**
    * Callback fired on mouse move event on the chart
    */
   onMouseMove?: (e: MouseHandlerDataParam) => void;
+
   /**
    * Callback fired on mouse up event on the chart
    */
@@ -92,6 +150,21 @@ interface XAxisProps {
   tickGap: number;
 }
 
+interface ActiveDotHandlers {
+  /**
+   * Callback fired when an active dot is clicked. The dataKey of the corresponding area is passed as an argument.
+   */
+  onClick?: (dataKey: string) => void;
+  /**
+   * Callback fired when the mouse enters an active dot. The dataKey of the corresponding area is passed as an argument.
+   */
+  onMouseEnter?: (dataKey: string) => void;
+  /**
+   * Callback fired when the mouse leaves an active dot.
+   */
+  onMouseLeave?: () => void;
+}
+
 interface YAxisProps {
   /**
    * The formatter function for the y-axis tick.
@@ -111,6 +184,11 @@ export interface AreaChartProps {
   ariaLabel: string;
 
   /**
+   * chart callbacks (onMouseDown, onMouseMove, onMouseUp, onMouseLeave)
+   */
+  chartCallbacks?: ChartCallbacks;
+
+  /**
    * Optional ref to the chart container element. Used for viewport boundary calculations during tooltip positioning.
    */
   chartContainerRef?: React.RefObject<HTMLDivElement | null>;
@@ -125,6 +203,16 @@ export interface AreaChartProps {
    * @default monotone
    */
   curveType?: 'linear' | 'monotone' | 'natural';
+
+  /**
+   * If passed, the chart will use this tooltip component instead of the default one. This allows for custom tooltip rendering according to consumers.
+   */
+  CustomConsumerTooltip?: React.ComponentType<CustomTooltipProps>;
+
+  /**
+   * Optional grouped options used only by custom tooltip renderers.
+   */
+  customTooltipOptions?: CustomTooltipOptions;
 
   /**
    * data to be displayed on the graph
@@ -234,18 +322,19 @@ export interface AreaChartProps {
    * y-axis properties
    */
   yAxisProps?: YAxisProps;
-
-  /**
-   * zoom callbacks (onMouseDown, onMouseMove, onMouseUp)
-   */
-  zoomCallbacks?: ZoomCallbacks;
 }
 
 interface CustomTooltipProps extends TooltipContentProps {
   /**
+   * Optional grouped options used by custom tooltip renderers.
+   */
+  customTooltipOptions?: CustomTooltipOptions;
+
+  /**
    * timezone for formatting the tooltip label timestamp
    */
   timezone: string;
+
   /**
    * formatter for the tooltip value
    */
@@ -285,16 +374,31 @@ export const AreaChart = (props: AreaChartProps) => {
     xAxisTickCount,
     yAxisProps,
     tooltipCustomValueFormatter,
-    zoomCallbacks,
+    chartCallbacks,
     referenceArea,
     tooltipRef,
     chartContainerRef,
     tooltipPosition,
     onHiddenAreasChange,
+    CustomConsumerTooltip,
+    customTooltipOptions,
   } = props;
 
+  const {
+    tooltipFilter,
+    onFilteredTooltipChange,
+    isTooltipVisible,
+    activeDotHandlers,
+  } = customTooltipOptions ?? {};
+  const {
+    onClick: onActiveDotClick,
+    onMouseEnter: onActiveDotMouseEnter,
+    onMouseLeave: onActiveDotMouseLeave,
+  } = activeDotHandlers ?? {};
+
   const theme = useTheme();
-  const { onMouseDown, onMouseMove, onMouseUp } = zoomCallbacks ?? {};
+  const { onMouseDown, onMouseMove, onMouseUp, onMouseLeave, onClick } =
+    chartCallbacks ?? {};
   const { referenceStart, referenceEnd } = referenceArea ?? {};
 
   const [activeSeries, setActiveSeries] = React.useState<Array<string>>([]);
@@ -313,16 +417,44 @@ export const AreaChart = (props: AreaChartProps) => {
   };
 
   const TooltipWrapper = React.useCallback(
-    (tooltipProps: TooltipContentProps) => (
-      <CustomTooltip
-        {...tooltipProps}
-        timezone={timezone}
-        tooltipCustomValueFormatter={tooltipCustomValueFormatter}
-        tooltipRef={tooltipRef}
-        unit={unit}
-      />
-    ),
-    [timezone, tooltipCustomValueFormatter, tooltipRef, unit]
+    (tooltipProps: TooltipContentProps) => {
+      const controlledTooltipActive =
+        isTooltipVisible === undefined
+          ? undefined
+          : Boolean(tooltipProps.active && isTooltipVisible);
+      return CustomConsumerTooltip ? (
+        React.createElement(CustomConsumerTooltip, {
+          ...tooltipProps,
+          customTooltipOptions: {
+            ...customTooltipOptions,
+            active: controlledTooltipActive,
+            hiddenLegendRows: activeSeries,
+          },
+          timezone,
+          tooltipCustomValueFormatter,
+          tooltipRef,
+          unit,
+        })
+      ) : (
+        <CustomTooltip
+          {...tooltipProps}
+          timezone={timezone}
+          tooltipCustomValueFormatter={tooltipCustomValueFormatter}
+          tooltipRef={tooltipRef}
+          unit={unit}
+        />
+      );
+    },
+    [
+      CustomConsumerTooltip,
+      activeSeries,
+      customTooltipOptions,
+      isTooltipVisible,
+      timezone,
+      tooltipCustomValueFormatter,
+      tooltipRef,
+      unit,
+    ]
   );
 
   const CustomLegend = ({ legendHeight }: { legendHeight?: string }) => {
@@ -353,6 +485,21 @@ export const AreaChart = (props: AreaChartProps) => {
     width: '100%',
   };
 
+  const handleMouseMove = (e: MouseHandlerDataParam) => {
+    // Call external callback if provided in chartCallbacks
+    if (onMouseMove) {
+      onMouseMove(e);
+    }
+  };
+
+  const handleMouseLeave = () => {
+    onMouseLeave?.();
+  };
+
+  React.useLayoutEffect(() => {
+    onFilteredTooltipChange?.();
+  }, [onFilteredTooltipChange, tooltipFilter]);
+
   React.useEffect(() => {
     onHiddenAreasChange?.(activeSeries);
   }, [activeSeries, onHiddenAreasChange]);
@@ -370,8 +517,10 @@ export const AreaChart = (props: AreaChartProps) => {
           aria-label={ariaLabel}
           data={data}
           margin={margin}
+          onClick={onClick}
           onMouseDown={onMouseDown}
-          onMouseMove={onMouseMove}
+          onMouseLeave={handleMouseLeave}
+          onMouseMove={handleMouseMove}
           onMouseUp={onMouseUp}
         >
           <CartesianGrid
@@ -452,6 +601,15 @@ export const AreaChart = (props: AreaChartProps) => {
           )}
           {areas.map(({ color, dataKey, stackId }) => (
             <Area
+              activeDot={
+                customTooltipOptions && isTooltipVisible
+                  ? {
+                      onClick: () => onActiveDotClick?.(dataKey),
+                      onMouseEnter: () => onActiveDotMouseEnter?.(dataKey),
+                      onMouseLeave: () => onActiveDotMouseLeave?.(),
+                    }
+                  : false
+              }
               connectNulls={connectNulls}
               dataKey={dataKey}
               dot={{ r: showDot ? dotRadius : 0 }}

@@ -47,6 +47,7 @@ export const InterfaceDetailsContent = (props: LinodeInterface) => {
       </Stack>
       {props.public && <PublicInterfaceDetailsContent {...props.public} />}
       {props.vpc && <VPCInterfaceDetailsContent {...props.vpc} />}
+      {props.rdma_vpc && <VPCInterfaceDetailsContent {...props.rdma_vpc} />}
       {props.vlan && <VlanInterfaceDetailsContent {...props.vlan} />}
       <Stack>
         <Typography>

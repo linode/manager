@@ -2,6 +2,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: var(--token-global-spacing-s12, 12px);
 }
 
 @media (max-width: 600px) {
@@ -23,7 +24,8 @@
   gap: var(--token-global-spacing-s24, 24px);
 }
 
-h3.sectionHeading {
+.sectionHeading {
+  font: var(--token-alias-typography-label-bold-l, 700 1rem/1.25rem 'Nunito Sans');
   margin-top: var(--token-global-spacing-s24, 24px);
   margin-bottom: var(--token-global-spacing-s12, 12px);
 }

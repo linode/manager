@@ -59,6 +59,23 @@ export function getLinodeInterfaceIPs(linodeInterface: LinodeInterface) {
     }
   }
 
+  if (linodeInterface.rdma_vpc && linodeInterface.rdma_vpc.ipv4) {
+    // RDMA VPC IPv4s
+    for (const address of linodeInterface.rdma_vpc.ipv4.addresses) {
+      if (address.primary) {
+        if (address.nat_1_1_address) {
+          ips.unshift(address.nat_1_1_address);
+        }
+        ips.unshift(address.address);
+      } else {
+        ips.push(address.address);
+        if (address.nat_1_1_address) {
+          ips.push(address.nat_1_1_address);
+        }
+      }
+    }
+  }
+
   if (linodeInterface.vpc && linodeInterface.vpc.ipv6) {
     // VPC IPv6s
     for (const slaacs of linodeInterface.vpc.ipv6.slaac) {

@@ -165,6 +165,44 @@ describe('useDetermineUnreachableIPsLinodeInterface', () => {
     });
   });
 
+  it('returns the RDMA VPC interface when the Linode is attached through rdma_vpc', async () => {
+    server.use(
+      http.get('*/linode/instances/:linodeId/interfaces', () => {
+        return HttpResponse.json({
+          interfaces: [
+            linodeInterfaceFactoryVPC.build({
+              vpc: null,
+              rdma_vpc: {
+                ipv4: {
+                  addresses: [
+                    {
+                      address: '10.0.0.5',
+                      primary: true,
+                    },
+                  ],
+                  ranges: [],
+                },
+                subnet_id: 1,
+                vpc_id: 2,
+              },
+            }),
+          ],
+        });
+      })
+    );
+
+    const { result } = renderHook(
+      () => useDetermineUnreachableIPsLinodeInterface(1, true),
+      {
+        wrapper: (ui) => wrapWithTheme(ui, { queryClient }),
+      }
+    );
+
+    await waitFor(() => {
+      expect(result.current.linodeInterfaceWithVPC?.rdma_vpc?.vpc_id).toBe(2);
+    });
+  });
+
   it('shows public IPs are reachable if Linode is not a "VPC only Linode" and has public interface', async () => {
     server.use(
       http.get('*/linode/instances/:linodeId/interfaces', () => {

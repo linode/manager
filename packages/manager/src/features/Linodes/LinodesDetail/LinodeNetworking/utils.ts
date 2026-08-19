@@ -23,8 +23,10 @@ export const ipResponseToDisplayRows = (inputs: {
   interfaceWithVPC?: Interface | LinodeInterface;
   ipResponse?: LinodeIPsResponse;
   isLinodeInterface: boolean;
+  linodeInterfaces?: LinodeInterface[];
 }): IPDisplay[] => {
-  const { ipResponse, isLinodeInterface, interfaceWithVPC } = inputs;
+  const { ipResponse, isLinodeInterface, interfaceWithVPC, linodeInterfaces } =
+    inputs;
   if (!ipResponse) {
     return [];
   }
@@ -52,7 +54,9 @@ export const ipResponseToDisplayRows = (inputs: {
     ipDisplay.push(ipToDisplay(ipv6?.link_local, 'Link Local'));
   }
 
-  ipDisplay.push(...createVPCIPv4Display(ipv4.vpc));
+  ipDisplay.push(
+    ...createVPCIPv4Display(ipv4.vpc, interfaceWithVPC, linodeInterfaces)
+  );
 
   if (ipv6?.vpc) {
     ipDisplay.push(...createVPCIPv6Display(ipv6.vpc));
@@ -160,7 +164,33 @@ const ipAddressForVPC = (
   };
 };
 
-export const createVPCIPv4Display = (ips: VPCIP[]): IPDisplay[] => {
+const getVPCIPv4Type = (
+  ip: VPCIP,
+  interfaceWithVPC?: Interface | LinodeInterface,
+  linodeInterfaces?: LinodeInterface[]
+) => {
+  // Prefer matching the IP to its actual owning interface (a Linode may have
+  // both a regular VPC interface and an RDMA VPC interface at the same time).
+  const matchingInterface = linodeInterfaces?.find(
+    (iface) => iface.id === ip.interface_id
+  );
+
+  if (matchingInterface) {
+    return matchingInterface.rdma_vpc ? 'VPC - RDMA - IPv4' : 'VPC – IPv4';
+  }
+
+  return interfaceWithVPC &&
+    'rdma_vpc' in interfaceWithVPC &&
+    interfaceWithVPC.rdma_vpc
+    ? 'VPC - RDMA - IPv4'
+    : 'VPC – IPv4';
+};
+
+export const createVPCIPv4Display = (
+  ips: VPCIP[],
+  interfaceWithVPC?: Interface | LinodeInterface,
+  linodeInterfaces?: LinodeInterface[]
+): IPDisplay[] => {
   const emptyProps = {
     gateway: '',
     rdns: '',
@@ -179,7 +209,7 @@ export const createVPCIPv4Display = (ips: VPCIP[]): IPDisplay[] => {
     if (ip.address) {
       vpcIPDisplay.push({
         address: ip.address,
-        type: 'VPC – IPv4',
+        type: getVPCIPv4Type(ip, interfaceWithVPC, linodeInterfaces),
         ...emptyProps,
       });
     }

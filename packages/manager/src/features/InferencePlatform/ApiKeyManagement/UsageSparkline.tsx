@@ -1,4 +1,4 @@
-import { useTheme } from '@mui/material/styles';
+import { Color } from '@akamai/cds-tokens';
 import React from 'react';
 
 interface UsageSparklineProps {
@@ -7,7 +7,6 @@ interface UsageSparklineProps {
 }
 
 export const UsageSparkline = ({ data, width = 100 }: UsageSparklineProps) => {
-  const theme = useTheme();
   const height = 24;
 
   // If data is empty, create a flat line at zero
@@ -28,14 +27,14 @@ export const UsageSparkline = ({ data, width = 100 }: UsageSparklineProps) => {
   return (
     <svg height={height} width={width}>
       <polygon
-        fill={theme.tokens.color.Ultramarine[70]}
+        fill={Color.Ultramarine[70]}
         opacity={0.15}
         points={areaPoints}
       />
       <polyline
         fill="none"
         points={points}
-        stroke={theme.tokens.color.Ultramarine[70]}
+        stroke={Color.Ultramarine[70]}
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeWidth={2}

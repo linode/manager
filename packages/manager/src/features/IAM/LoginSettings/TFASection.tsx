@@ -6,6 +6,7 @@ import * as React from 'react';
 import { usePermissions } from '../hooks/usePermissions';
 import { useTfaUserCounts } from '../hooks/useTfaUserCounts';
 import { Box } from '../Shared/Box/Box';
+import { CircleProgress } from '../Shared/CircleProgress/CircleProgress';
 import { TFA_ENFORCEMENT_LEARN_MORE_LINK } from '../Shared/constants';
 import { ErrorState } from '../Shared/ErrorState/ErrorState';
 import { Link } from '../Shared/Link/Link';
@@ -23,17 +24,25 @@ interface Props {
 export const TFASection = ({ error, tfaSettings }: Props) => {
   const navigate = useNavigate();
 
-  // TODO: UIE-12176 Replace with the correct permissions once they are available in the API.
   const {
     data: permissions,
     error: permissionsError,
     isLoading: isPermissionsLoading,
-  } = usePermissions('account', ['is_account_admin']);
+  } = usePermissions('account', ['list_tfa_optional_users']);
 
   const isEnforced = tfaSettings?.tfa_enforced ?? false;
-  const { enforcedUsersCount, totalUsers } = useTfaUserCounts(isEnforced);
+  const {
+    enforcedUsersCount,
+    totalUsers,
+    isLoading: isTfaUserCountsLoading,
+    isError: isTfaUserCountsError,
+  } = useTfaUserCounts(isEnforced);
 
-  if (!permissions?.is_account_admin && !isPermissionsLoading) {
+  if (isPermissionsLoading || isTfaUserCountsLoading) {
+    return <CircleProgress />;
+  }
+
+  if (!permissions?.list_tfa_optional_users && !isPermissionsLoading) {
     return (
       <NotificationBanner
         text="You do not have permission to view 2FA enforcement settings."
@@ -41,12 +50,13 @@ export const TFASection = ({ error, tfaSettings }: Props) => {
       />
     );
   }
-  if (permissionsError || (error && permissions?.is_account_admin)) {
-    return (
-      <Paper>
-        <ErrorState />
-      </Paper>
-    );
+
+  if (
+    permissionsError ||
+    (error && permissions?.list_tfa_optional_users) ||
+    isTfaUserCountsError
+  ) {
+    return <ErrorState withPaper />;
   }
 
   return (
@@ -80,7 +90,7 @@ export const TFASection = ({ error, tfaSettings }: Props) => {
               to use 2FA to log in.
             </>
           ) : (
-            'Not enforced. 2FA is optional for all users on this account.'
+            'Not enforced. 2FA is optional for all users in this account.'
           )}
         </p>
       </Box>

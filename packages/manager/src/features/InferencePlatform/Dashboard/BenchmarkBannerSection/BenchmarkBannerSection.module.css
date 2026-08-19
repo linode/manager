@@ -1,0 +1,55 @@
+.paper {
+  background: linear-gradient(120deg, #0e172f 0%, #1b2f63 100%);
+  border-radius: 4px;
+  color: #fff;
+  overflow: hidden;
+  padding: 24px;
+  position: relative;
+}
+
+.decorativeBox {
+  composes: box from '../../components/Box/Box.module.css';
+  background-color: rgba(255, 255, 255, 0.12);
+  border-radius: 50%;
+  height: 220px;
+  position: absolute;
+  right: -80px;
+  top: -20px;
+  width: 220px;
+}
+
+.contentStack {
+  position: relative;
+  z-index: 1;
+}
+
+.heading {
+  font-family: 'Nunito Sans';
+  font-size: 1.125rem;
+  font-weight: 700;
+  line-height: 1.5rem;
+  color: inherit;
+}
+
+.description {
+  color: rgba(255, 255, 255, 0.88);
+  font-family: 'Nunito Sans';
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.smallBox {
+  composes: box from '../../components/Box/Box.module.css';
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 4px;
+  display: none;
+  height: 90px;
+  min-width: 160px;
+}
+
+@media (min-width: 600px) {
+  .smallBox {
+    display: block;
+  }
+}
+

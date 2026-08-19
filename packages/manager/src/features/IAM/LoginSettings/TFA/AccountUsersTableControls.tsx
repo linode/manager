@@ -8,6 +8,7 @@ import { IAM_TFA_ENFORCE_PENDO_IDS } from '../constants';
 import styles from './TfaEnforcement.module.css';
 interface Props {
   clearDisabled: boolean;
+  disabled?: boolean;
   filteredUsersCount: number;
   onClear: () => void;
   onSelectAll: () => void;
@@ -18,6 +19,7 @@ interface Props {
 
 export const AccountUsersTableControls = ({
   clearDisabled,
+  disabled,
   filteredUsersCount,
   onClear,
   onSelectAll,
@@ -52,6 +54,7 @@ export const AccountUsersTableControls = ({
         <Button
           data-pendo-id={IAM_TFA_ENFORCE_PENDO_IDS.bulkSelectAllPages}
           disabled={
+            disabled ||
             scopedOptionsLength === 0 ||
             selectedScopedCount >= scopedOptionsLength
           }
@@ -64,7 +67,7 @@ export const AccountUsersTableControls = ({
         {isSmUp && <div className={styles.divider} />}
         <Button
           data-pendo-id={IAM_TFA_ENFORCE_PENDO_IDS.bulkDeselect}
-          disabled={clearDisabled}
+          disabled={disabled || clearDisabled}
           onClick={onClear}
           type="button"
           variant="link"

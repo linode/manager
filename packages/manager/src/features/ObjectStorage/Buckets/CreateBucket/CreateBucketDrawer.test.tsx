@@ -22,11 +22,6 @@ describe('CreateBucketDrawer', () => {
     const { getByTestId, getByText, queryByText } =
       renderWithThemeAndHookFormContext({
         component: <CreateBucketDrawer {...props} />,
-        options: {
-          flags: {
-            objectStorageGen2: { enabled: true },
-          },
-        },
       });
 
     expect(getByTestId('drawer-title')).toBeVisible();
@@ -56,11 +51,6 @@ describe('CreateBucketDrawer', () => {
 
       const { queryByText } = renderWithThemeAndHookFormContext({
         component: <CreateBucketDrawer {...props} />,
-        options: {
-          flags: {
-            objectStorageGen2: { enabled: true },
-          },
-        },
       });
 
       expect(

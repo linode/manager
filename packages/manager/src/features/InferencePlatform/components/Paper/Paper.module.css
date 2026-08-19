@@ -1,0 +1,13 @@
+.paper {
+  background-color: var(--paper-background-color, #ffffff);
+  border-radius: 4px;
+}
+
+.outlined {
+  border: 1px solid var(--paper-border-color, #e3e5e8);
+}
+
+body[data-theme='dark'] {
+  --paper-background-color: #3d3d42;
+  --paper-border-color: #515157;
+}

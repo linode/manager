@@ -8,6 +8,7 @@ import {
   INTERNAL_ERROR_NO_CHANGES_SAVED,
   LAST_ACCOUNT_ADMIN_ERROR,
   PAID_ENTITY_TYPES,
+  PARENT_USER,
 } from './constants';
 
 import type {
@@ -530,4 +531,20 @@ export const getErrorMessage = (error: APIError[] | null) => {
     : INTERNAL_ERROR_NO_CHANGES_SAVED;
 
   return error ? errorMessage : undefined;
+};
+
+export const getDeleteUserTooltipText = (
+  canDeleteUser: boolean,
+  profileUserName: string | undefined,
+  activeUserName: string,
+  isDelegateUserType: boolean
+): string | undefined => {
+  if (!canDeleteUser) {
+    return 'You do not have permission to delete this user.';
+  } else if (profileUserName && profileUserName === activeUserName) {
+    return `You can’t delete the currently active user.`;
+  } else if (isDelegateUserType) {
+    return `You can’t delete a ${PARENT_USER}.`;
+  }
+  return undefined;
 };

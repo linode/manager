@@ -31,6 +31,10 @@ export const StyledShareGroupsTableContainer = styled('div', {
   '& .group-column': {
     minWidth: '20%',
     ...TABLE_CELL_BASE_STYLES,
+    [theme.breakpoints.down('lg')]: {
+      minWidth: '25%',
+      maxWidth: '25%',
+    },
     [theme.breakpoints.down('sm')]: {
       minWidth: '30%',
     },
@@ -43,7 +47,8 @@ export const StyledShareGroupsTableContainer = styled('div', {
     display: 'block',
     ...TABLE_CELL_BASE_STYLES,
     [theme.breakpoints.down('lg')]: {
-      minWidth: '40%',
+      minWidth: '30%',
+      maxWidth: '30%',
     },
     [theme.breakpoints.down('sm')]: {
       minWidth: '40%',
@@ -53,14 +58,16 @@ export const StyledShareGroupsTableContainer = styled('div', {
     minWidth: '11%',
     ...TABLE_CELL_BASE_STYLES,
     [theme.breakpoints.down('lg')]: {
-      minWidth: '15%',
+      minWidth: '20%',
+      maxWidth: '20%',
     },
   },
   '& .imagesCount-column': {
     minWidth: '9%',
     ...TABLE_CELL_BASE_STYLES,
     [theme.breakpoints.down('lg')]: {
-      minWidth: '15%',
+      minWidth: '17%',
+      maxWidth: '19%',
     },
   },
   '& .created-column': {

@@ -118,7 +118,7 @@ export const LinodeDetailHeader = () => {
         'label'
       );
       const errorReasons: string[] = errors.map((error) => error.reason);
-      throw new Error(errorReasons[0]);
+      throw new Error(errorReasons[0], { cause: updateError });
     }
   };
 

@@ -53,7 +53,9 @@ export const ShareGroupActionMenu = (props: Props) => {
       tooltip: deleteButtonDisabled
         ? 'Before deleting this share group, revoke access for all members first.'
         : undefined,
-      pendoId: 'Images Groups Owned-Delete',
+      pendoId: deleteButtonDisabled
+        ? 'Images Groups Owned-Disabled Delete'
+        : 'Images Groups Owned-Delete',
     },
   ];
 
@@ -61,7 +63,7 @@ export const ShareGroupActionMenu = (props: Props) => {
     <ActionMenu
       actionsList={actions}
       ariaLabel="Action menu for share group"
-      data-pendo-id="Images Groups Owned-Group Action menu"
+      pendoId="Images Groups Owned-Action menu"
     />
   );
 };

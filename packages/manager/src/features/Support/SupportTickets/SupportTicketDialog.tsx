@@ -35,6 +35,7 @@ import {
   SCHEMA_MAP,
   SEVERITY_LABEL_MAP,
   SEVERITY_OPTIONS,
+  SUPPORT_TICKET_PENDO_IDS,
   TICKET_SEVERITY_TOOLTIP_TEXT,
   TICKET_TYPE_MAP,
 } from './constants';
@@ -423,6 +424,8 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
       return;
     }
 
+    const liveChatStartedAt = new Date().toISOString();
+
     liveChatInitializingRef.current = true;
     liveChatAbortedRef.current = false;
     reinitializeLiveChat();
@@ -460,6 +463,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
       window.sessionStorage.setItem('LiveChatToken', chat_token);
       window.sessionStorage.setItem('LiveChatSubject', summary);
       window.sessionStorage.setItem('LiveChatDescription', description);
+      window.sessionStorage.setItem('LiveChatStartedAt', liveChatStartedAt);
       window.sessionStorage.setItem('EnableLiveChat', 'true');
 
       const liveChatOutcomePromise = new Promise<
@@ -813,10 +817,19 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
                       name="description"
                       render={({ field, fieldState }) => (
                         <TabbedReply
+                          descriptionFieldPendoId={
+                            SUPPORT_TICKET_PENDO_IDS.descriptionField
+                          }
+                          descriptionTabPendoId={
+                            SUPPORT_TICKET_PENDO_IDS.descriptionTab
+                          }
                           error={fieldState.error?.message}
                           handleChange={field.onChange}
                           placeholder={
                             "Tell us more about the trouble you're having and any steps you've already taken to resolve it."
+                          }
+                          previewTabPendoId={
+                            SUPPORT_TICKET_PENDO_IDS.previewTab
                           }
                           required
                           value={description}
@@ -832,7 +845,11 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
                   >
                     <MarkdownReference />
                   </Accordion>
-                  <AttachFileForm files={files} updateFiles={updateFiles} />
+                  <AttachFileForm
+                    attachButtonPendoId={SUPPORT_TICKET_PENDO_IDS.attachButton}
+                    files={files}
+                    updateFiles={updateFiles}
+                  />
                 </>
               )}
               {showChatTimeoutWarning && isEligibleForLiveChat && (
@@ -874,6 +891,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
           >
             <Button
               buttonType="secondary"
+              data-pendo-id={SUPPORT_TICKET_PENDO_IDS.cancelButton}
               data-testid="cancel"
               onClick={handleCancel}
             >
@@ -890,6 +908,11 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
             )}
             <Button
               buttonType="primary"
+              data-pendo-id={
+                isEligibleForLiveChat
+                  ? SUPPORT_TICKET_PENDO_IDS.openLiveChatButton
+                  : SUPPORT_TICKET_PENDO_IDS.openTicketButton
+              }
               data-testid="submit"
               loading={submitting || isLiveChatAvailabilityPending}
               onClick={

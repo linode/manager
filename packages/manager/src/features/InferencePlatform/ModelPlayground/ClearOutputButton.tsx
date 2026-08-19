@@ -1,4 +1,5 @@
-import { Box, Button, fadeIn, useTheme } from '@linode/ui';
+import { Button } from '@akamai/cds-components/react';
+import { Box, fadeIn, useTheme } from '@linode/ui';
 import React, { useContext } from 'react';
 
 import {
@@ -41,25 +42,17 @@ export const ClearOutputButton = () => {
         }}
       >
         <Button
-          buttonType="secondary"
           disabled={isLoading}
           onClick={onClearMessages}
           size="small"
-          sx={{
-            '&.Mui-disabled': {
-              bgcolor: bg,
+          style={
+            {
+              background: bg,
+              borderRadius: '999px',
               boxShadow: `0 0 16px 16px ${bg}`,
-            },
-            '&:hover': {
-              bgcolor: bg,
-              boxShadow: `0 0 16px 16px ${bg}`,
-            },
-            bgcolor: bg,
-            borderRadius: '999px',
-            boxShadow: `0 0 16px 16px ${bg}`,
-            color: 'text.secondary',
-            p: 0,
-          }}
+            } as React.CSSProperties
+          }
+          variant="link"
         >
           Clear Context
         </Button>

@@ -1,15 +1,14 @@
-import { useInferenceUsageQuery } from '@linode/queries';
 import {
-  ActionsPanel,
-  Box,
+  Button,
   Checkbox,
-  CircleProgress,
   Drawer,
-  IconButton,
+  LoadingSpinner,
+  TextArea,
   TextField,
-  Typography,
-} from '@linode/ui';
-import EditIcon from '@mui/icons-material/Edit';
+} from '@akamai/cds-components/react';
+import { Edit } from '@akamai/cds-icons/react';
+import { useInferenceUsageQuery } from '@linode/queries';
+import { Box, Typography } from '@linode/ui';
 import { useEffect, useMemo, useState } from 'react';
 import * as React from 'react';
 
@@ -55,14 +54,13 @@ const DetailRow = ({
         {label}
       </Typography>
       {editable && !isEditing && (
-        <IconButton
+        <Button
           aria-label={`Edit ${label}`}
           onClick={onEditClick}
-          size="small"
-          sx={{ p: 0.25 }}
+          variant="icon"
         >
-          <EditIcon sx={{ fontSize: 16 }} />
-        </IconButton>
+          <Edit height={16} width={16} />
+        </Button>
       )}
     </Box>
     <Box>{children}</Box>
@@ -205,136 +203,145 @@ export const ApiKeyDetailsDrawer = ({
   }
 
   return (
-    <Drawer onClose={onClose} open={open} title={apiKey.label}>
-      <DetailRow
-        editable={isEditable}
-        isEditing={isEditingLabel}
-        label="Name"
-        onEditClick={() => setIsEditingLabel(true)}
-      >
-        <Box alignItems="center" display="flex" gap={1}>
-          {isEditingLabel ? (
-            <TextField
-              hideLabel
-              label="Name"
+    <Drawer aria-label={apiKey.label} onClose={onClose} open={open}>
+      <div slot="header">{apiKey.label}</div>
+      <div slot="body">
+        <DetailRow
+          editable={isEditable}
+          isEditing={isEditingLabel}
+          label="Name"
+          onEditClick={() => setIsEditingLabel(true)}
+        >
+          <Box alignItems="center" display="flex" gap={1}>
+            {isEditingLabel ? (
+              <TextField
+                onChange={(e) => {
+                  setEditLabel(String(e.detail));
+                  setHasChanges(true);
+                }}
+                value={editLabel}
+              />
+            ) : (
+              <Typography>{apiKey.label}</Typography>
+            )}
+            {apiKey.key_type === 'playground' && (
+              <KeyTypeBadge keyType={apiKey.key_type} />
+            )}
+          </Box>
+        </DetailRow>
+
+        <DetailRow label="ID">
+          <Typography>{apiKey.id}</Typography>
+        </DetailRow>
+
+        <DetailRow
+          editable={isEditable}
+          isEditing={isEditingDescription}
+          label="Description"
+          onEditClick={() => setIsEditingDescription(true)}
+        >
+          {isEditingDescription ? (
+            <TextArea
               onChange={(e) => {
-                setEditLabel(e.target.value);
+                setEditDescription(String(e.detail));
                 setHasChanges(true);
               }}
-              value={editLabel}
+              rows={2}
+              style={{ width: '100%' }}
+              value={editDescription}
             />
           ) : (
-            <Typography>{apiKey.label}</Typography>
+            <Typography sx={{ whiteSpace: 'pre-wrap' }}>
+              {apiKey.description || 'No description'}
+            </Typography>
           )}
-          {apiKey.key_type === 'playground' && (
-            <KeyTypeBadge keyType={apiKey.key_type} />
+        </DetailRow>
+
+        <DetailRow label="Usage 24h">
+          {isUsageLoading ? (
+            <Box alignItems="center" display="flex" height={40}>
+              <LoadingSpinner size="small" />
+            </Box>
+          ) : (
+            <UsageSparkline data={usageSparklineData} width={300} />
           )}
-        </Box>
-      </DetailRow>
+        </DetailRow>
 
-      <DetailRow label="ID">
-        <Typography>{apiKey.id}</Typography>
-      </DetailRow>
+        <DetailRow label="Key Prefix">
+          <Typography>{apiKey.key_prefix}...</Typography>
+        </DetailRow>
 
-      <DetailRow
-        editable={isEditable}
-        isEditing={isEditingDescription}
-        label="Description"
-        onEditClick={() => setIsEditingDescription(true)}
-      >
-        {isEditingDescription ? (
-          <TextField
-            hideLabel
-            label="Description"
-            multiline
-            onChange={(e) => {
-              setEditDescription(e.target.value);
-              setHasChanges(true);
-            }}
-            rows={2}
-            value={editDescription}
-          />
-        ) : (
-          <Typography sx={{ whiteSpace: 'pre-wrap' }}>
-            {apiKey.description || 'No description'}
-          </Typography>
-        )}
-      </DetailRow>
+        <DetailRow label="Status">
+          <StatusBadge status={apiKey.status} />
+        </DetailRow>
 
-      <DetailRow label="Usage 24h">
-        {isUsageLoading ? (
-          <Box alignItems="center" display="flex" height={40}>
-            <CircleProgress size="sm" />
-          </Box>
-        ) : (
-          <UsageSparkline data={usageSparklineData} width={300} />
-        )}
-      </DetailRow>
+        <DetailRow label="Created">
+          <DateTimeDisplay displayTime value={apiKey.created} />
+        </DetailRow>
 
-      <DetailRow label="Key Prefix">
-        <Typography>{apiKey.key_prefix}...</Typography>
-      </DetailRow>
+        <DetailRow label="Updated">
+          <DateTimeDisplay displayTime value={apiKey.updated} />
+        </DetailRow>
 
-      <DetailRow label="Status">
-        <StatusBadge status={apiKey.status} />
-      </DetailRow>
-
-      <DetailRow label="Created">
-        <DateTimeDisplay displayTime value={apiKey.created} />
-      </DetailRow>
-
-      <DetailRow label="Updated">
-        <DateTimeDisplay displayTime value={apiKey.updated} />
-      </DetailRow>
-
-      <DetailRow label="Allowed models">
-        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-          <Checkbox
-            checked={
-              allModelIds.length > 0 &&
-              selectedModels.length === allModelIds.length
-            }
-            disabled={!areModelsEditable || allModelIds.length === 0}
-            indeterminate={
-              selectedModels.length > 0 &&
-              selectedModels.length < allModelIds.length
-            }
-            onChange={(e) => {
-              if (e.target.checked) {
-                setSelectedModels([...allModelIds]);
-              } else {
-                setSelectedModels([]);
-              }
-              setHasChanges(true);
-            }}
-            text="All"
-          />
-          {models.map((model) => (
+        <DetailRow label="Allowed models">
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
             <Checkbox
-              checked={selectedModels.includes(model.id)}
-              disabled={!areModelsEditable}
-              key={model.id}
-              onChange={(e) => handleModelToggle(model.id, e.target.checked)}
-              text={model.id}
-            />
-          ))}
-        </Box>
-      </DetailRow>
-
-      <ActionsPanel
-        primaryButtonProps={
-          hasChanges
-            ? {
-                label: 'Save Changes',
-                onClick: handleSave,
+              checked={
+                allModelIds.length > 0 &&
+                selectedModels.length === allModelIds.length
               }
-            : undefined
-        }
-        secondaryButtonProps={{
-          label: hasChanges ? 'Cancel' : 'Close',
-          onClick: handleCancel,
-        }}
-      />
+              disabled={!areModelsEditable || allModelIds.length === 0}
+              indeterminate={
+                selectedModels.length > 0 &&
+                selectedModels.length < allModelIds.length
+              }
+              onChange={() => {
+                if (selectedModels.length === allModelIds.length) {
+                  setSelectedModels([]);
+                } else {
+                  setSelectedModels([...allModelIds]);
+                }
+                setHasChanges(true);
+              }}
+            >
+              All
+            </Checkbox>
+            {models.map((model) => (
+              <Checkbox
+                checked={selectedModels.includes(model.id)}
+                disabled={!areModelsEditable}
+                key={model.id}
+                onChange={() =>
+                  handleModelToggle(
+                    model.id,
+                    !selectedModels.includes(model.id)
+                  )
+                }
+              >
+                {model.id}
+              </Checkbox>
+            ))}
+          </Box>
+        </DetailRow>
+
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'flex-end',
+            gap: 2,
+            mt: 3,
+          }}
+        >
+          <Button onClick={handleCancel} variant="secondary">
+            {hasChanges ? 'Cancel' : 'Close'}
+          </Button>
+          {hasChanges && (
+            <Button onClick={handleSave} variant="primary">
+              Save Changes
+            </Button>
+          )}
+        </Box>
+      </div>
     </Drawer>
   );
 };

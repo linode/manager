@@ -80,10 +80,11 @@ describe('VPC create page', () => {
   });
 
   it('should have a default value for the subnet ip address', () => {
-    const { getAllByTestId } = renderWithTheme(<VPCCreate />);
-    const subnetIP = getAllByTestId('textfield-input');
-    expect(subnetIP[4]).toBeInTheDocument();
-    expect(subnetIP[4]).toHaveValue('10.0.0.0/24');
+    renderWithTheme(<VPCCreate />);
+
+    const subnetIP = screen.getByDisplayValue('10.0.0.0/24');
+    expect(subnetIP).toBeInTheDocument();
+    expect(subnetIP).toBeEnabled();
   });
 
   it('should disable inputs if user does not have create_vpc permission', async () => {
@@ -95,9 +96,8 @@ describe('VPC create page', () => {
     const { getByLabelText, getByText } = renderWithTheme(<VPCCreate />);
 
     expect(getByLabelText('Region')).toBeDisabled();
-    expect(getByLabelText('VPC Label')).toBeDisabled();
-    const description = screen.getByRole('textbox', { name: /description/i });
-    expect(description).toBeDisabled();
+    expect(getByLabelText('VPC Label')).toHaveProperty('disabled', true);
+    expect(getByLabelText('Description')).toHaveProperty('disabled', true);
     expect(getByLabelText('Subnet Label')).toBeDisabled();
     expect(getByLabelText('Subnet IPv4 Range (CIDR)')).toBeDisabled();
     expect(getByText('Add another Subnet')).toBeDisabled();
@@ -114,8 +114,7 @@ describe('VPC create page', () => {
 
     expect(getByLabelText('Region')).toBeEnabled();
     expect(getByLabelText('VPC Label')).toBeEnabled();
-    const description = screen.getByRole('textbox', { name: /description/i });
-    expect(description).toBeEnabled();
+    expect(getByLabelText('Description')).toBeEnabled();
     expect(getByLabelText('Subnet Label')).toBeEnabled();
     expect(getByLabelText('Subnet IPv4 Range (CIDR)')).toBeEnabled();
     expect(getByText('Add another Subnet')).toBeEnabled();

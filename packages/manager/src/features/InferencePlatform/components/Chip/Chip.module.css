@@ -1,0 +1,62 @@
+.chip {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 16px;
+  font-size: 0.875rem;
+  background-color: #e0e0e0;
+  color: #212121;
+  border: none;
+  cursor: default;
+}
+
+/* Size variants */
+.small {
+  padding: 4px 8px;
+  font-size: 0.75rem;
+  height: 24px;
+}
+
+.medium {
+  padding: 6px 12px;
+  font-size: 0.875rem;
+}
+
+/* Visual variants */
+.filled {
+  background-color: #e0e0e0;
+  color: #212121;
+}
+
+.outlined {
+  background-color: transparent;
+  border: 1px solid #bdbdbd;
+  color: #212121;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.clickable:hover {
+  opacity: 0.8;
+}
+
+.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.deletable {
+  padding-right: 8px;
+}
+
+.deleteIcon {
+  margin-left: 4px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+

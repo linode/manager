@@ -208,8 +208,8 @@ export const AddChannelListing = (props: AddChannelListingProps) => {
             sx={{
               width:
                 notificationChannelWatcher.length === 5 || !serviceType
-                  ? '215px'
-                  : '190px',
+                  ? '220px'
+                  : '195px',
             }}
             tooltipText="You can add up to 5 notification channels."
           >

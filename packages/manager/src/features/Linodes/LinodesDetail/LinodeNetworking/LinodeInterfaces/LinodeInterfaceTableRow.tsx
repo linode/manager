@@ -29,14 +29,14 @@ export const LinodeInterfaceTableRow = (props: Props) => {
     <TableRow>
       <TableCell>{type}</TableCell>
       <TableCell>{id}</TableCell>
+      <TableCell>
+        <LinodeInterfaceIPs linodeInterface={props} />
+      </TableCell>
       <Hidden smDown>
         <TableCell>
           <MaskableText isToggleable text={mac_address} />
         </TableCell>
       </Hidden>
-      <TableCell>
-        <LinodeInterfaceIPs linodeInterface={props} />
-      </TableCell>
       <Hidden lgDown>
         <TableCell>{version}</TableCell>
       </Hidden>

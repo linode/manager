@@ -122,7 +122,7 @@ describe('DestinationCustomHTTPSDetailsSummary', () => {
 
     renderWithTheme(<DestinationCustomHTTPSDetailsSummary {...details} />);
 
-    expect(screen.getByText('Connection Settings')).toBeVisible();
+    expect(screen.getByText('Advanced Settings')).toBeVisible();
     expect(screen.queryByTestId('client-certificate-header')).toBeVisible();
     // TLS Hostname:
     expect(screen.getByText('tls.example.com')).toBeVisible();
@@ -172,7 +172,7 @@ describe('DestinationCustomHTTPSDetailsSummary', () => {
     expect(screen.getByText('Bearer token123')).toBeVisible();
   });
 
-  it('does not render Connection Settings section when no optional fields provided', () => {
+  it('does not render Advanced Settings section when no optional fields provided', () => {
     const details: CustomHTTPSDetails = {
       authentication: { type: 'none' },
       endpoint_url: 'https://example.com/',
@@ -181,7 +181,7 @@ describe('DestinationCustomHTTPSDetailsSummary', () => {
 
     renderWithTheme(<DestinationCustomHTTPSDetailsSummary {...details} />);
 
-    expect(screen.queryByText('Connection Settings')).not.toBeInTheDocument();
+    expect(screen.queryByText('Advanced Settings')).not.toBeInTheDocument();
     expect(screen.queryByText('HTTPS Headers')).not.toBeInTheDocument();
   });
 });

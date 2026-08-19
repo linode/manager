@@ -1,6 +1,6 @@
+import { Popover } from '@akamai/cds-components/react/Popover';
 import { Box, Typography } from '@linode/ui';
-import Popover from '@mui/material/Popover';
-import React, { useState } from 'react';
+import React from 'react';
 
 import { useInferencePlatform } from '../InferencePlatformContext';
 
@@ -10,15 +10,6 @@ interface ModelsPopoverProps {
 
 export const ModelsPopover = ({ models }: ModelsPopoverProps) => {
   const { models: allAvailableModels } = useInferencePlatform();
-  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-
-  const handleMouseEnter = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleMouseLeave = () => {
-    setAnchorEl(null);
-  };
 
   // If no models specified or ['*'], it means all models are allowed
   const isAllModels =
@@ -28,15 +19,14 @@ export const ModelsPopover = ({ models }: ModelsPopoverProps) => {
     : models;
 
   return (
-    <Box
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      sx={{ display: 'inline-block' }}
-    >
+    <Box sx={{ display: 'inline-block' }}>
+      {/* cds-popover anchors to its previousElementSibling, so the trigger
+          must be the element immediately before it. */}
       <Typography
+        component="span"
         sx={{
           color: 'text.primary',
-          cursor: 'default',
+          cursor: 'pointer',
           fontSize: 'inherit',
           textDecoration: 'underline',
         }}
@@ -46,32 +36,32 @@ export const ModelsPopover = ({ models }: ModelsPopoverProps) => {
           : `${models.length} ${models.length === 1 ? 'Model' : 'Models'}`}
       </Typography>
       <Popover
-        anchorEl={anchorEl}
-        anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
-        disableRestoreFocus
-        onClose={handleMouseLeave}
-        open={Boolean(anchorEl)}
-        slotProps={{
-          paper: {
-            onMouseEnter: handleMouseEnter,
-            onMouseLeave: handleMouseLeave,
-          },
-        }}
-        sx={{ pointerEvents: 'none' }}
-        transformOrigin={{ horizontal: 'left', vertical: 'top' }}
+        placement="bottom-middle"
+        showArrow
+        style={
+          {
+            // .popover-content pads with this global token (24px by default),
+            // which is far too much for a short list. Scoped to this popover.
+            '--token-global-spacing-s24': '8px',
+          } as React.CSSProperties
+        }
+        trigger="hover"
       >
-        <Box sx={{ minWidth: 180, p: 2, pointerEvents: 'auto' }}>
-          {displayModels.length > 0 ? (
-            displayModels.map((model) => (
-              <Typography key={model} sx={{ py: 0.5 }}>
-                {model}
-              </Typography>
-            ))
-          ) : (
-            <Typography sx={{ color: 'text.secondary', fontStyle: 'italic' }}>
-              All available models
-            </Typography>
-          )}
+        <Box
+          sx={{
+            // Slotted content stays in the light DOM, so it inherits the MUI
+            // theme text colour (white in dark mode) and would vanish against
+            // the dark bubble. Set it explicitly.
+            display: 'flex',
+            flexDirection: 'column',
+            fontSize: '12px',
+            gap: '4px',
+            lineHeight: '16px',
+          }}
+        >
+          {displayModels.length > 0
+            ? displayModels.map((model) => <span key={model}>{model}</span>)
+            : 'All available models'}
         </Box>
       </Popover>
     </Box>

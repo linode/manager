@@ -1,3 +1,4 @@
+import { fireEvent, screen } from '@testing-library/react';
 import React from 'react';
 
 import { dashboardFactory } from 'src/factories';
@@ -6,6 +7,61 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { CloudPulseDashboardFilterBuilder } from './CloudPulseDashboardFilterBuilder';
 
 describe('CloudPulseDashboardFilterBuilder component tests', () => {
+  it('renders dashboard discovery loading without a selected dashboard', () => {
+    renderWithTheme(
+      <CloudPulseDashboardFilterBuilder
+        dashboardLoading
+        emitFilterChange={vi.fn()}
+        handleToggleAppliedFilter={vi.fn()}
+        isServiceAnalyticsIntegration={false}
+      />
+    );
+
+    expect(screen.getByTestId('circle-progress')).toBeVisible();
+    expect(screen.queryByRole('button')).not.toBeInTheDocument();
+  });
+
+  it('renders dashboard discovery errors without a selected dashboard', () => {
+    renderWithTheme(
+      <CloudPulseDashboardFilterBuilder
+        dashboardErrorText="Failed to fetch the dashboards."
+        emitFilterChange={vi.fn()}
+        handleToggleAppliedFilter={vi.fn()}
+        isServiceAnalyticsIntegration={false}
+      />
+    );
+
+    expect(screen.getByText('Failed to fetch the dashboards.')).toBeVisible();
+    expect(screen.queryByRole('button')).not.toBeInTheDocument();
+  });
+
+  it('renders applied filters when the filter row is collapsed', () => {
+    const dashboard = dashboardFactory.build({ service_type: 'linode' });
+    const TestComponent = () => {
+      const [showAppliedFilters, setShowAppliedFilters] = React.useState(false);
+
+      return (
+        <CloudPulseDashboardFilterBuilder
+          appliedFilters={
+            showAppliedFilters ? (
+              <span data-testid="applied-filters">MySQL</span>
+            ) : undefined
+          }
+          dashboard={dashboard}
+          emitFilterChange={vi.fn()}
+          handleToggleAppliedFilter={setShowAppliedFilters}
+          isServiceAnalyticsIntegration={false}
+        />
+      );
+    };
+
+    renderWithTheme(<TestComponent />);
+
+    fireEvent.click(screen.getByRole('button', { name: 'Toggle filters' }));
+
+    expect(screen.getByTestId('applied-filters')).toBeVisible();
+  });
+
   it('it should render successfully when the required props are passed for service type linode', () => {
     const { getByTestId } = renderWithTheme(
       <CloudPulseDashboardFilterBuilder

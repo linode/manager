@@ -73,6 +73,7 @@ export const BucketDeletionDialogWithRef =
     }, [deleteBucket, removeBucketConfirmationDialog, selectedBucket]);
 
     const bucketLabel = selectedBucket ? selectedBucket.label : '';
+    const deletingTheLastBucket = allBuckets?.length === 1;
 
     return (
       <TypeToConfirmDialog
@@ -100,7 +101,13 @@ export const BucketDeletionDialogWithRef =
           can&rsquo;t be undone.
         </NotificationBanner>
 
-        <p style={{ marginBottom: 'var(--token-global-spacing-s8)' }}>
+        <p
+          style={{
+            marginBottom: deletingTheLastBucket
+              ? 'var(--token-global-spacing-s8)'
+              : 0,
+          }}
+        >
           A bucket must be empty before deleting it. Please{' '}
           <Link to="https://techdocs.akamai.com/cloud-computing/docs/lifecycle-policies">
             delete all objects
@@ -112,7 +119,7 @@ export const BucketDeletionDialogWithRef =
           to force deletion.
         </p>
 
-        {allBuckets?.length === 1 && <CancelNotice />}
+        {deletingTheLastBucket && <CancelNotice />}
       </TypeToConfirmDialog>
     );
   });

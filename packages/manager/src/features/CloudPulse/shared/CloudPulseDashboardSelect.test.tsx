@@ -1,4 +1,4 @@
-import { fireEvent, screen } from '@testing-library/react';
+import { fireEvent, screen, waitFor } from '@testing-library/react';
 import React from 'react';
 
 import { dashboardFactory, serviceTypesFactory } from 'src/factories';
@@ -6,14 +6,6 @@ import * as utils from 'src/features/CloudPulse/Utils/utils';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { CloudPulseDashboardSelect } from './CloudPulseDashboardSelect';
-
-import type { CloudPulseDashboardSelectProps } from './CloudPulseDashboardSelect';
-
-const dashboardLabel = 'Factory Dashboard-1';
-const selectedDashboardLabel = 'Linodes - Factory Dashboard-1';
-const props: CloudPulseDashboardSelectProps = {
-  handleDashboardChange: vi.fn(),
-};
 
 const queryMocks = vi.hoisted(() => ({
   useCloudPulseDashboardsQuery: vi.fn().mockReturnValue({}),
@@ -41,96 +33,127 @@ vi.mock('src/queries/cloudpulse/services', async () => {
   };
 });
 
-queryMocks.useCloudPulseDashboardsQuery.mockReturnValue({
-  data: {
-    data: [mockDashboard],
-  },
-  error: false,
-  isLoading: false,
-});
-
-queryMocks.useCloudPulseServiceTypes.mockReturnValue({
-  data: {
-    data: [mockServiceTypesList],
-  },
-});
-
-vi.spyOn(utils, 'getAllDashboards').mockReturnValue({
-  data: mockDashboard,
-  error: '',
-  isLoading: false,
-});
-
-describe('CloudPulse Dashboard select', () => {
-  it('Should render dashboard select component', () => {
-    const { getByPlaceholderText, getByTestId } = renderWithTheme(
-      <CloudPulseDashboardSelect {...props} />
-    );
-
-    expect(getByTestId('cloudpulse-dashboard-select')).toBeInTheDocument();
-    expect(getByPlaceholderText('Select a Dashboard')).toBeInTheDocument();
-  });
-  it('Should render dashboard select component with data', () => {
-    renderWithTheme(<CloudPulseDashboardSelect {...props} />);
-
-    fireEvent.click(screen.getByRole('button', { name: 'Open' }));
-
-    expect(
-      screen.getByRole('option', { name: dashboardLabel })
-    ).toBeInTheDocument();
-  });
-  it('Should select the option on click', () => {
-    renderWithTheme(<CloudPulseDashboardSelect {...props} />);
-
-    fireEvent.click(screen.getByRole('button', { name: 'Open' }));
-    fireEvent.click(screen.getByRole('option', { name: dashboardLabel }));
-
-    expect(screen.getByRole('combobox')).toHaveAttribute(
-      'value',
-      selectedDashboardLabel
-    );
-  });
-  it('Should select the default value from preferences', () => {
-    renderWithTheme(
-      <CloudPulseDashboardSelect {...props} defaultValue={1} savePreferences />
-    );
-
-    expect(screen.getByRole('combobox')).toHaveAttribute(
-      'value',
-      selectedDashboardLabel
-    );
-  });
-
-  it('Should show error message when only dashboard call fails', () => {
-    vi.spyOn(utils, 'getAllDashboards').mockReturnValue({
-      data: [],
-      error: 'some error',
+describe('CloudPulseDashboardSelect', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    queryMocks.useCloudPulseServiceTypes.mockReturnValue({
+      data: { data: [mockServiceTypesList] },
+      error: undefined,
       isLoading: false,
     });
-
-    renderWithTheme(<CloudPulseDashboardSelect {...props} savePreferences />);
-
-    expect(
-      screen.getByText('Failed to fetch the dashboards.')
-    ).toBeInTheDocument();
+    vi.spyOn(utils, 'getAllDashboards').mockReturnValue({
+      data: mockDashboard,
+      error: '',
+      isLoading: false,
+    });
   });
-  it('Should show error message when services call fails', () => {
+
+  it('reports ready state and renders an enabled picker', async () => {
+    const onDashboardDiscoveryStateChange = vi.fn();
+
+    renderWithTheme(
+      <CloudPulseDashboardSelect
+        onDashboardDiscoveryStateChange={onDashboardDiscoveryStateChange}
+      />
+    );
+
+    await waitFor(() =>
+      expect(onDashboardDiscoveryStateChange).toHaveBeenLastCalledWith({
+        status: 'ready',
+      })
+    );
+    expect(screen.getByTestId('dashboard-picker-trigger')).toBeEnabled();
+  });
+
+  it('reports loading state and disables the picker', async () => {
+    const onDashboardDiscoveryStateChange = vi.fn();
     queryMocks.useCloudPulseServiceTypes.mockReturnValue({
       data: undefined,
-      error: 'an error happened',
-      isLoading: false,
+      error: undefined,
+      isLoading: true,
     });
 
+    renderWithTheme(
+      <CloudPulseDashboardSelect
+        onDashboardDiscoveryStateChange={onDashboardDiscoveryStateChange}
+      />
+    );
+
+    await waitFor(() =>
+      expect(onDashboardDiscoveryStateChange).toHaveBeenLastCalledWith({
+        status: 'loading',
+      })
+    );
+    expect(screen.getByTestId('dashboard-picker-trigger')).toBeDisabled();
+  });
+
+  it('reports service types errors before dashboard errors', async () => {
+    const onDashboardDiscoveryStateChange = vi.fn();
+    queryMocks.useCloudPulseServiceTypes.mockReturnValue({
+      data: undefined,
+      error: new Error('Service types request failed'),
+      isLoading: false,
+    });
     vi.spyOn(utils, 'getAllDashboards').mockReturnValue({
       data: [],
-      error: 'some error',
+      error: 'linode,',
       isLoading: false,
     });
 
-    renderWithTheme(<CloudPulseDashboardSelect {...props} savePreferences />);
+    renderWithTheme(
+      <CloudPulseDashboardSelect
+        onDashboardDiscoveryStateChange={onDashboardDiscoveryStateChange}
+      />
+    );
 
-    expect(
-      screen.getByText('Failed to fetch the services.')
-    ).toBeInTheDocument();
+    await waitFor(() =>
+      expect(onDashboardDiscoveryStateChange).toHaveBeenLastCalledWith({
+        errorText: 'Failed to fetch the services.',
+        status: 'error',
+      })
+    );
+  });
+
+  it('reports a dashboard error when a partial result is available', async () => {
+    const onDashboardDiscoveryStateChange = vi.fn();
+    vi.spyOn(utils, 'getAllDashboards').mockReturnValue({
+      data: [mockDashboard[0]],
+      error: 'linode,',
+      isLoading: false,
+    });
+
+    renderWithTheme(
+      <CloudPulseDashboardSelect
+        onDashboardDiscoveryStateChange={onDashboardDiscoveryStateChange}
+      />
+    );
+
+    await waitFor(() =>
+      expect(onDashboardDiscoveryStateChange).toHaveBeenLastCalledWith({
+        errorText: 'Failed to fetch the dashboards.',
+        status: 'error',
+      })
+    );
+    expect(screen.getByTestId('dashboard-picker-trigger')).toBeDisabled();
+  });
+
+  it('selects a dashboard option', () => {
+    const handleDashboardChange = vi.fn();
+
+    renderWithTheme(
+      <CloudPulseDashboardSelect
+        handleDashboardChange={handleDashboardChange}
+      />
+    );
+
+    fireEvent.click(screen.getByTestId('dashboard-picker-trigger'));
+    fireEvent.click(
+      screen.getByRole('option', { name: mockDashboard[0].label })
+    );
+
+    expect(handleDashboardChange).toHaveBeenCalledWith(
+      mockDashboard[0],
+      undefined
+    );
   });
 });

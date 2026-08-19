@@ -17,4 +17,10 @@ describe('ErrorState', () => {
     renderWithProviders(<ErrorState errorText={customErrorText} />);
     expect(screen.getByText(customErrorText)).toBeVisible();
   });
+
+  it('renders wrapped in Paper when withPaper is true', async () => {
+    const { container } = renderWithProviders(<ErrorState withPaper />);
+    expect(container.querySelector('[class*="paper"]')).toBeInTheDocument();
+    expect(screen.getByText(ERROR_STATE_TITLE)).toBeVisible();
+  });
 });

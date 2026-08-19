@@ -8,19 +8,22 @@ import {
   Radio,
   RadioGroup,
   Select,
+  Stack,
   TextField,
   Typography,
 } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
+import { Link } from 'src/components/Link';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
 import {
+  CUSTOM_PROTOCOL_PORT_NUMBERS,
   firewallOptionItemsShort,
   portPresets,
-  protocolOptions,
   useAddressOptions,
   useIsFirewallRulesetsPrefixlistsEnabled,
+  useProtocolOptions,
 } from 'src/features/Firewalls/shared';
 
 import { enforceIPMasks } from './FirewallRuleDrawer.utils';
@@ -65,6 +68,7 @@ export const FirewallRuleForm = React.memo((props: FirewallRuleFormProps) => {
     useIsFirewallRulesetsPrefixlistsEnabled();
 
   const addressOptions = useAddressOptions();
+  const allProtocolOptions = useProtocolOptions();
 
   const hasCustomInput = presetPorts.some(
     (thisPort) => thisPort.value === PORT_PRESETS['CUSTOM'].value
@@ -145,8 +149,22 @@ export const FirewallRuleForm = React.memo((props: FirewallRuleFormProps) => {
   const handleProtocolChange = React.useCallback(
     (item: string) => {
       setFieldValue('protocol', item);
-      if (item === 'ICMP' || item === 'IPENCAP') {
-        // Submitting the form with ICMP or IPENCAP and defined ports causes an error
+      if (['ALL', 'ICMP', 'IPENCAP', 'OTHER'].includes(item)) {
+        // These protocols don't use ports
+        setFieldValue('ports', '');
+        setPresetPorts([]);
+      }
+      if (item !== 'OTHER') {
+        setFieldValue('customProtocol', '');
+      }
+    },
+    [setFieldValue, setPresetPorts]
+  );
+
+  const handleCustomProtocolChange = React.useCallback(
+    (value: string) => {
+      setFieldValue('customProtocol', value);
+      if (!CUSTOM_PROTOCOL_PORT_NUMBERS.includes(value)) {
         setFieldValue('ports', '');
         setPresetPorts([]);
       }
@@ -224,6 +242,19 @@ export const FirewallRuleForm = React.memo((props: FirewallRuleFormProps) => {
     );
   }, [values]);
 
+  const isPortsDisabled =
+    ['ALL', 'ICMP', 'IPENCAP'].includes(values.protocol ?? '') ||
+    (values.protocol === 'OTHER' &&
+      !CUSTOM_PROTOCOL_PORT_NUMBERS.includes(values.customProtocol ?? ''));
+
+  const portsHelperText = isPortsDisabled
+    ? values.protocol === 'OTHER'
+      ? values.customProtocol
+        ? `Ports are not allowed for protocol number ${values.customProtocol}.`
+        : undefined
+      : `Ports are not allowed for ${values.protocol} protocols.`
+    : undefined;
+
   return (
     <form onSubmit={handleSubmit}>
       <Autocomplete
@@ -268,14 +299,46 @@ export const FirewallRuleForm = React.memo((props: FirewallRuleFormProps) => {
         label="Protocol"
         onBlur={handleBlur}
         onChange={(_, selected) => handleProtocolChange(selected.value)}
-        options={protocolOptions}
+        options={allProtocolOptions}
         placeholder="Select a protocol..."
         required
-        value={protocolOptions.find((p) => p.value === values.protocol)}
+        value={
+          allProtocolOptions.find((p) => p.value === values.protocol) ?? null
+        }
       />
+      {values.protocol === 'OTHER' && (
+        <TextField
+          aria-label="Enter custom protocol number."
+          errorText={errors.customProtocol}
+          label="IANA Protocol Number"
+          name="customProtocol"
+          onBlur={handleBlur}
+          onChange={(e) => handleCustomProtocolChange(e.target.value)}
+          placeholder="eg. 47 (GRE), 50 (ESP), 51 (AH), 89(OSPF)"
+          required
+          tooltipText={
+            <Stack gap={2}>
+              <Typography>
+                Only include the numeric value of the IANA protocol.
+              </Typography>
+              <Typography>
+                Reference:{' '}
+                <Link
+                  external
+                  to="https://www.iana.org/assignments/protocol-numbers"
+                >
+                  iana.org/assignments/protocol-numbers
+                </Link>
+              </Typography>
+            </Stack>
+          }
+          tooltipWidth={280}
+          value={values.customProtocol ?? ''}
+        />
+      )}
       <Autocomplete
         autoHighlight
-        disabled={['ICMP', 'IPENCAP'].includes(values.protocol ?? '')}
+        disabled={isPortsDisabled}
         disableSelectAll
         errorText={generalPortError}
         label="Ports"
@@ -291,9 +354,7 @@ export const FirewallRuleForm = React.memo((props: FirewallRuleFormProps) => {
           dataAttrs: {
             'data-qa-port-select': true,
           },
-          helperText: ['ICMP', 'IPENCAP'].includes(values.protocol ?? '')
-            ? `Ports are not allowed for ${values.protocol} protocols.`
-            : undefined,
+          helperText: portsHelperText,
         }}
         value={presetPorts}
       />

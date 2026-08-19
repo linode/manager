@@ -46,7 +46,7 @@ export const UserEntities = () => {
   }
 
   if (error || assignedRolesError) {
-    return <ErrorState />;
+    return <ErrorState withPaper />;
   }
 
   return (
@@ -67,10 +67,12 @@ export const UserEntities = () => {
           <AssignedEntitiesTable username={username} />
         </Paper>
       ) : (
-        <NoAssignedRoles
-          hasAssignNewRoleDrawer={false}
-          text={NO_ASSIGNED_ENTITIES_TEXT}
-        />
+        <Paper>
+          <NoAssignedRoles
+            hasAssignNewRoleDrawer={false}
+            text={NO_ASSIGNED_ENTITIES_TEXT}
+          />
+        </Paper>
       )}
     </>
   );

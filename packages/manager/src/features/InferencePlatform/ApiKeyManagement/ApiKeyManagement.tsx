@@ -1,8 +1,12 @@
-import { Autocomplete, Button, Checkbox, Stack, TextField } from '@linode/ui';
-import { styled } from '@mui/material/styles';
+import {
+  Button,
+  Checkbox,
+  Icon,
+  Select,
+  TextField,
+} from '@akamai/cds-components/react';
+import { Stack } from '@linode/ui';
 import React from 'react';
-
-import Add from 'src/assets/icons/add.svg';
 
 import { ApiKeyTable } from './ApiKeyTable';
 import { CreateApiKeyDrawer } from './CreateApiKeyDrawer';
@@ -11,7 +15,12 @@ import type { ApiKeyStatus } from '@linode/api-v4';
 
 type StatusFilterOption = 'all' | ApiKeyStatus;
 
-const statusOptions: { label: string; value: StatusFilterOption }[] = [
+interface StatusOption {
+  label: string;
+  value: StatusFilterOption;
+}
+
+const statusOptions: StatusOption[] = [
   { label: 'All', value: 'all' },
   { label: 'Active', value: 'active' },
   { label: 'Expired', value: 'expired' },
@@ -25,46 +34,48 @@ export const ApiKeyManagement = () => {
   const [showPlaygroundKeys, setShowPlaygroundKeys] = React.useState(true);
   const [isCreateDrawerOpen, setIsCreateDrawerOpen] = React.useState(false);
 
+  const selectedOption = statusOptions.find(
+    (opt) => opt.value === statusFilter
+  );
+
   return (
     <Stack direction="row" gap={3} sx={{ minHeight: 400 }}>
       <Stack sx={{ flex: 1, minWidth: 0 }}>
         <Stack direction="row" justifyContent="space-between" sx={{ mb: 2 }}>
           <Stack alignItems="center" direction="row" gap={2}>
             <TextField
-              hideLabel
-              label="Filter"
-              onChange={(e) => setFilter(e.target.value)}
-              placeholder="Filter by name, ID, key, models..."
-              sx={{ width: 300 }}
+              onChange={(e) => setFilter(String(e.detail))}
+              placeholder="Filter by name, key, models..."
+              style={{ width: '300px' }}
               value={filter}
             />
             <Stack alignItems="center" direction="row" gap={1}>
               <span>Status</span>
-              <Autocomplete
-                disableClearable
-                isOptionEqualToValue={(option, value) =>
-                  option.value === value.value
-                }
-                label="Status"
-                onChange={(_, value) => setStatusFilter(value?.value ?? 'all')}
-                options={statusOptions}
-                sx={{ minWidth: 120 }}
-                textFieldProps={{ hideLabel: true }}
-                value={statusOptions.find((opt) => opt.value === statusFilter)}
+              <Select<StatusOption>
+                aria-label="Status"
+                items={statusOptions}
+                onChange={(event) => {
+                  const option = event.detail as unknown as null | StatusOption;
+                  if (option) {
+                    setStatusFilter(option.value);
+                  }
+                }}
+                selected={selectedOption}
+                style={{ minWidth: '120px' }}
+                valueFn={(item) => (item as StatusOption).label}
               />
             </Stack>
             <Checkbox
               checked={showPlaygroundKeys}
-              onChange={(e) => setShowPlaygroundKeys(e.target.checked)}
-              sx={{ whiteSpace: 'nowrap' }}
-              text="Show playground keys"
-            />
+              onChange={(e) =>
+                setShowPlaygroundKeys((e as CustomEvent<boolean>).detail)
+              }
+            >
+              Show playground keys
+            </Checkbox>
           </Stack>
-          <Button
-            buttonType="primary"
-            onClick={() => setIsCreateDrawerOpen(true)}
-            startIcon={<StyledAddIcon />}
-          >
+          <Button onClick={() => setIsCreateDrawerOpen(true)} variant="primary">
+            <Icon icon="add" size="s" />
             Create API Key
           </Button>
         </Stack>
@@ -81,8 +92,3 @@ export const ApiKeyManagement = () => {
     </Stack>
   );
 };
-
-const StyledAddIcon = styled(Add)(() => ({
-  height: 16,
-  width: 16,
-}));

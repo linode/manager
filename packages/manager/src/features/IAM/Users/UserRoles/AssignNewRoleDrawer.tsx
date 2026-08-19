@@ -15,6 +15,7 @@ import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
 
 import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { useIsDefaultDelegationRolesForChildAccount } from '../../hooks/useDelegationRole';
+import { usePermissions } from '../../hooks/usePermissions';
 import { Box } from '../../Shared/Box/Box';
 import {
   IAM_ROLES_PENDO_IDS,
@@ -51,6 +52,15 @@ export const AssignNewRoleDrawer = ({
   const { data: accountRoles } = useAccountRoles();
   const { isDefaultDelegationRolesForChildAccount } =
     useIsDefaultDelegationRolesForChildAccount();
+  const { data: permissions } = usePermissions('account', [
+    'is_account_admin',
+    'update_default_delegate_access',
+  ]);
+
+  const permissionToCheck = isDefaultDelegationRolesForChildAccount
+    ? permissions?.update_default_delegate_access
+    : permissions?.is_account_admin;
+
   const form = useForm<AssignNewRoleFormValues>({
     defaultValues: {
       roles: [
@@ -78,20 +88,22 @@ export const AssignNewRoleDrawer = ({
     if (!accountRoles) {
       return [];
     }
-    return getAllRoles(accountRoles).filter((role) => {
-      // exclude account and entities roles that are already assigned to the user
-      if (isAccountRole(role)) {
-        return !assignedRoles?.account_access.includes(role.value);
-      }
+    return getAllRoles(accountRoles)
+      .filter((role) => {
+        // exclude account and entities roles that are already assigned to the user
+        if (isAccountRole(role)) {
+          return !assignedRoles?.account_access.includes(role.value);
+        }
 
-      if (isEntityRole(role)) {
-        return !assignedRoles?.entity_access.some((entity) =>
-          entity.roles.includes(role.value)
-        );
-      }
+        if (isEntityRole(role)) {
+          return !assignedRoles?.entity_access.some((entity) =>
+            entity.roles.includes(role.value)
+          );
+        }
 
-      return true;
-    });
+        return true;
+      })
+      .sort((a, b) => a.value.localeCompare(b.value));
   }, [accountRoles, assignedRoles]);
 
   const { mutateAsync: updateUserRoles, isPending: isUserRolesPending } =
@@ -164,6 +176,13 @@ export const AssignNewRoleDrawer = ({
       <div slot="header">{drawerTitle}</div>
       <FormProvider {...form}>
         <form onSubmit={handleSubmit(onSubmit)} slot="body">
+          {!permissionToCheck && (
+            <NotificationBanner
+              style={{ marginBottom: Spacing.S8 }}
+              text="You do not have permission to assign roles."
+              type="error"
+            />
+          )}
           {formState.errors.root?.message && (
             <NotificationBanner
               text={formState.errors.root?.message}
@@ -239,6 +258,7 @@ export const AssignNewRoleDrawer = ({
                   : undefined
               }
               data-testid="submit"
+              disabled={!permissionToCheck}
               processing={
                 isUserRolesPending ||
                 isDefaultRolesPending ||

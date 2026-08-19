@@ -86,7 +86,10 @@ export const createAlertDefinitionSchema = object({
   entity_ids: array().of(string().defined()).optional(),
   regions: array().of(string().defined()).optional(),
   scope: string().oneOf(['entity', 'region', 'account']).nullable().optional(),
-  group_by: array().of(string().defined()).optional(),
+  group_by: array()
+    .of(string().defined())
+    .required()
+    .min(1, 'At least one dimension is required.'),
 });
 
 export const editAlertDefinitionSchema = object({
@@ -145,7 +148,10 @@ export const editAlertDefinitionSchema = object({
     .optional(),
   scope: string().oneOf(['entity', 'region', 'account']).nullable().optional(),
   regions: array().of(string().defined()).optional(),
-  group_by: array().of(string().defined()).optional(),
+  group_by: array()
+    .of(string().defined())
+    .optional()
+    .min(1, 'At least one dimension is required.'),
 });
 
 export const createNotificationChannelPayloadSchema = object({

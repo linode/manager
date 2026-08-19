@@ -38,6 +38,31 @@ vi.mock('@linode/queries', async () => {
   };
 });
 
+vi.mock('../../Shared/UserDeleteConfirmation', () => ({
+  UserDeleteConfirmation: ({
+    open,
+    username,
+  }: {
+    open: boolean;
+    username: string;
+  }) => (
+    <div
+      data-open={String(open)}
+      data-testid="user-delete-confirmation"
+      data-username={username}
+    />
+  ),
+}));
+
+beforeEach(() => {
+  queryMocks.useSearch.mockReturnValue({
+    action: undefined,
+    query: undefined,
+    username: undefined,
+    users: undefined,
+  });
+});
+
 describe('Users', () => {
   it('renders only table and search filter if profile is not a child', async () => {
     const user = createUser();
@@ -85,5 +110,61 @@ describe('Users', () => {
 
     expect(container.querySelector('cds-search-field')).toBeVisible();
     expect(container.querySelector('cds-select')).toBeVisible();
+  });
+
+  it('opens delete confirmation for a username not in users list, showing an error', () => {
+    const user = createUser({ username: 'existing-user' });
+    queryMocks.useAccountUsers.mockReturnValue({
+      data: {
+        data: [user],
+        page: 1,
+        pages: 1,
+        results: 1,
+      },
+    });
+    queryMocks.useProfile.mockReturnValue({
+      data: createProfile({ user_type: 'default' }),
+    });
+    queryMocks.useSearch.mockReturnValue({
+      action: 'delete-user',
+      query: undefined,
+      username: 'not-existing-user',
+      users: undefined,
+    });
+
+    const { getByTestId } = renderWithProviders(<UsersLanding />);
+
+    expect(getByTestId('user-delete-confirmation')).toHaveAttribute(
+      'data-open',
+      'true'
+    );
+  });
+
+  it('opens delete confirmation when username exists in users list', () => {
+    const user = createUser({ username: 'existing-user' });
+    queryMocks.useAccountUsers.mockReturnValue({
+      data: {
+        data: [user],
+        page: 1,
+        pages: 1,
+        results: 1,
+      },
+    });
+    queryMocks.useProfile.mockReturnValue({
+      data: createProfile({ user_type: 'default' }),
+    });
+    queryMocks.useSearch.mockReturnValue({
+      action: 'delete-user',
+      query: undefined,
+      username: 'existing-user',
+      users: undefined,
+    });
+
+    const { getByTestId } = renderWithProviders(<UsersLanding />);
+
+    expect(getByTestId('user-delete-confirmation')).toHaveAttribute(
+      'data-open',
+      'true'
+    );
   });
 });

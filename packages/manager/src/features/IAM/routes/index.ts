@@ -40,21 +40,28 @@ import type { TableSearchParams } from '../../../routes/types';
 import type { AccessType, EntityType, User } from '@linode/api-v4';
 
 interface IamEntitiesSearchParams extends TableSearchParams {
+  action?: string;
+  entity?: string;
   entityType?: 'all' | EntityType;
   query?: string;
+  role?: string;
   selectedRole?: string;
 }
 
 interface IamUsersSearchParams extends TableSearchParams {
   action?: string;
   company?: string;
+  euuid?: string;
   query?: string; // to be deprecated once UIE-9292 is resolved
   username?: string;
   users?: string;
 }
 
 interface IamUserRolesSearchParams extends TableSearchParams {
+  action?: string;
+  entity?: string;
   query?: string;
+  role?: string;
   roleType?: 'all' | AccessType;
 }
 
@@ -64,8 +71,15 @@ interface IamTfaEnforcementSearchParams extends TableSearchParams {
 
 const iamActions = {
   'add-user': 'add-user',
+  'assign-new-roles': 'assign-new-roles',
+  'change-role': 'change-role',
+  'change-role-for-entity': 'change-role-for-entity',
   'delete-user': 'delete-user',
   'edit-user': 'edit-user',
+  'unassign-role': 'unassign-role',
+  'update-delegation': 'update-delegation',
+  'update-entities': 'update-entities',
+  'remove-entity': 'remove-entity',
 } as const;
 
 export type IAMAction = (typeof iamActions)[keyof typeof iamActions];

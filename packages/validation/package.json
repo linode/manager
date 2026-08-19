@@ -50,7 +50,7 @@
   },
   "devDependencies": {
     "@linode/tsconfig": "workspace:*",
-    "concurrently": "^10.0.3",
+    "concurrently": "^10.0.4",
     "tsup": "^8.5.1"
   },
   "lint-staged": {

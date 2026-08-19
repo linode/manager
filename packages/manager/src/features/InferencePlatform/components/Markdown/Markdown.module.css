@@ -1,0 +1,10 @@
+.markdown {
+  line-height: 1.8;
+  margin: 0;
+}
+
+.markdown pre {
+  border-radius: 4px;
+  overflow-x: auto;
+  padding: 8px;
+}

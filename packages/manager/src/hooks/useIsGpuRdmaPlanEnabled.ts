@@ -1,5 +1,5 @@
 import { useAccount } from '@linode/queries';
-import { isFeatureEnabled } from '@linode/utilities';
+import { isFeatureEnabledV2 } from '@linode/utilities';
 
 import { useFlags } from 'src/hooks/useFlags';
 /**
@@ -11,9 +11,7 @@ export const useIsGpuRdmaPlanEnabled = () => {
 
   const { data: account } = useAccount();
 
-  // TODO: Switch to isFeatureEnabledV2 (AND logic) once the 'GPUDirect RDMA' capability
-  // is available in the API. Currently using OR logic for development.
-  const isGpuRdmaPlanEnabled = isFeatureEnabled(
+  const isGpuRdmaPlanEnabled = isFeatureEnabledV2(
     'GPUDirect RDMA',
     Boolean(flags.nitro?.enabled),
     account?.capabilities ?? []

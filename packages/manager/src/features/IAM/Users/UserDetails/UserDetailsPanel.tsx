@@ -8,7 +8,7 @@ import { useDelegationRole } from '../../hooks/useDelegationRole';
 import { useIsIAMTfaEnforcementEnabled } from '../../hooks/useIsIAMTfaEnforcementEnabled';
 import { IAM_USERS_USER_DETAILS_PENDO_IDS } from '../../LoginSettings/constants';
 import { Box } from '../../Shared/Box/Box';
-import { EMAIL_MAX_LENGTH, PARENT_USER } from '../../Shared/constants';
+import { EMAIL_MAX_LENGTH } from '../../Shared/constants';
 import { DateTimeDisplay } from '../../Shared/DateTimeDisplay/DateTimeDisplay';
 import { Divider } from '../../Shared/Divider/Divider';
 import { MaskableText } from '../../Shared/MaskableText/MaskableText';
@@ -16,6 +16,7 @@ import { Paper } from '../../Shared/Paper/Paper';
 import { StatusIcon } from '../../Shared/StatusIcon/StatusIcon';
 import { truncateEnd } from '../../Shared/truncate';
 import { UserDeleteConfirmation } from '../../Shared/UserDeleteConfirmation';
+import { getDeleteUserTooltipText } from '../../Shared/utilities';
 import { EditUserDetailsDrawer } from './EditUserDetailsDrawer';
 import styles from './UserDetailsPanel.module.css';
 import { getTfaStatus, getTotalAssignedRoles } from './utils';
@@ -79,14 +80,12 @@ export const UserDetailsPanel = ({
 
   const editTooltipText = 'You do not have permission to edit this user.';
 
-  let deleteTooltipText: string | undefined;
-  if (!permissions?.delete_user) {
-    deleteTooltipText = 'You do not have permission to delete this user.';
-  } else if (profileUserName === activeUser.username) {
-    deleteTooltipText = `You can’t delete the currently active user.`;
-  } else if (isDelegateUserType) {
-    deleteTooltipText = `You can’t delete a ${PARENT_USER}.`;
-  }
+  const deleteTooltipText = getDeleteUserTooltipText(
+    permissions.delete_user,
+    profileUserName,
+    activeUser.username,
+    isDelegateUserType
+  );
 
   const assignRolesCount = assignedRoles
     ? getTotalAssignedRoles(assignedRoles)

@@ -1,23 +1,5 @@
-import OutlinedInput from '@mui/material/OutlinedInput';
 import MuiSlider from '@mui/material/Slider';
 import { styled } from '@mui/material/styles';
-
-export const StyledOutlinedInput = styled(OutlinedInput, {
-  label: 'StyledOutlinedInput',
-})(({ theme }) => ({
-  '& input': {
-    fontSize: theme.tokens.font.FontSize.Xs,
-    padding: '4px 0',
-    textAlign: 'left',
-  },
-  '& input::-webkit-inner-spin-button, & input::-webkit-outer-spin-button': {
-    opacity: 0,
-  },
-  '&:hover input::-webkit-inner-spin-button, &:hover input::-webkit-outer-spin-button':
-    { opacity: 1 },
-  '& .MuiOutlinedInput-notchedOutline': { border: 'none' },
-  width: 80,
-}));
 
 export const StyledSlider = styled(MuiSlider, {
   label: 'StyledSlider',

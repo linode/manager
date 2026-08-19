@@ -43,7 +43,7 @@ export const DefaultRoles = () => {
   }
 
   if (error) {
-    return <ErrorState />;
+    return <ErrorState withPaper />;
   }
 
   return (

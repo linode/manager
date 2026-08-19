@@ -20,9 +20,11 @@ import {
 import * as React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 
+import { useDiscardChanges } from '../../../hooks/useDiscardChanges';
 import { usePermissions } from '../../../hooks/usePermissions';
 import { Box } from '../../../Shared/Box/Box';
 import { CircleProgress } from '../../../Shared/CircleProgress/CircleProgress';
+import { DiscardChangesModal } from '../../../Shared/DiscardChangesModal/DiscardChangesModal';
 import { Divider } from '../../../Shared/Divider/Divider';
 import { ErrorState } from '../../../Shared/ErrorState/ErrorState';
 import { Paper } from '../../../Shared/Paper/Paper';
@@ -185,6 +187,13 @@ export const EnforcementSettings = () => {
     }
   };
 
+  const { handleCancelNavigation, handleProceedNavigation, status } =
+    useDiscardChanges([
+      isActivationStatusDirty,
+      isIncludedUsersDirty,
+      isExcludedUsersDirty,
+    ]);
+
   if (
     isLoading ||
     idpConfigsLoading ||
@@ -201,7 +210,7 @@ export const EnforcementSettings = () => {
     excludedUsersError ||
     permissionsError
   ) {
-    return <ErrorState />;
+    return <ErrorState withPaper />;
   }
 
   return (
@@ -220,6 +229,11 @@ export const EnforcementSettings = () => {
           type="warning"
         />
       )}
+      <DiscardChangesModal
+        onClose={handleCancelNavigation}
+        onDiscard={handleProceedNavigation}
+        open={status === 'blocked'}
+      />
       <form
         onSubmit={handleSubmit(onSubmit)}
         style={{ gap: Spacing.S24, display: 'flex', flexDirection: 'column' }}

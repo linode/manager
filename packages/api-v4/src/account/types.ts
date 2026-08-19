@@ -78,6 +78,7 @@ export const accountCapabilities = [
   'Cloud Firewall',
   'Cloud Firewall Rule Set',
   'CloudPulse',
+  'Custom VPC IPv4 Ranges',
   'Disk Encryption',
   'GPUDirect RDMA',
   'Kubernetes',

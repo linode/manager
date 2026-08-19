@@ -24,7 +24,7 @@ export const IdpConfigurationsLanding = () => {
   }
 
   if (error || permissionsError) {
-    return <ErrorState />;
+    return <ErrorState withPaper />;
   }
 
   return (

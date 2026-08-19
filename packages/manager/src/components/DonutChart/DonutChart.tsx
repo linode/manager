@@ -1,7 +1,7 @@
+import { LoadingSpinner } from '@akamai/cds-components/react/LoadingSpinner';
 import { Alias } from '@linode/design-language-system';
-import { Box, CircleProgress, Paper, Stack, Typography } from '@linode/ui';
+import { Box, keyframes, Paper, Stack, Typography, useTheme } from '@linode/ui';
 import { replaceNewlinesWithLineBreaks } from '@linode/utilities';
-import { keyframes, useTheme } from '@mui/material/styles';
 import React from 'react';
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts';
 
@@ -343,7 +343,7 @@ export const DonutChart = ({
           zIndex: 3,
         }}
       >
-        <CircleProgress size="md" />
+        <LoadingSpinner size="extra-large" />
       </Box>
     </Box>
   );

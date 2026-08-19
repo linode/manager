@@ -53,12 +53,15 @@ const useStyles = makeStyles()((theme: Theme) => ({
   required: {
     font: theme.font.normal,
   },
+  optional: {
+    font: theme.font.normal,
+  },
   root: {
     marginTop: theme.spacing(),
   },
 }));
 
-export interface MultipeIPInputProps {
+export interface MultipleIPInputProps {
   /**
    * Tightens spacing when used in VPC Dual Stack contexts.
    * @default false
@@ -136,6 +139,12 @@ export interface MultipeIPInputProps {
   onChange: (ips: ExtendedIP[]) => void;
 
   /**
+   * Indicates if the input is optional.
+   * @default false
+   */
+  optional?: boolean;
+
+  /**
    * Placeholder text for an empty input field.
    */
   placeholder?: string;
@@ -154,10 +163,10 @@ export interface MultipeIPInputProps {
   /**
    * Tooltip text for extra info on hover.
    */
-  tooltip?: string;
+  tooltip?: React.JSX.Element | string;
 }
 
-export const MultipleIPInput = React.memo((props: MultipeIPInputProps) => {
+export const MultipleIPInput = React.memo((props: MultipleIPInputProps) => {
   const {
     adjustSpacingForVPCDualStack,
     buttonText,
@@ -172,6 +181,7 @@ export const MultipleIPInput = React.memo((props: MultipeIPInputProps) => {
     isLinkStyled,
     onBlur,
     onChange,
+    optional,
     placeholder,
     required,
     title,
@@ -247,7 +257,12 @@ export const MultipleIPInput = React.memo((props: MultipeIPInputProps) => {
     <div className={cx(classes.root, className)}>
       {tooltip && title ? (
         <div className={classes.ipNetmaskTooltipSection}>
-          <InputLabel>{title}</InputLabel>
+          <InputLabel>
+            {title}
+            {optional ? (
+              <span className={classes.optional}> (optional)</span>
+            ) : null}
+          </InputLabel>
           <TooltipIcon
             status="info"
             sxTooltipIcon={{
@@ -256,6 +271,7 @@ export const MultipleIPInput = React.memo((props: MultipeIPInputProps) => {
             }}
             text={tooltip}
             tooltipPosition="right"
+            width={300}
           />
         </div>
       ) : (
@@ -266,6 +282,9 @@ export const MultipleIPInput = React.memo((props: MultipeIPInputProps) => {
             {title}
             {required ? (
               <span className={classes.required}> (required)</span>
+            ) : null}
+            {optional ? (
+              <span className={classes.optional}> (optional)</span>
             ) : null}
           </InputLabel>
         )

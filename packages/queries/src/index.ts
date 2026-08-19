@@ -13,6 +13,7 @@ export * from './inference';
 export * from './linodes';
 export * from './locks';
 export * from './marketplace';
+export * from './natgateways';
 export * from './netloadbalancers';
 export * from './networking';
 export * from './networktransfer';

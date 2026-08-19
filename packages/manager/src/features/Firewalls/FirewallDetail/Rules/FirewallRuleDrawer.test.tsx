@@ -17,6 +17,7 @@ import {
   classifyIPs,
   deriveTypeFromValuesAndIPs,
   formValueToIPs,
+  getInitialFormValues,
   getInitialIPsOrPLs,
   itemsToPortString,
   portStringToItems,
@@ -29,11 +30,15 @@ import type { ExtendedFirewallRule } from './firewallRuleEditor';
 import type { Category, FirewallRuleError } from './shared';
 import type {
   FirewallPolicyType,
+  FirewallRuleProtocol,
   FirewallRuleSet,
 } from '@linode/api-v4/lib/firewalls/types';
 
 const queryMocks = vi.hoisted(() => ({
   useFirewallRuleSetQuery: vi.fn().mockReturnValue({}),
+  useIsGpuRdmaPlanEnabled: vi
+    .fn()
+    .mockReturnValue({ isGpuRdmaPlanEnabled: false }),
 }));
 
 vi.mock('@linode/queries', async () => {
@@ -44,6 +49,10 @@ vi.mock('@linode/queries', async () => {
     useProfile: vi.fn().mockReturnValue({ data: { timezone: 'utc' } }),
   };
 });
+
+vi.mock('src/hooks/useIsGpuRdmaPlanEnabled', () => ({
+  useIsGpuRdmaPlanEnabled: () => queryMocks.useIsGpuRdmaPlanEnabled(),
+}));
 
 vi.mock('@akamai/compute-ui-core/datetime', async () => {
   const actual = await vi.importActual('@akamai/compute-ui-core/datetime');
@@ -91,8 +100,9 @@ describe('AddRuleDrawer', () => {
       <FirewallRuleDrawer {...props} category="inbound" mode="create" />
     );
     expect(getByPlaceholderText('Select a port...')).not.toBeDisabled();
-    await userEvent.click(getByPlaceholderText('Select a protocol...'));
-    await userEvent.click(getByText('ICMP'));
+    const user = userEvent.setup();
+    await user.click(getByPlaceholderText('Select a protocol...'));
+    await user.click(getByText('ICMP'));
     expect(getByPlaceholderText('Select a port...')).toBeDisabled();
   });
 
@@ -101,9 +111,41 @@ describe('AddRuleDrawer', () => {
       <FirewallRuleDrawer {...props} category="inbound" mode="create" />
     );
     expect(getByPlaceholderText('Select a port...')).not.toBeDisabled();
-    await userEvent.click(getByPlaceholderText('Select a protocol...'));
-    await userEvent.click(getByText('IPENCAP'));
+    const user = userEvent.setup();
+    await user.click(getByPlaceholderText('Select a protocol...'));
+    await user.click(getByText('IPENCAP'));
     expect(getByPlaceholderText('Select a port...')).toBeDisabled();
+  });
+
+  it('disables the port input when the ALL protocol is selected', async () => {
+    queryMocks.useIsGpuRdmaPlanEnabled.mockReturnValue({
+      isGpuRdmaPlanEnabled: true,
+    });
+    const { getByText, getByPlaceholderText } = renderWithTheme(
+      <FirewallRuleDrawer {...props} category="inbound" mode="create" />
+    );
+    expect(getByPlaceholderText('Select a port...')).not.toBeDisabled();
+    const user = userEvent.setup();
+    await user.click(getByPlaceholderText('Select a protocol...'));
+    await user.click(getByText('All'));
+    expect(getByPlaceholderText('Select a port...')).toBeDisabled();
+  });
+
+  it('shows the custom protocol number text field when Other Protocol is selected', async () => {
+    queryMocks.useIsGpuRdmaPlanEnabled.mockReturnValue({
+      isGpuRdmaPlanEnabled: true,
+    });
+    const { getByText, getByPlaceholderText, queryByPlaceholderText } =
+      renderWithTheme(
+        <FirewallRuleDrawer {...props} category="inbound" mode="create" />
+      );
+    expect(
+      queryByPlaceholderText('Enter a number (0\u2013255)...')
+    ).not.toBeInTheDocument();
+    const user = userEvent.setup();
+    await user.click(getByPlaceholderText('Select a protocol...'));
+    await user.click(getByText('Other Protocol'));
+    getByPlaceholderText('eg. 47 (GRE), 50 (ESP), 51 (AH), 89(OSPF)');
   });
 });
 
@@ -345,6 +387,9 @@ describe('utilities', () => {
         validateForm({ ports: '443', protocol: 'IPENCAP' }, baseOptions)
       ).toHaveProperty('ports', 'Ports are not allowed for IPENCAP protocols.');
       expect(
+        validateForm({ ports: '80', protocol: 'ALL' }, baseOptions)
+      ).toHaveProperty('ports', 'Ports are not allowed for ALL protocols.');
+      expect(
         validateForm({ ports: 'invalid-port', protocol: 'TCP' }, baseOptions)
       ).toHaveProperty('ports');
     });
@@ -557,6 +602,122 @@ describe('utilities', () => {
         ports: 'Ports is a required field.',
         protocol: 'Protocol is required.',
       });
+    });
+
+    it('does not require ports for ALL protocol', () => {
+      const rest = { addresses: 'All IPv4', label: 'test-rule' };
+      expect(
+        validateForm({ protocol: 'ALL', ...rest }, baseOptions)
+      ).not.toHaveProperty('ports');
+    });
+
+    it('does not require ports for OTHER protocol with non-port number', () => {
+      const rest = {
+        addresses: 'All IPv4',
+        customProtocol: '47',
+        label: 'test-rule',
+      };
+      expect(
+        validateForm({ protocol: 'OTHER', ...rest }, baseOptions)
+      ).not.toHaveProperty('ports');
+    });
+
+    it('requires ports for OTHER protocol with port-supporting number (6, 17, 132)', () => {
+      const rest = { addresses: 'All IPv4', label: 'test-rule' };
+      for (const num of ['6', '17', '132']) {
+        expect(
+          validateForm(
+            { customProtocol: num, protocol: 'OTHER', ...rest },
+            baseOptions
+          )
+        ).toHaveProperty('ports', 'Ports is a required field.');
+      }
+    });
+
+    it('requires customProtocol when protocol is OTHER', () => {
+      expect(validateForm({ protocol: 'OTHER' }, baseOptions)).toHaveProperty(
+        'customProtocol',
+        'Custom protocol number is required.'
+      );
+    });
+
+    it('rejects customProtocol values outside 0-255', () => {
+      const errorMsg =
+        'Protocol must be a number between 0 and 255 with no leading zeros.';
+      expect(
+        validateForm({ customProtocol: '256', protocol: 'OTHER' }, baseOptions)
+      ).toHaveProperty('customProtocol', errorMsg);
+      expect(
+        validateForm({ customProtocol: '-1', protocol: 'OTHER' }, baseOptions)
+      ).toHaveProperty('customProtocol');
+      expect(
+        validateForm({ customProtocol: 'abc', protocol: 'OTHER' }, baseOptions)
+      ).toHaveProperty('customProtocol');
+    });
+
+    it('rejects customProtocol values with leading zeros', () => {
+      const errorMsg =
+        'Protocol must be a number between 0 and 255 with no leading zeros.';
+      expect(
+        validateForm({ customProtocol: '017', protocol: 'OTHER' }, baseOptions)
+      ).toHaveProperty('customProtocol', errorMsg);
+      expect(
+        validateForm({ customProtocol: '00', protocol: 'OTHER' }, baseOptions)
+      ).toHaveProperty('customProtocol', errorMsg);
+    });
+
+    it('accepts customProtocol values within 0-255', () => {
+      const rest = { addresses: 'All IPv4', label: 'test-rule' };
+      expect(
+        validateForm(
+          { customProtocol: '47', protocol: 'OTHER', ...rest },
+          baseOptions
+        )
+      ).not.toHaveProperty('customProtocol');
+      expect(
+        validateForm(
+          { customProtocol: '0', protocol: 'OTHER', ...rest },
+          baseOptions
+        )
+      ).not.toHaveProperty('customProtocol');
+    });
+  });
+
+  describe('getInitialFormValues', () => {
+    const baseRule: ExtendedFirewallRule = {
+      action: 'ACCEPT',
+      addresses: { ipv4: ['0.0.0.0/0'], ipv6: ['::/0'] },
+      originalIndex: 0,
+      ports: '80',
+      protocol: 'TCP',
+      status: 'NEW',
+    };
+
+    it('maps a named protocol directly onto the protocol field', () => {
+      const values = getInitialFormValues(baseRule);
+      expect(values.protocol).toBe('TCP');
+      expect(values.customProtocol).toBe('');
+    });
+
+    it('maps a custom numeric protocol to protocol=OTHER and sets customProtocol', () => {
+      const values = getInitialFormValues({
+        ...baseRule,
+        protocol: '47' as FirewallRuleProtocol,
+      });
+      expect(values.protocol).toBe('OTHER');
+      expect(values.customProtocol).toBe('47');
+    });
+
+    it('handles ALL protocol correctly', () => {
+      const values = getInitialFormValues({ ...baseRule, protocol: 'ALL' });
+      expect(values.protocol).toBe('ALL');
+      expect(values.customProtocol).toBe('');
+    });
+
+    it('returns empty initial values when no rule is provided', () => {
+      const values = getInitialFormValues();
+      expect(values.protocol).toBe('');
+      expect(values.customProtocol).toBe('');
     });
   });
 

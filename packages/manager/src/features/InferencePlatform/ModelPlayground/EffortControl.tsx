@@ -1,8 +1,7 @@
-import { Box, TooltipIcon, Typography } from '@linode/ui';
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import { SegmentedButton, Tooltip } from '@akamai/cds-components/react';
+import { InfoOutline } from '@akamai/cds-icons/react';
+import { Box, Typography } from '@linode/ui';
 import React from 'react';
-
-import { StyledToggleButton } from './EffortControl.styles';
 
 import type { PlaygroundSettings } from './types';
 
@@ -23,43 +22,39 @@ const effortLevels: Array<{
 ];
 
 export const EffortControl = ({ label, onChange, tooltip, value }: Props) => {
-  const handleChange = (
-    _event: React.MouseEvent<HTMLElement>,
-    newValue: null | PlaygroundSettings['reasoning_effort']
-  ) => {
-    if (newValue !== null) {
-      onChange(newValue);
-    }
+  const handleChange = (e: CustomEvent) => {
+    onChange(e.detail.value as PlaygroundSettings['reasoning_effort']);
   };
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
-      <Box sx={{ alignItems: 'center', display: 'flex' }}>
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.75 }}>
+      <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
         <Typography variant="body2">{label}</Typography>
-        <TooltipIcon
-          labelTooltipIconSize="small"
-          status="info"
-          sxTooltipIcon={{
-            '& svg': { height: 16, width: 16 },
-            marginLeft: '-4px',
-          }}
-          text={tooltip}
-        />
+        <Tooltip tooltipText={tooltip}>
+          <span
+            style={{
+              alignItems: 'center',
+              display: 'flex',
+              marginRight: 4,
+            }}
+          >
+            <InfoOutline height={16} width={16} />
+          </span>
+        </Tooltip>
       </Box>
-      <ToggleButtonGroup
-        aria-label={label}
-        exclusive
-        fullWidth
-        onChange={handleChange}
-        sx={{ gap: 1 }}
-        value={value}
-      >
+      <Box sx={{ display: 'flex', gap: 1 }}>
         {effortLevels.map((level) => (
-          <StyledToggleButton key={level.value} value={level.value}>
+          <SegmentedButton
+            checked={value === level.value}
+            key={level.value}
+            onChange={handleChange}
+            style={{ borderRadius: '4px', flex: 1 }}
+            value={level.value}
+          >
             {level.label}
-          </StyledToggleButton>
+          </SegmentedButton>
         ))}
-      </ToggleButtonGroup>
+      </Box>
     </Box>
   );
 };

@@ -9,7 +9,6 @@ import {
   PARENT_ENTITY_REGION,
   REGION,
   RESOURCE_ID,
-  STATUS_CODE_PLACEHOLDER_TEXT,
 } from './constants';
 import { CloudPulseAvailableViews, CloudPulseSelectTypes } from './models';
 import { filterKubernetesClusters, getValidSortedEndpoints } from './utils';
@@ -679,24 +678,6 @@ export const LOGS_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
         priority: 2,
       },
       name: 'Stream Names',
-    },
-    {
-      configuration: {
-        filterKey: 'status_code',
-        filterType: 'string',
-        isFilterable: true,
-        isMetricsFilter: false,
-        name: 'Status Code',
-        dimensionKey: 'status_code',
-        neededInViews: [
-          CloudPulseAvailableViews.central,
-          CloudPulseAvailableViews.service,
-        ],
-        isOptional: true,
-        placeholder: STATUS_CODE_PLACEHOLDER_TEXT,
-        priority: 2,
-      },
-      name: 'Status Code',
     },
   ],
   serviceType: 'logs',

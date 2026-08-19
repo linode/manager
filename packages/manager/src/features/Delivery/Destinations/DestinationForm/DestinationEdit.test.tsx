@@ -2,12 +2,11 @@ import { Destination } from '@linode/api-v4';
 import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
-import { describe, expect } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
   akamaiObjectStorageDestinationFactory,
   customHttpsDestinationFactory,
-  objectStorageBucketFactory,
 } from 'src/factories';
 import { DestinationEdit } from 'src/features/Delivery/Destinations/DestinationForm/DestinationEdit';
 import { waitForLoadingToComplete } from 'src/features/Delivery/Shared/testHelpers';
@@ -20,21 +19,6 @@ const mockDestination = akamaiObjectStorageDestinationFactory.build({
   label: `Destination ${destinationId}`,
 });
 
-const mockBuckets = [
-  objectStorageBucketFactory.build({
-    hostname: 'bucket-with-hostname.us-east-1.linodeobjects.com',
-    label: 'bucket-with-hostname',
-    region: 'us-east',
-    s3_endpoint: undefined,
-  }),
-  objectStorageBucketFactory.build({
-    hostname: 'bucket-with-s3-endpoint.eu-central-1.linodeobjects.com',
-    label: 'bucket-with-s3-endpoint',
-    region: 'eu-central',
-    s3_endpoint: 'eu-central-1.linodeobjects.com',
-  }),
-];
-
 const queryMocks = vi.hoisted(() => ({
   useObjectStorageBuckets: vi.fn().mockReturnValue({
     data: undefined,
@@ -46,9 +30,10 @@ const queryMocks = vi.hoisted(() => ({
 vi.mock(
   'src/features/ObjectStorage/Buckets/hooks/useObjectStorageBuckets',
   async () => {
-    const actual = await vi.importActual(
-      'src/features/ObjectStorage/Buckets/hooks/useObjectStorageBuckets'
-    );
+    const actual = await vi.importActual<
+      typeof import('src/features/ObjectStorage/Buckets/hooks/useObjectStorageBuckets')
+    >('src/features/ObjectStorage/Buckets/hooks/useObjectStorageBuckets');
+
     return {
       ...actual,
       useObjectStorageBuckets: queryMocks.useObjectStorageBuckets,
@@ -57,7 +42,10 @@ vi.mock(
 );
 
 vi.mock('@tanstack/react-router', async () => {
-  const actual = await vi.importActual('@tanstack/react-router');
+  const actual = await vi.importActual<typeof import('@tanstack/react-router')>(
+    '@tanstack/react-router'
+  );
+
   return {
     ...actual,
     useParams: vi.fn().mockReturnValue({ destinationId: 123 }),
@@ -65,13 +53,16 @@ vi.mock('@tanstack/react-router', async () => {
 });
 
 describe('DestinationEdit', () => {
+  const user = userEvent.setup({ delay: null });
+
   beforeEach(() => {
     queryMocks.useObjectStorageBuckets.mockReturnValue({
-      data: mockBuckets,
+      data: [],
       error: null,
       isPending: false,
     });
   });
+
   const assertInputHasValue = (inputLabel: string, inputValue: string) => {
     expect(screen.getByLabelText(inputLabel)).toHaveValue(inputValue);
   };
@@ -100,124 +91,7 @@ describe('DestinationEdit', () => {
     assertInputHasValue('Log Path Prefix (optional)', 'file');
   });
 
-  describe('Bucket selection behavior in edit mode', () => {
-    const renderEditWithMockDestination = async () => {
-      server.use(
-        http.get(`*/monitor/streams/destinations/${destinationId}`, () => {
-          return HttpResponse.json(mockDestination);
-        })
-      );
-
-      renderWithThemeAndHookFormContext({
-        component: <DestinationEdit />,
-      });
-
-      await waitForLoadingToComplete();
-    };
-
-    it('should default to "Enter Bucket details manually" radio in edit mode', async () => {
-      await renderEditWithMockDestination();
-
-      const manualRadio = screen.getByLabelText(
-        'Enter Bucket details manually'
-      );
-      expect(manualRadio).toBeChecked();
-    });
-
-    it('should enable the Endpoint field in manual mode', async () => {
-      await renderEditWithMockDestination();
-
-      await waitFor(() => {
-        expect(screen.getByLabelText('Endpoint')).toBeEnabled();
-      });
-    });
-
-    it('should clear Bucket and Endpoint when switching to "Select Bucket associated with the account"', async () => {
-      await renderEditWithMockDestination();
-
-      await waitFor(() => {
-        assertInputHasValue('Bucket', 'destinations-bucket-name');
-      });
-      assertInputHasValue('Endpoint', 'destinations-bucket-name.host.com');
-
-      // Switch to bucket_from_account
-      const bucketFromAccountRadio = screen.getByLabelText(
-        'Select Bucket associated with the account'
-      );
-      await userEvent.click(bucketFromAccountRadio);
-
-      // Both fields should be cleared
-      expect(screen.getByLabelText('Bucket')).toHaveValue('');
-      expect(screen.getByLabelText('Endpoint')).toHaveValue('');
-    });
-
-    it('should disable the Endpoint field after switching to "Select Bucket associated with the account"', async () => {
-      await renderEditWithMockDestination();
-
-      const bucketFromAccountRadio = screen.getByLabelText(
-        'Select Bucket associated with the account'
-      );
-      await userEvent.click(bucketFromAccountRadio);
-
-      expect(screen.getByLabelText('Endpoint')).toBeDisabled();
-    });
-
-    it('should set Bucket and Endpoint from hostname when selecting a bucket without s3_endpoint', async () => {
-      await renderEditWithMockDestination();
-
-      // Switch to bucket_from_account to show the Autocomplete
-      const bucketFromAccountRadio = screen.getByLabelText(
-        'Select Bucket associated with the account'
-      );
-      await userEvent.click(bucketFromAccountRadio);
-
-      // Open the Bucket Autocomplete and select a bucket with only hostname
-      const bucketAutocomplete = screen.getByLabelText('Bucket');
-      await userEvent.click(bucketAutocomplete);
-
-      const bucketOption = await screen.findByText('bucket-with-hostname');
-      await userEvent.click(bucketOption);
-
-      // Bucket should display the selected bucket label
-      await waitFor(() => {
-        expect(bucketAutocomplete).toHaveValue('bucket-with-hostname');
-      });
-
-      // Endpoint should be auto-filled with the bucket's endpoint
-      expect(screen.getByLabelText('Endpoint')).toHaveValue(
-        'bucket-with-hostname.us-east-1.linodeobjects.com'
-      );
-    });
-
-    it('should set Bucket and Endpoint from s3_endpoint when selecting a bucket with s3_endpoint', async () => {
-      await renderEditWithMockDestination();
-
-      // Switch to bucket_from_account to show the Autocomplete
-      const bucketFromAccountRadio = screen.getByLabelText(
-        'Select Bucket associated with the account'
-      );
-      await userEvent.click(bucketFromAccountRadio);
-
-      // Open the Bucket Autocomplete and select a bucket with s3_endpoint
-      const bucketAutocomplete = screen.getByLabelText('Bucket');
-      await userEvent.click(bucketAutocomplete);
-
-      const bucketOption = await screen.findByText('bucket-with-s3-endpoint');
-      await userEvent.click(bucketOption);
-
-      // Bucket should display the selected bucket label
-      await waitFor(() => {
-        expect(bucketAutocomplete).toHaveValue('bucket-with-s3-endpoint');
-      });
-
-      // Endpoint should be auto-filled with the bucket's s3_endpoint
-      expect(screen.getByLabelText('Endpoint')).toHaveValue(
-        'eu-central-1.linodeobjects.com'
-      );
-    });
-  });
-
-  describe('Bearer Token authentication load in edit mode', () => {
+  describe('when loading Bearer Token authentication in edit mode', () => {
     const mockCustomHttpsDestination = customHttpsDestinationFactory.build({
       id: destinationId,
       label: `Destination ${destinationId}`,
@@ -251,20 +125,20 @@ describe('DestinationEdit', () => {
         },
       });
 
-      const authenticationTypeSelect = screen.getByLabelText(
-        'Authentication Type'
+      expect(screen.getByLabelText('Authentication Type')).toHaveValue(
+        'Bearer Token'
       );
-      expect(authenticationTypeSelect).toHaveValue('Bearer Token');
-
-      const bearerTokenInput = screen.getByLabelText('Bearer Token');
-      const headerNameInput = screen.getByLabelText('Header Name (optional)');
-      const tokenPrefixInput = screen.getByLabelText('Token Prefix (optional)');
-
-      expect(bearerTokenInput).toHaveValue('');
-      expect(headerNameInput).toHaveValue('');
-      expect(headerNameInput).toHaveAttribute('placeholder', 'Authorization');
-      expect(tokenPrefixInput).toHaveValue('');
-      expect(tokenPrefixInput).toHaveAttribute('placeholder', 'Bearer');
+      expect(screen.getByLabelText('Token')).toHaveValue('');
+      expect(screen.getByLabelText('Header Name (optional)')).toHaveValue('');
+      expect(screen.getByLabelText('Header Name (optional)')).toHaveAttribute(
+        'placeholder',
+        'Authorization'
+      );
+      expect(screen.getByLabelText('Token Prefix (optional)')).toHaveValue('');
+      expect(screen.getByLabelText('Token Prefix (optional)')).toHaveAttribute(
+        'placeholder',
+        'Bearer'
+      );
     });
 
     it('should have all Bearer Token Authentication fields filled with provided details', async () => {
@@ -282,24 +156,28 @@ describe('DestinationEdit', () => {
         },
       });
 
-      const authenticationTypeSelect = screen.getByLabelText(
-        'Authentication Type'
+      expect(screen.getByLabelText('Authentication Type')).toHaveValue(
+        'Bearer Token'
       );
-      expect(authenticationTypeSelect).toHaveValue('Bearer Token');
-
-      const bearerTokenInput = screen.getByLabelText('Bearer Token');
-      const headerNameInput = screen.getByLabelText('Header Name (optional)');
-      const tokenPrefixInput = screen.getByLabelText('Token Prefix (optional)');
-
-      expect(bearerTokenInput).toHaveValue('');
-      expect(headerNameInput).toHaveValue('X-Authorization');
-      expect(headerNameInput).toHaveAttribute('placeholder', 'Authorization');
-      expect(tokenPrefixInput).toHaveValue('CustomBearer');
-      expect(tokenPrefixInput).toHaveAttribute('placeholder', 'Bearer');
+      expect(screen.getByLabelText('Token')).toHaveValue('');
+      expect(screen.getByLabelText('Header Name (optional)')).toHaveValue(
+        'X-Authorization'
+      );
+      expect(screen.getByLabelText('Header Name (optional)')).toHaveAttribute(
+        'placeholder',
+        'Authorization'
+      );
+      expect(screen.getByLabelText('Token Prefix (optional)')).toHaveValue(
+        'CustomBearer'
+      );
+      expect(screen.getByLabelText('Token Prefix (optional)')).toHaveAttribute(
+        'placeholder',
+        'Bearer'
+      );
     });
   });
 
-  describe('given Test Connection and Save Changes buttons', () => {
+  describe('with Test Connection and Save Changes buttons', () => {
     const testConnectionButtonText = 'Test Connection';
     const saveDestinationButtonText = 'Save Changes';
     const editDestinationSpy = vi.fn();
@@ -321,8 +199,8 @@ describe('DestinationEdit', () => {
       type: 'akamai_object_storage',
     };
 
-    describe('when Test Connection button clicked and connection verified positively', () => {
-      it("should enable Save Changes button and perform proper call when it's clicked", async () => {
+    describe('when Test Connection is clicked and succeeds', () => {
+      it('should enable Save Changes and call edit API when connection succeeds', async () => {
         server.use(
           http.get(`*/monitor/streams/destinations/${destinationId}`, () => {
             return HttpResponse.json(mockDestination);
@@ -357,29 +235,29 @@ describe('DestinationEdit', () => {
           name: saveDestinationButtonText,
         });
 
-        // Enter Secret Key
-        const secretAccessKeyInput = screen.getByLabelText('Secret Key');
-        await userEvent.type(secretAccessKeyInput, 'Test');
+        await user.type(screen.getByLabelText('Secret Key'), 'Test');
 
         expect(saveDestinationButton).toBeDisabled();
-        await userEvent.click(testConnectionButton);
+        await user.click(testConnectionButton);
         expect(verifyDestinationSpy).toHaveBeenCalled();
-        const verifyPayload = verifyDestinationSpy.mock.calls[0][0];
-        expect(verifyPayload).toEqual(expectedVerifyPayload);
+        expect(verifyDestinationSpy.mock.calls[0][0]).toEqual(
+          expectedVerifyPayload
+        );
 
         await waitFor(() => {
           expect(saveDestinationButton).toBeEnabled();
         });
 
-        await userEvent.click(saveDestinationButton);
+        await user.click(saveDestinationButton);
         expect(editDestinationSpy).toHaveBeenCalled();
-        const editPayload = editDestinationSpy.mock.calls[0][0];
-        expect(editPayload).toEqual(expectedEditPayload);
+        expect(editDestinationSpy.mock.calls[0][0]).toEqual(
+          expectedEditPayload
+        );
       });
     });
 
-    describe('when Test Connection button clicked and connection verified negatively', () => {
-      it('should not enable Save Changes button', async () => {
+    describe('when Test Connection is clicked and fails', () => {
+      it('should keep Save Changes disabled when connection fails', async () => {
         server.use(
           http.get(`*/monitor/streams/destinations/${destinationId}`, () => {
             return HttpResponse.json(mockDestination);
@@ -399,6 +277,7 @@ describe('DestinationEdit', () => {
         });
 
         await waitForLoadingToComplete();
+
         const testConnectionButton = screen.getByRole('button', {
           name: testConnectionButtonText,
         });
@@ -406,15 +285,14 @@ describe('DestinationEdit', () => {
           name: saveDestinationButtonText,
         });
 
-        // Enter Secret Key
-        const secretAccessKeyInput = screen.getByLabelText('Secret Key');
-        await userEvent.type(secretAccessKeyInput, 'Test');
+        await user.type(screen.getByLabelText('Secret Key'), 'Test');
 
         expect(saveDestinationButton).toBeDisabled();
-        await userEvent.click(testConnectionButton);
+        await user.click(testConnectionButton);
         expect(verifyDestinationSpy).toHaveBeenCalled();
-        const verifyPayload = verifyDestinationSpy.mock.calls[0][0];
-        expect(verifyPayload).toEqual(expectedVerifyPayload);
+        expect(verifyDestinationSpy.mock.calls[0][0]).toEqual(
+          expectedVerifyPayload
+        );
 
         await waitFor(() => {
           expect(saveDestinationButton).toBeDisabled();

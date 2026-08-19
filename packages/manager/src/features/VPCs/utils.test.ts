@@ -289,6 +289,29 @@ describe('Linode Interface utility functions', () => {
     ).toEqual('10.0.0.0');
   });
 
+  it('gets the primary IPv4Address for RDMA interfaces', () => {
+    expect(
+      getLinodeInterfacePrimaryIPv4(
+        linodeInterfaceFactoryVPC.build({
+          vpc: null,
+          rdma_vpc: {
+            ipv4: {
+              addresses: [
+                {
+                  address: '10.0.0.8',
+                  primary: true,
+                },
+              ],
+              ranges: [],
+            },
+            subnet_id: 1,
+            vpc_id: 1,
+          },
+        })
+      )
+    ).toEqual('10.0.0.8');
+  });
+
   it('gets the VPC Linode Interface ranges', () => {
     expect(
       getLinodeInterfaceIPv4Ranges(linodeInterfaceFactoryVPC.build())

@@ -50,7 +50,7 @@ export const BucketObjectDetailsDrawer = React.memo(
       ({ label, region }) => label === bucketName && region === regionId
     );
 
-    const endpointType = bucket ? (bucket.endpoint_type ?? 'E0') : undefined;
+    const endpointType = bucket?.endpoint_type;
 
     try {
       if (lastModified) {

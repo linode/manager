@@ -32,6 +32,7 @@ const queryMocks = vi.hoisted(() => ({
   useParams: vi.fn().mockReturnValue({ username: 'test_user' }),
   useAccountRoles: vi.fn().mockReturnValue({}),
   useGetDefaultDelegationAccessQuery: vi.fn().mockReturnValue({}),
+  usePermissions: vi.fn().mockReturnValue({}),
   useUserRoles: vi.fn().mockReturnValue({}),
   useUserRolesMutation: vi.fn().mockReturnValue({}),
   useUpdateDefaultDelegationAccessQuery: vi.fn().mockReturnValue({}),
@@ -39,6 +40,11 @@ const queryMocks = vi.hoisted(() => ({
     .fn()
     .mockReturnValue({ isDefaultDelegationRolesForChildAccount: false }),
 }));
+
+vi.mock('../../hooks/usePermissions', async () => {
+  const actual = await vi.importActual<any>('../../hooks/usePermissions');
+  return { ...actual, usePermissions: queryMocks.usePermissions };
+});
 
 vi.mock('../../hooks/useDelegationRole', () => ({
   useIsDefaultDelegationRolesForChildAccount:
@@ -73,6 +79,9 @@ describe('UnassignRoleConfirmationDialog', () => {
 
     queryMocks.useParams.mockReturnValue({
       username: 'test_user',
+    });
+    queryMocks.usePermissions.mockReturnValue({
+      data: { is_account_admin: true, update_default_delegate_access: true },
     });
     queryMocks.useUserRoles.mockReturnValue({});
     queryMocks.useGetDefaultDelegationAccessQuery.mockReturnValue({});
@@ -199,5 +208,32 @@ describe('UnassignRoleConfirmationDialog', () => {
     expect(
       screen.getByText(INTERNAL_ERROR_NO_CHANGES_SAVED)
     ).toBeInTheDocument();
+  });
+
+  it('shows a pending state while roles are loading', () => {
+    renderWithProviders(
+      <UnassignRoleConfirmationDialog
+        {...props}
+        isRolesLoading
+        role={undefined}
+      />
+    );
+
+    expect(screen.getByTestId('circle-progress')).toBeInTheDocument();
+    expect(document.body.querySelectorAll('cds-button')).toHaveLength(1);
+  });
+
+  it('shows an error state when the role is missing after load', async () => {
+    renderWithProviders(
+      <UnassignRoleConfirmationDialog {...props} role={undefined} />
+    );
+
+    expect(
+      screen.getByText(/This role is no longer assigned or could not be found/i)
+    ).toBeInTheDocument();
+
+    const closeButton = await getCdsButtonByText(document.body, 'Close');
+    expect(closeButton).toBeVisible();
+    expect(document.body.querySelectorAll('cds-button')).toHaveLength(1);
   });
 });

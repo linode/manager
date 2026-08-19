@@ -37,7 +37,7 @@ export const EndpointSummaryPanel = () => {
           }}
         >
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <h3>Endpoint Summary</h3>
+            <h5>Endpoint Summary</h5>
 
             {objectStorageSummaryPageLinks && (
               <Link to="/object-storage/access-keys">Manage access keys</Link>

@@ -13,6 +13,12 @@ const queryMocks = vi.hoisted(() => ({
   useNavigate: vi.fn(() => vi.fn()),
   useParams: vi.fn().mockReturnValue({}),
   useSearch: vi.fn().mockReturnValue({}),
+  useIsCustomVPCIPv4RangesEnabled: vi.fn().mockReturnValue({
+    isCustomVPCIPv4RangesEnabled: false,
+  }),
+  useIsGpuRdmaPlanEnabled: vi.fn().mockReturnValue({
+    isGpuRdmaPlanEnabled: false,
+  }),
   useVPCQuery: vi.fn().mockReturnValue({}),
   useFirewallSettingsQuery: vi.fn().mockReturnValue({}),
   useRegionsQuery: vi.fn().mockReturnValue({}),
@@ -49,6 +55,21 @@ vi.mock('src/features/IAM/hooks/usePermissions', () => ({
   usePermissions: queryMocks.userPermissions,
 }));
 
+vi.mock('src/hooks/useIsGpuRdmaPlanEnabled', () => ({
+  useIsGpuRdmaPlanEnabled: queryMocks.useIsGpuRdmaPlanEnabled,
+}));
+
+vi.mock('src/features/VPCs/utils', async () => {
+  const actual = await vi.importActual<
+    typeof import('src/features/VPCs/utils')
+  >('src/features/VPCs/utils');
+
+  return {
+    ...actual,
+    useIsCustomVPCIPv4RangesEnabled: queryMocks.useIsCustomVPCIPv4RangesEnabled,
+  };
+});
+
 beforeAll(() => mockMatchMedia());
 
 describe('VPC Detail Summary section', () => {
@@ -68,6 +89,12 @@ describe('VPC Detail Summary section', () => {
         }),
       ],
     });
+    queryMocks.useIsGpuRdmaPlanEnabled.mockReturnValue({
+      isGpuRdmaPlanEnabled: false,
+    });
+    queryMocks.useIsCustomVPCIPv4RangesEnabled.mockReturnValue({
+      isCustomVPCIPv4RangesEnabled: false,
+    });
   });
 
   it('should display number of subnets and resources, region, id, creation and update dates', async () => {
@@ -81,7 +108,7 @@ describe('VPC Detail Summary section', () => {
       data: vpcFactory1,
     });
 
-    const { getByText } = renderWithTheme(<VPCDetail />, {
+    const { getByText, queryByText } = renderWithTheme(<VPCDetail />, {
       flags: { nodebalancerVpc: true },
     });
 
@@ -102,6 +129,37 @@ describe('VPC Detail Summary section', () => {
 
     expect(getByText('Updated')).toBeVisible();
     expect(getByText(vpcFactory1.updated)).toBeVisible();
+
+    expect(queryByText('VPC Type')).not.toBeInTheDocument();
+    expect(queryByText('IPv4 Ranges')).not.toBeInTheDocument();
+  });
+
+  it('should display VPC Type and IPv4 Ranges when the feature flags are enabled', async () => {
+    const vpcFactory1 = vpcFactory.build({
+      ipv4: [{ range: '10.0.0.0/24' }],
+      vpc_type: 'rdma',
+    });
+
+    queryMocks.useVPCQuery.mockReturnValue({
+      data: vpcFactory1,
+    });
+    queryMocks.useIsCustomVPCIPv4RangesEnabled.mockReturnValue({
+      isCustomVPCIPv4RangesEnabled: true,
+    });
+
+    const { getByText } = renderWithTheme(<VPCDetail />, {
+      flags: {
+        nitro: {
+          enabled: true,
+        },
+      },
+    });
+
+    expect(getByText('VPC Type')).toBeVisible();
+    expect(getByText('RDMA')).toBeVisible();
+
+    expect(getByText('VPC IPv4 Ranges')).toBeVisible();
+    expect(getByText('10.0.0.0/24')).toBeVisible();
   });
 
   it('should display description if one is provided', async () => {

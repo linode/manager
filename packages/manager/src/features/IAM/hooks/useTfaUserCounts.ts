@@ -2,6 +2,8 @@ import { useAccountUsers, useGetTfaOptionalUsersQuery } from '@linode/queries';
 
 interface UseTfaUserCountsResult {
   enforcedUsersCount: number;
+  isError: boolean;
+  isLoading: boolean;
   optionalUsersCount: number;
   totalUsers: number;
 }
@@ -16,14 +18,33 @@ interface UseTfaUserCountsResult {
 export const useTfaUserCounts = (
   isEnforced: boolean
 ): UseTfaUserCountsResult => {
-  const { data: allUsersData } = useAccountUsers({ params: { page_size: 25 } });
-  const { data: tfaOptionalUsersData } = useGetTfaOptionalUsersQuery({
+  const {
+    data: allUsersData,
+    isLoading: isAllUsersLoading,
+    isError: isAllUsersError,
+  } = useAccountUsers({
+    params: { page_size: 25 },
+  });
+  const {
+    data: tfaOptionalUsersData,
+    isLoading: isTfaOptionalUsersLoading,
+    isError: isTfaOptionalUsersError,
+  } = useGetTfaOptionalUsersQuery({
     page_size: 25,
   });
 
+  const isLoading = isAllUsersLoading || isTfaOptionalUsersLoading;
+  const isError = isAllUsersError || isTfaOptionalUsersError;
   const totalUsers = allUsersData?.results ?? 0;
   const optionalUsersCount = tfaOptionalUsersData?.results ?? 0;
-  const enforcedUsersCount = isEnforced ? totalUsers - optionalUsersCount : 0;
+  const enforcedUsersCount =
+    isEnforced && !isLoading ? totalUsers - optionalUsersCount : 0;
 
-  return { enforcedUsersCount, optionalUsersCount, totalUsers };
+  return {
+    enforcedUsersCount,
+    isLoading,
+    optionalUsersCount,
+    totalUsers,
+    isError,
+  };
 };

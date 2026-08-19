@@ -107,9 +107,9 @@ export const CertificatesTable = (props: CombinedProps) => {
   return (
     <>
       {!isLandingMode && (
-        <h3 className={idpConfigurationDrawerStyles.sectionHeading}>
+        <div className={idpConfigurationDrawerStyles.sectionHeading}>
           SAML Certificates
-        </h3>
+        </div>
       )}
 
       <Table

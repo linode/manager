@@ -1,6 +1,10 @@
-import { Box, IconButton, Select, Stack, Typography } from '@linode/ui';
-import { useTheme } from '@mui/material/styles';
-import React, { useEffect, useState } from 'react';
+import {
+  SegmentedButton,
+  SegmentedButtonGroup,
+} from '@akamai/cds-components/react/SegmentedButton';
+import { Select } from '@akamai/cds-components/react/Select';
+import { Box, Stack, Typography } from '@linode/ui';
+import React, { useState } from 'react';
 
 import CardView from 'src/assets/icons/ai/cardview.svg';
 import GridViewIcon from 'src/assets/icons/grid-view.svg';
@@ -36,10 +40,6 @@ export const ModelList = ({ height, isLoading, models }: ModelListProps) => {
   const [viewMode, setViewMode] = useState<ViewMode>(
     storage.aiModelsListViewType.get()
   );
-  const [selectedColor, setModeSelectedColor] =
-    useState<string>('hsl(210,100%,40%)');
-  const [deselectedColor, setModeDeselectedColor] =
-    useState<string>('hsl(210,100%,80%)');
 
   const handleViewModeChange = (mode: ViewMode) => {
     setViewMode(mode);
@@ -53,18 +53,6 @@ export const ModelList = ({ height, isLoading, models }: ModelListProps) => {
 
   const isEmpty = !isLoading && models.length === 0;
   const hasFixedHeight = typeof height === 'number';
-
-  const cmTheme = useTheme();
-
-  useEffect(() => {
-    if (cmTheme.palette.mode === 'light') {
-      setModeSelectedColor('hsl(210,30%,80%)');
-      setModeDeselectedColor('hsl(210,60%,50%)');
-    } else {
-      setModeSelectedColor('hsl(210,10%,35%)');
-      setModeDeselectedColor('hsl(210,70%,52%)');
-    }
-  }, [cmTheme]);
 
   return (
     <Box
@@ -87,39 +75,58 @@ export const ModelList = ({ height, isLoading, models }: ModelListProps) => {
         sx={{ mb: 2 }}
       >
         <Stack alignItems="center" direction="row" gap={0}>
-          <IconButton
-            aria-label="Grid view"
-            onClick={() => handleViewModeChange('grid')}
-            sx={{
-              borderRadius: 1,
-              color: viewMode === 'grid' ? deselectedColor : selectedColor,
-              padding: 0.75,
+          <SegmentedButtonGroup
+            onChange={(event) => {
+              const { value } = (event as CustomEvent<{ value: string }>)
+                .detail;
+              handleViewModeChange(value as ViewMode);
             }}
+            size="small"
+            style={{ borderRadius: '5px', overflow: 'hidden' }}
+            value={viewMode}
           >
-            <Box component={CardView} sx={{ height: 20, width: 20 }} />
-          </IconButton>
-
-          <IconButton
-            aria-label="List view"
-            onClick={() => handleViewModeChange('list')}
-            sx={{
-              borderRadius: 1,
-              color: viewMode !== 'grid' ? deselectedColor : selectedColor,
-              padding: 0.75,
-            }}
-          >
-            <Box component={GridViewIcon} sx={{ height: 20, width: 20 }} />
-          </IconButton>
+            <SegmentedButton
+              aria-label="Grid view"
+              style={{
+                borderBottomLeftRadius: '5px',
+                borderTopLeftRadius: '5px',
+                overflow: 'hidden',
+              }}
+              value="grid"
+            >
+              <Box component={CardView} sx={{ height: 20, width: 20 }} />
+            </SegmentedButton>
+            <SegmentedButton
+              aria-label="List view"
+              style={{
+                borderBottomRightRadius: '5px',
+                borderTopRightRadius: '5px',
+                overflow: 'hidden',
+              }}
+              value="list"
+            >
+              <Box component={GridViewIcon} sx={{ height: 20, width: 20 }} />
+            </SegmentedButton>
+          </SegmentedButtonGroup>
         </Stack>
 
         <Box sx={{ minWidth: 200 }}>
-          <Select
-            label="Sort by"
-            onChange={(_, option) => {
-              if (option) setSortKey(option.value as SortKey);
+          <Select<{ label: string; value: SortKey }>
+            aria-label="Sort by"
+            items={SORT_OPTIONS}
+            onChange={(event) => {
+              const option = event.detail as unknown as null | {
+                label: string;
+                value: SortKey;
+              };
+              if (option) {
+                setSortKey(option.value);
+              }
             }}
-            options={SORT_OPTIONS}
-            value={selectedSortOption}
+            selected={selectedSortOption}
+            valueFn={(item) =>
+              (item as { label: string; value: SortKey }).label
+            }
           />
         </Box>
       </Stack>

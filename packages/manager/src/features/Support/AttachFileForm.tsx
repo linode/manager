@@ -8,12 +8,13 @@ import { reshapeFiles } from './ticketUtils';
 import type { FileAttachment } from './index';
 
 interface Props {
+  attachButtonPendoId?: string;
   files: FileAttachment[];
   updateFiles: (newFiles: FileAttachment[]) => void;
 }
 
 export const AttachFileForm = (props: Props) => {
-  const { files, updateFiles } = props;
+  const { attachButtonPendoId, files, updateFiles } = props;
 
   const clickAttachButton = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (inputRef.current) {
@@ -67,6 +68,7 @@ export const AttachFileForm = (props: Props) => {
       <Button
         buttonType="secondary"
         compactX
+        data-pendo-id={attachButtonPendoId}
         onClick={clickAttachButton}
         sx={(theme) => ({
           display: 'flex',

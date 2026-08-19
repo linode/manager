@@ -91,8 +91,6 @@ export const STATUS_CODE_LEADING_COMMA_ERROR_MESSAGE =
 export const STATUS_CODE_LIMIT_ERROR_MESSAGE =
   'Status code list must be 100 characters or less.';
 
-export const STATUS_CODE_PLACEHOLDER_TEXT = 'e.g., 200,400';
-
 export const PORTS_PLACEHOLDER_TEXT = 'e.g., 80,443,3000';
 
 export const INTERFACE_IDS_HELPER_TEXT =

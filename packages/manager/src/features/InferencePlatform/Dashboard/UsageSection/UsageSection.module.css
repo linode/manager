@@ -1,0 +1,28 @@
+.usageSection {
+  border-radius: 0px;
+  padding: 0px;
+  margin-bottom: 16px;
+}
+.usageSectionContent {
+  padding: 20px 26px 24px 6px;
+  border-radius: 0px;
+  margin-top: 0px;
+}
+.usageSectionHeader {
+  align-content: flex-start;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  padding: 0px 0px 16px 14px;
+}
+.headerText {
+  font-family: 'Nunito Sans';
+  font-weight: 700;
+  font-size: 1rem;      /* 16px */
+  line-height: 1.25rem; /* 20px */
+  color: var(--token-alias-content-text-primary-default);
+}
+.selectWrapper{
+  min-width: 220px;
+  margin-bottom: 0px;
+}

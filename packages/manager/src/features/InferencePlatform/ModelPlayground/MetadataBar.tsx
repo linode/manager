@@ -1,8 +1,10 @@
+import {
+  Checkmark,
+  StatusAlertFilled,
+  StatusFailureErrorOutline,
+} from '@akamai/cds-icons/react';
 import { Box, keyframes, Stack, useTheme } from '@linode/ui';
 import { useInterval } from '@linode/utilities';
-import Check from '@mui/icons-material/Check';
-import ErrorOutline from '@mui/icons-material/ErrorOutline';
-import Warning from '@mui/icons-material/Warning';
 import React, { memo, useCallback, useState } from 'react';
 
 import { pulse } from './animations';
@@ -160,28 +162,34 @@ export const MetadataBar = memo(
               }}
             />
           ) : errored ? (
-            <ErrorOutline
-              sx={{
-                color: theme.palette.error.dark,
-                flexShrink: 0,
-                fontSize: '16px',
-              }}
+            <StatusFailureErrorOutline
+              aria-label="Error"
+              height={16}
+              role="img"
+              style={{ color: theme.palette.error.dark, flexShrink: 0 }}
+              width={16}
             />
           ) : cancelled || warned ? (
-            <Warning
-              sx={{
+            <StatusAlertFilled
+              aria-label="Warning"
+              height={16}
+              role="img"
+              style={{
                 color: theme.tokens.alias.Content.Icon.Warning,
                 flexShrink: 0,
-                fontSize: '16px',
               }}
+              width={16}
             />
           ) : (
-            <Check
-              sx={{
+            <Checkmark
+              aria-label="Success"
+              height={16}
+              role="img"
+              style={{
                 color: theme.tokens.alias.Content.Icon.Recommendation,
                 flexShrink: 0,
-                fontSize: '16px',
               }}
+              width={16}
             />
           )}
           {(errored || cancelled || warned) && (

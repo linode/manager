@@ -148,7 +148,10 @@ export const SubnetUnassignLinodesDrawer = React.memo(
                 if (response) {
                   if ('interfaces' in response) {
                     const vpcLinodeInterface = response.interfaces.find(
-                      (iface) => iface.vpc && iface.vpc.subnet_id === subnetId
+                      (iface) =>
+                        (iface.vpc && iface.vpc.subnet_id === subnetId) ||
+                        (iface.rdma_vpc &&
+                          iface.rdma_vpc?.subnet_id === subnetId)
                     );
                     if (!vpcLinodeInterface) {
                       return null;

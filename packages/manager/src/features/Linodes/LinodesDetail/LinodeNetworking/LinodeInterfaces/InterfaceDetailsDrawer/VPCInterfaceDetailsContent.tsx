@@ -35,7 +35,7 @@ export const VPCInterfaceDetailsContent = (props: VPCInterfaceData) => {
           />
         )
       )}
-      {ipv4?.ranges.map((range) => (
+      {ipv4?.ranges?.map((range) => (
         <MaskableText
           isToggleable
           key={range.range}

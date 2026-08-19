@@ -23,6 +23,10 @@ export interface ShareGroupsViewTableColConfig {
 
   /* Column name */
   name: string;
+
+  /* Pendo ID for this column */
+  pendoId?: string;
+
   /* Provide sortableProps to enable sorting for this column. */
   sortableProps?: {
     /* API field used for sorting this column */
@@ -57,17 +61,17 @@ export const shareGroupsSubTabs: ImageSubTab<ShareGroupsType>[] = [
   {
     type: 'owned-groups',
     title: 'Owned groups',
-    pendoId: 'Images Owned-Groups tab',
+    pendoId: 'Images-Groups',
   },
   {
     type: 'joined-groups',
     title: 'Joined groups',
-    pendoId: 'Images Joined-Groups tab',
+    pendoId: 'Images Groups-Joined',
   },
   {
     type: 'membership-requests',
     title: 'My membership requests',
-    pendoId: 'Images Membership-Requests tab',
+    pendoId: 'Images Groups-Membership',
   },
 ];
 
@@ -76,32 +80,38 @@ const OWNED_GROUPS_TABLE_COLUMNS: ShareGroupsViewTableColConfig[] = [
     name: 'Group',
     sortableProps: { label: 'label' },
     className: 'group-column',
+    pendoId: 'Images Groups Owned-Group sort',
   },
   {
     name: 'Description',
     sortableProps: { label: 'description' },
     className: 'description-column',
+    pendoId: 'Images Groups Owned-Description sort',
   },
   {
     name: '# of members',
     className: 'membersCount-column',
+    pendoId: 'Images Groups Owned-Members sort',
   },
   {
     name: '# of images',
     hidden: 'smDown',
     className: 'imagesCount-column',
+    pendoId: 'Images Groups Owned-Images sort',
   },
   {
     name: 'Created',
     sortableProps: { label: 'created' },
     hidden: 'lgDown',
     className: 'created-column',
+    pendoId: 'Images Groups Owned-Created sort',
   },
   {
     name: 'Updated',
     sortableProps: { label: 'updated' },
     hidden: 'lgDown',
     className: 'updated-column',
+    pendoId: 'Images Groups Owned-Updated sort',
   },
 ];
 

@@ -12,10 +12,10 @@
   width: 100%;
   bottom: 0;
   right: 0;
-  z-index: 1;
+  z-index: 100;
   color: white;
   font-size: 11pt;
-  scrollbar-color: rgba(255, 255, 255, .75) transparent;
+  scrollbar-color: rgba(255, 255, 255, 0.75) transparent;
 
   &.isDraggable {
     position: relative;
@@ -43,13 +43,13 @@
 
 .dev-tools__draggable-handle {
   position: absolute;
-  z-index: 2;
+  z-index: 100;
   left: -30px;
   top: 35px;
   cursor: grab;
   background: #222222;
   border: none;
-  border-radius: 4px 0 0  4px;
+  border-radius: 4px 0 0 4px;
   padding: 4px 4px 2px 4px;
 
   svg {
@@ -59,7 +59,7 @@
 
 .dev-tools__resize-handle {
   position: absolute;
-  z-index: 2;
+  z-index: 100;
   right: 0px;
   bottom: 22px;
   color: white;
@@ -89,12 +89,12 @@
   color: #fff;
 
   &.thin {
-    border-width: 1px
+    border-width: 1px;
   }
 }
 
-.dev-tools__select:has(>select:focus),
-.dev-tools__select:has(>select:active) {
+.dev-tools__select:has(> select:focus),
+.dev-tools__select:has(> select:active) {
   background: rgb(50, 50, 50);
   border-color: rgba(255, 255, 255, 0.65);
 }
@@ -123,7 +123,7 @@
   outline: none;
 }
 
- /* avoid overriding TanStack React Query Devtools styles */
+/* avoid overriding TanStack React Query Devtools styles */
 .dev-tools__body button.dev-tools-button:not(.tsqd-parent-container button) {
   background: transparent;
   border: 2px solid rgba(255, 255, 255, 0.5);
@@ -141,13 +141,12 @@
     padding: 2px 8px 4px 8px;
     border-width: 1px;
     font-size: 12px;
-    margin: 0
+    margin: 0;
   }
 
   &.right-align {
     float: right;
   }
-
 
   &.green {
     background: #17cf73;
@@ -159,10 +158,11 @@
   background: rgba(255, 255, 255, 0.1);
 }
 
-.dev-tools__body .dev-tools__content button.dev-tools-button:not(:disabled).green:hover {
+.dev-tools__body
+  .dev-tools__content
+  button.dev-tools-button:not(:disabled).green:hover {
   background-color: #60e9a4;
   color: #080808;
-
 }
 
 .dev-tools__body .dev-tools__content button.dev-tools-button:disabled,
@@ -191,7 +191,9 @@
   }
 }
 
-.dev-tools__segmented-button .dev-tools__content button:first-child:not(:only-child) {
+.dev-tools__segmented-button
+  .dev-tools__content
+  button:first-child:not(:only-child) {
   border-top-left-radius: 1000px;
   border-bottom-left-radius: 1000px;
   border-top-right-radius: 0;
@@ -201,7 +203,9 @@
   padding-left: 24px;
 }
 
-.dev-tools__segmented-button .dev-tools__content button:last-child:not(:only-child) {
+.dev-tools__segmented-button
+  .dev-tools__content
+  button:last-child:not(:only-child) {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
   border-top-right-radius: 1000px;
@@ -245,7 +249,7 @@
   position: absolute;
   right: 0;
   bottom: 0;
-  z-index: 1;
+  z-index: 100;
   transform: translateX(-50%);
 }
 
@@ -318,7 +322,6 @@
 
   svg {
     color: white;
-
   }
 }
 
@@ -326,8 +329,8 @@
   background-color: var(--background-color-opened);
 }
 
-.dev-tools__body input[type="number"],
-.dev-tools__body input[type="text"]:not(.MuiInput-input),
+.dev-tools__body input[type='number'],
+.dev-tools__body input[type='text']:not(.MuiInput-input),
 .dev-tools__body textarea {
   border-radius: 4px;
   border: 1px solid rgba(255, 255, 255, 0.5);
@@ -340,7 +343,7 @@
   width: 100%;
 }
 
-.dev-tools__body input[type="checkbox"] {
+.dev-tools__body input[type='checkbox'] {
   margin-right: 8px;
   position: relative;
   top: 1px;
@@ -372,7 +375,8 @@
     gap: 8px;
   }
 
-  input, select {
+  input,
+  select {
     padding: 4px;
   }
 
@@ -383,7 +387,7 @@
     white-space: pre;
   }
 
-  input[type="checkbox"] {
+  input[type='checkbox'] {
     align-self: start;
   }
 }
@@ -504,7 +508,7 @@
 .dev-tools__scroll-box {
   /*padding: 4px 8px;*/
   border: 1px solid rgba(255, 255, 255, 0.25);
-  box-shadow: inset 0px 5px 9px 0px rgba(0,0,0,0.35);
+  box-shadow: inset 0px 5px 9px 0px rgba(0, 0, 0, 0.35);
   height: 100%;
   overflow: auto;
 }
@@ -600,8 +604,6 @@
     opacity: 0.5;
   }
 }
-
-
 
 @media only screen and (min-width: 1024px) {
   .dev-tools.dev-tools--open .dev-tools__body {

@@ -69,6 +69,14 @@ export const InterfaceGeneration = () => {
   const createType = useGetLinodeCreateType();
   const isCreatingFromBackup = createType === 'Backups';
 
+  const [stackscriptData] = useWatch({
+    control,
+    name: ['stackscript_data'],
+  });
+
+  const clusterSize = stackscriptData?.['cluster_size'];
+  const isCluster = clusterSize !== null && clusterSize !== undefined;
+
   return (
     <FormControl>
       <Box alignItems="center" display="flex" flexDirection="row">
@@ -103,7 +111,6 @@ export const InterfaceGeneration = () => {
           if (value === 'linode') {
             setValue('private_ip', undefined);
           }
-
           // if Configuration Profile Interfaces is selected and user is on Backups tab, reset VLAN and VPC
           // fields to prevent validation errors - config profile interfaces are not compatible with backups
           if (value === 'legacy_config' && isCreatingFromBackup) {
@@ -114,6 +121,12 @@ export const InterfaceGeneration = () => {
         }}
         value={field.value}
       >
+        {field.value === 'linode' && isCluster && (
+          <Notice
+            text={`Cluster Quick Deploy Apps are only compatible with Configuration Profile Interfaces (Legacy)`}
+            variant="warning"
+          />
+        )}
         <FormControlLabel
           control={<Radio />}
           data-qa-interfaces-option="linode"

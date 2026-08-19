@@ -26,11 +26,11 @@ describe('MetadataBar', () => {
 
   describe('pending state (no metadata)', () => {
     it('shows neither the check nor warning icon', () => {
-      const { queryByTestId } = renderWithTheme(
+      const { queryByRole } = renderWithTheme(
         <MetadataBar startedAt={BASE_TIME - 500} />
       );
-      expect(queryByTestId('CheckIcon')).not.toBeInTheDocument();
-      expect(queryByTestId('WarningIcon')).not.toBeInTheDocument();
+      expect(queryByRole('img', { name: 'Success' })).not.toBeInTheDocument();
+      expect(queryByRole('img', { name: 'Warning' })).not.toBeInTheDocument();
     });
 
     it('shows elapsed time and updates it as time passes', () => {
@@ -47,11 +47,11 @@ describe('MetadataBar', () => {
 
   describe('complete state (metadata without cancelled)', () => {
     it('shows the check icon and not the warning icon', () => {
-      const { getByTestId, queryByTestId } = renderWithTheme(
+      const { getByRole, queryByRole } = renderWithTheme(
         <MetadataBar metadata={makeMetadata()} startedAt={BASE_TIME - 2000} />
       );
-      getByTestId('CheckIcon');
-      expect(queryByTestId('WarningIcon')).not.toBeInTheDocument();
+      getByRole('img', { name: 'Success' });
+      expect(queryByRole('img', { name: 'Warning' })).not.toBeInTheDocument();
     });
 
     it('displays durationMs and does not tick elapsed when complete', () => {
@@ -138,14 +138,14 @@ describe('MetadataBar', () => {
 
   describe('cancelled state', () => {
     it('shows the warning icon and not the check icon', () => {
-      const { getByTestId, queryByTestId } = renderWithTheme(
+      const { getByRole, queryByRole } = renderWithTheme(
         <MetadataBar
           metadata={makeMetadata({ cancelled: true })}
           startedAt={BASE_TIME - 1000}
         />
       );
-      getByTestId('WarningIcon');
-      expect(queryByTestId('CheckIcon')).not.toBeInTheDocument();
+      getByRole('img', { name: 'Warning' });
+      expect(queryByRole('img', { name: 'Success' })).not.toBeInTheDocument();
     });
 
     it('shows "Response was cancelled" inline', () => {
@@ -161,15 +161,15 @@ describe('MetadataBar', () => {
 
   describe('error state', () => {
     it('shows the error icon and not the check or warning icon', () => {
-      const { getByTestId, queryByTestId } = renderWithTheme(
+      const { getByRole, queryByRole } = renderWithTheme(
         <MetadataBar
           error="Something went wrong"
           startedAt={BASE_TIME - 1000}
         />
       );
-      getByTestId('ErrorOutlineIcon');
-      expect(queryByTestId('CheckIcon')).not.toBeInTheDocument();
-      expect(queryByTestId('WarningIcon')).not.toBeInTheDocument();
+      getByRole('img', { name: 'Error' });
+      expect(queryByRole('img', { name: 'Success' })).not.toBeInTheDocument();
+      expect(queryByRole('img', { name: 'Warning' })).not.toBeInTheDocument();
     });
 
     it('displays the error message inline', () => {

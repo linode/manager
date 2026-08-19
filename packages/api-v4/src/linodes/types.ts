@@ -294,6 +294,7 @@ export interface LinodeInterface {
   id: number;
   mac_address: string;
   public: null | PublicInterfaceData;
+  rdma_vpc?: null | VPCInterfaceData;
   updated: string;
   version: number;
   vlan: null | {

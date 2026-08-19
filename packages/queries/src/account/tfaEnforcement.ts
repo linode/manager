@@ -13,6 +13,7 @@ import {
 } from '@tanstack/react-query';
 
 import { queryPresets } from '../base';
+import { getAllTfaOptionalUsers } from './requests';
 
 import type {
   AccountSettings,
@@ -33,6 +34,10 @@ export const tfaEnforcementQueries = createQueryKeys('tfa-enforcement', {
   },
   tfaOptionalUsers: {
     contextQueries: {
+      all: (params: Params = {}, filter: Filter = {}) => ({
+        queryFn: () => getAllTfaOptionalUsers(params, filter),
+        queryKey: [params, filter],
+      }),
       paginated: (params: Params = {}, filter: Filter = {}) => ({
         queryFn: () => getTfaOptionalUsers(params, filter),
         queryKey: [params, filter],
@@ -94,6 +99,20 @@ export const useGetTfaOptionalUsersQuery = (
     ...tfaEnforcementQueries.tfaOptionalUsers._ctx.paginated(params, filter),
     enabled,
     placeholderData: keepPreviousData,
+  });
+
+/**
+ * Fetch all pages of users for whom 2FA is optional.
+ * - GET /v4beta/account/tfa-optional-users (all pages)
+ */
+export const useAllTfaOptionalUsersQuery = (
+  params: Params = {},
+  filter: Filter = {},
+  enabled = true,
+): UseQueryResult<TfaOptionalUser[], APIError[]> =>
+  useQuery({
+    ...tfaEnforcementQueries.tfaOptionalUsers._ctx.all(params, filter),
+    enabled,
   });
 
 /**

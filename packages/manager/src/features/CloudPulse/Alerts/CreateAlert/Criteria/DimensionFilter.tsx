@@ -68,7 +68,7 @@ export const DimensionFilters = (props: DimensionFilterProps) => {
           })
         }
         size="small"
-        sx={{ justifyContent: 'start', width: '160px' }}
+        sx={{ justifyContent: 'start', width: '170px' }}
         tooltipText="You can add up to 5 dimension filters."
       >
         Add dimension filter

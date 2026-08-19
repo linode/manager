@@ -1,19 +1,17 @@
+import {
+  FormField,
+  FormLabel,
+  NotificationBanner,
+  Select,
+  Switch,
+} from '@akamai/cds-components/react';
 import { getErrorStringOrDefault } from '@akamai/compute-ui-core/api';
 import { capitalize } from '@akamai/compute-ui-core/formatting';
-import {
-  ActionsPanel,
-  Autocomplete,
-  FormControlLabel,
-  Notice,
-  Toggle,
-  Typography,
-} from '@linode/ui';
 import { useOpenClose } from '@linode/utilities';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { Link } from 'src/components/Link';
 import {
   useBucketAccess,
   useObjectAccess,
@@ -23,6 +21,8 @@ import {
 
 import { getEndpointCapabilities } from '../../../shared/endpointCapabilities';
 import { bucketACLOptions, objectACLOptions } from '../../utils/utilities';
+import { ActionsPanel } from '../ActionsPanel/ActionsPanel';
+import { Link } from '../Link/Link';
 import { copy } from './AccessControls.data';
 
 import type {
@@ -32,7 +32,6 @@ import type {
   ObjectStorageObjectACL,
   UpdateObjectStorageBucketAccessPayload,
 } from '@linode/api-v4';
-import type { Theme } from '@mui/material/styles';
 
 export interface Props {
   bucketName?: string; // used only when variant is 'object'
@@ -163,106 +162,110 @@ export const AccessControls = React.memo((props: Props) => {
 
   return (
     <form onSubmit={onSubmit}>
-      {(updateBucketAccessSuccess || updateObjectAccessSuccess) && (
-        <Notice
-          spacingBottom={0}
-          spacingTop={8}
-          text={`${label} access updated successfully.`}
-          variant="success"
-        />
-      )}
+      <div
+        style={{
+          marginBottom: 'var(--token-global-spacing-s8)',
+          marginTop: 'var(--token-global-spacing-s8)',
+        }}
+      >
+        {(updateBucketAccessSuccess || updateObjectAccessSuccess) && (
+          <NotificationBanner
+            text={`${label} access updated successfully.`}
+            type="success"
+          />
+        )}
 
-      {errorText && (
-        <Notice
-          spacingBottom={0}
-          spacingTop={8}
-          text={'An error has occured'}
-          variant="error"
-        />
-      )}
+        {errorText && (
+          <NotificationBanner text={'An error has occured'} type="error" />
+        )}
+      </div>
 
       <Controller
         control={control}
         name="acl"
         render={({ field }) => (
-          <Autocomplete
-            data-testid="acl-select"
-            disableClearable
-            disabled={bucketAccessIsFetching || objectAccessIsFetching}
-            label="Access Control List (ACL)"
-            loading={bucketAccessIsFetching || objectAccessIsFetching}
-            onChange={(_, selected: { label: string; value: ACLType }) => {
-              if (selected) {
-                field.onChange(selected.value);
+          <FormField>
+            <FormLabel
+              style={{ marginBottom: 'var(--token-global-spacing-s8)' }}
+            >
+              Access Control List (ACL)
+            </FormLabel>
+            <Select
+              autocomplete={true}
+              data-testid="acl-select"
+              disabled={bucketAccessIsFetching || objectAccessIsFetching}
+              isLoading={bucketAccessIsFetching || objectAccessIsFetching}
+              items={_options}
+              onChange={(event: CustomEvent) => {
+                const selected = event.detail;
+                if (selected) {
+                  field.onChange(selected.value);
+                }
+              }}
+              placeholder={
+                bucketAccessIsFetching || objectAccessIsFetching
+                  ? 'Loading access...'
+                  : 'Select an ACL...'
               }
-            }}
-            options={_options}
-            placeholder={
-              bucketAccessIsFetching || objectAccessIsFetching
-                ? 'Loading access...'
-                : 'Select an ACL...'
-            }
-            value={_options.find((option) => option.value === field.value)}
-          />
+              selected={_options.find((option) => option.value === field.value)}
+              valueFn={(option: { label: string; value: ACLType }) =>
+                option.label
+              }
+            />
+          </FormField>
         )}
         rules={{ required: 'ACL is required' }}
       />
 
-      <div style={{ marginTop: 8, minHeight: 16 }}>
-        {aclLabel && aclCopy && (
-          <Typography>
-            {aclLabel}: {aclCopy}
-          </Typography>
-        )}
-      </div>
+      {aclLabel && aclCopy && (
+        <p>
+          {aclLabel}: {aclCopy}
+        </p>
+      )}
 
       {isCorsAvailable && (
         <Controller
           control={control}
           name="cors_enabled"
           render={({ field }) => (
-            <FormControlLabel
+            <Switch
               checked={field.value}
-              control={<Toggle />}
+              data-testid="cors-switch"
               disabled={bucketAccessIsFetching || objectAccessIsFetching}
-              label={
-                bucketAccessIsFetching || objectAccessIsFetching
-                  ? 'Loading access...'
-                  : field.value
-                    ? 'CORS Enabled'
-                    : 'CORS Disabled'
-              }
-              onChange={field.onChange}
-              style={{ marginTop: 16 }}
-            />
+              onChange={(event) => field.onChange(event.detail)}
+              style={{ marginTop: 'var(--token-global-spacing-s24)' }}
+            >
+              {bucketAccessIsFetching || objectAccessIsFetching
+                ? 'Loading access...'
+                : field.value
+                  ? 'CORS Enabled'
+                  : 'CORS Disabled'}
+            </Switch>
           )}
         />
       )}
 
       {isCorsAvailable ? (
-        <Typography>
+        <p style={{ marginTop: 'var(--token-global-spacing-s12)' }}>
           Whether Cross-Origin Resource Sharing is enabled for all origins. For
           more fine-grained control of CORS, please use another{' '}
           <Link to="https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-object-storage#object-storage-tools">
             S3-compatible tool
           </Link>
           .
-        </Typography>
+        </p>
       ) : endpointType && variant === 'bucket' ? (
-        <Notice spacingBottom={0} spacingTop={16} variant="warning">
-          <Typography
-            sx={(theme) => ({
-              font: theme.font.bold,
-            })}
-          >
-            CORS (Cross Origin Sharing) is not available for endpoint types E2
-            and E3.{' '}
-            <Link to="https://techdocs.akamai.com/cloud-computing/docs/define-access-and-permissions-using-acls-access-control-lists">
-              Learn more
-            </Link>
-            .
-          </Typography>
-        </Notice>
+        <NotificationBanner
+          style={{ marginTop: 'var(--token-global-spacing-s16)' }}
+          type="warning"
+        >
+          CORS (Cross Origin Sharing) is not available for endpoint types E2 and
+          E3.{' '}
+          <Link to="https://techdocs.akamai.com/cloud-computing/docs/define-access-and-permissions-using-acls-access-control-lists">
+            Learn more
+          </Link>
+          .
+        </NotificationBanner>
       ) : null}
 
       <ActionsPanel
@@ -270,7 +273,8 @@ export const AccessControls = React.memo((props: Props) => {
           disabled:
             bucketAccessIsFetching || objectAccessIsFetching || !isDirty,
           label: 'Save',
-          loading: isSubmitting,
+          processing: isSubmitting,
+          'data-testid': 'save-access-changes',
           onClick: () => {
             if (selectedACL === 'public-read-write') {
               openDialog();
@@ -278,11 +282,8 @@ export const AccessControls = React.memo((props: Props) => {
               onSubmit();
             }
           },
-          sx: (theme: Theme) => ({
-            marginTop: theme.spacing(3),
-          }),
         }}
-        style={{ padding: 0 }}
+        style={{ marginTop: 'var(--token-global-spacing-s24)' }}
       />
 
       <ConfirmationDialog
@@ -294,7 +295,6 @@ export const AccessControls = React.memo((props: Props) => {
               label: 'Cancel',
               onClick: closeDialog,
             }}
-            style={{ padding: 0 }}
           />
         )}
         onClose={closeDialog}

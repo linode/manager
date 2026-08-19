@@ -1,0 +1,104 @@
+.promoCard {
+  border-width: 0;
+  overflow: hidden;
+  padding-left: 24px;
+  padding-right: 24px;
+  padding-top: 24px;
+  padding-bottom: 24px;
+  position: relative;
+
+background: linear-gradient(
+    140deg,
+    var(--token-global-color-ultramarine-20) 0%,
+    var(--token-global-color-ultramarine-30) 100%
+  );
+}
+
+body[data-theme='dark'] .promoCard {
+  background: linear-gradient(
+    140deg,
+    var(--token-global-color-ultramarine-100) 0%,
+    var(--token-global-color-ultramarine-90) 100%
+  );
+}
+
+.promoCardCta {
+  background-color: var(--token-global-color-ultramarine-90); /* Action Button */
+  border-radius: 999px;
+  color: var(--token-alias-content-icon-primary-contrast);
+  display: inline-flex;
+  font-weight: 600;
+  font-size: var(--token-global-font-size-s);
+  line-height: 1;
+  padding: 10px 16px 9px 16px;
+  text-decoration: none;
+  width: fit-content;
+}
+
+.promoCardCta:hover {
+  background-color: var(--token-global-color-ultramarine-80); /* Action Button Hover */
+}
+
+.outerBox {
+  height: 100%;
+  left: 0px;
+  overflow: hidden;
+  position: absolute;
+  top: 0px;
+  width: 100%;
+}
+
+.promoBox {
+  aspect-ratio: 6 / 4;
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-template-rows: repeat(4, minmax(0, 1fr));
+  height: 100%;
+  left: 50%;
+  position: absolute;
+  top: 50%;
+  transform-origin: center;
+}
+
+.boxTitle {
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  position: relative;
+  --tile-color: hsla(220, 80%, 46%, 0.05);
+}
+
+body[data-theme='dark'] .boxTitle {
+  --tile-color: hsla(220, 26%, 2%, 0.14);
+}
+.boxGrid{
+  display: grid;
+  grid-template-rows: auto auto auto;
+  position: relative;
+  row-gap: 12px;
+  z-index: 1;
+}
+
+.boxH3{
+  display: flex;
+  minHeight: 160px;
+}
+
+.typographyH3{
+  font-size: 18px;
+  padding: 0px;
+}
+
+.boxDescription {
+  display: flex;
+  minHeight: 304px;
+}
+
+.typographyDescription {
+  color: var(--token-alias-content-text-secondary-default);
+  margin: 0px;
+}
+
+.boxEnd {
+  display: flex;
+  minHeight: 312px;
+}

@@ -70,7 +70,7 @@ export const BucketDetailsPage = React.memo(() => {
     error: regionError,
   } = useRegionQuery(bucket?.region || '');
 
-  const endpointType = bucket ? (bucket.endpoint_type ?? 'E0') : undefined;
+  const endpointType = bucket?.endpoint_type;
 
   const endpointCapabilities = getEndpointCapabilities(endpointType);
 

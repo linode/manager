@@ -22,9 +22,7 @@ import {
   accountQueries,
   queryPresets,
   updateAccountSettingsData,
-  useAccount,
 } from '@linode/queries';
-import { isFeatureEnabledV2 } from '@linode/utilities';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import {
   keepPreviousData,
@@ -38,7 +36,6 @@ import {
 } from '@tanstack/react-query';
 
 import { OBJECT_STORAGE_DELIMITER as delimiter } from 'src/constants';
-import { useFlags } from 'src/hooks/useFlags';
 import {
   sendCreateAccessKeyEvent,
   sendEditAccessKeyEvent,
@@ -237,19 +234,10 @@ export const useDeleteAccessKeyMutation = () => {
 };
 
 export const useObjectStorageEndpointsQuery = (enabled = true) => {
-  const flags = useFlags();
-  const { data: account } = useAccount();
-
-  const isObjectStorageGen2Enabled = isFeatureEnabledV2(
-    'Object Storage Endpoint Types',
-    Boolean(flags.objectStorageGen2?.enabled),
-    account?.capabilities ?? []
-  );
-
   return useQuery<ObjectStorageEndpoint[], APIError[]>({
     ...objectStorageQueries.endpoints,
     ...queryPresets.oneTimeFetch,
-    enabled: isObjectStorageGen2Enabled && enabled,
+    enabled,
   });
 };
 

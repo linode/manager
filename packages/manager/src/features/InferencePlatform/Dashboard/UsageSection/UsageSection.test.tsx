@@ -103,11 +103,12 @@ describe('UsageSection', () => {
   });
 
   it('renders the series filter dropdown', async () => {
-    const { getByRole } = renderWithTheme(<UsageSection />);
+    const { container } = renderWithTheme(<UsageSection />);
 
     await waitFor(() => {
-      // The select dropdown should be rendered as a button (MUI Select)
-      getByRole('combobox');
+      // CDS Select renders as a web component, not role="combobox"
+      // eslint-disable-next-line testing-library/no-node-access, testing-library/no-container -- CDS web component
+      expect(container.querySelector('cds-select')).toBeInTheDocument();
     });
   });
 

@@ -77,10 +77,10 @@ export const PUBLIC_IPV6_ACCESS_CHECKBOX_TOOLTIP = (
 );
 
 export const RFC1918HelperText = (
-  <Typography component="span">
+  <p>
     VPCs can use the full RFC 1918 private IP address range for subnetting,
     except for <Code>192.168.128.0/17</Code>, which is reserved.
-  </Typography>
+  </p>
 );
 
 // Linode Config dialog helper text for unrecommended configurations

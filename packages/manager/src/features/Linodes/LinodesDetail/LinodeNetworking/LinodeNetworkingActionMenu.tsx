@@ -56,6 +56,7 @@ export const LinodeNetworkingActionMenu = (props: Props) => {
     'Private – IPv4',
     'Reserved IPv4 (private)',
     'Reserved IPv4 (public)',
+    'VPC - RDMA - IPv4',
     'VPC – IPv4',
     'VPC – IPv6',
     'VPC – Range – IPv4',
@@ -157,38 +158,36 @@ export const LinodeNetworkingActionMenu = (props: Props) => {
   ].filter(Boolean) as Action[];
 
   return actions.length > 0 ? (
-    <>
-      {isReserveIpEnabled ? (
-        <ActionMenu
-          actionsList={actions}
-          ariaLabel={getAriaLabel()}
-          pendoId={pendoId}
-        />
-      ) : (
-        <>
-          {!matchesMdDown &&
-            actions.map((action) => {
-              return (
-                <InlineMenuAction
-                  actionText={action.title}
-                  data-testid={`action-menu-item-${action.id}`}
-                  disabled={action.disabled}
-                  key={action.id}
-                  onClick={action.onClick}
-                  tooltip={action.tooltip}
-                />
-              );
-            })}
-          {matchesMdDown && (
-            <ActionMenu
-              actionsList={actions}
-              ariaLabel={getAriaLabel()}
-              pendoId={pendoId}
-            />
-          )}
-        </>
-      )}
-    </>
+    isReserveIpEnabled ? (
+      <ActionMenu
+        actionsList={actions}
+        ariaLabel={getAriaLabel()}
+        pendoId={pendoId}
+      />
+    ) : (
+      <>
+        {!matchesMdDown &&
+          actions.map((action) => {
+            return (
+              <InlineMenuAction
+                actionText={action.title}
+                data-testid={`action-menu-item-${action.id}`}
+                disabled={action.disabled}
+                key={action.id}
+                onClick={action.onClick}
+                tooltip={action.tooltip}
+              />
+            );
+          })}
+        {matchesMdDown && (
+          <ActionMenu
+            actionsList={actions}
+            ariaLabel={getAriaLabel()}
+            pendoId={pendoId}
+          />
+        )}
+      </>
+    )
   ) : (
     <Box sx={{ height: 40 }} />
   );

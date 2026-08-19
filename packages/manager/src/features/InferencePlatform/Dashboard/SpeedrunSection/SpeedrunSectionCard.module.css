@@ -1,0 +1,51 @@
+.speedrunSectionCard {
+  border-radius: 4px;
+  padding: 12px;
+}
+
+.speedrunSectionCardContent {
+  gap: 0;
+}
+
+.speedrunSectionCardContentHeader{
+  align-items: flex-start;
+  flex-direction: row;
+  gap: 11.2px;
+}
+
+.speedrunSectionCardStepNumber {
+  align-items: center;
+  background-color: var(--token-global-color-ultramarine-10);
+  border-radius: 50%;
+  color: var(--token-global-color-neutrals-90);
+  display: inline-flex;
+  font-family: 'Nunito Sans';
+  font-weight: 700;
+  height: 40px;
+  justify-content: center;
+  width: 40px;
+  flex-shrink: 0;
+}
+
+.speedrunSectionCardText {
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 0;
+}
+
+.speedrunSectionCardTitle {
+  font-size: 14px;
+  color: var(--token-global-color-brand-80);
+  font-weight: 700;
+  font-family: 'Nunito Sans';
+  line-height: 1.25rem;
+  padding-top: 2px;
+}
+
+.speedrunSectionCardDescription {
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--token-alias-content-text-secondary-default);
+  font-weight: 600;
+  font-family: 'Nunito Sans';
+}

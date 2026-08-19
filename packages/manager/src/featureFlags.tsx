@@ -108,6 +108,11 @@ interface AclpFlag {
   enableCSVDownload?: boolean;
 
   /**
+   * This property indicates whether to show custom tooltip in the charts or not
+   */
+  enableCustomTooltip?: boolean;
+
+  /**
    * This property indicates whether the feature is enabled
    */
   enabled: boolean;
@@ -154,6 +159,10 @@ interface AclpLogsFlag {
    * This property indicates whether the feature is new or not
    */
   new?: boolean;
+  /**
+   * This property indicates whether to show Private Key Passphrase field in the Custom HTTPS destination form
+   */
+  privateKeyPassphraseEnabled?: boolean;
 }
 
 interface LkeEnterpriseFlag extends BaseFeatureFlag {
@@ -313,8 +322,6 @@ export interface Flags {
   nodebalancerIpv6: boolean;
   nodebalancerVpc: boolean;
   objectStorageContextualMetrics: boolean;
-  objectStorageGen2: BaseFeatureFlag;
-  objectStorageGlobalQuotas: boolean;
   objectStorageSummaryPageLinks: boolean;
   passwordlessLinodes: boolean;
   placementGroupPolicyUpdate: boolean;

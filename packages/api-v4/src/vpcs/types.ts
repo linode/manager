@@ -2,32 +2,42 @@ export interface VPCIPv6 {
   range?: string;
 }
 
+export interface VPCIPv4Range {
+  range?: string;
+}
+
 interface CreateVPCIPv6 extends VPCIPv6 {
   allocation_class?: string;
 }
+
+export type VPCType = 'rdma' | 'regular';
 
 export interface VPC {
   created: string;
   description: string;
   id: number;
+  ipv4?: VPCIPv4Range[];
   ipv6?: VPCIPv6[];
   label: string;
   region: string;
   subnets: Subnet[];
   updated: string;
-  vpc_type: 'rdma' | 'regular';
+  vpc_type: VPCType;
 }
 
 export interface CreateVPCPayload {
   description?: string;
+  ipv4?: VPCIPv4Range[];
   ipv6?: CreateVPCIPv6[];
   label: string;
   region: string;
   subnets?: CreateSubnetPayload[];
+  vpc_type?: VPCType;
 }
 
 export interface UpdateVPCPayload {
   description?: string;
+  ipv4?: VPCIPv4Range[];
   label?: string;
 }
 

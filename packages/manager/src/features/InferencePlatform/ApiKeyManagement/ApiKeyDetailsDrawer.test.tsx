@@ -19,6 +19,32 @@ vi.mock('./UsageSparkline', () => ({
   ),
 }));
 
+/**
+ * Helper to find a CDS button host element by its text content
+ */
+const getCdsButtonHostByText = (
+  root: ParentNode,
+  text: string
+): HTMLElement | undefined =>
+  // eslint-disable-next-line testing-library/no-node-access -- CDS web component
+  Array.from(root.querySelectorAll<HTMLElement>('cds-button')).find(
+    (button) => button.textContent?.trim() === text
+  );
+
+/**
+ * Helper to find a CDS button by its aria-label attribute
+ */
+const getCdsButtonByAriaLabel = (
+  root: ParentNode,
+  ariaLabel: string
+): HTMLElement | undefined =>
+  // eslint-disable-next-line testing-library/no-node-access -- CDS web component
+  Array.from(root.querySelectorAll<HTMLElement>('cds-button')).find(
+    (button) => button.getAttribute('aria-label') === ariaLabel
+  );
+
+const MODEL_TYPE = 'text-generation';
+
 const mockModels: InferenceModel[] = [
   {
     capabilities: ['chat', 'completion'],
@@ -36,7 +62,7 @@ const mockModels: InferenceModel[] = [
     provider: { id: 'test', name: 'Test' },
     regions: ['us-ord'],
     tags: [],
-    type: 'text-generation',
+    type: MODEL_TYPE,
     use_cases: [],
   },
   {
@@ -55,7 +81,7 @@ const mockModels: InferenceModel[] = [
     provider: { id: 'test', name: 'Test' },
     regions: ['us-ord'],
     tags: [],
-    type: 'text-generation',
+    type: MODEL_TYPE,
     use_cases: [],
   },
   {
@@ -74,7 +100,7 @@ const mockModels: InferenceModel[] = [
     provider: { id: 'test', name: 'Test' },
     regions: ['us-ord'],
     tags: [],
-    type: 'text-generation',
+    type: MODEL_TYPE,
     use_cases: [],
   },
 ];
@@ -120,16 +146,21 @@ describe('ApiKeyDetailsDrawer', () => {
   });
 
   it('renders the drawer with key label in title', () => {
-    const { getByRole } = renderWithContext();
-    expect(getByRole('heading', { name: 'my-api-key' })).toBeVisible();
+    const { container } = renderWithContext();
+    // CDS Drawer has aria-label with the key name
+    // eslint-disable-next-line testing-library/no-node-access, testing-library/no-container -- CDS web component
+    const drawer = container.querySelector('cds-drawer');
+    expect(drawer).toHaveAttribute('aria-label', 'my-api-key');
   });
 
   it('renders null when apiKey is null', () => {
-    const { queryByRole } = renderWithContext({
+    const { container } = renderWithContext({
       ...defaultProps,
       apiKey: null,
     });
-    expect(queryByRole('heading')).not.toBeInTheDocument();
+    // eslint-disable-next-line testing-library/no-node-access, testing-library/no-container -- CDS web component
+    const drawer = container.querySelector('cds-drawer');
+    expect(drawer).toBeNull();
   });
 
   it('displays the key ID', () => {
@@ -169,41 +200,45 @@ describe('ApiKeyDetailsDrawer', () => {
   });
 
   it('shows edit button for Name field on user keys', () => {
-    const { getByRole } = renderWithContext();
-    expect(getByRole('button', { name: 'Edit Name' })).toBeVisible();
+    const { container } = renderWithContext();
+    // Button has aria-label="Edit Name" not text content
+    const editButton = getCdsButtonByAriaLabel(container, 'Edit Name');
+    expect(editButton).toBeInTheDocument();
   });
 
   it('shows edit button for Description field on user keys', () => {
-    const { getByRole } = renderWithContext();
-    expect(getByRole('button', { name: 'Edit Description' })).toBeVisible();
+    const { container } = renderWithContext();
+    const editButton = getCdsButtonByAriaLabel(container, 'Edit Description');
+    expect(editButton).toBeInTheDocument();
   });
 
   it('does not show edit buttons for playground keys', () => {
-    const { queryByRole } = renderWithContext({
+    const { container } = renderWithContext({
       ...defaultProps,
       apiKey: apiKeyFactory.build({ key_type: 'playground' }),
     });
+    expect(getCdsButtonByAriaLabel(container, 'Edit Name')).toBeUndefined();
     expect(
-      queryByRole('button', { name: 'Edit Name' })
-    ).not.toBeInTheDocument();
-    expect(
-      queryByRole('button', { name: 'Edit Description' })
-    ).not.toBeInTheDocument();
+      getCdsButtonByAriaLabel(container, 'Edit Description')
+    ).toBeUndefined();
   });
 
   it('shows Close button when there are no changes', () => {
-    const { getByRole } = renderWithContext();
-    expect(getByRole('button', { name: 'Close' })).toBeVisible();
+    const { container } = renderWithContext();
+    const closeButton = getCdsButtonHostByText(container, 'Close');
+    expect(closeButton).toBeInTheDocument();
   });
 
   it('calls onClose when Close button is clicked', async () => {
     const user = userEvent.setup();
     const onClose = vi.fn();
-    const { getByRole } = renderWithContext({
+    const { container } = renderWithContext({
       ...defaultProps,
       onClose,
     });
-    await user.click(getByRole('button', { name: 'Close' }));
+    const closeButton = getCdsButtonHostByText(container, 'Close');
+    expect(closeButton).toBeInTheDocument();
+    await user.click(closeButton!);
     expect(onClose).toHaveBeenCalled();
   });
 

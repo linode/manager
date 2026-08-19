@@ -23,6 +23,24 @@ export interface CustomFields {
   useCase: string;
 }
 
+// Pendo IDs for the Open a Support Ticket dialog
+export const SUPPORT_TICKET_PENDO_IDS = {
+  accountBillingOption:
+    'Support Tickets Open ticket-Account/Billing (Live Chat)',
+  attachButton:
+    'Support Tickets Open ticket-Live chat not available-Attach a file',
+  cancelButton: 'Support Tickets Open ticket-Cancel',
+  category: 'Support Tickets Open ticket-What is this regarding',
+  descriptionField:
+    'Support Tickets Open ticket-Live chat not available-Description field',
+  descriptionTab:
+    'Support Tickets Open ticket-Live chat not available-Description',
+  openLiveChatButton: 'Support Tickets Open ticket-Open Live Chat',
+  openTicketButton:
+    'Support Tickets Open ticket-Live chat not available-Open Ticket',
+  previewTab: 'Support Tickets Open ticket-Live chat not available-Preview',
+};
+
 export const SMTP_DIALOG_TITLE = 'Contact Support: SMTP Restriction Removal';
 export const SMTP_HELPER_TEXT =
   'In an effort to fight spam, outbound connections are restricted on ports 25, 465, and 587. To have these restrictions removed, please provide us with the following information. A member of the Support team will review your request and follow up with you as soon as possible.';

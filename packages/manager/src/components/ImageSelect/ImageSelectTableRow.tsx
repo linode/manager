@@ -3,14 +3,7 @@ import { convertStorageUnit } from '@akamai/compute-ui-core/api';
 import { formatDate } from '@akamai/compute-ui-core/datetime';
 import { pluralize } from '@akamai/compute-ui-core/formatting';
 import { usePreferences } from '@linode/queries';
-import {
-  FormControlLabel,
-  Hidden,
-  ListItem,
-  Radio,
-  TooltipIcon,
-} from '@linode/ui';
-import useMediaQuery from '@mui/material/useMediaQuery';
+import { FormControlLabel, ListItem, Radio, TooltipIcon } from '@linode/ui';
 import React from 'react';
 
 import CloudInitIcon from 'src/assets/icons/cloud-init.svg';
@@ -22,7 +15,6 @@ import {
 import { LINODE_CREATE_SHARED_IMAGE_ICON_TOOLTIP } from 'src/features/Images/constants';
 import { getIsTableStripingEnabled } from 'src/features/Profile/Settings/TableStriping.utils';
 
-import { TABLE_CELL_BASE_STYLE } from './constants';
 import { getRegionListItem } from './utilities';
 
 import type {
@@ -30,7 +22,6 @@ import type {
   IMAGE_SELECT_TABLE_LINODE_REBUILD_PENDO_IDS,
 } from './constants';
 import type { Image, ImageRegion, Region } from '@linode/api-v4';
-import type { Theme } from '@linode/ui';
 import type { IMAGE_SELECT_TABLE_SHARE_GROUP_CREATE_PENDO_IDS } from 'src/components/ImageSelect/constants';
 
 interface Props {
@@ -69,10 +60,6 @@ export const ImageSelectTableRow = (props: Props) => {
     status,
     type,
   } = image;
-
-  const matchesLgDown = useMediaQuery((theme: Theme) =>
-    theme.breakpoints.down('lg')
-  );
 
   const getSizeDisplay = () => {
     if (status === 'available') {
@@ -126,7 +113,12 @@ export const ImageSelectTableRow = (props: Props) => {
       selected={selected}
       zebra={isTableStripingEnabled}
     >
-      <TableCell style={{ ...TABLE_CELL_BASE_STYLE, wordBreak: 'break-all' }}>
+      <TableCell
+        style={{
+          flex: '0 1 24.5%',
+          overflowWrap: 'anywhere',
+        }}
+      >
         {selectionMode === 'single' ? (
           <FormControlLabel
             checked={selected}
@@ -158,51 +150,36 @@ export const ImageSelectTableRow = (props: Props) => {
           />
         )}
       </TableCell>
-      <Hidden lgDown>
+      <TableCell
+        style={{
+          whiteSpace: 'nowrap',
+          paddingLeft: '47px',
+        }}
+      >
+        <PlanTextTooltip
+          data-pendo-id={pendoIDs.replicatedRegionPopover}
+          displayText={
+            imageRegions.length > 0
+              ? pluralize('Region', 'Regions', imageRegions.length)
+              : '—'
+          }
+          tooltipText={
+            imageRegions?.length > 0 ? <FormattedRegionList /> : 'N/A'
+          }
+        />
+      </TableCell>
+      {selectionMode === 'single' && (
         <TableCell
           style={{
-            whiteSpace: 'nowrap',
-            paddingLeft: '58px',
-            ...TABLE_CELL_BASE_STYLE,
+            overflowWrap: 'anywhere',
           }}
         >
-          <PlanTextTooltip
-            data-pendo-id={pendoIDs.replicatedRegionPopover}
-            displayText={
-              imageRegions.length > 0
-                ? pluralize('Region', 'Regions', imageRegions.length)
-                : '—'
-            }
-            tooltipText={
-              imageRegions?.length > 0 ? <FormattedRegionList /> : 'N/A'
-            }
-          />
+          {getShareGroupDisplay()}
         </TableCell>
-      </Hidden>
-      {selectionMode === 'single' && (
-        <Hidden smDown>
-          <TableCell
-            style={{
-              whiteSpace: 'nowrap',
-              paddingLeft: matchesLgDown ? '58px' : undefined,
-              ...TABLE_CELL_BASE_STYLE,
-            }}
-          >
-            {getShareGroupDisplay()}
-          </TableCell>
-        </Hidden>
       )}
-      <Hidden lgDown>
-        <TableCell style={{ whiteSpace: 'nowrap', ...TABLE_CELL_BASE_STYLE }}>
-          {getSizeDisplay()}
-        </TableCell>
-      </Hidden>
-      <TableCell style={{ whiteSpace: 'nowrap', ...TABLE_CELL_BASE_STYLE }}>
-        {formatDate(created, { timezone })}
-      </TableCell>
-      <TableCell style={{ whiteSpace: 'nowrap', ...TABLE_CELL_BASE_STYLE }}>
-        {id}
-      </TableCell>
+      <TableCell>{getSizeDisplay()}</TableCell>
+      <TableCell>{formatDate(created, { timezone })}</TableCell>
+      <TableCell>{id}</TableCell>
     </TableRow>
   );
 };

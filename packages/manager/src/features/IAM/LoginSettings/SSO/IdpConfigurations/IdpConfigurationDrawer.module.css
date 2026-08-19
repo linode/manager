@@ -31,6 +31,7 @@
 }
 
 .sectionHeading {
+  font: var(--token-alias-typography-label-bold-l, 700 1rem/1.25rem 'Nunito Sans');
   margin-top: var(--token-global-spacing-s32, 32px);
   margin-bottom: var(--token-global-spacing-s12, 12px);
 }
@@ -44,10 +45,11 @@
   margin-top: var(--token-global-spacing-s4, 4px);
   margin-bottom: var(--token-global-spacing-s0, 0);
   color: var(--token-alias-content-text-secondary-default, light-dark(#696970, #a3a3ab));
+  font-size: var(--token-global-font-font-size-xxxs, 12px);
 }
 
 .addCertificateButton {
-  margin-top: var(--token-global-spacing-s4, 4px);
+  margin-top: var(--token-global-spacing-s8, 8px);
   padding-top: 5px;
 }
 
@@ -62,6 +64,6 @@
 }
 
 .removeCertificateButton {
-  margin-top: var(--token-global-spacing-s40, 40px);
+  margin-top: var(--token-global-spacing-s32, 32px);
   flex-shrink: 0;
 }

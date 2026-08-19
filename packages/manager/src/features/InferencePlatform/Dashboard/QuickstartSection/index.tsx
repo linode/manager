@@ -1,9 +1,10 @@
-import { Paper, Stack, Typography } from '@linode/ui';
 import React from 'react';
 
 import { CodeSnippetBrowser } from 'src/components/CodeSnippetBrowser';
 import { Link } from 'src/components/Link';
 
+import { Paper, Stack, Typography } from '../../components';
+import styles from './QuickstartSection.module.css';
 const languages = ['python', 'typescript', 'curl'];
 
 const syntaxHighlightingLanguageMap = {
@@ -53,26 +54,13 @@ console.log(response.choices[0].message.content);`,
 
 export const QuickstartSection = () => {
   return (
-    <Paper
-      sx={{
-        border: 'none',
-        borderRadius: 1,
-        p: 0,
-        background: 'transparent',
-        mb: 2,
-      }}
-      variant="outlined"
-    >
-      <Stack
-        alignItems="center"
-        direction="row"
-        justifyContent="space-between"
-        mb={2}
-        pr={3}
-      >
-        <Typography variant="h3">Developer Quickstart</Typography>
+    <Paper className={styles.quickstartSection}>
+      <Stack className={styles.sectionContent} direction="row">
+        <Typography className={styles.quickstartSectionHeader3}>
+          Developer Quickstart
+        </Typography>
 
-        <Stack alignItems="center" direction="row" display="flex" gap={2}>
+        <Stack className={styles.quickstartSectionLinks} direction="row">
           <Link
             style={{ marginBottom: '-1px' }}
             to="/inference-platform/api-key-management"
@@ -92,6 +80,7 @@ export const QuickstartSection = () => {
         snippets={snippets}
         syntaxHighlightingLanguageMap={syntaxHighlightingLanguageMap}
         tabRightBorderWidthByIndex={tabRightBorderWidthByIndex}
+        viewMoreEnabled={false}
       />
     </Paper>
   );

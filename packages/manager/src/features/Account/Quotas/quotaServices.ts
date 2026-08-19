@@ -164,18 +164,12 @@ const DISPLAYED_OBJECT_STORAGE_ENDPOINT_QUOTA_TYPES: ObjectStorageEndpointQuota[
     'obj-total-ingress-throughput',
   ] as const;
 
-export const objectStorageQuotaService = (
-  objectStorageGlobalQuotasEnabled?: boolean
-): QuotaService =>
+export const objectStorageQuotaService = (): QuotaService =>
   ({
     type: 'object-storage',
     label: 'Object Storage',
     scopes: {
-      ...(objectStorageGlobalQuotasEnabled
-        ? {
-            global: { quotaCollection: 'global-quotas' },
-          }
-        : {}),
+      global: { quotaCollection: 'global-quotas' },
       'obj-endpoint': {
         quotaCollection: 'quotas',
         apiFilterFunction: (
@@ -199,17 +193,17 @@ export const objectStorageQuotaService = (
           switch (quota.quota_type) {
             case 'obj-total-egress-throughput':
               return {
-                text: 'Egress usage available in Cloud Pulse Metrics',
+                text: 'Egress usage available in Metrics',
                 url: '/metrics',
                 tooltip:
-                  'To view egress usage by endpoint, open the Object Storage Endpoint Activity dashboard available within Akamai Cloud Pulse Metrics and select your endpoint.',
+                  'To view egress usage by endpoint, open the Object Storage Endpoint Activity dashboard available within Metrics and select your endpoint.',
               };
             case 'obj-total-ingress-throughput':
               return {
-                text: 'Ingress usage available in Cloud Pulse Metrics',
+                text: 'Ingress usage available in Metrics',
                 url: '/metrics',
                 tooltip:
-                  'To view ingress usage by endpoint, open the Object Storage Endpoint Activity dashboard available within Akamai Cloud Pulse Metrics and select your endpoint.',
+                  'To view ingress usage by endpoint, open the Object Storage Endpoint Activity dashboard available within Metrics and select your endpoint.',
               };
             default:
               return null;
@@ -219,23 +213,34 @@ export const objectStorageQuotaService = (
     },
   }) satisfies QuotaService;
 
-const VOLUMES_QUOTA_NAMES = new Map<string, string>([
-  ['vol-attachments|region', 'Attachment Count'],
-  ['vol-capacity|global', 'Global Storage Capacity'],
-  ['vol-capacity|region', 'Regional Storage Capacity'],
-  ['vol-volumes|region', 'Volume Count'],
+const VOLUMES_QUOTA_TYPE_NAMES = new Map<string, string>([
+  ['vol-attachments', 'Attachment Count'],
+  ['vol-capacity', 'Storage Capacity'],
+  ['vol-volumes', 'Volume Count'],
 ]);
+
+const evaluateVolumeQuotaName = (quota: VolumesQuota): string => {
+  let quotaTypeName = VOLUMES_QUOTA_TYPE_NAMES.get(quota.quota_type);
+  if (!quotaTypeName) {
+    // handle unexpected quota names by falling back to the API-provided name,
+    // removing the "Block Storage" prefix and any scope prefix
+    quotaTypeName = quota.quota_name
+      .replace('Block Storage ', '')
+      .replace('Global ', '')
+      .replace('Regional ', '');
+  }
+  const prefix = quota.scope === 'global' ? 'Global ' : 'Regional ';
+  return prefix + quotaTypeName;
+};
 
 const volumeQuotaTransformFunction = (quota: VolumesQuota): VolumesQuota => {
   return {
     ...quota,
-    quota_name:
-      VOLUMES_QUOTA_NAMES.get(`${quota.quota_type}|${quota.scope}`) ??
-      quota.quota_name,
+    quota_name: evaluateVolumeQuotaName(quota),
   };
 };
 
-export const volumesQuotaService: QuotaService = {
+export const volumesQuotaService: QuotaService<VolumesQuota> = {
   type: 'volumes',
   label: 'Volumes',
   scopes: {
@@ -259,4 +264,4 @@ export const volumesQuotaService: QuotaService = {
       transformFunction: volumeQuotaTransformFunction,
     },
   },
-} satisfies QuotaService<VolumesQuota>;
+};

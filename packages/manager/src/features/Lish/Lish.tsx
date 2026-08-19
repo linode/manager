@@ -62,7 +62,7 @@ export const ParsePotentialLishErrorString = (
     return null;
   }
 
-  let parsed = null;
+  let parsed;
   try {
     parsed = JSON.parse(s);
   } catch {

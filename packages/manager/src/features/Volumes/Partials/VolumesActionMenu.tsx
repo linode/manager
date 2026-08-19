@@ -210,7 +210,7 @@ export const VolumesActionMenu = (props: Props) => {
             data-testid={action.title}
             disabled={action.disabled}
             key={index}
-            onSelect={action.onClick}
+            onSelected={action.onClick}
             style={{
               minWidth: '210px',
               paddingRight: Spacing.S4,

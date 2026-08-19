@@ -12,7 +12,7 @@ import { ErrorBoundaryFallback } from './features/ErrorBoundary/ErrorBoundaryFal
 import { useIsIAMEnabled } from './features/IAM/hooks/useIsIAMEnabled';
 import { useIsPrivateImageSharingEnabled } from './features/Images/utils';
 import { useIsPlacementGroupsEnabled } from './features/PlacementGroups/utils';
-import { markAppShellReady } from './hooks/appShellReady';
+import { isAuthCallbackPath, markAppShellReady } from './hooks/appShellReady';
 import { useAppShellBootstrap } from './hooks/useAppShellBootstrap';
 import { router } from './routes';
 
@@ -20,9 +20,16 @@ export const Router = () => {
   const queryClient = useQueryClient();
   const globalErrors = useGlobalErrors();
 
-  const isAuthCallback =
-    window.location.pathname === '/oauth/callback' ||
-    window.location.pathname === '/admin/callback';
+  // OAuth pushState must flip this so bootstrap runs before post-login route guards.
+  const [isAuthCallback, setIsAuthCallback] = React.useState(() =>
+    isAuthCallbackPath()
+  );
+
+  React.useEffect(() => {
+    return router.history.subscribe(() => {
+      setIsAuthCallback(isAuthCallbackPath());
+    });
+  }, []);
 
   const { isAppShellLoading } = useAppShellBootstrap(!isAuthCallback);
   const { data: profile } = useProfile();
@@ -51,10 +58,12 @@ export const Router = () => {
   });
 
   React.useLayoutEffect(() => {
-    if (!isAppShellLoading) {
+    // Never mark ready on the auth callback — post-login navigation must wait
+    // for bootstrap before route guards run against router context.
+    if (!isAuthCallback && !isAppShellLoading) {
       markAppShellReady();
     }
-  }, [isAppShellLoading]);
+  }, [isAppShellLoading, isAuthCallback]);
 
   return (
     <ErrorBoundaryFallback>

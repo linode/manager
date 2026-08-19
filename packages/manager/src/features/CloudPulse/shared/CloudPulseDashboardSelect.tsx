@@ -1,4 +1,3 @@
-import { Autocomplete, BetaChip, Box, Typography } from '@linode/ui';
 import React from 'react';
 
 import { useFlags } from 'src/hooks/useFlags';
@@ -7,12 +6,18 @@ import { useCloudPulseServiceTypes } from 'src/queries/cloudpulse/services';
 
 import { useCloudPulseContext } from '../Context/useCloudPulseContext';
 import { getAllDashboards, getEnabledServiceTypes } from '../Utils/utils';
+import { DashboardPicker } from './DashboardPicker';
 
 import type {
   CloudPulseServiceType,
   Dashboard,
   FilterValue,
 } from '@linode/api-v4';
+
+export type DashboardDiscoveryState =
+  | { errorText: string; status: 'error' }
+  | { status: 'loading' }
+  | { status: 'ready' };
 
 export interface CloudPulseDashboardSelectProps {
   /**
@@ -33,6 +38,10 @@ export interface CloudPulseDashboardSelectProps {
    */
   integrationServiceType?: CloudPulseServiceType;
   /**
+   * Called when the service types and dashboard discovery request state changes.
+   */
+  onDashboardDiscoveryStateChange?: (state: DashboardDiscoveryState) => void;
+  /**
    * boolean value to identify whether only dashboard id is provided by service owner
    */
   onlyServiceLevelDashboardIdAvailable?: boolean;
@@ -50,6 +59,7 @@ export const CloudPulseDashboardSelect = React.memo(
       savePreferences,
       integrationServiceType,
       onlyServiceLevelDashboardIdAvailable,
+      onDashboardDiscoveryStateChange,
     } = props;
 
     const {
@@ -94,21 +104,26 @@ export const CloudPulseDashboardSelect = React.memo(
     const [selectedDashboard, setSelectedDashboard] =
       React.useState<Dashboard>();
 
-    const getErrorText = () => {
-      if (serviceTypesError) {
-        return 'Failed to fetch the services.';
-      }
+    const dashboardDiscoveryState = React.useMemo<DashboardDiscoveryState>(
+      () =>
+        serviceTypesError
+          ? { errorText: 'Failed to fetch the services.', status: 'error' }
+          : dashboardsError.length > 0
+            ? { errorText: 'Failed to fetch the dashboards.', status: 'error' }
+            : serviceTypesLoading || dashboardsLoading
+              ? { status: 'loading' }
+              : { status: 'ready' },
+      [
+        dashboardsError,
+        dashboardsLoading,
+        serviceTypesError,
+        serviceTypesLoading,
+      ]
+    );
 
-      if (dashboardsError.length > 0) {
-        return 'Failed to fetch the dashboards.';
-      }
-
-      return '';
-    };
-
-    const errorText: string = getErrorText();
-
-    const placeHolder = 'Select a Dashboard';
+    React.useEffect(() => {
+      onDashboardDiscoveryStateChange?.(dashboardDiscoveryState);
+    }, [dashboardDiscoveryState, onDashboardDiscoveryStateChange]);
 
     // sorts dashboards by service type. Required due to unexpected autocomplete grouping behaviour
     const getSortedDashboardsList = (options: Dashboard[]): Dashboard[] => {
@@ -122,7 +137,7 @@ export const CloudPulseDashboardSelect = React.memo(
       // only call this code when the component is rendered initially
       if (
         (savePreferences || !!serviceType) &&
-        !dashboardsLoading &&
+        dashboardDiscoveryState.status === 'ready' &&
         dashboardsList.length > 0 &&
         selectedDashboard === undefined
       ) {
@@ -136,7 +151,7 @@ export const CloudPulseDashboardSelect = React.memo(
         }
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [dashboardsList]);
+    }, [dashboardsList, dashboardDiscoveryState.status]);
 
     React.useEffect(() => {
       if (selectedDashboard && serviceTypeMap.size > 0) {
@@ -147,71 +162,25 @@ export const CloudPulseDashboardSelect = React.memo(
       }
     }, [selectedDashboard, serviceTypeMap, setCurrentServiceLabel]);
     return (
-      <Autocomplete
-        autoHighlight
-        clearOnBlur
-        data-testid="cloudpulse-dashboard-select"
-        disableClearable={!!serviceType}
+      <DashboardPicker
+        aclpServices={aclpServices}
         disabled={
+          dashboardDiscoveryState.status !== 'ready' ||
           !dashboardsList.length ||
           (!savePreferences && !!onlyServiceLevelDashboardIdAvailable) ||
-          (!savePreferences && dashboardsList.length === 1)
+          (!savePreferences &&
+            dashboardsList.length === 1 &&
+            integrationServiceType !== undefined)
         }
-        errorText={dashboardsList?.length ? '' : errorText}
-        fullWidth
-        getOptionLabel={(option) => {
-          if (option.id === selectedDashboard?.id) {
-            return `${
-              serviceTypeMap.get(option.service_type) ?? option.service_type
-            } - ${option.label}`;
-          }
-
-          return option.label;
-        }}
-        groupBy={(option: Dashboard) => option.service_type}
-        isOptionEqualToValue={(option, value) => option.id === value.id}
-        label="Dashboard"
-        loading={dashboardsLoading || serviceTypesLoading}
-        noMarginTop
-        onChange={(_, dashboard: Dashboard) => {
-          setSelectedDashboard(dashboard);
-          handleDashboardChange(dashboard, savePreferences);
+        isContextualView={integrationServiceType !== undefined}
+        onChange={(dashboard) => {
+          setSelectedDashboard(dashboard ?? undefined);
+          handleDashboardChange(dashboard ?? undefined, savePreferences);
         }}
         options={getSortedDashboardsList(dashboardsList ?? [])}
-        placeholder={placeHolder}
-        renderGroup={(params) => (
-          <Box key={params.key}>
-            <Box display="flex">
-              <Typography
-                data-qa-id={params.group}
-                sx={{ marginLeft: '3.5%' }}
-                variant="h3"
-              >
-                {!serviceType &&
-                  (serviceTypeMap.get(params.group as CloudPulseServiceType) ||
-                    params.group)}
-              </Typography>
-              {!serviceType &&
-                aclpServices?.[params.group as CloudPulseServiceType]?.metrics
-                  ?.beta && <BetaChip />}
-            </Box>
-            {params.children}
-          </Box>
-        )}
-        renderOption={({ key, ...props }, option) => (
-          <li key={key} {...props} data-pendo-id={option.label}>
-            {option.label}
-          </li>
-        )}
-        sx={(theme) => ({
-          '& .MuiInputBase-input.Mui-disabled': {
-            WebkitTextFillColor: theme.tokens.color.Neutrals.Black,
-          },
-        })}
-        textFieldProps={{
-          color: 'primary',
-        }}
-        value={selectedDashboard ?? null} // Undefined is not allowed for uncontrolled component
+        serviceTypeMap={serviceTypeMap}
+        showServiceTypeLabel={!serviceType}
+        value={selectedDashboard ?? null}
       />
     );
   }

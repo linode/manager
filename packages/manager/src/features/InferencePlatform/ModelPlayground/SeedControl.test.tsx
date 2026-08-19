@@ -6,6 +6,42 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { SeedControl } from './SeedControl';
 
+// Replace CDS web components with plain HTML equivalents so Lit's lifecycle
+// never runs in JSDOM, avoiding ElementInternals unhandled rejections entirely.
+vi.mock('@akamai/cds-components/react', () => ({
+  Button: ({
+    children,
+    onClick,
+  }: {
+    children: React.ReactNode;
+    onClick?: () => void;
+  }) => (
+    <button onClick={onClick} type="button">
+      {children}
+    </button>
+  ),
+  NumericSpinner: ({
+    onChange,
+    value,
+  }: {
+    onChange?: (e: CustomEvent<null | number>) => void;
+    value?: null | number;
+  }) => (
+    <input
+      defaultValue={value ?? ''}
+      onChange={(e) => {
+        const val = e.target.value === '' ? null : parseFloat(e.target.value);
+        onChange?.(new CustomEvent('change', { detail: val }));
+      }}
+      role="spinbutton"
+      type="number"
+    />
+  ),
+  Tooltip: ({ children }: { children: React.ReactNode }) => (
+    <span>{children}</span>
+  ),
+}));
+
 const MAX_SEED = 2_147_483_647;
 
 describe('SeedControl', () => {
@@ -17,7 +53,7 @@ describe('SeedControl', () => {
         <SeedControl onChange={onChange} value={undefined} />
       );
       await user.type(getByRole('spinbutton'), '5');
-      expect(onChange).toHaveBeenLastCalledWith(5);
+      expect(onChange).toHaveBeenCalledWith(5);
     });
 
     it('calls onChange with undefined when the input is cleared', async () => {
@@ -30,14 +66,16 @@ describe('SeedControl', () => {
       expect(onChange).toHaveBeenCalledWith(undefined);
     });
 
-    it('clamps to MAX_SEED when a value above the maximum is entered', async () => {
+    it('passes through 0 without treating it as empty', async () => {
+      // Verifies ?? is used rather than ||: 0 is a valid seed and must not
+      // be coerced to undefined.
       const user = userEvent.setup();
       const onChange = vi.fn();
       const { getByRole } = renderWithTheme(
-        <SeedControl onChange={onChange} value={MAX_SEED} />
+        <SeedControl onChange={onChange} value={undefined} />
       );
       await user.type(getByRole('spinbutton'), '0');
-      expect(onChange).toHaveBeenLastCalledWith(MAX_SEED);
+      expect(onChange).toHaveBeenCalledWith(0);
     });
   });
 
@@ -48,7 +86,7 @@ describe('SeedControl', () => {
       const { getByRole } = renderWithTheme(
         <SeedControl onChange={onChange} value={undefined} />
       );
-      await user.click(getByRole('button', { name: /generate random seed/i }));
+      await user.click(getByRole('button', { name: /new seed/i }));
       expect(onChange).toHaveBeenCalledOnce();
       const seed = onChange.mock.calls[0][0] as number;
       expect(seed).toBeGreaterThanOrEqual(0);

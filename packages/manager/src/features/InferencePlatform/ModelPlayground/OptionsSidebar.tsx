@@ -1,5 +1,6 @@
-import { Box, Checkbox, FormControlLabel, Typography } from '@linode/ui';
-import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
+import { Checkbox } from '@akamai/cds-components/react';
+import { ChevronDown } from '@akamai/cds-icons/react';
+import { Box, Typography } from '@linode/ui';
 import Collapse from '@mui/material/Collapse';
 import React, {
   memo,
@@ -163,7 +164,7 @@ export const OptionsSidebar = () => {
           theme.palette.mode === 'light' ? theme.bg.white : theme.bg.offWhite,
         display: 'flex',
         flexDirection: 'column',
-        gap: 2,
+        gap: 2.5,
         overflowX: 'hidden',
         overflowY: 'auto',
         p: 2,
@@ -183,30 +184,25 @@ export const OptionsSidebar = () => {
         onChange={(value) => onSettingsChange({ stop: value })}
         value={settings.stop}
       />
-      <FormControlLabel
-        control={
-          <Checkbox
-            checked={settings.stream}
-            onChange={() => onSettingsChange({ stream: !settings.stream })}
-          />
-        }
-        label="Stream response"
-        sx={{ mt: 1 }}
-      />
-      <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={settings.enableThinking}
-              onChange={() =>
-                onSettingsChange({ enableThinking: !settings.enableThinking })
-              }
-            />
+      <Box sx={{ mt: 1 }}>
+        <Checkbox
+          checked={settings.stream}
+          onChange={() => onSettingsChange({ stream: !settings.stream })}
+        >
+          Stream response
+        </Checkbox>
+      </Box>
+      <Box sx={{ display: 'flex', flexDirection: 'column', mt: 1 }}>
+        <Checkbox
+          checked={settings.enableThinking}
+          onChange={() =>
+            onSettingsChange({ enableThinking: !settings.enableThinking })
           }
-          label="Enable thinking"
-        />
+        >
+          Enable thinking
+        </Checkbox>
         <Collapse in={settings.enableThinking}>
-          <Box sx={{ pt: 2 }}>
+          <Box sx={{ pt: 4 }}>
             <EffortControl
               label="Thinking Effort"
               onChange={(value) =>
@@ -246,12 +242,13 @@ export const OptionsSidebar = () => {
           >
             Advanced Options
           </Typography>
-          <KeyboardArrowDown
-            sx={{
-              fontSize: 18,
+          <ChevronDown
+            height={18}
+            style={{
               transform: showAdvanced ? 'rotate(180deg)' : 'none',
               transition: 'transform 0.2s',
             }}
+            width={18}
           />
         </Box>
         <Collapse
@@ -259,7 +256,9 @@ export const OptionsSidebar = () => {
           in={showAdvanced}
           timeout={{ enter: 0, exit: 350 }}
         >
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, pt: 2 }}>
+          <Box
+            sx={{ display: 'flex', flexDirection: 'column', gap: 2.5, pt: 2 }}
+          >
             {ADVANCED_SLIDERS.map((config) => (
               <SliderRow
                 config={config}

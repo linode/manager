@@ -1,14 +1,14 @@
+import { LoadingSpinner } from '@akamai/cds-components/react/LoadingSpinner';
 import { Alias } from '@linode/design-language-system';
 import {
   Box,
-  CircleProgress,
   Divider,
+  keyframes,
   Paper,
   Stack,
   Typography,
   useTheme,
 } from '@linode/ui';
-import { keyframes } from '@mui/material/styles';
 import { DateTime } from 'luxon';
 import React from 'react';
 
@@ -306,7 +306,7 @@ export const SingleMetricChart = ({
           zIndex: 2,
         }}
       >
-        <CircleProgress size="md" />
+        <LoadingSpinner size="extra-large" />
       </Box>
     </Paper>
   );

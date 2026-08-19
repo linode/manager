@@ -3,10 +3,10 @@ import type { FieldError, Merge } from 'react-hook-form';
 
 import { MultipleIPInput } from './MultipleIPInput';
 
-import type { MultipeIPInputProps } from './MultipleIPInput';
+import type { MultipleIPInputProps } from './MultipleIPInput';
 import type { ExtendedIP } from '@akamai/compute-ui-core/api';
 
-interface Props extends Omit<MultipeIPInputProps, 'ips' | 'onChange'> {
+interface Props extends Omit<MultipleIPInputProps, 'ips' | 'onChange'> {
   ipErrors?: Merge<FieldError, (FieldError | undefined)[]>;
   nonExtendedIPs: string[];
   onNonExtendedIPChange: (ips: string[]) => void;

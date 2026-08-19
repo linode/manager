@@ -205,11 +205,7 @@ export const accountRolesFactory = Factory.Sync.makeFactory<IamAccountRoles>({
           name: 'account_oauth_client_viewer',
           description:
             'Allows the user to list and view all OAuth client configurations in the account.',
-          permissions: [
-            'list_oauth_clients',
-            'view_oauth_client_thumbnail',
-            'view_oauth_client',
-          ],
+          permissions: ['list_oauth_clients', 'view_oauth_client'],
         },
         {
           name: 'account_maintenance_viewer',
@@ -226,7 +222,6 @@ export const accountRolesFactory = Factory.Sync.makeFactory<IamAccountRoles>({
             'update_oauth_client_thumbnail',
             'reset_oauth_client_secret',
             'create_oauth_client',
-            'view_oauth_client_thumbnail',
             'view_oauth_client',
             'delete_oauth_client',
           ],
@@ -345,7 +340,6 @@ export const accountRolesFactory = Factory.Sync.makeFactory<IamAccountRoles>({
             'list_profile_logins',
             'view_enrolled_beta_program',
             'view_service_transfer',
-            'view_oauth_client_thumbnail',
             'create_user',
             'view_account_login',
             'create_linode',
@@ -415,7 +409,6 @@ export const accountRolesFactory = Factory.Sync.makeFactory<IamAccountRoles>({
             'view_enrolled_beta_program',
             'view_service_transfer',
             'view_linode',
-            'view_oauth_client_thumbnail',
             'view_account_login',
             'view_account',
             'list_notifications',

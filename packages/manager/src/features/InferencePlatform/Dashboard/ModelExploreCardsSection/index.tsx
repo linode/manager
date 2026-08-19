@@ -1,10 +1,11 @@
-import { Box } from '@linode/ui';
 import React from 'react';
 
 import Playground from 'src/assets/icons/ai/playground.svg';
 import Stars from 'src/assets/icons/ai/stars.svg';
 
+import { Box } from '../../components';
 import { ModelExploreCard } from './ModelExploreCard';
+import styles from './ModelExploreCardsSection.module.css';
 
 import type { ModelExploreCardData } from './ModelExploreCard';
 
@@ -27,17 +28,7 @@ const cards: ModelExploreCardData[] = [
 
 export const ModelExploreCardsSection = () => {
   return (
-    <Box
-      sx={(theme) => ({
-        display: 'grid',
-        gap: 2,
-        mb: 2,
-        gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
-        [theme.breakpoints.down('md')]: {
-          gridTemplateColumns: '1fr',
-        },
-      })}
-    >
+    <Box className={styles.box}>
       {cards.map((card) => (
         <ModelExploreCard card={card} key={card.title} />
       ))}

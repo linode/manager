@@ -4,23 +4,26 @@ import {
   Breadcrumb,
   BreadcrumbItem,
   Button,
+  Icon,
   NotificationBanner,
   Switch,
+  Tooltip,
 } from '@akamai/cds-components/react';
 import { Spacing, Typography } from '@akamai/cds-tokens';
 import {
   useAllAccountUsersQuery,
+  useAllTfaOptionalUsersQuery,
   useGetTfaEnforcementAccountSettingsQuery,
-  useGetTfaOptionalUsersQuery,
   useUpdateTfaEnforcementAccountSettingsMutation,
   useUpdateTfaOptionalUsersMutation,
 } from '@linode/queries';
-import { useBlocker, useNavigate } from '@tanstack/react-router';
+import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 
 import { useFlags } from 'src/hooks/useFlags';
 
+import { useDiscardChanges } from '../../hooks/useDiscardChanges';
 import { useIsIAMEnabled } from '../../hooks/useIsIAMEnabled';
 import { usePermissions } from '../../hooks/usePermissions';
 import { useTfaUserCounts } from '../../hooks/useTfaUserCounts';
@@ -50,14 +53,9 @@ export const TfaEnforcementLanding = () => {
   const flags = useFlags();
   const { isIAMEnabled } = useIsIAMEnabled();
 
-  // TODO: UIE-12176 Replace with the correct permissions once they are available in the API.
   const { data: permissions, error: permissionsError } = usePermissions(
     'account',
-    [
-      'update_account_settings',
-      'list_tfa_optional_users',
-      'update_tfa_optional_users',
-    ]
+    ['update_account_settings', 'update_tfa_optional_users']
   );
 
   const {
@@ -72,8 +70,11 @@ export const TfaEnforcementLanding = () => {
   const { mutateAsync: updateOptionalUsers } =
     useUpdateTfaOptionalUsersMutation();
 
-  const { data: tfaOptionalUsers, isLoading: isOptionalUsersLoading } =
-    useGetTfaOptionalUsersQuery();
+  const {
+    data: tfaOptionalUsers,
+    isLoading: isOptionalUsersLoading,
+    error: tfaOptionalUsersError,
+  } = useAllTfaOptionalUsersQuery();
 
   const { data: allUsers } = useAllAccountUsersQuery(true);
   const allUsernames = React.useMemo(
@@ -82,7 +83,7 @@ export const TfaEnforcementLanding = () => {
   );
 
   const tfaOptionalUsersOptions = React.useMemo(() => {
-    return tfaOptionalUsers?.data.map((user: TfaOptionalUser) => user.username);
+    return tfaOptionalUsers?.map((user: TfaOptionalUser) => user.username);
   }, [tfaOptionalUsers]);
 
   const form = useForm<TfaEnforcementFormValues>({
@@ -98,7 +99,7 @@ export const TfaEnforcementLanding = () => {
 
   const {
     control,
-    formState: { errors, isSubmitting, isDirty },
+    formState: { dirtyFields, errors, isSubmitting, isDirty },
     getValues,
     handleSubmit,
     reset,
@@ -139,40 +140,22 @@ export const TfaEnforcementLanding = () => {
     }
   };
 
-  const hasUnsavedChanges = isDirty;
+  const { handleCancelNavigation, handleProceedNavigation, status } =
+    useDiscardChanges([
+      !!dirtyFields.tfa_enforced,
+      !!dirtyFields.tfaOptionalUsers,
+    ]);
 
-  const {
-    proceed,
-    reset: resetBlocker,
-    status,
-  } = useBlocker({
-    enableBeforeUnload: hasUnsavedChanges,
-    shouldBlockFn: () => hasUnsavedChanges,
-    withResolver: true,
-  });
-
-  const handleProceedNavigation = React.useCallback(() => {
-    if (status === 'blocked' && proceed) {
-      proceed();
-    }
-  }, [status, proceed]);
-
-  const handleCancelNavigation = React.useCallback(() => {
-    if (status === 'blocked' && resetBlocker) {
-      resetBlocker();
-    }
-  }, [status, resetBlocker]);
+  const isDisabled =
+    !permissions?.update_account_settings &&
+    !permissions?.update_tfa_optional_users;
 
   if (isLoading) {
     return <CircleProgress />;
   }
 
   if (settingsError || permissionsError) {
-    return (
-      <Paper>
-        <ErrorState />
-      </Paper>
-    );
+    return <ErrorState withPaper />;
   }
 
   return (
@@ -189,7 +172,7 @@ export const TfaEnforcementLanding = () => {
           <BreadcrumbItem
             onCdsBreadcrumbClick={() => navigate({ to: '/iam/settings' })}
           >
-            Account Settings
+            Settings
           </BreadcrumbItem>
           <BreadcrumbItem>Manage 2FA Enforcement</BreadcrumbItem>
         </Breadcrumb>
@@ -206,6 +189,15 @@ export const TfaEnforcementLanding = () => {
           type="error"
         />
       )}
+
+      {isDisabled && (
+        <NotificationBanner
+          style={{ marginBottom: Spacing.S16 }}
+          text="You do not have permission to update 2FA enforcement settings."
+          type="error"
+        />
+      )}
+
       <FormProvider {...form}>
         <DiscardChangesModal
           onClose={handleCancelNavigation}
@@ -262,7 +254,9 @@ export const TfaEnforcementLanding = () => {
                 <CircleProgress />
               ) : (
                 <AccountUsersTable
+                  disabled={!permissions?.update_tfa_optional_users}
                   tfaOptionalUsers={tfaOptionalUsersOptions}
+                  tfaOptionalUsersError={tfaOptionalUsersError}
                   totalUsers={totalUsers}
                 />
               )}
@@ -274,15 +268,21 @@ export const TfaEnforcementLanding = () => {
           )}
 
           <Box direction="row" style={{ justifyContent: 'flex-end' }}>
-            <Button
-              data-pendo-id={IAM_TFA_ENFORCE_PENDO_IDS.updateTFAEnforcement}
-              disabled={!isDirty || !permissions?.update_account_settings}
-              processing={isSubmitting}
-              type="submit"
-              variant="primary"
+            <Tooltip
+              disabled={!isDisabled}
+              tooltipText="You do not have permission to edit 2FA enforcement settings."
             >
-              Save Changes
-            </Button>
+              <Button
+                data-pendo-id={IAM_TFA_ENFORCE_PENDO_IDS.updateTFAEnforcement}
+                disabled={!isDirty || isDisabled}
+                processing={isSubmitting}
+                type="submit"
+                variant="primary"
+              >
+                Save Changes
+                {isDisabled ? <Icon icon="info-outline" size="m" /> : null}
+              </Button>
+            </Tooltip>
           </Box>
         </form>
       </FormProvider>

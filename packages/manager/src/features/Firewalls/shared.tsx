@@ -6,6 +6,7 @@ import React from 'react';
 
 import { Link } from 'src/components/Link';
 import { useFlags } from 'src/hooks/useFlags';
+import { useIsGpuRdmaPlanEnabled } from 'src/hooks/useIsGpuRdmaPlanEnabled';
 
 import type { PORT_PRESETS } from './FirewallDetail/Rules/shared';
 import type { PrefixListRuleReference } from '@akamai/compute-ui-core/api';
@@ -74,6 +75,24 @@ export const protocolOptions: FirewallOptionItem<FirewallRuleProtocol>[] = [
   { label: 'ICMP', value: 'ICMP' },
   { label: 'IPENCAP', value: 'IPENCAP' },
 ];
+
+/** IANA protocol numbers (0-255) that support ports, identical to TCP/UDP/SCTP. */
+export const CUSTOM_PROTOCOL_PORT_NUMBERS: string[] = ['6', '17', '132'];
+
+/** Returns protocol options extended with ALL and Other Protocol when RDMA is enabled. */
+export const useProtocolOptions = (): FirewallOptionItem<string>[] => {
+  const { isGpuRdmaPlanEnabled } = useIsGpuRdmaPlanEnabled();
+
+  if (!isGpuRdmaPlanEnabled) {
+    return protocolOptions;
+  }
+
+  return [
+    { label: 'All', value: 'ALL' },
+    ...protocolOptions,
+    { label: 'Other Protocol', value: 'OTHER' },
+  ];
+};
 
 export const useAddressOptions = () => {
   const { isFirewallRulesetsPrefixlistsFeatureEnabled } =

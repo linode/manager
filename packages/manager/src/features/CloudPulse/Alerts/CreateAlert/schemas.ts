@@ -72,7 +72,10 @@ export const triggerConditionSchema = triggerConditionValidation.concat(
 
 export const alertDefinitionFormSchema = createAlertDefinitionSchema.concat(
   object({
-    group_by: array().of(string().defined()).optional(),
+    group_by: array()
+      .of(string().defined())
+      .required()
+      .min(1, 'At least one dimension is required.'),
     hasAPIError: mixed<boolean>().optional(),
     entity_ids: array().of(string().defined()).optional(),
     entity_type: mixed<AssociatedEntityType>()

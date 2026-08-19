@@ -6,6 +6,7 @@ import {
   TableHeaderCell,
   TableRow,
 } from '@akamai/cds-components/react';
+import { useNavigate, useSearch } from '@tanstack/react-router';
 import React from 'react';
 
 import { CircleProgress } from '../Shared/CircleProgress/CircleProgress';
@@ -18,6 +19,7 @@ import {
 import { AccountDelegationsTableRow } from './AccountDelegationsTableRow';
 import { UpdateDelegationsDrawer } from './UpdateDelegationsDrawer';
 
+import type { IAMAction } from '../routes';
 import type {
   APIError,
   ChildAccount,
@@ -33,6 +35,9 @@ interface Props {
   orderBy: string;
 }
 
+const DELEGATIONS_ROUTE = '/iam/delegations';
+const UPDATE_DELEGATION_ACTION: IAMAction = 'update-delegation';
+
 export const AccountDelegationsTable = ({
   delegations,
   error,
@@ -42,15 +47,45 @@ export const AccountDelegationsTable = ({
   orderBy,
 }: Props) => {
   const { columnWidths, showUsers } = useAccountDelegationsTableColumns();
-  const [isUpdateDelegationDrawerOpen, setIsUpdateDelegationDrawerOpen] =
-    React.useState(false);
-  const [updateDelegationID, setUpdateDelegationID] = React.useState<
-    null | string
-  >(null);
+  const navigate = useNavigate();
+  const { action, euuid } = useSearch({
+    from: DELEGATIONS_ROUTE,
+  });
 
-  const updateDelegation = updateDelegationID
-    ? delegations?.find((delegation) => delegation.euuid === updateDelegationID)
-    : null;
+  const updateDelegation = React.useMemo(
+    () =>
+      euuid
+        ? delegations?.find((delegation) => delegation.euuid === euuid)
+        : undefined,
+    [euuid, delegations]
+  );
+
+  const actionHandler = (action: IAMAction, euuid?: string) => {
+    navigate({
+      to: DELEGATIONS_ROUTE,
+      search: (prev) => ({
+        ...prev,
+        action,
+        euuid,
+      }),
+    });
+  };
+
+  const closeDrawer = (expectedAction: IAMAction) => {
+    if (expectedAction && action !== expectedAction) {
+      return;
+    }
+
+    navigate({
+      to: DELEGATIONS_ROUTE,
+      search: (prev) => ({
+        ...prev,
+        action: undefined,
+        euuid: undefined,
+      }),
+    });
+  };
+
   return (
     <>
       <Table aria-label="List of Account Delegations">
@@ -98,7 +133,9 @@ export const AccountDelegationsTable = ({
           {error && (
             <TableRow>
               <TableCell style={{ justifyContent: 'center' }}>
-                <ErrorState errorText={error[0]?.reason} />
+                <div style={{ margin: '0 auto' }}>
+                  <ErrorState errorText={error[0]?.reason} />
+                </div>
               </TableCell>
             </TableRow>
           )}
@@ -123,17 +160,17 @@ export const AccountDelegationsTable = ({
                 index={index}
                 key={`delegation-${delegation.euuid}-${index}`}
                 onUpdateDelegations={(delegation) => {
-                  setUpdateDelegationID(delegation.euuid);
-                  setIsUpdateDelegationDrawerOpen(true);
+                  actionHandler(UPDATE_DELEGATION_ACTION, delegation.euuid);
                 }}
               />
             ))}
         </TableBody>
       </Table>
       <UpdateDelegationsDrawer
-        delegation={updateDelegation ?? null}
-        onClose={() => setIsUpdateDelegationDrawerOpen(false)}
-        open={isUpdateDelegationDrawerOpen}
+        delegation={updateDelegation}
+        isDelegationsLoading={isLoading}
+        onClose={() => closeDrawer(UPDATE_DELEGATION_ACTION)}
+        open={action === UPDATE_DELEGATION_ACTION}
       />
     </>
   );

@@ -23,10 +23,10 @@ export const LinodeInterfacesTable = ({ handlers, linodeId }: Props) => {
         <TableRow>
           <TableCell>Type</TableCell>
           <TableCell>ID</TableCell>
+          <TableCell>IP Addresses</TableCell>
           <Hidden smDown>
             <TableCell>MAC Address</TableCell>
           </Hidden>
-          <TableCell>IP Addresses</TableCell>
           <Hidden lgDown>
             <TableCell>Version</TableCell>
           </Hidden>

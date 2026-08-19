@@ -1,10 +1,16 @@
-import { defineConfig } from 'vite';
+import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
 import dts from 'vite-plugin-dts';
 import { resolve } from 'path';
 import { createRequire } from 'module';
+import { fileURLToPath } from 'url';
 import svgr from 'vite-plugin-svgr';
 import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js';
+
+// ESM-friendly alternative to `__dirname`.
+const __dirname = fileURLToPath(new URL('.', import.meta.url));
+
+
 // Safely read package.json in an ES Module environment
 const require = createRequire(import.meta.url);
 const pkg = require('./package.json');
@@ -16,6 +22,9 @@ const externalDeps = [
 ];
 export default defineConfig({
     root: __dirname,
+    // vite-plugin-dts@5 reads Vite's own logger instead of a `logLevel` passed
+    // to the plugin, so silence it here to keep dts output quiet.
+    logLevel: 'silent',
     plugins: [
         react(),
         svgr({
@@ -23,7 +32,10 @@ export default defineConfig({
             include: '**/*.svg',
         }),
         cssInjectedByJsPlugin(),
-        dts({ rollupTypes: true, insertTypesEntry: true, logLevel: 'silent' })
+        dts({
+            bundleTypes: true,
+            insertTypesEntry: true,
+        })
     ],
     test: {
         env: {

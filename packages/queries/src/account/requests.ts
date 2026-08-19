@@ -6,6 +6,7 @@ import {
   getNotifications,
   getPaymentMethods,
   getPayments,
+  getTfaOptionalUsers,
   getUsers,
 } from '@linode/api-v4';
 import { getAll } from '@linode/utilities';
@@ -20,6 +21,7 @@ import type {
   Params,
   Payment,
   PaymentMethod,
+  TfaOptionalUser,
   User,
 } from '@linode/api-v4';
 
@@ -76,5 +78,17 @@ export const getAllUsers = async (
 ) => {
   return getAll<User>((params, filters) =>
     getUsers({ ...params, ...passedParams }, { ...filters, ...passedFilters }),
+  )().then((data) => data.data);
+};
+
+export const getAllTfaOptionalUsers = async (
+  passedParams: Params = {},
+  passedFilters: Filter = {},
+) => {
+  return getAll<TfaOptionalUser>((params, filters) =>
+    getTfaOptionalUsers(
+      { ...params, ...passedParams },
+      { ...filters, ...passedFilters },
+    ),
   )().then((data) => data.data);
 };

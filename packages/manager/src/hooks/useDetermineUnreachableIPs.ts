@@ -26,6 +26,7 @@ export const useDetermineUnreachableIPs = (inputs: {
     linodeInterfaceWithVPC,
     isUnreachablePublicIPv4LinodeInterface,
     isUnreachablePublicIPv6LinodeInterface,
+    linodeInterfaces,
     vpcLinodeIsAssignedTo: vpcLinodeIsAssignedToInterface,
   } = useDetermineUnreachableIPsLinodeInterface(linodeId, isLinodeInterface);
   const {
@@ -50,6 +51,7 @@ export const useDetermineUnreachableIPs = (inputs: {
     interfaceWithVPC: linodeInterfaceWithVPC ?? configInterfaceWithVPC,
     isUnreachablePublicIPv4,
     isUnreachablePublicIPv6,
+    linodeInterfaces, // undefined if this Linode is using config profile interfaces
     vpcLinodeIsAssignedTo,
   };
 };
@@ -65,7 +67,9 @@ export const useDetermineUnreachableIPsLinodeInterface = (
 ) => {
   const { data: interfaces } = useLinodeInterfacesQuery(linodeId, enabled);
 
-  const vpcInterfaces = interfaces?.interfaces.filter((iface) => iface.vpc);
+  const vpcInterfaces = interfaces?.interfaces.filter(
+    (iface) => iface.vpc || iface.rdma_vpc
+  );
 
   // Some Linodes may have multiple VPC Linode interfaces. If so, we want the interface that
   // is a default route (otherwise just get the first one)
@@ -74,7 +78,9 @@ export const useDetermineUnreachableIPsLinodeInterface = (
     vpcInterfaces?.[0];
 
   const { data: vpcLinodeIsAssignedTo } = useVPCQuery(
-    linodeInterfaceWithVPC?.vpc?.vpc_id ?? -1,
+    linodeInterfaceWithVPC?.vpc?.vpc_id ??
+      linodeInterfaceWithVPC?.rdma_vpc?.vpc_id ??
+      -1,
     Boolean(vpcInterfaces?.length) && enabled
   );
 
@@ -82,8 +88,13 @@ export const useDetermineUnreachableIPsLinodeInterface = (
   // but doesn't have a nat_1_1 val
   const isVPCOnlyLinodeInterface = Boolean(
     linodeInterfaceWithVPC?.default_route.ipv4 &&
-      !linodeInterfaceWithVPC?.vpc?.ipv4?.addresses.some(
-        (address) => address.nat_1_1_address
+      !(
+        linodeInterfaceWithVPC?.vpc?.ipv4?.addresses.some(
+          (address) => address.nat_1_1_address
+        ) ??
+        linodeInterfaceWithVPC?.rdma_vpc?.ipv4?.addresses.some(
+          (address) => address.nat_1_1_address
+        )
       )
   );
 
@@ -100,6 +111,7 @@ export const useDetermineUnreachableIPsLinodeInterface = (
     isUnreachablePublicIPv4LinodeInterface,
     isUnreachablePublicIPv6LinodeInterface,
     linodeInterfaceWithVPC,
+    linodeInterfaces: interfaces?.interfaces,
     vpcLinodeIsAssignedTo,
   };
 };

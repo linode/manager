@@ -1,5 +1,6 @@
+import { Lock } from '@akamai/cds-icons/react';
+import { Color } from '@akamai/cds-tokens';
 import { Chip } from '@linode/ui';
-import LockIcon from '@mui/icons-material/Lock';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -18,16 +19,14 @@ export const KeyTypeBadge = ({ keyType }: KeyTypeBadgeProps) => {
     { backgroundColor: string; color: string }
   > = {
     playground: {
-      backgroundColor: isDarkMode
-        ? theme.tokens.color.Violet[90]
-        : theme.tokens.color.Violet[70],
-      color: theme.palette.common.white,
+      backgroundColor: isDarkMode ? Color.Violet[90] : Color.Violet[70],
+      color: Color.Neutrals.White,
     },
     user: {
       backgroundColor: isDarkMode
-        ? theme.tokens.color.Ultramarine[40]
-        : theme.tokens.color.Ultramarine[30],
-      color: theme.tokens.color.Ultramarine[90],
+        ? Color.Ultramarine[40]
+        : Color.Ultramarine[30],
+      color: Color.Ultramarine[90],
     },
   };
 
@@ -35,7 +34,7 @@ export const KeyTypeBadge = ({ keyType }: KeyTypeBadgeProps) => {
 
   return (
     <Chip
-      icon={<LockIcon sx={{ height: 12, width: 12 }} />}
+      icon={<Lock height={12} width={12} />}
       label={label}
       size="small"
       sx={{

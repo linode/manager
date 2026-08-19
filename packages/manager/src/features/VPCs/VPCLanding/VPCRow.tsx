@@ -67,9 +67,9 @@ export const VPCRow = ({ handleDeleteVPC, handleEditVPC, vpc }: Props) => {
   const getVPCType = (type: 'rdma' | 'regular') => {
     switch (type) {
       case 'rdma':
-        return 'RDMA (E/W)';
+        return 'RDMA';
       case 'regular':
-        return 'Standard (N/S)';
+        return 'Standard';
     }
   };
 

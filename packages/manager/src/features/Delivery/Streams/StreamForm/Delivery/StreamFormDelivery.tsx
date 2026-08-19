@@ -79,6 +79,8 @@ const customHttpsDetailsControlPaths = {
     'destination.details.client_certificate_details.client_certificate',
   clientPrivateKey:
     'destination.details.client_certificate_details.client_private_key',
+  clientPrivateKeyPassphrase:
+    'destination.details.client_certificate_details.client_private_key_passphrase',
   tlsHostname: 'destination.details.client_certificate_details.tls_hostname',
   contentType: 'destination.details.content_type',
   customHeaders: 'destination.details.custom_headers',

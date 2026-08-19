@@ -28,8 +28,8 @@
     "@akamai/compute-ui-core": "1.0.2",
     "@linode/api-v4": "workspace:*",
     "luxon": "3.4.4",
-    "react": "^19.2.5",
-    "react-dom": "^19.2.5"
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
   },
   "devDependencies": {
     "@linode/tsconfig": "workspace:*",
@@ -37,8 +37,8 @@
     "@testing-library/jest-dom": "~6.9.1",
     "@testing-library/react": "~16.0.0",
     "@types/luxon": "3.4.2",
-    "@types/react": "^19.1.6",
-    "@types/react-dom": "^19.1.6",
+    "@types/react": "^19.2.4",
+    "@types/react-dom": "^19.2.4",
     "factory.ts": "^0.5.1"
   },
   "lint-staged": {

@@ -2,21 +2,16 @@ import { readableBytes } from '@akamai/compute-ui-core/api';
 import { formatDate } from '@akamai/compute-ui-core/datetime';
 import { pluralize, truncateMiddle } from '@akamai/compute-ui-core/formatting';
 import { useProfile, useRegionQuery } from '@linode/queries';
-import {
-  CircleProgress,
-  Divider,
-  Drawer,
-  ErrorState,
-  Typography,
-} from '@linode/ui';
-import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
-import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
-import { Link } from 'src/components/Link';
-import { MaskableText } from 'src/components/MaskableText/MaskableText';
-
 import { AccessControls } from '../../shared/components/AccessControls/AccessControls';
+import { CircleProgress } from '../../shared/components/CircleProgress/CircleProgress';
+import { CopyTooltip } from '../../shared/components/CopyTooltip/CopyTooltip';
+import { Divider } from '../../shared/components/Divider/Divider';
+import { Drawer } from '../../shared/components/Drawer/Drawer';
+import { ErrorState } from '../../shared/components/ErrorState/ErrorState';
+import { Link } from '../../shared/components/Link/Link';
+import { MaskableText } from '../../shared/components/MaskableText/MaskableText';
 import { useObjectStorageBucket } from '../hooks/useObjectStorageBucket';
 
 export interface BucketDetailsDrawerProps {
@@ -31,15 +26,16 @@ export const BucketDetailsDrawer = React.memo(
     const { onClose, isOpen, bucketName, regionId } = props;
 
     return (
-      <Drawer
-        onClose={onClose}
-        open={isOpen}
-        title={truncateMiddle(bucketName ?? 'Bucket Details')}
-      >
-        <BucketDetailsDrawerContent
-          bucketName={bucketName}
-          regionId={regionId}
-        />
+      <Drawer onClose={onClose} open={isOpen}>
+        <span slot="header">
+          {truncateMiddle(bucketName ?? 'Bucket Details')}
+        </span>
+        <div slot="body">
+          <BucketDetailsDrawerContent
+            bucketName={bucketName}
+            regionId={regionId}
+          />
+        </div>
       </Drawer>
     );
   }
@@ -103,29 +99,24 @@ const BucketDetailsDrawerContent = ({
   return (
     <>
       {formattedCreated && (
-        <Typography data-testid="createdTime" variant="subtitle2">
-          Created: {formattedCreated}
-        </Typography>
+        <p data-testid="createdTime">Created: {formattedCreated}</p>
       )}
 
       {Boolean(endpoint_type) && (
-        <Typography data-testid="endpointType" variant="subtitle2">
-          Endpoint Type: {endpoint_type}
-        </Typography>
+        <p data-testid="endpointType">Endpoint Type: {endpoint_type}</p>
       )}
 
-      <Typography data-testid="region" variant="subtitle2">
-        {region?.label ?? ''}
-      </Typography>
+      <p data-testid="region">{region?.label ?? ''}</p>
 
       {hostname && (
         <MaskableText isToggleable text={hostname}>
-          <StyledLinkContainer>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1.8rem' }}>
             <Link external to={`https://${hostname}`}>
               {truncateMiddle(hostname, 50)}
             </Link>
-            <StyledCopyTooltip sx={{ marginLeft: 4 }} text={hostname} />
-          </StyledLinkContainer>
+
+            <CopyTooltip text={hostname} />
+          </div>
         </MaskableText>
       )}
 
@@ -133,9 +124,7 @@ const BucketDetailsDrawerContent = ({
         <Divider spacingBottom={16} spacingTop={16} />
       )}
 
-      <Typography variant="subtitle2">
-        {readableBytes(size).formatted}
-      </Typography>
+      <p>{readableBytes(size).formatted}</p>
 
       <Link to={`/object-storage/buckets/${regionId}/${bucketName}`}>
         {pluralize('object', 'objects', objects)}
@@ -152,16 +141,3 @@ const BucketDetailsDrawerContent = ({
     </>
   );
 };
-
-const StyledCopyTooltip = styled(CopyTooltip, {
-  label: 'StyledRootContainer',
-})(() => ({
-  marginLeft: '1em',
-  padding: 0,
-}));
-
-const StyledLinkContainer = styled('span', {
-  label: 'StyledLinkContainer',
-})(() => ({
-  display: 'flex',
-}));

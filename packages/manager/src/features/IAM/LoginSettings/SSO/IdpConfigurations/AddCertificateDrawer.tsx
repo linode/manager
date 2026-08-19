@@ -96,7 +96,7 @@ export const AddCertificateDrawer = ({
           />
         )}
 
-        <p style={{ marginBottom: Spacing.S12, marginTop: 0 }}>
+        <p style={{ marginBottom: Spacing.S24, marginTop: 0 }}>
           Enter a SAML certificate for the IDP configuration.
         </p>
 
@@ -121,7 +121,9 @@ export const AddCertificateDrawer = ({
                 rows={4}
                 value={field.value}
               />
-              <FormError>{fieldState?.error?.message}</FormError>
+              {Boolean(fieldState?.error?.message) && (
+                <FormError>{fieldState?.error?.message}</FormError>
+              )}
             </FormField>
           )}
         />

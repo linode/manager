@@ -76,11 +76,13 @@ const makeUsers = (count = 2): User[] =>
 const renderComponent = (
   tfaOptionalUsers: string[] = ['user-2'],
   totalUsers = 2,
-  initialEntries = ['/iam/settings/tfa-enforcement?page=1&pageSize=10']
+  initialEntries = ['/iam/settings/tfa-enforcement?page=1&pageSize=10'],
+  tfaOptionalUsersError?: unknown
 ) => {
   return renderWithProviders(
     <AccountUsersTable
       tfaOptionalUsers={tfaOptionalUsers}
+      tfaOptionalUsersError={tfaOptionalUsersError}
       totalUsers={totalUsers}
     />,
     {
@@ -254,5 +256,40 @@ describe('AccountUsersTable', () => {
     renderComponent([], 100);
 
     expect(screen.getByText('Users selected: 100/5')).toBeVisible();
+  });
+
+  describe('when tfaOptionalUsersError is set', () => {
+    const tfaError = { reason: 'Failed to load optional users' };
+
+    it('shows the error message in the table', () => {
+      renderComponent(['user-2'], 2, undefined, tfaError);
+
+      expect(screen.getByText('Failed to load optional users')).toBeVisible();
+    });
+
+    it('shows 0/0 in the selection summary', () => {
+      renderComponent(['user-2'], 2, undefined, tfaError);
+
+      expect(screen.getByText('Users selected: 0/0')).toBeVisible();
+    });
+
+    it('disables the Clear all button', async () => {
+      const { container } = renderComponent(['user-2'], 2, undefined, tfaError);
+      const clearAllButton = await getCdsButtonByText(container, 'Clear all');
+
+      expect(clearAllButton).toHaveAttribute('disabled');
+    });
+
+    it('does not show pagination', () => {
+      mocks.useAllAccountUsersQuery.mockReturnValue({
+        data: makeUsers(20),
+        error: undefined,
+        isLoading: false,
+      });
+
+      const { container } = renderComponent([], 20, undefined, tfaError);
+
+      expect(container.querySelector('cds-pagination')).not.toBeInTheDocument();
+    });
   });
 });

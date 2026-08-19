@@ -5,6 +5,7 @@ import React from 'react';
 import { useDelegationRole } from '../hooks/useDelegationRole';
 import { usePermissions } from '../hooks/usePermissions';
 import { CircleProgress } from '../Shared/CircleProgress/CircleProgress';
+import { ErrorState } from '../Shared/ErrorState/ErrorState';
 import { Paper } from '../Shared/Paper/Paper';
 import { mapAccountPermissionsToRoles } from '../Shared/utilities';
 import { DefaultRolesPanel } from './Defaults/DefaultRolesPanel';
@@ -15,9 +16,11 @@ export const RolesLanding = () => {
     'account',
     ['list_role_permissions']
   );
-  const { data: accountRoles, isLoading } = useAccountRoles(
-    permissions?.list_role_permissions
-  );
+  const {
+    data: accountRoles,
+    isLoading,
+    error,
+  } = useAccountRoles(permissions?.list_role_permissions);
   const { isChildUserType, isProfileLoading, isDelegateUserType } =
     useDelegationRole();
 
@@ -40,6 +43,10 @@ export const RolesLanding = () => {
         type="error"
       />
     );
+  }
+
+  if (error) {
+    return <ErrorState withPaper />;
   }
 
   return (

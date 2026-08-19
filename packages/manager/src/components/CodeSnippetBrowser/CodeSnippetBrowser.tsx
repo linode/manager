@@ -13,6 +13,7 @@ export interface CodeSnippetBrowserProps {
   syntaxHighlightingLanguageMap: Record<string, SupportedLanguage>;
   tabRightBorderWidthByIndex?: Partial<Record<number, number>>;
   textAreaHeight?: number;
+  viewMoreEnabled?: boolean;
 }
 
 interface ViewSizeToggleButtonProps {
@@ -127,6 +128,7 @@ export const CodeSnippetBrowser = ({
   defaultLanguage,
   tabRightBorderWidthByIndex,
   textAreaHeight = 158,
+  viewMoreEnabled = true,
 }: CodeSnippetBrowserProps) => {
   const firstLanguage = languages[0];
   const [language, setLanguage] = React.useState<string>(
@@ -154,7 +156,7 @@ export const CodeSnippetBrowser = ({
   }, [language, textAreaHeight]);
 
   const alwaysExpanded = shortSnippets[language] ?? false;
-  const effectivelyExpanded = isExpanded || alwaysExpanded;
+  const effectivelyExpanded = !viewMoreEnabled || isExpanded || alwaysExpanded;
 
   return (
     <Paper sx={{ borderRadius: 1 }}>
@@ -193,7 +195,7 @@ export const CodeSnippetBrowser = ({
             showLineNumbers={false}
           />
 
-          {!effectivelyExpanded && (
+          {viewMoreEnabled && !effectivelyExpanded && (
             <Box
               sx={(theme) => ({
                 alignItems: 'flex-end',
@@ -216,7 +218,7 @@ export const CodeSnippetBrowser = ({
           )}
         </Box>
 
-        {isExpanded && !alwaysExpanded && (
+        {viewMoreEnabled && isExpanded && !alwaysExpanded && (
           <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
             <ViewSizeToggleButton
               label="VIEW LESS"

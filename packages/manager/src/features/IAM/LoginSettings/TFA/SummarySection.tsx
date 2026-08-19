@@ -23,9 +23,9 @@ export const SummarySection = ({ isEnforced, totalUsers }: Props) => {
     formState: { dirtyFields },
     watch,
   } = useFormContext<TfaEnforcementFormValues>();
-  // TODO: UIE-12176 Replace with the correct permissions once they are available in the API.
   const { data: permissions } = usePermissions('account', [
     'update_account_settings',
+    'update_tfa_optional_users',
   ]);
 
   const hasSettingsChanged =
@@ -62,8 +62,8 @@ export const SummarySection = ({ isEnforced, totalUsers }: Props) => {
                     {notEnforcedUsersCount} user
                     {notEnforcedUsersCount !== 1 ? 's' : ''}
                   </strong>{' '}
-                  can still log in using a password only, as 2FA remains for
-                  them.
+                  can still log in using a password only, as 2FA remains
+                  optional for them.
                 </>
               )}
             </p>
@@ -114,7 +114,10 @@ export const SummarySection = ({ isEnforced, totalUsers }: Props) => {
               <Checkbox
                 checked={field.value}
                 data-pendo-id={IAM_TFA_ENFORCE_PENDO_IDS.consentChecked}
-                disabled={!permissions?.update_account_settings}
+                disabled={
+                  !permissions?.update_account_settings &&
+                  !permissions?.update_tfa_optional_users
+                }
                 onChange={(e) => field.onChange(e.detail as boolean)}
                 required
               >

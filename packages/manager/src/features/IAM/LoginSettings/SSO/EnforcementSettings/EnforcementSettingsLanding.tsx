@@ -23,7 +23,7 @@ export const EnforcementSettingsLanding = () => {
   }
 
   if (error || permissionsError) {
-    return <ErrorState />;
+    return <ErrorState withPaper />;
   }
 
   return (

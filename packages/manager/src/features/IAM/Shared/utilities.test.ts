@@ -9,6 +9,7 @@ import {
   deleteUserEntity,
   deleteUserRole,
   getAllRoles,
+  getDeleteUserTooltipText,
   getErrorMessage,
   getFacadeRoleDescription,
   getFormattedEntityType,
@@ -935,5 +936,52 @@ describe('getErrorMessage', () => {
   it('should return undefined if there are no errors', () => {
     const result = getErrorMessage(null);
     expect(result).toBeUndefined();
+  });
+});
+
+describe('getDeleteUserTooltipText', () => {
+  it('should return the correct tooltip text when user does not have delete permissions', () => {
+    const canDeleteUser = false;
+    const profileUserName = 'user-1';
+    const activeUserName = 'user-2';
+    const isDelegateUserType = false;
+
+    const result = getDeleteUserTooltipText(
+      canDeleteUser,
+      profileUserName,
+      activeUserName,
+      isDelegateUserType
+    );
+    expect(result).toBe('You do not have permission to delete this user.');
+  });
+
+  it('should return the correct tooltip text when user is trying to delete themselves', () => {
+    const canDeleteUser = true;
+    const profileUserName = 'user-1';
+    const activeUserName = 'user-1';
+    const isDelegateUserType = false;
+
+    const result = getDeleteUserTooltipText(
+      canDeleteUser,
+      profileUserName,
+      activeUserName,
+      isDelegateUserType
+    );
+    expect(result).toBe('You can’t delete the currently active user.');
+  });
+
+  it('should return the correct tooltip text when user is trying to delete a delegate user', () => {
+    const canDeleteUser = true;
+    const profileUserName = 'user-1';
+    const activeUserName = 'user-2';
+    const isDelegateUserType = true;
+
+    const result = getDeleteUserTooltipText(
+      canDeleteUser,
+      profileUserName,
+      activeUserName,
+      isDelegateUserType
+    );
+    expect(result).toBe('You can’t delete a parent user.');
   });
 });

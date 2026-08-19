@@ -256,8 +256,7 @@ export type AccountOauthClientAdmin =
 /** Permissions associated with the "account_oauth_client_viewer" role. */
 export type AccountOauthClientViewer =
   | 'list_oauth_clients'
-  | 'view_oauth_client'
-  | 'view_oauth_client_thumbnail';
+  | 'view_oauth_client';
 
 /**
  * Permissions associated with the user profile.

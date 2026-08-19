@@ -1,5 +1,6 @@
-import { Box, Button, Tooltip, TooltipIcon, Typography } from '@linode/ui';
-import OutlinedInput from '@mui/material/OutlinedInput';
+import { Button, NumericSpinner, Tooltip } from '@akamai/cds-components/react';
+import { InfoOutline } from '@akamai/cds-icons/react';
+import { Box, Typography } from '@linode/ui';
 import React from 'react';
 
 const MAX_SEED = 2_147_483_647;
@@ -10,16 +11,8 @@ interface SeedControlProps {
 }
 
 export const SeedControl = ({ onChange, value }: SeedControlProps) => {
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const raw = e.target.value;
-    if (raw === '') {
-      onChange(undefined);
-      return;
-    }
-    const num = parseInt(raw, 10);
-    if (!isNaN(num)) {
-      onChange(Math.min(MAX_SEED, Math.max(0, num)));
-    }
+  const handleChange = (e: CustomEvent<null | number>) => {
+    onChange(e.detail ?? undefined);
   };
 
   const handleRandomize = () => {
@@ -30,17 +23,19 @@ export const SeedControl = ({ onChange, value }: SeedControlProps) => {
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
-      <Box sx={{ alignItems: 'center', display: 'flex' }}>
+      <Box sx={{ alignItems: 'center', display: 'flex', gap: 1, mb: 1.25 }}>
         <Typography variant="body2">Seed</Typography>
-        <TooltipIcon
-          labelTooltipIconSize="small"
-          status="info"
-          sxTooltipIcon={{
-            '& svg': { height: 16, width: 16 },
-            marginLeft: '-4px',
-          }}
-          text="Fixes the random seed so identical inputs produce identical output, making runs of the same prompt reproducible."
-        />
+        <Tooltip tooltipText="Fixes the random seed so identical inputs produce identical output, making runs of the same prompt reproducible.">
+          <span
+            style={{
+              alignItems: 'center',
+              display: 'flex',
+              marginRight: 4,
+            }}
+          >
+            <InfoOutline height={16} width={16} />
+          </span>
+        </Tooltip>
       </Box>
       <Box
         sx={{
@@ -49,26 +44,17 @@ export const SeedControl = ({ onChange, value }: SeedControlProps) => {
           justifyContent: 'space-between',
         }}
       >
-        <OutlinedInput
-          inputProps={{ max: MAX_SEED, min: 0, step: 1 }}
+        <NumericSpinner
+          max={MAX_SEED}
+          min={0}
           onChange={handleChange}
           placeholder="—"
-          sx={(theme) => ({
-            '& input': {
-              fontSize: theme.tokens.font.FontSize.Xs,
-              padding: '4px 0',
-              textAlign: 'left',
-            },
-            '& input::-webkit-inner-spin-button, & input::-webkit-outer-spin-button':
-              { display: 'none' },
-            '& .MuiOutlinedInput-notchedOutline': { border: 'none' },
-            width: 110,
-          })}
-          type="number"
-          value={value ?? ''}
+          step={1}
+          style={{ borderRadius: '4px', flex: 'none', width: 130 }}
+          value={value ?? null}
         />
-        <Tooltip title="Generate random seed">
-          <Button buttonType="secondary" onClick={handleRandomize} size="small">
+        <Tooltip tooltipText="Generate random seed">
+          <Button onClick={handleRandomize} size="large" variant="link">
             New Seed
           </Button>
         </Tooltip>

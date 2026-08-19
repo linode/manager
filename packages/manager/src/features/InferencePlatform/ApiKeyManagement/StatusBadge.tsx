@@ -1,3 +1,4 @@
+import { Color } from '@akamai/cds-tokens';
 import { Chip } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
@@ -17,22 +18,16 @@ export const StatusBadge = ({ status }: StatusBadgeProps) => {
     { backgroundColor: string; color: string }
   > = {
     active: {
-      backgroundColor: isDarkMode
-        ? theme.tokens.color.Green[80]
-        : theme.tokens.color.Green[70],
-      color: theme.palette.common.white,
+      backgroundColor: isDarkMode ? Color.Green[80] : Color.Green[70],
+      color: Color.Neutrals.White,
     },
     expired: {
-      backgroundColor: isDarkMode
-        ? theme.tokens.color.Orange[80]
-        : theme.tokens.color.Orange[70],
-      color: theme.palette.common.white,
+      backgroundColor: isDarkMode ? Color.Orange[80] : Color.Orange[70],
+      color: Color.Neutrals.White,
     },
     revoked: {
-      backgroundColor: isDarkMode
-        ? theme.tokens.color.Neutrals[40]
-        : theme.tokens.color.Neutrals[30],
-      color: theme.tokens.color.Neutrals.Black,
+      backgroundColor: isDarkMode ? Color.Neutrals[40] : Color.Neutrals[30],
+      color: Color.Neutrals.Black,
     },
   };
 

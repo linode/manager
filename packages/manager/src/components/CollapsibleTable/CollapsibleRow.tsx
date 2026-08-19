@@ -6,19 +6,28 @@ import type { JSX } from 'react';
 
 import KeyboardCaretDownIcon from 'src/assets/icons/caret_down.svg';
 import KeyboardCaretRightIcon from 'src/assets/icons/caret_right.svg';
+import { Link } from 'src/components/Link';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 
 interface Props {
   InnerTable: JSX.Element;
   label: string;
+  linkForLabel?: string;
+  onToggle?: (open: boolean) => void;
   OuterTableCells: JSX.Element;
 }
 
 export const CollapsibleRow = (props: Props) => {
-  const { InnerTable, OuterTableCells, label } = props;
+  const { InnerTable, onToggle, OuterTableCells, label, linkForLabel } = props;
 
   const [open, setOpen] = React.useState(false);
+
+  const handleToggle = () => {
+    const next = !open;
+    setOpen(next);
+    onToggle?.(next);
+  };
 
   return (
     <>
@@ -32,13 +41,19 @@ export const CollapsibleRow = (props: Props) => {
           >
             <IconButton
               aria-label={`expand ${label} row`}
-              onClick={() => setOpen(!open)}
+              onClick={handleToggle}
               size="small"
               sx={{ marginRight: 0.5, padding: 0 }}
             >
               {open ? <KeyboardCaretDownIcon /> : <KeyboardCaretRightIcon />}
             </IconButton>
-            {label}
+            {linkForLabel ? (
+              <Link accessibleAriaLabel={label} to={linkForLabel}>
+                {label}
+              </Link>
+            ) : (
+              label
+            )}
           </Box>
         </TableCell>
         {OuterTableCells}

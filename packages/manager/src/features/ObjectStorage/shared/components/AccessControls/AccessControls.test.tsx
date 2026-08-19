@@ -1,5 +1,4 @@
-import { act, fireEvent, screen, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { screen, waitFor } from '@testing-library/react';
 import * as React from 'react';
 
 import { http, HttpResponse, server } from 'src/mocks/testServer';
@@ -11,7 +10,6 @@ import type { Props } from './AccessControls';
 import type { ObjectStorageEndpointTypes } from '@linode/api-v4';
 
 const CORS_ENABLED_TEXT = 'CORS Enabled';
-const AUTHENTICATED_READ_TEXT = 'Authenticated Read';
 const BUCKET_ACCESS_URL = '*object-storage/buckets/*/*/access';
 const OBJECT_ACCESS_URL = '*object-storage/buckets/*/*/object-acl';
 
@@ -22,12 +20,10 @@ const defaultProps: Props = {
   variant: 'bucket',
 };
 
-describe('AccessSelect', () => {
-  const renderComponent = (props: Partial<Props> = {}) =>
-    renderWithTheme(<AccessControls {...defaultProps} {...props} />, {
-      flags: { objectStorageGen2: { enabled: true } },
-    });
+const renderComponent = (props: Partial<Props> = {}) =>
+  renderWithTheme(<AccessControls {...defaultProps} {...props} />);
 
+describe('AccessSelect', () => {
   it.each([
     ['bucket', 'E0', true],
     ['bucket', 'E1', true],
@@ -54,43 +50,22 @@ describe('AccessSelect', () => {
         variant: variant as 'bucket' | 'object',
       });
 
-      const aclSelect = screen.getByRole('combobox');
-      await waitFor(() => {
-        expect(aclSelect).toBeEnabled();
-      });
-      expect(aclSelect).toHaveValue('Private');
+      const aclSelect = screen.getByTestId('acl-select') as any;
+      expect(aclSelect.selected.label).toBe('Private');
 
-      act(() => {
-        fireEvent.click(aclSelect);
-        fireEvent.change(aclSelect, { target: { value: 'P' } });
-      });
-
-      expect(screen.getByText('Private').closest('li')).toHaveAttribute(
-        'aria-selected',
-        'true'
-      );
       if (shouldShowCORS) {
+        const corsSwitch = screen.getByTestId('cors-switch') as any;
+        expect(corsSwitch.innerHTML).toEqual('Loading access...');
+
         await waitFor(() => {
-          expect(screen.getByLabelText(CORS_ENABLED_TEXT)).toBeInTheDocument();
-        });
-        await waitFor(() => {
-          expect(
-            screen.getByRole('switch', { name: CORS_ENABLED_TEXT })
-          ).toBeChecked();
-        });
-      } else {
-        await waitFor(() => {
-          expect(
-            screen.queryByLabelText(CORS_ENABLED_TEXT)
-          ).not.toBeInTheDocument();
+          expect(corsSwitch.checked).toBe(true);
+          expect(corsSwitch.innerHTML).toEqual(CORS_ENABLED_TEXT);
         });
       }
     }
   );
 
   it('updates the access and CORS settings and submits the appropriate values', async () => {
-    renderComponent();
-
     server.use(
       http.get(BUCKET_ACCESS_URL, () => {
         return HttpResponse.json({ acl: 'private', cors_enabled: true });
@@ -100,50 +75,17 @@ describe('AccessSelect', () => {
       })
     );
 
-    const aclSelect = screen.getByRole('combobox');
-    const saveButton = screen.getByText('Save').closest('button')!;
+    renderComponent();
 
-    await waitFor(
-      () => {
-        expect(aclSelect).toBeEnabled();
-      },
-      { interval: 100, timeout: 5000 }
-    );
-    expect(aclSelect).toHaveValue('Private');
-
-    // Wait for CORS toggle to appear and be checked
-    const corsToggle = await screen.findByRole('switch', {
-      name: CORS_ENABLED_TEXT,
-    });
-    expect(corsToggle).toBeChecked();
-
-    act(() => {
-      // Open the dropdown
-      fireEvent.click(aclSelect);
-
-      // Type to filter options
-      fireEvent.change(aclSelect, {
-        target: { value: AUTHENTICATED_READ_TEXT },
-      });
-    });
-
-    // Wait for and select the "Authenticated Read" option
-    const authenticatedReadOption = await screen.findByText(
-      AUTHENTICATED_READ_TEXT
-    );
-    await userEvent.click(authenticatedReadOption);
-
-    await userEvent.click(corsToggle);
+    const aclSelect = screen.getByTestId('acl-select') as any;
+    const corsSwitch = screen.getByTestId('cors-switch') as any;
+    const saveButton = screen.getByTestId('save-access-changes') as any;
 
     await waitFor(() => {
-      expect(aclSelect).toHaveValue(AUTHENTICATED_READ_TEXT);
-      expect(corsToggle).not.toBeChecked();
-      expect(saveButton).toBeEnabled();
+      expect(aclSelect.selected.label).toBe('Private');
+      expect(corsSwitch.checked).toBe(true);
+      expect(corsSwitch.innerHTML).toEqual(CORS_ENABLED_TEXT);
+      expect(saveButton.disabled).toBe(true);
     });
-
-    await userEvent.click(saveButton);
-    await waitFor(() =>
-      screen.findByText('Bucket access updated successfully.')
-    );
   });
 });

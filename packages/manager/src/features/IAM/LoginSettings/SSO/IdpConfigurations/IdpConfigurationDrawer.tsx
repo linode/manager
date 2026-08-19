@@ -7,7 +7,7 @@ import {
   NotificationBanner,
   TextField,
 } from '@akamai/cds-components/react';
-import { Spacing, Typography } from '@akamai/cds-tokens';
+import { Spacing } from '@akamai/cds-tokens';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
   useCreateIdpConfigMutation,
@@ -90,7 +90,10 @@ export const IdpConfigurationDrawer = ({
             entity_id: idpConfig.saml.entity_id,
             identity_element: idpConfig.saml.identity_element,
             idp_url: idpConfig.saml.idp_url,
-            public_certificates: [] as { certificate: string }[],
+            public_certificates:
+              idpConfig.saml.public_certificates.length === 0
+                ? [{ certificate: '' }]
+                : ([] as { certificate: string }[]),
             user_id_attribute: idpConfig.saml.user_id_attribute ?? '',
           },
         }
@@ -241,9 +244,9 @@ export const IdpConfigurationDrawer = ({
           name="label"
           render={({ field, fieldState }) => (
             <FormField
-              className={styles.formFieldText}
               error={!!fieldState.error}
               label-position="top"
+              style={{ padding: 0 }}
             >
               <FormLabel slot="label">Label</FormLabel>
               <TextField
@@ -263,12 +266,7 @@ export const IdpConfigurationDrawer = ({
           )}
         />
 
-        <h3
-          className={styles.sectionHeading}
-          style={{ font: Typography.Heading.S }}
-        >
-          Identity Provider Details
-        </h3>
+        <div className={styles.sectionHeading}>Identity Provider Details</div>
         <p className={styles.sectionDescription}>
           {IDENTITY_PROVIDER_DESCRIPTION}
         </p>

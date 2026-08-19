@@ -1,0 +1,54 @@
+
+.learnCardStack {
+  display: flex;
+  border: none;
+  padding: 0;
+  background: transparent;
+}
+
+.centerStack {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  gap: var(--token-global-spacing-s8);
+  width: 100%;
+}
+
+.learnCardPaper{
+  border-radius: 0;
+  padding: 11px 20px 11px 12px;
+  width: 100%;
+}
+
+.learnCardLink {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  flex: 1;
+  width: 100%;
+  color: var(--token-alias-content-icon-secondary-default);
+  text-decoration: none;
+  gap: var(--token-global-spacing-s8);
+}
+
+.learnCardLink > span svg {
+  color: var(--token-alias-content-icon-primary-default);
+}
+
+.learnCardLink > span {
+  margin-left: 0;
+  position: static;
+  top: 0;
+  transform: none;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.learnCardLink:hover {
+  color: var(--token-alias-content-icon-primary);
+}
+
+.learnCardLink:hover > span svg {
+  color: var(--token-alias-content-icon-primary);
+}

@@ -318,7 +318,7 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
           spacing={1}
           sx={{
             borderTop: `1px solid ${theme.borderColors.borderTable}`,
-            padding: `${theme.spacingFunction(8)} ${theme.spacingFunction(16)}`,
+            padding: `${theme.spacingFunction(16)} ${theme.spacingFunction(16)}`,
           }}
         >
           <StyledColumnLabelGrid data-testid="vpc-section-title">
@@ -331,7 +331,6 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
             sx={{
               alignItems: 'center',
               margin: 0,
-              padding: '0 0 8px 0',
               [theme.breakpoints.down('lg')]: {
                 alignItems: 'start',
                 display: 'flex',

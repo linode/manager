@@ -1,0 +1,29 @@
+.quickstartSection {
+  border-radius: 4px;
+  padding: 0px;
+  background: transparent;
+  margin-bottom: 16px;
+}
+
+.sectionContent {
+  align-items: center;
+  margin-bottom: 16px;
+  padding-right: 24px;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.quickstartSectionHeader3 {
+  font-family: 'Nunito Sans';
+  font-weight: 700;
+  font-size: 1rem;       /* 16px */
+  line-height: 1.25rem;  /* 20px */
+  color: var(--token-alias-content-text-primary-default);
+}
+
+.quickstartSectionLinks {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+}

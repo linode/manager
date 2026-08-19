@@ -10,7 +10,6 @@ import { CloudPulseDashboardLanding } from './CloudPulseDashboardLanding';
 
 const dashboardLabel = 'Factory Dashboard-1';
 const selectedDashboardLabel = 'Linodes - Factory Dashboard-1';
-const selectDashboardLabel = 'Select a Dashboard';
 const queryMocks = vi.hoisted(() => ({
   useCloudPulseDashboardsQuery: vi.fn().mockReturnValue({}),
   useLoadUserPreferences: vi.fn().mockReturnValue({}),
@@ -63,9 +62,8 @@ describe('CloudPulseDashboardFilterBuilder component tests', () => {
     const text = screen.getByText('metrics');
     expect(text).toBeInTheDocument();
 
-    expect(screen.getByPlaceholderText(selectDashboardLabel)).toHaveAttribute(
-      'value',
-      ''
+    expect(screen.getByTestId('dashboard-picker-trigger')).toHaveTextContent(
+      'Select a Dashboard'
     );
 
     const messageComponent = screen.getByText(message);
@@ -78,10 +76,7 @@ describe('CloudPulseDashboardFilterBuilder component tests', () => {
   it('should render error placeholder if some dashboard is selected and filter config is not present', async () => {
     renderWithTheme(<CloudPulseDashboardLanding />);
 
-    await userEvent.type(
-      screen.getByPlaceholderText(selectDashboardLabel),
-      'a'
-    );
+    await userEvent.click(screen.getByTestId('dashboard-picker-trigger'));
 
     const option = screen.getByRole('option', {
       name: dashboardLabel,
@@ -103,10 +98,7 @@ describe('CloudPulseDashboardFilterBuilder component tests', () => {
 
     renderWithTheme(<CloudPulseDashboardLanding />);
 
-    await userEvent.type(
-      screen.getByPlaceholderText(selectDashboardLabel),
-      'a'
-    );
+    await userEvent.click(screen.getByTestId('dashboard-picker-trigger'));
 
     const option = screen.getByRole('option', {
       name: dashboardLabel,
@@ -115,9 +107,7 @@ describe('CloudPulseDashboardFilterBuilder component tests', () => {
 
     await userEvent.click(screen.getByRole('option', { name: dashboardLabel }));
 
-    expect(screen.getByPlaceholderText(selectDashboardLabel)).toHaveAttribute(
-      // check if dashboard is selected already
-      'value',
+    expect(screen.getByTestId('dashboard-picker-trigger')).toHaveTextContent(
       selectedDashboardLabel
     );
     const messageComponent = screen.getByText(message);

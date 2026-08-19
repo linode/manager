@@ -18,6 +18,7 @@ interface Order {
   orderBy: string;
 }
 interface Props {
+  disabled?: boolean;
   onSelectAll: () => void;
   order: Order;
   scopedOptionsLength: number;
@@ -25,6 +26,7 @@ interface Props {
 }
 
 export const AccountUsersTableHead = ({
+  disabled,
   onSelectAll,
   scopedOptionsLength,
   selectedScopedCount,
@@ -47,7 +49,7 @@ export const AccountUsersTableHead = ({
               selectedScopedCount >= scopedOptionsLength
             }
             data-pendo-id={IAM_TFA_ENFORCE_PENDO_IDS.selectAllCurrentPage}
-            disabled={scopedOptionsLength === 0}
+            disabled={disabled || scopedOptionsLength === 0}
             indeterminate={
               selectedScopedCount > 0 &&
               selectedScopedCount < scopedOptionsLength
@@ -86,7 +88,7 @@ export const AccountUsersTableHead = ({
             sorted={order.orderBy === 'email' ? order.order : undefined}
             style={{ minWidth: '60%' }}
           >
-            Email Address
+            Email
           </TableHeaderCell>
         )}
       </TableRow>

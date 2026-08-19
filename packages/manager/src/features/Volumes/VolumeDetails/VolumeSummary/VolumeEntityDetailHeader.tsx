@@ -28,12 +28,15 @@ export const VolumeEntityDetailHeader = ({ volume, handlers }: Props) => {
           Summary
         </Typography>
       </Box>
-      <VolumesActionMenu
-        handlers={handlers}
-        isVolumeDetails={true}
-        isVolumesLanding={true} // We need Attach action here
-        volume={volume}
-      />
+
+      <div style={{ paddingRight: 'var(--token-global-spacing-s16)' }}>
+        <VolumesActionMenu
+          handlers={handlers}
+          isVolumeDetails={true}
+          isVolumesLanding={true} // We need Attach action here
+          volume={volume}
+        />
+      </div>
     </EntityHeader>
   );
 };

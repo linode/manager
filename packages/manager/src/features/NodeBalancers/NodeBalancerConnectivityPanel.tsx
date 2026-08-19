@@ -1,4 +1,4 @@
-import { RadioButton, RadioGroup } from '@akamai/cds-components/react';
+import { Badge, RadioButton, RadioGroup } from '@akamai/cds-components/react';
 import { Font, Spacing } from '@akamai/cds-tokens';
 import {
   Box,
@@ -125,7 +125,7 @@ export const NodeBalancerConnectivityPanel = (props: Props) => {
                 font: theme.font.bold,
               })}
             >
-              Backend Connectivity
+              Backend Connectivity {showNewBadge && <Badge type="new" />}
             </Typography>
 
             {backendConnectivityError && (

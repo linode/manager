@@ -87,7 +87,7 @@ export const DeleteCertificateDialog = ({
         </Button>
         <Button
           data-pendo-id={IAM_SSO_IDP_PENDO_IDS.deleteCertificateEndFlow}
-          disabled={isPending || !certificate}
+          disabled={!certificate}
           onClick={handleDelete}
           processing={isPending}
           variant="primary"

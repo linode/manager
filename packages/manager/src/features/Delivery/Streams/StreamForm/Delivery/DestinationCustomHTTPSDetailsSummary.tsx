@@ -73,7 +73,7 @@ export const DestinationCustomHTTPSDetailsSummary = (
       {(!!client_certificate_details || !!content_type || !!custom_headers) && (
         <>
           <Typography sx={{ mt: 0 }} variant="h2">
-            Connection Settings
+            Advanced Settings
           </Typography>
           {!!client_certificate_details && (
             <>
@@ -82,7 +82,7 @@ export const DestinationCustomHTTPSDetailsSummary = (
                 sx={{ mt: 2 }}
                 variant="h3"
               >
-                Client Certificate Authentication
+                Client Certificate
               </Typography>
               <LabelValue
                 label="TLS Hostname"

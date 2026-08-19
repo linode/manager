@@ -28,6 +28,7 @@ import { TableSortCell } from 'src/components/TableSortCell';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { PowerActionsDialog } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
 import { SubnetActionMenu } from 'src/features/VPCs/VPCDetail/SubnetActionMenu';
+import { useIsGpuRdmaPlanEnabled } from 'src/hooks/useIsGpuRdmaPlanEnabled';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { useVPCDualStack } from 'src/hooks/useVPCDualStack';
@@ -45,10 +46,11 @@ import {
   SubnetNodeBalancerRow,
   SubnetNodebalancerTableRowHead,
 } from './SubnetNodebalancerRow';
+import { SubnetRDMALinodeRow } from './SubnetRDMALinodeRow';
 import { SubnetUnassignLinodesDrawer } from './SubnetUnassignLinodesDrawer';
 
 import type { Linode } from '@linode/api-v4/lib/linodes/types';
-import type { Subnet } from '@linode/api-v4/lib/vpcs/types';
+import type { Subnet, VPCType } from '@linode/api-v4/lib/vpcs/types';
 import type { TableItem } from 'src/components/CollapsibleTable/CollapsibleTable';
 import type { Action } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
 
@@ -56,18 +58,25 @@ interface Props {
   isVPCLKEEnterpriseCluster: boolean;
   vpcId: number;
   vpcRegion: string;
+  vpcType?: VPCType;
 }
 
 const preferenceKey = 'vpc-subnets';
 
 export const VPCSubnetsTable = (props: Props) => {
-  const { isVPCLKEEnterpriseCluster, vpcId, vpcRegion } = props;
+  const {
+    isVPCLKEEnterpriseCluster,
+    vpcId,
+    vpcRegion,
+    vpcType = 'regular',
+  } = props;
   const theme = useTheme();
   const { enqueueSnackbar } = useSnackbar();
 
   const navigate = useNavigate();
   const params = useParams({ strict: false });
   const location = useLocation();
+  const { isGpuRdmaPlanEnabled } = useIsGpuRdmaPlanEnabled();
 
   const [linodePowerAction, setLinodePowerAction] = React.useState<
     Action | undefined
@@ -345,36 +354,38 @@ export const VPCSubnetsTable = (props: Props) => {
 
       const InnerTable = (
         <>
-          <Table aria-label="Linode" size="small" striped={false}>
-            <TableHead
-              style={{
-                color: theme.tokens.color.Neutrals.White,
-              }}
-            >
-              {SubnetLinodeTableRowHead(isDualStackEnabled)}
-            </TableHead>
-            <TableBody>
-              {uniqueResourcesFromSubnet.linodes.length > 0 ? (
-                uniqueResourcesFromSubnet.linodes.map((linodeInfo) => (
-                  <SubnetLinodeRow
-                    handlePowerActionsLinode={handlePowerActionsLinode}
-                    handleUnassignLinode={handleSubnetUnassignLinode}
-                    isVPCLKEEnterpriseCluster={isVPCLKEEnterpriseCluster}
-                    key={linodeInfo.id}
-                    linodeId={linodeInfo.id}
-                    subnet={subnet}
-                    subnetId={subnet.id}
-                    subnetInterfaces={linodeInfo.interfaces}
+          {vpcType !== 'rdma' && (
+            <Table aria-label="Linode" size="small" striped={false}>
+              <TableHead
+                style={{
+                  color: theme.tokens.color.Neutrals.White,
+                }}
+              >
+                {SubnetLinodeTableRowHead(isDualStackEnabled)}
+              </TableHead>
+              <TableBody>
+                {uniqueResourcesFromSubnet.linodes.length > 0 ? (
+                  uniqueResourcesFromSubnet.linodes.map((linodeInfo) => (
+                    <SubnetLinodeRow
+                      handlePowerActionsLinode={handlePowerActionsLinode}
+                      handleUnassignLinode={handleSubnetUnassignLinode}
+                      isVPCLKEEnterpriseCluster={isVPCLKEEnterpriseCluster}
+                      key={linodeInfo.id}
+                      linodeId={linodeInfo.id}
+                      subnet={subnet}
+                      subnetId={subnet.id}
+                      subnetInterfaces={linodeInfo.interfaces}
+                    />
+                  ))
+                ) : (
+                  <TableRowEmpty
+                    colSpan={isDualStackEnabled ? 8 : 6}
+                    message="No Linodes"
                   />
-                ))
-              ) : (
-                <TableRowEmpty
-                  colSpan={isDualStackEnabled ? 8 : 6}
-                  message="No Linodes"
-                />
-              )}
-            </TableBody>
-          </Table>
+                )}
+              </TableBody>
+            </Table>
+          )}
           {uniqueResourcesFromSubnet.nodeBalancers.length > 0 && (
             <Table aria-label="NodeBalancers" size="small" striped={false}>
               <TableHead
@@ -397,6 +408,36 @@ export const VPCSubnetsTable = (props: Props) => {
           )}
           {subnet.databases?.length > 0 && (
             <SubnetDatabasesTable subnetDatabasesData={subnet.databases} />
+          )}
+          {isGpuRdmaPlanEnabled && vpcType === 'rdma' && (
+            <Table aria-label="RDMA Interfaces" nested size="small">
+              <TableHead
+                style={{
+                  color: theme.tokens.color.Neutrals.White,
+                }}
+              >
+                <TableRow>
+                  <TableCell sx={{ width: '50%' }}>
+                    RDMA Interfaces (grouped by Linode)
+                  </TableCell>
+                  <TableCell>RDMA Interfaces</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {uniqueResourcesFromSubnet.linodes.length > 0 ? (
+                  uniqueResourcesFromSubnet.linodes.map((linodeInfo) => (
+                    <SubnetRDMALinodeRow
+                      key={linodeInfo.id}
+                      linodeId={linodeInfo.id}
+                      numberOfInterfaces={linodeInfo.interfaces.length}
+                      vpcId={vpcId}
+                    />
+                  ))
+                ) : (
+                  <TableRowEmpty colSpan={2} message="No RDMA Interfaces" />
+                )}
+              </TableBody>
+            </Table>
           )}
         </>
       );

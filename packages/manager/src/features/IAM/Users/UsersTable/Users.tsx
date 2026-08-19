@@ -183,6 +183,15 @@ export const UsersLanding = () => {
       search: (prev) => ({
         ...prev,
         action: undefined,
+      }),
+    });
+  };
+
+  const clearDialogParams = () => {
+    navigate({
+      to: '/iam/users',
+      search: (prev) => ({
+        ...prev,
         username: undefined,
       }),
     });
@@ -319,7 +328,8 @@ export const UsersLanding = () => {
       />
       <UserDeleteConfirmation
         onClose={handleDeleteDialogClose}
-        open={action === 'delete-user' && Boolean(selectedUsername)}
+        onExited={clearDialogParams}
+        open={action === 'delete-user'}
         username={selectedUsername ?? ''}
       />
     </React.Fragment>

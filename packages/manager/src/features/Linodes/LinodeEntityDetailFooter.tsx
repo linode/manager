@@ -74,7 +74,7 @@ export const LinodeEntityDetailFooter = React.memo((props: FooterProps) => {
     >
       <Grid
         size={{
-          lg: 8,
+          lg: 9,
           xs: 12,
         }}
         sx={{
@@ -132,7 +132,7 @@ export const LinodeEntityDetailFooter = React.memo((props: FooterProps) => {
       </Grid>
       <Grid
         size={{
-          lg: 4,
+          lg: 3,
           xs: 12,
         }}
         sx={{

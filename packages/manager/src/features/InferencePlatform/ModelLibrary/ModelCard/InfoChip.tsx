@@ -1,4 +1,5 @@
-import { Box, Tooltip, Typography } from '@linode/ui';
+import { Tooltip } from '@akamai/cds-components/react/Tooltip';
+import { Box, Typography } from '@linode/ui';
 import React from 'react';
 
 interface InfoChipProps {
@@ -98,7 +99,7 @@ const InfoChip = ({
   );
 
   if (description) {
-    return <Tooltip title={description}>{chip}</Tooltip>;
+    return <Tooltip tooltipText={description}>{chip}</Tooltip>;
   }
 
   return chip;

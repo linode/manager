@@ -29,6 +29,8 @@ describe('BucketTableRow', () => {
     onRemove: mockOnRemove,
     region: bucket.region,
     size: bucket.size,
+    endpoint_type: 'E0',
+    s3_endpoint: `${bucket.label}.${bucket.cluster}.linodeobjects.com`,
   };
 
   it('should render the bucket name', () => {

@@ -110,7 +110,6 @@ export const CloudPulseAlertsGroupBy = ({ metricDefinitions, name }: Props) => {
     >
       <Box sx={{ alignItems: 'center', display: 'flex', gap: 0.5 }}>
         <Typography variant="h3">Group By</Typography>
-        <Typography variant="body1">(optional)</Typography>
       </Box>
       <Typography variant="body1">
         Group by controls how alerts are grouped and evaluated based on selected

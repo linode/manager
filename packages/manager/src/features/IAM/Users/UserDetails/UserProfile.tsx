@@ -8,6 +8,7 @@ import { CircleProgress } from '../../Shared/CircleProgress/CircleProgress';
 import { DocumentTitleSegment } from '../../Shared/DocumentTitleSegment/DocumentTitleSegment';
 import { ErrorState } from '../../Shared/ErrorState/ErrorState';
 import { NotFound } from '../../Shared/NotFound/NotFound';
+import { Paper } from '../../Shared/Paper/Paper';
 import { UserDetailsPanel } from './UserDetailsPanel';
 
 export const UserProfile = () => {
@@ -44,11 +45,15 @@ export const UserProfile = () => {
   }
 
   if (error) {
-    return <ErrorState errorText={error[0].reason} />;
+    return <ErrorState errorText={error[0].reason} withPaper />;
   }
 
   if (!user) {
-    return <NotFound />;
+    return (
+      <Paper>
+        <NotFound />
+      </Paper>
+    );
   }
 
   return (

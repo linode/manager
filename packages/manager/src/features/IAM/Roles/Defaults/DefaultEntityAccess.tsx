@@ -42,7 +42,7 @@ export const DefaultEntityAccess = () => {
   }
 
   if (error) {
-    return <ErrorState />;
+    return <ErrorState withPaper />;
   }
 
   return (

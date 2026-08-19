@@ -27,6 +27,7 @@ import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { ReserveIPDrawer } from 'src/features/ReservedIps/ReserveIPDrawer';
 import { useIsReserveIpEnabled } from 'src/features/ReservedIps/utils';
 import { useDetermineUnreachableIPs } from 'src/hooks/useDetermineUnreachableIPs';
+import { useIsGpuRdmaPlanEnabled } from 'src/hooks/useIsGpuRdmaPlanEnabled';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 
 import { AddIPDrawer } from './AddIPDrawer';
@@ -60,6 +61,7 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
   const { data: linode } = useLinodeQuery(linodeID);
   const { data: regions } = useRegionsQuery();
   const { isReserveIpEnabled } = useIsReserveIpEnabled();
+  const { isGpuRdmaPlanEnabled } = useIsGpuRdmaPlanEnabled();
   const [isOpen, setIsOpen] = React.useState<boolean>(false);
 
   const linodeIsInDistributedRegion = getIsDistributedRegion(
@@ -76,11 +78,15 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
   );
   const isLinodeInterface = linode?.interface_generation === 'linode';
 
-  const { isUnreachablePublicIPv4, isUnreachablePublicIPv6, interfaceWithVPC } =
-    useDetermineUnreachableIPs({
-      isLinodeInterface,
-      linodeId: linodeID,
-    });
+  const {
+    isUnreachablePublicIPv4,
+    isUnreachablePublicIPv6,
+    interfaceWithVPC,
+    linodeInterfaces,
+  } = useDetermineUnreachableIPs({
+    isLinodeInterface,
+    linodeId: linodeID,
+  });
 
   const [selectedIP, setSelectedIP] = React.useState<IPAddress>();
   const [selectedRange, setSelectedRange] = React.useState<IPRange>();
@@ -154,8 +160,9 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
   const ipDisplay = ipResponseToDisplayRows({
     isLinodeInterface,
     interfaceWithVPC,
+    linodeInterfaces,
     ipResponse: ips,
-  });
+  }).filter((ip) => isGpuRdmaPlanEnabled || ip.type !== 'VPC - RDMA - IPv4');
 
   const { sortedData, order, orderBy, handleOrderChange } = useOrderV2({
     data: ipDisplay,

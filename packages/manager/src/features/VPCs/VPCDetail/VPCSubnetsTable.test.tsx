@@ -1,3 +1,4 @@
+import { linodeFactory, linodeInterfaceFactoryVPC } from '@linode/utilities';
 import { screen, waitForElementToBeRemoved } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
@@ -18,6 +19,11 @@ const queryMocks = vi.hoisted(() => ({
   useSearch: vi.fn().mockReturnValue({ query: undefined }),
   useSubnetsQuery: vi.fn().mockReturnValue({}),
   useFirewallSettingsQuery: vi.fn().mockReturnValue({}),
+  useLinodeQuery: vi.fn().mockReturnValue({}),
+  useLinodeInterfacesQuery: vi.fn().mockReturnValue({}),
+  useIsGpuRdmaPlanEnabled: vi
+    .fn()
+    .mockReturnValue({ isGpuRdmaPlanEnabled: false }),
   userPermissions: vi.fn(() => ({
     data: {
       create_vpc_subnet: true,
@@ -39,10 +45,15 @@ vi.mock('@linode/queries', async () => {
     ...actual,
     useSubnetsQuery: queryMocks.useSubnetsQuery,
     useFirewallSettingsQuery: queryMocks.useFirewallSettingsQuery,
+    useLinodeQuery: queryMocks.useLinodeQuery,
+    useLinodeInterfacesQuery: queryMocks.useLinodeInterfacesQuery,
   };
 });
 vi.mock('src/features/IAM/hooks/usePermissions', () => ({
   usePermissions: queryMocks.userPermissions,
+}));
+vi.mock('src/hooks/useIsGpuRdmaPlanEnabled', () => ({
+  useIsGpuRdmaPlanEnabled: queryMocks.useIsGpuRdmaPlanEnabled,
 }));
 
 const loadingTestId = 'circle-progress';
@@ -320,5 +331,94 @@ describe('VPC Subnets table', () => {
       'aria-disabled',
       'true'
     );
+  });
+
+  it('should not show RDMA Interfaces for a regular VPC', async () => {
+    const subnet = subnetFactory.build({
+      linodes: [subnetAssignedLinodeDataFactory.build({ id: 1 })],
+    });
+
+    queryMocks.useSubnetsQuery.mockReturnValue({
+      data: {
+        data: [subnet],
+      },
+    });
+
+    const { getByLabelText, queryByText } = renderWithTheme(
+      <VPCSubnetsTable
+        isVPCLKEEnterpriseCluster={false}
+        vpcId={1}
+        vpcRegion=""
+        vpcType="regular"
+      />
+    );
+
+    const expandTableButton = getByLabelText(`expand ${subnet.label} row`);
+    await userEvent.click(expandTableButton);
+
+    expect(queryByText('RDMA Interfaces')).not.toBeInTheDocument();
+  });
+
+  it('should show RDMA Interfaces grouped by Linode for an RDMA VPC', async () => {
+    const linode = linodeFactory.build({ id: 1, label: 'rdma-linode' });
+    const rdmaInterface = linodeInterfaceFactoryVPC.build({
+      id: 987654321,
+      mac_address: 'aa:bb:cc:dd:ee:ff',
+      vpc: null,
+      rdma_vpc: {
+        vpc_id: 1,
+        subnet_id: 419438,
+        ipv4: {
+          addresses: [
+            {
+              address: '10.0.0.2',
+              primary: true,
+            },
+          ],
+        },
+      },
+    });
+
+    const subnet = subnetFactory.build({
+      linodes: [subnetAssignedLinodeDataFactory.build({ id: linode.id })],
+    });
+
+    queryMocks.useSubnetsQuery.mockReturnValue({
+      data: {
+        data: [subnet],
+      },
+    });
+    queryMocks.useLinodeQuery.mockReturnValue({ data: linode });
+    queryMocks.useLinodeInterfacesQuery.mockReturnValue({
+      data: { interfaces: [rdmaInterface] },
+    });
+    queryMocks.useIsGpuRdmaPlanEnabled.mockReturnValue({
+      isGpuRdmaPlanEnabled: true,
+    });
+
+    const { findByText, getByLabelText, getByText, queryByText } =
+      renderWithTheme(
+        <VPCSubnetsTable
+          isVPCLKEEnterpriseCluster={false}
+          vpcId={1}
+          vpcRegion=""
+          vpcType="rdma"
+        />
+      );
+
+    const expandTableButton = getByLabelText(`expand ${subnet.label} row`);
+    await userEvent.click(expandTableButton);
+
+    await findByText('RDMA Interfaces');
+
+    // Standard Linode table should be replaced, not shown alongside RDMA Interfaces
+    expect(queryByText('VPC IPv4')).not.toBeInTheDocument();
+    expect(queryByText('Firewalls')).not.toBeInTheDocument();
+
+    const expandLinodeRow = getByLabelText(`expand ${linode.label} row`);
+    await userEvent.click(expandLinodeRow);
+
+    expect(getByText(rdmaInterface.id)).toBeVisible();
+    expect(getByText(rdmaInterface.mac_address)).toBeVisible();
   });
 });

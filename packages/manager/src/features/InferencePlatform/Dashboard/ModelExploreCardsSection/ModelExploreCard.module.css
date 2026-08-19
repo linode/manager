@@ -1,0 +1,59 @@
+.paper{
+  overflow: hidden;
+  padding-left: 26px;
+  padding-right: 26px;
+  padding-top: 24px;
+  padding-bottom: 17.6px;
+  position: relative;
+  background: linear-gradient(
+    140deg,
+    var(--token-global-color-ultramarine-20) 0%,
+    var(--token-global-color-ultramarine-30) 100%
+  );
+}
+
+body[data-theme='dark'] .paper {
+  background: linear-gradient(
+    140deg,
+    var(--token-global-color-ultramarine-100) 0%,
+    var(--token-global-color-ultramarine-90) 100%
+  );
+}
+
+.stackZero{
+  gap: 0px;
+}
+.stackFlex{
+  flex-direction: row;
+  gap: 0px;
+  height: 28px;
+  justify-content: space-between;
+}
+
+.stackRow{
+  flex-direction: row;
+  gap: 1.1px;
+}
+
+.boxIcon{
+  height: 20px;
+  width: 20px;
+  --color-a: var(--token-global-color-neutrals-100);
+}
+
+body[data-theme='dark'] .boxIcon {
+  --color-a: var(--token-global-color-neutrals-10);
+}
+
+.typographyTitle{
+  font-size: 18px;
+  padding-left: 4px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.typographyDescription{
+  font-size: 16px;
+  line-height: 1.4;
+  color: var(--color-text-primary);
+}

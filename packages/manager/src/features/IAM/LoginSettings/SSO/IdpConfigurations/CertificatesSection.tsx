@@ -55,11 +55,12 @@ export const CertificatesSection = (props: Props) => {
     existingCertificatesCount + certificateFields.length;
 
   const isMaxCertificatesReached = totalCertificatesCount >= 10;
-  const canRemoveCertificate = certificateFields.length > 1 || isEdit;
+  const canRemoveCertificate =
+    certificateFields.length > 1 || (isEdit && existingCertificatesCount > 0);
 
   return (
     <>
-      {isEdit && (
+      {isEdit && props.certificates.length > 0 && (
         <CertificatesTable
           certificates={props.certificates}
           deletedIds={props.deletedCertificateIds}
@@ -84,7 +85,7 @@ export const CertificatesSection = (props: Props) => {
                   label-position="top"
                   style={{
                     paddingTop:
-                      isEdit && index === 0
+                      isEdit && existingCertificatesCount !== 0 && index === 0
                         ? 'var(--token-global-spacing-s12, 12px)'
                         : 'var(--token-global-spacing-s0, 0)',
                   }}

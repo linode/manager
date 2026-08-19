@@ -1,10 +1,5 @@
 import { toast } from '@akamai/cds-components/notification-toast';
-import {
-  Button,
-  Icon,
-  NotificationBanner,
-  Tooltip,
-} from '@akamai/cds-components/react';
+import { Button, NotificationBanner } from '@akamai/cds-components/react';
 import { Spacing } from '@akamai/cds-tokens';
 import {
   useAccountUsers,
@@ -252,114 +247,115 @@ export const UpdateDelegationForm = ({
   };
 
   return (
-    <>
-      {errors.root?.message && (
-        <NotificationBanner text={errors.root?.message} type="error" />
-      )}
-      <FormProvider {...form}>
-        <form onSubmit={handleSubmit(onSubmit)} slot="body">
-          <p style={{ marginBottom: Spacing.S16 }}>
-            Add or remove users who should have access to the child account.
-            Users removed from this list will lose the role assignment on the
-            child account and they won&apos;t be visible in the user list on the
-            child account.
-          </p>
-
-          <p
-            style={{
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              whiteSpace: 'nowrap',
-            }}
-          >
-            Update delegation for <strong>{delegation.company}:</strong>
-          </p>
-
-          <SelectionPanel
-            effectivePage={effectivePage}
-            errorText={
-              fetchError
-                ? (fetchError[0]?.reason ?? 'Failed to load users')
-                : undefined
-            }
-            filterPlaceholder={getPlaceholder(
-              'delegates',
-              selectedUsers.length,
-              totalUserCount
-            )}
-            filterText={filterText}
-            isClearDisabled={clearDisabled || isSubmitting}
-            isDisabled={isSubmitting}
-            isFilterDisabled={isFetchingAllUsers || isSubmitting}
-            isFilterLoading={isFetchingAllUsers || isSearching}
-            isLoading={isLoading}
-            isSelectAllDisabled={
-              totalUserCount > 0 &&
-              displayedSelectedUsers.length >= totalUserCount
-            }
-            isShowSelectedOnlyDisabled={selectedUsers.length === 0}
-            loadingLabel={isFetchingAllUsers ? 'Fetching all users...' : ''}
-            minPageSize={MIN_PAGE_SIZE}
-            noItemsText="No users found"
-            onClear={clearDisplayedUsers}
-            onFilterTextChange={(text) => {
-              setFilterText(text);
-              setPage(1);
-            }}
-            onPageChange={(newPage) => setPage(newPage)}
-            onPageSizeChange={(newSize) => {
-              setPageSize(newSize);
-              setPage(1);
-            }}
-            onSelectAll={handleSelectAll}
-            onShowSelectedOnlyChange={(show) => {
-              setShowSelectedOnly(show);
-              setPage(1);
-            }}
-            onToggle={toggleUserSelection}
-            pageSize={pageSize}
-            pageSizes={[25, 50, 75, 100]}
-            paginatedRows={paginatedDisplayedUserRows}
-            selectedCount={selectedUsers.length}
-            selectionLabel="Users selected:"
-            selectionMap={selectedUserMap}
-            showEmptyState={showNoUsersText}
-            showPagination={totalCount > MIN_PAGE_SIZE && !isFetchingAllUsers}
-            showSelectedOnly={showSelectedOnly}
-            totalCount={totalCount}
+    <FormProvider {...form}>
+      <form onSubmit={handleSubmit(onSubmit)} slot="body">
+        {errors.root?.message && (
+          <NotificationBanner
+            style={{ marginBottom: Spacing.S8 }}
+            text={errors.root?.message}
+            type="error"
           />
-          <DrawerInlineActions>
-            <Button
-              data-testid="cancel"
-              onClick={handleClose}
-              variant="secondary"
-            >
-              Cancel
-            </Button>
-            <Tooltip
-              disabled={permissions?.update_delegate_users}
-              tooltipText={
-                !permissions?.update_delegate_users
-                  ? 'You do not have permission to update delegations.'
-                  : undefined
-              }
-            >
-              <Button
-                data-pendo-id={IAM_PARENT_USERS_PENDO_IDS.updateDelegationSave}
-                data-testid="submit"
-                processing={isSubmitting}
-                type="submit"
-                variant="primary"
-              >
-                Save Changes
-                {!permissions?.update_delegate_users ? (
-                  <Icon icon="info-outline" size="m" />
-                ) : null}
-              </Button>
-            </Tooltip>
-          </DrawerInlineActions>
-        </form>
-      </FormProvider>
-    </>
+        )}
+        {!permissions.update_delegate_users && (
+          <NotificationBanner
+            style={{ marginBottom: Spacing.S8 }}
+            text="You do not have permission to update delegations."
+            type="error"
+          />
+        )}
+        <p style={{ marginBottom: Spacing.S16 }}>
+          Add or remove users who should have access to the child account.
+          removed from this list will lose the role assignment on the child
+          account and they won&apos;t be visible in the user list on the child
+          child account.
+        </p>
+
+        <p
+          style={{
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
+          }}
+        >
+          Update delegation for <strong>{delegation.company}:</strong>
+        </p>
+
+        <SelectionPanel
+          effectivePage={effectivePage}
+          errorText={
+            fetchError
+              ? (fetchError[0]?.reason ?? 'Failed to load users')
+              : undefined
+          }
+          filterPlaceholder={getPlaceholder(
+            'delegates',
+            selectedUsers.length,
+            totalUserCount
+          )}
+          filterText={filterText}
+          isClearDisabled={
+            clearDisabled || isSubmitting || !permissions?.update_delegate_users
+          }
+          isDisabled={isSubmitting || !permissions?.update_delegate_users}
+          isFilterDisabled={isFetchingAllUsers || isSubmitting}
+          isFilterLoading={isFetchingAllUsers || isSearching}
+          isLoading={isLoading}
+          isSelectAllDisabled={
+            (totalUserCount > 0 &&
+              displayedSelectedUsers.length >= totalUserCount) ||
+            !permissions?.update_delegate_users
+          }
+          isShowSelectedOnlyDisabled={selectedUsers.length === 0}
+          loadingLabel={isFetchingAllUsers ? 'Fetching all users...' : ''}
+          minPageSize={MIN_PAGE_SIZE}
+          noItemsText="No users found"
+          onClear={clearDisplayedUsers}
+          onFilterTextChange={(text) => {
+            setFilterText(text);
+            setPage(1);
+          }}
+          onPageChange={(newPage) => setPage(newPage)}
+          onPageSizeChange={(newSize) => {
+            setPageSize(newSize);
+            setPage(1);
+          }}
+          onSelectAll={handleSelectAll}
+          onShowSelectedOnlyChange={(show) => {
+            setShowSelectedOnly(show);
+            setPage(1);
+          }}
+          onToggle={toggleUserSelection}
+          pageSize={pageSize}
+          pageSizes={[25, 50, 75, 100]}
+          paginatedRows={paginatedDisplayedUserRows}
+          selectedCount={selectedUsers.length}
+          selectionLabel="Users selected:"
+          selectionMap={selectedUserMap}
+          showEmptyState={showNoUsersText}
+          showPagination={totalCount > MIN_PAGE_SIZE && !isFetchingAllUsers}
+          showSelectedOnly={showSelectedOnly}
+          totalCount={totalCount}
+        />
+        <DrawerInlineActions>
+          <Button
+            data-testid="cancel"
+            onClick={handleClose}
+            variant="secondary"
+          >
+            Cancel
+          </Button>
+          <Button
+            data-pendo-id={IAM_PARENT_USERS_PENDO_IDS.updateDelegationSave}
+            data-testid="submit"
+            disabled={!permissions?.update_delegate_users}
+            processing={isSubmitting}
+            type="submit"
+            variant="primary"
+          >
+            Save Changes
+          </Button>
+        </DrawerInlineActions>
+      </form>
+    </FormProvider>
   );
 };

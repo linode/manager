@@ -128,7 +128,8 @@ export const FirewallRuleDrawer = React.memo(
     const addressesLabel = category === 'inbound' ? 'source' : 'destination';
 
     const onValidateRule = (values: FormState) => {
-      const { addresses, description, label, ports, protocol } = values;
+      const { addresses, customProtocol, description, label, ports, protocol } =
+        values;
 
       // The validated IPs may have errors, so set them to state so we see the errors.
       const validatedIPs = validateIPs(ips, {
@@ -152,6 +153,7 @@ export const FirewallRuleDrawer = React.memo(
         ...validateForm(
           {
             addresses,
+            customProtocol,
             description,
             label,
             ports: _ports,
@@ -170,7 +172,10 @@ export const FirewallRuleDrawer = React.memo(
 
     const onSubmitRule = (values: FormState) => {
       const ports = itemsToPortString(presetPorts, values.ports!);
-      const protocol = values.protocol as FirewallRuleProtocol;
+      // When "Other Protocol" is selected, use the chosen protocol number instead
+      const protocol = (
+        values.protocol === 'OTHER' ? values.customProtocol : values.protocol
+      ) as FirewallRuleProtocol;
       const addresses = formValueToIPs(values.addresses!, ips, pls);
 
       const payload: FirewallRuleType = {

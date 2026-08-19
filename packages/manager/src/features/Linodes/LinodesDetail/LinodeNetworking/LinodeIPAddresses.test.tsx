@@ -1,3 +1,4 @@
+import { linodeInterfaceFactoryVPC } from '@linode/utilities';
 import { screen, waitForElementToBeRemoved } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
@@ -109,6 +110,83 @@ describe('ipResponseToDisplayRows utility function', () => {
     });
     // Check the last row (the IPv6 range)
     expect(result[9]._range).toBeDefined();
+  });
+
+  it('labels RDMA VPC IPv4 rows correctly', () => {
+    const result = ipResponseToDisplayRows({
+      interfaceWithVPC: linodeInterfaceFactoryVPC.build({
+        vpc: null,
+        rdma_vpc: {
+          ipv4: {
+            addresses: [],
+            ranges: [],
+          },
+          subnet_id: 1,
+          vpc_id: 1,
+        },
+      }),
+      ipResponse: response,
+      isLinodeInterface: true,
+    });
+
+    expect(
+      result.find((ipDisplay) => ipDisplay.type === 'VPC - RDMA - IPv4')
+    ).toBeDefined();
+  });
+
+  it('labels each VPC IPv4 row according to the interface it actually belongs to, when the Linode has both a regular and an RDMA VPC interface', () => {
+    const regularInterface = linodeInterfaceFactoryVPC.build({
+      id: 1,
+      rdma_vpc: null,
+    });
+    const rdmaInterface = linodeInterfaceFactoryVPC.build({
+      id: 2,
+      vpc: null,
+      rdma_vpc: {
+        ipv4: {
+          addresses: [],
+          ranges: [],
+        },
+        subnet_id: 2,
+        vpc_id: 2,
+      },
+    });
+
+    const mixedResponse: LinodeIPsResponse = {
+      ...response,
+      ipv4: {
+        ...response.ipv4,
+        vpc: [
+          vpcIPv4Factory.build({
+            address: '10.0.0.1',
+            interface_id: regularInterface.id,
+          }),
+          vpcIPv4Factory.build({
+            address: '10.0.0.2',
+            interface_id: rdmaInterface.id,
+          }),
+        ],
+      },
+    };
+
+    const result = ipResponseToDisplayRows({
+      // Simulate the "primary" interface picked by useDetermineUnreachableIPs
+      // being the regular VPC interface, while the RDMA interface is also present.
+      interfaceWithVPC: regularInterface,
+      ipResponse: mixedResponse,
+      isLinodeInterface: true,
+      linodeInterfaces: [regularInterface, rdmaInterface],
+    });
+
+    const regularVPCRow = result.find(
+      (ipDisplay) => ipDisplay.address === '10.0.0.1'
+    );
+    const rdmaVPCRow = result.find(
+      (ipDisplay) => ipDisplay.address === '10.0.0.2'
+    );
+
+    expect(regularVPCRow?.type).toBe('VPC – IPv4');
+    expect(rdmaVPCRow?.type).toBe('VPC - RDMA - IPv4');
   });
 });
 

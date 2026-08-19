@@ -4,14 +4,14 @@
   "license": "Apache-2.0",
   "type": "module",
   "devDependencies": {
-    "@eslint/js": "^9.39.4",
-    "concurrently": "^10.0.3",
+    "@eslint/js": "^10.0.1",
+    "concurrently": "^10.0.4",
     "husky": "^9.1.6",
     "typescript": "^5.7.3",
-    "vitest": "^4.0.10",
+    "vitest": "^4.1.10",
     "@vitest/ui": "^4.1.10",
     "lint-staged": "^16.4.0",
-    "eslint": "^9.39.4",
+    "eslint": "^10.0.0",
     "eslint-config-prettier": "^10.1.1",
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-perfectionist": "^4.15.1",
@@ -85,5 +85,9 @@
       "scripts"
     ]
   },
-  "pnpm": {}
+  "pnpm": {
+    "overrides": {
+      "ws": ">=8.21.1"
+    }
+  }
 }

@@ -9,6 +9,7 @@ import { NO_ACCOUNT_DELEGATIONS_TEXT } from '../../Shared/constants';
 import { DocumentTitleSegment } from '../../Shared/DocumentTitleSegment/DocumentTitleSegment';
 import { ErrorState } from '../../Shared/ErrorState/ErrorState';
 import { NoAssignedRoles } from '../../Shared/NoAssignedRoles/NoAssignedRoles';
+import { Paper } from '../../Shared/Paper/Paper';
 import { UserDelegationsTable } from './UserDelegationsTable';
 
 export const UserDelegations = () => {
@@ -46,7 +47,7 @@ export const UserDelegations = () => {
   }
 
   if (error) {
-    return <ErrorState />;
+    return <ErrorState withPaper />;
   }
 
   return (
@@ -55,10 +56,12 @@ export const UserDelegations = () => {
       {hasDelegatedChildAccounts ? (
         <UserDelegationsTable />
       ) : (
-        <NoAssignedRoles
-          hasAssignNewRoleDrawer={false}
-          text={NO_ACCOUNT_DELEGATIONS_TEXT}
-        />
+        <Paper>
+          <NoAssignedRoles
+            hasAssignNewRoleDrawer={false}
+            text={NO_ACCOUNT_DELEGATIONS_TEXT}
+          />
+        </Paper>
       )}
     </>
   );

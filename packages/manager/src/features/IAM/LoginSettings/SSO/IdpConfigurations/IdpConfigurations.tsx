@@ -59,7 +59,12 @@ export const IdpConfigurations = ({ idpConfig }: { idpConfig: IdpConfig }) => {
     <>
       <Paper>
         <div className={styles.header}>
-          <h3>Provider details</h3>
+          <div
+            className={styles.sectionHeading}
+            style={{ marginTop: 0, marginBottom: 0 }}
+          >
+            Provider details
+          </div>
           <div className={styles.headerActions}>
             <Tooltip
               disabled={permissions?.delete_idp_config}
@@ -137,7 +142,7 @@ export const IdpConfigurations = ({ idpConfig }: { idpConfig: IdpConfig }) => {
           </Button>
         </div>
 
-        <h3 className={styles.sectionHeading}>Attribute Mapping</h3>
+        <div className={styles.sectionHeading}>Attribute Mapping</div>
 
         <div className={styles.detailRow}>
           <p className={styles.detailLabel}>Identity Element:</p>
@@ -155,7 +160,7 @@ export const IdpConfigurations = ({ idpConfig }: { idpConfig: IdpConfig }) => {
           )}
 
         <div className={styles.certsHeader}>
-          <h3>SAML Certificates</h3>
+          <div className={styles.sectionHeading}>SAML Certificates</div>
           <Tooltip
             disabled={
               !(

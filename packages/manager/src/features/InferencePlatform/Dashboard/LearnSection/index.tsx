@@ -1,7 +1,8 @@
-import { Box, Stack, Typography } from '@linode/ui';
 import React from 'react';
 
+import { Box, Stack, Typography } from '../../components';
 import { LearnCard } from './LearnCard';
+import styles from './LearnSection.module.css';
 
 import type { LearnItem } from './LearnCard';
 
@@ -46,21 +47,10 @@ export const LearnSection = () => {
   }
 
   return (
-    <Stack marginBottom={4}>
-      <Typography sx={{ mb: 2 }} variant="h3">
-        Learn
-      </Typography>
+    <Stack className={styles.stack}>
+      <Typography className={styles.typography}>Learn</Typography>
 
-      <Box
-        sx={(theme) => ({
-          display: 'grid',
-          gap: 2,
-          gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
-          [theme.breakpoints.down('md')]: {
-            gridTemplateColumns: '1fr',
-          },
-        })}
-      >
+      <Box className={styles.box}>
         {learnColumns.map((column, index) => (
           <LearnCard items={column} key={`learn-column-${index}`} />
         ))}

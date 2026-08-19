@@ -10,6 +10,7 @@ import type { IamUserRoles } from '@linode/api-v4';
 const queryMocks = vi.hoisted(() => ({
   useProfile: vi.fn().mockReturnValue({}),
   useSearch: vi.fn().mockReturnValue({}),
+  useAccountUser: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('@linode/queries', async () => {
@@ -17,6 +18,7 @@ vi.mock('@linode/queries', async () => {
   return {
     ...actual,
     useProfile: queryMocks.useProfile,
+    useAccountUser: queryMocks.useAccountUser,
   };
 });
 
@@ -252,7 +254,7 @@ describe('UserDetailsPanel – Delete User button', () => {
     ).toBeNull();
   });
 
-  it('opens the delete confirmation dialog when the Delete User button is clicked', () => {
+  it('opens the delete confirmation dialog when the Delete User button is clicked', async () => {
     queryMocks.useProfile.mockReturnValue({
       data: createProfile({ username: 'current_user' }),
     });
@@ -261,6 +263,8 @@ describe('UserDetailsPanel – Delete User button', () => {
       user_type: 'default',
       username: 'other_user',
     });
+
+    queryMocks.useAccountUser.mockReturnValue({ data: user });
 
     const { container } = renderWithProviders(
       <UserDetailsPanel

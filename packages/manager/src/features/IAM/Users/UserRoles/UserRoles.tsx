@@ -48,7 +48,7 @@ export const UserRoles = () => {
   }
 
   if (error || assignedRolesError) {
-    return <ErrorState />;
+    return <ErrorState withPaper />;
   }
 
   return (
@@ -67,10 +67,12 @@ export const UserRoles = () => {
           <AssignedRolesTable />
         </Paper>
       ) : (
-        <NoAssignedRoles
-          hasAssignNewRoleDrawer={true}
-          text={NO_ASSIGNED_ROLES_TEXT}
-        />
+        <Paper>
+          <NoAssignedRoles
+            hasAssignNewRoleDrawer={true}
+            text={NO_ASSIGNED_ROLES_TEXT}
+          />
+        </Paper>
       )}
     </>
   );

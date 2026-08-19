@@ -68,22 +68,23 @@ export const getSelectedKernelId = (
 export const kernelsToGroupedItems = (kernels: Kernel[]) => {
   const groupedKernels: { [index: string]: Kernel[] } = {};
   kernels.forEach((kernel) => {
-    let group = '';
-    if (
-      kernel.label.match(/latest/i) ||
-      ['GRUB 2', 'GRUB (Legacy)'].includes(kernel.label) ||
-      kernel.label === 'Direct Disk'
-    ) {
-      group = 'Current';
-    } else if (kernel.deprecated) {
-      group = 'Deprecated';
-    } else if (kernel.architecture === 'x86_64') {
-      group = '64 bit';
-    } else if (kernel.architecture === 'i386') {
-      group = '32 bit';
-    } else {
-      group = 'Current';
-    }
+    const group = (() => {
+      if (
+        kernel.label.match(/latest/i) ||
+        ['GRUB 2', 'GRUB (Legacy)'].includes(kernel.label) ||
+        kernel.label === 'Direct Disk'
+      ) {
+        return 'Current';
+      } else if (kernel.deprecated) {
+        return 'Deprecated';
+      } else if (kernel.architecture === 'x86_64') {
+        return '64 bit';
+      } else if (kernel.architecture === 'i386') {
+        return '32 bit';
+      } else {
+        return 'Current';
+      }
+    })();
     if (Array.isArray(groupedKernels[group])) {
       groupedKernels[group].push({ ...kernel });
     } else {

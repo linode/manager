@@ -4,6 +4,7 @@ import React from 'react';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
+import { useIsGpuRdmaPlanEnabled } from 'src/hooks/useIsGpuRdmaPlanEnabled';
 
 import { LinodeInterfaceTableRow } from './LinodeInterfaceTableRow';
 
@@ -17,6 +18,7 @@ interface Props {
 
 export const LinodeInterfacesTableContent = ({ handlers, linodeId }: Props) => {
   const { data, error, isPending } = useLinodeInterfacesQuery(linodeId);
+  const { isGpuRdmaPlanEnabled } = useIsGpuRdmaPlanEnabled();
 
   const cols = 9;
 
@@ -44,7 +46,11 @@ export const LinodeInterfacesTableContent = ({ handlers, linodeId }: Props) => {
     );
   }
 
-  return data.interfaces.map((networkInterface) => (
+  const interfaces = isGpuRdmaPlanEnabled
+    ? data.interfaces
+    : data.interfaces.filter((iface) => !iface.rdma_vpc);
+
+  return interfaces.map((networkInterface) => (
     <LinodeInterfaceTableRow
       handlers={handlers}
       key={networkInterface.id}

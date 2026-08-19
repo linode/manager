@@ -1,7 +1,22 @@
-import { Box, TooltipIcon, Typography } from '@linode/ui';
+import { NumericSpinner, Tooltip } from '@akamai/cds-components/react';
+import { InfoOutline } from '@akamai/cds-icons/react';
+import { Box, Typography } from '@linode/ui';
 import React from 'react';
 
-import { StyledOutlinedInput, StyledSlider } from './SliderControl.styles';
+import { StyledSlider } from './SliderControl.styles';
+
+const stepDecimals = (step: number) =>
+  (step.toString().split('.')[1] ?? '').length;
+
+const roundedIncrement = (value: null | number, step: number): number => {
+  if (value === null) return 0;
+  return parseFloat((value + step).toFixed(stepDecimals(step)));
+};
+
+const roundedDecrement = (value: null | number, step: number): number => {
+  if (value === null) return 0;
+  return parseFloat((value - step).toFixed(stepDecimals(step)));
+};
 
 export interface SliderControlProps {
   label: string;
@@ -24,10 +39,9 @@ export const SliderControl = ({
 }: SliderControlProps) => {
   const effectiveValue = value ?? min;
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const num = parseFloat(e.target.value);
-    if (!isNaN(num)) {
-      onChange(Math.min(max, Math.max(min, num)));
+  const handleInputChange = (e: CustomEvent<null | number>) => {
+    if (e.detail !== null) {
+      onChange(Math.min(max, Math.max(min, e.detail)));
     }
   };
 
@@ -40,22 +54,28 @@ export const SliderControl = ({
           justifyContent: 'space-between',
         }}
       >
-        <Box sx={{ alignItems: 'center', display: 'flex' }}>
+        <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
           <Typography variant="body2">{label}</Typography>
-          <TooltipIcon
-            labelTooltipIconSize="small"
-            status="info"
-            sxTooltipIcon={{
-              '& svg': { height: 16, width: 16 },
-              marginLeft: '-4px',
-            }}
-            text={tooltip}
-          />
+          <Tooltip tooltipText={tooltip}>
+            <span
+              style={{
+                alignItems: 'center',
+                display: 'flex',
+                marginRight: 8,
+              }}
+            >
+              <InfoOutline height={16} width={16} />
+            </span>
+          </Tooltip>
         </Box>
-        <StyledOutlinedInput
-          inputProps={{ max, min, step }}
+        <NumericSpinner
+          decrementFn={roundedDecrement}
+          incrementFn={roundedIncrement}
+          max={max}
+          min={min}
           onChange={handleInputChange}
-          type="number"
+          step={step}
+          style={{ borderRadius: '4px', flex: 'none', width: 85 }}
           value={effectiveValue}
         />
       </Box>

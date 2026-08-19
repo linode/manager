@@ -15,7 +15,12 @@ import {
   useGetDefaultDelegationAccessQuery,
   useUserRoles,
 } from '@linode/queries';
-import { useNavigate, useParams, useSearch } from '@tanstack/react-router';
+import {
+  useLocation,
+  useNavigate,
+  useParams,
+  useSearch,
+} from '@tanstack/react-router';
 import React from 'react';
 
 import { useIsDefaultDelegationRolesForChildAccount } from '../../hooks/useDelegationRole';
@@ -49,6 +54,7 @@ import {
   mapRolesToPermissions,
 } from './utils';
 
+import type { IAMAction } from '../../routes';
 import type {
   CombinedEntity,
   DrawerModes,
@@ -74,15 +80,26 @@ const DEFAULTS_ROLES_URL = '/iam/roles/defaults/roles';
 const USER_ROLES_URL = '/iam/users/$username/roles';
 const MIN_PAGE_SIZE = 25;
 
+/** Snapshot passed via router location state so overlays survive list updates. */
+type AssignedRolesLocationState = {
+  overlayEntity?: CombinedEntity;
+  overlayRole?: ExtendedRoleView;
+};
+
 export const AssignedRolesTable = () => {
   const { username } = useParams({ strict: false });
   const navigate = useNavigate();
+  const location = useLocation();
+  const locationState = location.state as AssignedRolesLocationState;
 
   const { isDefaultDelegationRolesForChildAccount } =
     useIsDefaultDelegationRolesForChildAccount();
 
   const {
+    action,
+    entity: entityParam,
     query: queryParam,
+    role: roleParam,
     roleType: roleTypeParam,
     order: orderParam,
   } = useSearch({
@@ -139,54 +156,8 @@ export const AssignedRolesTable = () => {
     });
   };
 
-  const [isChangeRoleDrawerOpen, setIsChangeRoleDrawerOpen] =
-    React.useState<boolean>(false);
-  const [selectedRole, setSelectedRole] = React.useState<ExtendedRoleView>();
-  const [selectedEntity, setSelectedEntity] = React.useState<CombinedEntity>();
-  const [isUnassignRoleDialogOpen, setIsUnassignRoleDialogOpen] =
-    React.useState<boolean>(false);
-  const [isUpdateEntitiesDrawerOpen, setIsUpdateEntitiesDrawerOpen] =
-    React.useState<boolean>(false);
-
   const [drawerMode, setDrawerMode] =
     React.useState<DrawerModes>('assign-role');
-  const [isRemoveAssignmentDialogOpen, setIsRemoveAssignmentDialogOpen] =
-    React.useState<boolean>(false);
-  const [isAssignNewRoleDrawerOpen, setIsAssignNewRoleDrawerOpen] =
-    React.useState<boolean>(false);
-
-  const handleChangeRole = (role: ExtendedRoleView) => {
-    setIsChangeRoleDrawerOpen(true);
-    setSelectedRole(role);
-    setDrawerMode('change-role');
-  };
-
-  const handleUnassignRole = (role: ExtendedRoleView) => {
-    setIsUnassignRoleDialogOpen(true);
-    setSelectedRole(role);
-  };
-
-  const handleUpdateEntities = (role: ExtendedRoleView) => {
-    setIsUpdateEntitiesDrawerOpen(true);
-    setSelectedRole(role);
-  };
-
-  const handleRemoveAssignment = (
-    entity: CombinedEntity,
-    role: ExtendedRoleView
-  ) => {
-    setIsRemoveAssignmentDialogOpen(true);
-    setSelectedEntity(entity);
-    setSelectedRole(role);
-  };
-
-  const handleDialogClose = (drawerMode?: DrawerModes) => {
-    if (drawerMode && drawerMode === 'change-role') {
-      setIsChangeRoleDrawerOpen(false);
-    } else {
-      setIsUnassignRoleDialogOpen(false);
-    }
-  };
 
   const { data: accountRoles, isLoading: accountPermissionsLoading } =
     useAccountRoles();
@@ -287,9 +258,152 @@ export const AssignedRolesTable = () => {
     [navigate, isDefaultDelegationRolesForChildAccount, username]
   );
 
-  if (accountPermissionsLoading || entitiesLoading || assignedRolesLoading) {
-    return <CircleProgress />;
-  }
+  const actionHandler = (
+    nextAction: IAMAction,
+    options?: {
+      entity?: string;
+      overlayEntity?: CombinedEntity;
+      overlayRole?: ExtendedRoleView;
+      role?: string;
+      username?: string;
+    }
+  ) => {
+    navigate({
+      to: isDefaultDelegationRolesForChildAccount
+        ? DEFAULTS_ROLES_URL
+        : USER_ROLES_URL,
+      search: (prev) => ({
+        ...prev,
+        action: nextAction,
+        username: options?.username,
+        role: options?.role,
+        entity: options?.entity,
+      }),
+      state: (prev) => ({
+        ...prev,
+        overlayRole: options?.overlayRole,
+        overlayEntity: options?.overlayEntity,
+      }),
+    });
+  };
+
+  // Prefer the location-state snapshot (set when opening). Fall back to a list
+  // lookup for deep links / refresh where history state is empty.
+  const selectedRole =
+    locationState.overlayRole?.name === roleParam
+      ? locationState.overlayRole
+      : roleParam && roles
+        ? roles.find((r) => r.name === roleParam)
+        : undefined;
+
+  const selectedEntity = React.useMemo<CombinedEntity | undefined>(() => {
+    if (
+      locationState.overlayEntity?.name === entityParam &&
+      locationState.overlayEntity
+    ) {
+      return locationState.overlayEntity;
+    }
+    if (!entityParam || !entities) return undefined;
+    const e = entities.find((entity) => entity.label === entityParam);
+    return e ? { id: e.id, name: e.label } : undefined;
+  }, [entityParam, entities, locationState.overlayEntity]);
+
+  const handleAssignNewRoles = () => {
+    actionHandler('assign-new-roles');
+  };
+
+  const handleChangeRole = (role: ExtendedRoleView) => {
+    actionHandler('change-role', { role: role.name, overlayRole: role });
+    setDrawerMode('change-role');
+  };
+
+  const handleUnassignRole = (role: ExtendedRoleView) => {
+    actionHandler('unassign-role', { role: role.name, overlayRole: role });
+  };
+
+  const handleUpdateEntities = (role: ExtendedRoleView) => {
+    actionHandler('update-entities', { role: role.name, overlayRole: role });
+  };
+
+  const handleRemoveAssignment = (
+    entity: CombinedEntity,
+    role: ExtendedRoleView
+  ) => {
+    actionHandler('remove-entity', {
+      role: role.name,
+      entity: entity.name,
+      overlayRole: role,
+      overlayEntity: entity,
+    });
+  };
+
+  const clearDialogAction = (expectedAction?: IAMAction) => {
+    // Both overlays share the same `action` search param. Guard ensures a close
+    // event from one overlay cannot wipe the other's URL state.
+    if (expectedAction && action !== expectedAction) {
+      return;
+    }
+
+    // Only clear `action` here so URL `role`/`entity` and location-state
+    // snapshots remain during the exit animation. Cleared in `clearDialogParams`.
+    navigate({
+      to: isDefaultDelegationRolesForChildAccount
+        ? DEFAULTS_ROLES_URL
+        : USER_ROLES_URL,
+      search: (prev) => ({
+        ...prev,
+        action: undefined,
+      }),
+      // navigate() without state replaces history state with {} — keep snapshot.
+      state: (prev) => prev,
+    });
+  };
+
+  const clearDialogParams = () => {
+    navigate({
+      to: isDefaultDelegationRolesForChildAccount
+        ? DEFAULTS_ROLES_URL
+        : USER_ROLES_URL,
+      search: (prev) => ({
+        ...prev,
+        role: undefined,
+        username: undefined,
+        entity: undefined,
+      }),
+      state: (prev) => ({
+        ...prev,
+        overlayRole: undefined,
+        overlayEntity: undefined,
+      }),
+    });
+  };
+
+  const closeDrawer = (expectedAction: IAMAction) => {
+    if (expectedAction && action !== expectedAction) {
+      return;
+    }
+
+    navigate({
+      to: isDefaultDelegationRolesForChildAccount
+        ? DEFAULTS_ROLES_URL
+        : USER_ROLES_URL,
+      search: (prev) => ({
+        ...prev,
+        action: undefined,
+        role: undefined,
+        username: undefined,
+        entity: undefined,
+      }),
+      state: (prev) => ({
+        ...prev,
+        overlayRole: undefined,
+        overlayEntity: undefined,
+      }),
+    });
+  };
+
+  const isRolesLoading =
+    assignedRolesLoading || accountPermissionsLoading || entitiesLoading;
 
   let selectedRoleDetails: EntitiesRole | undefined;
 
@@ -312,146 +426,159 @@ export const AssignedRolesTable = () => {
 
   return (
     <>
-      <Box
-        direction="row"
-        spacing={1}
-        style={{
-          justifyContent: 'space-between',
-          marginBottom: Spacing.S12,
-        }}
-      >
-        <Box direction="row" spacing={1}>
-          <FormField
-            labelPosition="top"
-            style={{ padding: 0, marginRight: Spacing.S16 }}
-          >
-            <FormLabel
-              className={globalStyles.visuallyHidden}
-              htmlFor="filter-roles"
-              slot="label"
-            >
-              Search Roles
-            </FormLabel>
-            <DebouncedSearchField
-              id="filter-roles"
-              onSearch={onSearch}
-              placeholder="Search"
-              value={queryParam ?? ''}
-            />
-          </FormField>
-          <Select
-            items={filterableOptions}
-            onChange={(event) => {
-              const selected = event.detail as unknown as null | SelectOption;
-              const nextRoleType = (selected?.value ??
-                ALL_ROLES_OPTION.value) as 'all' | AccessType;
-
-              navigate({
-                to: isDefaultDelegationRolesForChildAccount
-                  ? DEFAULTS_ROLES_URL
-                  : USER_ROLES_URL,
-                params: isDefaultDelegationRolesForChildAccount
-                  ? undefined
-                  : { username: username || '' },
-                search: (prev) => ({
-                  ...prev,
-                  page: 1,
-                  roleType: nextRoleType,
-                }),
-              });
+      {isRolesLoading ? (
+        <CircleProgress />
+      ) : (
+        <>
+          <Box
+            direction="row"
+            spacing={1}
+            style={{
+              justifyContent: 'space-between',
+              marginBottom: Spacing.S12,
             }}
-            placeholder="All Assigned Roles"
-            selected={selectedEntityTypeOption}
-            style={{ minWidth: 250, maxWidth: 362 }}
-            valueFn={(item) => (item as SelectOption).label}
-          />
-        </Box>
-        <Tooltip
-          disabled={permissionToCheck}
-          tooltipPlacement="bottom"
-          tooltipText={
-            !permissionToCheck
-              ? 'You do not have permission to assign roles.'
-              : undefined
-          }
-        >
-          <Button
-            data-pendo-id={
-              isDefaultDelegationRolesForChildAccount
-                ? IAM_ROLES_PENDO_IDS.addNewDefaultRoles
-                : undefined
-            }
-            disabled={!permissionToCheck}
-            onClick={() => setIsAssignNewRoleDrawerOpen(true)}
-            variant="primary"
           >
-            {isDefaultDelegationRolesForChildAccount
-              ? 'Add New Default Roles'
-              : 'Assign New Roles'}
-            {!permissionToCheck && <Icon icon="info-outline" size="m" />}
-          </Button>
-        </Tooltip>
-      </Box>
-      <Table aria-label="collapsible table">
-        <AssignedRolesTableHead
-          handleOrderChange={handleOrderChange}
-          order={order}
-          orderBy={orderBy}
-        />
-        <TableBody>
-          <AssignedRolesTableBody
-            handleChangeRole={handleChangeRole}
-            handleRemoveAssignment={handleRemoveAssignment}
-            handleUnassignRole={handleUnassignRole}
-            handleUpdateEntities={handleUpdateEntities}
-            handleViewEntities={handleViewEntities}
-            paginatedData={pagination.paginatedData}
-            permissions={rolesPermissions}
-          />
-        </TableBody>
-      </Table>
+            <Box direction="row" spacing={1}>
+              <FormField
+                labelPosition="top"
+                style={{ padding: 0, marginRight: Spacing.S16 }}
+              >
+                <FormLabel
+                  className={globalStyles.visuallyHidden}
+                  htmlFor="filter-roles"
+                  slot="label"
+                >
+                  Search Roles
+                </FormLabel>
+                <DebouncedSearchField
+                  id="filter-roles"
+                  onSearch={onSearch}
+                  placeholder="Search"
+                  value={queryParam ?? ''}
+                />
+              </FormField>
+              <Select
+                items={filterableOptions}
+                onChange={(event) => {
+                  const selected =
+                    event.detail as unknown as null | SelectOption;
+                  const nextRoleType = (selected?.value ??
+                    ALL_ROLES_OPTION.value) as 'all' | AccessType;
+
+                  navigate({
+                    to: isDefaultDelegationRolesForChildAccount
+                      ? DEFAULTS_ROLES_URL
+                      : USER_ROLES_URL,
+                    params: isDefaultDelegationRolesForChildAccount
+                      ? undefined
+                      : { username: username || '' },
+                    search: (prev) => ({
+                      ...prev,
+                      page: 1,
+                      roleType: nextRoleType,
+                    }),
+                  });
+                }}
+                placeholder="All Assigned Roles"
+                selected={selectedEntityTypeOption}
+                style={{ minWidth: 250, maxWidth: 362 }}
+                valueFn={(item) => (item as SelectOption).label}
+              />
+            </Box>
+            <Tooltip
+              disabled={permissionToCheck}
+              tooltipPlacement="bottom"
+              tooltipText={
+                !permissionToCheck
+                  ? 'You do not have permission to assign roles.'
+                  : undefined
+              }
+            >
+              <Button
+                data-pendo-id={
+                  isDefaultDelegationRolesForChildAccount
+                    ? IAM_ROLES_PENDO_IDS.addNewDefaultRoles
+                    : undefined
+                }
+                disabled={!permissionToCheck}
+                onClick={handleAssignNewRoles}
+                variant="primary"
+              >
+                {isDefaultDelegationRolesForChildAccount
+                  ? 'Add New Default Roles'
+                  : 'Assign New Roles'}
+                {!permissionToCheck && <Icon icon="info-outline" size="m" />}
+              </Button>
+            </Tooltip>
+          </Box>
+          <Table aria-label="collapsible table">
+            <AssignedRolesTableHead
+              handleOrderChange={handleOrderChange}
+              order={order}
+              orderBy={orderBy}
+            />
+            <TableBody>
+              <AssignedRolesTableBody
+                handleChangeRole={handleChangeRole}
+                handleRemoveAssignment={handleRemoveAssignment}
+                handleUnassignRole={handleUnassignRole}
+                handleUpdateEntities={handleUpdateEntities}
+                handleViewEntities={handleViewEntities}
+                paginatedData={pagination.paginatedData}
+                permissions={rolesPermissions}
+              />
+            </TableBody>
+          </Table>
+          {filteredAndSortedRolesCount > MIN_PAGE_SIZE && (
+            <Pagination
+              count={filteredAndSortedRolesCount}
+              onPageChange={(e: CustomEvent<number>) =>
+                pagination.handlePageChange(Number(e.detail))
+              }
+              onPageSizeChange={(
+                e: CustomEvent<{ page: number; pageSize: number }>
+              ) => pagination.handlePageSizeChange(Number(e.detail.pageSize))}
+              page={pagination.page}
+              pageSize={pagination.pageSize}
+              pageSizes={[MIN_PAGE_SIZE, 50, 75, 100]}
+              style={{ border: 0 }}
+            />
+          )}
+        </>
+      )}
       <AssignNewRoleDrawer
         assignedRoles={assignedRoles}
-        onClose={() => setIsAssignNewRoleDrawerOpen(false)}
-        open={isAssignNewRoleDrawerOpen}
+        onClose={() => closeDrawer('assign-new-roles')}
+        open={action === 'assign-new-roles'}
       />
       <ChangeRoleDrawer
+        isRolesLoading={isRolesLoading}
         mode={drawerMode}
-        onClose={() => handleDialogClose(drawerMode)}
-        open={isChangeRoleDrawerOpen}
+        onClose={() => closeDrawer('change-role')}
+        open={action === 'change-role'}
         role={selectedRole}
       />
       <UnassignRoleConfirmationDialog
-        onClose={() => handleDialogClose()}
-        open={isUnassignRoleDialogOpen}
+        isRolesLoading={isRolesLoading}
+        onClose={() => clearDialogAction('unassign-role')}
+        onExited={clearDialogParams}
+        open={action === 'unassign-role'}
         role={selectedRole}
       />
       <UpdateEntitiesDrawer
-        onClose={() => setIsUpdateEntitiesDrawerOpen(false)}
-        open={isUpdateEntitiesDrawerOpen}
+        isRolesLoading={isRolesLoading}
+        onClose={() => closeDrawer('update-entities')}
+        open={action === 'update-entities'}
         role={selectedRole}
       />
       <RemoveAssignmentConfirmationDialog
-        onClose={() => setIsRemoveAssignmentDialogOpen(false)}
-        open={isRemoveAssignmentDialogOpen}
+        isRolesLoading={isRolesLoading}
+        onClose={() => clearDialogAction('remove-entity')}
+        onExited={clearDialogParams}
+        open={action === 'remove-entity'}
         role={selectedRoleDetails}
         username={username}
       />
-      {filteredAndSortedRolesCount > MIN_PAGE_SIZE && (
-        <Pagination
-          count={filteredAndSortedRolesCount}
-          onPageChange={(e: CustomEvent<number>) =>
-            pagination.handlePageChange(Number(e.detail))
-          }
-          onPageSizeChange={(
-            e: CustomEvent<{ page: number; pageSize: number }>
-          ) => pagination.handlePageSizeChange(Number(e.detail.pageSize))}
-          page={pagination.page}
-          pageSize={pagination.pageSize}
-          pageSizes={[MIN_PAGE_SIZE, 50, 75, 100]}
-          style={{ border: 0 }}
-        />
-      )}
     </>
   );
 };

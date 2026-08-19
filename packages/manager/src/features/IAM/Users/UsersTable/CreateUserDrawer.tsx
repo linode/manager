@@ -14,6 +14,7 @@ import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { useDelegationRole } from '../../hooks/useDelegationRole';
+import { usePermissions } from '../../hooks/usePermissions';
 import {
   IAM_CHILD_USERS_PENDO_IDS,
   IAM_DELEGATE_USERS_PENDO_IDS,
@@ -45,6 +46,8 @@ export const CreateUserDrawer = (props: Props) => {
     },
   });
 
+  const { data: permissions } = usePermissions('account', ['create_user']);
+
   const onSubmit = async (data: {
     email: string;
     restricted: boolean;
@@ -69,6 +72,13 @@ export const CreateUserDrawer = (props: Props) => {
     <Drawer aria-label="Add a User" onClose={handleClose} open={open}>
       <div slot="header">Add a User</div>
       <form noValidate onSubmit={handleSubmit(onSubmit)} slot="body">
+        {!permissions.create_user && (
+          <NotificationBanner
+            style={{ marginBottom: Spacing.S8 }}
+            text="You do not have permission to create other users."
+            type="error"
+          />
+        )}
         {errors.root?.message && (
           <NotificationBanner text={errors.root?.message} type="error" />
         )}
@@ -174,6 +184,7 @@ export const CreateUserDrawer = (props: Props) => {
                   : IAM_CHILD_USERS_PENDO_IDS.addUserDrawerSubmit
             }
             data-testid="submit"
+            disabled={!permissions.create_user}
             processing={isSubmitting}
             type="submit"
             variant="primary"

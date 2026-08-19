@@ -6,7 +6,8 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { RevokeApiKeyDialog } from './RevokeApiKeyDialog';
 
-const mockApiKey = apiKeyFactory.build({ label: 'my-api-key' });
+const API_KEY_LABEL = 'my-api-key';
+const mockApiKey = apiKeyFactory.build({ label: API_KEY_LABEL });
 
 const defaultProps = {
   apiKey: mockApiKey,
@@ -15,20 +16,30 @@ const defaultProps = {
   open: true,
 };
 
+/**
+ * Helper to find a CDS button host element by its text content
+ */
+const getCdsButtonHostByText = (
+  root: ParentNode,
+  text: string
+): HTMLElement | undefined =>
+  // eslint-disable-next-line testing-library/no-node-access -- CDS web component
+  Array.from(root.querySelectorAll<HTMLElement>('cds-button')).find(
+    (button) => button.textContent?.trim() === text
+  );
+
 describe('RevokeApiKeyDialog', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
   it('renders the dialog with warning message', () => {
-    const { getByText } = renderWithTheme(
-      <RevokeApiKeyDialog {...defaultProps} />
-    );
+    renderWithTheme(<RevokeApiKeyDialog {...defaultProps} />);
 
-    expect(
-      getByText('Are you sure you want to revoke this key?')
-    ).toBeVisible();
-    expect(getByText('This action cannot be undone.')).toBeVisible();
+    // Dialog renders into document.body via portal
+    // eslint-disable-next-line testing-library/no-node-access -- CDS web component
+    const banner = document.body.querySelector('cds-notification-banner');
+    expect(banner).toBeInTheDocument();
   });
 
   it('renders the title with the key label', () => {
@@ -36,7 +47,7 @@ describe('RevokeApiKeyDialog', () => {
       <RevokeApiKeyDialog {...defaultProps} />
     );
 
-    expect(getByText('Revoke key my-api-key')).toBeVisible();
+    expect(getByText(`Revoke key ${API_KEY_LABEL}`)).toBeVisible();
   });
 
   it('displays the key label to confirm', () => {
@@ -44,37 +55,45 @@ describe('RevokeApiKeyDialog', () => {
       <RevokeApiKeyDialog {...defaultProps} />
     );
 
-    expect(getByText('my-api-key')).toBeVisible();
+    expect(getByText(API_KEY_LABEL)).toBeVisible();
   });
 
   it('disables the revoke button when confirmation text does not match', () => {
-    const { getByTestId } = renderWithTheme(
-      <RevokeApiKeyDialog {...defaultProps} />
-    );
+    renderWithTheme(<RevokeApiKeyDialog {...defaultProps} />);
 
-    const revokeButton = getByTestId('revoke-api-key-confirm');
-    expect(revokeButton).toBeDisabled();
+    const revokeButton = getCdsButtonHostByText(
+      document.body,
+      'Revoke API key'
+    ) as HTMLElement & { disabled?: boolean };
+    expect(revokeButton).toBeInTheDocument();
+    // CDS Button reflects disabled as a JS property, not an HTML attribute
+    expect(revokeButton?.disabled).toBe(true);
   });
 
   it('enables the revoke button when confirmation text matches', async () => {
-    const { getByLabelText, getByTestId } = renderWithTheme(
+    const user = userEvent.setup();
+    const { getByLabelText } = renderWithTheme(
       <RevokeApiKeyDialog {...defaultProps} />
     );
 
     const input = getByLabelText('API Key Name');
-    await userEvent.type(input, 'my-api-key');
+    await user.type(input, API_KEY_LABEL);
 
-    const revokeButton = getByTestId('revoke-api-key-confirm');
-    expect(revokeButton).toBeEnabled();
+    const revokeButton = getCdsButtonHostByText(
+      document.body,
+      'Revoke API key'
+    ) as HTMLElement & { disabled?: boolean };
+    expect(revokeButton).toBeInTheDocument();
+    expect(revokeButton?.disabled).not.toBe(true);
   });
 
   it('calls onClose when cancel button is clicked', async () => {
-    const { getByTestId } = renderWithTheme(
-      <RevokeApiKeyDialog {...defaultProps} />
-    );
+    const user = userEvent.setup();
+    renderWithTheme(<RevokeApiKeyDialog {...defaultProps} />);
 
-    const cancelButton = getByTestId('revoke-api-key-cancel');
-    await userEvent.click(cancelButton);
+    const cancelButton = getCdsButtonHostByText(document.body, 'Cancel');
+    expect(cancelButton).toBeVisible();
+    await user.click(cancelButton!);
 
     expect(defaultProps.onClose).toHaveBeenCalled();
   });

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import { MultipleIPInput } from './MultipleIPInput';
 
-import type { MultipeIPInputProps } from './MultipleIPInput';
+import type { MultipleIPInputProps } from './MultipleIPInput';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 type Story = StoryObj<typeof MultipleIPInput>;
@@ -29,7 +29,7 @@ const meta: Meta<typeof MultipleIPInput> = {
 
 export default meta;
 
-const MultipleIPInputWithState = ({ ...args }: MultipeIPInputProps) => {
+const MultipleIPInputWithState = ({ ...args }: MultipleIPInputProps) => {
   const [ips, setIps] = useState(args.ips);
 
   const handleChange = (newIps: typeof ips) => {

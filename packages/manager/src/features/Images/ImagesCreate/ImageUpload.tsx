@@ -355,20 +355,18 @@ export const ImageUpload = () => {
                     field.onChange(files[0]);
                   }}
                   onDropRejected={(fileRejections) => {
-                    let message = '';
-                    switch (fileRejections[0].errors[0].code) {
-                      case 'file-invalid-type':
-                        message =
-                          'Only raw disk images (.img) compressed using gzip (.gz) can be uploaded.';
-                        break;
-                      case 'file-too-large':
-                        message = `Max file size (${
-                          readableBytes(MAX_FILE_SIZE_IN_BYTES).formatted
-                        }) exceeded`;
-                        break;
-                      default:
-                        message = fileRejections[0].errors[0].message;
-                    }
+                    const message = (() => {
+                      switch (fileRejections[0].errors[0].code) {
+                        case 'file-invalid-type':
+                          return 'Only raw disk images (.img) compressed using gzip (.gz) can be uploaded.';
+                        case 'file-too-large':
+                          return `Max file size (${
+                            readableBytes(MAX_FILE_SIZE_IN_BYTES).formatted
+                          }) exceeded`;
+                        default:
+                          return fileRejections[0].errors[0].message;
+                      }
+                    })();
                     form.setError('file', { message });
                     form.resetField('file', { keepError: true });
                   }}

@@ -1,5 +1,6 @@
-import { Box, Divider, IconButton, Stack } from '@linode/ui';
-import CloseIcon from '@mui/icons-material/Close';
+import { Button } from '@akamai/cds-components/react/Button';
+import { Close } from '@akamai/cds-icons/react';
+import { Box, Divider, Stack } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import React from 'react';
 
@@ -124,7 +125,7 @@ export const ActiveFilters = ({
             width={16}
           />
           {hasActiveFilters && (
-            <IconButton
+            <Button
               aria-label="Clear all filters"
               onClick={() =>
                 onFilterChange({
@@ -142,10 +143,10 @@ export const ActiveFilters = ({
                 })
               }
               size="small"
-              sx={{ padding: 0.25 }}
+              variant="icon"
             >
-              <CloseIcon sx={{ fontSize: 14 }} />
-            </IconButton>
+              <Close height={14} width={14} />
+            </Button>
           )}
         </Box>
 

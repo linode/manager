@@ -2,6 +2,7 @@ import { TextField } from '@linode/ui';
 import * as React from 'react';
 
 export interface Props {
+  descriptionFieldPendoId?: string;
   error?: string;
   handleChange: (value: string) => void;
   placeholder?: string;
@@ -9,10 +10,12 @@ export interface Props {
 }
 
 export const TicketReply = (props: Props) => {
-  const { error, handleChange, placeholder, value } = props;
+  const { descriptionFieldPendoId, error, handleChange, placeholder, value } =
+    props;
 
   return (
     <TextField
+      data-pendo-id={descriptionFieldPendoId}
       data-qa-ticket-description
       errorText={error}
       expand

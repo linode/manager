@@ -73,4 +73,44 @@ describe('useTfaUserCounts', () => {
     expect(result.current.optionalUsersCount).toBe(0);
     expect(result.current.enforcedUsersCount).toBe(10);
   });
+
+  it('returns correct counts when totalUsers is refetching with stale data', () => {
+    queryMocks.useAccountUsers.mockReturnValue({
+      data: { results: 10 },
+      isLoading: false,
+    });
+    queryMocks.useGetTfaOptionalUsersQuery.mockReturnValue({
+      data: { results: 2 },
+      isLoading: false,
+    });
+
+    const { result } = renderHook(() => useTfaUserCounts(true), {
+      wrapper: (ui) => wrapWithProviders(ui),
+    });
+
+    expect(result.current.isLoading).toBe(false);
+    expect(result.current.totalUsers).toBe(10);
+    expect(result.current.optionalUsersCount).toBe(2);
+    expect(result.current.enforcedUsersCount).toBe(8);
+  });
+
+  it('returns 0 for enforcedUsersCount while totalUsers is still loading (no data yet)', () => {
+    queryMocks.useAccountUsers.mockReturnValue({
+      data: undefined,
+      isLoading: true,
+    });
+    queryMocks.useGetTfaOptionalUsersQuery.mockReturnValue({
+      data: { results: 2 },
+      isLoading: false,
+    });
+
+    const { result } = renderHook(() => useTfaUserCounts(true), {
+      wrapper: (ui) => wrapWithProviders(ui),
+    });
+
+    expect(result.current.isLoading).toBe(true);
+    expect(result.current.totalUsers).toBe(0);
+    expect(result.current.optionalUsersCount).toBe(2);
+    expect(result.current.enforcedUsersCount).toBe(0);
+  });
 });

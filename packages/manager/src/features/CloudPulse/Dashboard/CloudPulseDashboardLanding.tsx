@@ -151,6 +151,14 @@ export const CloudPulseDashboardLanding = () => {
           <Paper sx={{ padding: 0 }}>
             <Box display="flex" flexDirection="column">
               <GlobalFilters
+                appliedFilters={
+                  dashboard?.service_type && showAppliedFilters ? (
+                    <CloudPulseAppliedFilterRenderer
+                      dashboardId={dashboard.id}
+                      filters={filterData.label}
+                    />
+                  ) : undefined
+                }
                 handleAnyFilterChange={onFilterChange}
                 handleDashboardChange={onDashboardChange}
                 handleDownloadPDF={handleDownloadPDF}
@@ -160,12 +168,6 @@ export const CloudPulseDashboardLanding = () => {
                 isDownloadingPdf={isDownloadingPdf}
                 isMandatoryFiltersSelected={isMandatoryFiltersSelected}
               />
-              {dashboard?.service_type && showAppliedFilters && (
-                <CloudPulseAppliedFilterRenderer
-                  dashboardId={dashboard.id}
-                  filters={filterData.label}
-                />
-              )}
             </Box>
           </Paper>
         </GridLegacy>

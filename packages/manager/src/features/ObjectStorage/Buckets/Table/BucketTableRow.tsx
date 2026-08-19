@@ -66,15 +66,13 @@ export const BucketTableRow = (props: BucketTableRowProps) => {
           </Typography>
         </StyledBucketRegionCell>
       </Hidden>
-      {Boolean(endpoint_type) && (
-        <Hidden lgDown>
-          <TableCell>
-            <Typography data-qa-size variant="body1">
-              {typeLabel} ({endpoint_type})
-            </Typography>
-          </TableCell>
-        </Hidden>
-      )}
+      <Hidden lgDown>
+        <TableCell>
+          <Typography data-qa-size variant="body1">
+            {typeLabel} ({endpoint_type})
+          </Typography>
+        </TableCell>
+      </Hidden>
       <Hidden lgDown>
         <TableCell>
           <DateTimeDisplay data-qa-created value={created} />

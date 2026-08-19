@@ -1,6 +1,5 @@
+import { Checkmark, ChevronDown } from '@akamai/cds-icons/react';
 import { Box, keyframes, Stack, useTheme } from '@linode/ui';
-import Check from '@mui/icons-material/Check';
-import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import Collapse from '@mui/material/Collapse';
 import React, {
   memo,
@@ -178,22 +177,24 @@ const ReasoningBlock = memo(
               Reasoning
             </Box>
             {!isStreaming && !wasInterrupted && (
-              <Check
-                sx={{
+              <Checkmark
+                height={20}
+                style={{
                   color: theme.tokens.alias.Content.Icon.Recommendation,
-                  fontSize: '20px',
-                  ml: 0.5,
+                  marginLeft: 4,
                 }}
+                width={20}
               />
             )}
           </Stack>
-          <KeyboardArrowDown
-            sx={{
+          <ChevronDown
+            height={20}
+            style={{
               color: ICON_AND_SECONDARY_COLOR,
-              fontSize: '1.25rem',
               transform: open ? 'rotate(180deg)' : 'rotate(0deg)',
               transition: 'transform 0.2s',
             }}
+            width={20}
           />
         </Stack>
         <Collapse in={open}>

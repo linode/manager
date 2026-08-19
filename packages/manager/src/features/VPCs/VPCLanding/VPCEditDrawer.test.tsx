@@ -3,6 +3,7 @@ import * as React from 'react';
 import { vpcFactory } from 'src/factories/vpcs';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
+import * as VPCUtils from '../utils';
 import { VPCEditDrawer } from './VPCEditDrawer';
 
 const queryMocks = vi.hoisted(() => ({
@@ -78,5 +79,65 @@ describe('Edit VPC Drawer', () => {
 
     const descriptionInput = getByLabelText('Description');
     expect(descriptionInput).not.toHaveAttribute('disabled');
+  });
+
+  it('Should render IPv4 Ranges section when feature flag is enabled', () => {
+    vi.spyOn(VPCUtils, 'useIsCustomVPCIPv4RangesEnabled').mockReturnValue({
+      isCustomVPCIPv4RangesEnabled: true,
+    });
+    const { getByText } = renderWithTheme(<VPCEditDrawer {...props} />);
+    const ipv4Label = getByText('VPC IPv4 Range (CIDR)');
+    expect(ipv4Label).toBeVisible();
+  });
+
+  it('Should not render IPv4 Ranges section when feature flag is disabled', () => {
+    vi.spyOn(VPCUtils, 'useIsCustomVPCIPv4RangesEnabled').mockReturnValue({
+      isCustomVPCIPv4RangesEnabled: false,
+    });
+    const { queryByText } = renderWithTheme(<VPCEditDrawer {...props} />);
+    const ipv4Label = queryByText('VPC IPv4 Range (CIDR)');
+    expect(ipv4Label).not.toBeInTheDocument();
+  });
+
+  it('Should disable IPv4 Ranges when user does not have "update_vpc" permission', () => {
+    vi.spyOn(VPCUtils, 'useIsCustomVPCIPv4RangesEnabled').mockReturnValue({
+      isCustomVPCIPv4RangesEnabled: true,
+    });
+    queryMocks.userPermissions.mockReturnValue({
+      data: {
+        update_vpc: false,
+      },
+    });
+    const { getByText } = renderWithTheme(<VPCEditDrawer {...props} />);
+    const addRangeButton = getByText('Add IPv4 Range').closest('button');
+    expect(addRangeButton).toHaveAttribute('disabled');
+  });
+
+  it('Should enable IPv4 Ranges when user has "update_vpc" permission', () => {
+    vi.spyOn(VPCUtils, 'useIsCustomVPCIPv4RangesEnabled').mockReturnValue({
+      isCustomVPCIPv4RangesEnabled: true,
+    });
+    queryMocks.userPermissions.mockReturnValue({
+      data: {
+        update_vpc: true,
+      },
+    });
+    const { getByText } = renderWithTheme(<VPCEditDrawer {...props} />);
+    const addRangeButton = getByText('Add IPv4 Range').closest('button');
+    expect(addRangeButton).not.toHaveAttribute('disabled');
+  });
+
+  it('Should display IPv4 Ranges from VPC data', () => {
+    vi.spyOn(VPCUtils, 'useIsCustomVPCIPv4RangesEnabled').mockReturnValue({
+      isCustomVPCIPv4RangesEnabled: true,
+    });
+    const vpcWithIPv4 = vpcFactory.build({
+      ipv4: [{ range: '10.0.0.0/24' }, { range: '10.1.0.0/24' }],
+    });
+    const { getByDisplayValue } = renderWithTheme(
+      <VPCEditDrawer {...props} vpc={vpcWithIPv4} />
+    );
+    getByDisplayValue('10.0.0.0/24');
+    getByDisplayValue('10.1.0.0/24');
   });
 });

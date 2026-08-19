@@ -1,16 +1,12 @@
-const isAuthCallbackPath = () =>
-  window.location.pathname === '/oauth/callback' ||
-  window.location.pathname === '/admin/callback';
-
 let resolveReady: (() => void) | undefined;
-let isReady = isAuthCallbackPath();
+let isReady = false;
 
 const readyPromise = new Promise<void>((resolve) => {
   resolveReady = resolve;
-  if (isReady) {
-    resolve();
-  }
 });
+
+export const isAuthCallbackPath = (pathname = window.location.pathname) =>
+  pathname === '/oauth/callback' || pathname === '/admin/callback';
 
 /** Resolves once the app shell has finished bootstrapping. */
 export const waitForAppShell = () => readyPromise;

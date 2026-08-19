@@ -226,7 +226,7 @@ export const filterBucketsByEndpoints = (
 ) =>
   (buckets ?? []).filter(
     (bucket) =>
-      endpointsFilter === null || endpointsFilter?.has(bucket.s3_endpoint ?? '')
+      endpointsFilter === null || endpointsFilter?.has(bucket.s3_endpoint)
   );
 
 export const parseCsvSet = (value?: string): null | Set<string> =>

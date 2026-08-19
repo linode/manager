@@ -5,7 +5,6 @@ import * as React from 'react';
 
 import { EndpointMultiSelect } from '../../shared/components/EndpointSelect/EndpointMultiSelect';
 import { RegionMultiSelect } from '../../shared/components/RegionSelect/RegionMultiSelect';
-import { useIsObjectStorageGen2Enabled } from '../../shared/hooks/useIsObjectStorageGen2Enabled';
 import { useObjectStorageRegionsWithAssignedEndpoints } from '../../shared/hooks/useObjectStorageRegionsWithAssignedEndpoints';
 import {
   filterSet,
@@ -63,8 +62,6 @@ export const BucketFilters = (props: BucketFiltersProps) => {
   const search = useSearch({
     from: '/object-storage/buckets',
   }) as BucketListSearch;
-
-  const { isObjectStorageGen2Enabled } = useIsObjectStorageGen2Enabled();
 
   const regionIdsFilter = React.useMemo(
     () => parseCsvSet(search.regions),
@@ -232,18 +229,16 @@ export const BucketFilters = (props: BucketFiltersProps) => {
           />
         </Grid>
 
-        {isObjectStorageGen2Enabled && (
-          <Grid size={{ sm: 4 }}>
-            <EndpointMultiSelect
-              onChange={setSelectedEndpoints}
-              options={displayedEndpointOptions}
-              optionsLoading={areFiltersLoading}
-              showLabel={true}
-              sx={{ flex: 1 }}
-              values={selectedEndpoints}
-            />
-          </Grid>
-        )}
+        <Grid size={{ sm: 4 }}>
+          <EndpointMultiSelect
+            onChange={setSelectedEndpoints}
+            options={displayedEndpointOptions}
+            optionsLoading={areFiltersLoading}
+            showLabel={true}
+            sx={{ flex: 1 }}
+            values={selectedEndpoints}
+          />
+        </Grid>
       </Grid>
     </>
   );

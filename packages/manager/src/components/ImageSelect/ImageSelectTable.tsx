@@ -19,7 +19,6 @@ import {
   Box,
   CircleProgress,
   ErrorState,
-  Hidden,
   Notice,
   Stack,
   TooltipIcon,
@@ -37,7 +36,6 @@ import { Link } from '../Link';
 import {
   DEFAULT_CLIENT_SIDE_PAGE_SIZE,
   IMAGE_SELECT_TABLE_PREFERENCE_KEY,
-  TABLE_CELL_BASE_STYLE,
 } from './constants';
 import { ImageSelectTableRow } from './ImageSelectTableRow';
 
@@ -276,8 +274,8 @@ export const ImageSelectTable = (props: Props) => {
           />
         </Box>
       </Stack>
-      <Box>
-        <Table>
+      <div style={{ overflowX: 'auto', width: '100%' }}>
+        <Table style={{ minWidth: '1200px' }}>
           <TableHead>
             <TableRow
               headerbackground={
@@ -287,53 +285,34 @@ export const ImageSelectTable = (props: Props) => {
             >
               <TableHeaderCell
                 style={{
-                  paddingLeft: '58px',
-                  whiteSpace: 'nowrap',
-                  ...TABLE_CELL_BASE_STYLE,
+                  flex: '0 1 24.5%',
+                  paddingLeft: '47px',
                 }}
               >
                 Image
               </TableHeaderCell>
-              <Hidden lgDown>
-                <TableHeaderCell>Replicated in</TableHeaderCell>
-              </Hidden>
+              <TableHeaderCell>Replicated in</TableHeaderCell>
               {selectionMode === 'single' && (
-                <Hidden smDown>
-                  <TableHeaderCell
-                    style={{ whiteSpace: 'nowrap', ...TABLE_CELL_BASE_STYLE }}
-                  >
-                    <Stack alignItems="center" direction="row">
-                      Share Group
-                      <TooltipIcon
-                        data-pendo-id={pendoIDs.shareGroupInfoIcon}
-                        status="info"
-                        sxTooltipIcon={{
-                          padding: '4px',
-                        }}
-                        text={SHARE_GROUP_COLUMN_HEADER_TOOLTIP}
-                        tooltipPosition="right"
-                      />
-                    </Stack>
-                  </TableHeaderCell>
-                </Hidden>
-              )}
-              <Hidden lgDown>
-                <TableHeaderCell
-                  style={{ whiteSpace: 'nowrap', ...TABLE_CELL_BASE_STYLE }}
-                >
-                  {selectionMode === 'single' ? 'Size' : 'Original Image'}
+                <TableHeaderCell style={{ whiteSpace: 'nowrap' }}>
+                  <Stack alignItems="center" direction="row">
+                    Share Group
+                    <TooltipIcon
+                      data-pendo-id={pendoIDs.shareGroupInfoIcon}
+                      status="info"
+                      sxTooltipIcon={{
+                        padding: '4px',
+                      }}
+                      text={SHARE_GROUP_COLUMN_HEADER_TOOLTIP}
+                      tooltipPosition="right"
+                    />
+                  </Stack>
                 </TableHeaderCell>
-              </Hidden>
-              <TableHeaderCell
-                style={{ whiteSpace: 'nowrap', ...TABLE_CELL_BASE_STYLE }}
-              >
-                Created
+              )}
+              <TableHeaderCell>
+                {selectionMode === 'single' ? 'Size' : 'Original Image'}
               </TableHeaderCell>
-              <TableHeaderCell
-                style={{ whiteSpace: 'nowrap', ...TABLE_CELL_BASE_STYLE }}
-              >
-                Image ID
-              </TableHeaderCell>
+              <TableHeaderCell>Created</TableHeaderCell>
+              <TableHeaderCell>Image ID</TableHeaderCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -379,7 +358,7 @@ export const ImageSelectTable = (props: Props) => {
             style={{ border: 0 }}
           />
         )}
-      </Box>
+      </div>
     </Stack>
   );
 };

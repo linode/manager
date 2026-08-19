@@ -1,4 +1,5 @@
 import { linodeIPFactory } from '@linode/utilities';
+import { linodeInterfaceFactoryVPC } from '@linode/utilities';
 import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
 
@@ -19,6 +20,20 @@ const ipDisplay = ipResponseToDisplayRows({
 const [ipDisplayVPC, ipDisplayVPCNAT] = createVPCIPv4Display([
   vpcIPv4Factory.build(),
 ]);
+const [ipDisplayRDMA] = createVPCIPv4Display(
+  [vpcIPv4Factory.build()],
+  linodeInterfaceFactoryVPC.build({
+    vpc: null,
+    rdma_vpc: {
+      ipv4: {
+        addresses: [],
+        ranges: [],
+      },
+      subnet_id: 1,
+      vpc_id: 1,
+    },
+  })
+);
 
 const handlers: IPAddressRowHandlers = {
   handleOpenEditRDNS: vi.fn(),
@@ -92,6 +107,25 @@ describe('LinodeIPAddressRow', () => {
     getAllByText(ipDisplayVPCNAT.type);
     // Check if actions were rendered
     getAllByText('Edit RDNS');
+  });
+
+  it('should render an RDMA VPC IPv4 Address row', () => {
+    const { getAllByText, queryByText } = renderWithTheme(
+      wrapWithTableBody(
+        <LinodeIPAddressRow
+          isLinodeInterface={false}
+          isUnreachablePublicIPv4={false}
+          linodeId={1}
+          readOnly={false}
+          {...handlers}
+          {...ipDisplayRDMA}
+        />
+      )
+    );
+
+    getAllByText(ipDisplayRDMA.address);
+    getAllByText(ipDisplayRDMA.type);
+    expect(queryByText('Edit RDNS')).not.toBeInTheDocument();
   });
 
   it('should disable the row if disabled is true and display a tooltip', async () => {

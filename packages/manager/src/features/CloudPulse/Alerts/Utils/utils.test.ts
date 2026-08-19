@@ -117,7 +117,10 @@ it('should correctly convert an alert definition values to the required format',
     label,
     rule_criteria: {
       rules: rule_criteria.rules.map((rule) => ({
-        ...rule,
+        aggregate_function: rule.aggregate_function,
+        operator: rule.operator,
+        metric: rule.metric,
+        threshold: rule.threshold,
         dimension_filters:
           rule.dimension_filters?.map(({ label, ...filter }) => filter) ?? [],
       })),

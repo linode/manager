@@ -15,7 +15,7 @@ export interface UseQuotaServicesResult {
 }
 
 export const useQuotaServices = (): UseQuotaServicesResult => {
-  const { blockStorageQuotas, objectStorageGlobalQuotas } = useFlags();
+  const { blockStorageQuotas } = useFlags();
   const { data: profile, isFetching: isFetchingProfile } = useProfile();
   const { data: accountSettings, isFetching: isFetchingAccountSettings } =
     useAccountSettings();
@@ -27,14 +27,14 @@ export const useQuotaServices = (): UseQuotaServicesResult => {
       !profile.restricted &&
       accountSettings?.object_storage === 'active'
     ) {
-      result.push(objectStorageQuotaService(objectStorageGlobalQuotas));
+      result.push(objectStorageQuotaService());
     }
     if (blockStorageQuotas) {
       result.push(volumesQuotaService);
     }
 
     return result;
-  }, [objectStorageGlobalQuotas, blockStorageQuotas, profile, accountSettings]);
+  }, [blockStorageQuotas, profile, accountSettings]);
 
   return {
     data: result,

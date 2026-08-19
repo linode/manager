@@ -1,5 +1,6 @@
+import { Button, NotificationBanner } from '@akamai/cds-components/react';
 import { useRevokeInferenceApiKeyMutation } from '@linode/queries';
-import { ActionsPanel, Box, Notice } from '@linode/ui';
+import { Box } from '@linode/ui';
 import * as React from 'react';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
@@ -45,22 +46,24 @@ export const RevokeApiKeyDialog = ({
   const isConfirmationValid = confirmationText === apiKey?.label;
 
   const actions = (
-    <ActionsPanel
-      primaryButtonProps={{
-        color: 'error',
-        'data-testid': 'revoke-api-key-confirm',
-        disabled: !isConfirmationValid,
-        label: 'Revoke API key',
-        loading: isRevoking,
-        onClick: handleRevoke,
-      }}
-      secondaryButtonProps={{
-        'data-testid': 'revoke-api-key-cancel',
-        label: 'Cancel',
-        onClick: handleClose,
-      }}
-      style={{ padding: 0 }}
-    />
+    <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
+      <Button
+        data-testid="revoke-api-key-cancel"
+        onClick={handleClose}
+        variant="secondary"
+      >
+        Cancel
+      </Button>
+      <Button
+        data-testid="revoke-api-key-confirm"
+        disabled={!isConfirmationValid}
+        onClick={handleRevoke}
+        processing={isRevoking}
+        variant="danger"
+      >
+        Revoke API key
+      </Button>
+    </div>
   );
 
   return (
@@ -71,11 +74,11 @@ export const RevokeApiKeyDialog = ({
       open={open}
       title={`Revoke key ${apiKey?.label ?? ''}`}
     >
-      <Notice spacingBottom={16} variant="warning">
-        <span>Are you sure you want to revoke this key?</span>
-        <br />
-        <span>This action cannot be undone.</span>
-      </Notice>
+      <NotificationBanner
+        style={{ marginBottom: '16px' }}
+        text="Are you sure you want to revoke this key? This action cannot be undone."
+        type="warning"
+      />
       <TypeToConfirm
         confirmationText={
           <Box

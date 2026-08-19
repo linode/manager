@@ -150,6 +150,7 @@ export const ShareGroupsTable = (props: ShareGroupsTableProps) => {
                   const cell = col.sortableProps ? (
                     <TableHeaderCell
                       className={col.className}
+                      data-pendo-id={col.pendoId}
                       key={idx}
                       onSort={() =>
                         handleOrderChange(
@@ -168,6 +169,7 @@ export const ShareGroupsTable = (props: ShareGroupsTableProps) => {
                   ) : (
                     <TableHeaderCell
                       className={col.className}
+                      data-pendo-id={col.pendoId}
                       key={idx}
                       style={{ ...col.style }}
                     >

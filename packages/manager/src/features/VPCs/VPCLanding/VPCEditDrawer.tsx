@@ -1,3 +1,4 @@
+import { Spacing } from '@akamai/cds-tokens';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useUpdateVPCMutation } from '@linode/queries';
 import { ActionsPanel, Drawer, Notice, TextField } from '@linode/ui';
@@ -6,6 +7,9 @@ import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
+
+import { VPCIPv4Ranges } from '../components/VPCIPv4Ranges';
+import { useIsCustomVPCIPv4RangesEnabled } from '../utils';
 
 import type { APIError, UpdateVPCPayload, VPC } from '@linode/api-v4';
 
@@ -27,6 +31,7 @@ export const VPCEditDrawer = (props: Props) => {
     mutateAsync: updateVPC,
     reset: resetMutation,
   } = useUpdateVPCMutation(vpc?.id ?? -1);
+  const { isCustomVPCIPv4RangesEnabled } = useIsCustomVPCIPv4RangesEnabled();
 
   const {
     control,
@@ -34,12 +39,14 @@ export const VPCEditDrawer = (props: Props) => {
     handleSubmit,
     reset: resetForm,
     setError,
+    trigger,
   } = useForm<UpdateVPCPayload>({
     mode: 'onBlur',
     resolver: yupResolver(updateVPCSchema),
     values: {
       description: vpc?.description ?? '',
       label: vpc?.label ?? '',
+      ipv4: vpc?.ipv4 ?? [],
     },
   });
 
@@ -111,6 +118,41 @@ export const VPCEditDrawer = (props: Props) => {
             />
           )}
         />
+        {isCustomVPCIPv4RangesEnabled && (
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              paddingTop: Spacing.S4,
+              paddingBottom: Spacing.S12,
+            }}
+          >
+            <Controller
+              control={control}
+              name="ipv4"
+              render={({ field, fieldState }) => (
+                <VPCIPv4Ranges
+                  disabled={!permissions.update_vpc}
+                  error={
+                    typeof fieldState.error?.message === 'string'
+                      ? fieldState.error.message
+                      : undefined
+                  }
+                  onBlur={field.onBlur}
+                  onChange={(ranges) => {
+                    field.onChange(ranges);
+                    trigger('ipv4');
+                  }}
+                  optional
+                  rangeErrors={(field.value ?? []).map(
+                    (_, index) => errors.ipv4?.[index]?.range?.message
+                  )}
+                  ranges={field.value ?? []}
+                />
+              )}
+            />
+          </div>
+        )}
         <ActionsPanel
           primaryButtonProps={{
             'data-testid': 'save-button',

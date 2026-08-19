@@ -33,6 +33,7 @@ export interface FirewallRuleDrawerProps {
 export interface FormState {
   action: FirewallPolicyType;
   addresses: string;
+  customProtocol?: string;
   description: string;
   label: string;
   ports?: string;

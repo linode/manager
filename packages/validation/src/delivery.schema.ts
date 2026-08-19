@@ -1,3 +1,4 @@
+import ipaddr from 'ipaddr.js';
 import {
   array,
   boolean,
@@ -14,7 +15,11 @@ import type { InferType, MixedSchema, Schema } from 'yup';
 const maxLength = 255;
 const maxLengthMessage = 'Length must be 255 characters or less.';
 
-const isValidUrl = (input: string, checkProtocol = true): boolean => {
+const isValidUrl = (
+  input: string,
+  checkProtocol = true,
+  prohibitIp = false,
+): boolean => {
   if (/\s/.test(input)) {
     return false;
   }
@@ -25,10 +30,17 @@ const isValidUrl = (input: string, checkProtocol = true): boolean => {
 
     const { protocol, hostname } = new URL(urlToCheck);
 
+    const unwrappedHostname =
+      hostname.startsWith('[') && hostname.endsWith(']')
+        ? hostname.slice(1, -1)
+        : hostname;
+    const hasIpAddress = ipaddr.isValid(unwrappedHostname);
+
     return (
       ['http:', 'https:'].includes(protocol) &&
       !['127.0.0.1', '[::1]', 'localhost'].includes(hostname) &&
-      (hostname.includes('.') || hostname.includes(':'))
+      (hostname.includes('.') || hostname.includes(':')) &&
+      (!prohibitIp || !hasIpAddress)
     );
   } catch {
     return false;
@@ -49,7 +61,7 @@ const basicAuthenticationDetailsSchema = object({
 const bearerTokenAuthenticationDetailsSchema = object({
   bearer_token_authentication_value: string()
     .max(8192, 'Length must be 8192 characters or less.')
-    .required('Bearer Token is required for Bearer Token authentication.'),
+    .required('Bearer token is required.'),
   bearer_token_authentication_header_name: string()
     .max(maxLength, maxLengthMessage)
     .optional(),
@@ -102,6 +114,7 @@ const clientCertificateDetailsSchema = object({
   client_ca_certificate: string(),
   client_certificate: string(),
   client_private_key: string(),
+  client_private_key_passphrase: string(),
 }).test(
   'all-or-nothing-cert-details',
   'If any certificate detail is provided, all are required.',
@@ -110,16 +123,27 @@ const clientCertificateDetailsSchema = object({
       return true;
     }
 
-    const { client_ca_certificate, client_certificate, client_private_key } =
-      value;
-
-    const fields = [
+    const {
+      client_ca_certificate,
+      client_certificate,
+      client_private_key,
+      client_private_key_passphrase,
+    } = value;
+    const requiredFields = [
       client_ca_certificate,
       client_certificate,
       client_private_key,
     ];
-    const hasAnyValue = fields.some(hasValue);
-    const hasAllValues = fields.every(hasValue);
+    const hasAnyValue = requiredFields.some(hasValue);
+    const hasAllValues = requiredFields.every(hasValue);
+
+    if (!client_private_key && hasValue(client_private_key_passphrase)) {
+      return this.createError({
+        path: `${this.path}.client_private_key_passphrase`,
+        message:
+          'Private Key Passphrase must be empty when the Client Private Key is not provided.',
+      });
+    }
 
     if (!hasAnyValue || hasAllValues) {
       return true;
@@ -204,7 +228,7 @@ const customHTTPSDetailsSchema = object({
     .optional()
     .test(
       'unique-header-names',
-      'Custom Header names must be unique.',
+      'Header name is already in use. Choose a different name.',
       function (headers) {
         if (!headers || headers.length === 0) {
           return true;
@@ -223,7 +247,8 @@ const customHTTPSDetailsSchema = object({
             errors.push(
               this.createError({
                 path: `${this.path}[${index}].name`,
-                message: 'Custom Header name must be unique.',
+                message:
+                  'Header name is already in use. Choose a different name.',
               }),
             );
           } else {
@@ -238,8 +263,10 @@ const customHTTPSDetailsSchema = object({
   endpoint_url: string()
     .max(maxLength, maxLengthMessage)
     .required('Endpoint URL is required.')
-    .test('is-valid-url', 'Endpoint URL must be a valid URL.', (value) =>
-      isValidUrl(value),
+    .test(
+      'is-valid-url-hostname',
+      "Endpoint URL must be a valid URL with a hostname. IP addresses aren't allowed.",
+      (value) => isValidUrl(value, true, true),
     ),
 });
 

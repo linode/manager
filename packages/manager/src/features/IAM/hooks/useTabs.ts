@@ -88,16 +88,25 @@ export function useTabs<T extends Tab>(
     return index === -1 ? 0 : index;
   }, [visibleTabs, matchRoute]);
 
+  const activateCurrentTab = React.useCallback(() => {
+    const el = tabsRef?.current as unknown as null | TabsElementInternal;
+    el?._activateTab?.(tabIndex);
+  }, [tabIndex, tabsRef]);
+
   const handleTabChange = React.useCallback(
     (index: number) => {
       const tab = visibleTabs[index];
       // Guard: if the tab's route is already active (e.g. triggered by our own
       // programmatic _activateTab call below), skip navigating to avoid loops.
       if (tab && !matchRoute({ fuzzy: true, to: String(tab.to) })) {
+        // CDS updates active visuals on click before route transition completes.
+        // Re-activate the current-route tab so blocked navigation can't leave
+        // the wrong tab highlighted.
+        activateCurrentTab();
         navigate({ to: tab.to });
       }
     },
-    [visibleTabs, navigate, matchRoute]
+    [visibleTabs, navigate, matchRoute, activateCurrentTab]
   );
 
   // Preload route bundles on hover, restoring the prefetch behaviour of
@@ -133,9 +142,8 @@ export function useTabs<T extends Tab>(
     // Cast through unknown: `_activateTab` is private on TabsElement, so
     // intersection fails at the type level. TabsElementInternal documents the
     // shape we rely on; `unknown` is the only valid escape hatch here.
-    const el = tabsRef?.current as unknown as null | TabsElementInternal;
-    el?._activateTab?.(tabIndex);
-  }, [tabIndex, tabsRef]);
+    activateCurrentTab();
+  }, [activateCurrentTab]);
 
   return {
     handleTabChange,

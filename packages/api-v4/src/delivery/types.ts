@@ -110,6 +110,7 @@ interface ClientCertificateDetails {
   client_ca_certificate?: string;
   client_certificate?: string;
   client_private_key?: string;
+  client_private_key_passphrase?: string;
   tls_hostname?: string;
 }
 

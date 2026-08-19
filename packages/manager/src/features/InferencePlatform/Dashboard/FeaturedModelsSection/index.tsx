@@ -1,13 +1,14 @@
-import { Box, Stack, Typography } from '@linode/ui';
 import React from 'react';
 
 import LeftArrowIcon from 'src/assets/icons/arrow-left.svg';
 import { Link } from 'src/components/Link';
 
+import { Box, Stack, Typography } from '../../components';
 import {
   ModelCard,
   ModelCardSkeleton,
 } from '../../ModelLibrary/ModelCard/ModelCard';
+import styles from './FeaturedModelsSection.module.css';
 
 import type { Model } from '../../ModelLibrary/modelLibrary.types';
 
@@ -21,11 +22,15 @@ export const FeaturedModelsSection = ({
   models,
 }: FeaturedModelsSectionProps) => {
   return (
-    <Stack gap={2} marginBottom={2}>
-      <Stack alignItems="center" direction="row" justifyContent="space-between">
-        <Typography variant="h3">Models</Typography>
+    <Stack className={styles.topStack} direction="column">
+      <Stack className={styles.middleStack} direction="row">
+        <Typography className={styles.typographyH3}>Models</Typography>
 
-        <Stack alignItems="center" direction="row" gap={0.5}>
+        <Stack
+          alignItems="center"
+          className={styles.bottomStack}
+          direction="row"
+        >
           <Link to="/inference-platform/model-library">View all Models</Link>
 
           <LeftArrowIcon
@@ -36,19 +41,7 @@ export const FeaturedModelsSection = ({
         </Stack>
       </Stack>
 
-      <Box
-        sx={(theme) => ({
-          display: 'grid',
-          gap: 2,
-          gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
-          [theme.breakpoints.down('lg')]: {
-            gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
-          },
-          [theme.breakpoints.down('md')]: {
-            gridTemplateColumns: '1fr',
-          },
-        })}
-      >
+      <Box className={styles.gridBox}>
         {isLoading
           ? Array.from({ length: 3 }).map((_, index) => (
               <ModelCardSkeleton key={`featured-skeleton-${index}`} />

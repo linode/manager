@@ -21,10 +21,7 @@ export const populateChangelogEntry = (entries, changelogContent) => {
             let description = '';
 
             for (const token of tokens) {
-              if (
-                token.type === 'inline' &&
-                token.content.includes('github.com/linode/manager/pull/')
-              ) {
+              if (token.type === 'inline' && token.content.includes('git.source.akamai.com/projects/FEE/repos/cloud-manager/pull-requests/')) {
                 description = token.content;
                 break;
               }

@@ -39,11 +39,18 @@ const getErrorText = (
     : undefined);
 
 interface Props {
+  disabled?: boolean;
   tfaOptionalUsers: string[] | undefined;
+  tfaOptionalUsersError?: unknown;
   totalUsers: number;
 }
 
-export const AccountUsersTable = ({ totalUsers, tfaOptionalUsers }: Props) => {
+export const AccountUsersTable = ({
+  totalUsers,
+  tfaOptionalUsers,
+  disabled,
+  tfaOptionalUsersError,
+}: Props) => {
   const { setValue } = useFormContext<TfaEnforcementFormValues>();
   const [showSelectedOnly, setShowSelectedOnly] = React.useState(false);
   const navigate = useNavigate();
@@ -99,6 +106,8 @@ export const AccountUsersTable = ({ totalUsers, tfaOptionalUsers }: Props) => {
     error: usersError,
     isLoading: isUsersLoading,
   } = useAllAccountUsersQuery(permissions?.view_user, usersFilter);
+
+  const usersDataError = tfaOptionalUsersError || usersError;
 
   const userOptions = React.useMemo(() => {
     if (!users) {
@@ -199,13 +208,16 @@ export const AccountUsersTable = ({ totalUsers, tfaOptionalUsers }: Props) => {
     [scopedOptions, selectedUsersSet]
   );
 
-  const clearDisabled = !filteredRows.some((row) =>
-    selectedUsersSet.has(row.option.value)
-  );
+  const clearDisabled =
+    !!usersDataError ||
+    !filteredRows.some((row) => selectedUsersSet.has(row.option.value));
 
   const hasNoResults = paginatedRows.length === 0 && userOptions.length === 0;
+
+  const errorText = getErrorText(searchError, usersDataError);
+
   const showNoUsersText =
-    !isLoading && !searchError && !usersError && hasNoResults;
+    !isLoading && !searchError && !usersDataError && hasNoResults;
 
   const applyOptionalUsersUpdate = (next: string[]) => {
     setOptionalUsers(next);
@@ -254,9 +266,7 @@ export const AccountUsersTable = ({ totalUsers, tfaOptionalUsers }: Props) => {
     applyOptionalUsersUpdate(next);
   };
 
-  const errorText = getErrorText(searchError, usersError);
-
-  const shouldShowPagination = totalCount > MIN_PAGE_SIZE;
+  const shouldShowPagination = totalCount > MIN_PAGE_SIZE && !usersDataError;
 
   return (
     <div>
@@ -280,12 +290,13 @@ export const AccountUsersTable = ({ totalUsers, tfaOptionalUsers }: Props) => {
 
       <AccountUsersTableControls
         clearDisabled={clearDisabled}
-        filteredUsersCount={userOptions.length}
+        disabled={disabled}
+        filteredUsersCount={usersDataError ? 0 : userOptions.length}
         onClear={handleClear}
         onSelectAll={handleSelectAll}
-        scopedOptionsLength={scopedOptions.length}
-        selectedScopedCount={selectedScopedCount}
-        selectedUsersCount={selectedUsersCount}
+        scopedOptionsLength={usersDataError ? 0 : scopedOptions.length}
+        selectedScopedCount={usersDataError ? 0 : selectedScopedCount}
+        selectedUsersCount={usersDataError ? 0 : selectedUsersCount}
       />
 
       <div>
@@ -296,13 +307,14 @@ export const AccountUsersTable = ({ totalUsers, tfaOptionalUsers }: Props) => {
           }}
         >
           <AccountUsersTableHead
+            disabled={disabled}
             onSelectAll={handleSelectAll}
             order={order}
-            scopedOptionsLength={scopedOptions.length}
-            selectedScopedCount={selectedScopedCount}
+            scopedOptionsLength={usersDataError ? 0 : scopedOptions.length}
+            selectedScopedCount={usersDataError ? 0 : selectedScopedCount}
           />
           <TableBody>
-            {isLoading ? (
+            {errorText ? null : isLoading ? (
               <TableRow>
                 <TableCell style={{ justifyContent: 'center' }}>
                   <CircleProgress />
@@ -312,6 +324,7 @@ export const AccountUsersTable = ({ totalUsers, tfaOptionalUsers }: Props) => {
               paginatedRows.map((p) => (
                 <AccountUserRow
                   checked={selectedUsersSet.has(p.option.value)}
+                  disabled={disabled}
                   email={p.email}
                   key={p.rank}
                   onToggle={(checked) => handleToggle(p.option.value, checked)}

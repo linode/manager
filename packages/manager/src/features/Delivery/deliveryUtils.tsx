@@ -34,17 +34,20 @@ import type {
 } from 'src/features/Delivery/Shared/types';
 
 /**
- * Hook to determine if the ACLP Logs feature is new for the current user.
+ * Hook to determine if the features in ACLP Logs feature are enabled for the current user.
  */
 export const useACLPLogsFlags = (): {
   isACLPLogsBearerTokenAuthEnabled: boolean;
   isACLPLogsNew: boolean;
+  isPrivateKeyPassphraseEnabled: boolean;
 } => {
   const flags = useFlags();
 
   return {
     isACLPLogsBearerTokenAuthEnabled: !!flags.aclpLogs?.bearerTokenAuthEnabled,
     isACLPLogsNew: !!flags.aclpLogs?.new,
+    isPrivateKeyPassphraseEnabled:
+      !!flags.aclpLogs?.privateKeyPassphraseEnabled,
   };
 };
 
@@ -114,11 +117,24 @@ export const getDestinationPayloadDetails = (
 
       if (shouldRemoveCertDetails) {
         propsToRemove.push('client_certificate_details');
-      } else if (!certDetails.tls_hostname?.trim()) {
-        finalCustomHTTPSDetails = {
-          ...customHTTPSDetails,
-          client_certificate_details: omitProps(certDetails, ['tls_hostname']),
-        };
+      } else {
+        const clientCertDetailsPropsToRemove: any[] = [];
+        if (!certDetails.tls_hostname?.trim()) {
+          clientCertDetailsPropsToRemove.push('tls_hostname');
+        }
+        if (!certDetails.client_private_key_passphrase?.trim()) {
+          clientCertDetailsPropsToRemove.push('client_private_key_passphrase');
+        }
+
+        if (clientCertDetailsPropsToRemove.length > 0) {
+          finalCustomHTTPSDetails = {
+            ...customHTTPSDetails,
+            client_certificate_details: omitProps(
+              certDetails,
+              clientCertDetailsPropsToRemove
+            ),
+          };
+        }
       }
     }
 

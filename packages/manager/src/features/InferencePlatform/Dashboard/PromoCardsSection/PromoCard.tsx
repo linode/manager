@@ -1,7 +1,9 @@
-import { Box, Paper, Typography } from '@linode/ui';
 import React from 'react';
 
 import { Link } from 'src/components/Link';
+
+import { Box, Paper, Typography } from '../../components';
+import styles from './PromoCard.module.css';
 
 const PROMO_TILE_COLUMNS = 6;
 const PROMO_TILE_ROWS = 4;
@@ -34,7 +36,7 @@ interface PromoCardProps {
   card: PromoCardData;
 }
 
-const getTileShapeSx = (tile: PromoTileStyle, tileColor: string) => {
+const getTileShapeStyle = (tile: PromoTileStyle, tileColor: string) => {
   if (tile === 'empty') {
     return { display: 'none' };
   }
@@ -103,107 +105,35 @@ export const PromoCard = ({ card }: PromoCardProps) => {
   );
 
   return (
-    <Paper
-      sx={(theme) => ({
-        '& .promoCardCta': {
-          backgroundColor: theme.tokens.color.Ultramarine[90], // Action Button Field
-          borderRadius: '999px',
-          color: theme.palette.primary.contrastText,
-          display: 'inline-flex',
-          font: theme.font.semibold,
-          fontSize: theme.tokens.font.FontSize.S,
-          lineHeight: 1,
-          padding: '10px 16px 9px 16px',
-          textDecoration: 'none',
-          width: 'fit-content',
-        },
-        '& .promoCardCta:hover': {
-          backgroundColor: theme.tokens.color.Ultramarine[80], // Action Button Field
-        },
-        background: `linear-gradient(140deg, ${
-          theme.palette.mode === 'light'
-            ? `${theme.tokens.color.Ultramarine[20]} 0%, ${theme.tokens.color.Ultramarine[30]} 100%` // Card background gradient - LIGHT
-            : `${theme.tokens.color.Ultramarine[100]} 0%, ${theme.tokens.color.Ultramarine[90]} 100%` // Card background gradient - DARK
-        })`, // Tile background colour
-        border: 'none',
-        borderRadius: 1,
-        overflow: 'hidden',
-        p: 3,
-        position: 'relative',
-      })}
-      variant="outlined"
-    >
-      <Box
-        sx={{
-          height: '100%',
-          left: 0,
-          overflow: 'hidden',
-          position: 'absolute',
-          top: 0,
-          width: '100%',
-        }}
-      >
+    <Paper className={styles.promoCard}>
+      <Box className={styles.outerBox}>
         <Box
-          sx={{
-            aspectRatio: `${PROMO_TILE_COLUMNS} / ${PROMO_TILE_ROWS}`,
-            display: 'grid',
-            gridTemplateColumns: `repeat(${PROMO_TILE_COLUMNS}, minmax(0, 1fr))`,
-            gridTemplateRows: `repeat(${PROMO_TILE_ROWS}, minmax(0, 1fr))`,
-            height: '100%',
-            left: '50%',
-            position: 'absolute',
-            top: '50%',
+          className={styles.promoBox}
+          style={{
             transform: `translate(calc(-50% + ${card.pattern.offsetX}px), calc(-50% + ${card.pattern.offsetY}px)) scale(${card.pattern.scale})`,
-            transformOrigin: 'center',
           }}
         >
           {tiledBackground.map((tile, index) => (
-            <Box
-              key={`${card.title}-${index}`}
-              sx={{
-                aspectRatio: '1 / 1',
-                overflow: 'hidden',
-                position: 'relative',
-              }}
-            >
-              <Box
-                sx={(theme) => ({
-                  ...getTileShapeSx(
-                    tile,
-                    theme.palette.mode === 'light'
-                      ? 'hsla(220, 80%, 46%, 0.05)' // Tile pattern colour - LIGHT
-                      : 'hsla(220, 26%, 2%, 0.14)' // Tile pattern colour - DARK
-                  ), // Tile pattern colour
-                })}
-              />
+            <Box className={styles.boxTitle} key={`${card.title}-${index}`}>
+              <Box style={getTileShapeStyle(tile, 'var(--tile-color)')} />
             </Box>
           ))}
         </Box>
       </Box>
 
       {/* Main Card Definitinion */}
-      <Box
-        sx={{
-          display: 'grid',
-          gridTemplateRows: 'auto auto auto',
-          position: 'relative',
-          rowGap: 1.5,
-          zIndex: 1,
-        }}
-      >
-        <Box sx={{ alignItems: 'flex-start', display: 'flex', minHeight: 20 }}>
-          <Typography padding={0} variant="h3">
-            {card.title}
-          </Typography>
+      <Box className={styles.boxGrid}>
+        <Box className={styles.boxH3}>
+          <Typography className={styles.typographyH3}>{card.title}</Typography>
         </Box>
 
-        <Box sx={{ alignItems: 'flex-start', display: 'flex', minHeight: 38 }}>
-          <Typography color="text.secondary" margin={0}>
+        <Box className={styles.boxDescription}>
+          <Typography className={styles.typographyDescription}>
             {card.description}
           </Typography>
         </Box>
 
-        <Box sx={{ alignItems: 'flex-end', display: 'flex', minHeight: 39 }}>
+        <Box align-items="flex-end" className={styles.boxEnd}>
           <Link
             className="promoCardCta"
             external={card.to.startsWith('http')}

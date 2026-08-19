@@ -36,6 +36,7 @@ import { AssignedEntitiesTableBody } from './AssignedEntitiesTableBody';
 import { AssignedEntitiesTableHead } from './AssignedEntitiesTableHead';
 import { ChangeRoleForEntityDrawer } from './ChangeRoleForEntityDrawer';
 
+import type { IAMAction } from '../../routes';
 import type { DrawerModes, EntitiesRole, SelectOption } from '../types';
 import type { EntityType } from '@linode/api-v4';
 
@@ -68,9 +69,12 @@ export const AssignedEntitiesTable = ({ username }: Props) => {
     useIsDefaultDelegationRolesForChildAccount();
 
   const {
+    action,
     query: queryParam,
+    entity: entityParam,
     entityType: entityTypeParam,
     order: orderParam,
+    role: roleParam,
     selectedRole: selectedRoleSearchParam,
     orderBy: orderByParam,
   } = useSearch({
@@ -108,10 +112,6 @@ export const AssignedEntitiesTable = ({ username }: Props) => {
 
   const [drawerMode, setDrawerMode] =
     React.useState<DrawerModes>('assign-role');
-
-  const [isChangeRoleForEntityDrawerOpen, setIsChangeRoleForEntityDrawerOpen] =
-    React.useState<boolean>(false);
-  const [selectedRole, setSelectedRole] = React.useState<EntitiesRole>();
 
   const {
     data: entities,
@@ -171,31 +171,106 @@ export const AssignedEntitiesTable = ({ username }: Props) => {
     );
   }, [filterableOptions, entityTypeParam]);
 
-  const handleChangeRole = (role: EntitiesRole) => {
-    setIsChangeRoleForEntityDrawerOpen(true);
-    setSelectedRole(role);
-    setDrawerMode('change-role-for-entity');
+  const selectedRole = React.useMemo(
+    () =>
+      roleParam && roles
+        ? roles.find(
+            (r) =>
+              r.role_name === roleParam &&
+              (!entityParam || r.entity_name === entityParam)
+          )
+        : undefined,
+    [roleParam, entityParam, roles]
+  );
+
+  const actionHandler = (
+    action: IAMAction,
+    username?: string,
+    role?: string,
+    entity?: string
+  ) => {
+    navigate({
+      to: isDefaultDelegationRolesForChildAccount
+        ? DEFAULTS_ENTITIES_URL
+        : USER_ENTITIES_URL,
+      search: (prev) => ({
+        ...prev,
+        action,
+        username,
+        role,
+        entity,
+      }),
+    });
   };
-  const [isRemoveAssignmentDialogOpen, setIsRemoveAssignmentDialogOpen] =
-    React.useState<boolean>(false);
+
+  const handleChangeRole = (role: EntitiesRole) => {
+    setDrawerMode('change-role-for-entity');
+    actionHandler(
+      'change-role-for-entity',
+      undefined,
+      role.role_name,
+      role.entity_name
+    );
+  };
 
   const handleRemoveAssignment = (role: EntitiesRole) => {
-    setIsRemoveAssignmentDialogOpen(true);
-    setSelectedRole(role);
+    actionHandler('remove-entity', undefined, role.role_name, role.entity_name);
   };
 
-  /**
-   * Closes the appropriate assignment-related dialog and adjusts pagination if needed.
-   *
-   * @param drawerMode Optional mode indicating which dialog should be closed.
-   */
-  const handleDialogClose = (drawerMode?: DrawerModes) => {
-    if (drawerMode && drawerMode === 'change-role-for-entity') {
-      setIsChangeRoleForEntityDrawerOpen(false);
-    } else {
-      setIsRemoveAssignmentDialogOpen(false);
+  const clearDialogAction = (expectedAction?: IAMAction) => {
+    // Both overlays share the same `action` search param. Guard ensures a close
+    // event from one overlay cannot wipe the other's URL state.
+    if (expectedAction && action !== expectedAction) {
+      return;
     }
+
+    // Only clear `action` here so modal bodies keep `role`/`entity` during the
+    // exit animation. Remaining params are cleared in `clearDialogParams`.
+    navigate({
+      to: isDefaultDelegationRolesForChildAccount
+        ? DEFAULTS_ENTITIES_URL
+        : USER_ENTITIES_URL,
+      search: (prev) => ({
+        ...prev,
+        action: undefined,
+      }),
+    });
   };
+
+  const clearDialogParams = () => {
+    navigate({
+      to: isDefaultDelegationRolesForChildAccount
+        ? DEFAULTS_ENTITIES_URL
+        : USER_ENTITIES_URL,
+      search: (prev) => ({
+        ...prev,
+        role: undefined,
+        username: undefined,
+        entity: undefined,
+      }),
+    });
+  };
+
+  const closeDrawer = (expectedAction: IAMAction) => {
+    if (expectedAction && action !== expectedAction) {
+      return;
+    }
+
+    navigate({
+      to: isDefaultDelegationRolesForChildAccount
+        ? DEFAULTS_ENTITIES_URL
+        : USER_ENTITIES_URL,
+      search: (prev) => ({
+        ...prev,
+        action: undefined,
+        role: undefined,
+        username: undefined,
+        entity: undefined,
+      }),
+    });
+  };
+
+  const isRolesLoading = loading || entitiesLoading;
 
   const filteredRoles = getFilteredRoles({
     entityType: entityTypeParam ?? 'all',
@@ -329,15 +404,18 @@ export const AssignedEntitiesTable = ({ username }: Props) => {
         </TableBody>
       </Table>
       <ChangeRoleForEntityDrawer
+        isRolesLoading={isRolesLoading}
         mode={drawerMode}
-        onClose={() => handleDialogClose(drawerMode)}
-        open={isChangeRoleForEntityDrawerOpen}
+        onClose={() => closeDrawer('change-role-for-entity')}
+        open={action === 'change-role-for-entity'}
         role={selectedRole}
         username={username}
       />
       <RemoveAssignmentConfirmationDialog
-        onClose={() => handleDialogClose()}
-        open={isRemoveAssignmentDialogOpen}
+        isRolesLoading={isRolesLoading}
+        onClose={() => clearDialogAction('remove-entity')}
+        onExited={clearDialogParams}
+        open={action === 'remove-entity'}
         role={selectedRole}
         username={username}
       />

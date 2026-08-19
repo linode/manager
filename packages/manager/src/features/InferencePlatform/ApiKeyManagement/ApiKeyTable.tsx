@@ -1,19 +1,26 @@
 import {
+  LoadingSpinner,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeaderCell,
+  TableRow,
+  TextOverflow,
+  ZeroErrorIcon,
+  ZeroErrorState,
+  ZeroErrorTitle,
+} from '@akamai/cds-components/react';
+import {
   useAllInferenceApiKeysQuery,
   useUpdateInferenceApiKeyMutation,
 } from '@linode/queries';
-import { Box, CircleProgress, ErrorState, Typography } from '@linode/ui';
+import { Box, Typography } from '@linode/ui';
 import React, { useMemo, useState } from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import { Table as LinodeTable } from 'src/components/Table';
-import { TableBody } from 'src/components/TableBody';
-import { TableCell } from 'src/components/TableCell';
-import { TableHead } from 'src/components/TableHead';
-import { TableRow } from 'src/components/TableRow';
-import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
 import { ApiKeyDetailsDrawer } from './ApiKeyDetailsDrawer';
@@ -40,6 +47,41 @@ interface ApiKeyTableProps {
   showPlaygroundKeys?: boolean;
   statusFilter?: StatusFilterOption;
 }
+
+const COLUMN_WIDTHS = {
+  actions: '3%',
+  allowedModels: '12%',
+  expires: '14%',
+  key: '12%',
+  lastUsed: '14%',
+  name: '30%',
+  status: '10%',
+};
+
+const TABLE_CELL_BASE_STYLE = {
+  boxSizing: 'border-box' as const,
+};
+
+/**
+ * Generates consistent cell styles for table columns.
+ * @param column - The column key from COLUMN_WIDTHS
+ * @param options - Additional style options
+ */
+const getCellStyle = (
+  column: keyof typeof COLUMN_WIDTHS,
+  options?: {
+    truncate?: boolean;
+    whiteSpace?: 'normal' | 'nowrap';
+  }
+): React.CSSProperties => ({
+  ...(options?.truncate && {
+    maxWidth: COLUMN_WIDTHS[column],
+    overflow: 'hidden',
+  }),
+  minWidth: COLUMN_WIDTHS[column],
+  ...(options?.whiteSpace && { whiteSpace: options.whiteSpace }),
+  ...TABLE_CELL_BASE_STYLE,
+});
 
 export const ApiKeyTable = ({
   filter,
@@ -121,8 +163,10 @@ export const ApiKeyTable = ({
   const API_KEYS_TABLE_PREFERENCE_KEY = 'api-keys-table';
 
   const filteredKeys = useMemo(() => {
-    if (!apiKeys) return [];
-    return apiKeys.filter((row: ApiKey) => {
+    if (!apiKeys || !Array.isArray(apiKeys)) {
+      return [];
+    }
+    return apiKeys.filter((row) => {
       // Filter out playground keys if checkbox is unchecked
       if (!showPlaygroundKeys && row.key_type === 'playground') {
         return false;
@@ -140,9 +184,7 @@ export const ApiKeyTable = ({
         row.key_prefix.toLowerCase().includes(lower) ||
         String(row.id).includes(lower) ||
         row.status.toLowerCase().includes(lower) ||
-        row.allowed_models.some((model: string) =>
-          model.toLowerCase().includes(lower)
-        )
+        row.allowed_models.some((model) => model.toLowerCase().includes(lower))
       );
     });
   }, [apiKeys, filter, showPlaygroundKeys, statusFilter]);
@@ -189,26 +231,10 @@ export const ApiKeyTable = ({
     preferenceKey: API_KEYS_TABLE_PREFERENCE_KEY,
   });
 
-  const handleSort = (key: string) => {
-    if (orderBy === key) {
-      setOrder(order === 'asc' ? 'desc' : 'asc');
-    } else {
-      setOrderBy(key);
-      setOrder('asc');
-    }
+  const handleSort = (event: CustomEvent, key: string) => {
+    setOrderBy(key);
+    setOrder(event.detail as 'asc' | 'desc');
   };
-
-  // Helper to render a sortable table header cell
-  const renderSortCell = (label: string, display: string) => (
-    <TableSortCell
-      active={orderBy === label}
-      direction={order}
-      handleClick={() => handleSort(label)}
-      label={label}
-    >
-      {display}
-    </TableSortCell>
-  );
 
   // Loading state
   if (isLoading) {
@@ -221,14 +247,25 @@ export const ApiKeyTable = ({
           p: 4,
         }}
       >
-        <CircleProgress />
+        <LoadingSpinner data-testid="loading-spinner" />
       </Box>
     );
   }
 
   // Error state
   if (error) {
-    return <ErrorState errorText="Failed to load API keys." />;
+    let errorMessage = 'Failed to load API keys. Please try again.';
+    if (Array.isArray(error) && error[0]?.reason) {
+      errorMessage = error[0].reason;
+    } else if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+    return (
+      <ZeroErrorState>
+        <ZeroErrorIcon icon="error-cloud" />
+        <ZeroErrorTitle>{errorMessage}</ZeroErrorTitle>
+      </ZeroErrorState>
+    );
   }
 
   // Empty state
@@ -249,56 +286,117 @@ export const ApiKeyTable = ({
 
   return (
     <Box sx={{ width: '100%' }}>
-      <LinodeTable aria-label="API Keys">
-        <TableHead>
-          <TableRow>
-            {renderSortCell('label', 'Name')}
-            <TableCell>Key</TableCell>
-            <TableCell>Status</TableCell>
-            {renderSortCell('last_used', 'Last used')}
-            <TableCell>Allowed Models</TableCell>
-            {renderSortCell('expiry', 'Expires')}
-            <TableCell />
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {pagination.paginatedData.map((key) => (
-            <TableRow key={key.id}>
-              <TableCell>
-                <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
-                  {key.label}
-                  {key.key_type === 'playground' && (
-                    <KeyTypeBadge keyType={key.key_type} />
-                  )}
-                </Box>
-              </TableCell>
-              <TableCell>{key.key_prefix}...</TableCell>
-              <TableCell>
-                <StatusBadge status={key.status} />
-              </TableCell>
-              <TableCell>
-                {key.last_used ? (
-                  <DateTimeDisplay humanizeCutoff="day" value={key.last_used} />
-                ) : (
-                  <Typography>Never</Typography>
-                )}
-              </TableCell>
-              <TableCell>
-                <ModelsPopover models={key.allowed_models} />
-              </TableCell>
-              <TableCell>
-                <ExpiresDisplay expiry={key.expiry} />
-              </TableCell>
-              <TableCell>
-                <ActionMenu
-                  actionsList={getApiKeyActions(key)}
-                  ariaLabel={key.label}
-                />
-              </TableCell>
+      <Box
+        sx={{
+          // The CDS cell is a flex container, so the tallest child drives row
+          // height. ActionMenu's IconButton ships `padding: 10px` around a
+          // 24px kebab icon (44px), which pushed rows to ~64px. Scoped here so
+          // the shared ActionMenu is unaffected elsewhere.
+          '& cds-table-cell .MuiIconButton-root': {
+            height: 'auto',
+            paddingBottom: 0,
+            paddingTop: 0,
+          },
+          overflowX: 'auto',
+        }}
+      >
+        <Table
+          aria-label="API Keys"
+          style={{
+            border: '1px solid var(--token-alias-border-normal)',
+          }}
+        >
+          <TableHead>
+            <TableRow headerborder>
+              <TableHeaderCell
+                onSort={(event) => handleSort(event, 'label')}
+                sortable
+                sorted={orderBy === 'label' ? order : undefined}
+                style={getCellStyle('name')}
+              >
+                Name
+              </TableHeaderCell>
+              <TableHeaderCell style={getCellStyle('key')}>Key</TableHeaderCell>
+              <TableHeaderCell style={getCellStyle('status')}>
+                Status
+              </TableHeaderCell>
+              <TableHeaderCell
+                onSort={(event) => handleSort(event, 'last_used')}
+                sortable
+                sorted={orderBy === 'last_used' ? order : undefined}
+                style={getCellStyle('lastUsed', { whiteSpace: 'nowrap' })}
+              >
+                Last used
+              </TableHeaderCell>
+              <TableHeaderCell
+                style={getCellStyle('allowedModels', { whiteSpace: 'nowrap' })}
+              >
+                Allowed Models
+              </TableHeaderCell>
+              <TableHeaderCell
+                onSort={(event) => handleSort(event, 'expiry')}
+                sortable
+                sorted={orderBy === 'expiry' ? order : undefined}
+                style={getCellStyle('expires')}
+              >
+                Expires
+              </TableHeaderCell>
+              <TableHeaderCell style={getCellStyle('actions')} />
             </TableRow>
-          ))}
-        </TableBody>
-      </LinodeTable>
+          </TableHead>
+          <TableBody>
+            {pagination.paginatedData.map((key) => (
+              <TableRow hoverable key={key.id} rowborder zebra>
+                <TableCell style={getCellStyle('name', { truncate: true })}>
+                  <Box
+                    sx={{
+                      alignItems: 'center',
+                      display: 'flex',
+                      gap: 1,
+                      overflow: 'hidden',
+                    }}
+                  >
+                    <TextOverflow style={{ flex: 1, minWidth: 0 }}>
+                      {key.label}
+                    </TextOverflow>
+                    {key.key_type === 'playground' && (
+                      <KeyTypeBadge keyType={key.key_type} />
+                    )}
+                  </Box>
+                </TableCell>
+                <TableCell style={getCellStyle('key')}>
+                  {key.key_prefix}...
+                </TableCell>
+                <TableCell style={getCellStyle('status')}>
+                  <StatusBadge status={key.status} />
+                </TableCell>
+                <TableCell style={getCellStyle('lastUsed')}>
+                  {key.last_used ? (
+                    <DateTimeDisplay
+                      humanizeCutoff="day"
+                      value={key.last_used}
+                    />
+                  ) : (
+                    <Typography>Never</Typography>
+                  )}
+                </TableCell>
+                <TableCell style={getCellStyle('allowedModels')}>
+                  <ModelsPopover models={key.allowed_models} />
+                </TableCell>
+                <TableCell style={getCellStyle('expires')}>
+                  <ExpiresDisplay expiry={key.expiry} />
+                </TableCell>
+                <TableCell style={getCellStyle('actions')}>
+                  <ActionMenu
+                    actionsList={getApiKeyActions(key)}
+                    ariaLabel={key.label}
+                  />
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </Box>
       <PaginationFooter
         count={sortedKeys.length}
         customOptions={pageSizeOptions}

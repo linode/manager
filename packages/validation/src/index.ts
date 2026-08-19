@@ -13,6 +13,7 @@ export * from './linodes.schema';
 export * from './longview.schema';
 export * from './managed.schema';
 export * from './marketplace.schema';
+export * from './natgateways.schema';
 export * from './networking.schema';
 export * from './nodebalancers.schema';
 export * from './objectStorageKeys.schema';

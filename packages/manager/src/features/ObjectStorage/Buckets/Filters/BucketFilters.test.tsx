@@ -13,7 +13,6 @@ const mocks = vi.hoisted(() => ({
   useSearch: vi.fn(),
   useObjectStorageRegionsWithAssignedEndpoints: vi.fn(),
   useObjectStorageBucketsByRegions: vi.fn(),
-  useIsObjectStorageGen2Enabled: vi.fn(),
 }));
 
 vi.mock('@tanstack/react-router', async () => {
@@ -38,13 +37,6 @@ vi.mock(
 vi.mock('../hooks/useObjectStorageBucketsByRegions', () => ({
   useObjectStorageBucketsByRegions: mocks.useObjectStorageBucketsByRegions,
 }));
-
-vi.mock(
-  'src/features/ObjectStorage/shared/hooks/useIsObjectStorageGen2Enabled',
-  () => ({
-    useIsObjectStorageGen2Enabled: mocks.useIsObjectStorageGen2Enabled,
-  })
-);
 
 // Mock the heavy child multiselect components so we can focus on search param behavior.
 vi.mock(
@@ -102,9 +94,6 @@ describe('BucketFilters', () => {
         'eu-west': { data: [] },
       },
     });
-    mocks.useIsObjectStorageGen2Enabled.mockReturnValue({
-      isObjectStorageGen2Enabled: true,
-    });
   });
 
   it('renders the filter heading', () => {
@@ -155,15 +144,5 @@ describe('BucketFilters', () => {
         replace: true,
       });
     });
-  });
-
-  it('does not render the endpoint multiselect when Gen2 is disabled', () => {
-    mocks.useIsObjectStorageGen2Enabled.mockReturnValue({
-      isObjectStorageGen2Enabled: false,
-    });
-    renderWithTheme(<BucketFilters />);
-    expect(
-      screen.queryByTestId('endpoint-multiselect')
-    ).not.toBeInTheDocument();
   });
 });

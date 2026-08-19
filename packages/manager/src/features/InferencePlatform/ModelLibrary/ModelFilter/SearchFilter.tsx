@@ -1,5 +1,5 @@
-import { Box, TextField } from '@linode/ui';
-import SearchIcon from '@mui/icons-material/Search';
+import { SearchField } from '@akamai/cds-components/react/SearchField';
+import { Box } from '@linode/ui';
 import React from 'react';
 
 import type { ModelFilterState } from '../modelLibrary.types';
@@ -15,18 +15,13 @@ export const SearchFilter = ({
 }: SearchFilterProps) => {
   return (
     <Box sx={{ flex: '1 1 220px', minWidth: 180, maxWidth: 240 }}>
-      <TextField
-        fullWidth
-        InputProps={{
-          startAdornment: (
-            <SearchIcon
-              sx={{ color: 'text.secondary', fontSize: 18, mr: 0.5 }}
-            />
-          ),
-        }}
-        label="Search"
-        onChange={(e) => onFilterChange({ searchQuery: e.target.value })}
+      <SearchField
+        aria-label="Search"
+        onChange={(e: CustomEvent<{ value: string }>) =>
+          onFilterChange({ searchQuery: e.detail.value })
+        }
         placeholder="Models, providers, use cases"
+        style={{ width: '100%' }}
         value={searchQuery}
       />
     </Box>

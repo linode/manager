@@ -1,0 +1,12 @@
+.box{
+  display: grid;
+  gap: var(--token-global-spacing-s16);
+  margin-bottom: var(--token-global-spacing-s16);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+@media (max-width: 960px) {
+  .box {
+    grid-template-columns: 1fr;
+  }
+}

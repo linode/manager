@@ -46,7 +46,7 @@ export const GlobalFilterGroupByRenderer = (
   const { options, defaultValue, isLoading } = useGlobalDimensions(
     selectedDashboard?.id,
     selectedDashboard?.service_type,
-    preferenceGroupBy as string[]
+    savePreferences ? (preferenceGroupBy as string[]) : undefined
   );
 
   const [open, setOpen] = React.useState(false);
@@ -89,7 +89,7 @@ export const GlobalFilterGroupByRenderer = (
           size="small"
           sx={(theme) => ({
             marginBlockEnd: 'auto',
-            marginTop: { md: theme.spacingFunction(28) },
+            marginTop: { md: theme.spacingFunction(24) },
             color: isSelected
               ? theme.tokens.component.Button.Primary.Hover.Background
               : 'inherit',

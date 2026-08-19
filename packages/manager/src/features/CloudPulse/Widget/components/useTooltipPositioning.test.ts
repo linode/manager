@@ -127,7 +127,7 @@ describe('useTooltipPositioning - Horizontal Placement', () => {
     ({ mockContainerElement, mockTooltipElement } = setupMocks());
   });
 
-  it('should place tooltip to the left when point is in right half of chart', () => {
+  it('should place tooltip to the left when right placement would overflow viewport', () => {
     const { result } = renderHook(() => useTooltipPositioning());
 
     act(() => {
@@ -140,13 +140,13 @@ describe('useTooltipPositioning - Horizontal Placement', () => {
     act(() => {
       result.current.handleMouseMove({
         ...mockChartData,
-        activeCoordinate: { x: 600, y: 100 },
+        activeCoordinate: { x: 1000, y: 100 },
       });
     });
 
     expect(result.current.tooltipPos).toBeDefined();
     expect(result.current.tooltipPos?.x).toBe(
-      600 - mockTooltipElement.getBoundingClientRect().width - horizontalGap
+      1000 - mockTooltipElement.getBoundingClientRect().width - horizontalGap
     );
   });
 
@@ -181,7 +181,7 @@ describe('useTooltipPositioning - Vertical Placement', () => {
     ({ mockContainerElement, mockTooltipElement } = setupMocks());
   });
 
-  it('should place tooltip above when point is in bottom half of chart', () => {
+  it('should place tooltip above when bottom placement would overflow viewport', () => {
     const { result } = renderHook(() => useTooltipPositioning());
 
     act(() => {
@@ -194,17 +194,17 @@ describe('useTooltipPositioning - Vertical Placement', () => {
     act(() => {
       result.current.handleMouseMove({
         ...mockChartData,
-        activeCoordinate: { x: 100, y: 500 },
+        activeCoordinate: { x: 100, y: 680 },
       });
     });
 
     expect(result.current.tooltipPos).toBeDefined();
     expect(result.current.tooltipPos?.y).toBe(
-      500 - mockTooltipElement.getBoundingClientRect().height - verticalGap
+      680 - mockTooltipElement.getBoundingClientRect().height - verticalGap
     );
   });
 
-  it('should place tooltip below when point is in top half of chart', () => {
+  it('should place tooltip above when there is enough space above', () => {
     const { result } = renderHook(() => useTooltipPositioning());
 
     act(() => {
@@ -222,7 +222,9 @@ describe('useTooltipPositioning - Vertical Placement', () => {
     });
 
     expect(result.current.tooltipPos).toBeDefined();
-    expect(result.current.tooltipPos?.y).toBe(100 + verticalGap);
+    expect(result.current.tooltipPos?.y).toBe(
+      100 - mockTooltipElement.getBoundingClientRect().height - verticalGap
+    );
   });
 });
 
@@ -395,8 +397,7 @@ describe('useTooltipPositioning - State Updates', () => {
 describe('useTooltipPositioning - Constants', () => {
   it('should respect TOOLTIP_POSITIONING constants', () => {
     expect(TOOLTIP_POSITIONING.edgePadding).toBe(10);
-    expect(TOOLTIP_POSITIONING.horizontalGap).toBe(8);
-    expect(TOOLTIP_POSITIONING.verticalGap).toBe(8);
-    expect(TOOLTIP_POSITIONING.sideBarWidthAdjustment).toBe(250);
+    expect(TOOLTIP_POSITIONING.horizontalGap).toBe(6);
+    expect(TOOLTIP_POSITIONING.verticalGap).toBe(6);
   });
 });

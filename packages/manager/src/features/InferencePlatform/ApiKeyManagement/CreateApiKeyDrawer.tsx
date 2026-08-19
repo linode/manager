@@ -1,16 +1,17 @@
-import { useCreateInferenceApiKeyMutation } from '@linode/queries';
 import {
-  ActionsPanel,
-  Box,
-  DateTimeField,
+  Button,
+  DateField,
   Drawer,
-  FormControlLabel,
-  Notice,
-  Radio,
+  FormField,
+  FormLabel,
+  NotificationBanner,
+  RadioButton,
   RadioGroup,
+  TextArea,
   TextField,
-  Typography,
-} from '@linode/ui';
+} from '@akamai/cds-components/react';
+import { useCreateInferenceApiKeyMutation } from '@linode/queries';
+import { Box, Stack, Typography } from '@linode/ui';
 import { DateTime } from 'luxon';
 import React from 'react';
 
@@ -100,83 +101,116 @@ export const CreateApiKeyDrawer = ({
 
   return (
     <>
-      <Drawer onClose={handleClose} open={open} title="Create API Key">
-        {error && (
-          <Notice spacingBottom={16} variant="error">
-            {error}
-          </Notice>
-        )}
-        <TextField
-          label="Name"
-          onChange={(e) => setLabel(e.target.value)}
-          placeholder=""
-          value={label}
-        />
-
-        <TextField
-          label="Description"
-          multiline
-          onChange={(e) => setDescription(e.target.value)}
-          placeholder="Enter a description for this API key"
-          rows={1}
-          value={description}
-        />
-
-        <Box sx={{ mb: 2, mt: 2 }}>
-          <Typography
-            sx={{ fontFamily: 'LatoWebBold, sans-serif', mb: 1 }}
-            variant="body1"
-          >
-            Expiry
-          </Typography>
-          <RadioGroup
-            onChange={(e) => setExpiry(e.target.value as ExpiryOption)}
-            value={expiry}
-          >
-            <FormControlLabel
-              control={<Radio />}
-              label="In 6 months"
-              value="6months"
+      <Drawer aria-label="Create API Key" onClose={handleClose} open={open}>
+        <div slot="header">Create API Key</div>
+        <div slot="body">
+          {error && (
+            <NotificationBanner
+              style={{ marginBottom: '16px' }}
+              text={error}
+              type="error"
             />
-            <FormControlLabel
-              control={<Radio />}
-              label="In 3 months"
-              value="3months"
-            />
-            <FormControlLabel control={<Radio />} label="Never" value="never" />
-            {/* Commented for now since we don't have a great UI for picking custom expiry dates, and it's not a priority feature 
-            <FormControlLabel
-              control={<Radio />}
-              label="Custom"
-              value="custom"
-            /> 
-            */}
-          </RadioGroup>
-          {expiry === 'custom' && (
-            <Box sx={{ mt: 1 }}>
-              <DateTimeField
-                label="Expiry date"
-                onChange={(date: DateTime | null) => setCustomExpiryDate(date)}
-                value={customExpiryDate}
-              />
-            </Box>
           )}
-        </Box>
+          <FormField labelPosition="top" style={{ marginBottom: '16px' }}>
+            <FormLabel slot="label">Name</FormLabel>
+            <TextField
+              onChange={(e) => setLabel(String(e.detail))}
+              placeholder=""
+              value={label}
+            />
+          </FormField>
 
-        <ActionsPanel
-          primaryButtonProps={{
-            'data-testid': 'create-api-key-submit',
-            label: 'Create API key',
-            loading: isSubmitting,
-            onClick: handleSubmit,
-            type: 'button',
-          }}
-          secondaryButtonProps={{
-            'data-testid': 'create-api-key-cancel',
-            label: 'Cancel',
-            onClick: handleClose,
-          }}
-        />
+          <FormField labelPosition="top" style={{ marginBottom: '16px' }}>
+            <FormLabel slot="label">Description</FormLabel>
+            <TextArea
+              onChange={(e) => setDescription(String(e.detail))}
+              placeholder="Enter a description for this API key"
+              rows={2}
+              value={description}
+            />
+          </FormField>
+
+          <Box sx={{ mb: 2, mt: 2 }}>
+            <Typography
+              sx={{ fontFamily: 'LatoWebBold, sans-serif', mb: 1 }}
+              variant="body1"
+            >
+              Expiry
+            </Typography>
+            <RadioGroup
+              onChange={(e) => setExpiry(e.detail.value as ExpiryOption)}
+              value={expiry}
+            >
+              <Stack direction="column" spacing={1}>
+                <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
+                  <RadioButton id="expiry-6months" value="6months" />
+                  <label htmlFor="expiry-6months">In 6 months</label>
+                </Box>
+                <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
+                  <RadioButton id="expiry-3months" value="3months" />
+                  <label htmlFor="expiry-3months">In 3 months</label>
+                </Box>
+                <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
+                  <RadioButton id="expiry-never" value="never" />
+                  <label htmlFor="expiry-never">Never</label>
+                </Box>
+                {/* Commented for now since we don't have a great UI for picking custom expiry dates, and it's not a priority feature 
+                {
+                <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
+                  <RadioButton id="expiry-custom" value="custom" />
+                  <label htmlFor="expiry-custom">Custom</label>
+                </Box>
+                */}
+              </Stack>
+            </RadioGroup>
+            {expiry === 'custom' && (
+              <Box sx={{ mt: 1 }}>
+                <FormField labelPosition="top">
+                  <FormLabel slot="label">Expiry date</FormLabel>
+                  <DateField
+                    format="MMM d, yyyy"
+                    mode="day"
+                    onChange={(e) => {
+                      // DateFieldChangeDetail contains: date, value, formatted
+                      const dateValue = e.detail?.value;
+                      if (dateValue) {
+                        setCustomExpiryDate(DateTime.fromISO(dateValue));
+                      } else {
+                        setCustomExpiryDate(null);
+                      }
+                    }}
+                    value={customExpiryDate?.toISODate() ?? ''}
+                  />
+                </FormField>
+              </Box>
+            )}
+          </Box>
+
+          <Box
+            sx={{
+              display: 'flex',
+              gap: 2,
+              justifyContent: 'flex-end',
+              mt: 3,
+            }}
+          >
+            <Button
+              data-testid="create-api-key-cancel"
+              onClick={handleClose}
+              variant="secondary"
+            >
+              Cancel
+            </Button>
+            <Button
+              data-testid="create-api-key-submit"
+              onClick={handleSubmit}
+              processing={isSubmitting}
+              variant="primary"
+            >
+              Create API key
+            </Button>
+          </Box>
+        </div>
       </Drawer>
       <SecretTokenDialog
         onClose={handleSecretDialogClose}

@@ -7,6 +7,7 @@ import { IAM_TFA_ENFORCE_PENDO_IDS } from '../constants';
 
 interface Props {
   checked: boolean;
+  disabled?: boolean;
   email?: string;
   onToggle: (checked: boolean) => void;
   username: string;
@@ -14,6 +15,7 @@ interface Props {
 
 export const AccountUserRow = ({
   checked,
+  disabled,
   email,
   onToggle,
   username,
@@ -24,6 +26,7 @@ export const AccountUserRow = ({
     <TableRow
       hoverable
       onClick={(e: React.MouseEvent) => {
+        if (disabled) return;
         const t = e.target as Element;
         if (t.closest?.('cds-checkbox')) return;
         onToggle(!checked);
@@ -36,6 +39,7 @@ export const AccountUserRow = ({
         <Checkbox
           checked={checked}
           data-pendo-id={IAM_TFA_ENFORCE_PENDO_IDS.selectSingleUser}
+          disabled={disabled}
           onChange={(e) => onToggle(Boolean(e.detail))}
           onClick={(e: React.MouseEvent) => e.stopPropagation()}
           size="small"

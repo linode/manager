@@ -9,8 +9,6 @@ import {
   Radio,
   RadioGroup,
   Stack,
-  SxProps,
-  Theme,
   TooltipIcon,
   Typography,
 } from '@linode/ui';
@@ -22,6 +20,7 @@ import { StyledLinkButtonBox } from 'src/components/SelectFirewallPanel/SelectFi
 import { ReserveIPDrawer } from 'src/features/ReservedIps/ReserveIPDrawer';
 
 import type { IPAddress } from '@linode/api-v4';
+import type { SxProps, Theme } from '@linode/ui';
 
 type IPAddressMode = 'auto' | 'reserved';
 

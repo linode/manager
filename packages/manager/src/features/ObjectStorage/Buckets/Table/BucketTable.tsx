@@ -16,7 +16,7 @@ import { BucketTableRow } from './BucketTableRow';
 
 import type { ObjectStorageBucket } from '@linode/api-v4';
 
-const BASE_COLUMN_COUNT = 6;
+const BASE_COLUMN_COUNT = 7;
 
 interface Props {
   data: ObjectStorageBucket[];
@@ -39,8 +39,6 @@ export const BucketTable = (props: Props) => {
     orderBy,
   } = props;
 
-  const isEndpointTypeAvailable = Boolean(data[0]?.endpoint_type);
-
   return (
     <Paginate data={data} pageSize={25}>
       {({
@@ -51,7 +49,7 @@ export const BucketTable = (props: Props) => {
         page,
         pageSize,
       }) => (
-        <React.Fragment>
+        <>
           <Table aria-label="List of your Buckets">
             <TableHead>
               <TableRow>
@@ -75,19 +73,17 @@ export const BucketTable = (props: Props) => {
                     Region
                   </TableSortCell>
                 </Hidden>
-                {isEndpointTypeAvailable && (
-                  <Hidden lgDown>
-                    <TableSortCell
-                      active={orderBy === 'endpoint_type'}
-                      data-qa-created
-                      direction={order}
-                      handleClick={handleOrderChange}
-                      label="endpoint_type"
-                    >
-                      Endpoint Type
-                    </TableSortCell>
-                  </Hidden>
-                )}
+                <Hidden lgDown>
+                  <TableSortCell
+                    active={orderBy === 'endpoint_type'}
+                    data-qa-created
+                    direction={order}
+                    handleClick={handleOrderChange}
+                    label="endpoint_type"
+                  >
+                    Endpoint Type
+                  </TableSortCell>
+                </Hidden>
                 <Hidden lgDown>
                   <TableSortCell
                     active={orderBy === 'created'}
@@ -127,7 +123,6 @@ export const BucketTable = (props: Props) => {
             <TableBody>
               <RenderData
                 data={paginatedData}
-                isEndpointTypeAvailable={isEndpointTypeAvailable}
                 loading={loading}
                 onDetails={handleClickDetails}
                 onRemove={handleClickRemove}
@@ -143,7 +138,7 @@ export const BucketTable = (props: Props) => {
             page={page}
             pageSize={pageSize}
           />
-        </React.Fragment>
+        </>
       )}
     </Paginate>
   );
@@ -151,20 +146,18 @@ export const BucketTable = (props: Props) => {
 
 interface RenderDataProps {
   data: ObjectStorageBucket[];
-  isEndpointTypeAvailable: boolean;
   loading: boolean;
   onDetails: (bucket: ObjectStorageBucket) => void;
   onRemove: (bucket: ObjectStorageBucket) => void;
 }
 
 const RenderData: React.FC<RenderDataProps> = (props) => {
-  const { data, loading, isEndpointTypeAvailable, onDetails, onRemove } = props;
+  const { data, loading, onDetails, onRemove } = props;
 
-  const numberOfColumns = BASE_COLUMN_COUNT + (isEndpointTypeAvailable ? 1 : 0);
   if (loading) {
     return (
       <TableRowLoading
-        columns={numberOfColumns}
+        columns={BASE_COLUMN_COUNT}
         rows={data.length > 0 ? data.length : 1}
       />
     );
@@ -172,7 +165,7 @@ const RenderData: React.FC<RenderDataProps> = (props) => {
   if (data.length === 0) {
     return (
       <TableRowEmpty
-        colSpan={numberOfColumns}
+        colSpan={BASE_COLUMN_COUNT}
         message="No buckets to display."
       />
     );

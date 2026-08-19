@@ -99,7 +99,7 @@ export const EndpointSummaryRow = ({ endpoint }: Props) => {
           marginBottom: 'var(--token-global-spacing-s8)',
         }}
       >
-        <h4>{endpoint.s3_endpoint}</h4>
+        <h6>{endpoint.s3_endpoint}</h6>
 
         {objectStorageSummaryPageLinks && (
           <Link

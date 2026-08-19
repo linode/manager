@@ -1,6 +1,6 @@
+import { LoadingSpinner } from '@akamai/cds-components/react/LoadingSpinner';
 import { Alias } from '@linode/design-language-system';
-import { Box, CircleProgress, Paper, Typography } from '@linode/ui';
-import { keyframes, useTheme } from '@mui/material/styles';
+import { Box, keyframes, Paper, Typography, useTheme } from '@linode/ui';
 import React from 'react';
 import {
   Bar,
@@ -603,7 +603,7 @@ export const StackedBarChart = ({
         zIndex: 3,
       }}
     >
-      <CircleProgress size="md" />
+      <LoadingSpinner size="extra-large" />
     </Box>
   );
 

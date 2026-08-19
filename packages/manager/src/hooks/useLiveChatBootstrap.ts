@@ -39,6 +39,7 @@ const clearLiveChatSessionItems = () => {
   window.sessionStorage.removeItem('LiveChatToken');
   window.sessionStorage.removeItem('LiveChatSubject');
   window.sessionStorage.removeItem('LiveChatDescription');
+  window.sessionStorage.removeItem('LiveChatStartedAt');
 };
 
 const handleGhostSessionResume = () => {
@@ -274,10 +275,13 @@ const handleSalesforceMessage = (event: MessageEvent) => {
   ) {
     const token = window.sessionStorage.getItem('LiveChatToken');
     const subject = window.sessionStorage.getItem('LiveChatSubject');
+    const startedAt = window.sessionStorage.getItem('LiveChatStartedAt');
 
+    // chatStartTime is the click-time timestamp, not token-completion time.
     const dataMap = {
       JWE_Token: token ?? '',
       Title: subject ?? '',
+      chatStartTime: startedAt ?? '',
     };
 
     if (event.source && event.origin) {

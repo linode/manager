@@ -18,6 +18,7 @@ import {
   allowNoneIPv6,
   allowsAllIPs,
   buildPrefixListReferenceMap,
+  CUSTOM_PROTOCOL_PORT_NUMBERS,
   predefinedFirewallFromRule,
 } from 'src/features/Firewalls/shared';
 
@@ -197,6 +198,7 @@ export const classifyPLs = (pls: ExtendedPL[]) => {
 const initialValues: FormState = {
   action: 'ACCEPT',
   addresses: '',
+  customProtocol: '',
   description: '',
   label: '',
   ports: '',
@@ -211,13 +213,20 @@ export const getInitialFormValues = (
     return initialValues;
   }
 
+  const rawProtocol = ruleToModify.protocol ?? '';
+  // Protocols not in this set were submitted as custom numeric protocol numbers
+  const isCustomProtocol =
+    rawProtocol !== '' &&
+    !['ALL', 'ICMP', 'IPENCAP', 'TCP', 'UDP'].includes(rawProtocol);
+
   return {
     action: ruleToModify.action,
     addresses: getInitialAddressFormValue(ruleToModify.addresses),
+    customProtocol: isCustomProtocol ? rawProtocol : '',
     description: ruleToModify?.description || '',
     label: ruleToModify?.label || '',
     ports: portStringToItems(ruleToModify.ports)[1],
-    protocol: ruleToModify.protocol,
+    protocol: isCustomProtocol ? 'OTHER' : rawProtocol,
     type: predefinedFirewallFromRule(ruleToModify) || '',
   } as FormState;
 };
@@ -389,7 +398,14 @@ export interface ValidateFormOptions {
 }
 
 export const validateForm = (
-  { addresses, description, label, ports, protocol }: Partial<FormState>,
+  {
+    addresses,
+    customProtocol,
+    description,
+    label,
+    ports,
+    protocol,
+  }: Partial<FormState>,
   {
     validatedIPs,
     validatedPLs,
@@ -419,6 +435,24 @@ export const validateForm = (
     errors.protocol = 'Protocol is required.';
   }
 
+  if (protocol === 'OTHER' && !customProtocol) {
+    errors.customProtocol = 'Custom protocol number is required.';
+  } else if (protocol === 'OTHER' && customProtocol) {
+    const hasLeadingZero =
+      customProtocol.length > 1 && customProtocol.startsWith('0');
+    const num = Number(customProtocol);
+    if (hasLeadingZero || !Number.isInteger(num) || num < 0 || num > 255) {
+      errors.customProtocol =
+        'Protocol must be a number between 0 and 255 with no leading zeros.';
+    }
+  }
+
+  // True for protocols that don't use ports (including OTHER with a non-port number)
+  const isPortFreeProtocol =
+    ['ALL', 'ICMP', 'IPENCAP'].includes(protocol ?? '') ||
+    (protocol === 'OTHER' &&
+      !CUSTOM_PROTOCOL_PORT_NUMBERS.includes(customProtocol ?? ''));
+
   if (!addresses) {
     errors.addresses = 'Sources is a required field.';
   } else if (
@@ -431,12 +465,15 @@ export const validateForm = (
       'Add an IP address in IP/mask format, or reference a Prefix List name.';
   }
 
-  if (!ports && protocol !== 'ICMP' && protocol !== 'IPENCAP') {
+  if (!ports && !isPortFreeProtocol) {
     errors.ports = 'Ports is a required field.';
   }
 
-  if ((protocol === 'ICMP' || protocol === 'IPENCAP') && ports) {
-    errors.ports = `Ports are not allowed for ${protocol} protocols.`;
+  if (isPortFreeProtocol && ports) {
+    errors.ports =
+      protocol === 'OTHER'
+        ? `Ports are not allowed for protocol number ${customProtocol}.`
+        : `Ports are not allowed for ${protocol} protocols.`;
   } else if (ports && !isCustomPortsValid(ports)) {
     errors.ports = CUSTOM_PORTS_ERROR_MESSAGE;
   }

@@ -72,7 +72,7 @@ export const RECOVERY_IMAGES_TAB_PENDO_IDS = {
 };
 
 export const SHARE_GROUPS_OWNED_TAB_PENDO_IDS = {
-  createButton: 'Images Groups Owned-Create Button',
+  createButton: 'Images Groups Owned-Create Group',
   imageSharingDocsLink: 'Images Groups Owned-Image sharing docs',
   searchShareGroupsBar: 'Images Groups Owned-Search',
 };

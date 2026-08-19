@@ -1,3 +1,4 @@
+import { ArrowUp, Square } from '@akamai/cds-icons/react';
 import {
   Box,
   IconButton,
@@ -5,8 +6,6 @@ import {
   TextField,
   useTheme,
 } from '@linode/ui';
-import ArrowUpward from '@mui/icons-material/ArrowUpward';
-import Stop from '@mui/icons-material/Stop';
 import React, { useContext, useEffect, useRef } from 'react';
 
 import { useInferencePlatform } from '../InferencePlatformContext';
@@ -90,7 +89,7 @@ export const InputBox = () => {
                       '&:hover': { color: theme.palette.text.primary },
                     }}
                   >
-                    <Stop style={{ height: 20, width: 20 }} />
+                    <Square style={{ height: 12, width: 12 }} />
                   </IconButton>
                 ) : (
                   <IconButton
@@ -115,7 +114,7 @@ export const InputBox = () => {
                       },
                     }}
                   >
-                    <ArrowUpward style={{ height: 20, width: 20 }} />
+                    <ArrowUp style={{ height: 24, width: 24 }} />
                   </IconButton>
                 )}
               </InputAdornment>

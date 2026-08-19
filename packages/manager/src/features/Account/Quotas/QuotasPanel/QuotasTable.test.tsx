@@ -174,7 +174,7 @@ describe('QuotasTable', () => {
       const ingressUsageLink = ingressRow!.querySelector('a');
       expect(ingressUsageLink).not.toBeNull();
       expect(ingressUsageLink).toHaveTextContent(
-        'Ingress usage available in Cloud Pulse Metrics'
+        'Ingress usage available in Metrics'
       );
       expect(ingressUsageLink).toHaveAttribute('href', '/metrics');
 
@@ -194,7 +194,7 @@ describe('QuotasTable', () => {
       const egressUsageLink = egressRow!.querySelector('a');
       expect(egressUsageLink).not.toBeNull();
       expect(egressUsageLink).toHaveTextContent(
-        'Egress usage available in Cloud Pulse Metrics'
+        'Egress usage available in Metrics'
       );
       expect(egressUsageLink).toHaveAttribute('href', '/metrics');
     });

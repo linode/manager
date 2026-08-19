@@ -13,6 +13,11 @@ import type { GroupByOption } from '../GroupBy/CloudPulseGroupByDrawer';
 const queryMocks = vi.hoisted(() => ({
   useCloudPulseDashboardsQuery: vi.fn().mockReturnValue({}),
   useGlobalDimensions: vi.fn().mockReturnValue({}),
+  useCloudPulseServiceTypes: vi.fn().mockReturnValue({
+    data: { data: [] },
+    error: undefined,
+    isLoading: false,
+  }),
 }));
 
 const circleProgress = 'circle-progress';
@@ -28,6 +33,13 @@ vi.mock('src/queries/cloudpulse/dashboards', async () => {
   return {
     ...actual,
     useCloudPulseDashboardsQuery: queryMocks.useCloudPulseDashboardsQuery,
+  };
+});
+vi.mock('src/queries/cloudpulse/services', async () => {
+  const actual = await vi.importActual('src/queries/cloudpulse/services');
+  return {
+    ...actual,
+    useCloudPulseServiceTypes: queryMocks.useCloudPulseServiceTypes,
   };
 });
 vi.mock('../GroupBy/utils', async () => {
@@ -285,7 +297,7 @@ describe('CloudPulseDashboardWithFilters component tests', () => {
 
     const presetButton = screen.getByTestId(PRESET_BUTTON_ID);
     expect(presetButton).toBeInTheDocument();
-    await userEvent.click(screen.getByPlaceholderText('Select a Dashboard'));
+    await userEvent.click(screen.getByTestId('dashboard-picker-trigger'));
     await userEvent.click(screen.getByText('nodebalancer_firewall_dashbaord'));
     expect(
       screen.getByPlaceholderText('Select a NodeBalancer Region')

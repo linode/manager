@@ -1,6 +1,7 @@
 import { toast } from '@akamai/cds-components/notification-toast';
 import {
   Button,
+  LoadingSpinner,
   NotificationBanner,
   Select,
 } from '@akamai/cds-components/react';
@@ -16,6 +17,7 @@ import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { useIsDefaultDelegationRolesForChildAccount } from '../../hooks/useDelegationRole';
+import { usePermissions } from '../../hooks/usePermissions';
 import { Drawer, DrawerInlineActions } from '../../Shared/Drawer';
 import styles from '../../Shared/global.module.css';
 import { AssignedPermissionsPanel } from '../AssignedPermissionsPanel/AssignedPermissionsPanel';
@@ -36,6 +38,7 @@ import type { DrawerModes, EntitiesRole } from '../types';
 import type { ExtendedEntityRole } from '../utilities';
 
 interface Props {
+  isRolesLoading?: boolean;
   mode: DrawerModes;
   onClose: () => void;
   open: boolean;
@@ -44,6 +47,7 @@ interface Props {
 }
 
 export const ChangeRoleForEntityDrawer = ({
+  isRolesLoading = false,
   mode,
   onClose,
   open,
@@ -52,6 +56,15 @@ export const ChangeRoleForEntityDrawer = ({
 }: Props) => {
   const { isDefaultDelegationRolesForChildAccount } =
     useIsDefaultDelegationRolesForChildAccount();
+
+  const { data: permissions } = usePermissions('account', [
+    'is_account_admin',
+    'update_default_delegate_access',
+  ]);
+
+  const permissionToCheck = isDefaultDelegationRolesForChildAccount
+    ? permissions?.update_default_delegate_access
+    : permissions?.is_account_admin;
 
   const { data: accountRoles, isLoading: accountPermissionsLoading } =
     useAccountRoles();
@@ -173,6 +186,8 @@ export const ChangeRoleForEntityDrawer = ({
 
   const drawerTitle = 'Change Role';
 
+  const roleMissing = !isRolesLoading && !role;
+
   return (
     <Drawer
       aria-label="Change Role"
@@ -182,75 +197,113 @@ export const ChangeRoleForEntityDrawer = ({
       title={drawerTitle}
     >
       <div slot="header">{drawerTitle}</div>
-      <form onSubmit={handleSubmit(onSubmit)} slot="body">
-        {errors.root?.message && (
-          <NotificationBanner text={errors.root?.message} type="error" />
-        )}
-        <p style={{ marginBottom: Spacing.S20 }}>
-          Select a role you want the entity to be attached to.{' '}
-          <Link to={ROLES_LEARN_MORE_LINK}>
-            Learn more about roles and permissions
-          </Link>
-          .
-        </p>
-
-        <p style={{ marginBottom: Spacing.S8 }}>
-          Change the role for <strong>{role?.entity_name}</strong> from{' '}
-          <strong>{role?.role_name}</strong> to:
-        </p>
-
-        <Controller
-          control={control}
-          name="roleName"
-          render={({ field, fieldState }) => (
-            <Select
-              autocomplete
-              clearable
-              error={Boolean(fieldState.error?.message)}
-              errorMessage={fieldState.error?.message ?? ''}
-              isLoading={accountPermissionsLoading}
-              items={allRoles}
-              noItemsLabel="You have no options to choose from"
-              onChange={(event) => {
-                const newValue =
-                  event.detail as unknown as ExtendedEntityRole | null;
-                field.onChange(newValue);
-              }}
-              placeholder="Select a Role"
-              selected={field.value || null}
-              style={{ marginBottom: Spacing.S16 }}
-              valueFn={(item) => (item as ExtendedEntityRole).label}
+      {isRolesLoading ? (
+        <div
+          slot="body"
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            padding: Spacing.S24,
+          }}
+        >
+          <LoadingSpinner data-testid="circle-progress" size="medium" />
+        </div>
+      ) : roleMissing ? (
+        <div slot="body">
+          <NotificationBanner type="error">
+            <p style={{ marginBottom: Spacing.S0 }}>
+              This role is no longer assigned or could not be found.
+            </p>
+          </NotificationBanner>
+          <DrawerInlineActions>
+            <Button
+              data-testid="cancel"
+              onClick={handleClose}
+              variant="secondary"
+            >
+              Close
+            </Button>
+          </DrawerInlineActions>
+        </div>
+      ) : (
+        <form onSubmit={handleSubmit(onSubmit)} slot="body">
+          {!permissionToCheck && (
+            <NotificationBanner
+              style={{ marginBottom: Spacing.S8 }}
+              text="You do not have permission to change this role."
+              type="error"
             />
           )}
-          rules={{ required: 'Role is required.' }}
-        />
+          {errors.root?.message && (
+            <NotificationBanner text={errors.root?.message} type="error" />
+          )}
+          <p style={{ marginBottom: Spacing.S20 }}>
+            Select a role you want the entity to be attached to.{' '}
+            <Link to={ROLES_LEARN_MORE_LINK}>
+              Learn more about roles and permissions
+            </Link>
+            .
+          </p>
 
-        {selectedRole && (
-          <AssignedPermissionsPanel
-            key={selectedRole.name}
-            mode={mode}
-            role={selectedRole}
-            value={[]}
+          <p style={{ marginBottom: Spacing.S8 }}>
+            Change the role for <strong>{role?.entity_name}</strong> from{' '}
+            <strong>{role?.role_name}</strong> to:
+          </p>
+
+          <Controller
+            control={control}
+            name="roleName"
+            render={({ field, fieldState }) => (
+              <Select
+                autocomplete
+                clearable
+                error={Boolean(fieldState.error?.message)}
+                errorMessage={fieldState.error?.message ?? ''}
+                isLoading={accountPermissionsLoading}
+                items={allRoles}
+                noItemsLabel="You have no options to choose from"
+                onChange={(event) => {
+                  const newValue =
+                    event.detail as unknown as ExtendedEntityRole | null;
+                  field.onChange(newValue);
+                }}
+                placeholder="Select a Role"
+                selected={field.value || null}
+                style={{ marginBottom: Spacing.S16 }}
+                valueFn={(item) => (item as ExtendedEntityRole).label}
+              />
+            )}
+            rules={{ required: 'Role is required.' }}
           />
-        )}
-        <DrawerInlineActions>
-          <Button
-            data-testid="cancel"
-            onClick={handleClose}
-            variant="secondary"
-          >
-            Cancel
-          </Button>
-          <Button
-            data-testid="submit"
-            processing={isSubmitting}
-            type="submit"
-            variant="primary"
-          >
-            Save
-          </Button>
-        </DrawerInlineActions>
-      </form>
+
+          {selectedRole && (
+            <AssignedPermissionsPanel
+              key={selectedRole.name}
+              mode={mode}
+              role={selectedRole}
+              value={[]}
+            />
+          )}
+          <DrawerInlineActions>
+            <Button
+              data-testid="cancel"
+              onClick={handleClose}
+              variant="secondary"
+            >
+              Cancel
+            </Button>
+            <Button
+              data-testid="submit"
+              disabled={!permissionToCheck}
+              processing={isSubmitting}
+              type="submit"
+              variant="primary"
+            >
+              Save
+            </Button>
+          </DrawerInlineActions>
+        </form>
+      )}
     </Drawer>
   );
 };

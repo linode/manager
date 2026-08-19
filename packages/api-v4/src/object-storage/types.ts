@@ -94,12 +94,12 @@ export interface DeleteObjectStorageBucketPayload {
 export interface ObjectStorageBucket {
   cluster: string;
   created: string;
-  endpoint_type?: ObjectStorageEndpointTypes;
+  endpoint_type: ObjectStorageEndpointTypes;
   hostname: string;
   label: string;
   objects: number;
   region: string;
-  s3_endpoint?: string;
+  s3_endpoint: string;
   size: number; // Size of bucket in bytes
 }
 

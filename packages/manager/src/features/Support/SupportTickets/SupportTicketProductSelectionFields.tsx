@@ -18,6 +18,7 @@ import {
   ACCOUNT_LIMIT_FIELD_NAME_TO_LABEL_MAP,
   ENTITY_ID_TO_NAME_MAP,
   ENTITY_MAP,
+  SUPPORT_TICKET_PENDO_IDS,
 } from './constants';
 import { LiveChatChip } from './LiveChatChip';
 import {
@@ -283,6 +284,7 @@ export const SupportTicketProductSelectionFields = (props: Props) => {
             name="entityType"
             render={({ field, fieldState }) => (
               <Autocomplete
+                data-pendo-id={SUPPORT_TICKET_PENDO_IDS.category}
                 data-qa-ticket-entity-type
                 errorText={
                   fieldState.error?.message || errors.entityType?.message
@@ -322,7 +324,15 @@ export const SupportTicketProductSelectionFields = (props: Props) => {
                 renderOption={
                   liveChat
                     ? (props, option) => (
-                        <li {...props}>
+                        <li
+                          {...props}
+                          data-pendo-id={
+                            option.topicVariant ===
+                            SUPPORT_TOPIC_ACCOUNT_BILLING
+                              ? SUPPORT_TICKET_PENDO_IDS.accountBillingOption
+                              : undefined
+                          }
+                        >
                           <Box
                             sx={{
                               alignItems: 'center',

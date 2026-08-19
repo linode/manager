@@ -12,20 +12,25 @@ import { TicketReply } from './TicketReply';
 import type { Props as ReplyProps } from './TicketReply';
 
 interface Props extends ReplyProps {
+  descriptionTabPendoId?: string;
   isReply?: boolean;
+  previewTabPendoId?: string;
   required?: boolean;
 }
 
 export const TabbedReply = (props: Props) => {
-  const { error, value, ...rest } = props;
+  const { descriptionTabPendoId, error, previewTabPendoId, value, ...rest } =
+    props;
 
   const title = props.isReply ? 'Reply' : 'Description';
 
   return (
     <Tabs>
       <TabList>
-        <Tab>{props.required ? `${title} (required)` : title}</Tab>
-        <Tab>Preview</Tab>
+        <Tab data-pendo-id={descriptionTabPendoId}>
+          {props.required ? `${title} (required)` : title}
+        </Tab>
+        <Tab data-pendo-id={previewTabPendoId}>Preview</Tab>
       </TabList>
       <TabPanels>
         <SafeTabPanel index={0}>

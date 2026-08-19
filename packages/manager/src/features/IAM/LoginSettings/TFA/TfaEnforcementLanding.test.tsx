@@ -25,9 +25,9 @@ const mocks = vi.hoisted(() => ({
   useDebouncedValue: vi.fn(),
   useDelegationRole: vi.fn(),
   useAllAccountUsersQuery: vi.fn(),
+  useAllTfaOptionalUsersQuery: vi.fn(),
   useFlags: vi.fn(),
   useGetTfaEnforcementAccountSettingsQuery: vi.fn(),
-  useGetTfaOptionalUsersQuery: vi.fn(),
   useIsIAMEnabled: vi.fn(),
   useNavigate: vi.fn(() => mockNavigate),
   useOrder: vi.fn(),
@@ -57,9 +57,9 @@ vi.mock('@linode/queries', async () => {
   return {
     ...actual,
     useAllAccountUsersQuery: mocks.useAllAccountUsersQuery,
+    useAllTfaOptionalUsersQuery: mocks.useAllTfaOptionalUsersQuery,
     useGetTfaEnforcementAccountSettingsQuery:
       mocks.useGetTfaEnforcementAccountSettingsQuery,
-    useGetTfaOptionalUsersQuery: mocks.useGetTfaOptionalUsersQuery,
     useUpdateTfaEnforcementAccountSettingsMutation:
       mocks.useUpdateTfaEnforcementAccountSettingsMutation,
     useUpdateTfaOptionalUsersMutation: mocks.useUpdateTfaOptionalUsersMutation,
@@ -105,9 +105,8 @@ vi.mock('../../hooks/useTfaUserCounts', () => ({
 const makeAllUsers = (): User[] =>
   [{ username: 'alice' }, { username: 'bob' }, { username: 'carol' }] as User[];
 
-const makeOptionalUsers = (): { data: TfaOptionalUser[] } => ({
-  data: [{ username: 'bob' }, { username: 'carol' }] as TfaOptionalUser[],
-});
+const makeOptionalUsers = (): TfaOptionalUser[] =>
+  [{ username: 'bob' }, { username: 'carol' }] as TfaOptionalUser[];
 
 beforeAll(() => mockMatchMedia());
 
@@ -151,7 +150,7 @@ beforeEach(() => {
     error: null,
     isLoading: false,
   });
-  mocks.useGetTfaOptionalUsersQuery.mockReturnValue({
+  mocks.useAllTfaOptionalUsersQuery.mockReturnValue({
     data: makeOptionalUsers(),
   });
   mocks.useAllAccountUsersQuery.mockReturnValue({

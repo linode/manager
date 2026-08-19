@@ -7,15 +7,27 @@ import { accountFactory } from 'src/factories';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
 
+const rdmaMocks = vi.hoisted(() => ({
+  useIsGpuRdmaPlanEnabled: vi
+    .fn()
+    .mockReturnValue({ isGpuRdmaPlanEnabled: false }),
+}));
+
+vi.mock('src/hooks/useIsGpuRdmaPlanEnabled', () => ({
+  useIsGpuRdmaPlanEnabled: rdmaMocks.useIsGpuRdmaPlanEnabled,
+}));
+
 import {
   allIPv4,
   allIPv6,
   buildPrefixListReferenceMap,
+  CUSTOM_PROTOCOL_PORT_NUMBERS,
   generateAddressesLabel,
   generateAddressesLabelV2,
   getFeatureChip,
   predefinedFirewallFromRule,
   useIsFirewallRulesetsPrefixlistsEnabled,
+  useProtocolOptions,
 } from './shared';
 
 import type { PrefixListReferenceMap } from './shared';
@@ -547,5 +559,38 @@ describe('getFeatureChip', () => {
       isFirewallRulesetsPrefixListsGAEnabled: false,
     });
     expect(result).toBeNull();
+  });
+});
+
+describe('CUSTOM_PROTOCOL_PORT_NUMBERS', () => {
+  it('contains exactly TCP (6), UDP (17), and SCTP (132)', () => {
+    expect(CUSTOM_PROTOCOL_PORT_NUMBERS).toEqual(['6', '17', '132']);
+  });
+});
+
+describe('useProtocolOptions', () => {
+  it('returns base 4 options when RDMA is disabled', () => {
+    rdmaMocks.useIsGpuRdmaPlanEnabled.mockReturnValue({
+      isGpuRdmaPlanEnabled: false,
+    });
+    const { result } = renderHook(() => useProtocolOptions(), {
+      wrapper: ({ children }) => wrapWithTheme(children),
+    });
+    expect(result.current).toHaveLength(4);
+    const values = result.current.map((o) => o.value);
+    expect(values).toEqual(['TCP', 'UDP', 'ICMP', 'IPENCAP']);
+  });
+
+  it('includes ALL and Other Protocol when RDMA is enabled', () => {
+    rdmaMocks.useIsGpuRdmaPlanEnabled.mockReturnValue({
+      isGpuRdmaPlanEnabled: true,
+    });
+    const { result } = renderHook(() => useProtocolOptions(), {
+      wrapper: ({ children }) => wrapWithTheme(children),
+    });
+    expect(result.current).toHaveLength(6);
+    const values = result.current.map((o) => o.value);
+    expect(values).toContain('ALL');
+    expect(values).toContain('OTHER');
   });
 });

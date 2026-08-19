@@ -1,4 +1,4 @@
-import { Button, CircleProgress, ErrorState, Typography } from '@linode/ui';
+import { Button, CircleProgress, ErrorState } from '@linode/ui';
 import { GridLegacy, useTheme } from '@mui/material';
 import * as React from 'react';
 
@@ -6,7 +6,7 @@ import KeyboardCaretDownIcon from 'src/assets/icons/caret_down.svg';
 import KeyboardCaretRightIcon from 'src/assets/icons/caret_right.svg';
 import InfoIcon from 'src/assets/icons/info.svg';
 import NullComponent from 'src/components/NullComponent';
-import { oauthClient } from 'src/OAuth/oauthClient';
+import { storage } from 'src/utilities/storage';
 
 import RenderComponent from '../shared/CloudPulseComponentRenderer';
 import {
@@ -51,12 +51,29 @@ import type { CloudPulseResources } from './CloudPulseResourcesSelect';
 import type { CloudPulseTags } from './CloudPulseTagsFilter';
 import type { AclpConfig, Dashboard } from '@linode/api-v4';
 
+const EMPTY_DASHBOARD = {} as Dashboard;
+
 export interface CloudPulseDashboardFilterBuilderProps {
+  /**
+   * Applied filter values rendered alongside the collapsed toggle.
+   */
+  appliedFilters?: React.ReactNode;
+
   /**
    * We need the dashboard here, as we can infer serviceType and other required properties from it.
    * Since it is going to integrated after a dashboard selection component, it is easily available to pass.
    */
-  dashboard: Dashboard;
+  dashboard?: Dashboard;
+
+  /**
+   * Error message from dashboard service discovery.
+   */
+  dashboardErrorText?: string;
+
+  /**
+   * Loading state from dashboard service discovery.
+   */
+  dashboardLoading?: boolean;
 
   /**
    * all the selection changes in the filter goes through this method
@@ -100,7 +117,10 @@ export interface CloudPulseDashboardFilterBuilderProps {
 export const CloudPulseDashboardFilterBuilder = React.memo(
   (props: CloudPulseDashboardFilterBuilderProps) => {
     const {
-      dashboard,
+      appliedFilters,
+      dashboard = EMPTY_DASHBOARD,
+      dashboardErrorText,
+      dashboardLoading = false,
       emitFilterChange,
       handleToggleAppliedFilter,
       isServiceAnalyticsIntegration,
@@ -125,7 +145,9 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
       LOADING_DELAYS.LARGE_DATASET
     );
 
-    const isImpersonatedUser = oauthClient.getIsLoggedInAsCustomer();
+    const isImpersonatedUser =
+      storage.authentication.token.get()?.toLowerCase().startsWith('admin') ??
+      false;
 
     const checkAndUpdateDependentFilters = React.useCallback(
       (filterKey: string, value: FilterValueType) => {
@@ -193,7 +215,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
           }
         );
       },
-      [dashboard.id, emitFilterChangeByFilterKey]
+      [dashboard?.id, emitFilterChangeByFilterKey]
     );
 
     const handleNodeTypeChange = React.useCallback(
@@ -207,7 +229,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
           [NODE_TYPE]: nodeTypeId,
         });
       },
-      [dashboard.id, emitFilterChangeByFilterKey]
+      [dashboard?.id, emitFilterChangeByFilterKey]
     );
 
     const handleTagsChange = React.useCallback(
@@ -224,7 +246,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
           }
         );
       },
-      [dashboard.id, emitFilterChangeByFilterKey]
+      [dashboard?.id, emitFilterChangeByFilterKey]
     );
 
     const handleResourceChange = React.useCallback(
@@ -242,7 +264,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
           }
         );
       },
-      [dashboard.id, emitFilterChangeByFilterKey]
+      [dashboard?.id, emitFilterChangeByFilterKey]
     );
 
     const handleRegionChange = React.useCallback(
@@ -264,7 +286,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
           updatedPreferenceData
         );
       },
-      [dashboard.id, emitFilterChangeByFilterKey]
+      [dashboard?.id, emitFilterChangeByFilterKey]
     );
 
     const handleEndpointsChange = React.useCallback(
@@ -274,7 +296,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
           [ENDPOINT]: endpoints,
         });
       },
-      [dashboard.id, emitFilterChangeByFilterKey]
+      [dashboard?.id, emitFilterChangeByFilterKey]
     );
 
     const handleFirewallNodebalancersChange = React.useCallback(
@@ -292,7 +314,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
           }
         );
       },
-      [dashboard.id, emitFilterChangeByFilterKey]
+      [dashboard?.id, emitFilterChangeByFilterKey]
     );
 
     const handleCustomSelectChange = React.useCallback(
@@ -516,9 +538,9 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
     }, [dashboard, getProps, isServiceAnalyticsIntegration]);
 
     if (
-      !dashboard ||
-      !dashboard.service_type ||
-      !FILTER_CONFIG.has(dashboard.id)
+      (!dashboard.service_type || !FILTER_CONFIG.has(dashboard.id)) &&
+      !dashboardLoading &&
+      !dashboardErrorText
     ) {
       return <NullComponent />; // in this we don't want to show the filters at all
     }
@@ -528,71 +550,90 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
         container
         item
         sx={{
+          flexWrap: 'nowrap',
           m: 3,
           paddingBottom: isServiceAnalyticsIntegration ? 3 : 0,
         }}
         xs={12}
       >
-        <GridLegacy
-          item
-          key="toggleFilter"
-          sx={{
-            m: 0,
-            p: 0,
-          }}
-          xs={12}
-        >
-          <Button
-            onClick={toggleShowFilter}
-            startIcon={
-              showFilter ? (
-                <KeyboardCaretDownIcon />
-              ) : (
-                <KeyboardCaretRightIcon />
-              )
-            }
-            sx={{
-              justifyContent: 'start',
-              m: theme.spacing(0),
-              marginBottom: theme.spacing(showFilter ? 1 : 0),
-              minHeight: 'auto',
-              minWidth: 'auto',
-              p: theme.spacing(0),
-              svg: {
-                color: theme.color.grey4,
-              },
-            }}
-          >
-            <Typography variant="h3">Filters</Typography>
-          </Button>
-        </GridLegacy>
-        {isLoading ? (
+        {dashboardErrorText || dashboardLoading || isLoading ? (
           <GridLegacy
             alignItems="center"
             container
             direction="column"
             display="flex"
             justifyContent="center"
-          >
-            <CircleProgress size="md" />
-            {showLoadingIndicator && <DelayedLoadingMessage />}
-          </GridLegacy>
-        ) : (
-          <GridLegacy
-            columnSpacing={theme.spacingFunction(16)}
-            container
-            item
-            sx={{
-              display: showFilter ? 'flex' : 'none',
-              maxHeight: '184px',
-              overflow: 'auto',
-              pr: { sm: 0, xs: 2 },
-              rowGap: theme.spacingFunction(16),
-            }}
+            sx={{ height: 160 }}
             xs={12}
           >
-            <RenderFilters />
+            {dashboardErrorText ? (
+              <ErrorState compact errorText={dashboardErrorText} />
+            ) : (
+              <>
+                <CircleProgress size="md" />
+                {isLoading && showLoadingIndicator && <DelayedLoadingMessage />}
+              </>
+            )}
           </GridLegacy>
+        ) : (
+          <>
+            <GridLegacy
+              item
+              key="toggleFilter"
+              sx={{
+                alignSelf: 'flex-start',
+                flexShrink: 0,
+                m: 0,
+                p: 0,
+              }}
+            >
+              <Button
+                aria-label="Toggle filters"
+                onClick={toggleShowFilter}
+                startIcon={
+                  showFilter ? (
+                    <KeyboardCaretDownIcon />
+                  ) : (
+                    <KeyboardCaretRightIcon />
+                  )
+                }
+                sx={{
+                  justifyContent: 'start',
+                  m: theme.spacing(0),
+                  marginBottom: theme.spacing(showFilter ? 1 : 0),
+                  minHeight: 'auto',
+                  minWidth: 'auto',
+                  p: theme.spacing(0),
+                  svg: {
+                    color: theme.color.grey4,
+                  },
+                }}
+              />
+            </GridLegacy>
+            {!showFilter && appliedFilters ? (
+              <GridLegacy item sx={{ flex: 1, minWidth: 0 }}>
+                {appliedFilters}
+              </GridLegacy>
+            ) : (
+              <GridLegacy
+                columnSpacing={theme.spacingFunction(16)}
+                container
+                item
+                sx={{
+                  display: showFilter ? 'flex' : 'none',
+                  flex: 1,
+                  maxHeight: '184px',
+                  minWidth: 0,
+                  overflow: 'auto',
+                  pr: { sm: 0, xs: 2 },
+                  rowGap: theme.spacingFunction(16),
+                }}
+                xs={12}
+              >
+                <RenderFilters />
+              </GridLegacy>
+            )}
+          </>
         )}
       </GridLegacy>
     );
@@ -605,7 +646,10 @@ function compareProps(
   newProps: CloudPulseDashboardFilterBuilderProps
 ) {
   return (
+    oldProps.appliedFilters === newProps.appliedFilters &&
     oldProps.dashboard?.id === newProps.dashboard?.id &&
+    oldProps.dashboardErrorText === newProps.dashboardErrorText &&
+    oldProps.dashboardLoading === newProps.dashboardLoading &&
     oldProps.preferences?.[DASHBOARD_ID] ===
       newProps.preferences?.[DASHBOARD_ID] &&
     oldProps.isLoading === newProps.isLoading &&

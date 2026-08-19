@@ -7,6 +7,7 @@ export type IPTypes =
   | 'Reserved IPv4 (private)'
   | 'Reserved IPv4 (public)'
   | 'Shared – IPv4'
+  | 'VPC - RDMA - IPv4'
   | 'VPC – IPv4'
   | 'VPC – IPv6'
   | 'VPC – Range – IPv4'

@@ -17,7 +17,10 @@ import { useCloudPulseContext } from '../Context/useCloudPulseContext';
 import { GlobalFilterGroupByRenderer } from '../GroupBy/GlobalFilterGroupByRenderer';
 import { CloudPulseAppliedFilterRenderer } from '../shared/CloudPulseAppliedFilterRenderer';
 import { CloudPulseDashboardFilterBuilder } from '../shared/CloudPulseDashboardFilterBuilder';
-import { CloudPulseDashboardSelect } from '../shared/CloudPulseDashboardSelect';
+import {
+  CloudPulseDashboardSelect,
+  type DashboardDiscoveryState,
+} from '../shared/CloudPulseDashboardSelect';
 import { CloudPulseDateTimeRangePicker } from '../shared/CloudPulseDateTimeRangePicker';
 import { CloudPulseErrorPlaceholder } from '../shared/CloudPulseErrorPlaceholder';
 import { CloudPulseTooltip } from '../shared/CloudPulseTooltip';
@@ -96,6 +99,8 @@ const CloudPulseDashboardWithFiltersRenderer = React.memo(
     });
 
     const [dashboard, setDashboard] = React.useState<Dashboard | undefined>();
+    const [dashboardDiscoveryState, setDashboardDiscoveryState] =
+      React.useState<DashboardDiscoveryState>({ status: 'loading' });
 
     // Update dashboard when dashboardsList loads
     React.useEffect(() => {
@@ -225,6 +230,8 @@ const CloudPulseDashboardWithFiltersRenderer = React.memo(
       timeDuration,
       groupBy,
     });
+    const isDashboardDiscoveryReady =
+      dashboardDiscoveryState.status === 'ready';
 
     return (
       <Box display="flex" flexDirection="column" gap={2.5}>
@@ -236,17 +243,22 @@ const CloudPulseDashboardWithFiltersRenderer = React.memo(
           <GridLegacy container>
             <GridLegacy item xs={12}>
               <Box
+                alignItems={{ lg: 'center', xs: 'flex-start' }}
                 display="flex"
                 flexDirection={{ lg: 'row', xs: 'column' }}
                 flexWrap="wrap"
                 gap={2}
                 justifyContent="space-between"
-                m={3}
+                marginBottom={1}
+                marginLeft={2}
+                marginRight={2}
+                marginTop={1}
               >
                 <CloudPulseDashboardSelect
                   defaultValue={currentDashboard.id}
                   handleDashboardChange={handleDashboardChange}
                   integrationServiceType={currentDashboard.service_type}
+                  onDashboardDiscoveryStateChange={setDashboardDiscoveryState}
                   onlyServiceLevelDashboardIdAvailable={
                     !!dashboardId && !serviceType
                   }
@@ -273,7 +285,7 @@ const CloudPulseDashboardWithFiltersRenderer = React.memo(
                       size="small"
                       sx={(theme) => ({
                         marginBlockEnd: 'auto',
-                        marginTop: { md: theme.spacingFunction(28) },
+                        marginTop: { md: theme.spacingFunction(24) },
                       })}
                     >
                       <Reload height="24px" width="24px" />
@@ -298,7 +310,7 @@ const CloudPulseDashboardWithFiltersRenderer = React.memo(
                         size="small"
                         sx={(theme) => ({
                           marginBlockEnd: 'auto',
-                          marginTop: { md: theme.spacingFunction(28) },
+                          marginTop: { md: theme.spacingFunction(24) },
                         })}
                       >
                         <DownloadIcon height="24px" width="24px" />
@@ -324,7 +336,21 @@ const CloudPulseDashboardWithFiltersRenderer = React.memo(
 
             {isFilterBuilderNeeded && (
               <CloudPulseDashboardFilterBuilder
+                appliedFilters={
+                  showAppliedFilters ? (
+                    <CloudPulseAppliedFilterRenderer
+                      dashboardId={currentDashboard.id}
+                      filters={filterData.label}
+                    />
+                  ) : undefined
+                }
                 dashboard={currentDashboard}
+                dashboardErrorText={
+                  dashboardDiscoveryState.status === 'error'
+                    ? dashboardDiscoveryState.errorText
+                    : undefined
+                }
+                dashboardLoading={dashboardDiscoveryState.status === 'loading'}
                 emitFilterChange={onFilterChange}
                 handleToggleAppliedFilter={toggleAppliedFilter}
                 isServiceAnalyticsIntegration
@@ -337,24 +363,9 @@ const CloudPulseDashboardWithFiltersRenderer = React.memo(
                 }
               />
             )}
-            <GridLegacy
-              item
-              sx={{
-                mb: 3,
-                mt: -3,
-              }}
-              xs={12}
-            >
-              {showAppliedFilters && (
-                <CloudPulseAppliedFilterRenderer
-                  dashboardId={currentDashboard.id}
-                  filters={filterData.label}
-                />
-              )}
-            </GridLegacy>
           </GridLegacy>
         </Paper>
-        {isMandatoryFiltersSelected ? (
+        {isDashboardDiscoveryReady && isMandatoryFiltersSelected ? (
           <CloudPulseDashboard
             {...getDashboardProperties({
               dashboardObj: currentDashboard,

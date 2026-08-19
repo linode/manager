@@ -345,6 +345,78 @@ describe('delivery utils functions', () => {
           client_private_key: 'key',
         });
       });
+
+      it('should include client_private_key_passphrase when all required fields and passphrase are provided', () => {
+        const details: CustomHTTPSDetailsExtended = {
+          ...baseCustomHTTPSDetails,
+          client_certificate_details: {
+            client_ca_certificate: 'ca-cert',
+            client_certificate: 'cert',
+            client_private_key: 'key',
+            client_private_key_passphrase: 'passphrase-value',
+            tls_hostname: 'hostname',
+          },
+        };
+
+        const result = getDestinationPayloadDetails(
+          details,
+          destinationType.CustomHttps
+        ) as CustomHTTPSDetailsExtended;
+
+        expect(result.client_certificate_details).toBeDefined();
+        expect(result.client_certificate_details).toEqual(
+          details.client_certificate_details
+        );
+      });
+
+      it('should omit client_private_key_passphrase when it is empty string', () => {
+        const details: CustomHTTPSDetailsExtended = {
+          ...baseCustomHTTPSDetails,
+          client_certificate_details: {
+            client_ca_certificate: 'ca-cert',
+            client_certificate: 'cert',
+            client_private_key: 'key',
+            client_private_key_passphrase: '',
+            tls_hostname: 'hostname',
+          },
+        };
+
+        const result = getDestinationPayloadDetails(
+          details,
+          destinationType.CustomHttps
+        ) as CustomHTTPSDetailsExtended;
+
+        expect(result.client_certificate_details).toBeDefined();
+        expect(
+          result.client_certificate_details?.client_private_key_passphrase
+        ).toBeUndefined();
+        expect(result.client_certificate_details).toEqual({
+          client_ca_certificate: 'ca-cert',
+          client_certificate: 'cert',
+          client_private_key: 'key',
+          tls_hostname: 'hostname',
+        });
+      });
+
+      it('should omit client_certificate_details when required fields are present but only passphrase is filled', () => {
+        const details: CustomHTTPSDetailsExtended = {
+          ...baseCustomHTTPSDetails,
+          client_certificate_details: {
+            client_ca_certificate: '',
+            client_certificate: '',
+            client_private_key: '',
+            client_private_key_passphrase: 'passphrase-value',
+            tls_hostname: '',
+          },
+        };
+
+        const result = getDestinationPayloadDetails(
+          details,
+          destinationType.CustomHttps
+        ) as CustomHTTPSDetailsExtended;
+
+        expect(result.client_certificate_details).toBeUndefined();
+      });
     });
   });
 });

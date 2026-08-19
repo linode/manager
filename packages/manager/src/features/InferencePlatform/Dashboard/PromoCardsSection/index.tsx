@@ -1,7 +1,8 @@
-import { Box } from '@linode/ui';
 import React from 'react';
 
+import { Box } from '../../components';
 import { PromoCard } from './PromoCard';
+import styles from './PromoCardsSection.module.css';
 
 import type { PromoCardData } from './PromoCard';
 
@@ -130,17 +131,7 @@ export const PromoCardsSection = () => {
   }
 
   return (
-    <Box
-      sx={(theme) => ({
-        display: 'grid',
-        gap: 2,
-        gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
-        [theme.breakpoints.down('md')]: {
-          gridTemplateColumns: '1fr',
-        },
-        mb: 2,
-      })}
-    >
+    <Box className={styles.box}>
       {cards.map((card) => (
         <PromoCard card={card} key={card.title} />
       ))}

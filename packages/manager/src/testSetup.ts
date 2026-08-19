@@ -19,6 +19,7 @@ vi.mock('src/OAuth/oauthClient', async (importOriginal) => {
       ensureAuthCallbacksHandled: vi.fn().mockResolvedValue(undefined),
       login: vi.fn(),
       logout: vi.fn().mockResolvedValue(undefined),
+      responseMiddleware: vi.fn(),
     },
   };
 });

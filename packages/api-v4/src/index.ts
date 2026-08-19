@@ -34,6 +34,8 @@ export * from './managed';
 
 export * from './marketplace';
 
+export * from './natgateways';
+
 export * from './netloadbalancers';
 
 export * from './network-transfer';

@@ -34,20 +34,28 @@ export const LinodeInterfaceActionMenu = (props: Props) => {
         }
       : {};
 
+  const isRDMA = type === 'RDMA - VPC';
+
   const actions = [
     { onClick: () => handlers.onShowDetails(id), title: 'Details' },
+    ...(isRDMA
+      ? []
+      : [
+          {
+            onClick: () => handlers.onEdit(id),
+            title: 'Edit',
+            ...editOptions,
+          },
+        ]),
     {
-      onClick: () => handlers.onEdit(id),
-      title: 'Edit',
-      ...editOptions,
-    },
-    {
-      disabled: isLinodeSubResourcesLocked,
+      disabled: isLinodeSubResourcesLocked || isRDMA,
       onClick: () => handlers.onDelete(id),
       title: 'Delete',
       tooltip: isLinodeSubResourcesLocked
         ? LINODE_LOCKED_DELETE_INTERFACE_TOOLTIP
-        : undefined,
+        : isRDMA
+          ? 'RDMA interfaces cannot be deleted.'
+          : undefined,
     },
   ];
 

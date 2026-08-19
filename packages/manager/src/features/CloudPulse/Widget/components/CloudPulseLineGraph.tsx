@@ -11,12 +11,18 @@ import {
   computeZoomedInData,
 } from '../../Utils/CloudPulseZoomInUtils';
 import { humanizeLargeData } from '../../Utils/utils';
+import { CloudPulseTooltip } from './CloudPulseTooltip';
+import { useTooltipFilterHandler } from './useTooltipFilterHandler';
 import { useTooltipPositioning } from './useTooltipPositioning';
+import { useTooltipVisibilityHandler } from './useTooltipVisibilityHandler';
 import { useZoomController } from './useZoomController';
 
+import type { MouseHandlerDataParam } from 'recharts';
 import type {
   AreaChartProps,
   DataSet,
+  TooltipEntriesByTimestamp,
+  TooltipMetricEntry,
 } from 'src/components/AreaChart/AreaChart';
 
 export interface CloudPulseLineGraph extends AreaChartProps {
@@ -45,11 +51,23 @@ export const CloudPulseLineGraph = React.memo((props: CloudPulseLineGraph) => {
     showLegend,
     widgetLabel,
     onHiddenAreasChange,
+    areas,
     ...rest
   } = props;
   const flags = useFlags();
 
   const theme = useTheme();
+
+  const isCustomTooltipEnabled = flags.aclp?.enableCustomTooltip ?? false; // default to false
+
+  const areaColorMap = React.useMemo(() => {
+    if (!isCustomTooltipEnabled) return undefined;
+    const map: Record<string, string> = {};
+    areas?.forEach(({ dataKey, color }) => {
+      map[dataKey] = color;
+    });
+    return map;
+  }, [areas, isCustomTooltipEnabled]);
 
   // to reduce the x-axis tick count for small screen
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
@@ -70,11 +88,82 @@ export const CloudPulseLineGraph = React.memo((props: CloudPulseLineGraph) => {
     zoomCallbacks,
   } = useZoomController(zoomResetKey);
 
-  const { tooltipPos, handleMouseMove, chartContainerRef, tooltipRef } =
-    useTooltipPositioning(
-      isZoomEnabled ? zoomCallbacks?.onMouseMove : undefined,
-      isMobileOrTablet
-    );
+  const {
+    tooltipPos,
+    tooltipMaxHeight,
+    handleMouseMove: handleTooltipPositioningMouseMove,
+    chartContainerRef,
+    tooltipRef,
+    recalculate,
+    reset,
+  } = useTooltipPositioning(
+    isZoomEnabled ? zoomCallbacks?.onMouseMove : undefined,
+    isMobileOrTablet
+  );
+  const {
+    handleActiveDotClick,
+    handleActiveDotMouseEnter,
+    handleActiveDotMouseLeave,
+    handleTooltipFilterOnChartClick,
+    resetTooltipFilter,
+    tooltipFilter,
+  } = useTooltipFilterHandler();
+  const { claimTooltipVisibility, isTooltipVisible, releaseTooltipVisibility } =
+    useTooltipVisibilityHandler(resetTooltipFilter);
+
+  // Tooltip-specific mouse handlers (custom tooltip only)
+  const tooltipMouseHandlers = React.useMemo(
+    () =>
+      isCustomTooltipEnabled
+        ? {
+            onMouseMove: (chartData: MouseHandlerDataParam) => {
+              claimTooltipVisibility();
+              handleTooltipPositioningMouseMove(chartData);
+            },
+            onMouseLeave: () => {
+              releaseTooltipVisibility();
+              reset();
+            },
+            onClick: (chartData: MouseHandlerDataParam) => {
+              if (chartData.isTooltipActive && tooltipFilter?.dataKey) {
+                handleTooltipFilterOnChartClick();
+              }
+            },
+          }
+        : {
+            onMouseMove: (chartData: MouseHandlerDataParam) =>
+              handleTooltipPositioningMouseMove(chartData),
+            onMouseLeave: undefined,
+            onClick: undefined,
+          },
+    [
+      isCustomTooltipEnabled,
+      claimTooltipVisibility,
+      handleTooltipPositioningMouseMove,
+      releaseTooltipVisibility,
+      reset,
+      tooltipFilter?.dataKey,
+      handleTooltipFilterOnChartClick,
+    ]
+  );
+
+  const zoomCallbackHandlers = React.useMemo(
+    () =>
+      isZoomEnabled
+        ? {
+            onMouseDown: (chartData: MouseHandlerDataParam) => {
+              zoomCallbacks?.onMouseDown?.(chartData);
+            },
+            onMouseMove: (chartData: MouseHandlerDataParam) => {
+              zoomCallbacks?.onMouseMove?.(chartData);
+            },
+            onMouseUp: () => {
+              zoomCallbacks?.onMouseUp?.();
+            },
+          }
+        : undefined,
+    [isZoomEnabled, zoomCallbacks]
+  );
 
   const zoomedData = React.useMemo(() => {
     if (!isZoomEnabled) {
@@ -102,6 +191,29 @@ export const CloudPulseLineGraph = React.memo((props: CloudPulseLineGraph) => {
     zoom,
     zoomedData,
   ]);
+
+  const tooltipEntriesByTimestamp = React.useMemo<
+    TooltipEntriesByTimestamp | undefined
+  >(() => {
+    if (!isCustomTooltipEnabled) {
+      return undefined;
+    }
+
+    const entriesByTimestamp = new Map<number, TooltipMetricEntry[]>();
+
+    for (const dataPoint of zoomedData) {
+      const metricEntries = Object.entries(dataPoint)
+        .filter(
+          (entry): entry is TooltipMetricEntry =>
+            entry[0] !== 'timestamp' && typeof entry[1] === 'number'
+        )
+        .sort(([, firstValue], [, secondValue]) => secondValue - firstValue);
+
+      entriesByTimestamp.set(dataPoint.timestamp, metricEntries);
+    }
+
+    return entriesByTimestamp;
+  }, [isCustomTooltipEnabled, zoomedData]);
 
   React.useEffect(() => {
     if (onZoomChange) {
@@ -139,7 +251,7 @@ export const CloudPulseLineGraph = React.memo((props: CloudPulseLineGraph) => {
               onClick={resetZoom}
               sx={(theme) => ({
                 height: '26px',
-                width: '84px',
+                width: '88px',
                 padding: theme.spacingFunction(4, 8),
                 fontSize: theme.tokens.font.FontSize.Xxxs,
               })}
@@ -150,7 +262,49 @@ export const CloudPulseLineGraph = React.memo((props: CloudPulseLineGraph) => {
           )}
           <AreaChart
             {...rest}
+            areas={areas}
+            chartCallbacks={{
+              onMouseDown: (chartData) => {
+                zoomCallbackHandlers?.onMouseDown?.(chartData);
+              },
+              onClick: (chartData) => {
+                tooltipMouseHandlers.onClick?.(chartData);
+              },
+              onMouseMove: (chartData) => {
+                tooltipMouseHandlers.onMouseMove?.(chartData);
+                zoomCallbackHandlers?.onMouseMove?.(chartData);
+              },
+              onMouseLeave: tooltipMouseHandlers.onMouseLeave,
+              onMouseUp: zoomCallbackHandlers?.onMouseUp,
+            }}
             chartContainerRef={chartContainerRef}
+            CustomConsumerTooltip={
+              isCustomTooltipEnabled ? CloudPulseTooltip : undefined
+            }
+            customTooltipOptions={
+              isCustomTooltipEnabled
+                ? {
+                    areasColorMap: areaColorMap,
+                    tooltipEntriesByTimestamp,
+                    tooltipWrapperStyle: {
+                      maxHeight: `${tooltipMaxHeight}px`,
+                      overflow: 'hidden',
+                      minHeight: '44px',
+                      maxWidth: '300px',
+                      minWidth: '190px',
+                      contain: 'layout',
+                    },
+                    activeDotHandlers: {
+                      onClick: handleActiveDotClick,
+                      onMouseEnter: handleActiveDotMouseEnter,
+                      onMouseLeave: handleActiveDotMouseLeave,
+                    },
+                    isTooltipVisible,
+                    onFilteredTooltipChange: recalculate,
+                    tooltipFilter,
+                  }
+                : undefined
+            }
             data={zoomedData}
             fillOpacity={0.5}
             legendHeight="165px"
@@ -171,11 +325,15 @@ export const CloudPulseLineGraph = React.memo((props: CloudPulseLineGraph) => {
                 : null
             }
             showLegend={zoomedData.length > 0 ? showLegend : false}
-            tooltipCustomValueFormatter={
-              isHumanizableUnit
-                ? (value, unit) => `${humanizeLargeData(value)} ${unit}`
-                : undefined
-            }
+            tooltipCustomValueFormatter={(value) => {
+              const formattedValue = isHumanizableUnit
+                ? humanizeLargeData(value)
+                : roundTo(value);
+
+              return isCustomTooltipEnabled
+                ? `${formattedValue}`
+                : `${formattedValue} ${unit}`;
+            }}
             tooltipPosition={tooltipPos}
             tooltipRef={tooltipRef}
             unit={unit}
@@ -190,16 +348,6 @@ export const CloudPulseLineGraph = React.memo((props: CloudPulseLineGraph) => {
                   }
                 : {
                     tickFormat: (value: number) => `${roundTo(value, 3)}`,
-                  }
-            }
-            zoomCallbacks={
-              isZoomEnabled
-                ? {
-                    ...zoomCallbacks,
-                    onMouseMove: handleMouseMove,
-                  }
-                : {
-                    onMouseMove: handleMouseMove,
                   }
             }
           />

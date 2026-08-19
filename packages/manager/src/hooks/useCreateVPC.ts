@@ -9,10 +9,11 @@ import { useForm } from 'react-hook-form';
 
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useGetLinodeCreateType } from 'src/features/Linodes/LinodeCreate/Tabs/utils/useGetLinodeCreateType';
+import { useIsGpuRdmaPlanEnabled } from 'src/hooks/useIsGpuRdmaPlanEnabled';
 import { sendLinodeCreateFormStepEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { DEFAULT_SUBNET_IPV4_VALUE } from 'src/utilities/subnets';
 
-import type { CreateVPCPayload, VPC } from '@linode/api-v4';
+import type { CreateVPCPayload, VPC, VPCType } from '@linode/api-v4';
 
 // Custom hook to consolidate shared logic between VPCCreate.tsx and VPCCreateDrawer.tsx
 export interface UseCreateVPCInputs {
@@ -42,9 +43,26 @@ export const useCreateVPC = (inputs: UseCreateVPCInputs) => {
   const { isPending: isLoadingCreateVPC, mutateAsync: createVPC } =
     useCreateVPCMutation();
 
+  const { isGpuRdmaPlanEnabled } = useIsGpuRdmaPlanEnabled();
+
   const onCreateVPC = async (values: CreateVPCPayload) => {
     try {
-      const vpc = await createVPC(values);
+      const payload: CreateVPCPayload = {
+        ...values,
+        ipv4: values.ipv4
+          ?.map((range) => ({ range: range.range?.trim() ?? '' }))
+          .filter((range) => range.range !== ''),
+      };
+
+      if (!payload.ipv4 || payload.ipv4.length === 0) {
+        delete payload.ipv4;
+      }
+
+      if (!isGpuRdmaPlanEnabled) {
+        delete payload.vpc_type;
+      }
+
+      const vpc = await createVPC(payload);
       if (pushToVPCPage) {
         navigate({ to: '/vpcs/$vpcId', params: { vpcId: vpc.id } });
       } else {
@@ -87,6 +105,7 @@ export const useCreateVPC = (inputs: UseCreateVPCInputs) => {
         label: '',
       },
     ],
+    vpc_type: 'regular' as VPCType,
   };
 
   const form = useForm<CreateVPCPayload>({

@@ -95,7 +95,7 @@ export const UserDelegationsTable = () => {
   }
 
   if (errorChildAccounts) {
-    return <ErrorState errorText={errorChildAccounts[0].reason} />;
+    return <ErrorState errorText={errorChildAccounts[0].reason} withPaper />;
   }
 
   return (
