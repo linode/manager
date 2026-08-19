@@ -43,7 +43,7 @@
     "typecheck": "tsc --noEmit true --emitDeclarationOnly false"
   },
   "dependencies": {
-    "@akamai/compute-ui-core": "1.0.2",
+    "@akamai/compute-ui-core": "1.1.1",
     "ipaddr.js": "^2.0.0",
     "libphonenumber-js": "^1.10.6",
     "yup": "^1.4.0"

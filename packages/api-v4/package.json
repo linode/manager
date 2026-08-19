@@ -42,7 +42,7 @@
     "typecheck": "tsc --noEmit true --emitDeclarationOnly false"
   },
   "dependencies": {
-    "@akamai/compute-ui-core": "1.0.2",
+    "@akamai/compute-ui-core": "1.1.1",
     "@linode/validation": "workspace:*",
     "axios": "~1.18.0",
     "ipaddr.js": "^2.0.0",
