@@ -23,11 +23,7 @@ export function Drawer(props: ComponentProps<typeof CDSDrawer>) {
   );
 
   return createPortal(
-    <CDSDrawer
-      {...rest}
-      onClose={handleClose}
-      open={open}
-    />,
+    <CDSDrawer {...rest} onClose={handleClose} open={open} />,
     document.body
   );
 }
