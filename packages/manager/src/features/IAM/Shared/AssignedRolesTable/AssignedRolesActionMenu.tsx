@@ -138,7 +138,7 @@ export const AssignedRolesActionMenu = ({
           data-testid={action.title}
           disabled={Boolean(action.disabled)}
           key={action.title}
-          onSelect={action.onClick}
+          onSelected={action.onClick}
           style={{
             minWidth: '210px',
             paddingRight: Spacing.S4,

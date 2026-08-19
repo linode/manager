@@ -33,9 +33,9 @@
     "coverage:summary": "vitest run --coverage.enabled --reporter=junit --coverage.reporter=json-summary"
   },
   "dependencies": {
-    "@akamai/cds-components": "0.0.0-20260622084103",
-    "@akamai/cds-icons": "0.0.0-20260622084103",
-    "@akamai/cds-tokens": "0.0.0-20260622084103",
+    "@akamai/cds-components": "1.0.1",
+    "@akamai/cds-icons": "1.0.0",
+    "@akamai/cds-tokens": "1.0.0",
     "@akamai/compute-ui-core": "1.1.1-develop-20260817135918-1b5479a9b0e0988323114e9c9e8f33440422c06e",
     "@braintree/sanitize-url": "^7.1.0",
     "@dnd-kit/core": "^6.1.0",

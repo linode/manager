@@ -73,7 +73,7 @@ export const DatabaseConnectionPoolRow = (props: Props) => {
             <MenuItem
               disabled={action.disabled}
               key={action.title}
-              onSelect={action.onClick}
+              onSelected={action.onClick}
               style={{
                 minWidth: '210px',
                 paddingRight: Spacing.S4,

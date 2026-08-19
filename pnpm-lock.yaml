@@ -303,14 +303,14 @@ importers:
   packages/manager:
     dependencies:
       '@akamai/cds-components':
-        specifier: 0.0.0-20260622084103
-        version: 0.0.0-20260622084103(@akamai/cds-icons@0.0.0-20260622084103(lit@3.3.2)(react@19.2.8))(@akamai/cds-tokens@0.0.0-20260622084103)(@lit/context@1.1.6)(@lit/react@1.0.8(@types/react@19.2.18))(lit@3.3.2)(luxon@3.4.4)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        specifier: 1.0.1
+        version: 1.0.1(@akamai/cds-icons@1.0.0(lit@3.3.2)(react@19.2.8))(@akamai/cds-tokens@1.0.0)(@lit/context@1.1.6)(@lit/react@1.0.8(@types/react@19.2.18))(lit@3.3.2)(luxon@3.4.4)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@akamai/cds-icons':
-        specifier: 0.0.0-20260622084103
-        version: 0.0.0-20260622084103(lit@3.3.2)(react@19.2.8)
+        specifier: 1.0.0
+        version: 1.0.0(lit@3.3.2)(react@19.2.8)
       '@akamai/cds-tokens':
-        specifier: 0.0.0-20260622084103
-        version: 0.0.0-20260622084103
+        specifier: 1.0.0
+        version: 1.0.0
       '@akamai/compute-ui-core':
         specifier: 1.1.1-develop-20260817135918-1b5479a9b0e0988323114e9c9e8f33440422c06e
         version: 1.1.1-develop-20260817135918-1b5479a9b0e0988323114e9c9e8f33440422c06e(luxon@3.4.4)(peggy@4.2.0)
@@ -1028,6 +1028,33 @@ packages:
       react-dom:
         optional: true
 
+  '@akamai/cds-components@1.0.1':
+    resolution: {integrity: sha512-+CoI6K4mkqN1Na1JBr+g4d86kXd77Cnfn61sok/BWF53xUc2WKZ7VTC2zVpMRiO5tHDgt0SzAn8AmzNYxylGRQ==, tarball: https://repos.akamai.com:443/artifactory/api/npm/npmjs-repos/@akamai/cds-components/-/@akamai/cds-components-1.0.1.tgz}
+    peerDependencies:
+      '@akamai/cds-icons': 1.0.0
+      '@akamai/cds-tokens': 1.0.0
+      '@angular/core': ^21.2.5
+      '@angular/forms': ^21.2.5
+      '@lit/context': ^1.1.6
+      '@lit/react': ^1.0.0
+      lit: ^3.2.1
+      luxon: ^3.0.0
+      react: ^18.0.0
+      react-dom: ^18.0.0
+    peerDependenciesMeta:
+      '@angular/core':
+        optional: true
+      '@angular/forms':
+        optional: true
+      '@lit/react':
+        optional: true
+      luxon:
+        optional: true
+      react:
+        optional: true
+      react-dom:
+        optional: true
+
   '@akamai/cds-icons@0.0.0-20260612001831':
     resolution: {integrity: sha512-dgLPh23+OeP9gYQOhL3IBU+uU9s41LFfhdyADrJH+kDIBzgLLTfvyOH72HPHjUVNsvR3g1yJHUeEcKc4yI6y0w==, tarball: https://repos.akamai.com:443/artifactory/api/npm/npmjs-repos/@akamai/cds-icons/-/@akamai/cds-icons-0.0.0-20260612001831.tgz}
     peerDependencies:
@@ -1050,11 +1077,25 @@ packages:
       react:
         optional: true
 
+  '@akamai/cds-icons@1.0.0':
+    resolution: {integrity: sha512-IkWU5bcYHC/1zLMuSMWGl/qY/SMxrcU+enqtGa2uPAD0fSFnhmbsP7FnqRvl5/cD+G2yuToWmMAej3uLDGATxw==, tarball: https://repos.akamai.com:443/artifactory/api/npm/npmjs-repos/@akamai/cds-icons/-/@akamai/cds-icons-1.0.0.tgz}
+    peerDependencies:
+      lit: ^3.2.1
+      react: ^18.0.0
+    peerDependenciesMeta:
+      lit:
+        optional: true
+      react:
+        optional: true
+
   '@akamai/cds-tokens@0.0.0-20260612001831':
     resolution: {integrity: sha512-A7XrdkmxkMWh30xtl2PWvL923wiump6pGpLUT27HomY3QZz+7jYTBN6lexVYYJkAg5ONXG4QdN9Em3nxrkTM2Q==, tarball: https://repos.akamai.com:443/artifactory/api/npm/npmjs-repos/@akamai/cds-tokens/-/@akamai/cds-tokens-0.0.0-20260612001831.tgz}
 
   '@akamai/cds-tokens@0.0.0-20260622084103':
     resolution: {integrity: sha512-uSfYON0DkwDmErs1v5pmMWMAP6Vb6irAInzrBnEEU8jSfuN0t+NiY4yNeT4W/2DSZLAzu5sWGSy3+nSoOtsVgQ==, tarball: https://repos.akamai.com/artifactory/api/npm/npmjs-repos/@akamai/cds-tokens/-/@akamai/cds-tokens-0.0.0-20260622084103.tgz}
+
+  '@akamai/cds-tokens@1.0.0':
+    resolution: {integrity: sha512-1fAqru3RXZ2o09106Cc0HgwWPQPsMXozRjI6pcWeqfDLP3V2Ze0Uz9u0qfY4rXnRcdK+1mGh7kMCL62Ob3BBKA==, tarball: https://repos.akamai.com:443/artifactory/api/npm/npmjs-repos/@akamai/cds-tokens/-/@akamai/cds-tokens-1.0.0.tgz}
 
   '@akamai/compute-ui-core@0.0.0-20260615155722':
     resolution: {integrity: sha512-GeyTIMBRxwJV7Y8jN+lk6fRElWnIkxWqGCyP1VGvc2JxeceX+RC2MeOTRtxswMQEY4ih27QwsR+bYUddVZnomQ==, tarball: https://repos.akamai.com/artifactory/api/npm/npmjs-repos/@akamai/compute-ui-core/-/@akamai/compute-ui-core-0.0.0-20260615155722.tgz}
@@ -1107,10 +1148,10 @@ packages:
         optional: true
 
   '@akamai/compute-ui-portal-menu@1.0.4':
-    resolution: {integrity: sha512-srgNkP3iHlK0A9CwV+qz3zi3hTnrxBdPQBT5XuBmOlcohUCMR/mnM4aN2VfoFUNFT8snErISijC20ZT7XQ9F3w==, tarball: https://repos.akamai.com:443/artifactory/api/npm/npmjs-repos/@akamai/compute-ui-portal-menu/-/@akamai/compute-ui-portal-menu-1.0.4.tgz}
+    resolution: {integrity: sha512-srgNkP3iHlK0A9CwV+qz3zi3hTnrxBdPQBT5XuBmOlcohUCMR/mnM4aN2VfoFUNFT8snErISijC20ZT7XQ9F3w==, tarball: https://repos.akamai.com/artifactory/api/npm/npmjs-repos/@akamai/compute-ui-portal-menu/-/@akamai/compute-ui-portal-menu-1.0.4.tgz}
 
   '@akamai/compute-ui-portal@1.0.5':
-    resolution: {integrity: sha512-RLJHdlzLQOU9AGN/hxpg58yoxdP2123Fv3m2ZQpCfGIyRXq1PKQdIyXeMqYhPKFZZWa9hErYLnVxu4z2zEjgDw==, tarball: https://repos.akamai.com:443/artifactory/api/npm/npmjs-repos/@akamai/compute-ui-portal/-/@akamai/compute-ui-portal-1.0.5.tgz}
+    resolution: {integrity: sha512-RLJHdlzLQOU9AGN/hxpg58yoxdP2123Fv3m2ZQpCfGIyRXq1PKQdIyXeMqYhPKFZZWa9hErYLnVxu4z2zEjgDw==, tarball: https://repos.akamai.com/artifactory/api/npm/npmjs-repos/@akamai/compute-ui-portal/-/@akamai/compute-ui-portal-1.0.5.tgz}
 
   '@algolia/cache-browser-local-storage@4.24.0':
     resolution: {integrity: sha512-t63W9BnoXVrGy9iYHBgObNXqYXM3tYXCjDSHeNwnsc324r4o5UiVKUiAB4THQ5z9U5hTj6qUvwg/Ez43ZD85ww==}
@@ -2005,10 +2046,10 @@ packages:
       eslint: ^9
 
   '@lit-labs/ssr-dom-shim@1.6.0':
-    resolution: {integrity: sha512-VHb0ALPMTlgKjM6yIxxoQNnpKyUKLD04VzeQdsiXkMqkvYlAHxq9glGLmgbb889/1GsohSOAjvQYoiBppXFqrQ==, tarball: https://repos.akamai.com:443/artifactory/api/npm/npmjs-repos/@lit-labs/ssr-dom-shim/-/ssr-dom-shim-1.6.0.tgz}
+    resolution: {integrity: sha512-VHb0ALPMTlgKjM6yIxxoQNnpKyUKLD04VzeQdsiXkMqkvYlAHxq9glGLmgbb889/1GsohSOAjvQYoiBppXFqrQ==}
 
   '@lit/context@1.1.6':
-    resolution: {integrity: sha512-M26qDE6UkQbZA2mQ3RjJ3Gzd8TxP+/0obMgE5HfkfLhEEyYE3Bui4A5XHiGPjy0MUGAyxB3QgVuw2ciS0kHn6A==, tarball: https://repos.akamai.com:443/artifactory/api/npm/npmjs-repos/@lit/context/-/context-1.1.6.tgz}
+    resolution: {integrity: sha512-M26qDE6UkQbZA2mQ3RjJ3Gzd8TxP+/0obMgE5HfkfLhEEyYE3Bui4A5XHiGPjy0MUGAyxB3QgVuw2ciS0kHn6A==}
 
   '@lit/react@1.0.8':
     resolution: {integrity: sha512-p2+YcF+JE67SRX3mMlJ1TKCSTsgyOVdAwd/nxp3NuV1+Cb6MWALbN6nT7Ld4tpmYofcE5kcaSY1YBB9erY+6fw==, tarball: https://repos.akamai.com:443/artifactory/api/npm/npmjs-repos/@lit/react/-/react-1.0.8.tgz}
@@ -2016,10 +2057,10 @@ packages:
       '@types/react': 17 || 18 || 19
 
   '@lit/reactive-element@2.1.2':
-    resolution: {integrity: sha512-pbCDiVMnne1lYUIaYNN5wrwQXDtHaYtg7YEFPeW+hws6U47WeFvISGUWekPGKWOP1ygrs0ef0o1VJMk1exos5A==, tarball: https://repos.akamai.com:443/artifactory/api/npm/npmjs-repos/@lit/reactive-element/-/reactive-element-2.1.2.tgz}
+    resolution: {integrity: sha512-pbCDiVMnne1lYUIaYNN5wrwQXDtHaYtg7YEFPeW+hws6U47WeFvISGUWekPGKWOP1ygrs0ef0o1VJMk1exos5A==}
 
   '@lit/task@1.0.3':
-    resolution: {integrity: sha512-1gJGJl8WON+2j0y9xfcD+XsS1rvcy3XDgsIhcdUW++yTR8ESjZW6o7dn8M8a4SZM8NnJe6ynS2cKWwsbfLOurg==, tarball: https://repos.akamai.com:443/artifactory/api/npm/npmjs-repos/@lit/task/-/task-1.0.3.tgz}
+    resolution: {integrity: sha512-1gJGJl8WON+2j0y9xfcD+XsS1rvcy3XDgsIhcdUW++yTR8ESjZW6o7dn8M8a4SZM8NnJe6ynS2cKWwsbfLOurg==}
 
   '@lukemorales/query-key-factory@1.3.4':
     resolution: {integrity: sha512-A3frRDdkmaNNQi6mxIshsDk4chRXWoXa05US8fBo4kci/H+lVmujS6QrwQLLGIkNIRFGjMqp2uKjC4XsLdydRw==}
@@ -3269,7 +3310,7 @@ packages:
     engines: {node: '>=12'}
 
   '@tanstack/query-core@5.51.24':
-    resolution: {integrity: sha512-qtIR0FMHUDIWyIQw87q4C+so7XaN59MsGfWrc6rgi2VTHrVZF3Hd0St2dbpqRetHf6XW5yY5lzTrXpTilPlxUg==, tarball: https://repos.akamai.com:443/artifactory/api/npm/npmjs-repos/@tanstack/query-core/-/query-core-5.51.24.tgz}
+    resolution: {integrity: sha512-qtIR0FMHUDIWyIQw87q4C+so7XaN59MsGfWrc6rgi2VTHrVZF3Hd0St2dbpqRetHf6XW5yY5lzTrXpTilPlxUg==}
 
   '@tanstack/query-devtools@5.51.16':
     resolution: {integrity: sha512-ajwuq4WnkNCMj/Hy3KR8d3RtZ6PSKc1dD2vs2T408MdjgKzQ3klVoL6zDgVO7X+5jlb5zfgcO3thh4ojPhfIaw==}
@@ -5266,13 +5307,13 @@ packages:
     engines: {node: '>=20.0.0'}
 
   lit-element@4.2.2:
-    resolution: {integrity: sha512-aFKhNToWxoyhkNDmWZwEva2SlQia+jfG0fjIWV//YeTaWrVnOxD89dPKfigCUspXFmjzOEUQpOkejH5Ly6sG0w==, tarball: https://repos.akamai.com:443/artifactory/api/npm/npmjs-repos/lit-element/-/lit-element-4.2.2.tgz}
+    resolution: {integrity: sha512-aFKhNToWxoyhkNDmWZwEva2SlQia+jfG0fjIWV//YeTaWrVnOxD89dPKfigCUspXFmjzOEUQpOkejH5Ly6sG0w==}
 
   lit-html@3.3.3:
-    resolution: {integrity: sha512-el8M6jK2o3RXBnrSHX3ZKrsN8zEV63pSExTO1wYJz7QndGYZ8353e2a5PPX+qHe2aGayfnchQmkAojaWAREOIA==, tarball: https://repos.akamai.com:443/artifactory/api/npm/npmjs-repos/lit-html/-/lit-html-3.3.3.tgz}
+    resolution: {integrity: sha512-el8M6jK2o3RXBnrSHX3ZKrsN8zEV63pSExTO1wYJz7QndGYZ8353e2a5PPX+qHe2aGayfnchQmkAojaWAREOIA==}
 
   lit@3.3.2:
-    resolution: {integrity: sha512-NF9zbsP79l4ao2SNrH3NkfmFgN/hBYSQo90saIVI1o5GpjAdCPVstVzO1MrLOakHoEhYkrtRjPK6Ob521aoYWQ==, tarball: https://repos.akamai.com:443/artifactory/api/npm/npmjs-repos/lit/-/lit-3.3.2.tgz}
+    resolution: {integrity: sha512-NF9zbsP79l4ao2SNrH3NkfmFgN/hBYSQo90saIVI1o5GpjAdCPVstVzO1MrLOakHoEhYkrtRjPK6Ob521aoYWQ==}
 
   load-tsconfig@0.2.5:
     resolution: {integrity: sha512-IXO6OCs9yg8tMKzfPZ1YmheJbZCiEsnBdcB03l0OcfK9prKnJb96siuHCr5Fl37/yo9DnKU+TLpxzTUspw9shg==}
@@ -6916,6 +6957,18 @@ snapshots:
       react: 19.2.8
       react-dom: 19.2.8(react@19.2.8)
 
+  '@akamai/cds-components@1.0.1(@akamai/cds-icons@1.0.0(lit@3.3.2)(react@19.2.8))(@akamai/cds-tokens@1.0.0)(@lit/context@1.1.6)(@lit/react@1.0.8(@types/react@19.2.18))(lit@3.3.2)(luxon@3.4.4)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
+    dependencies:
+      '@akamai/cds-icons': 1.0.0(lit@3.3.2)(react@19.2.8)
+      '@akamai/cds-tokens': 1.0.0
+      '@lit/context': 1.1.6
+      lit: 3.3.2
+    optionalDependencies:
+      '@lit/react': 1.0.8(@types/react@19.2.18)
+      luxon: 3.4.4
+      react: 19.2.8
+      react-dom: 19.2.8(react@19.2.8)
+
   '@akamai/cds-icons@0.0.0-20260612001831(lit@3.3.2)(react@19.2.8)':
     optionalDependencies:
       lit: 3.3.2
@@ -6926,9 +6979,16 @@ snapshots:
       lit: 3.3.2
       react: 19.2.8
 
+  '@akamai/cds-icons@1.0.0(lit@3.3.2)(react@19.2.8)':
+    optionalDependencies:
+      lit: 3.3.2
+      react: 19.2.8
+
   '@akamai/cds-tokens@0.0.0-20260612001831': {}
 
   '@akamai/cds-tokens@0.0.0-20260622084103': {}
+
+  '@akamai/cds-tokens@1.0.0': {}
 
   '@akamai/compute-ui-core@0.0.0-20260615155722(luxon@3.4.4)':
     dependencies:
