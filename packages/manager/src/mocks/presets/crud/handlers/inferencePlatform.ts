@@ -773,7 +773,7 @@ export const getUsage = (_mockState: MockState) => [
   http.post('*/v4beta/inference/usage', async ({ request }) => {
     await new Promise((resolve) => setTimeout(resolve, 300));
 
-    let body: Record<string, unknown> = {};
+    let body: Record<string, unknown>;
     try {
       body = (await request.json()) as Record<string, unknown>;
     } catch {
