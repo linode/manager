@@ -1,7 +1,7 @@
 import { useLinodeLishQuery, useLinodeQuery } from '@linode/queries';
 import { CircleProgress, ErrorState } from '@linode/ui';
 import { styled } from '@mui/material/styles';
-import { useNavigate, useParams } from '@tanstack/react-router';
+import { useParams } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
@@ -88,8 +88,6 @@ export const ParsePotentialLishErrorString = (
 };
 
 export const Lish = () => {
-  const navigate = useNavigate();
-
   const { linodeId, type } = useParams({
     strict: false,
   });
@@ -131,22 +129,16 @@ export const Lish = () => {
   const tabs = [
     /* NB: These must correspond to the routes inside the Switch */
     {
-      routeName: `/linodes/${id}/lish/weblish`,
+      routeName: `/linodes/${id}/lish/weblish?kiosk`,
       title: 'Weblish',
     },
     !isBareMetal
       ? {
-          routeName: `/linodes/${id}/lish/glish`,
+          routeName: `/linodes/${id}/lish/glish?kiosk`,
           title: 'Glish',
         }
       : null,
   ].filter(Boolean) as Tab[];
-
-  const navToURL = (index: number) => {
-    navigate({
-      to: `/linodes/${id}/lish/${tabs[index].title.toLowerCase()}`,
-    });
-  };
 
   const refreshToken = async () => {
     await refetch();
@@ -177,16 +169,12 @@ export const Lish = () => {
     );
   }
 
+  const selectedTabIndex = tabs.findIndex(
+    (tab) => tab.title.toLocaleLowerCase() === type
+  );
+
   return (
-    <StyledTabs
-      index={
-        type &&
-        tabs.findIndex((tab) => tab.title.toLocaleLowerCase() === type) !== -1
-          ? tabs.findIndex((tab) => tab.title.toLocaleLowerCase() === type)
-          : 0
-      }
-      onChange={navToURL}
-    >
+    <StyledTabs index={selectedTabIndex === -1 ? 0 : selectedTabIndex}>
       <TabLinkList tabs={tabs} />
       <TabPanels>
         <SafeTabPanel data-qa-tab="Weblish" index={0}>
@@ -208,15 +196,22 @@ const StyledTabs = styled(Tabs)(({ theme }) => ({
   '& [data-reach-tab][role="tab"]': {
     '&[aria-selected="true"]': {
       '&:hover': {
-        backgroundColor: theme.palette.primary.light,
-        color: theme.name === 'light' ? theme.color.white : theme.color.black,
+        backgroundColor:
+          'var(--token-component-button-primary-hover-background)',
+        color: 'var(--token-component-button-primary-hover-text)',
       },
-      backgroundColor: theme.palette.primary.main,
-      borderBottom: 'none !important',
-      color: theme.name === 'light' ? theme.color.white : theme.color.black,
+      borderBottom: 'none',
+      backgroundColor:
+        'var(--token-component-button-primary-default-background)',
+      color: 'var(--token-component-button-primary-default-text)',
     },
-    backgroundColor: theme.bg.offWhite,
-    color: theme.color.tableHeaderText,
+    '&:hover': {
+      backgroundColor:
+        'var(--token-component-button-secondary-hover-background)',
+    },
+    backgroundColor:
+      'var(--token-component-button-secondary-default-background)',
+    color: 'var(--token-component-button-secondary-default-text)',
     flex: 'auto',
     margin: 0,
     maxWidth: 'none !important',
@@ -224,7 +219,8 @@ const StyledTabs = styled(Tabs)(({ theme }) => ({
   '& [role="tablist"]': {
     backgroundColor: theme.bg.offWhite,
     display: 'flex',
-    marginBottom: '0 !important',
+    marginBottom: '0px !important',
     overflow: 'hidden',
+    padding: '1px !important',
   },
 }));

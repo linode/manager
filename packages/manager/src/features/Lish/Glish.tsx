@@ -123,7 +123,7 @@ const Glish = (props: Props) => {
       scaleViewport
       showDotCursor
       style={{
-        height: 'calc(100vh - 60px)',
+        height: 'calc(100vh - 42px)',
         padding: 8,
       }}
       url={glish_url}

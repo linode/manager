@@ -151,7 +151,7 @@ export class Weblish extends React.Component<Props, State> {
             className="terminal"
             id="terminal"
             style={{
-              height: 'calc(100vh - 50px)',
+              height: 'calc(100vh - 42px)',
               padding: 8,
             }}
           />
@@ -181,7 +181,7 @@ export class Weblish extends React.Component<Props, State> {
       cols: 80,
       cursorBlink: true,
       fontFamily: '"Ubuntu Mono", monospace, sans-serif',
-      rows: 40,
+      rows: 30,
       screenReaderMode: true,
     });
 
