@@ -280,7 +280,7 @@ describe('AccountUsersTable', () => {
       expect(clearAllButton).toHaveAttribute('disabled');
     });
 
-    it('does not show pagination', () => {
+    it('does show pagination by default', () => {
       mocks.useAllAccountUsersQuery.mockReturnValue({
         data: makeUsers(20),
         error: undefined,
@@ -289,7 +289,7 @@ describe('AccountUsersTable', () => {
 
       const { container } = renderComponent([], 20, undefined, tfaError);
 
-      expect(container.querySelector('cds-pagination')).not.toBeInTheDocument();
+      expect(container.querySelector('cds-pagination')).toBeInTheDocument();
     });
   });
 });

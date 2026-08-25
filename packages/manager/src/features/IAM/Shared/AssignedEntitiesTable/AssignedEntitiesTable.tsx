@@ -55,7 +55,7 @@ interface Props {
 
 const DEFAULTS_ENTITIES_URL = '/iam/roles/defaults/entity-access';
 const USER_ENTITIES_URL = '/iam/users/$username/entities';
-const MIN_PAGE_SIZE = 25;
+const MIN_PAGE_SIZE = 10;
 
 export const AssignedEntitiesTable = ({ username }: Props) => {
   const { data: permissions } = usePermissions('account', [
@@ -296,6 +296,7 @@ export const AssignedEntitiesTable = ({ username }: Props) => {
     currentRoute: isDefaultDelegationRolesForChildAccount
       ? DEFAULTS_ENTITIES_URL
       : USER_ENTITIES_URL,
+    defaultPageSize: MIN_PAGE_SIZE,
     initialPage: 1,
     preferenceKey: ENTITIES_TABLE_PREFERENCE_KEY,
     clientSidePaginationData: filteredAndSortedRoles,
@@ -419,21 +420,20 @@ export const AssignedEntitiesTable = ({ username }: Props) => {
         role={selectedRole}
         username={username}
       />
-      {filteredAndSortedRolesCount > MIN_PAGE_SIZE && (
-        <Pagination
-          count={filteredAndSortedRolesCount}
-          onPageChange={(e: CustomEvent<number>) =>
-            pagination.handlePageChange(Number(e.detail))
-          }
-          onPageSizeChange={(
-            e: CustomEvent<{ page: number; pageSize: number }>
-          ) => pagination.handlePageSizeChange(Number(e.detail.pageSize))}
-          page={pagination.page}
-          pageSize={pagination.pageSize}
-          pageSizes={[MIN_PAGE_SIZE, 50, 75, 100]}
-          style={{ borderBottom: 0 }}
-        />
-      )}
+      <Pagination
+        count={filteredAndSortedRolesCount}
+        itemsLabel="Entities"
+        onPageChange={(e: CustomEvent<number>) =>
+          pagination.handlePageChange(Number(e.detail))
+        }
+        onPageSizeChange={(
+          e: CustomEvent<{ page: number; pageSize: number }>
+        ) => pagination.handlePageSizeChange(Number(e.detail.pageSize))}
+        page={pagination.page}
+        pageSize={pagination.pageSize}
+        pageSizes={[MIN_PAGE_SIZE, 20, 50, 100]}
+        style={{ borderBottom: 0 }}
+      />
     </>
   );
 };

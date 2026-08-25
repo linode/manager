@@ -306,21 +306,20 @@ export const UsersLanding = () => {
             />
           </TableBody>
         </Table>
-        {users?.results && users.results > MIN_PAGE_SIZE ? (
-          <Pagination
-            count={users?.results ?? 0}
-            onPageChange={(e: CustomEvent<number>) =>
-              pagination.handlePageChange(Number(e.detail))
-            }
-            onPageSizeChange={(
-              e: CustomEvent<{ page: number; pageSize: number }>
-            ) => pagination.handlePageSizeChange(Number(e.detail.pageSize))}
-            page={pagination.page}
-            pageSize={pagination.pageSize}
-            pageSizes={[MIN_PAGE_SIZE, 50, 75, 100]}
-            style={{ borderBottom: 0 }}
-          />
-        ) : null}
+        <Pagination
+          count={users?.results ?? 0}
+          items-label="Users"
+          onPageChange={(e: CustomEvent<number>) =>
+            pagination.handlePageChange(Number(e.detail))
+          }
+          onPageSizeChange={(
+            e: CustomEvent<{ page: number; pageSize: number }>
+          ) => pagination.handlePageSizeChange(Number(e.detail.pageSize))}
+          page={pagination.page}
+          pageSize={pagination.pageSize}
+          pageSizes={[MIN_PAGE_SIZE, 50, 75, 100]}
+          style={{ borderBottom: 0 }}
+        />
       </Paper>
       <CreateUserDrawer
         onClose={() => clearDialogAction('add-user')}

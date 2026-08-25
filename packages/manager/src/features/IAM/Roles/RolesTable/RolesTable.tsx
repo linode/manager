@@ -404,6 +404,7 @@ export const RolesTable = ({ roles = [] }: Props) => {
         {sortedRows.length !== 0 && sortedRows.length > DEFAULT_PAGE_SIZE && (
           <Pagination
             count={sortedRows.length}
+            itemsLabel="Roles"
             onPageChange={handlePageChange}
             onPageSizeChange={handlePageSizeChange}
             page={pagination.page}

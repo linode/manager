@@ -266,8 +266,6 @@ export const AccountUsersTable = ({
     applyOptionalUsersUpdate(next);
   };
 
-  const shouldShowPagination = totalCount > MIN_PAGE_SIZE && !usersDataError;
-
   return (
     <div>
       <AccountUsersTableToolbar
@@ -349,21 +347,20 @@ export const AccountUsersTable = ({
           </TableBody>
         </Table>
 
-        {shouldShowPagination && (
-          <Pagination
-            count={totalCount}
-            onPageChange={(e: CustomEvent<number>) =>
-              pagination.handlePageChange(Number(e.detail))
-            }
-            onPageSizeChange={(
-              e: CustomEvent<{ page: number; pageSize: number }>
-            ) => pagination.handlePageSizeChange(Number(e.detail.pageSize))}
-            page={pagination.page}
-            pageSize={pagination.pageSize}
-            pageSizes={[MIN_PAGE_SIZE, 20, 50]}
-            style={{ borderTop: 0, borderBottom: 0 }}
-          />
-        )}
+        <Pagination
+          count={totalCount}
+          itemsLabel="Users"
+          onPageChange={(e: CustomEvent<number>) =>
+            pagination.handlePageChange(Number(e.detail))
+          }
+          onPageSizeChange={(
+            e: CustomEvent<{ page: number; pageSize: number }>
+          ) => pagination.handlePageSizeChange(Number(e.detail.pageSize))}
+          page={pagination.page}
+          pageSize={pagination.pageSize}
+          pageSizes={[MIN_PAGE_SIZE, 20, 50]}
+          style={{ borderTop: 0, borderBottom: 0 }}
+        />
       </div>
     </div>
   );

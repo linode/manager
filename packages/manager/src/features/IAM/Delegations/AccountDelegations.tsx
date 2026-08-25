@@ -130,6 +130,7 @@ export const AccountDelegations = () => {
       />
       <Pagination
         count={childAccountsWithDelegates?.results ?? 0}
+        itemsLabel="Accounts"
         onPageChange={(e: CustomEvent<number>) =>
           pagination.handlePageChange(Number(e.detail))
         }

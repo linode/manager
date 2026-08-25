@@ -78,7 +78,7 @@ const ALL_ROLES_OPTION: SelectOption = {
 
 const DEFAULTS_ROLES_URL = '/iam/roles/defaults/roles';
 const USER_ROLES_URL = '/iam/users/$username/roles';
-const MIN_PAGE_SIZE = 25;
+const MIN_PAGE_SIZE = 10;
 
 /** Snapshot passed via router location state so overlays survive list updates. */
 type AssignedRolesLocationState = {
@@ -231,6 +231,7 @@ export const AssignedRolesTable = () => {
     currentRoute: isDefaultDelegationRolesForChildAccount
       ? DEFAULTS_ROLES_URL
       : USER_ROLES_URL,
+    defaultPageSize: MIN_PAGE_SIZE,
     initialPage: 1,
     preferenceKey: ASSIGNED_ROLES_TABLE_PREFERENCE_KEY,
     clientSidePaginationData: filteredAndSortedRoles,
@@ -529,21 +530,20 @@ export const AssignedRolesTable = () => {
               />
             </TableBody>
           </Table>
-          {filteredAndSortedRolesCount > MIN_PAGE_SIZE && (
-            <Pagination
-              count={filteredAndSortedRolesCount}
-              onPageChange={(e: CustomEvent<number>) =>
-                pagination.handlePageChange(Number(e.detail))
-              }
-              onPageSizeChange={(
-                e: CustomEvent<{ page: number; pageSize: number }>
-              ) => pagination.handlePageSizeChange(Number(e.detail.pageSize))}
-              page={pagination.page}
-              pageSize={pagination.pageSize}
-              pageSizes={[MIN_PAGE_SIZE, 50, 75, 100]}
-              style={{ border: 0 }}
-            />
-          )}
+          <Pagination
+            count={filteredAndSortedRolesCount}
+            itemsLabel="Roles"
+            onPageChange={(e: CustomEvent<number>) =>
+              pagination.handlePageChange(Number(e.detail))
+            }
+            onPageSizeChange={(
+              e: CustomEvent<{ page: number; pageSize: number }>
+            ) => pagination.handlePageSizeChange(Number(e.detail.pageSize))}
+            page={pagination.page}
+            pageSize={pagination.pageSize}
+            pageSizes={[MIN_PAGE_SIZE, 20, 50, 100]}
+            style={{ border: 0 }}
+          />
         </>
       )}
       <AssignNewRoleDrawer
