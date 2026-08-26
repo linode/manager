@@ -1,8 +1,8 @@
 import { NumericSpinner, Tooltip } from '@akamai/cds-components/react';
 import { InfoOutline } from '@akamai/cds-icons/react';
-import { Box, Typography } from '@linode/ui';
 import React from 'react';
 
+import { Box, Typography } from '../components';
 import { StyledSlider } from './SliderControl.styles';
 
 const stepDecimals = (step: number) =>
@@ -46,16 +46,16 @@ export const SliderControl = ({
   };
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+    <Box style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
       <Box
-        sx={{
+        style={{
           alignItems: 'center',
           display: 'flex',
           justifyContent: 'space-between',
         }}
       >
-        <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
-          <Typography variant="body2">{label}</Typography>
+        <Box style={{ alignItems: 'center', display: 'flex', gap: '8px' }}>
+          <Typography style={{ fontSize: '0.875rem' }}>{label}</Typography>
           <Tooltip tooltipText={tooltip}>
             <span
               style={{

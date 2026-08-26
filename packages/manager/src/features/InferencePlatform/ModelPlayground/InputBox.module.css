@@ -1,0 +1,24 @@
+/* CDS TextArea host overrides */
+.textarea {
+  border: 1px solid transparent; /* preserve box-model (host min-height: 38px = textarea 36px + 1px border top/bottom) */
+  flex: 1;
+  min-width: 0;
+}
+
+/* CDS Button host overrides */
+.button {
+  flex-shrink: 0;
+  margin-bottom: 5px;
+  margin-right: 8px;
+  width: 32px;
+  /* Override disabled state: muted greyed-out blue instead of CDS default grey */
+  --token-component-button-primary-disabled-background: light-dark(#7ab8d9, #3a7a9e);
+  --token-component-button-primary-disabled-text: light-dark(#ffffff, #ffffff);
+}
+
+.cancelButton {
+  flex-shrink: 0;
+  margin-bottom: 5px;
+  margin-right: 8px;
+  width: 32px;
+}

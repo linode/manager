@@ -3,11 +3,12 @@ import {
   StatusAlertFilled,
   StatusFailureErrorOutline,
 } from '@akamai/cds-icons/react';
-import { Box, keyframes, Stack, useTheme } from '@linode/ui';
+import { useTheme } from '@linode/ui';
 import { useInterval } from '@linode/utilities';
 import React, { memo, useCallback, useState } from 'react';
 
-import { pulse } from './animations';
+import './animations.css';
+import { Box, Stack } from '../components';
 
 import type { MessageMetadata } from './ModelPlaygroundContext';
 
@@ -17,11 +18,6 @@ interface MetadataBarProps {
   startedAt: number;
   timeToFirstTokenMs?: number;
 }
-
-const statSlideIn = keyframes`
-  from { opacity: 0; transform: translateY(10px); }
-  to   { opacity: 1; transform: translateY(0); }
-`;
 
 /**
  * Returns a human-readable warning message for non-normal finish reasons,
@@ -114,8 +110,9 @@ export const MetadataBar = memo(
       <Stack
         alignItems="center"
         direction="row"
-        sx={{
-          bgcolor: complete
+        flexWrap="wrap"
+        style={{
+          backgroundColor: complete
             ? theme.palette.mode === 'dark'
               ? theme.tokens.alias.Background.Recommendationsubtle
               : theme.tokens.color.Green[10]
@@ -133,28 +130,25 @@ export const MetadataBar = memo(
               ? 'none'
               : `1px solid ${theme.tokens.alias.Border.Normal}`,
           borderRadius: '8px',
-          columnGap: 2.5,
-          flexWrap: 'wrap',
-          px: 1.5,
-          py: 0.75,
-          rowGap: 0.5,
+          gap: '4px 20px',
+          padding: '6px 12px',
         }}
       >
         {/* Icon + error text grouped so they never split across rows */}
         <Stack
           alignItems="center"
           direction="row"
-          gap={1}
-          sx={{
+          spacing="8px"
+          style={{
             flex: errored || cancelled || warned ? '1 1 auto' : '0 0 auto',
             minWidth: 0,
           }}
         >
           {pending ? (
             <Box
-              sx={{
-                animation: `${pulse} 1.2s ease-out infinite`,
-                bgcolor: 'text.disabled',
+              style={{
+                animation: `pulse 1.2s ease-out infinite`,
+                backgroundColor: theme.palette.text.disabled,
                 borderRadius: '50%',
                 flexShrink: 0,
                 height: 11,
@@ -194,8 +188,10 @@ export const MetadataBar = memo(
           )}
           {(errored || cancelled || warned) && (
             <Box
-              sx={{
-                color: errored ? theme.palette.error.dark : 'text.secondary',
+              style={{
+                color: errored
+                  ? theme.palette.error.dark
+                  : theme.palette.text.secondary,
                 flex: 1,
                 fontSize: theme.tokens.font.FontSize.Xs,
                 minWidth: 0,
@@ -213,13 +209,15 @@ export const MetadataBar = memo(
         <Stack
           alignItems="center"
           direction="row"
-          gap={2}
-          sx={{
-            color: complete ? 'text.primary' : 'text.secondary',
+          flexWrap="wrap"
+          justifyContent="flex-end"
+          spacing="16px"
+          style={{
+            color: complete
+              ? theme.palette.text.primary
+              : theme.palette.text.secondary,
             flex: '1 1 auto',
-            flexWrap: 'wrap',
             fontSize: theme.tokens.font.FontSize.Xs,
-            justifyContent: 'flex-end',
             minWidth: 0,
           }}
         >
@@ -229,9 +227,9 @@ export const MetadataBar = memo(
               <Box
                 component="span"
                 key={label}
-                sx={{ animation: `${statSlideIn} 0.3s ease-in-out both` }}
+                style={{ animation: `statSlideIn 0.3s ease-in-out both` }}
               >
-                <Box component="span" sx={{ font: theme.font.semibold }}>
+                <Box component="span" style={{ font: theme.font.semibold }}>
                   {value}
                 </Box>{' '}
                 {label}

@@ -1,7 +1,8 @@
 import { Select } from '@akamai/cds-components/react';
-import { Box, Typography, useTheme } from '@linode/ui';
+import { useTheme } from '@linode/ui';
 import React, { useCallback, useContext, useEffect, useMemo } from 'react';
 
+import { Box, Typography } from '../components';
 import { useInferencePlatform } from '../InferencePlatformContext';
 import { MODEL_SUPPLEMENTARY } from '../ModelLibrary/modelLibrary.supplementary';
 import { providerIcon, providerIconStyles } from '../utils';
@@ -85,21 +86,27 @@ export const ModelSelector = () => {
 
   return (
     <Box
-      sx={{
+      style={{
         alignItems: 'center',
-        bgcolor:
+        backgroundColor:
           theme.palette.mode === 'light' ? theme.bg.white : theme.bg.offWhite,
         display: 'flex',
         flexShrink: 0,
-        gap: 2,
+        gap: '16px',
         height: 56,
-        px: 2,
+        padding: '0 16px',
       }}
     >
-      <Typography noWrap sx={{ flexShrink: 0, font: theme.font.semibold }}>
+      <Typography
+        style={{
+          flexShrink: 0,
+          font: theme.font.semibold,
+          whiteSpace: 'nowrap',
+        }}
+      >
         Model
       </Typography>
-      <Box sx={{ minWidth: 220 }}>
+      <Box style={{ minWidth: 220 }}>
         <Select<ModelOption>
           disabled={isModelsLoading || options.length === 0}
           items={options}

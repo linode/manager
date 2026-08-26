@@ -1,7 +1,9 @@
 import { TagInput, Tooltip } from '@akamai/cds-components/react';
 import { InfoOutline } from '@akamai/cds-icons/react';
-import { Box, Typography, useTheme } from '@linode/ui';
+import { useTheme } from '@linode/ui';
 import React from 'react';
+
+import { Box, Typography } from '../components';
 
 interface StopSequencesControlProps {
   onChange: (value: string[] | undefined) => void;
@@ -24,8 +26,15 @@ export const StopSequencesControl = ({
 
   return (
     <Box>
-      <Box sx={{ alignItems: 'center', display: 'flex', gap: 1, mb: 1 }}>
-        <Typography variant="body2">Stop Sequences</Typography>
+      <Box
+        style={{
+          alignItems: 'center',
+          display: 'flex',
+          gap: '8px',
+          marginBottom: '8px',
+        }}
+      >
+        <Typography style={{ fontSize: '0.875rem' }}>Stop Sequences</Typography>
         <Tooltip tooltipText="Text strings that immediately halt generation when produced. Useful for ending a response at a known marker.">
           <span
             style={{

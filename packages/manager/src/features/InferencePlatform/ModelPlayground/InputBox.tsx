@@ -1,19 +1,28 @@
+import { Button, TextArea } from '@akamai/cds-components/react';
 import { ArrowUp, Square } from '@akamai/cds-icons/react';
-import {
-  Box,
-  IconButton,
-  InputAdornment,
-  TextField,
-  useTheme,
-} from '@linode/ui';
+import { TextArea as TextAreaTokens } from '@akamai/cds-tokens';
+import { TextArea as TextAreaTokensDark } from '@akamai/cds-tokens/themes/dark';
+import { useTheme } from '@linode/ui';
 import React, { useContext, useEffect, useRef } from 'react';
 
+import { Box } from '../components';
 import { useInferencePlatform } from '../InferencePlatformContext';
+import styles from './InputBox.module.css';
 import {
   ModelPlaygroundInputContext,
   ModelPlaygroundModelContext,
   ModelPlaygroundOutputContext,
 } from './ModelPlaygroundContext';
+
+const MAX_TEXTAREA_HEIGHT_PX = 240;
+
+const resizeTextarea = (textarea: HTMLTextAreaElement) => {
+  textarea.style.height = 'auto';
+  const nextHeight = Math.min(textarea.scrollHeight, MAX_TEXTAREA_HEIGHT_PX);
+  textarea.style.height = `${nextHeight}px`;
+  textarea.style.overflowY =
+    textarea.scrollHeight > MAX_TEXTAREA_HEIGHT_PX ? 'auto' : 'hidden';
+};
 
 export const InputBox = () => {
   const { inputValue, isLoading, onCancel, onInputChange, onSend } = useContext(
@@ -23,11 +32,49 @@ export const InputBox = () => {
   const { messages } = useContext(ModelPlaygroundOutputContext);
   const { isModelsLoading } = useInferencePlatform();
   const theme = useTheme();
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<React.ComponentRef<typeof TextArea>>(null);
 
   const isDisabled = isLoading || isModelsLoading || !selectedModel;
   const hasInput = Boolean(inputValue.trim());
   const canSend = hasInput && !isDisabled;
+
+  useEffect(() => {
+    const el = inputRef.current;
+    if (!el) return;
+    el.updateComplete.then(() => {
+      const root = el.shadowRoot;
+      if (!root) return;
+
+      const handle = root.querySelector<HTMLElement>('.cds-text-area--resize');
+      if (handle) handle.style.display = 'none';
+
+      const clearBtn = root.querySelector<HTMLElement>('.cds-text-area--clear');
+      if (clearBtn) clearBtn.style.display = 'none';
+
+      const textarea = root.querySelector<HTMLTextAreaElement>('textarea');
+      if (textarea) {
+        textarea.style.resize = 'none';
+        textarea.style.maxHeight = `${MAX_TEXTAREA_HEIGHT_PX}px`;
+        textarea.style.overflowX = 'hidden';
+        textarea.style.paddingRight = '12px';
+        resizeTextarea(textarea);
+      }
+    });
+  }, []);
+
+  // Auto-grow: after Lit renders the new value, measure scrollHeight and apply it
+  useEffect(() => {
+    const el = inputRef.current;
+    if (!el) return;
+
+    el.updateComplete.then(() => {
+      const textarea =
+        el.shadowRoot?.querySelector<HTMLTextAreaElement>('textarea');
+      if (!textarea) return;
+
+      resizeTextarea(textarea);
+    });
+  }, [inputValue]);
 
   useEffect(() => {
     if (messages.length === 0) {
@@ -47,7 +94,7 @@ export const InputBox = () => {
     }
   }, [isLoading]);
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+  const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey && canSend) {
       e.preventDefault();
       onSend();
@@ -55,86 +102,64 @@ export const InputBox = () => {
   };
 
   return (
-    <Box sx={{ width: '100%' }}>
-      <TextField
+    <Box
+      onKeyDown={handleKeyDown}
+      style={{
+        alignItems: 'flex-end',
+        border: `1px solid ${
+          isDisabled
+            ? theme.palette.mode === 'dark'
+              ? TextAreaTokensDark.Disabled.Border
+              : TextAreaTokens.Disabled.Border
+            : theme.borderColors.divider
+        }`,
+        backgroundColor: isDisabled
+          ? theme.palette.mode === 'dark'
+            ? TextAreaTokensDark.Disabled.Background
+            : TextAreaTokens.Disabled.Background
+          : theme.bg.white,
+        borderRadius: '4px',
+        cursor: isDisabled ? 'not-allowed' : undefined,
+        display: 'flex',
+        gap: '8px',
+        padding: '5px 0px',
+        width: '100%',
+      }}
+    >
+      <TextArea
+        aria-label="Prompt"
+        className={styles.textarea}
         disabled={isDisabled}
-        fullWidth
-        hideLabel
-        inputRef={inputRef}
-        label="Prompt"
-        minRows={1}
-        multiline
-        onChange={(e) => onInputChange(e.target.value)}
-        onKeyDown={handleKeyDown}
+        onChange={(e: Event) =>
+          onInputChange((e.target as HTMLElement & { value: string }).value)
+        }
         placeholder="Write a prompt..."
-        slotProps={{
-          htmlInput: {
-            style: { minHeight: 'unset' },
-          },
-          input: {
-            endAdornment: (
-              <InputAdornment position="end">
-                {isLoading ? (
-                  <IconButton
-                    onClick={onCancel}
-                    size="small"
-                    sx={{
-                      bgcolor: 'background.paper',
-                      border: `1px solid ${theme.palette.text.secondary}`,
-                      borderRadius: '4px',
-                      color: theme.palette.text.secondary,
-                      height: 32,
-                      mb: 0.6,
-                      width: 32,
-                      '&:hover': { color: theme.palette.text.primary },
-                    }}
-                  >
-                    <Square style={{ height: 12, width: 12 }} />
-                  </IconButton>
-                ) : (
-                  <IconButton
-                    disabled={!canSend}
-                    onClick={onSend}
-                    size="small"
-                    sx={{
-                      bgcolor: 'primary.main',
-                      borderRadius: '4px',
-                      color: 'primary.contrastText',
-                      height: 32,
-                      mb: 0.6,
-                      width: 32,
-                      '&.Mui-disabled': {
-                        bgcolor: 'primary.light',
-                        color: 'primary.contrastText',
-                        opacity: 0.45,
-                      },
-                      '&:hover': {
-                        bgcolor: canSend ? 'primary.dark' : undefined,
-                        color: 'primary.contrastText',
-                      },
-                    }}
-                  >
-                    <ArrowUp style={{ height: 24, width: 24 }} />
-                  </IconButton>
-                )}
-              </InputAdornment>
-            ),
-            sx: (theme) => ({
-              alignItems: 'flex-end',
-              border: `1px solid ${theme.borderColors.divider}`,
-              borderRadius: '4px',
-              height: 'auto',
-              maxWidth: 'unset',
-              px: 1.5,
-              py: 1,
-              '& .MuiOutlinedInput-notchedOutline': {
-                border: 'none',
-              },
-            }),
-          },
-        }}
+        ref={inputRef}
+        rows={1}
         value={inputValue}
       />
+      {isLoading ? (
+        <Button
+          aria-label="Cancel generation"
+          className={styles.cancelButton}
+          onClick={onCancel}
+          size="small"
+          variant="secondary"
+        >
+          <Square style={{ height: 12, width: 12 }} />
+        </Button>
+      ) : (
+        <Button
+          aria-label="Send prompt"
+          className={styles.button}
+          disabled={!canSend}
+          onClick={onSend}
+          size="small"
+          variant="primary"
+        >
+          <ArrowUp style={{ height: 12, width: 12 }} />
+        </Button>
+      )}
     </Box>
   );
 };

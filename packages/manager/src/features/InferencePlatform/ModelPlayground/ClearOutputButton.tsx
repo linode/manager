@@ -1,7 +1,9 @@
 import { Button } from '@akamai/cds-components/react';
-import { Box, fadeIn, useTheme } from '@linode/ui';
+import { useTheme } from '@linode/ui';
 import React, { useContext } from 'react';
 
+import './animations.css';
+import { Box } from '../components';
 import {
   ModelPlaygroundInputContext,
   ModelPlaygroundOutputContext,
@@ -23,7 +25,7 @@ export const ClearOutputButton = () => {
     // the top of the scroll viewport so it stays visible while scrolling, and
     // since it's inside the scroll box it respects the scrollbar width.
     <Box
-      sx={{
+      style={{
         height: 0,
         overflow: 'visible',
         position: 'sticky',
@@ -32,8 +34,8 @@ export const ClearOutputButton = () => {
       }}
     >
       <Box
-        sx={{
-          animation: visible ? `${fadeIn} 0.3s ease forwards` : 'none',
+        style={{
+          animation: visible ? `fadeIn 0.3s ease forwards` : 'none',
           opacity: visible ? 1 : 0,
           pointerEvents: visible ? 'auto' : 'none',
           position: 'absolute',

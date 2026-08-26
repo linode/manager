@@ -1,7 +1,8 @@
 import { Button, NumericSpinner, Tooltip } from '@akamai/cds-components/react';
 import { InfoOutline } from '@akamai/cds-icons/react';
-import { Box, Typography } from '@linode/ui';
 import React from 'react';
+
+import { Box, Typography } from '../components';
 
 const MAX_SEED = 2_147_483_647;
 
@@ -22,9 +23,16 @@ export const SeedControl = ({ onChange, value }: SeedControlProps) => {
   };
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
-      <Box sx={{ alignItems: 'center', display: 'flex', gap: 1, mb: 1.25 }}>
-        <Typography variant="body2">Seed</Typography>
+    <Box style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+      <Box
+        style={{
+          alignItems: 'center',
+          display: 'flex',
+          gap: '8px',
+          marginBottom: '10px',
+        }}
+      >
+        <Typography style={{ fontSize: '0.875rem' }}>Seed</Typography>
         <Tooltip tooltipText="Fixes the random seed so identical inputs produce identical output, making runs of the same prompt reproducible.">
           <span
             style={{
@@ -38,7 +46,7 @@ export const SeedControl = ({ onChange, value }: SeedControlProps) => {
         </Tooltip>
       </Box>
       <Box
-        sx={{
+        style={{
           alignItems: 'center',
           display: 'flex',
           justifyContent: 'space-between',

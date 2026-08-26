@@ -1,6 +1,6 @@
-import { Checkbox } from '@akamai/cds-components/react';
+import { Button, Checkbox } from '@akamai/cds-components/react';
 import { ChevronDown } from '@akamai/cds-icons/react';
-import { Box, Typography } from '@linode/ui';
+import { useTheme } from '@linode/ui';
 import Collapse from '@mui/material/Collapse';
 import React, {
   memo,
@@ -11,6 +11,7 @@ import React, {
   useState,
 } from 'react';
 
+import { Box, Typography } from '../components';
 import { EffortControl } from './EffortControl';
 import { ModelPlaygroundOptionsContext } from './ModelPlaygroundContext';
 import { SeedControl } from './SeedControl';
@@ -144,7 +145,10 @@ export const OptionsSidebar = () => {
     ModelPlaygroundOptionsContext
   );
   const [showAdvanced, setShowAdvanced] = useState(false);
-  const advancedButtonRef = useRef<HTMLButtonElement | null>(null);
+  const advancedButtonRef = useRef<null | React.ComponentRef<typeof Button>>(
+    null
+  );
+  const theme = useTheme();
 
   useEffect(() => {
     if (!showAdvanced) return;
@@ -159,19 +163,24 @@ export const OptionsSidebar = () => {
 
   return (
     <Box
-      sx={(theme) => ({
-        bgcolor:
+      style={{
+        backgroundColor:
           theme.palette.mode === 'light' ? theme.bg.white : theme.bg.offWhite,
         display: 'flex',
         flexDirection: 'column',
-        gap: 2.5,
+        gap: '20px',
         overflowX: 'hidden',
         overflowY: 'auto',
-        p: 2,
+        padding: '16px',
         width: 280,
-      })}
+      }}
     >
-      <Typography variant="h3">Controls</Typography>
+      <Typography
+        component="h3"
+        style={{ font: 'var(--token-alias-typography-heading-s)' }}
+      >
+        Controls
+      </Typography>
       {VISIBLE_SLIDERS.map((config) => (
         <SliderRow
           config={config}
@@ -184,7 +193,7 @@ export const OptionsSidebar = () => {
         onChange={(value) => onSettingsChange({ stop: value })}
         value={settings.stop}
       />
-      <Box sx={{ mt: 1 }}>
+      <Box style={{ marginTop: '8px' }}>
         <Checkbox
           checked={settings.stream}
           onChange={() => onSettingsChange({ stream: !settings.stream })}
@@ -192,7 +201,9 @@ export const OptionsSidebar = () => {
           Stream response
         </Checkbox>
       </Box>
-      <Box sx={{ display: 'flex', flexDirection: 'column', mt: 1 }}>
+      <Box
+        style={{ display: 'flex', flexDirection: 'column', marginTop: '8px' }}
+      >
         <Checkbox
           checked={settings.enableThinking}
           onChange={() =>
@@ -202,7 +213,7 @@ export const OptionsSidebar = () => {
           Enable thinking
         </Checkbox>
         <Collapse in={settings.enableThinking}>
-          <Box sx={{ pt: 4 }}>
+          <Box style={{ paddingTop: '32px' }}>
             <EffortControl
               label="Thinking Effort"
               onChange={(value) =>
@@ -214,42 +225,28 @@ export const OptionsSidebar = () => {
           </Box>
         </Collapse>
       </Box>
-      <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-        <Box
-          aria-controls="advanced-options-panel"
-          aria-expanded={showAdvanced}
-          component="button"
-          onClick={() => setShowAdvanced((prev) => !prev)}
-          ref={advancedButtonRef}
-          sx={(theme) => ({
-            alignItems: 'center',
-            background: 'none',
-            border: 'none',
-            color: theme.tokens.component.Button.Link.Default.Text,
-            cursor: 'pointer',
-            display: 'flex',
-            gap: 0.5,
-            padding: '8px 0 0',
-            width: '100%',
-            '&:hover': {
-              color: theme.tokens.component.Button.Link.Hover.Text,
-            },
-          })}
-        >
-          <Typography
-            sx={(theme) => ({ fontFamily: theme.font.bold })}
-            variant="body2"
+      <Box style={{ display: 'flex', flexDirection: 'column' }}>
+        <Box>
+          <Button
+            aria-controls="advanced-options-panel"
+            aria-expanded={showAdvanced}
+            onClick={() => setShowAdvanced((prev) => !prev)}
+            ref={advancedButtonRef}
+            style={{ padding: '8px 0 0' }}
+            variant="link"
           >
-            Advanced Options
-          </Typography>
-          <ChevronDown
-            height={18}
-            style={{
-              transform: showAdvanced ? 'rotate(180deg)' : 'none',
-              transition: 'transform 0.2s',
-            }}
-            width={18}
-          />
+            <Typography style={{ font: theme.font.bold, fontSize: '0.875rem' }}>
+              Advanced Options
+            </Typography>
+            <ChevronDown
+              height={18}
+              style={{
+                transform: showAdvanced ? 'rotate(180deg)' : 'none',
+                transition: 'transform 0.2s',
+              }}
+              width={18}
+            />
+          </Button>
         </Box>
         <Collapse
           id="advanced-options-panel"
@@ -257,7 +254,12 @@ export const OptionsSidebar = () => {
           timeout={{ enter: 0, exit: 350 }}
         >
           <Box
-            sx={{ display: 'flex', flexDirection: 'column', gap: 2.5, pt: 2 }}
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '20px',
+              paddingTop: '16px',
+            }}
           >
             {ADVANCED_SLIDERS.map((config) => (
               <SliderRow

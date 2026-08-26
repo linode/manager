@@ -1,8 +1,8 @@
-import { Stack } from '@linode/ui';
 import React, { useLayoutEffect, useRef, useState } from 'react';
 
 import { FOOTER_HEIGHT } from 'src/features/Footer';
 
+import { Stack } from '../components';
 import { InputBox } from './InputBox';
 import { ModelPlaygroundOptionsProvider } from './ModelPlaygroundOptionsProvider';
 import { ModelPlaygroundProvider } from './ModelPlaygroundProvider';
@@ -44,15 +44,16 @@ export const ModelPlayground = () => {
   return (
     <ModelPlaygroundOptionsProvider>
       <ModelPlaygroundProvider>
-        <Stack gap={2}>
+        <Stack spacing="16px">
           <ModelSelector />
           <Stack
             direction="row"
-            gap={3}
+            height={contentHeight}
             ref={contentRef}
-            sx={{ height: contentHeight, minHeight: 200 }}
+            spacing="24px"
+            style={{ minHeight: 200 }}
           >
-            <Stack sx={{ flex: 1, minWidth: 0 }}>
+            <Stack style={{ flex: 1, minWidth: 0 }}>
               <OutputBox />
               <InputBox />
             </Stack>

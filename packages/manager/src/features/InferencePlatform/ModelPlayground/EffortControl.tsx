@@ -1,7 +1,8 @@
 import { SegmentedButton, Tooltip } from '@akamai/cds-components/react';
 import { InfoOutline } from '@akamai/cds-icons/react';
-import { Box, Typography } from '@linode/ui';
 import React from 'react';
+
+import { Box, Typography } from '../components';
 
 import type { PlaygroundSettings } from './types';
 
@@ -27,9 +28,9 @@ export const EffortControl = ({ label, onChange, tooltip, value }: Props) => {
   };
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.75 }}>
-      <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
-        <Typography variant="body2">{label}</Typography>
+    <Box style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+      <Box style={{ alignItems: 'center', display: 'flex', gap: '8px' }}>
+        <Typography style={{ fontSize: '0.875rem' }}>{label}</Typography>
         <Tooltip tooltipText={tooltip}>
           <span
             style={{
@@ -42,7 +43,7 @@ export const EffortControl = ({ label, onChange, tooltip, value }: Props) => {
           </span>
         </Tooltip>
       </Box>
-      <Box sx={{ display: 'flex', gap: 1 }}>
+      <Box style={{ display: 'flex', gap: '8px' }}>
         {effortLevels.map((level) => (
           <SegmentedButton
             checked={value === level.value}

@@ -3,6 +3,14 @@
   margin: 0;
 }
 
+.markdown p:first-of-type {
+  margin-top: 0;
+}
+
+.markdown p:last-of-type {
+  margin-bottom: 0;
+}
+
 .markdown pre {
   border-radius: 4px;
   overflow-x: auto;
