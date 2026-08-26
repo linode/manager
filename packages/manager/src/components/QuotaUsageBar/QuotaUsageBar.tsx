@@ -1,3 +1,4 @@
+import { Color } from '@akamai/cds-tokens';
 import * as React from 'react';
 
 import { BarPercent } from 'src/components/BarPercent';
@@ -43,8 +44,21 @@ export const QuotaUsageBar = ({
   return (
     <>
       <BarPercent
+        customColors={[
+          {
+            color: Color.Red[80],
+            percentage: 81,
+          },
+          {
+            color: Color.Orange[80],
+            percentage: 61,
+          },
+          {
+            color: Color.Green[70],
+            percentage: 1,
+          },
+        ]}
         max={limit}
-        segmented={true}
         sx={{
           mb: 0.5,
           mt: isWide ? 0.5 : 2,

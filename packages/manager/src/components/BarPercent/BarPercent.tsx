@@ -38,8 +38,6 @@ export interface BarPercentProps {
   narrow?: boolean;
   /** Applies a `border-radius` to the bar. */
   rounded?: boolean;
-  /** When true, render segmented colors. */
-  segmented?: boolean;
   sx?: SxProps<Theme>;
   /** The value of the progress indicator for the determinate and buffer variants. */
   value: number;
@@ -58,14 +56,12 @@ export const BarPercent = React.memo((props: BarPercentProps) => {
     max,
     narrow,
     rounded,
-    segmented,
     sx,
     value,
     valueBuffer,
   } = props;
 
   const percentage = getPercentage(value, max);
-  const effectiveValueBuffer = segmented ? undefined : valueBuffer;
 
   return (
     <StyledDiv className={className}>
@@ -73,19 +69,13 @@ export const BarPercent = React.memo((props: BarPercentProps) => {
         customColors={customColors}
         narrow={narrow}
         rounded={rounded}
-        segmented={segmented}
-        style={
-          {
-            ['--linode-bar-percent' as any]: percentage,
-          } as React.CSSProperties
-        }
         sx={sx}
         value={percentage}
-        valueBuffer={effectiveValueBuffer}
+        valueBuffer={valueBuffer}
         variant={
           isFetchingValue
             ? 'indeterminate'
-            : effectiveValueBuffer
+            : valueBuffer
               ? 'buffer'
               : 'determinate'
         }
@@ -102,51 +92,24 @@ const StyledDiv = styled('div')({
 
 const StyledLinearProgress = styled(LinearProgress, {
   label: 'StyledLinearProgress',
-  shouldForwardProp: omittedProps([
-    'rounded',
-    'narrow',
-    'customColors',
-    'segmented',
-  ]),
-})<Partial<BarPercentProps>>(({ theme, ...props }) => {
-  const segmentedBackgroundImage = `linear-gradient(
-    90deg,
-    ${theme.tokens.color.Green[70]} 0%,
-    ${theme.tokens.color.Green[70]} 60%,
-    ${theme.tokens.color.Orange[80]} 60%,
-    ${theme.tokens.color.Orange[80]} 80%,
-    ${theme.tokens.color.Red[80]} 80%,
-    ${theme.tokens.color.Red[80]} 100%
-  )`;
-
-  return {
-    '& .MuiLinearProgress-bar2Buffer': {
-      backgroundColor: theme.tokens.color.Green[60],
-    },
-    '& .MuiLinearProgress-barColorPrimary': {
-      ...(props.segmented
-        ? {
-            backgroundImage: segmentedBackgroundImage,
-            backgroundRepeat: 'no-repeat',
-            backgroundSize:
-              'calc(100 / var(--linode-bar-percent, 1) * 100%) 100%',
-            backgroundPosition: 'left',
-          }
-        : {
-            // Increase contrast if we have a buffer bar
-            background: props.customColors
-              ? getCustomColor(props.customColors, props.value ?? 0)
-              : props.valueBuffer
-                ? theme.tokens.color.Green[70]
-                : theme.tokens.color.Green[60],
-          }),
-    },
-    '& .MuiLinearProgress-dashed': {
-      display: 'none',
-    },
-    backgroundColor: theme.color.grey2,
-    borderRadius: props.rounded ? theme.shape.borderRadius : undefined,
-    padding: props.narrow ? 8 : 12,
-    width: '100%',
-  };
-});
+  shouldForwardProp: omittedProps(['rounded', 'narrow', 'customColors']),
+})<Partial<BarPercentProps>>(({ theme, ...props }) => ({
+  '& .MuiLinearProgress-bar2Buffer': {
+    backgroundColor: theme.tokens.color.Green[60],
+  },
+  '& .MuiLinearProgress-barColorPrimary': {
+    // Increase contrast if we have a buffer bar
+    background: props.customColors
+      ? getCustomColor(props.customColors, props.value ?? 0)
+      : props.valueBuffer
+        ? theme.tokens.color.Green[70]
+        : theme.tokens.color.Green[60],
+  },
+  '& .MuiLinearProgress-dashed': {
+    display: 'none',
+  },
+  backgroundColor: theme.color.grey2,
+  borderRadius: props.rounded ? theme.shape.borderRadius : undefined,
+  padding: props.narrow ? 8 : 12,
+  width: '100%',
+}));
