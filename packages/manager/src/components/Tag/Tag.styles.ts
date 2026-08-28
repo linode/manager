@@ -24,6 +24,11 @@ export const StyledChip = styled(Chip, {
     borderTopRightRadius: 0,
     padding: '7px 10px',
   },
+  // Reset MUI's built-in font-size: 22px and margin on the custom delete button
+  ['& .MuiChip-deleteIcon']: {
+    fontSize: 'inherit',
+    margin: 0,
+  },
   '&:focus, &:hover, &.Mui-focusVisible': {
     ['& .MuiChip-deleteIcon']: {
       color: theme.color.tagIcon,
