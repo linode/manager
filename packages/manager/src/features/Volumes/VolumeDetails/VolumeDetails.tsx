@@ -80,15 +80,16 @@ export const VolumeDetails = () => {
     });
   };
 
-  const navigateToVolumeSummary = () => {
+  const navigateToVolumeSummary = (replace: boolean = false) => {
     navigate({
       search: (prev) => prev,
       to: `/volumes/${volume.id}/summary`,
+      replace,
     });
   };
 
   if (location.pathname === `/volumes/${volumeId}`) {
-    navigateToVolumeSummary();
+    navigateToVolumeSummary(true);
   }
 
   return (
