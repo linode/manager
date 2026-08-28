@@ -40,11 +40,6 @@ import type { IAMAction } from '../../routes';
 import type { DrawerModes, EntitiesRole, SelectOption } from '../types';
 import type { EntityType } from '@linode/api-v4';
 
-const ALL_ENTITIES_OPTION: SelectOption = {
-  label: 'All Entities',
-  value: 'all',
-};
-
 type SortOrder = 'asc' | 'desc';
 
 type OrderByKeys = 'entity_name' | 'entity_type' | 'role_name';
@@ -155,21 +150,10 @@ export const AssignedEntitiesTable = ({ username }: Props) => {
 
     const roles = addEntityNamesToRoles(assignedRoles, transformedEntities);
 
-    const filterableOptions = [
-      ALL_ENTITIES_OPTION,
-      ...mapEntityTypesForSelect(roles, 's'),
-    ];
+    const filterableOptions = [...mapEntityTypesForSelect(roles, 's')];
 
     return { filterableOptions, roles };
   }, [assignedRoles, entities]);
-
-  const selectedEntityTypeOption = React.useMemo<null | SelectOption>(() => {
-    const value = entityTypeParam ?? ALL_ENTITIES_OPTION.value;
-    return (
-      filterableOptions.find((opt) => opt.value === value) ||
-      ALL_ENTITIES_OPTION
-    );
-  }, [filterableOptions, entityTypeParam]);
 
   const selectedRole = React.useMemo(
     () =>
@@ -355,11 +339,12 @@ export const AssignedEntitiesTable = ({ username }: Props) => {
           />
         </FormField>
         <Select
+          autocomplete
+          clearable
           items={filterableOptions}
           onChange={(event) => {
             const selected = event.detail as unknown as null | SelectOption;
-            const nextEntityType = (selected?.value ??
-              ALL_ENTITIES_OPTION.value) as 'all' | EntityType;
+            const nextEntityType = selected?.value as EntityType;
 
             navigate({
               to: isDefaultDelegationRolesForChildAccount
@@ -376,8 +361,7 @@ export const AssignedEntitiesTable = ({ username }: Props) => {
               }),
             });
           }}
-          placeholder="All Entities"
-          selected={selectedEntityTypeOption}
+          placeholder="Filter by entity type"
           style={{ flex: '0 0 250px' }}
           valueFn={(item) => (item as SelectOption).label}
         />

@@ -71,11 +71,6 @@ import type {
 
 type OrderByKeys = 'name';
 
-const ALL_ROLES_OPTION: SelectOption = {
-  label: 'All Assigned Roles',
-  value: 'all',
-};
-
 const DEFAULTS_ROLES_URL = '/iam/roles/defaults/roles';
 const USER_ROLES_URL = '/iam/users/$username/roles';
 const MIN_PAGE_SIZE = 10;
@@ -173,10 +168,7 @@ export const AssignedRolesTable = () => {
     const userRoles = combineRoles(assignedRoles);
     let roles = mapRolesToPermissions(accountRoles, userRoles);
 
-    const filterableOptions = [
-      ALL_ROLES_OPTION,
-      ...mapEntityTypesForSelect(roles, ' Roles'),
-    ];
+    const filterableOptions = [...mapEntityTypesForSelect(roles, ' Roles')];
 
     if (entities) {
       const transformedEntities = groupAccountEntitiesByType(entities);
@@ -186,13 +178,6 @@ export const AssignedRolesTable = () => {
 
     return { filterableOptions, roles };
   }, [assignedRoles, accountRoles, entities]);
-
-  const selectedEntityTypeOption = React.useMemo<null | SelectOption>(() => {
-    const value = roleTypeParam ?? ALL_ROLES_OPTION.value;
-    return (
-      filterableOptions.find((opt) => opt.value === value) || ALL_ROLES_OPTION
-    );
-  }, [filterableOptions, roleTypeParam]);
 
   const handleViewEntities = (roleName: AccountRoleType | EntityRoleType) => {
     navigate({
@@ -459,12 +444,13 @@ export const AssignedRolesTable = () => {
                 />
               </FormField>
               <Select
+                autocomplete
+                clearable
                 items={filterableOptions}
                 onChange={(event) => {
                   const selected =
                     event.detail as unknown as null | SelectOption;
-                  const nextRoleType = (selected?.value ??
-                    ALL_ROLES_OPTION.value) as 'all' | AccessType;
+                  const nextRoleType = selected?.value as AccessType;
 
                   navigate({
                     to: isDefaultDelegationRolesForChildAccount
@@ -480,8 +466,7 @@ export const AssignedRolesTable = () => {
                     }),
                   });
                 }}
-                placeholder="All Assigned Roles"
-                selected={selectedEntityTypeOption}
+                placeholder="Filter by role type"
                 style={{ minWidth: 250, maxWidth: 362 }}
                 valueFn={(item) => (item as SelectOption).label}
               />

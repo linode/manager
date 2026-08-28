@@ -38,12 +38,9 @@ import type { IAMAction } from '../../routes';
 import type { SelectOption } from '../../Shared/types';
 import type { Filter } from '@linode/api-v4';
 
-const ALL_USERS_OPTION: SelectOption = {
-  label: 'All User Types',
-  value: 'all',
-};
-
 const MIN_PAGE_SIZE = 25;
+
+const USERS_URL = `/iam/users`;
 
 export const UsersLanding = () => {
   const navigate = useNavigate();
@@ -56,14 +53,14 @@ export const UsersLanding = () => {
     username: selectedUsername,
     users: usersParam,
   } = useSearch({
-    from: '/iam/users',
+    from: USERS_URL,
   });
   const { data: permissions } = usePermissions('account', [
     'create_user',
     'view_user',
   ]);
   const pagination = usePagination({
-    currentRoute: '/iam/users',
+    currentRoute: USERS_URL,
     initialPage: 1,
     preferenceKey: 'iam-account-users-pagination',
   });
@@ -73,7 +70,7 @@ export const UsersLanding = () => {
         order: 'desc',
         orderBy: 'username',
       },
-      from: '/iam/users',
+      from: USERS_URL,
     },
     preferenceKey: 'iam-account-users-order',
   });
@@ -88,7 +85,6 @@ export const UsersLanding = () => {
 
   const filterableOptions = React.useMemo(
     () => [
-      ALL_USERS_OPTION,
       {
         label: 'Users',
         value: 'users',
@@ -103,12 +99,11 @@ export const UsersLanding = () => {
 
   // Initialize userType based on URL parameter
   const getInitialUserType = React.useMemo(() => {
-    if (!usersParam || usersParam === 'all') {
-      return ALL_USERS_OPTION;
+    if (!usersParam) {
+      return null;
     }
     return (
-      filterableOptions.find((option) => option.value === usersParam) ||
-      ALL_USERS_OPTION
+      filterableOptions.find((option) => option.value === usersParam) || null
     );
   }, [usersParam, filterableOptions]);
 
@@ -145,7 +140,7 @@ export const UsersLanding = () => {
     (value: string) => {
       const nextQuery = value === '' ? undefined : String(value);
       navigate({
-        to: '/iam/users',
+        to: USERS_URL,
         search: (prev) => ({
           ...prev,
           query: nextQuery,
@@ -158,7 +153,7 @@ export const UsersLanding = () => {
 
   const actionHandler = (action: IAMAction, username?: string) => {
     navigate({
-      to: '/iam/users',
+      to: USERS_URL,
       search: (prev) => ({
         ...prev,
         action,
@@ -179,7 +174,7 @@ export const UsersLanding = () => {
     }
 
     navigate({
-      to: '/iam/users',
+      to: USERS_URL,
       search: (prev) => ({
         ...prev,
         action: undefined,
@@ -189,7 +184,7 @@ export const UsersLanding = () => {
 
   const clearDialogParams = () => {
     navigate({
-      to: '/iam/users',
+      to: USERS_URL,
       search: (prev) => ({
         ...prev,
         username: undefined,
@@ -250,6 +245,8 @@ export const UsersLanding = () => {
             </FormField>
             {isChildOrDelegate && (
               <Select
+                autocomplete
+                clearable
                 disabled={!permissions?.view_user}
                 items={filterableOptions}
                 onChange={(event) => {
@@ -259,14 +256,14 @@ export const UsersLanding = () => {
                   pagination.handlePageChange(1);
                   setUserType(nextSelected ?? null);
                   navigate({
-                    to: '/iam/users',
+                    to: USERS_URL,
                     search: (prev) => ({
                       ...prev,
                       users: String(nextSelected?.value ?? 'all'),
                     }),
                   });
                 }}
-                placeholder="All User Types"
+                placeholder="Filter by user type"
                 selected={userType}
                 style={{ minWidth: 250 }}
                 valueFn={(item) => (item as SelectOption).label}

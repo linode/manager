@@ -17,7 +17,7 @@ import {
 } from '@akamai/cds-components/react';
 import { Spacing } from '@akamai/cds-tokens';
 import { capitalizeAllWords } from '@akamai/compute-ui-core/formatting';
-import { useLocation, useNavigate, useSearch } from '@tanstack/react-router';
+import { useNavigate, useSearch } from '@tanstack/react-router';
 import React, { useState } from 'react';
 
 import { useBreakpoint } from '../../hooks/useBreakpoint';
@@ -44,11 +44,7 @@ import { RolesTableExpandedRow } from './RolesTableExpandedRow';
 
 import type { RoleView, SelectOption } from '../../Shared/types';
 import type { Order } from '@akamai/cds-components/react/Table';
-
-const ALL_ROLES_OPTION: SelectOption = {
-  label: 'All Roles',
-  value: 'all',
-};
+import type { AccessType } from '@linode/api-v4';
 
 const COLUMN_WIDTHS = {
   name: '26%',
@@ -60,6 +56,8 @@ const COLUMN_WIDTHS = {
 const TABLE_CELL_BASE_STYLE = {
   boxSizing: 'border-box' as const,
 };
+
+const ROLES_URL = '/iam/roles';
 interface Props {
   roles?: RoleView[];
 }
@@ -68,14 +66,11 @@ const DEFAULT_PAGE_SIZE = 10;
 export const RolesTable = ({ roles = [] }: Props) => {
   const isSmUp = useBreakpoint('up', 'sm');
   const navigate = useNavigate();
-  const location = useLocation();
-  const { query } = useSearch({
+  const { query, roleType: roleTypeParam } = useSearch({
     strict: false,
   });
   const hasTableStripingEnabled = useHasTableStripingEnabled();
 
-  const [filterableEntityType, setFilterableEntityType] =
-    useState<null | SelectOption>(ALL_ROLES_OPTION);
   const [sort, setSort] = useState<
     undefined | { column: string; order: Order }
   >({ column: 'name', order: 'asc' });
@@ -86,28 +81,24 @@ export const RolesTable = ({ roles = [] }: Props) => {
   const isAccountAdmin = permissions?.is_account_admin;
   const { isDelegateUserType, isChildUserType } = useDelegationRole();
   // Filtering
-  const getFilteredRows = (
-    text: string,
-    entityTypeVal = ALL_ROLES_OPTION.value
-  ) => {
+  const filteredRows = React.useMemo(() => {
     return roles.filter(
       (r) =>
-        (entityTypeVal === ALL_ROLES_OPTION.value ||
-          entityTypeVal === r.entity_type) &&
-        (r.name.includes(text) ||
-          r.description.includes(text) ||
-          r.access.includes(text))
+        (!roleTypeParam || roleTypeParam === r.entity_type) &&
+        (r.name.includes(query ?? '') ||
+          r.description.includes(query ?? '') ||
+          r.access.includes(query ?? ''))
     );
-  };
-
-  const filteredRows = React.useMemo(() => {
-    return getFilteredRows(query ?? '', filterableEntityType?.value);
-  }, [roles, query, filterableEntityType]);
+  }, [roles, query, roleTypeParam]);
 
   // Get just the list of entity types from this list of roles, to be used in the selection filter
   const filterableOptions = React.useMemo(() => {
-    return [ALL_ROLES_OPTION, ...mapEntityTypesForSelect(roles, ' Roles')];
+    return [...mapEntityTypesForSelect(roles, ' Roles')];
   }, [roles]);
+
+  const selectedRoleType = React.useMemo(() => {
+    return filterableOptions.find((opt) => opt.value === roleTypeParam) ?? null;
+  }, [filterableOptions, roleTypeParam]);
 
   const sortedRows = React.useMemo(() => {
     if (!sort) return filteredRows;
@@ -115,7 +106,7 @@ export const RolesTable = ({ roles = [] }: Props) => {
   }, [filteredRows, sort]);
 
   const pagination = usePagination({
-    currentRoute: '/iam/roles',
+    currentRoute: ROLES_URL,
     defaultPageSize: DEFAULT_PAGE_SIZE,
     initialPage: 1,
     preferenceKey: ROLES_TABLE_PREFERENCE_KEY,
@@ -147,17 +138,28 @@ export const RolesTable = ({ roles = [] }: Props) => {
   const handleTextFilter = React.useCallback(
     (fs: string) => {
       navigate({
-        to: location.pathname,
-        search: { query: fs !== '' ? fs : undefined },
+        to: ROLES_URL,
+        search: (prev) => ({
+          ...prev,
+          page: 1,
+          query: fs !== '' ? fs : undefined,
+        }),
       });
     },
-    [navigate, location.pathname]
+    [navigate]
   );
 
   const handleChangeEntityTypeFilter = (event: CustomEvent) => {
     const entityType = event.detail as null | SelectOption;
 
-    setFilterableEntityType(entityType ?? ALL_ROLES_OPTION);
+    navigate({
+      to: ROLES_URL,
+      search: (prev) => ({
+        ...prev,
+        page: 1,
+        roleType: entityType ? (entityType.value as AccessType) : undefined,
+      }),
+    });
   };
 
   const assignRoleRow = (row: RoleView) => {
@@ -219,10 +221,12 @@ export const RolesTable = ({ roles = [] }: Props) => {
               />
             </FormField>
             <Select
+              autocomplete
+              clearable
               items={filterableOptions}
               onChange={handleChangeEntityTypeFilter}
-              placeholder="All Roles"
-              selected={filterableEntityType}
+              placeholder="Filter by type"
+              selected={selectedRoleType}
               style={{ minWidth: 250, maxWidth: 360 }}
               valueFn={(item) => (item as SelectOption).label}
             />
