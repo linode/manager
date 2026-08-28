@@ -90,10 +90,6 @@ const useStyles = makeStyles()((theme: Theme) => ({
       justifyContent: 'flex-end',
     },
   },
-  copy: {
-    marginBottom: theme.spacing(),
-    maxWidth: 700,
-  },
   labelTooltip: {
     '& .MuiTooltip-tooltip': {
       minWidth: 220,
@@ -350,17 +346,11 @@ export const VolumeCreate = () => {
       <form onSubmit={handleSubmit}>
         <Box display="flex" flexDirection="column">
           <Paper>
-            <Typography
-              className={classes.copy}
-              data-qa-volume-size-help
-              variant="body1"
-            >
-              <span>
-                A single Volume can range from 10 to {MAX_VOLUME_SIZE} GB in
-                size. Up to to eight Volumes can be attached to a single Linode.
-                Select a region to see cost per GB.
-              </span>
-            </Typography>
+            <p data-qa-volume-size-help>
+              A single Volume can range from 10 to {MAX_VOLUME_SIZE} GB in size.
+              Up to to eight Volumes can be attached to a single Linode. Select
+              a region to see cost per GB.
+            </p>
             {error && (
               <Notice spacingBottom={0} spacingTop={12} variant="error">
                 <ErrorMessage entity={{ type: 'volume_id' }} message={error} />
