@@ -21,6 +21,7 @@ import {
 import {
   accountQueries,
   queryPresets,
+  quotaQueries,
   updateAccountSettingsData,
 } from '@linode/queries';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
@@ -379,6 +380,13 @@ export const useCreateBucketMutation = () => {
         queryKey: accountQueries.settings.queryKey,
       });
 
+      // Invalidate usage queries to show updated information
+      // on the Summary page
+      queryClient.invalidateQueries({
+        queryKey: quotaQueries.serviceQuotas('object-storage', 'quotas')
+          .queryKey,
+      });
+
       // add endpoint if needed
       queryClient.setQueryData<ObjectStorageEndpoint[]>(
         objectStorageQueries.endpoints.queryKey,
@@ -435,6 +443,13 @@ export const useDeleteBucketMutation = () => {
   return useMutation<{}, APIError[], { bucketName: string; regionId: string }>({
     mutationFn: deleteBucket,
     onSuccess: (_, variables) => {
+      // Invalidate usage queries to show updated information
+      // on the Summary page
+      queryClient.invalidateQueries({
+        queryKey: quotaQueries.serviceQuotas('object-storage', 'quotas')
+          .queryKey,
+      });
+
       queryClient.setQueryData<ObjectStorageBucket[]>(
         objectStorageQueries.allBucketsInRegion(variables.regionId).queryKey,
         (oldData) =>

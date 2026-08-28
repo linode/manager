@@ -1,5 +1,6 @@
 import { truncateMiddle } from '@akamai/compute-ui-core/formatting';
 import { getObjectList, getObjectURL } from '@linode/api-v4';
+import { quotaQueries } from '@linode/queries';
 import { ActionsPanel, Box } from '@linode/ui';
 import { Hidden } from '@linode/ui';
 import { useQueryClient } from '@tanstack/react-query';
@@ -191,6 +192,12 @@ export const BucketObjectsPanel = () => {
   };
 
   const updateStore = (pages: ObjectStorageObjectList[]) => {
+    // Invalidate usage queries to show updated information
+    // on the Summary page
+    queryClient.invalidateQueries({
+      queryKey: quotaQueries.serviceQuotas('object-storage', 'quotas').queryKey,
+    });
+
     queryClient.setQueryData<{
       pageParams: string[];
       pages: ObjectStorageObjectList[];
