@@ -184,12 +184,8 @@ export const AccessControls = React.memo((props: Props) => {
         control={control}
         name="acl"
         render={({ field }) => (
-          <FormField>
-            <FormLabel
-              style={{ marginBottom: 'var(--token-global-spacing-s8)' }}
-            >
-              Access Control List (ACL)
-            </FormLabel>
+          <FormField labelPosition="top">
+            <FormLabel>Access Control List (ACL)</FormLabel>
             <Select
               autocomplete={true}
               data-testid="acl-select"
