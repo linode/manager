@@ -28,7 +28,7 @@ import type {
 } from '@linode/api-v4';
 import type { Theme } from '@mui/material';
 import type { DataSet } from 'src/components/AreaChart/AreaChart';
-import type { AreaProps } from 'src/components/AreaChart/AreaChart';
+import type { DataPlot } from 'src/components/chartTypes';
 import type { MetricsDisplayRow } from 'src/components/LineGraph/MetricsDisplay';
 
 export interface LabelNameOptionsProps {
@@ -189,7 +189,7 @@ interface GraphData {
   /**
    * array of area props to be shown on graph
    */
-  areas: AreaProps[];
+  areas: DataPlot[];
 
   /**
    * plots to be shown of each dimension
@@ -226,7 +226,7 @@ export const generateGraphData = (props: GraphDataOptionsProps): GraphData => {
   const legendRowsData: MetricsDisplayRow[] = [];
   const dimension: { [timestamp: number]: { [label: string]: null | number } } =
     {};
-  const areas: AreaProps[] = [];
+  const areas: DataPlot[] = [];
   const colors = Object.values(Alias.Chart.Categorical);
   const isHumanizableUnit = humanizedUnits?.some(
     (unitElement) => unitElement.toLowerCase() === unit.toLowerCase()

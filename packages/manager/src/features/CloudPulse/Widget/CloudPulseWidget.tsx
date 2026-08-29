@@ -57,11 +57,8 @@ import type {
   TimeGranularity,
   Widgets,
 } from '@linode/api-v4';
-import type {
-  AreaProps,
-  ChartVariant,
-  DataSet,
-} from 'src/components/AreaChart/AreaChart';
+import type { DataSet } from 'src/components/AreaChart/AreaChart';
+import type { DataPlot } from 'src/components/chartTypes';
 import type { MetricsDisplayRow } from 'src/components/LineGraph/MetricsDisplay';
 
 export interface CloudPulseWidgetProperties {
@@ -480,8 +477,8 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
 
   let legendRows: MetricsDisplayRow[] = [];
   let currentUnit = unit;
-  let areas: AreaProps[] = [];
-  const variant: ChartVariant = widget.chart_type;
+  let areas: DataPlot[] = [];
+  const variant = widget.chart_type;
   if (!isLoading && metricsList) {
     const generatedData = generateGraphData({
       label: widget.label,
@@ -763,13 +760,13 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
               height={424}
               legendRows={legendRows}
               loading={widgetLoading} // keep loading until we are trying to fetch the refresh token
-              onHiddenAreasChange={onHiddenAreasChange}
+              onHiddenDataPlotChanges={onHiddenAreasChange}
               onZoomChange={handleZoomStateChange}
               showDot
               showLegend={data.length !== 0}
               timezone={timezone}
               unit={`${currentUnit}${unit.endsWith('ps') ? '/s' : ''}`}
-              variant={variant}
+              variant={variant === 'line' ? 'line' : 'area'}
               widgetLabel={widget.label}
               xAxis={{ tickFormat, tickGap: 60 }}
               zoomResetKey={

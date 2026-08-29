@@ -12,7 +12,7 @@ import type {
   TooltipPayloadEntryWithData,
   TooltipPayloadWithData,
 } from './chartTypes';
-import type { TooltipMetricEntry } from 'src/components/AreaChart/AreaChart';
+import type { TooltipMetricEntry } from 'src/components/chartTypes';
 
 const MAX_TOOLTIP_ITEMS = 30; // current max height can accommodate 30 items, so we limit the number of items displayed to avoid overflow and unnecessary iteration over the entire payload.
 
@@ -61,7 +61,7 @@ export const CloudPulseTooltip = React.memo(
     tooltipRef,
   }: CloudPulseTooltipProps) => {
     const {
-      areasColorMap = {},
+      dataColorMap = {},
       tooltipWrapperStyle,
       tooltipEntriesByTimestamp,
       tooltipFilter: filteredTooltip,
@@ -127,7 +127,7 @@ export const CloudPulseTooltip = React.memo(
                 fontSize: theme.tokens.font.FontSize.Xs,
               })}
             >
-              {tooltipLabelFormatter(label, timezone)}
+              {tooltipLabelFormatter(label, timezone ?? 'UTC')}
             </Typography>
             {metricEntries.map(([metricName, metricValue]) => {
               const metricValueLabel = tooltipCustomValueFormatter
@@ -136,7 +136,7 @@ export const CloudPulseTooltip = React.memo(
 
               return (
                 <TooltipMetricRow
-                  areaColor={areasColorMap[metricName] ?? 'transparent'}
+                  areaColor={dataColorMap[metricName] ?? 'transparent'}
                   key={metricName}
                   metricName={metricName}
                   metricValueLabel={metricValueLabel}

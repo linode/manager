@@ -3,7 +3,11 @@ import type {
   TooltipContentProps,
   TooltipPayload,
 } from 'recharts';
-import type { CustomTooltipOptions } from 'src/components/AreaChart/AreaChart';
+import type {
+  BaseChartProps,
+  CustomTooltipOptions,
+  DataSet,
+} from 'src/components/chartTypes';
 
 export type TooltipPayloadEntryWithData = TooltipPayload[number] & {
   payload: {
@@ -150,4 +154,18 @@ export interface TooltipPositionInfo {
    * Ref for the tooltip element, used to measure its dimensions for accurate positioning calculations.
    */
   tooltipRef: React.RefObject<HTMLDivElement | null>;
+}
+
+export interface CloudPulseGraphPickerProps extends BaseChartProps {
+  data: DataSet[];
+  error?: string;
+  loading?: boolean;
+  onHiddenDataPlotChanges?: (hiddenKeys: string[]) => void;
+  onZoomChange?: (
+    isZoomed: boolean,
+    left: 'dataMin' | number,
+    right: 'dataMax' | number
+  ) => void;
+  widgetLabel: string;
+  zoomResetKey: string;
 }

@@ -16,9 +16,9 @@ import {
 } from '../../Utils/CloudPulseZoomInUtils';
 import { humanizeLargeData } from '../../Utils/utils';
 
-import type { CloudPulseLineGraph } from './CloudPulseLineGraph';
+import type { CloudPulseGraphPickerProps } from './chartTypes';
 
-export interface CloudPulseGraphPdfProps extends CloudPulseLineGraph {
+export interface CloudPulseGraphPdfProps extends CloudPulseGraphPickerProps {
   /**
    * The error text to display in the PDF if the graph fails to load or render
    */

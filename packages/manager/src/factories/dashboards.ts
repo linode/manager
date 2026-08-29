@@ -8,8 +8,8 @@ import type {
   MetricDefinition,
   Widgets,
 } from '@linode/api-v4';
-import type { ChartVariant } from 'src/components/AreaChart/AreaChart';
 
+type ChartVariant = 'area' | 'line';
 const color = ['blue', 'red', 'green', 'yellow'];
 const chart_type: ChartVariant[] = ['area', 'area', 'area', 'line'];
 const scrape_interval = ['2m', '30s', '30s', '30s'];
