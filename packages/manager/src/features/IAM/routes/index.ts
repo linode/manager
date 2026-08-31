@@ -66,12 +66,19 @@ interface IamUserRolesSearchParams extends TableSearchParams {
 }
 
 interface IamTfaEnforcementSearchParams extends TableSearchParams {
+  action?: string;
+  certificateID?: string;
+  configurationID?: string;
   query?: string;
 }
 
 const iamActions = {
   'add-user': 'add-user',
+  'add-certificate': 'add-certificate',
   'assign-new-roles': 'assign-new-roles',
+  'create-idp-configuration': 'create-idp-configuration',
+  'delete-idp-configuration': 'delete-idp-configuration',
+  'edit-idp-configuration': 'edit-idp-configuration',
   'change-role': 'change-role',
   'change-role-for-entity': 'change-role-for-entity',
   'delete-user': 'delete-user',
@@ -80,9 +87,20 @@ const iamActions = {
   'update-delegation': 'update-delegation',
   'update-entities': 'update-entities',
   'remove-entity': 'remove-entity',
+  'view-certificate': 'view-certificate',
+  'delete-certificate': 'delete-certificate',
 } as const;
 
 export type IAMAction = (typeof iamActions)[keyof typeof iamActions];
+
+export const IAM_ACTIONS = {
+  addCertificate: iamActions['add-certificate'],
+  editConfig: iamActions['edit-idp-configuration'],
+  deleteConfig: iamActions['delete-idp-configuration'],
+  viewCertificate: iamActions['view-certificate'],
+  deleteCertificate: iamActions['delete-certificate'],
+  createConfig: iamActions['create-idp-configuration'],
+} as const;
 
 const iamRoute = createRoute({
   beforeLoad: ({ context }) => {
@@ -390,6 +408,7 @@ const iamSsoIndexRoute = createRoute({
 const iamSsoIdpConfigurationsRoute = createRoute({
   getParentRoute: () => iamSsoRoute,
   path: 'idp-configurations',
+  validateSearch: (search: IamTfaEnforcementSearchParams) => search,
 }).lazy(() =>
   import(
     '../LoginSettings/SSO/IdpConfigurations/idpConfigurationsLazyRoute'

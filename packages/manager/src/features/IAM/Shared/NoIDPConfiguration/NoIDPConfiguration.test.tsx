@@ -1,5 +1,4 @@
 import { screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { getCdsButtonByText } from '../../utilities/testHelpers';
@@ -14,6 +13,7 @@ const mockNavigate = vi.fn();
 const queryMocks = vi.hoisted(() => ({
   useLocation: vi.fn().mockReturnValue({ pathname: '/iam/settings/sso' }),
   useNavigate: vi.fn(() => mockNavigate),
+  useSearch: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('@tanstack/react-router', async () => {
@@ -22,6 +22,7 @@ vi.mock('@tanstack/react-router', async () => {
     ...actual,
     useLocation: queryMocks.useLocation,
     useNavigate: queryMocks.useNavigate,
+    useSearch: queryMocks.useSearch,
   };
 });
 
@@ -95,25 +96,6 @@ describe('NoIDPConfiguration', () => {
 
     expect(createButton).toBeInTheDocument();
     expect(createButton).toBeDisabled();
-  });
-
-  it('does not navigate when button is clicked on the IDP configurations page', async () => {
-    queryMocks.useLocation.mockReturnValue({
-      pathname: IDP_CONFIGURATIONS_PATH,
-    });
-
-    const { container } = renderWithProviders(
-      <NoIDPConfiguration permissions={{ create_idp_config: true }} />
-    );
-
-    const createButton = await getCdsButtonByText(
-      container,
-      'Create IDP Configuration'
-    );
-    expect(createButton).toBeVisible();
-    await userEvent.click(createButton as HTMLButtonElement);
-
-    expect(mockNavigate).not.toHaveBeenCalled();
   });
 
   it('renders the info icon when user is not an account admin', () => {

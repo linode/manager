@@ -8,7 +8,7 @@ import {
   ZeroErrorState,
   ZeroErrorTitle,
 } from '@akamai/cds-components/react';
-import { useLocation } from '@tanstack/react-router';
+import { useLocation, useNavigate, useSearch } from '@tanstack/react-router';
 import * as React from 'react';
 
 import {
@@ -16,21 +16,59 @@ import {
   IAM_SSO_IDP_PENDO_IDS,
 } from '../../LoginSettings/constants';
 import { IdpConfigurationDrawer } from '../../LoginSettings/SSO/IdpConfigurations/IdpConfigurationDrawer';
+import { IAM_ACTIONS } from '../../routes';
+
+import type { IAMAction } from '../../routes';
 
 interface Props {
   permissions: Record<'create_idp_config', boolean> | undefined;
 }
 
+const IDP_CONFIGURATIONS_URL = '/iam/settings/sso/idp-configurations';
+const SSO_ENFORCEMENT_URL = '/iam/settings/sso/enforcement-settings';
+
 export const NoIDPConfiguration = ({ permissions }: Props) => {
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const { action } = useSearch({ strict: false }) as { action?: IAMAction };
 
   const isOnIDPConfigurationsPage = location.pathname.includes(
     '/idp-configurations'
   );
-  const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
 
-  const onClick = () => {
-    setIsDrawerOpen(true);
+  const handleCreateIDPConfiguration = () => {
+    actionHandler(IAM_ACTIONS.createConfig);
+  };
+
+  const actionHandler = (action: IAMAction) => {
+    navigate({
+      to: isOnIDPConfigurationsPage
+        ? IDP_CONFIGURATIONS_URL
+        : SSO_ENFORCEMENT_URL,
+      search: (prev) => ({
+        ...prev,
+        action,
+      }),
+    });
+  };
+
+  const clearDialogAction = (expectedAction?: IAMAction) => {
+    // Both overlays share the same `action` search param. Guard ensures a close
+    // event from one overlay cannot wipe the other's URL state.
+    if (expectedAction && action !== expectedAction) {
+      return;
+    }
+
+    navigate({
+      to: isOnIDPConfigurationsPage
+        ? IDP_CONFIGURATIONS_URL
+        : SSO_ENFORCEMENT_URL,
+      search: (prev) => ({
+        ...prev,
+        action: undefined,
+      }),
+    });
   };
 
   return (
@@ -56,7 +94,7 @@ export const NoIDPConfiguration = ({ permissions }: Props) => {
                   : IAM_SSO_ENFORCE_PENDO_IDS.createIDPConfigurationStartFlow
               }
               disabled={!permissions?.create_idp_config}
-              onClick={onClick}
+              onClick={handleCreateIDPConfiguration}
               variant="primary"
             >
               Create IDP Configuration
@@ -69,8 +107,8 @@ export const NoIDPConfiguration = ({ permissions }: Props) => {
       </ZeroErrorState>
       <IdpConfigurationDrawer
         mode="create"
-        onClose={() => setIsDrawerOpen(false)}
-        open={isDrawerOpen}
+        onClose={() => clearDialogAction(IAM_ACTIONS.createConfig)}
+        open={action === IAM_ACTIONS.createConfig}
       />
     </>
   );

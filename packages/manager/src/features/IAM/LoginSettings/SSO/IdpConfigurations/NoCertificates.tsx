@@ -8,6 +8,7 @@ import {
   ZeroErrorState,
   ZeroErrorTitle,
 } from '@akamai/cds-components/react';
+import { useNavigate, useSearch } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { usePermissions } from '../../../hooks/usePermissions';
@@ -17,17 +18,52 @@ import {
 } from '../../constants';
 import { AddCertificateDrawer } from './AddCertificateDrawer';
 
+import type { IAMAction } from '../../../routes';
+
 interface Props {
   idpConfigId: string;
 }
+
+const ADD_CERTIFICATE_ACTION: IAMAction = 'add-certificate';
+const IDP_CONFIGURATIONS_ROUTE = '/iam/settings/sso/idp-configurations';
 
 export const NoCertificates = ({ idpConfigId }: Props) => {
   const { data: permissions } = usePermissions('account', [
     'create_idp_config_cert',
   ]);
-  const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
 
-  const onClick = () => setIsDrawerOpen(true);
+  const navigate = useNavigate();
+  const { action } = useSearch({
+    from: IDP_CONFIGURATIONS_ROUTE,
+  });
+
+  const actionHandler = (action: IAMAction) => {
+    navigate({
+      to: IDP_CONFIGURATIONS_ROUTE,
+      search: (prev) => ({
+        ...prev,
+        action,
+      }),
+    });
+  };
+
+  const handleAddCertificate = () => {
+    actionHandler(ADD_CERTIFICATE_ACTION);
+  };
+
+  const closeDrawer = (expectedAction: IAMAction) => {
+    if (expectedAction && action !== expectedAction) {
+      return;
+    }
+
+    navigate({
+      to: IDP_CONFIGURATIONS_ROUTE,
+      search: (prev) => ({
+        ...prev,
+        action: undefined,
+      }),
+    });
+  };
 
   return (
     <>
@@ -48,7 +84,7 @@ export const NoCertificates = ({ idpConfigId }: Props) => {
                 IAM_SSO_IDP_PENDO_IDS.addCertificateWhenSSODisabled
               }
               disabled={!permissions?.create_idp_config_cert}
-              onClick={onClick}
+              onClick={handleAddCertificate}
               variant="primary"
             >
               Add Certificate
@@ -62,8 +98,8 @@ export const NoCertificates = ({ idpConfigId }: Props) => {
 
       <AddCertificateDrawer
         idpConfigId={idpConfigId}
-        onClose={() => setIsDrawerOpen(false)}
-        open={isDrawerOpen}
+        onClose={() => closeDrawer(ADD_CERTIFICATE_ACTION)}
+        open={action === ADD_CERTIFICATE_ACTION}
       />
     </>
   );

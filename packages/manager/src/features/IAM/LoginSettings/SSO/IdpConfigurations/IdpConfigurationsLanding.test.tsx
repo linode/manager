@@ -46,6 +46,8 @@ const queryMocks = vi.hoisted(() => ({
   useGetIdpConfigsQuery: vi.fn().mockReturnValue({}),
   usePermissions: vi.fn().mockReturnValue({}),
   useProfile: vi.fn().mockReturnValue({ data: { timezone: 'UTC' } }),
+  useSearch: vi.fn().mockReturnValue({}),
+  useNavigate: vi.fn().mockReturnValue(vi.fn()),
 }));
 
 vi.mock('@linode/queries', async () => {
@@ -65,10 +67,21 @@ vi.mock('../../../hooks/usePermissions', async () => {
   };
 });
 
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+  return {
+    ...actual,
+    useSearch: queryMocks.useSearch,
+    useNavigate: queryMocks.useNavigate,
+  };
+});
+
 describe('IdpConfigurationsLanding', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mockMatchMedia();
+    queryMocks.useSearch.mockReturnValue({});
+    queryMocks.useNavigate.mockReturnValue(vi.fn());
     queryMocks.usePermissions.mockReturnValue({
       data: { create_idp_config: true },
       error: null,

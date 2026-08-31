@@ -31,6 +31,8 @@ const queryMocks = vi.hoisted(() => ({
   usePreferences: vi.fn(),
   useProfile: vi.fn().mockReturnValue({ data: { timezone: 'UTC' } }),
   useSnackbar: vi.fn().mockReturnValue({ enqueueSnackbar: vi.fn() }),
+  useSearch: vi.fn().mockReturnValue({}),
+  useNavigate: vi.fn().mockReturnValue(vi.fn()),
 }));
 
 vi.mock('../../../hooks/usePermissions', async () => {
@@ -49,6 +51,15 @@ vi.mock('@linode/queries', async () => {
     useDeleteIdpCertificateMutation: queryMocks.useDeleteIdpCertificateMutation,
     usePreferences: queryMocks.usePreferences,
     useProfile: queryMocks.useProfile,
+  };
+});
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+  return {
+    ...actual,
+    useSearch: queryMocks.useSearch,
+    useNavigate: queryMocks.useNavigate,
   };
 });
 
@@ -161,6 +172,8 @@ describe('IdpConfigurations', () => {
       mutateAsync: vi.fn(),
       reset: vi.fn(),
     });
+    queryMocks.useSearch.mockReturnValue({});
+    queryMocks.useNavigate.mockReturnValue(vi.fn());
   });
 
   describe('Notification Banner', () => {

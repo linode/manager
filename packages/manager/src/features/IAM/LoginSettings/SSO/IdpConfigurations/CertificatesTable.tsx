@@ -9,11 +9,13 @@ import {
 } from '@akamai/cds-components/react/Table';
 import { Spacing } from '@akamai/cds-tokens';
 import { truncateMiddle } from '@akamai/compute-ui-core/formatting';
+import { useNavigate, useSearch } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { useBreakpoint } from '../../../hooks/useBreakpoint';
 import { useHasTableStripingEnabled } from '../../../hooks/useHasTableStripingEnabled';
 import { useOrder } from '../../../hooks/useOrder';
+import { IAM_ACTIONS, type IAMAction } from '../../../routes';
 import { DateTimeDisplay } from '../../../Shared/DateTimeDisplay/DateTimeDisplay';
 import globalStyles from '../../../Shared/global.module.css';
 import { StatusIcon } from '../../../Shared/StatusIcon/StatusIcon';
@@ -36,6 +38,7 @@ interface EditModeProps {
   deletedIds: Set<string>;
   hasNewCertificates?: boolean;
   isAtMax?: boolean;
+  isCertLoading?: boolean;
   mode?: 'edit';
   onToggleDelete: (id: string) => void;
 }
@@ -43,6 +46,7 @@ interface EditModeProps {
 interface LandingModeProps {
   certificates: IdpCertificate[];
   idpConfigId: string;
+  isCertLoading?: boolean;
   mode: 'landing';
 }
 
@@ -54,8 +58,10 @@ interface ExtraProps {
 
 type CombinedProps = Props & ExtraProps;
 
+const IDP_CONFIGURATIONS_ROUTE = '/iam/settings/sso/idp-configurations';
+
 export const CertificatesTable = (props: CombinedProps) => {
-  const { certificates, mode } = props;
+  const { certificates, mode, isCertLoading } = props;
   const isLandingMode = mode === 'landing';
   const hasTableStripingEnabled = useHasTableStripingEnabled();
 
@@ -70,9 +76,14 @@ export const CertificatesTable = (props: CombinedProps) => {
         order: 'asc',
         orderBy: 'certificate',
       },
-      from: '/iam/settings/sso/idp-configurations',
+      from: IDP_CONFIGURATIONS_ROUTE,
     },
     preferenceKey,
+  });
+
+  const navigate = useNavigate();
+  const { action, certificateID, configurationID } = useSearch({
+    from: IDP_CONFIGURATIONS_ROUTE,
   });
 
   const sortedCertificates = order.sortedData ?? certificates;
@@ -93,16 +104,89 @@ export const CertificatesTable = (props: CombinedProps) => {
   const isSmallScreen = useBreakpoint('down', 'lg');
   const isMobileScreen = useBreakpoint('down', 'sm');
 
-  const [viewCertId, setViewCertId] = React.useState<null | string>(null);
-  const [isViewCertDrawerOpen, setIsViewCertDrawerOpen] = React.useState(false);
-  const [deleteCert, setDeleteCert] = React.useState<IdpCertificate | null>(
-    null
+  const configIDMatches = React.useMemo(
+    () =>
+      isLandingMode &&
+      configurationID === (props as LandingModeProps).idpConfigId,
+    [configurationID, isLandingMode, props]
   );
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
 
-  const viewCert = viewCertId
-    ? certificates.find((cert) => cert.id === viewCertId)
-    : undefined;
+  const selectedCert = React.useMemo(
+    () =>
+      certificateID && configIDMatches
+        ? certificates.find((cert) => cert.id === certificateID)
+        : undefined,
+    [certificateID, configIDMatches, certificates]
+  );
+
+  const actionHandler = (action: IAMAction, certificateID?: string) => {
+    navigate({
+      to: IDP_CONFIGURATIONS_ROUTE,
+      search: (prev) => ({
+        ...prev,
+        action,
+        certificateID,
+        configurationID: isLandingMode
+          ? (props as LandingModeProps).idpConfigId
+          : configurationID,
+      }),
+    });
+  };
+
+  const handleAddCertificate = (selectedCert: IdpCertificate) => {
+    actionHandler(IAM_ACTIONS.viewCertificate, selectedCert.id);
+  };
+
+  const handleRemoveCertificate = (selectedCert: IdpCertificate) => {
+    actionHandler(IAM_ACTIONS.deleteCertificate, selectedCert.id);
+  };
+
+  const closeDrawer = (expectedAction: IAMAction) => {
+    if (expectedAction && action !== expectedAction) {
+      return;
+    }
+
+    navigate({
+      to: IDP_CONFIGURATIONS_ROUTE,
+      search: (prev) => ({
+        ...prev,
+        action: undefined,
+        certificateID: undefined,
+        configurationID: undefined,
+      }),
+    });
+  };
+
+  const clearDialogAction = (expectedAction?: IAMAction) => {
+    // Both overlays share the same `action` search param. Guard ensures a close
+    // event from one overlay cannot wipe the other's URL state.
+    if (expectedAction && action !== expectedAction) {
+      return;
+    }
+
+    // Only clear `action` here so modal bodies keep `role`/`entity` during the
+    // exit animation. Remaining params are cleared in `clearDialogParams`.
+    navigate({
+      to: IDP_CONFIGURATIONS_ROUTE,
+      search: (prev) => ({
+        ...prev,
+        action: undefined,
+        certificateID: undefined,
+        configurationID: undefined,
+      }),
+    });
+  };
+
+  const clearDialogParams = () => {
+    navigate({
+      to: IDP_CONFIGURATIONS_ROUTE,
+      search: (prev) => ({
+        ...prev,
+        certificateID: undefined,
+        configurationID: undefined,
+      }),
+    });
+  };
 
   return (
     <>
@@ -176,12 +260,10 @@ export const CertificatesTable = (props: CombinedProps) => {
                     isSmallScreen={isSmallScreen}
                     key={cert.id}
                     onDelete={(selectedCert) => {
-                      setDeleteCert(selectedCert);
-                      setIsDeleteDialogOpen(true);
+                      handleRemoveCertificate(selectedCert);
                     }}
                     onViewDetails={(selectedCert) => {
-                      setViewCertId(selectedCert.id);
-                      setIsViewCertDrawerOpen(true);
+                      handleAddCertificate(selectedCert);
                     }}
                     ssoEnabled={props.ssoEnabled}
                     status={status}
@@ -259,17 +341,20 @@ export const CertificatesTable = (props: CombinedProps) => {
 
       {isLandingMode && (
         <ViewCertificateDrawer
-          cert={viewCert ?? null}
-          onClose={() => setIsViewCertDrawerOpen(false)}
-          open={isViewCertDrawerOpen}
+          cert={selectedCert}
+          isCertLoading={isCertLoading}
+          onClose={() => closeDrawer(IAM_ACTIONS.viewCertificate)}
+          open={action === IAM_ACTIONS.viewCertificate}
         />
       )}
       {isLandingMode && (
         <DeleteCertificateDialog
-          certificate={deleteCert}
+          certificate={selectedCert}
           idpConfigId={props.idpConfigId}
-          onClose={() => setIsDeleteDialogOpen(false)}
-          open={isDeleteDialogOpen}
+          isCertLoading={isCertLoading}
+          onClose={() => clearDialogAction(IAM_ACTIONS.deleteCertificate)}
+          onExited={clearDialogParams}
+          open={action === IAM_ACTIONS.deleteCertificate}
         />
       )}
     </>

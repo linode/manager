@@ -4,6 +4,7 @@ import {
   FormError,
   FormField,
   FormLabel,
+  LoadingSpinner,
   NotificationBanner,
   TextField,
 } from '@akamai/cds-components/react';
@@ -20,6 +21,8 @@ import {
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import type { Resolver } from 'react-hook-form';
+
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 
 import { useBreakpoint } from '../../../hooks/useBreakpoint';
 import { Drawer, DrawerInlineActions } from '../../../Shared/Drawer';
@@ -41,6 +44,7 @@ import type { CreateIdpConfigPayload, IdpConfig } from '@linode/api-v4';
 
 interface Props {
   idpConfig?: IdpConfig;
+  isIdpConfigLoading?: boolean;
   mode: DrawerMode;
   onClose: () => void;
   open: boolean;
@@ -51,7 +55,13 @@ export const IdpConfigurationDrawer = ({
   mode,
   onClose,
   open,
+  isIdpConfigLoading = false,
 }: Props) => {
+  const { data: permissions } = usePermissions('account', [
+    'create_idp_config',
+    'update_idp_config',
+  ]);
+
   const { mutateAsync: createIdpConfig, isPending: isCreatingIdpConfig } =
     useCreateIdpConfigMutation();
   const { mutateAsync: updateIdpConfig, isPending: isUpdatingIdpConfig } =
@@ -66,6 +76,10 @@ export const IdpConfigurationDrawer = ({
   >(new Set());
 
   const notificationBannerRef = React.useRef<HTMLDivElement>(null);
+
+  const permissionsToCheck = isEdit
+    ? permissions?.update_idp_config
+    : permissions?.create_idp_config;
 
   const handleToggleDeleteCertificate = (id: string) => {
     setDeletedCertificateIds((prev) => {
@@ -221,6 +235,8 @@ export const IdpConfigurationDrawer = ({
   const isSaveDisabled =
     !hasChanges || (allExistingCertsDeleted && newCertificates.length === 0);
 
+  const configMissing = !isIdpConfigLoading && !idpConfig && mode === 'edit';
+
   return (
     <Drawer
       aria-label={title}
@@ -229,149 +245,186 @@ export const IdpConfigurationDrawer = ({
       width={isSMUp ? (isEdit ? '616px' : '480px') : '100%'}
     >
       <div slot="header">{title}</div>
-      <form noValidate onSubmit={handleSubmit(onSubmit)} slot="body">
-        {errors.root?.message && (
-          <div ref={notificationBannerRef}>
+      {isIdpConfigLoading ? (
+        <div
+          slot="body"
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            padding: Spacing.S24,
+          }}
+        >
+          <LoadingSpinner data-testid="circle-progress" size="medium" />
+        </div>
+      ) : configMissing ? (
+        <div slot="body">
+          <NotificationBanner type="error">
+            <p style={{ marginBottom: Spacing.S0 }}>
+              The IDP configuration could not be found.
+            </p>
+          </NotificationBanner>
+          <DrawerInlineActions>
+            <Button
+              data-testid="cancel"
+              onClick={handleClose}
+              variant="secondary"
+            >
+              Close
+            </Button>
+          </DrawerInlineActions>
+        </div>
+      ) : (
+        <form noValidate onSubmit={handleSubmit(onSubmit)} slot="body">
+          {!permissionsToCheck && (
             <NotificationBanner
-              style={{ marginBottom: Spacing.S12 }}
-              text={errors.root?.message}
+              style={{ marginBottom: Spacing.S8 }}
+              text={`You do not have permission to ${isEdit ? 'update' : 'create'} IDP configuration.`}
               type="error"
             />
-          </div>
-        )}
-        <Controller
-          control={control}
-          name="label"
-          render={({ field, fieldState }) => (
-            <FormField
-              error={!!fieldState.error}
-              label-position="top"
-              style={{ padding: 0 }}
-            >
-              <FormLabel slot="label">Label</FormLabel>
-              <TextField
-                data-pendo-id={
-                  isEdit
-                    ? IAM_EDIT_IDP_PENDO_IDS.label
-                    : IAM_CREATE_IDP_PENDO_IDS.label
-                }
-                onChange={field.onChange}
-                placeholder="Enter a label"
-                value={field.value}
-              />
-              {fieldState.error && (
-                <FormError>{fieldState.error.message}</FormError>
-              )}
-            </FormField>
           )}
-        />
-
-        <div className={styles.sectionHeading}>Identity Provider Details</div>
-        <p className={styles.sectionDescription}>
-          {IDENTITY_PROVIDER_DESCRIPTION}
-        </p>
-
-        <Controller
-          control={control}
-          name="saml.entity_id"
-          render={({ field, fieldState }) => (
-            <FormField
-              className={styles.formFieldTextSpaced}
-              error={!!fieldState.error}
-              label-position="top"
-            >
-              <FormLabel slot="label">Entity ID</FormLabel>
-              <TextField
-                data-pendo-id={
-                  isEdit
-                    ? IAM_EDIT_IDP_PENDO_IDS.entityID
-                    : IAM_CREATE_IDP_PENDO_IDS.entityID
-                }
-                onChange={field.onChange}
-                placeholder="Enter an entity ID"
-                value={field.value}
+          {errors.root?.message && (
+            <div ref={notificationBannerRef}>
+              <NotificationBanner
+                style={{ marginBottom: Spacing.S12 }}
+                text={errors.root?.message}
+                type="error"
               />
-              {fieldState.error && (
-                <FormError>{fieldState.error.message}</FormError>
-              )}
-            </FormField>
+            </div>
           )}
-        />
-
-        <Controller
-          control={control}
-          name="saml.idp_url"
-          render={({ field, fieldState }) => (
-            <FormField
-              className={styles.formFieldTextSpaced}
-              error={!!fieldState.error}
-              label-position="top"
-            >
-              <FormLabel slot="label">IDP URL</FormLabel>
-              <TextField
-                data-pendo-id={
-                  isEdit
-                    ? IAM_EDIT_IDP_PENDO_IDS.idpURL
-                    : IAM_CREATE_IDP_PENDO_IDS.idpURL
-                }
-                onChange={field.onChange}
-                placeholder="Enter an IDP URL"
-                value={field.value}
-              />
-              {fieldState.error && (
-                <FormError>{fieldState.error.message}</FormError>
-              )}
-            </FormField>
-          )}
-        />
-
-        {!isEdit && <CertificatesSection control={control} />}
-
-        {isEdit && idpConfig && (
-          <CertificatesSection
-            certificates={idpConfig.saml.public_certificates}
+          <Controller
             control={control}
-            deletedCertificateIds={deletedCertificateIds}
-            isEdit
-            onToggleDeleteCertificate={handleToggleDeleteCertificate}
+            name="label"
+            render={({ field, fieldState }) => (
+              <FormField
+                error={!!fieldState.error}
+                label-position="top"
+                style={{ padding: 0 }}
+              >
+                <FormLabel slot="label">Label</FormLabel>
+                <TextField
+                  data-pendo-id={
+                    isEdit
+                      ? IAM_EDIT_IDP_PENDO_IDS.label
+                      : IAM_CREATE_IDP_PENDO_IDS.label
+                  }
+                  onChange={field.onChange}
+                  placeholder="Enter a label"
+                  value={field.value}
+                />
+                {fieldState.error && (
+                  <FormError>{fieldState.error.message}</FormError>
+                )}
+              </FormField>
+            )}
           />
-        )}
 
-        <AttributeMappingSection
-          control={control}
-          isEdit={isEdit}
-          watch={watch}
-        />
+          <div className={styles.sectionHeading}>Identity Provider Details</div>
+          <p className={styles.sectionDescription}>
+            {IDENTITY_PROVIDER_DESCRIPTION}
+          </p>
 
-        <DrawerInlineActions>
-          <Button
-            data-pendo-id={
+          <Controller
+            control={control}
+            name="saml.entity_id"
+            render={({ field, fieldState }) => (
+              <FormField
+                className={styles.formFieldTextSpaced}
+                error={!!fieldState.error}
+                label-position="top"
+              >
+                <FormLabel slot="label">Entity ID</FormLabel>
+                <TextField
+                  data-pendo-id={
+                    isEdit
+                      ? IAM_EDIT_IDP_PENDO_IDS.entityID
+                      : IAM_CREATE_IDP_PENDO_IDS.entityID
+                  }
+                  onChange={field.onChange}
+                  placeholder="Enter an entity ID"
+                  value={field.value}
+                />
+                {fieldState.error && (
+                  <FormError>{fieldState.error.message}</FormError>
+                )}
+              </FormField>
+            )}
+          />
+
+          <Controller
+            control={control}
+            name="saml.idp_url"
+            render={({ field, fieldState }) => (
+              <FormField
+                className={styles.formFieldTextSpaced}
+                error={!!fieldState.error}
+                label-position="top"
+              >
+                <FormLabel slot="label">IDP URL</FormLabel>
+                <TextField
+                  data-pendo-id={
+                    isEdit
+                      ? IAM_EDIT_IDP_PENDO_IDS.idpURL
+                      : IAM_CREATE_IDP_PENDO_IDS.idpURL
+                  }
+                  onChange={field.onChange}
+                  placeholder="Enter an IDP URL"
+                  value={field.value}
+                />
+                {fieldState.error && (
+                  <FormError>{fieldState.error.message}</FormError>
+                )}
+              </FormField>
+            )}
+          />
+
+          {!isEdit && <CertificatesSection control={control} />}
+
+          {isEdit && idpConfig && (
+            <CertificatesSection
+              certificates={idpConfig.saml.public_certificates}
+              control={control}
+              deletedCertificateIds={deletedCertificateIds}
               isEdit
-                ? IAM_EDIT_IDP_PENDO_IDS.cancel
-                : IAM_CREATE_IDP_PENDO_IDS.cancel
-            }
-            onClick={handleClose}
-            variant="secondary"
-          >
-            Cancel
-          </Button>
-          <Button
-            data-pendo-id={
-              isEdit
-                ? IAM_EDIT_IDP_PENDO_IDS.editIDPConfigurationEndFlow
-                : IAM_CREATE_IDP_PENDO_IDS.createIDPConfigurationEndFlow
-            }
-            disabled={isSaveDisabled}
-            processing={
-              isSubmitting || isCreatingIdpConfig || isUpdatingIdpConfig
-            }
-            type="submit"
-            variant="primary"
-          >
-            {isEdit ? 'Save Changes' : 'Create IDP Configuration'}
-          </Button>
-        </DrawerInlineActions>
-      </form>
+              onToggleDeleteCertificate={handleToggleDeleteCertificate}
+            />
+          )}
+
+          <AttributeMappingSection
+            control={control}
+            isEdit={isEdit}
+            watch={watch}
+          />
+
+          <DrawerInlineActions>
+            <Button
+              data-pendo-id={
+                isEdit
+                  ? IAM_EDIT_IDP_PENDO_IDS.cancel
+                  : IAM_CREATE_IDP_PENDO_IDS.cancel
+              }
+              onClick={handleClose}
+              variant="secondary"
+            >
+              Cancel
+            </Button>
+            <Button
+              data-pendo-id={
+                isEdit
+                  ? IAM_EDIT_IDP_PENDO_IDS.editIDPConfigurationEndFlow
+                  : IAM_CREATE_IDP_PENDO_IDS.createIDPConfigurationEndFlow
+              }
+              disabled={isSaveDisabled || !permissionsToCheck}
+              processing={
+                isSubmitting || isCreatingIdpConfig || isUpdatingIdpConfig
+              }
+              type="submit"
+              variant="primary"
+            >
+              {isEdit ? 'Save Changes' : 'Create IDP Configuration'}
+            </Button>
+          </DrawerInlineActions>
+        </form>
+      )}
     </Drawer>
   );
 };

@@ -4,9 +4,11 @@ import {
   NotificationBanner,
   Tooltip,
 } from '@akamai/cds-components/react';
+import { useNavigate, useSearch } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { usePermissions } from '../../../hooks/usePermissions';
+import { IAM_ACTIONS, type IAMAction } from '../../../routes';
 import { CopyTooltip } from '../../../Shared/CopyTooltip/CopyTooltip';
 import { Paper } from '../../../Shared/Paper/Paper';
 import {
@@ -28,25 +30,40 @@ import styles from './IdpConfigurations.module.css';
 
 import type { IdpConfig } from '@linode/api-v4';
 
-export const IdpConfigurations = ({ idpConfig }: { idpConfig: IdpConfig }) => {
+const IDP_CONFIGURATIONS_ROUTE = '/iam/settings/sso/idp-configurations';
+
+interface Props {
+  idpConfig: IdpConfig;
+  isIDPConfigLoading?: boolean;
+}
+
+export const IdpConfigurations = ({ idpConfig, isIDPConfigLoading }: Props) => {
   const { data: permissions } = usePermissions('account', [
     'delete_idp_config',
     'update_idp_config',
     'create_idp_config_cert',
   ]);
 
-  const [isEditDrawerOpen, setIsEditDrawerOpen] = React.useState(false);
-  const [isAddCertDrawerOpen, setIsAddCertDrawerOpen] = React.useState(false);
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
+  const navigate = useNavigate();
+  const { action, configurationID } = useSearch({
+    from: IDP_CONFIGURATIONS_ROUTE,
+  });
+
+  const selectedIdpConfig = React.useMemo(
+    () =>
+      configurationID && configurationID === idpConfig?.id
+        ? idpConfig
+        : undefined,
+    [configurationID, idpConfig]
+  );
 
   const identityElementLabel =
     identityElementOptions.find(
       (opt) => opt.value === idpConfig.saml.identity_element
     )?.label ?? idpConfig.saml.identity_element;
 
-  const isMaxCertificatesReached =
-    idpConfig.saml.public_certificates.length >= 10;
   const certs = idpConfig.saml.public_certificates;
+  const isMaxCertificatesReached = certs.length >= 10;
 
   const {
     activeCertificatesCount,
@@ -54,6 +71,72 @@ export const IdpConfigurations = ({ idpConfig }: { idpConfig: IdpConfig }) => {
     expiredCount,
     expiringCount,
   } = getCertificateCounts(certs);
+
+  const actionHandler = (action: IAMAction) => {
+    navigate({
+      to: IDP_CONFIGURATIONS_ROUTE,
+      search: (prev) => ({
+        ...prev,
+        action,
+        configurationID: idpConfig.id,
+      }),
+    });
+  };
+
+  const handleAddCertificate = () => {
+    actionHandler(IAM_ACTIONS.addCertificate);
+  };
+
+  const handleEditConfig = () => {
+    actionHandler(IAM_ACTIONS.editConfig);
+  };
+
+  const handleDeleteConfig = () => {
+    actionHandler(IAM_ACTIONS.deleteConfig);
+  };
+
+  const closeDrawer = (expectedAction: IAMAction) => {
+    if (expectedAction && action !== expectedAction) {
+      return;
+    }
+
+    navigate({
+      to: IDP_CONFIGURATIONS_ROUTE,
+      search: (prev) => ({
+        ...prev,
+        action: undefined,
+        configurationID: undefined,
+      }),
+    });
+  };
+
+  const clearDialogAction = (expectedAction?: IAMAction) => {
+    // Both overlays share the same `action` search param. Guard ensures a close
+    // event from one overlay cannot wipe the other's URL state.
+    if (expectedAction && action !== expectedAction) {
+      return;
+    }
+
+    // Only clear `action` here so modal bodies keep `idpConfig` during the
+    // exit animation. Remaining params are cleared in `clearDialogParams`.
+    navigate({
+      to: IDP_CONFIGURATIONS_ROUTE,
+      search: (prev) => ({
+        ...prev,
+        action: undefined,
+      }),
+    });
+  };
+
+  const clearDialogParams = () => {
+    navigate({
+      to: IDP_CONFIGURATIONS_ROUTE,
+      search: (prev) => ({
+        ...prev,
+        configurationID: undefined,
+      }),
+    });
+  };
 
   return (
     <>
@@ -76,7 +159,7 @@ export const IdpConfigurations = ({ idpConfig }: { idpConfig: IdpConfig }) => {
                   IAM_SSO_IDP_PENDO_IDS.deleteIDPConfigurationStartFlow
                 }
                 disabled={!permissions?.delete_idp_config}
-                onClick={() => setIsDeleteDialogOpen(true)}
+                onClick={handleDeleteConfig}
                 type="button"
                 variant="link"
               >
@@ -93,7 +176,7 @@ export const IdpConfigurations = ({ idpConfig }: { idpConfig: IdpConfig }) => {
               <Button
                 data-pendo-id={IAM_SSO_IDP_PENDO_IDS.editIDPConfiguration}
                 disabled={!permissions?.update_idp_config}
-                onClick={() => setIsEditDrawerOpen(true)}
+                onClick={handleEditConfig}
                 type="button"
                 variant="primary"
               >
@@ -181,7 +264,7 @@ export const IdpConfigurations = ({ idpConfig }: { idpConfig: IdpConfig }) => {
               disabled={
                 isMaxCertificatesReached || !permissions?.create_idp_config_cert
               }
-              onClick={() => setIsAddCertDrawerOpen(true)}
+              onClick={() => handleAddCertificate()}
               type="button"
               variant="secondary"
             >
@@ -215,29 +298,34 @@ export const IdpConfigurations = ({ idpConfig }: { idpConfig: IdpConfig }) => {
 
         <CertificatesTable
           activeCertificateCount={activeCertificatesCount}
-          certificates={idpConfig.saml.public_certificates}
+          certificates={certs}
           idpConfigId={idpConfig.id}
+          isCertLoading={isIDPConfigLoading}
           mode="landing"
           ssoEnabled={idpConfig.enabled}
         />
       </Paper>
       <IdpConfigurationDrawer
-        idpConfig={idpConfig}
+        idpConfig={selectedIdpConfig}
+        isIdpConfigLoading={isIDPConfigLoading}
         mode="edit"
-        onClose={() => setIsEditDrawerOpen(false)}
-        open={isEditDrawerOpen}
+        onClose={() => closeDrawer(IAM_ACTIONS.editConfig)}
+        open={action === IAM_ACTIONS.editConfig}
       />
       <AddCertificateDrawer
-        existingCerts={idpConfig.saml.public_certificates}
-        idpConfigId={idpConfig.id}
-        onClose={() => setIsAddCertDrawerOpen(false)}
-        open={isAddCertDrawerOpen}
+        existingCerts={certs}
+        idpConfigId={selectedIdpConfig?.id ?? ''}
+        isIdpConfigLoading={isIDPConfigLoading}
+        onClose={() => closeDrawer(IAM_ACTIONS.addCertificate)}
+        open={action === IAM_ACTIONS.addCertificate}
       />
       <IDPConfigDeleteConfirmation
-        idpConfigId={idpConfig.id}
-        idpConfigLabel={idpConfig.label}
-        onClose={() => setIsDeleteDialogOpen(false)}
-        open={isDeleteDialogOpen}
+        idpConfigId={selectedIdpConfig?.id ?? ''}
+        idpConfigLabel={selectedIdpConfig?.label ?? ''}
+        isIdpConfigLoading={isIDPConfigLoading}
+        onClose={() => clearDialogAction(IAM_ACTIONS.deleteConfig)}
+        onExited={clearDialogParams}
+        open={action === IAM_ACTIONS.deleteConfig}
       />
     </>
   );

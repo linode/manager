@@ -4,6 +4,7 @@ import {
   FormError,
   FormField,
   FormLabel,
+  LoadingSpinner,
   NotificationBanner,
   TextArea,
 } from '@akamai/cds-components/react';
@@ -15,8 +16,13 @@ import * as React from 'react';
 import type { Resolver } from 'react-hook-form';
 import { Controller, useForm } from 'react-hook-form';
 
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
+
 import { Drawer, DrawerInlineActions } from '../../../Shared/Drawer';
-import { IAM_SSO_IDP_PENDO_IDS } from '../../constants';
+import {
+  ADD_CERTIFICATE_PERMISSION_ERROR,
+  IAM_SSO_IDP_PENDO_IDS,
+} from '../../constants';
 import styles from './IdpConfigurationDrawer.module.css';
 
 interface FormValues {
@@ -26,6 +32,7 @@ interface FormValues {
 interface Props {
   existingCerts?: Array<{ certificate: string }>;
   idpConfigId: string;
+  isIdpConfigLoading?: boolean;
   onClose: () => void;
   open: boolean;
 }
@@ -39,7 +46,11 @@ export const AddCertificateDrawer = ({
   idpConfigId,
   onClose,
   open,
+  isIdpConfigLoading = false,
 }: Props) => {
+  const { data: permissions } = usePermissions('account', [
+    'create_idp_config_cert',
+  ]);
   const { mutateAsync: createIdpCertificate, isPending } =
     useCreateIdpCertificateMutation(idpConfigId);
 
@@ -84,69 +95,108 @@ export const AddCertificateDrawer = ({
     }
   };
 
+  const configMissing = !isIdpConfigLoading && !idpConfigId;
+
   return (
     <Drawer aria-label="Add Certificate" onClose={handleClose} open={open}>
       <div slot="header">Add Certificate</div>
-      <form noValidate onSubmit={handleSubmit(onSubmit)} slot="body">
-        {errors.root?.message && (
-          <NotificationBanner
-            style={{ marginBottom: Spacing.S12 }}
-            text={errors.root.message}
-            type="error"
-          />
-        )}
-
-        <p style={{ marginBottom: Spacing.S24, marginTop: 0 }}>
-          Enter a SAML certificate for the IDP configuration.
-        </p>
-
-        <Controller
-          control={control}
-          name="certificate"
-          render={({ field, fieldState }) => (
-            <FormField
-              className={styles.formFieldCertificate}
-              error={!!fieldState.error}
-              label-position="top"
+      {isIdpConfigLoading ? (
+        <div
+          slot="body"
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            padding: Spacing.S24,
+          }}
+        >
+          <LoadingSpinner data-testid="circle-progress" size="medium" />
+        </div>
+      ) : configMissing ? (
+        <div slot="body">
+          <NotificationBanner type="error">
+            <p style={{ marginBottom: Spacing.S0 }}>
+              The IDP configuration could not be found.
+            </p>
+          </NotificationBanner>
+          <DrawerInlineActions>
+            <Button
+              data-testid="cancel"
+              onClick={handleClose}
+              variant="secondary"
             >
-              <FormLabel label-position="top" slot="label">
-                SAML Public Certificate
-              </FormLabel>
-              <TextArea
-                aria-invalid={!!fieldState.error}
-                data-pendo-id={IAM_SSO_IDP_PENDO_IDS.addCertSamlCert}
-                error={!!fieldState.error}
-                onChange={field.onChange}
-                placeholder="Enter a SAML public certificate"
-                rows={4}
-                value={field.value}
-              />
-              {Boolean(fieldState?.error?.message) && (
-                <FormError>{fieldState?.error?.message}</FormError>
-              )}
-            </FormField>
+              Close
+            </Button>
+          </DrawerInlineActions>
+        </div>
+      ) : (
+        <form noValidate onSubmit={handleSubmit(onSubmit)} slot="body">
+          {!permissions.create_idp_config_cert && (
+            <NotificationBanner
+              style={{ marginBottom: Spacing.S8 }}
+              text={ADD_CERTIFICATE_PERMISSION_ERROR}
+              type="error"
+            />
           )}
-        />
+          {errors.root?.message && (
+            <NotificationBanner
+              style={{ marginBottom: Spacing.S12 }}
+              text={errors.root.message}
+              type="error"
+            />
+          )}
 
-        <DrawerInlineActions>
-          <Button
-            data-pendo-id={IAM_SSO_IDP_PENDO_IDS.addCertCancel}
-            onClick={handleClose}
-            variant="secondary"
-          >
-            Cancel
-          </Button>
-          <Button
-            data-pendo-id={IAM_SSO_IDP_PENDO_IDS.addCertAddCertificate}
-            disabled={!isValid}
-            processing={isSubmitting || isPending}
-            type="submit"
-            variant="primary"
-          >
-            Add Certificate
-          </Button>
-        </DrawerInlineActions>
-      </form>
+          <p style={{ marginBottom: Spacing.S24, marginTop: 0 }}>
+            Enter a SAML certificate for the IDP configuration.
+          </p>
+
+          <Controller
+            control={control}
+            name="certificate"
+            render={({ field, fieldState }) => (
+              <FormField
+                className={styles.formFieldCertificate}
+                error={!!fieldState.error}
+                label-position="top"
+              >
+                <FormLabel label-position="top" slot="label">
+                  SAML Public Certificate
+                </FormLabel>
+                <TextArea
+                  aria-invalid={!!fieldState.error}
+                  data-pendo-id={IAM_SSO_IDP_PENDO_IDS.addCertSamlCert}
+                  error={!!fieldState.error}
+                  onChange={field.onChange}
+                  placeholder="Enter a SAML public certificate"
+                  rows={4}
+                  value={field.value}
+                />
+                {Boolean(fieldState?.error?.message) && (
+                  <FormError>{fieldState?.error?.message}</FormError>
+                )}
+              </FormField>
+            )}
+          />
+
+          <DrawerInlineActions>
+            <Button
+              data-pendo-id={IAM_SSO_IDP_PENDO_IDS.addCertCancel}
+              onClick={handleClose}
+              variant="secondary"
+            >
+              Cancel
+            </Button>
+            <Button
+              data-pendo-id={IAM_SSO_IDP_PENDO_IDS.addCertAddCertificate}
+              disabled={!isValid || !permissions?.create_idp_config_cert}
+              processing={isSubmitting || isPending}
+              type="submit"
+              variant="primary"
+            >
+              Add Certificate
+            </Button>
+          </DrawerInlineActions>
+        </form>
+      )}
     </Drawer>
   );
 };
