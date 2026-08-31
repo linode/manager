@@ -54,13 +54,14 @@ export const CertificatesSection = (props: Props) => {
   const totalCertificatesCount =
     existingCertificatesCount + certificateFields.length;
 
+  const isTableVisible = isEdit && props.certificates.length > 0;
   const isMaxCertificatesReached = totalCertificatesCount >= 10;
   const canRemoveCertificate =
     certificateFields.length > 1 || (isEdit && existingCertificatesCount > 0);
 
   return (
     <>
-      {isEdit && props.certificates.length > 0 && (
+      {isTableVisible && (
         <CertificatesTable
           certificates={props.certificates}
           deletedIds={props.deletedCertificateIds}
@@ -85,21 +86,12 @@ export const CertificatesSection = (props: Props) => {
                   label-position="top"
                   style={{
                     paddingTop:
-                      isEdit && existingCertificatesCount !== 0 && index === 0
+                      index > 0 || isTableVisible
                         ? 'var(--token-global-spacing-s12, 12px)'
                         : 'var(--token-global-spacing-s0, 0)',
                   }}
                 >
-                  <FormLabel
-                    className={
-                      index === 0
-                        ? styles.firstCertificateLabel
-                        : styles.nextCertificateLabel
-                    }
-                    slot="label"
-                  >
-                    SAML Public Certificate
-                  </FormLabel>
+                  <FormLabel slot="label">SAML Public Certificate</FormLabel>
                   <TextArea
                     aria-invalid={!!fieldState.error}
                     data-pendo-id={

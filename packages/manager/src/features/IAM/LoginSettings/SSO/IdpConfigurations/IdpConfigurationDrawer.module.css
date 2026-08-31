@@ -1,11 +1,3 @@
-.firstCertificateLabel {
-  padding-top: var(--token-global-spacing-s0, 0);
-}
-
-.nextCertificateLabel {
-  padding-top: var(--token-global-spacing-s12, 12px);
-}
-
 .formFieldSelect {
   padding-top: var(--token-global-spacing-s0, 0);
   padding-bottom: var(--token-global-spacing-s0, 0);
