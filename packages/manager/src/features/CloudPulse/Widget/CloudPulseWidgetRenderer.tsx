@@ -1,3 +1,4 @@
+import { Box } from '@linode/ui';
 import { GridLegacy, Paper } from '@mui/material';
 import React from 'react';
 
@@ -5,6 +6,7 @@ import { useFlags } from 'src/hooks/useFlags';
 
 import { CloudPulseErrorPlaceholder } from '../shared/CloudPulseErrorPlaceholder';
 import { createObjectCopy } from '../Utils/utils';
+import { CloudPulseSingleCellWidget } from './CloudPulseSingleCellWidget';
 import { CloudPulseWidget } from './CloudPulseWidget';
 import {
   allIntervalOptions,
@@ -159,46 +161,116 @@ export const RenderWidgets = React.memo(
 
     // maintain a copy
     const newDashboard: Dashboard = createObjectCopy(dashboard)!;
-    return (
-      <GridLegacy columnSpacing={2} container item rowSpacing={2} xs={12}>
-        {{ ...newDashboard }.widgets.map((widget, index) => {
-          // check if widget metric definition is available or not
-          if (widget) {
-            // find the metric defintion of the widget label
-            const availMetrics = metricDefinitions?.data.find(
-              (availMetrics: MetricDefinition) =>
-                widget.metric === availMetrics.metric
-            );
-            const cloudPulseWidgetProperties = getCloudPulseGraphProperties({
-              ...widget,
-            });
 
-            // metric definition is available but time_granularity is not present
-            if (
-              availMetrics &&
-              !cloudPulseWidgetProperties.widget.time_granularity
-            ) {
-              cloudPulseWidgetProperties.widget.time_granularity =
-                getTimeGranularity(availMetrics.scrape_interval);
+    const singleKpiWidgets = { ...newDashboard }.widgets.filter(
+      (widget) => widget.chart_type === 'kpi'
+    );
+    return (
+      <>
+        <Box
+          sx={{
+            display: singleKpiWidgets.length ? 'grid' : 'none',
+            // 100% width single column on mobile (xs); 300px fixed columns on tablet/desktop (sm+)
+            gridTemplateColumns: {
+              xs: '1fr',
+              sm: 'repeat(auto-fill, 249.5px)',
+            },
+            gap: 1,
+            marginTop: 3,
+            width: {
+              xs: '100%',
+              sm: 'calc(100% - 16px)', // Deducts spacing for marginLeft on sm+
+            },
+            marginLeft: {
+              xs: 0,
+              sm: 3,
+            },
+          }}
+        >
+          {singleKpiWidgets.map((widget, index) => {
+            if (widget) {
+              const availMetrics = metricDefinitions?.data.find(
+                (availMetrics: MetricDefinition) =>
+                  widget.metric === availMetrics.metric
+              );
+              const cloudPulseWidgetProperties = getCloudPulseGraphProperties({
+                ...widget,
+              });
+
+              if (
+                availMetrics &&
+                !cloudPulseWidgetProperties.widget.time_granularity
+              ) {
+                cloudPulseWidgetProperties.widget.time_granularity =
+                  getTimeGranularity(availMetrics.scrape_interval);
+              }
+              return (
+                <Box
+                  key={index}
+                  sx={{
+                    borderRadius: 1,
+                    minWidth: 0,
+                    width: '100%',
+                    boxShadow: '0px 8px 20px rgba(0, 0, 0, 0.1)',
+                  }}
+                >
+                  <CloudPulseSingleCellWidget
+                    key={widget.label}
+                    {...cloudPulseWidgetProperties}
+                    authToken={jweToken?.token}
+                    isJweTokenFetching={isJweTokenFetching}
+                    linodeRegion={linodeRegion}
+                    region={region}
+                    resources={resourceList ?? []}
+                    savePref={savePref}
+                  />
+                </Box>
+              );
+            } else {
+              return <React.Fragment key={index} />;
             }
-            return (
-              <CloudPulseWidget
-                key={widget.label}
-                {...cloudPulseWidgetProperties}
-                authToken={jweToken?.token}
-                availableMetrics={availMetrics}
-                isJweTokenFetching={isJweTokenFetching}
-                linodeRegion={linodeRegion}
-                region={region}
-                resources={resourceList!}
-                savePref={savePref}
-              />
-            );
-          } else {
-            return <React.Fragment key={index} />;
-          }
-        })}
-      </GridLegacy>
+          })}
+        </Box>
+        <GridLegacy columnSpacing={2} container item rowSpacing={2} xs={12}>
+          {{ ...newDashboard }.widgets.map((widget, index) => {
+            // check if widget metric definition is available or not
+            if (widget && widget.chart_type !== 'kpi') {
+              // find the metric defintion of the widget label
+              const availMetrics = metricDefinitions?.data.find(
+                (availMetrics: MetricDefinition) =>
+                  widget.metric === availMetrics.metric
+              );
+              const cloudPulseWidgetProperties = getCloudPulseGraphProperties({
+                ...widget,
+              });
+
+              // metric definition is available but time_granularity is not present
+              if (
+                availMetrics &&
+                !cloudPulseWidgetProperties.widget.time_granularity
+              ) {
+                cloudPulseWidgetProperties.widget.time_granularity =
+                  getTimeGranularity(availMetrics.scrape_interval);
+              }
+              return (
+                <CloudPulseWidget
+                  key={widget.label}
+                  {...cloudPulseWidgetProperties}
+                  authToken={jweToken?.token}
+                  availableMetrics={availMetrics}
+                  isJweTokenFetching={isJweTokenFetching}
+                  linodeRegion={linodeRegion}
+                  region={region}
+                  resources={resourceList!}
+                  savePref={savePref}
+                />
+              );
+            } else {
+              return <React.Fragment key={index} />;
+            }
+          })}
+        </GridLegacy>
+      </>
     );
   },
   (oldProps: WidgetProps, newProps: WidgetProps) => {

@@ -766,7 +766,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
               showLegend={data.length !== 0}
               timezone={timezone}
               unit={`${currentUnit}${unit.endsWith('ps') ? '/s' : ''}`}
-              variant={variant === 'line' ? 'line' : 'area'}
+              variant={variant !== 'kpi' ? variant : 'line'}
               widgetLabel={widget.label}
               xAxis={{ tickFormat, tickGap: 60 }}
               zoomResetKey={
@@ -799,7 +799,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
             showDot
             timezone={timezone}
             unit={`${currentUnit}${unit.endsWith('ps') ? '/s' : ''}`}
-            variant={variant}
+            variant={widget.chart_type !== 'kpi' ? widget.chart_type : 'line'}
             widgetLabel={widget.label}
             widgetLabelWithUnit={`${convertStringToCamelCasesWithSpaces(widget.label)} (${currentUnit}${unit.endsWith('ps') && !currentUnit.endsWith('ps') ? '/s' : ''})`}
             xAxis={{ tickFormat, tickGap: 60 }}

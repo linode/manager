@@ -84,7 +84,7 @@ export interface DateTimeWithPreset {
 
 export interface Widgets {
   aggregate_function: string;
-  chart_type: 'area' | 'line';
+  chart_type: 'area' | 'kpi' | 'line';
   color: string;
   description: string;
   entity_ids: string[];
