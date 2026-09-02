@@ -1,11 +1,13 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useUpdateSubnetMutation } from '@linode/queries';
+import { useUpdateSubnetMutation, useVPCQuery } from '@linode/queries';
 import { ActionsPanel, Drawer, Notice, TextField } from '@linode/ui';
 import { modifySubnetSchema } from '@linode/validation';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
+import { useIsNATGatewaysEnabled } from 'src/features/NATGateways/utils';
+import { NATGatewaySelect } from 'src/features/VPCs/components/NATGatewaySelect';
 
 import type { APIError, ModifySubnetPayload, Subnet } from '@linode/api-v4';
 
@@ -24,6 +26,8 @@ const IP_HELPER_TEXT =
 export const SubnetEditDrawer = (props: Props) => {
   const { isFetching, onClose, open, subnet, subnetError, vpcId } = props;
 
+  const { data: vpc } = useVPCQuery(vpcId, open);
+
   const {
     isPending,
     mutateAsync: updateSubnet,
@@ -36,13 +40,18 @@ export const SubnetEditDrawer = (props: Props) => {
     handleSubmit,
     reset: resetForm,
     setError,
-  } = useForm<ModifySubnetPayload>({
+  } = useForm<ModifySubnetPayload & { natgateway?: null | { id: number } }>({
     mode: 'onBlur',
     resolver: yupResolver(modifySubnetSchema),
     values: {
       label: subnet?.label ?? '',
+      natgateway:
+        (subnet as Subnet & { natgateway?: { id: number } })?.natgateway ??
+        undefined,
     },
   });
+
+  const isNATGatewaysEnabled = useIsNATGatewaysEnabled();
 
   const handleDrawerClose = () => {
     onClose();
@@ -102,6 +111,31 @@ export const SubnetEditDrawer = (props: Props) => {
           tooltipText={IP_HELPER_TEXT}
           value={subnet?.ipv4}
         />
+        {isNATGatewaysEnabled && (
+          <Controller
+            control={control}
+            name="natgateway"
+            render={({ field, fieldState }) => (
+              <NATGatewaySelect
+                currentSubnetId={subnet?.id}
+                dataPendoIdForOption="VPC Details Create Subnet NAT Gateway Options"
+                dataPendoIdForSelect="VPC Details Create Subnet NAT Gateway open"
+                disabled={!permissions.update_vpc}
+                errorText={fieldState.error?.message}
+                interfaces={
+                  subnet?.linodes?.flatMap((linode) => linode.interfaces) ?? []
+                }
+                onChange={(natGatewayId) => {
+                  field.onChange(
+                    natGatewayId !== null ? { id: natGatewayId } : undefined
+                  );
+                }}
+                region={vpc?.region}
+                value={field.value?.id ?? null}
+              />
+            )}
+          />
+        )}
         <ActionsPanel
           primaryButtonProps={{
             'data-testid': 'save-button',

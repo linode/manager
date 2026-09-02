@@ -1,3 +1,5 @@
+import { type SubnetNATGatewayDetail } from '../natgateways/types';
+
 export interface VPCIPv6 {
   range?: string;
 }
@@ -45,23 +47,37 @@ interface VPCIPv6Subnet {
   range: string;
 }
 
+/**
+ * NAT Gateway reference in CREATE/UPDATE subnet payloads.
+ * Only the ID is sent to the API.
+ */
+interface SubnetNATGatewayPayload {
+  id: number;
+}
+
 export interface CreateSubnetPayload {
   ipv4?: string;
   ipv6?: VPCIPv6Subnet[];
   label: string;
+  natgateway?: SubnetNATGatewayPayload;
 }
 
-export interface Subnet extends CreateSubnetPayload {
+export interface Subnet {
   created: string;
   databases: SubnetAssignedDatabaseData[];
   id: number;
+  ipv4?: string;
+  ipv6?: VPCIPv6Subnet[];
+  label: string;
   linodes: SubnetAssignedLinodeData[];
+  natgateway?: SubnetNATGatewayDetail;
   nodebalancers: SubnetAssignedNodeBalancerData[];
   updated: string;
 }
 
 export interface ModifySubnetPayload {
   label: string;
+  natgateway?: null | SubnetNATGatewayPayload;
 }
 
 export interface SubnetLinodeInterfaceData {

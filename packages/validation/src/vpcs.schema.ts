@@ -1,5 +1,5 @@
 import ipaddr from 'ipaddr.js';
-import { array, lazy, object, string } from 'yup';
+import { array, lazy, number, object, string } from 'yup';
 
 const LABEL_MESSAGE = 'Label must be between 1 and 64 characters.';
 const LABEL_REQUIRED = 'Label is required.';
@@ -311,4 +311,9 @@ export const createVPCSchema = object({
 
 export const modifySubnetSchema = object({
   label: labelValidation.required(LABEL_REQUIRED),
+  natgateway: object({
+    id: number().required(),
+  })
+    .nullable()
+    .optional(),
 });

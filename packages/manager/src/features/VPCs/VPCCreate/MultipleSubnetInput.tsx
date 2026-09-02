@@ -16,10 +16,11 @@ import type { CreateVPCPayload } from '@linode/api-v4';
 interface Props {
   disabled?: boolean;
   isDrawer?: boolean;
+  isNATGatewaysEnabled?: boolean;
 }
 
 export const MultipleSubnetInput = (props: Props) => {
-  const { disabled, isDrawer } = props;
+  const { disabled, isDrawer, isNATGatewaysEnabled } = props;
 
   const { control } = useFormContext<CreateVPCPayload>();
 
@@ -61,6 +62,7 @@ export const MultipleSubnetInput = (props: Props) => {
               disabled={disabled}
               idx={subnetIdx}
               isCreateVPCDrawer={isDrawer}
+              isNATGatewaysEnabled={isNATGatewaysEnabled}
               remove={remove}
               shouldDisplayIPv6={shouldDisplayIPv6}
             />

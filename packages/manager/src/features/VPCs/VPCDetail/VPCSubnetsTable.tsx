@@ -3,7 +3,13 @@ import {
   useSubnetQuery,
   useSubnetsQuery,
 } from '@linode/queries';
-import { Box, Button, CircleProgress, ErrorState } from '@linode/ui';
+import {
+  Box,
+  Button,
+  CircleProgress,
+  ErrorState,
+  TooltipIcon,
+} from '@linode/ui';
 import { Hidden } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import {
@@ -17,6 +23,7 @@ import * as React from 'react';
 
 import { CollapsibleTable } from 'src/components/CollapsibleTable/CollapsibleTable';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
+import { Link } from 'src/components/Link';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
@@ -27,6 +34,7 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { PowerActionsDialog } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
+import { useIsNATGatewaysEnabled } from 'src/features/NATGateways/utils';
 import { SubnetActionMenu } from 'src/features/VPCs/VPCDetail/SubnetActionMenu';
 import { useIsGpuRdmaPlanEnabled } from 'src/hooks/useIsGpuRdmaPlanEnabled';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
@@ -99,6 +107,9 @@ export const VPCSubnetsTable = (props: Props) => {
   const { query } = search;
 
   const { isDualStackEnabled } = useVPCDualStack();
+
+  const { isNATGatewaysEnabled } = useIsNATGatewaysEnabled();
+  const NAT_INFO_TOOLTIP_TEXT = `The NAT Gateway assigned to this subnet. The numbers in parentheses show the gateway's currently allocated ports out of its maximum capacity.`;
 
   const { data: permissions } = usePermissions(
     'vpc',
@@ -313,6 +324,16 @@ export const VPCSubnetsTable = (props: Props) => {
         Subnet {isDualStackEnabled ? 'IPv4' : 'IP'} Range
       </TableCell>
       {isDualStackEnabled && <TableCell>Subnet IPv6 Range</TableCell>}
+      {isNATGatewaysEnabled && (
+        <TableCell>
+          NAT Gateway
+          <TooltipIcon
+            status="info"
+            text={NAT_INFO_TOOLTIP_TEXT}
+            tooltipPosition="top"
+          />
+        </TableCell>
+      )}
       <Hidden smDown>
         <TableCell sx={{ width: '10%' }}>Resources</TableCell>
       </Hidden>
@@ -332,6 +353,17 @@ export const VPCSubnetsTable = (props: Props) => {
           <TableCell>{subnet.ipv4}</TableCell>
           {isDualStackEnabled && (
             <TableCell>{subnet.ipv6?.[0]?.range ?? '—'}</TableCell>
+          )}
+          {isNATGatewaysEnabled && (
+            <TableCell>
+              {subnet.natgateway?.id ? (
+                <Link to={`/natgateways/${subnet.natgateway.id}`}>
+                  {subnet.natgateway.label}
+                </Link>
+              ) : (
+                <span>—</span>
+              )}
+            </TableCell>
           )}
           <Hidden smDown>
             <TableCell>

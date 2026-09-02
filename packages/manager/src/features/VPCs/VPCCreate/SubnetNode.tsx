@@ -4,6 +4,7 @@ import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
+import { NATGatewaySelect } from 'src/features/VPCs/components/NATGatewaySelect';
 import {
   calculateAvailableIPv4sRFC1918,
   calculateAvailableIPv6Linodes,
@@ -17,16 +18,25 @@ interface Props {
   disabled?: boolean;
   idx: number;
   isCreateVPCDrawer?: boolean;
+  isNATGatewaysEnabled?: boolean;
   remove: (index?: number | number[]) => void;
   shouldDisplayIPv6?: boolean;
 }
 
 export const SubnetNode = (props: Props) => {
-  const { disabled, idx, shouldDisplayIPv6, isCreateVPCDrawer, remove } = props;
+  const {
+    disabled,
+    idx,
+    shouldDisplayIPv6,
+    isCreateVPCDrawer,
+    isNATGatewaysEnabled,
+    remove,
+  } = props;
 
   const { control } = useFormContext<CreateVPCPayload>();
 
   const { ipv4, label } = useWatch({ control, name: `subnets.${idx}` });
+  const region = useWatch({ control, name: 'region' });
 
   const numberOfAvailIPs = calculateAvailableIPv4sRFC1918(ipv4 ?? '');
 
@@ -108,6 +118,27 @@ export const SubnetNode = (props: Props) => {
                   value={SUBNET_IPV6_PREFIX_LENGTHS.find(
                     (option) => option.value === field.value
                   )}
+                />
+              )}
+            />
+          )}
+          {isNATGatewaysEnabled && (
+            <Controller
+              control={control}
+              name={`subnets.${idx}.natgateway`}
+              render={({ field, fieldState }) => (
+                <NATGatewaySelect
+                  dataPendoIdForOption="VPC Create Subnets NAT Gateway Options"
+                  dataPendoIdForSelect="VPC Create Subnets NAT Gateway open"
+                  disabled={disabled}
+                  errorText={fieldState.error?.message}
+                  onChange={(natGatewayId) => {
+                    field.onChange(
+                      natGatewayId !== null ? { id: natGatewayId } : undefined
+                    );
+                  }}
+                  region={region}
+                  value={field.value?.id ?? null}
                 />
               )}
             />

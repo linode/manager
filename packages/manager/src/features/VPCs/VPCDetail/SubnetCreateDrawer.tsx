@@ -17,6 +17,8 @@ import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
+import { useIsNATGatewaysEnabled } from 'src/features/NATGateways/utils';
+import { NATGatewaySelect } from 'src/features/VPCs/components/NATGatewaySelect';
 import { useVPCDualStack } from 'src/hooks/useVPCDualStack';
 import {
   calculateAvailableIPv4sRFC1918,
@@ -59,6 +61,7 @@ export const SubnetCreateDrawer = (props: Props) => {
   } = useCreateSubnetMutation(vpcId);
 
   const { shouldDisplayIPv6, recommendedIPv6 } = useVPCDualStack(vpc?.ipv6);
+  const { isNATGatewaysEnabled } = useIsNATGatewaysEnabled();
 
   const {
     control,
@@ -186,6 +189,27 @@ export const SubnetCreateDrawer = (props: Props) => {
                   value={SUBNET_IPV6_PREFIX_LENGTHS.find(
                     (option) => option.value === field.value
                   )}
+                />
+              )}
+            />
+          )}
+          {isNATGatewaysEnabled && (
+            <Controller
+              control={control}
+              name="natgateway"
+              render={({ field, fieldState }) => (
+                <NATGatewaySelect
+                  dataPendoIdForOption="VPC Details Create Subnet NAT Gateway Options"
+                  dataPendoIdForSelect="VPC Details Create Subnet NAT Gateway open"
+                  disabled={!canCreateSubnet}
+                  errorText={fieldState.error?.message}
+                  onChange={(natGatewayId) => {
+                    field.onChange(
+                      natGatewayId !== null ? { id: natGatewayId } : undefined
+                    );
+                  }}
+                  region={vpc?.region}
+                  value={field.value?.id ?? null}
                 />
               )}
             />

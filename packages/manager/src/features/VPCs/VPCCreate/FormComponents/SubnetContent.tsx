@@ -17,10 +17,11 @@ import type { CreateVPCPayload } from '@linode/api-v4';
 interface Props {
   disabled?: boolean;
   isDrawer?: boolean;
+  isNATGatewaysEnabled?: boolean;
 }
 
 export const SubnetContent = (props: Props) => {
-  const { disabled, isDrawer } = props;
+  const { disabled, isDrawer, isNATGatewaysEnabled } = props;
 
   const isFromLinodeCreate = location.pathname.includes('/linodes/create');
   const createType = useGetLinodeCreateType();
@@ -67,7 +68,11 @@ export const SubnetContent = (props: Props) => {
           variant="error"
         />
       )}
-      <MultipleSubnetInput disabled={disabled} isDrawer={isDrawer} />
+      <MultipleSubnetInput
+        disabled={disabled}
+        isDrawer={isDrawer}
+        isNATGatewaysEnabled={isNATGatewaysEnabled}
+      />
     </>
   );
 };

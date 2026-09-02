@@ -6,6 +6,7 @@ import { FormProvider } from 'react-hook-form';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
+import { useIsNATGatewaysEnabled } from 'src/features/NATGateways/utils';
 import { VPC_GETTING_STARTED_LINK } from 'src/features/VPCs/constants';
 import { SubnetContent } from 'src/features/VPCs/VPCCreate/FormComponents/SubnetContent';
 import { useCreateVPC } from 'src/hooks/useCreateVPC';
@@ -27,6 +28,8 @@ const VPCCreate = () => {
     formState: { errors },
     handleSubmit,
   } = form;
+
+  const { isNATGatewaysEnabled } = useIsNATGatewaysEnabled();
 
   return (
     <FormProvider {...form}>
@@ -59,7 +62,10 @@ const VPCCreate = () => {
             />
           </Paper>
           <Paper sx={(theme) => ({ marginTop: theme.spacing(2.5) })}>
-            <SubnetContent disabled={userCannotAddVPC} />
+            <SubnetContent
+              disabled={userCannotAddVPC}
+              isNATGatewaysEnabled={isNATGatewaysEnabled}
+            />
           </Paper>
           <StyledActionsPanel
             primaryButtonProps={{

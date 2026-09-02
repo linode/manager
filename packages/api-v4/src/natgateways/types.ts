@@ -88,3 +88,12 @@ export interface InterfaceNATGateway {
   label: string;
   portsets?: NATGatewayPortset[];
 }
+
+export interface SubnetNATGatewayDetail {
+  addresses: string[];
+  id: number;
+  label: string;
+  portsets: NATGatewayPortset[];
+  type: 'natgateway';
+  url: string;
+}
