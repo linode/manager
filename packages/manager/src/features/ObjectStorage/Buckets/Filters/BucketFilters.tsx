@@ -3,6 +3,7 @@ import Grid from '@mui/material/Grid';
 import { useNavigate, useSearch } from '@tanstack/react-router';
 import * as React from 'react';
 
+import { useObjectStorageSelection } from '../../ObjectStorageContext';
 import { EndpointMultiSelect } from '../../shared/components/EndpointSelect/EndpointMultiSelect';
 import { RegionMultiSelect } from '../../shared/components/RegionSelect/RegionMultiSelect';
 import { useObjectStorageRegionsWithAssignedEndpoints } from '../../shared/hooks/useObjectStorageRegionsWithAssignedEndpoints';
@@ -44,6 +45,13 @@ export const BucketFilters = (props: BucketFiltersProps) => {
   const { isLoading: areBucketsLoading, bucketQueriesByRegions } =
     useObjectStorageBucketQueriesByRegions({ retryOnMount: false });
 
+  const {
+    selectedBucketsEndpointIds: endpointsFromContext,
+    setSelectedBucketsEndpointIds: setEndpointsInContext,
+    selectedBucketsRegionIds: regionsFromContext,
+    setSelectedBucketsRegionIds: setRegionsInContext,
+  } = useObjectStorageSelection();
+
   const regionMultiselectOptions = React.useMemo(() => {
     if (!regionsWithAssignedEndpoints || areBucketsLoading) {
       return [];
@@ -63,15 +71,15 @@ export const BucketFilters = (props: BucketFiltersProps) => {
     from: '/object-storage/buckets',
   }) as BucketListSearch;
 
-  const regionIdsFilter = React.useMemo(
-    () => parseCsvSet(search.regions),
-    [search.regions]
-  );
+  const regionIdsFilter = React.useMemo(() => {
+    const regionsFromSearch = parseCsvSet(search.regions);
+    return regionsFromSearch ?? regionsFromContext ?? null;
+  }, [search.regions, regionsFromContext]);
 
-  const endpointsFilter = React.useMemo(
-    () => parseCsvSet(search.endpoints),
-    [search.endpoints]
-  );
+  const endpointsFilter = React.useMemo(() => {
+    const endpointsFromSearch = parseCsvSet(search.endpoints);
+    return endpointsFromSearch ?? endpointsFromContext ?? null;
+  }, [search.endpoints, endpointsFromContext]);
 
   const availableRegionIds = React.useMemo(
     () => new Set((regionsWithAssignedEndpoints ?? []).map((r) => r.id)),
@@ -108,6 +116,9 @@ export const BucketFilters = (props: BucketFiltersProps) => {
         return;
       }
 
+      setRegionsInContext(newRegionIdsFilter);
+      setEndpointsInContext(newEndpointsFilter);
+
       navigate({ search: { regions, endpoints }, replace: true });
     },
     [
@@ -116,6 +127,8 @@ export const BucketFilters = (props: BucketFiltersProps) => {
       search.endpoints,
       search.regions,
       objectStorageEndpoints,
+      setRegionsInContext,
+      setEndpointsInContext,
     ]
   );
 

@@ -13,6 +13,12 @@ const mocks = vi.hoisted(() => ({
   useSearch: vi.fn(),
   useObjectStorageRegionsWithAssignedEndpoints: vi.fn(),
   useObjectStorageBucketsByRegions: vi.fn(),
+  useObjectStorageSelection: vi.fn(() => ({
+    selectedBucketsEndpointIds: new Set(),
+    setSelectedBucketsEndpointIds: vi.fn(),
+    selectedBucketsRegionIds: new Set(),
+    setSelectedBucketsRegionIds: vi.fn(),
+  })),
 }));
 
 vi.mock('@tanstack/react-router', async () => {
@@ -25,6 +31,10 @@ vi.mock('@tanstack/react-router', async () => {
     useSearch: () => mocks.useSearch(),
   };
 });
+
+vi.mock('../../ObjectStorageContext', () => ({
+  useObjectStorageSelection: mocks.useObjectStorageSelection,
+}));
 
 vi.mock(
   'src/features/ObjectStorage/shared/hooks/useObjectStorageRegionsWithAssignedEndpoints',
@@ -106,6 +116,45 @@ describe('BucketFilters', () => {
       regions: 'eu-west,us-east',
       endpoints: 'eu-west-1.linodeobjects.com',
     });
+    renderWithTheme(<BucketFilters />);
+    expect(screen.getByTestId('region-multiselect')).toHaveTextContent(
+      'selected=eu-west,us-east'
+    );
+    expect(screen.getByTestId('endpoint-multiselect')).toHaveTextContent(
+      'selected=eu-west-1.linodeobjects.com'
+    );
+  });
+
+  it('prepopulates filters from the OBJ context', () => {
+    mocks.useObjectStorageSelection.mockReturnValue({
+      selectedBucketsEndpointIds: new Set(['eu-west-1.linodeobjects.com']),
+      setSelectedBucketsEndpointIds: vi.fn(),
+      selectedBucketsRegionIds: new Set(['eu-west', 'us-east']),
+      setSelectedBucketsRegionIds: vi.fn(),
+    });
+
+    renderWithTheme(<BucketFilters />);
+    expect(screen.getByTestId('region-multiselect')).toHaveTextContent(
+      'selected=eu-west,us-east'
+    );
+    expect(screen.getByTestId('endpoint-multiselect')).toHaveTextContent(
+      'selected=eu-west-1.linodeobjects.com'
+    );
+  });
+
+  it('prioritize filters from the URL search over the OBJ context', () => {
+    mocks.useSearch.mockReturnValue({
+      regions: 'eu-west,us-east',
+      endpoints: 'eu-west-1.linodeobjects.com',
+    });
+
+    mocks.useObjectStorageSelection.mockReturnValue({
+      selectedBucketsEndpointIds: new Set(['us-east-1.linodeobjects.com']),
+      setSelectedBucketsEndpointIds: vi.fn(),
+      selectedBucketsRegionIds: new Set(['us-west', 'eu-east']),
+      setSelectedBucketsRegionIds: vi.fn(),
+    });
+
     renderWithTheme(<BucketFilters />);
     expect(screen.getByTestId('region-multiselect')).toHaveTextContent(
       'selected=eu-west,us-east'
