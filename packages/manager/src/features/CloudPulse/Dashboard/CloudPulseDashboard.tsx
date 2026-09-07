@@ -15,10 +15,8 @@ import {
   getResourcesFilterConfig,
 } from '../Utils/FilterConfig';
 import { useAclpPreference } from '../Utils/UserPreference';
-import {
-  renderPlaceHolder,
-  RenderWidgets,
-} from '../Widget/CloudPulseWidgetRenderer';
+import { CloudPulseWidgetGroups } from '../Widget/CloudPulseWidgetGroups';
+import { renderPlaceHolder } from '../Widget/CloudPulseWidgetRenderer';
 
 import type { CloudPulseMetricsAdditionalFilters } from '../Widget/CloudPulseWidget';
 import type {
@@ -185,7 +183,7 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
     );
   }
   return (
-    <RenderWidgets
+    <CloudPulseWidgetGroups
       additionalFilters={additionalFilters}
       dashboard={dashboard}
       duration={duration}

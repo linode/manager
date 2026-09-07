@@ -75,6 +75,7 @@ const baseProps: CSVDataProps = {
     size: 12,
     time_duration: { value: 1, unit: 'hour' },
     y_label: 'cpu_usage',
+    widget_order: 1,
   },
 };
 

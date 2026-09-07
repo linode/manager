@@ -100,6 +100,8 @@ export interface Widgets {
   time_duration: TimeDuration;
   time_granularity: TimeGranularity;
   unit: string;
+  widget_grouping?: string;
+  widget_order: number;
   y_label: string;
 }
 

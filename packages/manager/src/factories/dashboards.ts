@@ -58,6 +58,7 @@ export const widgetFactory = Factory.Sync.makeFactory<Widgets>({
   },
   unit: 'defaultUnit',
   y_label: Factory.each((i) => `y_label_${i}`),
+  widget_order: 1,
 });
 
 export const dashboardMetricFactory =

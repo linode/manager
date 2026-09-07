@@ -5,7 +5,6 @@ import React from 'react';
 import { useFlags } from 'src/hooks/useFlags';
 
 import { CloudPulseErrorPlaceholder } from '../shared/CloudPulseErrorPlaceholder';
-import { createObjectCopy } from '../Utils/utils';
 import { CloudPulseSingleCellWidget } from './CloudPulseSingleCellWidget';
 import { CloudPulseWidget } from './CloudPulseWidget';
 import {
@@ -30,7 +29,7 @@ import type {
   Widgets,
 } from '@linode/api-v4';
 
-interface WidgetProps {
+export interface WidgetProps {
   additionalFilters?: CloudPulseMetricsAdditionalFilters[];
   dashboard: Dashboard;
   duration: DateTimeWithPreset;
@@ -48,6 +47,8 @@ interface WidgetProps {
   resourceList: CloudPulseResources[] | undefined;
   resources: string[];
   savePref?: boolean;
+  widgetGroup?: string;
+  widgetGroups?: Map<string, Widgets[]>;
 }
 
 export const renderPlaceHolder = (subtitle: string) => {
@@ -77,6 +78,8 @@ export const RenderWidgets = React.memo(
       groupBy,
       linodeRegion,
       region,
+      widgetGroup,
+      widgetGroups,
     } = props;
 
     const flags = useFlags();
@@ -160,9 +163,12 @@ export const RenderWidgets = React.memo(
     }
 
     // maintain a copy
-    const newDashboard: Dashboard = createObjectCopy(dashboard)!;
+    const widgetsToRender =
+      widgetGroup && widgetGroups
+        ? (widgetGroups.get(widgetGroup) ?? [])
+        : (dashboard.widgets ?? []);
 
-    const singleKpiWidgets = { ...newDashboard }.widgets.filter(
+    const singleKpiWidgets = widgetsToRender.filter(
       (widget) => widget.chart_type === 'kpi'
     );
     return (
@@ -177,14 +183,6 @@ export const RenderWidgets = React.memo(
             },
             gap: 1,
             marginTop: 3,
-            width: {
-              xs: '100%',
-              sm: 'calc(100% - 16px)', // Deducts spacing for marginLeft on sm+
-            },
-            marginLeft: {
-              xs: 0,
-              sm: 3,
-            },
           }}
         >
           {singleKpiWidgets.map((widget, index) => {
@@ -231,8 +229,15 @@ export const RenderWidgets = React.memo(
             }
           })}
         </Box>
-        <GridLegacy columnSpacing={2} container item rowSpacing={2} xs={12}>
-          {{ ...newDashboard }.widgets.map((widget, index) => {
+        <GridLegacy
+          columnSpacing={2}
+          container
+          item
+          marginTop={1}
+          rowSpacing={2}
+          xs={12}
+        >
+          {widgetsToRender.map((widget, index) => {
             // check if widget metric definition is available or not
             if (widget && widget.chart_type !== 'kpi') {
               // find the metric defintion of the widget label
