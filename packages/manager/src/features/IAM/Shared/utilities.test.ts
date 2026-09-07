@@ -745,6 +745,7 @@ describe('getFormattedEntityType', () => {
     expect(getFormattedEntityType('linode')).toBe('Linode');
     expect(getFormattedEntityType('database')).toBe('Database');
     expect(getFormattedEntityType('volume')).toBe('Volume');
+    expect(getFormattedEntityType('nfs_space')).toBe('NFS Space');
   });
 });
 

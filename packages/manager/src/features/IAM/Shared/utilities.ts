@@ -450,6 +450,7 @@ export const getFormattedEntityType = (entityType: string): string => {
     postgresql_database: 'PostgreSQL Database',
     valkey_database: 'Valkey Database',
     vpc: 'VPC',
+    nfs_space: 'NFS Space',
   };
 
   // Return the overridden capitalization if it exists, otherwise capitalize normally

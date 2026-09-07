@@ -7,6 +7,7 @@ export type EntityType =
   | 'lkecluster'
   | 'longview'
   | 'mysql_database'
+  | 'nfs_space'
   | 'nodebalancer'
   | 'placement_group'
   | 'postgresql_database'

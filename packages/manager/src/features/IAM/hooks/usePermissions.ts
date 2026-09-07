@@ -64,6 +64,7 @@ declare const PermissionByAccessKnown: {
   lkecluster: never; // TODO: add lkecluster permissions
   longview: never; // TODO: add longview permissions
   mysql_database: never; // TODO: add MySQL database permissions
+  nfs_space: never; // TODO: add NFS space permissions
   nodebalancer:
     | NodeBalancerAdmin
     | NodeBalancerContributor
