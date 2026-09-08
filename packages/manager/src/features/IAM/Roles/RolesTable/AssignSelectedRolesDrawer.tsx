@@ -7,16 +7,14 @@ import {
 import { Spacing, Typography } from '@akamai/cds-tokens';
 import {
   useAccountRoles,
-  useAccountUsers,
-  useAllAccountUsersQuery,
   useUserRoles,
   useUserRolesMutation,
 } from '@linode/queries';
 import React, { useMemo, useState } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 
+import { useAccountUsersSearch } from '../../hooks/useAccountUsersSearch';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
-import { useDebouncedValue } from '../../hooks/useDebouncedValue';
 import { usePermissions } from '../../hooks/usePermissions';
 import { Box } from '../../Shared/Box/Box';
 import {
@@ -30,8 +28,7 @@ import { TruncatedUsername } from '../../Shared/TruncatedUsername/TruncatedUsern
 import { mergeAssignedRolesIntoExistingRoles } from '../../Shared/utilities';
 import { AssignSingleSelectedRole } from './AssignSingleSelectedRole';
 
-import type { RoleView } from '../../Shared/types';
-import type { SelectOption } from '../../Shared/types';
+import type { RoleView, SelectOption } from '../../Shared/types';
 import type { AssignNewRoleFormValues } from '../../Shared/utilities';
 import type { User } from '@linode/api-v4';
 
@@ -86,59 +83,42 @@ export const AssignSelectedRolesDrawer = ({
 
   const [usernameInput, setUsernameInput] = useState<string>('');
   const [hasEngagedUserSelect, setHasEngagedUserSelect] = useState(false);
-  const debouncedUsernameInput = useDebouncedValue(usernameInput);
   const username = form.watch('username');
-  const isSearching = debouncedUsernameInput.length > 0;
-  const isPendingSearch =
-    usernameInput.length > 0 && debouncedUsernameInput !== usernameInput;
-
-  const userSearchFilter = isSearching
-    ? {
-        ['+or']: [
-          { username: { ['+contains']: debouncedUsernameInput } },
-          { email: { ['+contains']: debouncedUsernameInput } },
-        ],
-      }
-    : undefined;
 
   const { data: permissions } = usePermissions('account', ['view_user']);
 
   const canFetchUsers = open && permissions?.view_user && hasEngagedUserSelect;
 
-  // TODO - CDS - UIE-11455: replace with useAccountUsersInfiniteQuery when tag input supports infinite loading
-  const { data: browseUsers, isLoading: isLoadingBrowseUsers } =
-    useAllAccountUsersQuery(canFetchUsers && !isSearching, {
-      '+order': 'asc',
-      '+order_by': 'username',
-    });
-
   const {
-    data: searchResults,
-    isFetching: isFetchingSearchUsers,
-    isLoading: isLoadingSearchUsers,
-  } = useAccountUsers({
-    enabled: canFetchUsers && isSearching,
-    filters: userSearchFilter,
-    params: { page: 1, page_size: 100 },
+    fetchNextPage,
+    hasNextPage,
+    isFetching,
+    isFetchingNextPage,
+    isLoading,
+    isPendingSearch,
+    users: accountUsers,
+  } = useAccountUsersSearch({
+    enabled: canFetchUsers,
+    search: usernameInput,
   });
 
-  const accountUsers: undefined | User[] = isSearching
-    ? searchResults?.data
-    : browseUsers;
-
-  const isLoadingAccountUsers = isSearching
-    ? isLoadingSearchUsers || isFetchingSearchUsers || isPendingSearch
-    : isLoadingBrowseUsers;
+  const isSearching = usernameInput.trim().length > 0;
+  const isLoadingAccountUsers =
+    isPendingSearch || isLoading || (isFetching && accountUsers.length === 0);
 
   const userOptions = useMemo<UserOption[]>(() => {
-    return (
-      accountUsers?.map((user) => ({
-        label: user.username,
-        userType: user.user_type,
-        value: user.username,
-      })) ?? []
-    );
+    return accountUsers.map((user) => ({
+      label: user.username,
+      userType: user.user_type,
+      value: user.username,
+    }));
   }, [accountUsers]);
+
+  const handleLoadMore = () => {
+    if (hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  };
 
   const { handleSubmit, reset, control, formState, setError } = form;
 
@@ -270,6 +250,7 @@ export const AssignSelectedRolesDrawer = ({
                     setUsernameInput('');
                   }}
                   onFocus={() => setHasEngagedUserSelect(true)}
+                  onLoadMore={handleLoadMore}
                   onSearchChange={(event) => {
                     setHasEngagedUserSelect(true);
                     setUsernameInput(event.detail as unknown as string);
