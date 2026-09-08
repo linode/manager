@@ -19,6 +19,7 @@ const subnetAction = {
   delete: 'delete',
   edit: 'edit',
   unassign: 'unassign',
+  'unassign-natgateway': 'unassign-natgateway',
 } as const;
 
 const subnetLinodeAction = {

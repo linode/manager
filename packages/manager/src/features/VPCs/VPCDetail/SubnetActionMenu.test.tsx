@@ -27,6 +27,7 @@ const props = {
   handleDelete: vi.fn(),
   handleEdit: vi.fn(),
   handleUnassignLinodes: vi.fn(),
+  handleUnassignNATGateway: vi.fn(),
   numUniqueResources: 2,
   subnet: subnetFactory.build({ label: 'subnet-1' }),
   vpcId: 1,

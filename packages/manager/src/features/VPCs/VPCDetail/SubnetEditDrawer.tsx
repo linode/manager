@@ -3,7 +3,7 @@ import { useUpdateSubnetMutation, useVPCQuery } from '@linode/queries';
 import { ActionsPanel, Drawer, Notice, TextField } from '@linode/ui';
 import { modifySubnetSchema } from '@linode/validation';
 import * as React from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, Resolver, useForm } from 'react-hook-form';
 
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useIsNATGatewaysEnabled } from 'src/features/NATGateways/utils';
@@ -40,18 +40,16 @@ export const SubnetEditDrawer = (props: Props) => {
     handleSubmit,
     reset: resetForm,
     setError,
-  } = useForm<ModifySubnetPayload & { natgateway?: null | { id: number } }>({
+  } = useForm<ModifySubnetPayload>({
     mode: 'onBlur',
-    resolver: yupResolver(modifySubnetSchema),
+    resolver: yupResolver(modifySubnetSchema) as Resolver<ModifySubnetPayload>,
     values: {
       label: subnet?.label ?? '',
-      natgateway:
-        (subnet as Subnet & { natgateway?: { id: number } })?.natgateway ??
-        undefined,
+      natgateway: subnet?.natgateway ? { id: subnet.natgateway.id } : undefined,
     },
   });
 
-  const isNATGatewaysEnabled = useIsNATGatewaysEnabled();
+  const { isNATGatewaysEnabled } = useIsNATGatewaysEnabled();
 
   const handleDrawerClose = () => {
     onClose();
@@ -125,10 +123,9 @@ export const SubnetEditDrawer = (props: Props) => {
                 interfaces={
                   subnet?.linodes?.flatMap((linode) => linode.interfaces) ?? []
                 }
+                isClearable={false}
                 onChange={(natGatewayId) => {
-                  field.onChange(
-                    natGatewayId !== null ? { id: natGatewayId } : undefined
-                  );
+                  field.onChange({ id: natGatewayId });
                 }}
                 region={vpc?.region}
                 value={field.value?.id ?? null}

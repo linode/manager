@@ -312,7 +312,7 @@ export const createVPCSchema = object({
 export const modifySubnetSchema = object({
   label: labelValidation.required(LABEL_REQUIRED),
   natgateway: object({
-    id: number().required(),
+    id: number().nullable().defined(),
   })
     .nullable()
     .optional(),

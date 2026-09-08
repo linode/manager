@@ -2,6 +2,7 @@ import * as React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
+import { useIsNATGatewaysEnabled } from 'src/features/NATGateways/utils';
 
 import type { Subnet } from '@linode/api-v4';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
@@ -11,6 +12,7 @@ interface SubnetActionHandlers {
   handleDelete: (subnet: Subnet) => void;
   handleEdit: (subnet: Subnet) => void;
   handleUnassignLinodes: (subnet: Subnet) => void;
+  handleUnassignNATGateway: (subnet: Subnet) => void;
 }
 
 interface Props extends SubnetActionHandlers {
@@ -25,6 +27,7 @@ export const SubnetActionMenu = (props: Props) => {
     handleDelete,
     handleEdit,
     handleUnassignLinodes,
+    handleUnassignNATGateway,
     numUniqueResources,
     subnet,
     vpcId,
@@ -35,6 +38,8 @@ export const SubnetActionMenu = (props: Props) => {
     ['update_vpc', 'delete_vpc'],
     vpcId
   );
+
+  const { isNATGatewaysEnabled } = useIsNATGatewaysEnabled();
 
   const canUpdateVPC = permissions?.update_vpc;
   const canDeleteVPC = permissions?.delete_vpc;
@@ -52,6 +57,17 @@ export const SubnetActionMenu = (props: Props) => {
       },
       title: 'Unassign Linodes',
     },
+    ...(isNATGatewaysEnabled && subnet?.natgateway?.id
+      ? [
+          {
+            onClick: () => {
+              handleUnassignNATGateway(subnet);
+            },
+            pendoId: 'VPC Details Subnets-Unassign NAT Gateway Start Flow',
+            title: 'Unassign NAT Gateway',
+          },
+        ]
+      : []),
     {
       onClick: () => {
         handleEdit(subnet);
@@ -83,6 +99,7 @@ export const SubnetActionMenu = (props: Props) => {
     <ActionMenu
       actionsList={actions}
       ariaLabel={`Action menu for Subnet ${subnet.label}`}
+      pendoId="VPC Details Subnets-Action menu"
     />
   );
 };

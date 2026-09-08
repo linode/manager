@@ -43,6 +43,10 @@ interface Props {
     config_id: null | number;
     id: number;
   }>;
+  /**
+   * Whether the selected NAT Gateway can be cleared via the Select's clear button.
+   */
+  isClearable?: boolean;
 
   /**
    * Whether dependent data required by the parent is loading.
@@ -82,6 +86,7 @@ export const NATGatewaySelect = React.memo((props: Props) => {
     disabled = false,
     errorText,
     interfaces,
+    isClearable = true,
     loading = false,
     onChange,
     region,
@@ -236,7 +241,7 @@ export const NATGatewaySelect = React.memo((props: Props) => {
 
   const select = (
     <Select<NATGateway>
-      clearable
+      clearable={isClearable}
       data-pendo-id={props.dataPendoIdForSelect ?? ''}
       disabled={isDisabled}
       error={Boolean(errorText)}

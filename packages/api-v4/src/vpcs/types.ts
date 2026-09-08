@@ -47,12 +47,8 @@ interface VPCIPv6Subnet {
   range: string;
 }
 
-/**
- * NAT Gateway reference in CREATE/UPDATE subnet payloads.
- * Only the ID is sent to the API.
- */
-interface SubnetNATGatewayPayload {
-  id: number;
+export interface SubnetNATGatewayPayload {
+  id: null | number;
 }
 
 export interface CreateSubnetPayload {
@@ -77,7 +73,7 @@ export interface Subnet {
 
 export interface ModifySubnetPayload {
   label: string;
-  natgateway?: null | SubnetNATGatewayPayload;
+  natgateway?: SubnetNATGatewayPayload;
 }
 
 export interface SubnetLinodeInterfaceData {

@@ -17,7 +17,8 @@ interface EntityInfo {
     | 'deletion'
     | 'detachment'
     | 'resizing'
-    | 'restoration';
+    | 'restoration'
+    | 'unassignment';
   error?: APIError[] | null | string | undefined;
   name?: string | undefined;
   primaryBtnText: string;
@@ -36,6 +37,7 @@ interface EntityInfo {
     | 'Managed Contact'
     | 'Managed Credential'
     | 'Managed Service Monitor'
+    | 'NAT Gateway'
     | 'NodeBalancer'
     | 'Notification Channel'
     | 'Placement Group'

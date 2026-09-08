@@ -122,6 +122,7 @@ export const createVPC = (mockState: MockState) => [
             created: DateTime.now().toISO(),
             linodes: [],
             nodebalancers: [],
+            natgateway: undefined,
             updated: DateTime.now().toISO(),
           });
           vpcSubnets.push(subnet);

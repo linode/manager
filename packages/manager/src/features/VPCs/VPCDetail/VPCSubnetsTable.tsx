@@ -56,6 +56,7 @@ import {
 } from './SubnetNodebalancerRow';
 import { SubnetRDMALinodeRow } from './SubnetRDMALinodeRow';
 import { SubnetUnassignLinodesDrawer } from './SubnetUnassignLinodesDrawer';
+import { SubnetUnassignNATGatewayDialog } from './SubnetUnassignNATGatewayDialog';
 
 import type { Linode } from '@linode/api-v4/lib/linodes/types';
 import type { Subnet, VPCType } from '@linode/api-v4/lib/vpcs/types';
@@ -221,6 +222,17 @@ export const VPCSubnetsTable = (props: Props) => {
     });
   };
 
+  const handleSubnetUnassignNATGateway = (subnet: Subnet) => {
+    navigate({
+      params: {
+        subnetAction: 'unassign-natgateway',
+        subnetId: subnet.id,
+        vpcId,
+      },
+      to: SUBNET_ACTION_PATH,
+    });
+  };
+
   const handleSubnetUnassignLinode = (linode: Linode, subnet: Subnet) => {
     navigate({
       params: {
@@ -357,7 +369,10 @@ export const VPCSubnetsTable = (props: Props) => {
           {isNATGatewaysEnabled && (
             <TableCell>
               {subnet.natgateway?.id ? (
-                <Link to={`/natgateways/${subnet.natgateway.id}`}>
+                <Link
+                  data-pendo-id="VPC Details Subnets NAT Gateway"
+                  to={`/natgateways/${subnet.natgateway.id}`}
+                >
                   {subnet.natgateway.label}
                 </Link>
               ) : (
@@ -376,6 +391,7 @@ export const VPCSubnetsTable = (props: Props) => {
               handleDelete={handleSubnetDelete}
               handleEdit={handleSubnetEdit}
               handleUnassignLinodes={handleSubnetUnassignLinodes}
+              handleUnassignNATGateway={handleSubnetUnassignNATGateway}
               numUniqueResources={uniqueResourcesFromSubnet.numUniqueResources}
               subnet={subnet}
               vpcId={vpcId}
@@ -563,6 +579,14 @@ export const VPCSubnetsTable = (props: Props) => {
         isFetching={isFetchingSubnet}
         onClose={onCloseSubnetDrawer}
         open={params.subnetAction === 'delete'}
+        subnet={selectedSubnet}
+        subnetError={selectedSubnetError}
+        vpcId={vpcId}
+      />
+      <SubnetUnassignNATGatewayDialog
+        isFetching={isFetchingSubnet}
+        onClose={onCloseSubnetDrawer}
+        open={params.subnetAction === 'unassign-natgateway'}
         subnet={selectedSubnet}
         subnetError={selectedSubnetError}
         vpcId={vpcId}
