@@ -95,6 +95,10 @@ const options: { flag: keyof Flags; label: string }[] = [
     label: 'IAM Quotas',
   },
   {
+    flag: 'iamLKE',
+    label: 'IAM LKE',
+  },
+  {
     flag: 'linodeCloneFirewall',
     label: 'Linode Clone Firewall',
   },

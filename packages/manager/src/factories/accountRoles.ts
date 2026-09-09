@@ -1,6 +1,39 @@
 import { Factory } from '@linode/utilities';
 
-import type { IamAccountRoles } from '@linode/api-v4';
+import type { IamAccountRoles, PermissionType } from '@linode/api-v4';
+
+const LKE_CLUSTER_VIEWER_PERMISSIONS = [
+  'view_lkecluster',
+  'view_lkecluster_api_endpoints',
+  'view_lkecluster_control_plane_acl',
+  'view_lkecluster_nodepool',
+  'view_lkecluster_nodepool_nodes',
+] as const satisfies readonly PermissionType[];
+
+const LKE_CLUSTER_KUBECONFIGADMIN_PERMISSIONS = [
+  ...LKE_CLUSTER_VIEWER_PERMISSIONS,
+  'view_lkecluster_kubeconfig',
+] as const satisfies readonly PermissionType[];
+
+const LKE_CLUSTER_CONTRIBUTOR_PERMISSIONS = [
+  ...LKE_CLUSTER_KUBECONFIGADMIN_PERMISSIONS,
+  'update_lkecluster',
+  'recycle_lkecluster',
+  'regenerate_lkecluster',
+  'update_lkecluster_control_plane_acl',
+  'delete_lkecluster_control_plane_acl',
+  'create_lkecluster_nodepool',
+  'recycle_lkecluster_nodepool',
+  'update_lkecluster_nodepool',
+  'delete_lkecluster_nodepool',
+  'recycle_lkecluster_nodepool_nodes',
+  'delete_lkecluster_nodepool_nodes',
+] as const satisfies readonly PermissionType[];
+
+const LKE_CLUSTER_ADMIN_PERMISSIONS = [
+  ...LKE_CLUSTER_CONTRIBUTOR_PERMISSIONS,
+  'delete_lkecluster',
+] as const satisfies readonly PermissionType[];
 
 interface CreateResourceRoles {
   accountAdmin?: string[];
@@ -159,10 +192,22 @@ export const accountRolesFactory = Factory.Sync.makeFactory<IamAccountRoles>({
       type: 'lkecluster',
       roles: [
         {
+          name: 'account_lkecluster_admin',
+          description:
+            'Allows the user full control over all LKE clusters and sub-entities in the account, plus the ability to create clusters.',
+          permissions: ['create_lkecluster', ...LKE_CLUSTER_ADMIN_PERMISSIONS],
+        },
+        {
           name: 'account_lkecluster_creator',
           description:
             'Allows the user the same access as the legacy "Can add Kubernetes Clusters to this account ($)" general permission.',
-          permissions: [],
+          permissions: ['create_lkecluster'],
+        },
+        {
+          name: 'account_lkecluster_viewer',
+          description:
+            'Allows the user to view all LKE clusters and sub-entities in the account, except kubeconfig.',
+          permissions: [...LKE_CLUSTER_VIEWER_PERMISSIONS],
         },
       ],
     },
@@ -802,13 +847,25 @@ export const accountRolesFactory = Factory.Sync.makeFactory<IamAccountRoles>({
           name: 'lkecluster_viewer',
           description:
             'Allows the user the same access as the legacy Read-Only special permission for the LKE clusters attached to this role.',
-          permissions: [],
+          permissions: [...LKE_CLUSTER_VIEWER_PERMISSIONS],
+        },
+        {
+          name: 'lkecluster_kubeconfigadmin',
+          description:
+            'Allows the user to view an LKE cluster and sub-entities, including the kubeconfig.',
+          permissions: [...LKE_CLUSTER_KUBECONFIGADMIN_PERMISSIONS],
+        },
+        {
+          name: 'lkecluster_contributor',
+          description:
+            'Allows the user to update an LKE cluster and its node pools, but not delete the cluster.',
+          permissions: [...LKE_CLUSTER_CONTRIBUTOR_PERMISSIONS],
         },
         {
           name: 'lkecluster_admin',
           description:
             'Allows the user the same access as the legacy Read-Write special permission for the LKE clusters attached to this role.',
-          permissions: [],
+          permissions: [...LKE_CLUSTER_ADMIN_PERMISSIONS],
         },
       ],
     },

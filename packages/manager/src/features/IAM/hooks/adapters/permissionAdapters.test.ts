@@ -421,6 +421,73 @@ describe('fromGrants', () => {
     });
   });
 
+  it('should check account level create_lkecluster from add_lkes grant', () => {
+    const permissionsToCheck: PermissionType[] = ['create_lkecluster'];
+    const result = fromGrants('account', permissionsToCheck, {
+      ...grants,
+      global: { ...grants.global, add_lkes: true },
+    });
+    expect(result).toEqual({
+      create_lkecluster: true,
+    });
+  });
+
+  it('should check lkecluster permissions for read_only entity grant', () => {
+    const permissionsToCheck: PermissionType[] = [
+      'view_lkecluster',
+      'view_lkecluster_kubeconfig',
+      'delete_lkecluster',
+    ];
+    const result = fromGrants(
+      'lkecluster',
+      permissionsToCheck,
+      {
+        ...grants,
+        lkecluster: [
+          {
+            id: 123,
+            label: 'test-cluster',
+            permissions: 'read_only',
+          },
+        ],
+      },
+      true,
+      123
+    );
+    expect(result).toEqual({
+      view_lkecluster: true,
+      view_lkecluster_kubeconfig: false,
+      delete_lkecluster: false,
+    });
+  });
+
+  it('should check lkecluster permissions for read_write entity grant', () => {
+    const permissionsToCheck: PermissionType[] = [
+      'view_lkecluster_kubeconfig',
+      'delete_lkecluster',
+    ];
+    const result = fromGrants(
+      'lkecluster',
+      permissionsToCheck,
+      {
+        ...grants,
+        lkecluster: [
+          {
+            id: 456,
+            label: 'test-cluster-rw',
+            permissions: 'read_write',
+          },
+        ],
+      },
+      true,
+      456
+    );
+    expect(result).toEqual({
+      view_lkecluster_kubeconfig: true,
+      delete_lkecluster: true,
+    });
+  });
+
   it('should check firewall permissions for read_write firewall', () => {
     const permissionsToCheck: PermissionType[] = [
       'update_firewall',

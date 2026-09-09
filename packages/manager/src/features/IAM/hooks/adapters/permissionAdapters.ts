@@ -2,6 +2,7 @@ import { accountGrantsToPermissions } from './accountGrantsToPermissions';
 import { firewallGrantsToPermissions } from './firewallGrantsToPermissions';
 import { imageGrantsToPermissions } from './imageGrantsToPermissions';
 import { linodeGrantsToPermissions } from './linodeGrantsToPermissions';
+import { lkeclusterGrantsToPermissions } from './lkeclusterGrantsToPermissions';
 import { nodeBalancerGrantsToPermissions } from './nodeBalancerGrantsToPermissions';
 import { volumeGrantsToPermissions } from './volumeGrantsToPermissions';
 import { vpcGrantsToPermissions } from './vpcGrantsToPermissions';
@@ -49,6 +50,10 @@ export const entityPermissionMapFrom = (
         entity?.permissions,
         profile?.restricted
       ) as PermissionMap;
+      const lkeclusterPermissionsMap = lkeclusterGrantsToPermissions(
+        entity?.permissions,
+        profile?.restricted
+      ) as PermissionMap;
       const vpcPermissionsMap = vpcGrantsToPermissions(
         entity?.permissions,
         profile?.restricted
@@ -64,6 +69,9 @@ export const entityPermissionMapFrom = (
           break;
         case 'linode':
           entityPermissionsMap[entity.id] = linodePermissionsMap;
+          break;
+        case 'lkecluster':
+          entityPermissionsMap[entity.id] = lkeclusterPermissionsMap;
           break;
         case 'nodebalancer':
           entityPermissionsMap[entity.id] = nodebalancerPermissionsMap;
@@ -97,6 +105,7 @@ export const fromGrants = (
   /** Find the entity in the grants */
   const firewall = grants?.firewall.find((f) => f.id === entityId);
   const image = grants?.image.find((f) => f.id.toString() === imageId);
+  const lkecluster = grants?.lkecluster.find((f) => f.id === entityId);
   const linode = grants?.linode.find((f) => f.id === entityId);
   const volume = grants?.volume.find((f) => f.id === entityId);
   const nodebalancer = grants?.nodebalancer.find((f) => f.id === entityId);
@@ -127,6 +136,12 @@ export const fromGrants = (
     case 'linode':
       usersPermissionsMap = linodeGrantsToPermissions(
         linode?.permissions,
+        isRestricted
+      ) as PermissionMap;
+      break;
+    case 'lkecluster':
+      usersPermissionsMap = lkeclusterGrantsToPermissions(
+        lkecluster?.permissions,
         isRestricted
       ) as PermissionMap;
       break;

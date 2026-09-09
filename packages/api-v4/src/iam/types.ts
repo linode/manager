@@ -20,7 +20,9 @@ export type AccountRoleType =
   | 'account_ip_viewer'
   | 'account_linode_admin'
   | 'account_linode_creator'
+  | 'account_lkecluster_admin'
   | 'account_lkecluster_creator'
+  | 'account_lkecluster_viewer'
   | 'account_longview_creator'
   | 'account_longview_subscription_admin'
   | 'account_maintenance_viewer'
@@ -50,6 +52,8 @@ export type EntityRoleType =
   | 'linode_contributor'
   | 'linode_viewer'
   | 'lkecluster_admin'
+  | 'lkecluster_contributor'
+  | 'lkecluster_kubeconfigadmin'
   | 'lkecluster_viewer'
   | 'longview_admin'
   | 'longview_viewer'
@@ -147,6 +151,7 @@ export type AccountAdmin =
   | AccountIDPAdmin
   | AccountImageAdmin
   | AccountLinodeAdmin
+  | AccountLkeClusterAdmin
   | AccountMaintenanceViewer
   | AccountNodeBalancerAdmin
   | AccountNotificationViewer
@@ -206,6 +211,15 @@ export type AccountNodeBalancerAdmin =
 
 /** Permissions associated with the "account_nodebalancer_creator" role. */
 export type AccountNodeBalancerCreator = 'create_nodebalancer';
+
+/** Permissions associated with the "account_lkecluster_creator" role. */
+export type AccountLkeClusterCreator = 'create_lkecluster';
+
+/** Permissions associated with the "account_lkecluster_admin" role. */
+export type AccountLkeClusterAdmin = AccountLkeClusterCreator | LkeClusterAdmin;
+
+/** Permissions associated with the "account_lkecluster_viewer" role. */
+export type AccountLkeClusterViewer = LkeClusterViewer;
 
 /** Permissions associated with the "account_volume_admin" role. */
 export type AccountVolumeAdmin =
@@ -445,6 +459,37 @@ export type NodeBalancerViewer =
   | 'view_nodebalancer_config_node'
   | 'view_nodebalancer_statistics'
   | 'view_nodebalancer_vpc_config';
+
+/** Permissions associated with the "lkecluster_viewer" role. */
+export type LkeClusterViewer =
+  | 'view_lkecluster'
+  | 'view_lkecluster_api_endpoints'
+  | 'view_lkecluster_control_plane_acl'
+  | 'view_lkecluster_nodepool'
+  | 'view_lkecluster_nodepool_nodes';
+
+/** Permissions associated with the "lkecluster_kubeconfigadmin" role. */
+export type LkeClusterKubeconfigAdmin =
+  | 'view_lkecluster_kubeconfig'
+  | LkeClusterViewer;
+
+/** Permissions associated with the "lkecluster_contributor" role. */
+export type LkeClusterContributor =
+  | 'create_lkecluster_nodepool'
+  | 'delete_lkecluster_control_plane_acl'
+  | 'delete_lkecluster_nodepool'
+  | 'delete_lkecluster_nodepool_nodes'
+  | 'recycle_lkecluster'
+  | 'recycle_lkecluster_nodepool'
+  | 'recycle_lkecluster_nodepool_nodes'
+  | 'regenerate_lkecluster'
+  | 'update_lkecluster'
+  | 'update_lkecluster_control_plane_acl'
+  | 'update_lkecluster_nodepool'
+  | LkeClusterKubeconfigAdmin;
+
+/** Permissions associated with the "lkecluster_admin" role. */
+export type LkeClusterAdmin = 'delete_lkecluster' | LkeClusterContributor;
 
 /** Permissions associated with the "volume_admin" role. */
 export type VolumeAdmin = 'delete_volume' | VolumeContributor;

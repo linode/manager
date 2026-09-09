@@ -298,6 +298,7 @@ export interface Flags {
   gpuv2: GpuV2;
   iam: BaseFeatureFlag;
   iamFederation: boolean;
+  iamLKE: boolean;
   iamNewBadge: boolean;
   iamQuotas: boolean;
   iamTfaEnforcement: boolean;

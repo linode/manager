@@ -11,6 +11,7 @@ import { useIsIAMEnabled } from './useIsIAMEnabled';
 import type {
   AccessType,
   AccountAdmin,
+  AccountLkeClusterAdmin,
   APIError,
   FirewallAdmin,
   FirewallContributor,
@@ -55,13 +56,13 @@ type EntityPermission =
   | VPCViewer;
 
 declare const PermissionByAccessKnown: {
-  account: Exclude<AccountAdmin, EntityPermission>;
+  account: Exclude<AccountAdmin, AccountLkeClusterAdmin | EntityPermission>;
   database: never; // TODO: add database permissions
   domain: never; // TODO: add domain permissions
   firewall: FirewallAdmin | FirewallContributor | FirewallViewer;
   image: ImageAdmin | ImageContributor | ImageViewer;
   linode: LinodeAdmin | LinodeContributor | LinodeViewer;
-  lkecluster: never; // TODO: add lkecluster permissions
+  lkecluster: never; // use useLkePermissions
   longview: never; // TODO: add longview permissions
   mysql_database: never; // TODO: add MySQL database permissions
   nfs_space: never; // TODO: add NFS space permissions
@@ -114,7 +115,8 @@ export function usePermissions<
   accessType: A,
   permissionsToCheck: T,
   entityId?: undefined,
-  enabled?: boolean
+  enabled?: boolean,
+  useIamApi?: boolean
 ): PermissionsResult<T>;
 
 /**
@@ -127,11 +129,15 @@ export function usePermissions<
   accessType: A,
   permissionsToCheck: T,
   entityId: number | string | undefined,
-  enabled?: boolean
+  enabled?: boolean,
+  useIamApi?: boolean
 ): PermissionsResult<T>;
 
 /**
  * Implementation
+ *
+ * `useIamApi` defaults to the global IAM flag. Pass `false` to force the grants
+ * fallback (e.g. LKE while `iamLKE` is off).
  */
 export function usePermissions<
   A extends AccessType,
@@ -140,10 +146,12 @@ export function usePermissions<
   accessType: A,
   permissionsToCheck: T,
   entityId?: number | string,
-  enabled: boolean = true
+  enabled: boolean = true,
+  useIamApi?: boolean
 ): PermissionsResult<T> {
   const { isIAMEnabled } = useIsIAMEnabled();
   const { data: profile } = useProfile();
+  const shouldUseIamApi = useIamApi ?? isIAMEnabled;
 
   const _entityId =
     typeof entityId === 'string' && entityId.includes('/')
@@ -151,7 +159,7 @@ export function usePermissions<
       : entityId;
 
   const { data: grants, isLoading: isGrantsLoading } = useGrants(
-    !isIAMEnabled && enabled
+    !shouldUseIamApi && enabled
   );
 
   const {
@@ -159,19 +167,23 @@ export function usePermissions<
     isLoading: isUserAccountPermissionsLoading,
     ...restAccountPermissions
   } = useUserAccountPermissions(
-    isIAMEnabled && accessType === 'account' && enabled
+    shouldUseIamApi && accessType === 'account' && enabled
   );
 
   const {
     data: userEntityPermissions,
     isLoading: isUserEntityPermissionsLoading,
     ...restEntityPermissions
-  } = useUserEntityPermissions(accessType, _entityId!, isIAMEnabled && enabled);
+  } = useUserEntityPermissions(
+    accessType,
+    _entityId!,
+    shouldUseIamApi && enabled
+  );
 
   const usersPermissions =
     accessType === 'account' ? userAccountPermissions : userEntityPermissions;
 
-  const permissionMap = isIAMEnabled
+  const permissionMap = shouldUseIamApi
     ? toPermissionMap(
         permissionsToCheck,
         Array.isArray(usersPermissions) ? usersPermissions : [],
@@ -188,7 +200,7 @@ export function usePermissions<
 
   return {
     data: permissionMap,
-    isLoading: isIAMEnabled
+    isLoading: shouldUseIamApi
       ? isUserAccountPermissionsLoading || isUserEntityPermissionsLoading
       : isGrantsLoading,
     ...restAccountPermissions,

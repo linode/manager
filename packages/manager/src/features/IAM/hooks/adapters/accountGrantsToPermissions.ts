@@ -79,6 +79,8 @@ export const accountGrantsToPermissions = (
     upload_image: unrestricted || globalGrants?.add_images,
     // AccountVPCAdmin
     create_vpc: unrestricted || globalGrants?.add_vpcs,
+    // AccountLkeClusterAdmin
+    create_lkecluster: unrestricted || globalGrants?.add_lkes,
     // AccountOAuthClientAdmin
     create_oauth_client: true,
     update_oauth_client: true,
