@@ -299,6 +299,7 @@ export interface Flags {
   iam: BaseFeatureFlag;
   iamFederation: boolean;
   iamNewBadge: boolean;
+  iamQuotas: boolean;
   iamTfaEnforcement: boolean;
   inferencePlatform: boolean;
   ipv6Sharing: boolean;

@@ -69,6 +69,9 @@ export const accountGrantsToPermissions = (
     create_linode: unrestricted || globalGrants?.add_linodes,
     // AccountVolumeAdmin
     create_volume: unrestricted || globalGrants?.add_volumes,
+    list_volume_quotas: hasReadAccess,
+    view_volume_quota: hasReadAccess,
+    view_volume_quota_usage: hasReadAccess,
     // AccountNodeBalancerAdmin
     create_nodebalancer: unrestricted || globalGrants?.add_nodebalancers,
     // AccountImageAdmin

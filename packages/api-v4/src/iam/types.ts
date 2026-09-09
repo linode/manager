@@ -109,6 +109,7 @@ export type AccountAdmin =
   | 'list_user_delegate_accounts'
   | 'list_user_grants'
   | 'list_user_permissions'
+  | 'list_volume_quotas'
   | 'revoke_profile_app'
   | 'revoke_profile_device'
   | 'send_profile_phone_number_verification_code'
@@ -138,6 +139,8 @@ export type AccountAdmin =
   | 'view_service_transfer'
   | 'view_user'
   | 'view_user_preferences'
+  | 'view_volume_quota'
+  | 'view_volume_quota_usage'
   | AccountBillingAdmin
   | AccountEventViewer
   | AccountFirewallAdmin
@@ -205,7 +208,12 @@ export type AccountNodeBalancerAdmin =
 export type AccountNodeBalancerCreator = 'create_nodebalancer';
 
 /** Permissions associated with the "account_volume_admin" role. */
-export type AccountVolumeAdmin = AccountVolumeCreator | VolumeAdmin;
+export type AccountVolumeAdmin =
+  | 'list_volume_quotas'
+  | 'view_volume_quota'
+  | 'view_volume_quota_usage'
+  | AccountVolumeCreator
+  | VolumeAdmin;
 
 /** Permissions associated with the "account_volume_creator" role. */
 export type AccountVolumeCreator = 'create_volume';
@@ -291,6 +299,7 @@ export type AccountViewer =
   | 'list_service_transfers'
   | 'list_user_grants'
   | 'list_user_permissions'
+  | 'list_volume_quotas'
   | 'view_account'
   | 'view_account_login'
   | 'view_account_settings'
@@ -301,6 +310,8 @@ export type AccountViewer =
   | 'view_service_transfer'
   | 'view_user'
   | 'view_user_preferences'
+  | 'view_volume_quota'
+  | 'view_volume_quota_usage'
   | AccountBillingViewer
   | AccountEventViewer
   | AccountMaintenanceViewer
