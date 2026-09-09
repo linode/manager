@@ -8,6 +8,7 @@ export type CloudPulseServiceType =
   | 'blockstorage'
   | 'dbaas'
   | 'firewall'
+  | 'inference'
   | 'linode'
   | 'lke'
   | 'logs'
@@ -412,6 +413,7 @@ export const capabilityServiceTypeMapping: Record<
   netloadbalancer: 'Network LoadBalancer',
   logs: 'Akamai Cloud Pulse Logs',
   ai: 'AI Inference',
+  inference: 'AI Inference',
 };
 
 /**

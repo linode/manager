@@ -238,6 +238,34 @@ describe('CloudPulseResourcesSelect component tests', () => {
     expect(screen.getByRole('button')).toBeInTheDocument();
   });
 
+  it('selects all AI API keys without saved preferences', async () => {
+    const mockApiKeys = linodeFactory.buildList(2);
+    queryMocks.useResourcesQuery.mockReturnValue({
+      data: mockApiKeys,
+      isError: false,
+      isLoading: false,
+      status: 'success',
+    });
+
+    renderWithTheme(
+      <CloudPulseResourcesSelect
+        handleResourcesSelection={mockResourceHandler}
+        label="API Keys"
+        resourceType="inference"
+      />
+    );
+
+    expect(mockResourceHandler).toHaveBeenCalledWith(mockApiKeys);
+
+    await userEvent.click(await screen.findByRole('button', { name: 'Open' }));
+    expect(
+      screen.getByRole('option', { name: mockApiKeys[0].label })
+    ).toHaveAttribute(ARIA_SELECTED, 'true');
+    expect(
+      screen.getByRole('option', { name: mockApiKeys[1].label })
+    ).toHaveAttribute(ARIA_SELECTED, 'true');
+  });
+
   it('Should show appropriate error message on resources call failure', async () => {
     queryMocks.useResourcesQuery.mockReturnValue({
       data: undefined,

@@ -1,12 +1,14 @@
 import type { CloudPulseResources } from '../shared/CloudPulseResourcesSelect';
 import type { AssociatedEntityType } from '../shared/types';
 import type {
+  ApiKey,
   Capabilities,
   CloudPulseServiceType,
   DatabaseEngine,
   DatabaseInstance,
   DatabaseType,
   Firewall,
+  InferenceModelsResponse,
   KubernetesCluster,
   Linode,
   NetworkLoadBalancer,
@@ -59,11 +61,13 @@ export interface CloudPulseServiceTypeFilters {
  * As of now, the list of possible custom filters are engine, database type, this union type will be expanded if we start enhancing our custom select config
  */
 export type QueryFunctionType =
+  | ApiKey[]
   | CloudPulseResources[]
   | DatabaseEngine[]
   | DatabaseInstance[]
   | DatabaseType[]
   | Firewall[]
+  | InferenceModelsResponse[]
   | KubernetesCluster[]
   | Linode[]
   | NetworkLoadBalancer[]

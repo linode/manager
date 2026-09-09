@@ -724,6 +724,14 @@ export const filterUsingDependentFilters = (
     return Object.entries(dependentFilters).every(([key, filterValue]) => {
       const resourceValue = resource[key as keyof CloudPulseResources];
 
+      if (
+        key === 'model_name' &&
+        Array.isArray(resourceValue) &&
+        resourceValue.includes('*')
+      ) {
+        return true;
+      }
+
       if (Array.isArray(resourceValue) && Array.isArray(filterValue)) {
         return filterValue.some((val) => resourceValue.includes(String(val)));
       }

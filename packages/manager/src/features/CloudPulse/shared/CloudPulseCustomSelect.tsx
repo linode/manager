@@ -7,6 +7,7 @@ import {
   getInitialDefaultSelections,
   handleCustomSelectionChange,
 } from './CloudPulseCustomSelectUtils';
+import { CLOUD_PULSE_TEXT_FIELD_PROPS } from './styles';
 
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
 import type {
@@ -184,7 +185,7 @@ export const CloudPulseCustomSelect = React.memo(
     });
 
     React.useEffect(() => {
-      if (!selectedResource && !disabled) {
+      if (!selectedResource && !disabled && (options || queriedResources)) {
         setResource(
           getInitialDefaultSelections({
             defaultValue,
@@ -255,6 +256,7 @@ export const CloudPulseCustomSelect = React.memo(
         errorText={staticErrorText}
         isOptionEqualToValue={(option, value) => option.label === value.label}
         label={label || 'Select a Value'}
+        limitTags={1}
         loading={isLoading}
         multiple={isMultiSelect}
         noMarginTop
@@ -275,7 +277,10 @@ export const CloudPulseCustomSelect = React.memo(
             placement: 'bottom',
           },
         }}
-        textFieldProps={{ optional: isOptional }}
+        textFieldProps={{
+          optional: isOptional,
+          ...CLOUD_PULSE_TEXT_FIELD_PROPS,
+        }}
         value={selectedResource ?? (isMultiSelect ? [] : null)}
       />
     );

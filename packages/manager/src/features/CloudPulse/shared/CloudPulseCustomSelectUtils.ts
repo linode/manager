@@ -149,7 +149,12 @@ export const getInitialDefaultSelections = (
   }
 
   // Handle the case when there is no default value and preferences are not saved
-  if (!defaultValue && !savePreferences && !isOptional) {
+  if (
+    !defaultValue &&
+    !savePreferences &&
+    !isOptional &&
+    filterKey !== 'model_name'
+  ) {
     const initialSelection = isMultiSelect ? [options[0]] : options[0];
     handleSelectionChange(
       filterKey,
@@ -158,13 +163,21 @@ export const getInitialDefaultSelections = (
     );
     return initialSelection;
   }
-  const selectedValues = savePreferences
-    ? options.filter(({ id }) =>
-        (Array.isArray(defaultValue) ? defaultValue : [defaultValue]).includes(
-          String(id)
-        )
+
+  const isModelNameFilter = filterKey === 'model_name';
+  const shouldSelectAllModels = isModelNameFilter && defaultValue === undefined;
+  const defaultValues = Array.isArray(defaultValue)
+    ? defaultValue
+    : defaultValue === undefined
+      ? []
+      : [defaultValue];
+  const selectedValues = isModelNameFilter
+    ? options.filter(
+        ({ id }) => shouldSelectAllModels || defaultValues.includes(String(id))
       )
-    : undefined;
+    : savePreferences
+      ? options.filter(({ id }) => defaultValues.includes(String(id)))
+      : undefined;
 
   handleSelectionChange(
     filterKey,

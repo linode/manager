@@ -4105,6 +4105,14 @@ export const handlers = [
           },
         }),
         serviceTypesFactory.build({
+          label: 'AI Inference',
+          service_type: 'ai',
+          alert: {
+            evaluation_period_seconds: [300, 600],
+            polling_interval_seconds: [300, 600],
+          },
+        }),
+        serviceTypesFactory.build({
           label: 'Nodebalancers',
           service_type: 'nodebalancer',
           regions: 'us-iad,us-east',
@@ -4159,6 +4167,7 @@ export const handlers = [
     const serviceType = params.serviceType as CloudPulseServiceType;
     const serviceTypesMap: Record<CloudPulseServiceType, string> = {
       ai: 'AI',
+      inference: 'AI Inference',
       linode: 'Linode',
       dbaas: 'Databases',
       nodebalancer: 'NodeBalancers',
@@ -4195,6 +4204,27 @@ export const handlers = [
           id: 1,
           label: 'DBaaS Dashboard',
           service_type: 'dbaas',
+          widgets: [
+            widgetFactory.build({
+              label: 'CPU utilization',
+              metric: 'system_cpu_utilization_percent',
+              unit: '%',
+              group_by: ['entity_id'],
+              y_label: 'system_cpu_utilization_ratio',
+              description:
+                'Percentage of the available CPU capacity used by the Linode hosting the database.',
+            }),
+          ],
+        })
+      );
+    }
+
+    if (params.serviceType === 'ai') {
+      response.data.push(
+        dashboardFactory.build({
+          id: 12,
+          label: 'AI Inference Dashboard',
+          service_type: 'ai',
           widgets: [
             widgetFactory.build({
               label: 'CPU utilization',
@@ -4801,6 +4831,223 @@ export const handlers = [
     return HttpResponse.json(response);
   }),
 
+  http.get('*/inference/api-keys', () => {
+    const response = [
+      {
+        id: 3211,
+        key: '[REDACTED]',
+        key_prefix: 'sk_pg_9f5vme',
+        key_type: 'playground',
+        label: 'playground-dszlajnd_devcloud-73897dbd',
+        description: '',
+        scopes: ['*'],
+        rate_limit: {
+          requests_per_minute: -1,
+          tokens_per_day: -1,
+        },
+        allowed_models: ['qwen3-4b'],
+        allowed_ips: ['0.0.0.0/0'],
+        status: 'expired',
+        created: '2026-08-31T14:31:45Z',
+        updated: '2026-08-31T14:46:23Z',
+        expiry: '2026-08-31T14:46:45Z',
+        last_used: '2026-08-31T14:46:23Z',
+      },
+      {
+        id: 2442,
+        key: '[REDACTED]',
+        key_prefix: 'sk_aka_lfkXSl',
+        key_type: 'user',
+        label: '456789cvbnjkdfjhdf63j~~!@#$%^&*',
+        description: 'test label',
+        scopes: ['*'],
+        rate_limit: {
+          requests_per_minute: -1,
+          tokens_per_day: -1,
+        },
+        allowed_models: ['*'],
+        allowed_ips: ['0.0.0.0/0'],
+        status: 'revoked',
+        created: '2026-08-19T14:04:27Z',
+        updated: '2026-08-19T14:06:26Z',
+        expiry: '2026-11-19T14:04:26Z',
+        last_used: null,
+      },
+      {
+        id: 2441,
+        key: '[REDACTED]',
+        key_prefix: 'sk_aka_IXobr1',
+        key_type: 'user',
+        label: 'apikeyaug19',
+        description: 'apikeyaug19',
+        scopes: ['*'],
+        rate_limit: {
+          requests_per_minute: -1,
+          tokens_per_day: -1,
+        },
+        allowed_models: ['*'],
+        allowed_ips: ['0.0.0.0/0'],
+        status: 'active',
+        created: '2026-08-19T13:51:50Z',
+        updated: '2026-08-19T13:51:50Z',
+        expiry: '2027-02-19T13:51:49Z',
+        last_used: null,
+      },
+      {
+        id: 1215,
+        key: '[REDACTED]',
+        key_prefix: 'sk_aka_ZUPC2F',
+        key_type: 'user',
+        label: 'test_apikey',
+        description: 'kk test',
+        scopes: ['*'],
+        rate_limit: {
+          requests_per_minute: -1,
+          tokens_per_day: -1,
+        },
+        allowed_models: ['*'],
+        allowed_ips: ['0.0.0.0/0'],
+        status: 'active',
+        created: '2026-08-06T12:29:40Z',
+        updated: '2026-08-06T12:29:40Z',
+        expiry: '2027-02-06T12:29:39Z',
+        last_used: null,
+      },
+      {
+        id: 942,
+        key: '[REDACTED]',
+        key_prefix: 'sk_pg_aVggux',
+        key_type: 'playground',
+        label: 'playground-shkaruna-aclp-528ca696',
+        description: '',
+        scopes: ['*'],
+        rate_limit: {
+          requests_per_minute: -1,
+          tokens_per_day: -1,
+        },
+        allowed_models: ['*'],
+        allowed_ips: ['0.0.0.0/0'],
+        status: 'revoked',
+        created: '2026-08-04T02:55:58Z',
+        updated: '2026-08-21T04:40:35Z',
+        expiry: '2026-08-04T03:10:58Z',
+        last_used: '2026-08-04T03:10:44Z',
+      },
+    ];
+
+    return HttpResponse.json(makeResourcePage(response));
+  }),
+
+  http.get('*/inference/models', () => {
+    const response = [
+      {
+        id: 'gemma-4-26b-a4b-it',
+        label: 'Gemma 4 26B A4B IT',
+        provider: {
+          id: 'google',
+          name: 'Google',
+        },
+        description:
+          "Google's Gemma 4 26B parameter instruction-tuned model with extended context window support up to 262K tokens.",
+        type: 'text-generation',
+        use_cases: ['chatbots', 'content-generation', 'long-context'],
+        modalities: {
+          input: ['text'],
+          output: ['text'],
+        },
+        capabilities: ['chat', 'completion'],
+        parameters: {
+          parameter_count_billions: 26,
+          context_window: 262144,
+          max_output_tokens: 8192,
+        },
+        playground_available: true,
+        regions: ['us-ord', 'us-sea', 'eu-mil'],
+        lifecycle_status: 'active',
+        tags: ['instruction-tuned', 'long-context'],
+      },
+      {
+        id: 'qwen3-4b',
+        label: 'Qwen3 4B Instruct',
+        provider: {
+          id: 'qwen',
+          name: 'Qwen',
+        },
+        description:
+          'Qwen3 4B parameter instruction-tuned model for efficient chat and content generation.',
+        type: 'text-generation',
+        use_cases: ['chatbots', 'content-generation'],
+        modalities: {
+          input: ['text'],
+          output: ['text'],
+        },
+        capabilities: ['chat', 'completion'],
+        parameters: {
+          parameter_count_billions: 4,
+          context_window: 32768,
+          max_output_tokens: 4096,
+        },
+        playground_available: true,
+        regions: ['us-ord', 'us-sea', 'eu-mil', 'eu-mad'],
+        lifecycle_status: 'active',
+        tags: ['efficient', 'instruction-tuned'],
+      },
+      {
+        id: 'qwen3-8b',
+        label: 'Qwen3 8B',
+        provider: {
+          id: 'qwen',
+          name: 'Qwen',
+        },
+        description:
+          'Qwen3 8B parameter model optimized for general-purpose text generation and chat applications.',
+        type: 'text-generation',
+        use_cases: ['chatbots', 'code-assistance', 'summarization'],
+        modalities: {
+          input: ['text'],
+          output: ['text'],
+        },
+        capabilities: ['chat', 'completion'],
+        parameters: {
+          parameter_count_billions: 8,
+          context_window: 32768,
+          max_output_tokens: 4096,
+        },
+        playground_available: true,
+        regions: ['us-ord', 'us-sea', 'eu-mil'],
+        lifecycle_status: 'active',
+        tags: ['general-purpose'],
+      },
+      {
+        id: 'qwen3-embedding-4b',
+        label: 'Qwen3 Embedding 4B',
+        provider: {
+          id: 'qwen',
+          name: 'Qwen',
+        },
+        description:
+          'Qwen3 4B parameter embedding model for text vectorization and semantic search.',
+        type: 'text-embedding',
+        use_cases: ['rag', 'semantic-search'],
+        modalities: {
+          input: ['text'],
+          output: ['embedding'],
+        },
+        capabilities: ['embedding'],
+        parameters: {
+          parameter_count_billions: 4,
+          context_window: 8192,
+          max_output_tokens: null,
+        },
+        playground_available: false,
+        regions: ['us-ord', 'us-sea'],
+        lifecycle_status: 'active',
+        tags: ['embedding', 'rag'],
+      },
+    ];
+    return HttpResponse.json(makeResourcePage(response));
+  }),
+
   http.get('*/monitor/dashboards/:id', ({ params }) => {
     let serviceType: string;
     let dashboardLabel: string;
@@ -4808,7 +5055,41 @@ export const handlers = [
 
     const id = params.id;
 
-    if (id === '1') {
+    if (id === '12') {
+      serviceType = 'ai';
+      dashboardLabel = 'AI Inference Dashboard';
+      widgets = [
+        {
+          metric: 'cpu_usage',
+          unit: '%',
+          label: 'CPU Usage',
+          color: 'default',
+          size: 12,
+          chart_type: 'area',
+          y_label: 'cpu_usage',
+          group_by: ['entity_id'],
+          aggregate_function: 'avg',
+          description:
+            'Percentage of the available CPU capacity used by the Linode hosting the database.',
+        },
+        {
+          metric: 'memory_usage',
+          unit: '%',
+          label: 'Memory Usage',
+          color: 'default',
+          size: 6,
+          chart_type: 'area',
+          y_label: 'memory_usage',
+          group_by: ['entity_id'],
+          aggregate_function: 'avg',
+          // intentionally add empty lines to the string to test/view the trimming behaviour.
+          description: `Number of available entries in the firewall’s connection table recorded each minute, showing how many more TCP, UDP, ICMP, and IPencap flows can be tracked.
+
+
+Number of available entries in the firewall’s connection table recorded each minute, showing how many more traffic flows can be tracked.`,
+        },
+      ];
+    } else if (id === '1') {
       serviceType = 'dbaas';
       dashboardLabel = 'DBaaS Service I/O Statistics';
       widgets = [

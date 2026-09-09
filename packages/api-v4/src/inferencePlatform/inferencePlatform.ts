@@ -109,6 +109,22 @@ export const getInferenceModels = () =>
   );
 
 /**
+ * getInferenceModelsResourcePage
+ *
+ * Returns a paginated list of API keys for the Inference Platform.
+ */
+export const getInferenceModelsResourcePage = (
+  params?: Params,
+  filter?: Filter,
+) =>
+  Request<ResourcePage<InferenceModelsResponse>>(
+    setURL(`${BETA_API_ROOT}/inference/models`),
+    setMethod('GET'),
+    setParams(params),
+    setXFilter(filter),
+  );
+
+/**
  * getInferenceUsage
  *
  * Returns usage statistics for the Inference Platform.

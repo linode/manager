@@ -27,6 +27,7 @@ export interface CloudPulseResources {
   entities?: Record<string, string>;
   id: string;
   label: string;
+  model_name?: string[];
   region?: string;
   tags?: string[];
   volumeLinodeId?: string;
@@ -124,7 +125,9 @@ export const CloudPulseResourcesSelect = React.memo(
       const obj = flags.aclpResourceTypeMap?.find(
         (item) => item.serviceType === resourceType
       );
-      return obj?.maxResourceSelections || 10;
+      return (
+        obj?.maxResourceSelections || (resourceType !== 'ai' ? 10 : Infinity)
+      );
     }, [resourceType, flags.aclpResourceTypeMap]);
 
     const resourcesLimitReached = React.useMemo(() => {
@@ -137,13 +140,21 @@ export const CloudPulseResourcesSelect = React.memo(
         return;
       }
       // To save default values, go through side effects if disabled is false
-      if (resources && savePreferences && !selectedResources) {
+      if (
+        resources &&
+        (savePreferences || resourceType === 'inference') &&
+        !selectedResources
+      ) {
+        const hasDefaultResources =
+          savePreferences && defaultValue !== undefined;
         const defaultResources =
           defaultValue && Array.isArray(defaultValue)
             ? defaultValue.map((resource) => String(resource))
             : [];
         const resource = getResourcesList.filter((resource) =>
-          defaultResources.includes(String(resource.id))
+          hasDefaultResources
+            ? defaultResources.includes(String(resource.id))
+            : resourceType === 'inference'
         );
 
         handleResourcesSelection(resource);
@@ -187,7 +198,9 @@ export const CloudPulseResourcesSelect = React.memo(
         disableSelectAll={resourcesLimitReached} // Select_All option will not be available if number of resources are higher than resource selection limit
         errorText={isError ? `Failed to fetch ${label || 'Resources'}.` : ''}
         helperText={
-          !isError ? `Select up to ${maxResourceSelectionLimit} ${label}` : ''
+          !isError && resourceType !== 'inference'
+            ? `Select up to ${maxResourceSelectionLimit} ${label}`
+            : ''
         }
         isOptionEqualToValue={(option, value) => option.id === value.id}
         label={label || 'Resources'}

@@ -99,7 +99,7 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
   const { preferences } = useAclpPreference();
 
   const getJweTokenPayload = (): JWETokenPayLoad => {
-    if (serviceType === 'objectstorage') {
+    if (serviceType === 'objectstorage' || serviceType === 'inference') {
       return {};
     }
     return {

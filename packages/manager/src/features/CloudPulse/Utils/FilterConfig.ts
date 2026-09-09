@@ -1,4 +1,5 @@
 import { capabilityServiceTypeMapping } from '@linode/api-v4';
+import { getAllInferenceModels } from '@linode/queries';
 
 import { queryFactory } from 'src/queries/cloudpulse/queries';
 
@@ -682,6 +683,54 @@ export const LOGS_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
   ],
   serviceType: 'logs',
 };
+
+export const AI_INFERENCE_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
+  capability: capabilityServiceTypeMapping['inference'],
+  filters: [
+    {
+      configuration: {
+        filterKey: 'model_name',
+        children: ['resource_id'],
+        filterType: 'string',
+        isFilterable: true,
+        isMetricsFilter: false,
+        isMultiSelect: true,
+        name: 'Model Names',
+        neededInViews: [
+          CloudPulseAvailableViews.central,
+          CloudPulseAvailableViews.service,
+        ],
+        placeholder: 'Select Model Names',
+        type: CloudPulseSelectTypes.dynamic,
+        apiV4QueryKey: {
+          queryFn: () => getAllInferenceModels(),
+          queryKey: ['all'],
+        },
+        priority: 2,
+      },
+      name: 'Model Names',
+    },
+    {
+      configuration: {
+        dependency: ['model_name'],
+        filterKey: 'resource_id',
+        filterType: 'string',
+        isFilterable: true,
+        isMetricsFilter: true,
+        isMultiSelect: true,
+        name: 'API Keys',
+        neededInViews: [
+          CloudPulseAvailableViews.central,
+          CloudPulseAvailableViews.service,
+        ],
+        placeholder: 'Select API Keys',
+        priority: 2,
+      },
+      name: 'API Keys',
+    },
+  ],
+  serviceType: 'ai',
+};
 export const FILTER_CONFIG: Readonly<
   Map<number, CloudPulseServiceTypeFilterMap>
 > = new Map([
@@ -696,6 +745,7 @@ export const FILTER_CONFIG: Readonly<
   [9, LKE_CONFIG],
   [10, ENDPOINT_DASHBOARD_CONFIG],
   [11, LOGS_CONFIG],
+  [12, AI_INFERENCE_CONFIG],
 ]);
 
 /**

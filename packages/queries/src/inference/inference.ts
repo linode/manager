@@ -7,6 +7,7 @@ import {
   revokeApiKey,
   updateApiKey,
 } from '@linode/api-v4';
+import { getInferenceModelsResourcePage } from '@linode/api-v4';
 import { getAll } from '@linode/utilities';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import {
@@ -36,6 +37,17 @@ import type {
 const getAllApiKeys = (passedParams: Params = {}, passedFilter: Filter = {}) =>
   getAll<ApiKey>((params, filter) =>
     getApiKeys({ ...params, ...passedParams }, { ...filter, ...passedFilter }),
+  )().then((data) => data.data);
+
+export const getAllInferenceModels = (
+  passedParams: Params = {},
+  passedFilter: Filter = {},
+) =>
+  getAll<InferenceModelsResponse>((params, filter) =>
+    getInferenceModelsResourcePage(
+      { ...params, ...passedParams },
+      { ...filter, ...passedFilter },
+    ),
   )().then((data) => data.data);
 
 export const inferenceQueries = createQueryKeys('inference', {

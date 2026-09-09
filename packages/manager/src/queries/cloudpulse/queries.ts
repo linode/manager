@@ -13,6 +13,7 @@ import {
   deliveryQueries,
   firewallQueries,
   getAllLinodesRequest,
+  inferenceQueries,
   networkLoadBalancerQueries,
   nodebalancerQueries,
   volumeQueries,
@@ -152,6 +153,8 @@ export const queryFactory = createQueryKeys(key, {
         return databaseQueries.databases._ctx.all(params, filters);
       case 'firewall':
         return firewallQueries.firewalls._ctx.all(params, filters);
+      case 'inference':
+        return inferenceQueries.allApiKeys();
       case 'linode':
         return {
           queryFn: () => getAllLinodesRequest(params, filters), // since we don't have query factory implementation, in linodes.ts, once it is ready we will reuse that, untill then we will use same query keys

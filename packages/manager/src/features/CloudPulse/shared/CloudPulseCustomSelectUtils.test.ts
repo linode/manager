@@ -119,3 +119,74 @@ it('test getInitialDefaultSelections method for multi selection', () => {
   expect(result).toEqual(undefined);
   expect(handleSelectionChange).toBeCalledTimes(2);
 });
+
+it('defaults model names to all options without a saved preference', () => {
+  const handleSelectionChange = vi.fn();
+  const options: CloudPulseServiceTypeFiltersOptions[] = [
+    { id: 'model-1', label: 'Model 1' },
+    { id: 'model-2', label: 'Model 2' },
+  ];
+
+  const result = getInitialDefaultSelections({
+    filterKey: 'model_name',
+    handleSelectionChange,
+    isMultiSelect: true,
+    options,
+    savePreferences: true,
+  });
+
+  expect(result).toEqual(options);
+  expect(handleSelectionChange).toHaveBeenCalledWith(
+    'model_name',
+    ['model-1', 'model-2'],
+    ['Model 1', 'Model 2']
+  );
+});
+
+it('honors saved model-name preferences', () => {
+  const handleSelectionChange = vi.fn();
+  const options: CloudPulseServiceTypeFiltersOptions[] = [
+    { id: 'model-1', label: 'Model 1' },
+    { id: 'model-2', label: 'Model 2' },
+  ];
+
+  const result = getInitialDefaultSelections({
+    defaultValue: ['model-2'],
+    filterKey: 'model_name',
+    handleSelectionChange,
+    isMultiSelect: true,
+    options,
+    savePreferences: true,
+  });
+
+  expect(result).toEqual([options[1]]);
+  expect(handleSelectionChange).toHaveBeenCalledWith(
+    'model_name',
+    ['model-2'],
+    ['Model 2']
+  );
+});
+
+it('honors saved model-name preferences when saving is disabled', () => {
+  const handleSelectionChange = vi.fn();
+  const options: CloudPulseServiceTypeFiltersOptions[] = [
+    { id: 'model-1', label: 'Model 1' },
+    { id: 'model-2', label: 'Model 2' },
+  ];
+
+  const result = getInitialDefaultSelections({
+    defaultValue: ['model-1'],
+    filterKey: 'model_name',
+    handleSelectionChange,
+    isMultiSelect: true,
+    options,
+    savePreferences: false,
+  });
+
+  expect(result).toEqual([options[0]]);
+  expect(handleSelectionChange).toHaveBeenCalledWith(
+    'model_name',
+    ['model-1'],
+    ['Model 1']
+  );
+});
