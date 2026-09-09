@@ -10,17 +10,13 @@ import { IncludedUsersPanel } from './IncludedUsersPanel';
 import type { EnforcementSettingsFormValues } from './EnforcementSettings';
 
 const queryMocks = vi.hoisted(() => ({
-  useAllAccountUsersQuery: vi.fn().mockReturnValue({}),
+  useAccountUsersSearch: vi.fn().mockReturnValue({}),
   usePermissions: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('@linode/queries', async () => {
-  const actual = await vi.importActual('@linode/queries');
-  return {
-    ...actual,
-    useAllAccountUsersQuery: queryMocks.useAllAccountUsersQuery,
-  };
-});
+vi.mock('../../../hooks/useAccountUsersSearch', () => ({
+  useAccountUsersSearch: queryMocks.useAccountUsersSearch,
+}));
 
 vi.mock('../../../hooks/usePermissions', async () => {
   const actual = await vi.importActual('../../../hooks/usePermissions');
@@ -54,10 +50,15 @@ describe('IncludedUsersPanel', () => {
     queryMocks.usePermissions.mockReturnValue({
       data: { view_user: true },
     });
-    queryMocks.useAllAccountUsersQuery.mockReturnValue({
-      data: [{ username: 'user1' }, { username: 'user2' }],
+    queryMocks.useAccountUsersSearch.mockReturnValue({
       error: null,
+      fetchNextPage: vi.fn(),
+      hasNextPage: false,
+      isFetching: false,
+      isFetchingNextPage: false,
       isLoading: false,
+      isPendingSearch: false,
+      users: [{ username: 'user1' }, { username: 'user2' }],
     });
   });
 

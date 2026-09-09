@@ -7,13 +7,11 @@ import {
   Tooltip,
 } from '@akamai/cds-components/react';
 import { Spacing, Typography } from '@akamai/cds-tokens';
-import { useAllAccountUsersQuery } from '@linode/queries';
-import { getAPIFilterFromQuery } from '@linode/search';
 import * as React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
+import { useAccountUsersSearch } from '../../../hooks/useAccountUsersSearch';
 import { useBreakpoint } from '../../../hooks/useBreakpoint';
-import { useDebouncedValue } from '../../../hooks/useDebouncedValue';
 import { useDelegationRole } from '../../../hooks/useDelegationRole';
 import { usePermissions } from '../../../hooks/usePermissions';
 import { useTagInputCloseHandler } from '../../../hooks/useTagInputCloseHandler';
@@ -88,34 +86,36 @@ export const IncludedUsersPanel = ({ includedUsers }: Props) => {
   ]);
   const [usernameInput, setUsernameInput] = React.useState<string>('');
 
-  const debouncedUsernameInput = useDebouncedValue(usernameInput);
-
-  const { error: searchError, filter } = getAPIFilterFromQuery(
-    debouncedUsernameInput,
-    {
-      searchableFieldsWithoutOperator: ['username', 'email'],
-    }
-  );
-
-  // TODO - CDS: UIE-11455: replace with useAccountUsersInfiniteQuery when tag input supports infinite loading
   const {
-    data: users,
     error,
+    fetchNextPage,
+    hasNextPage,
+    isFetching,
+    isFetchingNextPage,
     isLoading,
-  } = useAllAccountUsersQuery(permissions?.view_user, {
-    ...filter,
-    ...(isChildUserType
-      ? {
-          user_type: 'child',
-        }
-      : {}),
-    '+order': 'asc',
-    '+order_by': 'username',
+    isPendingSearch,
+    users,
+  } = useAccountUsersSearch({
+    enabled: permissions?.view_user,
+    extraFilter: isChildUserType ? { user_type: 'child' } : undefined,
+    search: usernameInput,
   });
 
+  const isLoadingUsers =
+    isPendingSearch ||
+    isLoading ||
+    isFetchingNextPage ||
+    (isFetching && users.length === 0);
+
   const userOptions = React.useMemo(() => {
-    return users?.map((user) => user.username);
+    return users.map((user) => user.username);
   }, [users]);
+
+  const handleLoadMore = () => {
+    if (hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  };
 
   const tagInputValidFn = (item: string) => !excludedUsers.includes(item);
 
@@ -167,14 +167,15 @@ export const IncludedUsersPanel = ({ includedUsers }: Props) => {
                 data-pendo-id={IAM_SSO_ENFORCE_PENDO_IDS.includedUsers}
                 disabled={!permissions?.update_idp_config_user_includes}
                 filterFn={() => true}
-                isError={Boolean(searchError || error)}
-                isLoading={isLoading}
-                items={userOptions ?? []}
-                loadingErrorLabel={searchError?.message || ERROR_STATE_TITLE}
+                isError={Boolean(error)}
+                isLoading={isLoadingUsers}
+                items={userOptions}
+                loadingErrorLabel={error?.[0]?.reason || ERROR_STATE_TITLE}
                 onChange={(e) => {
                   field.onChange(e.detail);
                   trigger(['includedUsers', 'excludedUsers']);
                 }}
+                onLoadMore={handleLoadMore}
                 onSearchChange={(e) => setUsernameInput(e.detail)}
                 placeholder="Search by name or email or select from the list"
                 ref={tagInputRef}

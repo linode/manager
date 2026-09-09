@@ -104,7 +104,10 @@ export const AssignSelectedRolesDrawer = ({
 
   const isSearching = usernameInput.trim().length > 0;
   const isLoadingAccountUsers =
-    isPendingSearch || isLoading || (isFetching && accountUsers.length === 0);
+    isPendingSearch ||
+    isLoading ||
+    isFetchingNextPage ||
+    (isFetching && accountUsers.length === 0);
 
   const userOptions = useMemo<UserOption[]>(() => {
     return accountUsers.map((user) => ({
