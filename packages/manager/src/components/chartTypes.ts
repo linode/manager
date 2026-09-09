@@ -285,7 +285,7 @@ export interface BaseChartProps {
   /**
    * Variant of the chart. For AreaChart, it can be 'area' or 'line'. For BarChart, it can be 'normal' or 'stacked'.
    */
-  variant?: 'area' | 'line' | 'normal' | 'stacked';
+  variant?: 'area' | 'bar' | 'line' | 'stacked-bar';
 
   /**
    * The width of chart container.

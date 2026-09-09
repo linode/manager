@@ -268,6 +268,7 @@ export const RenderWidgets = React.memo(
                   region={region}
                   resources={resourceList!}
                   savePref={savePref}
+                  showNonTableLegend={!widget.legacy_legend}
                 />
               );
             } else {

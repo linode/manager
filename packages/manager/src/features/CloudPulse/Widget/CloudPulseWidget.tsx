@@ -38,8 +38,8 @@ import {
 } from '../Utils/utils';
 import { CloudPulseAggregateFunction } from './components/CloudPulseAggregateFunction';
 import { CloudPulseGraphPdfWrapper } from './components/CloudPulseGraphPdfWrapper';
+import { CloudPulseGraphPicker } from './components/CloudPulseGraphPicker';
 import { CloudPulseIntervalSelect } from './components/CloudPulseIntervalSelect';
-import { CloudPulseLineGraph } from './components/CloudPulseLineGraph';
 import { CloudPulseDimensionFiltersSelect } from './components/DimensionFilters/CloudPulseDimensionFiltersSelect';
 import { ZoomIcon } from './components/Zoomer';
 import { CloudPulseWidgetCSVDownloader } from './csv/CloudPulseWidgetCSVDownloader';
@@ -57,8 +57,7 @@ import type {
   TimeGranularity,
   Widgets,
 } from '@linode/api-v4';
-import type { DataSet } from 'src/components/AreaChart/AreaChart';
-import type { DataPlot } from 'src/components/chartTypes';
+import type { DataPlot, DataSet } from 'src/components/chartTypes';
 import type { MetricsDisplayRow } from 'src/components/LineGraph/MetricsDisplay';
 
 export interface CloudPulseWidgetProperties {
@@ -138,14 +137,19 @@ export interface CloudPulseWidgetProperties {
   serviceType: CloudPulseServiceType;
 
   /**
+   * Flag to indicate whether to show the non-table legend in the widget
+   */
+  showNonTableLegend?: boolean;
+
+  /**
    * optional timestamp to pass as react query param to forcefully re-fetch data
    */
   timeStamp?: number;
-
   /**
    * this should come from dashboard, which maintains map for service types in a separate API call
    */
   unit: string;
+
   /**
    * color index to be selected from available them if not theme is provided by user
    */
@@ -206,6 +210,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     linodeRegion,
     dashboardId,
     region,
+    showNonTableLegend = false,
   } = props;
   const [dimensionFilters, setDimensionFilters] = React.useState<
     MetricsDimensionFilter[] | undefined
@@ -746,7 +751,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
                 </Box>
               </Stack>
             </Stack>
-            <CloudPulseLineGraph
+            <CloudPulseGraphPicker
               areas={areas}
               ariaLabel={ariaLabel ? ariaLabel : ''}
               data={data}
@@ -758,7 +763,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
                   : undefined
               }
               height={424}
-              legendRows={legendRows}
+              legendRows={showNonTableLegend ? undefined : legendRows}
               loading={widgetLoading} // keep loading until we are trying to fetch the refresh token
               onHiddenDataPlotChanges={onHiddenAreasChange}
               onZoomChange={handleZoomStateChange}

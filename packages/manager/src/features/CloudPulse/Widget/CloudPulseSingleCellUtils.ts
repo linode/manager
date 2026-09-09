@@ -6,6 +6,7 @@ import {
 import type {
   CloudPulseMetricsResponse,
   DateTimeWithPreset,
+  MetricAggregationType,
 } from '@linode/api-v4';
 import type { ChartData } from 'src/components/SingleKpiChart';
 
@@ -16,7 +17,7 @@ import type { ChartData } from 'src/components/SingleKpiChart';
  */
 export const calculateAggregatedValue = (
   data: ChartData[] | undefined,
-  aggFunction?: string
+  aggFunction?: MetricAggregationType
 ): number => {
   if (!data || data.length === 0) {
     return 0;
@@ -28,6 +29,10 @@ export const calculateAggregatedValue = (
     case 'avg': {
       const sum = data.reduce((acc, curr) => acc + (curr.value ?? 0), 0);
       return sum / data.length;
+    }
+
+    case 'count': {
+      return data.length;
     }
 
     case 'max': {

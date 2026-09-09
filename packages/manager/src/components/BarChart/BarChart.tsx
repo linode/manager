@@ -5,6 +5,7 @@ import {
   Bar,
   CartesianGrid,
   Legend,
+  Rectangle,
   ReferenceArea,
   ResponsiveContainer,
   Tooltip,
@@ -25,6 +26,45 @@ import { useBarChartInteractions } from './useBarChartInteractions';
 
 import type { BaseChartProps } from '../chartTypes';
 import type { MouseHandlerDataParam } from 'recharts';
+
+interface TooltipCursorProps {
+  /**
+   * The fill color of the tooltip cursor rectangle.
+   */
+  fill: string;
+  /**
+   * The height of the tooltip cursor rectangle.
+   */
+  height?: number;
+  /**
+   * The width of the tooltip cursor rectangle.
+   */
+  width?: number;
+  /**
+   * The x-coordinate of the tooltip cursor rectangle.
+   */
+  x?: number;
+  /**
+   * The y-coordinate of the tooltip cursor rectangle.
+   */
+  y?: number;
+}
+
+// Narrows the default tooltip cursor rectangle (which spans the full category band, including bar gaps) down to the bar's own width
+const TooltipCursor = React.memo((props: TooltipCursorProps) => {
+  const { fill, height = 0, width = 0, x = 0, y = 0 } = props;
+  const cursorWidth = Math.min(width, 100);
+  return (
+    <Rectangle
+      fill={fill}
+      fillOpacity={0.5}
+      height={height}
+      width={cursorWidth}
+      x={x + (width - cursorWidth) / 2}
+      y={y}
+    />
+  );
+});
 
 /**
  * Renders a bar chart with a timestamp-based (time scale) x-axis. Not meant to be consumed directly —
@@ -167,7 +207,13 @@ export const BarChart = (props: BaseChartProps) => {
           contentStyle={{
             color: theme.tokens.color.Neutrals[70],
           }}
-          cursor={isTooltipVisible} // disable the cursor when tooltip is not visible, because when tooltip is not visible, we don't want the cursor to be shown on hover
+          cursor={
+            isTooltipVisible ? (
+              <TooltipCursor fill={theme.color.grey1} />
+            ) : (
+              false
+            )
+          } // disable the cursor when tooltip is not visible, because when tooltip is not visible, we don't want the cursor to be shown on hover
           itemStyle={{
             color: theme.tokens.color.Neutrals[70],
             font: theme.font.bold,
@@ -219,6 +265,7 @@ export const BarChart = (props: BaseChartProps) => {
                 ? {
                     onClick: () => onActiveDotClick?.(dataKey),
                     onMouseEnter: () => onActiveDotMouseEnter?.(dataKey),
+                    onMouseMove: () => onActiveDotMouseEnter?.(dataKey),
                     onMouseLeave: () => onActiveDotMouseLeave?.(),
                   }
                 : false
@@ -228,7 +275,8 @@ export const BarChart = (props: BaseChartProps) => {
             hide={activeSeries.includes(dataKey)}
             isAnimationActive={false}
             key={dataKey}
-            stackId={variant === 'stacked' ? 'same-stack' : stackId} // if variant is stacked, we want all bars to be stacked together, so we give them the same stackId, otherwise we use the provided stackId
+            maxBarSize={75}
+            stackId={variant === 'stacked-bar' ? 'same-stack' : stackId} // if variant is stacked, we want all bars to be stacked together, so we give them the same stackId, otherwise we use the provided stackId
             stroke={color}
             zIndex={1000} // the x-axis and y-axis have z-index of 500, so we need higher z-index for the area to be above the axes in 3.8.1
           />

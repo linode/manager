@@ -92,12 +92,14 @@ export interface Widgets {
   filters: Filters[];
   group_by?: string[];
   label: string;
+  legacy_legend?: boolean;
   metric: string;
   namespace_id: number;
   region_id: number;
   service_type: CloudPulseServiceType;
   serviceType: CloudPulseServiceType;
   size: number;
+  summary_level_aggregate_function?: MetricAggregationType;
   time_duration: TimeDuration;
   time_granularity: TimeGranularity;
   unit: string;

@@ -4,7 +4,6 @@ import { useMediaQuery } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import * as React from 'react';
 
-import { AreaChart } from 'src/components/AreaChart/AreaChart';
 import { useFlags } from 'src/hooks/useFlags';
 import { themes } from 'src/utilities/theme';
 
@@ -15,6 +14,7 @@ import {
   computeZoomedInData,
 } from '../../Utils/CloudPulseZoomInUtils';
 import { humanizeLargeData } from '../../Utils/utils';
+import { CloudPulseGraphPicker } from './CloudPulseGraphPicker';
 
 import type { CloudPulseGraphPickerProps } from './chartTypes';
 
@@ -71,7 +71,7 @@ export const CloudPulseGraphPdfWrapper = React.memo(
       errorText,
       zoomRange,
       loading,
-      areas,
+      areas: areas,
       resourceLabels,
       hiddenLegendRows,
       ...rest
@@ -163,7 +163,7 @@ export const CloudPulseGraphPdfWrapper = React.memo(
           ref={containerRef}
           style={{ width: '100%', height: '100%' }}
         >
-          <AreaChart
+          <CloudPulseGraphPicker
             {...rest}
             areas={filteredAreas}
             ariaLabel={`${widgetLabel}-pdf`}
@@ -184,6 +184,7 @@ export const CloudPulseGraphPdfWrapper = React.memo(
                 : undefined
             }
             unit={unit}
+            widgetLabel={widgetLabel}
             xAxisTickCount={
               isSmallScreen ? undefined : Math.min(zoomedData.length, 7)
             }

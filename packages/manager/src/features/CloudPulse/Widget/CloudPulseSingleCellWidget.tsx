@@ -76,9 +76,9 @@ export const CloudPulseSingleCellWidget = React.memo(
 
       return calculateAggregatedValue(
         singleMetricChartData,
-        widget.aggregate_function
+        widget.summary_level_aggregate_function
       );
-    }, [singleMetricChartData, widget.aggregate_function]);
+    }, [singleMetricChartData, widget.summary_level_aggregate_function]);
 
     const periodLabel = React.useMemo(
       () => getWidgetPeriodLabel(duration, singleMetricChartData),
