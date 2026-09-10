@@ -405,17 +405,15 @@ export const RolesTable = ({ roles = [] }: Props) => {
             )}
           </TableBody>
         </Table>
-        {sortedRows.length !== 0 && sortedRows.length > DEFAULT_PAGE_SIZE && (
-          <Pagination
-            count={sortedRows.length}
-            itemsLabel="Roles"
-            onPageChange={handlePageChange}
-            onPageSizeChange={handlePageSizeChange}
-            page={pagination.page}
-            pageSize={pagination.pageSize}
-            style={{ border: 0 }}
-          />
-        )}
+        <Pagination
+          count={sortedRows.length}
+          itemsLabel="Roles"
+          onPageChange={handlePageChange}
+          onPageSizeChange={handlePageSizeChange}
+          page={pagination.page}
+          pageSize={pagination.pageSize}
+          style={{ border: 0 }}
+        />
       </Box>
       <AssignSelectedRolesDrawer
         onClose={() => setIsDrawerOpen(false)}
