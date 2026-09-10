@@ -122,3 +122,6 @@ export const NO_PERMISSIONS_TOOLTIP_TEXT = getRestrictedResourceText({
   isSingular: true,
   action: 'edit',
 });
+
+export const CUSTOM_IP_ADDRESS_NOTICE_TEXT =
+  'Node status and health checks are not available when using custom IP targets. Confirm that your target server is active and reachable.';

@@ -1,18 +1,23 @@
-import { NodeBalancerBackendConnectivity } from '@linode/api-v4';
-import { Autocomplete } from '@linode/ui';
+import { Autocomplete, Select } from '@linode/ui';
 import React, { useMemo } from 'react';
 
 import { useGetLinodeIPAndVPCData } from 'src/hooks/useDataForLinodesInVPC';
 import { useFlags } from 'src/hooks/useFlags';
 
 import {
+  getCustomIPOptions,
   getIPv6Options,
   getPrivateIPOptions,
   getVPCIPOptions,
+  useIsCustomIPCustomer,
 } from './ConfigNodeIPSelect.utils';
 import { ConfigNodeOption } from './ConfigNodeOption';
 
 import type { LinodeIPOption, VPCIPOption } from './ConfigNodeIPSelect.utils';
+import type {
+  NodeBalancerBackendConnectivity,
+  NodeBalancerType,
+} from '@linode/api-v4';
 
 interface Props {
   /**
@@ -44,6 +49,10 @@ interface Props {
    */
   nodeAddress: string | undefined;
   /**
+   * The NodeBalancer type
+   */
+  nodeBalancerType?: NodeBalancerType;
+  /**
    * The index of the config node in state
    */
   nodeIndex: number;
@@ -52,14 +61,27 @@ interface Props {
    * @note IPs won't load until a region is passed
    */
   region: string | undefined;
+
+  /**
+   * Function to set whether or not the notice about custom IPs should be shown
+   */
+  setShowCustomIPNotice: (show: boolean) => void;
   /**
    * The subnetID for which to load the available VPC IPs
    */
   subnetId?: number;
+
   /**
    * The vpcId for which to load available VPC IPs
    */
   vpcId?: number;
+}
+interface IPAddressSelectProps {
+  disabled?: boolean;
+  errorText: string | undefined;
+  label: string;
+  loading: boolean;
+  noOptionsText: string;
 }
 
 export type NodeOption = LinodeIPOption | VPCIPOption;
@@ -72,17 +94,22 @@ export const ConfigNodeIPSelect = React.memo((props: Props) => {
     handleChange,
     inputId,
     nodeAddress,
+    nodeBalancerType,
     nodeIndex,
     region,
     vpcId,
+    setShowCustomIPNotice,
     subnetId,
   } = props;
 
   const { premiumNodebalancer: isPremiumNodebalancerEnabled } = useFlags();
+
   const { linodes, error, isLoading, vpc, vpcIPs } = useGetLinodeIPAndVPCData({
     region,
     vpcId,
   });
+
+  const hasCustomIPCapability = useIsCustomIPCustomer();
 
   // When premium isn't enabled, connectivity is inferred from whether a VPC is selected.
   const inferredConnectivity = vpcId ? 'vpc' : 'legacy';
@@ -132,20 +159,51 @@ export const ConfigNodeIPSelect = React.memo((props: Props) => {
     } else return 'The selected subnet must have at least one Linode.';
   }, [vpcId, subnetId, connectivity]);
 
-  return (
+  const ipAddressSelectProps: IPAddressSelectProps = {
+    disabled,
+    errorText: errorText ?? error?.[0]?.reason,
+    label: 'IP Address',
+    loading: isLoading,
+    noOptionsText,
+  };
+
+  return hasCustomIPCapability &&
+    nodeBalancerType === 'premium' &&
+    connectivity === 'vpc' ? (
+    <Select
+      clearable
+      creatable
+      disabled={disabled}
+      onChange={(e, value) => {
+        const customIPOptions = getCustomIPOptions(vpcIPs);
+        handleChange(nodeIndex, value?.label ?? null);
+        if (
+          value &&
+          !customIPOptions.find((option) => option.label === value?.label)
+        ) {
+          setShowCustomIPNotice(true);
+        } else {
+          setShowCustomIPNotice(false);
+        }
+      }}
+      options={getCustomIPOptions(vpcIPs)}
+      textFieldProps={{
+        errorText: errorText ?? error?.[0]?.reason,
+        noMarginTop: true,
+      }}
+      {...ipAddressSelectProps}
+      placeholder="Select or enter a custom IP address"
+    />
+  ) : (
     <Autocomplete
       disabled={disabled}
-      errorText={errorText ?? error?.[0]?.reason}
       id={inputId}
-      label="IP Address"
-      loading={isLoading}
       noMarginTop
-      noOptionsText={noOptionsText}
       onChange={(e, value: NodeOption) =>
         handleChange(nodeIndex, value?.label ?? null, subnetId)
       }
       options={options}
-      placeholder="Enter IP Address"
+      placeholder="Enter IP address"
       renderOption={(props, option) => {
         const { key, ...rest } = props;
         return (
@@ -153,6 +211,7 @@ export const ConfigNodeIPSelect = React.memo((props: Props) => {
         );
       }}
       value={options.find((o) => o.label === nodeAddress) ?? null}
+      {...ipAddressSelectProps}
     />
   );
 });

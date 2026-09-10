@@ -468,6 +468,7 @@ export const NodeBalancerConfigPanel = (
                 }
                 nodeBalancerRegion={props.nodeBalancerRegion}
                 nodeBalancerSubnetId={props.nodeBalancerSubnetId}
+                nodeBalancerType={props.nodeBalancerType}
                 nodeBalancerVpcId={props.nodeBalancerVpcId}
                 onNodeAddressChange={props.onNodeAddressChange}
                 onNodeLabelChange={onNodeLabelChange}
@@ -478,17 +479,19 @@ export const NodeBalancerConfigPanel = (
                 removeNode={removeNode}
               />
             ))}
-            <Button
-              buttonType="outlined"
-              disabled={
-                forEdit
-                  ? !permissions?.create_nodebalancer_config
-                  : !permissions?.create_nodebalancer
-              }
-              onClick={addNode}
-            >
-              Add a Node
-            </Button>
+            <Grid size={12}>
+              <Button
+                buttonType="outlined"
+                disabled={
+                  forEdit
+                    ? !permissions?.create_nodebalancer_config
+                    : !permissions?.create_nodebalancer
+                }
+                onClick={addNode}
+              >
+                Add a Node
+              </Button>
+            </Grid>
           </Grid>
         </Grid>
       </Grid>

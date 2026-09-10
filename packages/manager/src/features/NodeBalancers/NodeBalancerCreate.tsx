@@ -927,6 +927,7 @@ const NodeBalancerCreate = () => {
                 }
                 nodeBalancerRegion={nodeBalancerFields.region}
                 nodeBalancerSubnetId={nodeBalancerFields?.vpcs?.[0].subnet_id}
+                nodeBalancerType={nodeBalancerFields.type}
                 nodeBalancerVpcId={vpcSelected?.id}
                 nodes={nodeBalancerFields.configs[idx].nodes}
                 onAlgorithmChange={onChange('algorithm')}

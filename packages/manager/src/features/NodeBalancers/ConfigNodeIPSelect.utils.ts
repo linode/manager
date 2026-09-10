@@ -1,6 +1,9 @@
-import { listToItemsByID } from '@linode/queries';
+import { listToItemsByID, useAccount } from '@linode/queries';
+
+import { useFlags } from 'src/hooks/useFlags';
 
 import type { Linode, Subnet, VPCIP } from '@linode/api-v4';
+import type { SelectOption } from '@linode/ui';
 
 export interface LinodeIPOption {
   /**
@@ -96,4 +99,46 @@ export const getIPv6Options = (linodes: Linode[] | undefined) => {
     }
   }
   return options;
+};
+
+/**
+ * Given an array of VPC IPs, this function returns an array of
+ * custom IP options intended to be used in a Select component for customers with Custom IP capability.
+ */
+export const getCustomIPOptions = (
+  vpcIps: undefined | VPCIP[]
+): SelectOption<string>[] => {
+  if (!vpcIps) {
+    return [];
+  }
+  const options: SelectOption<string>[] = [];
+
+  for (const ip of vpcIps) {
+    if (!ip.address) {
+      continue;
+    }
+
+    options.push({
+      label: ip.address,
+      value: ip.address,
+    });
+  }
+  return options;
+};
+/**
+ * React hook to determine if the current user has the "Custom VPC IPv4 Ranges" capability.
+ */
+export const useIsCustomIPCustomer = () => {
+  const { data: account, error } = useAccount();
+
+  const { nitro } = useFlags();
+
+  if (error) {
+    return false;
+  }
+
+  return (
+    (nitro && account?.capabilities?.includes('Custom VPC IPv4 Ranges')) ??
+    false
+  );
 };

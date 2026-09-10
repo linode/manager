@@ -4,6 +4,7 @@ import type {
   NodeBalancerBackendConnectivity,
   NodeBalancerConfigNode,
   NodeBalancerProxyProtocol,
+  NodeBalancerType,
   PermissionType,
   Protocol,
   Stickiness,
@@ -60,6 +61,7 @@ export interface NodeBalancerConfigPanelProps {
   nodeBalancerRegion?: string;
 
   nodeBalancerSubnetId?: number;
+  nodeBalancerType?: NodeBalancerType;
   nodeBalancerVpcId?: number;
   nodeMessage?: string;
   nodes: NodeBalancerConfigNodeFields[];

@@ -14,6 +14,7 @@ import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { ConfigNodeIPSelect } from './ConfigNodeIPSelect';
+import { CUSTOM_IP_ADDRESS_NOTICE_TEXT } from './constants';
 
 import type {
   NodeBalancerConfigNodeFields,
@@ -22,6 +23,7 @@ import type {
 import type {
   NodeBalancerBackendConnectivity,
   NodeBalancerConfigNodeMode,
+  NodeBalancerType,
 } from '@linode/api-v4';
 
 export interface NodeBalancerConfigNodeProps {
@@ -34,6 +36,7 @@ export interface NodeBalancerConfigNodeProps {
   nodeBalancerBackendConnectivity?: NodeBalancerBackendConnectivity;
   nodeBalancerRegion?: string;
   nodeBalancerSubnetId?: number;
+  nodeBalancerType?: NodeBalancerType;
   nodeBalancerVpcId?: number;
   onNodeAddressChange: (
     nodeIdx: number,
@@ -77,6 +80,7 @@ export const NodeBalancerConfigNode = React.memo(
       nodeBalancerRegion,
       nodeBalancerVpcId,
       nodeBalancerSubnetId,
+      nodeBalancerType,
       onNodeAddressChange,
       onNodeLabelChange,
       onNodeModeChange,
@@ -85,6 +89,8 @@ export const NodeBalancerConfigNode = React.memo(
       removeNode,
       forEdit,
     } = props;
+
+    const [showCustomIPNotice, setShowCustomIPNotice] = React.useState(false);
 
     if (node.modifyStatus === 'delete') {
       /* This node has been marked for deletion, don't display it */
@@ -175,8 +181,10 @@ export const NodeBalancerConfigNode = React.memo(
                 handleChange={onNodeAddressChange}
                 inputId={`ip-select-node-${configIdx}-${idx}`}
                 nodeAddress={node.address}
+                nodeBalancerType={nodeBalancerType}
                 nodeIndex={idx}
                 region={nodeBalancerRegion}
+                setShowCustomIPNotice={setShowCustomIPNotice}
                 subnetId={nodeBalancerSubnetId}
                 vpcId={nodeBalancerVpcId}
               />
@@ -261,6 +269,19 @@ export const NodeBalancerConfigNode = React.memo(
             )}
           </Grid>
         </Grid>
+        {showCustomIPNotice &&
+          nodeBalancerType === 'premium' &&
+          node?.address !== null && (
+            <Grid
+              size={{
+                lg: 6,
+                sm: 12,
+                xs: 12,
+              }}
+            >
+              <Notice text={CUSTOM_IP_ADDRESS_NOTICE_TEXT} variant="info" />
+            </Grid>
+          )}
       </React.Fragment>
     );
   }
