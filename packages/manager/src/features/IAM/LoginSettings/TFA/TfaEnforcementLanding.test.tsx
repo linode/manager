@@ -1,15 +1,14 @@
 import { toast } from '@akamai/cds-components/notification-toast';
-import { screen, waitFor } from '@testing-library/react';
+import { fireEvent, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { ERROR_STATE_TEXT, ERROR_STATE_TITLE } from '../../Shared/constants';
 import {
-  getCdsButtonByText,
-  getSwitchControl,
   mockMatchMedia,
   renderWithProviders,
 } from '../../utilities/testHelpers';
+import { IAM_TFA_ENFORCE_PENDO_IDS } from '../constants';
 import { TfaEnforcementLanding } from './TfaEnforcementLanding';
 
 import type { TfaOptionalUser, User } from '@linode/api-v4';
@@ -33,7 +32,6 @@ const mocks = vi.hoisted(() => ({
   useOrder: vi.fn(),
   usePagination: vi.fn(),
   usePermissions: vi.fn(),
-  useTfaUserCounts: vi.fn(),
   useUpdateTfaEnforcementAccountSettingsMutation: vi.fn(),
   useUpdateTfaOptionalUsersMutation: vi.fn(),
 }));
@@ -98,10 +96,6 @@ vi.mock('../../hooks/usePermissions', () => ({
   usePermissions: mocks.usePermissions,
 }));
 
-vi.mock('../../hooks/useTfaUserCounts', () => ({
-  useTfaUserCounts: mocks.useTfaUserCounts,
-}));
-
 const makeAllUsers = (): User[] =>
   [{ username: 'alice' }, { username: 'bob' }, { username: 'carol' }] as User[];
 
@@ -156,7 +150,6 @@ beforeEach(() => {
   mocks.useAllAccountUsersQuery.mockReturnValue({
     data: makeAllUsers(),
   });
-  mocks.useTfaUserCounts.mockReturnValue({ totalUsers: 3 });
   mocks.useUpdateTfaEnforcementAccountSettingsMutation.mockReturnValue({
     mutateAsync: mocks.updateTfaSettings,
   });
@@ -173,20 +166,39 @@ const renderComponent = () =>
     initialRoute: '/iam/settings/tfa-enforcement',
   });
 
-const clickEnforcementSwitch = async () => {
-  const switchHost = screen
-    .getByText('Enforce two-factor authentication on this account')
-    .closest('cds-switch') as HTMLElement;
-  const switchControl = await getSwitchControl(switchHost);
-  await userEvent.click(switchControl as HTMLButtonElement);
+const getHostByPendoId = (pendoId: string) =>
+  document.querySelector(`[data-pendo-id="${pendoId}"]`) as HTMLElement | null;
+
+const dispatchHostChange = (host: HTMLElement, detail: boolean) => {
+  host.dispatchEvent(
+    new CustomEvent('change', {
+      bubbles: true,
+      composed: true,
+      detail,
+    })
+  );
 };
 
-const acknowledgeChange = async (labelText: string) => {
-  const checkboxHost = screen.getByText(labelText).closest('cds-checkbox');
-  expect(checkboxHost).toBeTruthy();
-  checkboxHost!.dispatchEvent(
-    new CustomEvent('change', { bubbles: true, detail: true })
-  );
+const clickEnforcementSwitch = (nextValue: boolean) => {
+  const switchHost = getHostByPendoId(IAM_TFA_ENFORCE_PENDO_IDS.enforce2FA);
+  expect(switchHost).toBeTruthy();
+  dispatchHostChange(switchHost as HTMLElement, nextValue);
+};
+
+const acknowledgeChange = async () => {
+  const checkboxHost = await waitFor(() => {
+    const host = getHostByPendoId(IAM_TFA_ENFORCE_PENDO_IDS.consentChecked);
+    expect(host).toBeTruthy();
+    return host as HTMLElement;
+  });
+
+  dispatchHostChange(checkboxHost, true);
+};
+
+const submitForm = () => {
+  const form = document.querySelector('form');
+  expect(form).toBeTruthy();
+  fireEvent.submit(form as HTMLFormElement);
 };
 
 describe('TfaEnforcementLanding', () => {
@@ -230,15 +242,11 @@ describe('TfaEnforcementLanding', () => {
   });
 
   it('submits enabled enforcement with current optional users', async () => {
-    const { container } = renderComponent();
+    renderComponent();
 
-    await clickEnforcementSwitch();
-    await acknowledgeChange(
-      'I understand that my changes apply immediately upon saving and block newly-selected users from logging in until they configure two-factor authentication.'
-    );
-
-    const submitButton = await getCdsButtonByText(container, 'Save Changes');
-    await userEvent.click(submitButton as HTMLButtonElement);
+    clickEnforcementSwitch(true);
+    await acknowledgeChange();
+    submitForm();
 
     await waitFor(() => {
       expect(mocks.updateTfaSettings).toHaveBeenCalledWith({
@@ -266,15 +274,11 @@ describe('TfaEnforcementLanding', () => {
       isLoading: false,
     });
 
-    const { container } = renderComponent();
+    renderComponent();
 
-    await clickEnforcementSwitch();
-    await acknowledgeChange(
-      'I understand that my changes will be applied immediately.'
-    );
-
-    const submitButton = await getCdsButtonByText(container, 'Save Changes');
-    await userEvent.click(submitButton as HTMLButtonElement);
+    clickEnforcementSwitch(false);
+    await acknowledgeChange();
+    submitForm();
 
     await waitFor(() => {
       expect(mocks.updateTfaSettings).toHaveBeenCalledWith({

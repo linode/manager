@@ -23,7 +23,6 @@ import { Controller, FormProvider, useForm } from 'react-hook-form';
 
 import { useDiscardChanges } from '../../hooks/useDiscardChanges';
 import { usePermissions } from '../../hooks/usePermissions';
-import { useTfaUserCounts } from '../../hooks/useTfaUserCounts';
 import { Box } from '../../Shared/Box/Box';
 import { CircleProgress } from '../../Shared/CircleProgress/CircleProgress';
 import { IAM_LABEL, TFA_ENFORCEMENT_LINK } from '../../Shared/constants';
@@ -76,6 +75,7 @@ export const TfaEnforcementLanding = () => {
     () => (allUsers ?? []).map((user: User) => user.username),
     [allUsers]
   );
+  const totalUsers = allUsers?.length ?? 0;
 
   const tfaOptionalUsersOptions = React.useMemo(() => {
     return tfaOptionalUsers?.map((user: TfaOptionalUser) => user.username);
@@ -103,8 +103,6 @@ export const TfaEnforcementLanding = () => {
   } = form;
 
   const isEnforced = watch('tfa_enforced');
-
-  const { totalUsers } = useTfaUserCounts(isEnforced);
 
   const onSubmit = async (values: TfaEnforcementFormValues) => {
     try {

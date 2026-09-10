@@ -87,7 +87,7 @@ export const AccountUsersTableToolbar = ({
             }
           }}
           selected={filterableOptions.find((o) => o.value === sortOrder)}
-          valueFn={(item) => (item as SelectOption).label}
+          valueFn={(item) => item.label}
         />
       </Box>
       {hasInteracted && isDirty && (

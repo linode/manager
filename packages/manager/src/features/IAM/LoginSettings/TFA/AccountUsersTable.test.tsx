@@ -4,6 +4,7 @@ import * as React from 'react';
 
 import {
   getCdsButtonByText,
+  getCdsButtonHostByText,
   mockMatchMedia,
   mockScrollIntoView,
   renderWithProviders,
@@ -14,13 +15,12 @@ import type { User } from '@linode/api-v4';
 
 const mocks = vi.hoisted(() => {
   return {
-    getAPIFilterFromQuery: vi.fn(),
     handlePageChange: vi.fn(),
     handlePageSizeChange: vi.fn(),
     mutateAsync: vi.fn(),
     setValue: vi.fn(),
+    useAccountUsersSearch: vi.fn(),
     useAllAccountUsersQuery: vi.fn(),
-    useDebouncedValue: vi.fn(),
     useDelegationRole: vi.fn(),
     useFormContext: vi.fn(),
     usePagination: vi.fn(),
@@ -36,10 +36,6 @@ vi.mock('@linode/queries', () => ({
   usePreferences: mocks.usePreferences,
 }));
 
-vi.mock('@linode/search', () => ({
-  getAPIFilterFromQuery: mocks.getAPIFilterFromQuery,
-}));
-
 vi.mock('react-hook-form', async () => {
   const actual = await vi.importActual('react-hook-form');
   return {
@@ -48,8 +44,8 @@ vi.mock('react-hook-form', async () => {
   };
 });
 
-vi.mock('../../hooks/useDebouncedValue', () => ({
-  useDebouncedValue: mocks.useDebouncedValue,
+vi.mock('../../hooks/useAccountUsersSearch', () => ({
+  useAccountUsersSearch: mocks.useAccountUsersSearch,
 }));
 
 vi.mock('../../hooks/useDelegationRole', () => ({
@@ -73,10 +69,25 @@ const makeUsers = (count = 2): User[] =>
     } as User;
   });
 
+const mockPaginatedUsers = (
+  users: User[],
+  extras: Record<string, unknown> = {}
+) => {
+  mocks.useAccountUsersSearch.mockReturnValue({
+    error: null,
+    isFetching: false,
+    isLoading: false,
+    isPendingSearch: false,
+    total: users.length,
+    users,
+    ...extras,
+  });
+};
+
 const renderComponent = (
   tfaOptionalUsers: string[] = ['user-2'],
   totalUsers = 2,
-  initialEntries = ['/iam/settings/tfa-enforcement?page=1&pageSize=10'],
+  initialEntries = ['/iam/settings/tfa-enforcement?page=1&pageSize=25'],
   tfaOptionalUsersError?: unknown
 ) => {
   return renderWithProviders(
@@ -104,32 +115,25 @@ beforeEach(() => {
     formState: { isDirty: false },
     setValue: mocks.setValue,
   });
-  mocks.useDebouncedValue.mockImplementation((value: string) => value);
   mocks.useDelegationRole.mockReturnValue({ isChildUserType: false });
   mocks.usePermissions.mockReturnValue({ data: { view_user: true } });
-  mocks.usePreferences.mockReturnValue({ data: undefined });
+  mocks.usePreferences.mockReturnValue({ data: undefined, isPending: false });
   mocks.useMutatePreferences.mockReturnValue({
     mutateAsync: mocks.mutateAsync,
   });
-  mocks.getAPIFilterFromQuery.mockReturnValue({ error: null, filter: {} });
+  mockPaginatedUsers(makeUsers());
   mocks.useAllAccountUsersQuery.mockReturnValue({
     data: makeUsers(),
-    error: undefined,
+    error: null,
+    isFetching: false,
     isLoading: false,
   });
-  mocks.usePagination.mockImplementation(
-    ({
-      clientSidePaginationData,
-    }: {
-      clientSidePaginationData: unknown[];
-    }) => ({
-      handlePageChange: mocks.handlePageChange,
-      handlePageSizeChange: mocks.handlePageSizeChange,
-      page: 1,
-      pageSize: 10,
-      paginatedData: clientSidePaginationData,
-    })
-  );
+  mocks.usePagination.mockReturnValue({
+    handlePageChange: mocks.handlePageChange,
+    handlePageSizeChange: mocks.handlePageSizeChange,
+    page: 1,
+    pageSize: 25,
+  });
 });
 
 describe('AccountUsersTable', () => {
@@ -145,7 +149,8 @@ describe('AccountUsersTable', () => {
     const { container } = renderComponent(['user-2'], 2);
     const selectAllButton = await getCdsButtonByText(container, 'Select all');
 
-    await userEvent.click(selectAllButton as HTMLElement);
+    expect(selectAllButton).toBeTruthy();
+    await userEvent.click(selectAllButton as HTMLButtonElement);
 
     expect(mocks.setValue).toHaveBeenCalledWith('tfaOptionalUsers', [], {
       shouldDirty: true,
@@ -156,7 +161,8 @@ describe('AccountUsersTable', () => {
     const { container } = renderComponent(['user-2'], 2);
     const clearAllButton = await getCdsButtonByText(container, 'Clear all');
 
-    await userEvent.click(clearAllButton as HTMLElement);
+    expect(clearAllButton).toBeTruthy();
+    await userEvent.click(clearAllButton as HTMLButtonElement);
 
     expect(mocks.setValue).toHaveBeenCalledWith(
       'tfaOptionalUsers',
@@ -169,13 +175,17 @@ describe('AccountUsersTable', () => {
 
   it('updates optional users when toggling a checked row off', async () => {
     const { container } = renderComponent(['user-2'], 2);
-    const row = Array.from(
+    const userRow = Array.from(
       container.querySelectorAll<HTMLElement>('cds-table-row')
-    ).find((r) => r.textContent?.includes('user-1'));
+    ).find((row) => {
+      const innerText = row.shadowRoot?.textContent ?? row.textContent ?? '';
+      return innerText.includes('user-1');
+    });
+    const checkbox = userRow?.querySelector('cds-checkbox');
 
-    expect(row).toBeTruthy();
+    expect(checkbox).toBeTruthy();
 
-    await userEvent.click(row as HTMLElement);
+    await userEvent.click(checkbox as HTMLElement);
 
     expect(mocks.setValue).toHaveBeenCalledWith(
       'tfaOptionalUsers',
@@ -193,17 +203,20 @@ describe('AccountUsersTable', () => {
     });
 
     const { container } = renderComponent(['user-2'], 2);
-    const row = Array.from(
+    const userRow = Array.from(
       container.querySelectorAll<HTMLElement>('cds-table-row')
-    ).find((r) => r.textContent?.includes('user-1'));
+    ).find((row) => {
+      const innerText = row.shadowRoot?.textContent ?? row.textContent ?? '';
+      return innerText.includes('user-1');
+    });
+    const checkbox = userRow?.querySelector('cds-checkbox');
 
-    expect(row).toBeTruthy();
-
-    await userEvent.click(row as HTMLElement);
+    expect(checkbox).toBeTruthy();
+    await userEvent.click(checkbox as HTMLElement);
 
     expect(screen.getByText('Re-sort list')).toBeVisible();
 
-    const cdsSelect = container.querySelector('cds-select');
+    const cdsSelect = document.querySelector('cds-select');
     expect(cdsSelect).toBeTruthy();
 
     await act(async () => {
@@ -221,10 +234,8 @@ describe('AccountUsersTable', () => {
   });
 
   it('shows API error text', () => {
-    mocks.useAllAccountUsersQuery.mockReturnValue({
-      data: undefined,
+    mockPaginatedUsers([], {
       error: { reason: 'Failed to load account users from API' },
-      isLoading: false,
     });
 
     renderComponent([]);
@@ -235,9 +246,11 @@ describe('AccountUsersTable', () => {
   });
 
   it('shows empty state when there are no users', () => {
+    mockPaginatedUsers([]);
     mocks.useAllAccountUsersQuery.mockReturnValue({
       data: [],
-      error: undefined,
+      error: null,
+      isFetching: false,
       isLoading: false,
     });
 
@@ -247,15 +260,23 @@ describe('AccountUsersTable', () => {
   });
 
   it('shows global selected count over filtered users count', () => {
+    mockPaginatedUsers(makeUsers(5));
     mocks.useAllAccountUsersQuery.mockReturnValue({
       data: makeUsers(5),
-      error: undefined,
+      error: null,
+      isFetching: false,
       isLoading: false,
     });
 
     renderComponent([], 100);
 
     expect(screen.getByText('Users selected: 100/5')).toBeVisible();
+  });
+
+  it('uses the unfiltered all-users query', () => {
+    renderComponent([], 2);
+
+    expect(mocks.useAllAccountUsersQuery).toHaveBeenCalledWith(true);
   });
 
   describe('when tfaOptionalUsersError is set', () => {
@@ -275,15 +296,18 @@ describe('AccountUsersTable', () => {
 
     it('disables the Clear all button', async () => {
       const { container } = renderComponent(['user-2'], 2, undefined, tfaError);
-      const clearAllButton = await getCdsButtonByText(container, 'Clear all');
+      const clearAllButton = getCdsButtonHostByText(container, 'Clear all');
 
+      expect(clearAllButton).toBeTruthy();
       expect(clearAllButton).toHaveAttribute('disabled');
     });
 
     it('does show pagination by default', () => {
+      mockPaginatedUsers(makeUsers(20));
       mocks.useAllAccountUsersQuery.mockReturnValue({
         data: makeUsers(20),
-        error: undefined,
+        error: null,
+        isFetching: false,
         isLoading: false,
       });
 

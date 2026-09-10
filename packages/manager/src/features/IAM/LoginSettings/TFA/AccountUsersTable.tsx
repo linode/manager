@@ -1,42 +1,32 @@
-import {
-  Pagination,
-  Table,
-  TableBody,
-  TableCell,
-  TableRow,
-} from '@akamai/cds-components/react';
-import { useAllAccountUsersQuery } from '@linode/queries';
-import { getAPIFilterFromQuery } from '@linode/search';
+import { Pagination, Table, TableBody } from '@akamai/cds-components/react';
+import { useAllAccountUsersQuery, usePreferences } from '@linode/queries';
 import { useNavigate, useSearch } from '@tanstack/react-router';
 import * as React from 'react';
 import { useFormContext } from 'react-hook-form';
 
+import { useAccountUsersSearch } from '../../hooks/useAccountUsersSearch';
 import { useDelegationRole } from '../../hooks/useDelegationRole';
 import { useOrder } from '../../hooks/useOrder';
 import { usePagination } from '../../hooks/usePagination';
 import { usePermissions } from '../../hooks/usePermissions';
-import { CircleProgress } from '../../Shared/CircleProgress/CircleProgress';
-import { AccountUserRow } from './AccountUserRow';
+import {
+  getErrorText,
+  getIsLoadingUsers,
+  getLoadingLabel,
+  getMatchingUsers,
+  getNextOptionalUsersForSelectAll,
+  getTableRows,
+  toUserOptions,
+} from './AccountUsersTable.utilities';
+import { AccountUsersTableBody } from './AccountUsersTableBody';
 import { AccountUsersTableControls } from './AccountUsersTableControls';
 import { AccountUsersTableHead } from './AccountUsersTableHead';
 import { AccountUsersTableToolbar } from './AccountUsersTableToolbar';
 
 import type { TfaEnforcementFormValues } from './TfaEnforcementLanding';
-import type { Filter, User } from '@linode/api-v4';
 
-const MIN_PAGE_SIZE = 10;
-
+const MIN_PAGE_SIZE = 25;
 const TFA_ENFORCEMENT_ROUTE = '/iam/settings/tfa-enforcement' as const;
-
-const getErrorText = (
-  searchErr: null | SyntaxError,
-  usersErr: unknown
-): string | undefined =>
-  searchErr?.message ??
-  (usersErr
-    ? ((usersErr as { reason?: string }).reason ??
-      'Failed to load account users')
-    : undefined);
 
 interface Props {
   disabled?: boolean;
@@ -70,6 +60,10 @@ export const AccountUsersTable = ({
   const [sortSnapshot, setSortSnapshot] = React.useState<Set<string>>(
     () => new Set(tfaOptionalUsers ?? [])
   );
+  const [hasEngagedFullList, setHasEngagedFullList] = React.useState(false);
+  const [pendingBulkAction, setPendingBulkAction] = React.useState<
+    'clear' | 'select' | null
+  >(null);
 
   // Filter out delegate users from the users if user is a child or delegate user.
   const { isChildUserType, isDelegateUserType } = useDelegationRole();
@@ -77,9 +71,6 @@ export const AccountUsersTable = ({
   const isChildOrDelegate = isChildUserType || isDelegateUserType;
   const { data: permissions } = usePermissions('account', ['view_user']);
 
-  const { error: searchError, filter } = getAPIFilterFromQuery(query ?? '', {
-    searchableFieldsWithoutOperator: ['username', 'email'],
-  });
   const order = useOrder({
     initialRoute: {
       defaultOrder: {
@@ -91,37 +82,73 @@ export const AccountUsersTable = ({
     preferenceKey: 'iam-tfa-enforcement-account-users-order',
   });
 
-  const usersFilter: Filter = {
-    ['+order']: order.order,
-    ['+order_by']: order.orderBy,
-    ...filter,
-    ...(isChildOrDelegate
-      ? {
-          user_type: 'child',
-        }
-      : {}),
-  };
+  const extraFilter = React.useMemo(
+    () => (isChildOrDelegate ? { user_type: 'child' } : undefined),
+    [isChildOrDelegate]
+  );
+  const canFetchUsers = Boolean(permissions?.view_user);
 
-  // This currently fetches all users
+  const { isPending: isPageSizePreferencePending } = usePreferences(
+    (preferences) => preferences?.pageSizes
+  );
+
+  const pagination = usePagination({
+    currentRoute: TFA_ENFORCEMENT_ROUTE,
+    defaultPageSize: MIN_PAGE_SIZE,
+    preferenceKey: 'iam-tfa-enforcement-users',
+  });
+
+  const canFetchPaginatedUsers = canFetchUsers && !isPageSizePreferencePending;
+
+  // Same unfiltered getAll as TfaEnforcementLanding (`{}`) so React Query
+  // dedupes. First page still comes from the paginated query for a fast paint.
   const {
-    data: users,
-    error: usersError,
-    isLoading: isUsersLoading,
-  } = useAllAccountUsersQuery(permissions?.view_user, usersFilter);
+    data: allUsers,
+    error: allUsersError,
+    isFetching: isFetchingAllUsers,
+    isLoading: isLoadingAllUsers,
+  } = useAllAccountUsersQuery(canFetchUsers);
 
-  const usersDataError = tfaOptionalUsersError || usersError;
+  const hasAllUsers = allUsers !== undefined;
 
-  const userOptions = React.useMemo(() => {
-    if (!users) {
+  const {
+    error: paginatedError,
+    isFetching: isFetchingPage,
+    isLoading: isLoadingPage,
+    isPendingSearch,
+    total: paginatedTotal,
+    users: paginatedUsers,
+  } = useAccountUsersSearch({
+    debounceMs: 0,
+    enabled: canFetchPaginatedUsers && !hasEngagedFullList,
+    extraFilter,
+    mode: 'paginated',
+    order: order.order,
+    orderBy: order.orderBy,
+    page: pagination.page,
+    pageSize: pagination.pageSize,
+    search: query ?? '',
+  });
+
+  const matchingAllUsers = React.useMemo(() => {
+    if (!allUsers) {
       return [];
     }
 
-    return users.map((user: User) => ({
-      email: user.email,
-      label: user.username,
-      value: user.username,
-    }));
-  }, [users]);
+    return getMatchingUsers({
+      extraFilter,
+      order: order.order,
+      orderBy: order.orderBy,
+      query,
+      users: allUsers,
+    });
+  }, [allUsers, extraFilter, order.order, order.orderBy, query]);
+
+  const users = hasEngagedFullList ? matchingAllUsers : paginatedUsers;
+  const usersError = hasEngagedFullList ? allUsersError : paginatedError;
+  const usersDataError = tfaOptionalUsersError || usersError;
+
+  const userOptions = React.useMemo(() => toUserOptions(users), [users]);
 
   // Derive the set of enforced (selected) users (all users except optionalUsers)
   const optionalUsernamesSet = React.useMemo(
@@ -136,12 +163,12 @@ export const AccountUsersTable = ({
           .filter((u) => !optionalUsernamesSet.has(u.value))
           .map((u) => u.value)
       ),
-    [userOptions, optionalUsernamesSet]
+    [optionalUsernamesSet, userOptions]
   );
 
   const selectedUsers = React.useMemo(
     () => userOptions.filter((u) => selectedUsersSet.has(u.value)),
-    [userOptions, selectedUsersSet]
+    [selectedUsersSet, userOptions]
   );
 
   const selectedUsersCount = React.useMemo(
@@ -149,7 +176,23 @@ export const AccountUsersTable = ({
     [optionalUsernamesSet, totalUsers]
   );
 
-  const isLoading = isUsersLoading;
+  const isLoadingUsers = getIsLoadingUsers({
+    hasAllUsers,
+    hasEngagedFullList,
+    isFetchingAllUsers,
+    isFetchingPage,
+    isLoadingAllUsers,
+    isLoadingPage,
+    isPageSizePreferencePending,
+    isPendingSearch,
+    paginatedUsersCount: paginatedUsers.length,
+  });
+
+  const loadingLabel = getLoadingLabel({
+    hasEngagedFullList,
+    isPendingSearch,
+    query,
+  });
 
   const handleSearch = React.useCallback(
     (value: string) => {
@@ -167,41 +210,19 @@ export const AccountUsersTable = ({
     [navigate]
   );
 
-  const filteredRows = React.useMemo(() => {
-    const source = showSelectedOnly ? selectedUsers : userOptions;
-
-    const rows = source.map((option, index) => ({
-      email: option.email,
-      name: option.label,
-      option,
-      rank: index,
-    }));
-
-    return rows.sort((a, b) => {
-      // A row is "selected" (enforced) if it is NOT in the optional snapshot.
-      const aSelected = !sortSnapshot.has(a.option.value) ? 1 : 0;
-      const bSelected = !sortSnapshot.has(b.option.value) ? 1 : 0;
-      return sortOrder === 'unselected'
-        ? aSelected - bSelected
-        : bSelected - aSelected;
-    });
-  }, [showSelectedOnly, userOptions, selectedUsers, sortSnapshot, sortOrder]);
-
-  const totalCount = filteredRows.length;
-
-  const pagination = usePagination({
-    currentRoute: TFA_ENFORCEMENT_ROUTE,
-    defaultPageSize: MIN_PAGE_SIZE,
-    preferenceKey: 'iam-tfa-enforcement-users',
-    clientSidePaginationData: filteredRows,
+  const { filteredRows, tableRows } = getTableRows({
+    hasEngagedFullList,
+    page: pagination.page,
+    pageSize: pagination.pageSize,
+    selectedUsers,
+    showSelectedOnly,
+    sortOrder,
+    sortSnapshot,
+    userOptions,
   });
 
-  const paginatedRows = pagination.paginatedData;
-
-  const scopedOptions = React.useMemo(
-    () => filteredRows.map((row) => row.option),
-    [filteredRows]
-  );
+  const scopedOptions = tableRows.map((row) => row.option);
+  const matchingUsernames = matchingAllUsers.map((user) => user.username);
 
   const selectedScopedCount = React.useMemo(
     () =>
@@ -212,14 +233,16 @@ export const AccountUsersTable = ({
 
   const clearDisabled =
     !!usersDataError ||
-    !filteredRows.some((row) => selectedUsersSet.has(row.option.value));
+    !tableRows.some((row) => selectedUsersSet.has(row.option.value));
 
-  const hasNoResults = paginatedRows.length === 0 && userOptions.length === 0;
-
-  const errorText = getErrorText(searchError, usersDataError);
-
-  const showNoUsersText =
-    !isLoading && !searchError && !usersDataError && hasNoResults;
+  const hasNoResults = tableRows.length === 0 && userOptions.length === 0;
+  const errorText = getErrorText(usersDataError);
+  const showNoUsersText = !isLoadingUsers && !usersDataError && hasNoResults;
+  const totalCount = hasEngagedFullList ? filteredRows.length : paginatedTotal;
+  const matchingUsersCount = hasEngagedFullList
+    ? userOptions.length
+    : paginatedTotal;
+  const filteredUsersCount = usersDataError ? 0 : matchingUsersCount;
 
   const applyOptionalUsersUpdate = (next: string[]) => {
     setOptionalUsers(next);
@@ -227,36 +250,64 @@ export const AccountUsersTable = ({
     setHasInteracted(true);
   };
 
+  const applyBulkAction = (
+    action: 'clear' | 'select',
+    scopedValues: string[]
+  ) => {
+    if (action === 'clear') {
+      const visibleSelectedValues = scopedValues.filter(
+        (value) => !optionalUsernamesSet.has(value)
+      );
+      const next = [...optionalUsers, ...visibleSelectedValues];
+      applyOptionalUsersUpdate(next);
+      const newOptionalSet = new Set(next);
+      const remainingSelected = userOptions.filter(
+        (u) => !newOptionalSet.has(u.value)
+      ).length;
+      setShowSelectedOnly(remainingSelected > 0 ? showSelectedOnly : false);
+      return;
+    }
+
+    const allSelected =
+      scopedValues.length > 0 &&
+      scopedValues.every((value) => selectedUsersSet.has(value));
+    applyOptionalUsersUpdate(
+      getNextOptionalUsersForSelectAll({
+        allSelected,
+        optionalUsernamesSet,
+        optionalUsers,
+        scopedValues,
+      })
+    );
+  };
+
+  React.useEffect(() => {
+    if (pendingBulkAction === null || !hasAllUsers) {
+      return;
+    }
+
+    applyBulkAction(pendingBulkAction, matchingUsernames);
+    setPendingBulkAction(null);
+    // applyBulkAction closes over the latest selection state for this render.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hasAllUsers, matchingUsernames, pendingBulkAction]);
+
   const handleClear = () => {
-    const visibleSelectedValues = filteredRows
-      .map((row) => row.option.value)
-      .filter((v) => !optionalUsernamesSet.has(v));
-    const next = [...optionalUsers, ...visibleSelectedValues];
-    applyOptionalUsersUpdate(next);
-    const newOptionalSet = new Set(next);
-    const remainingSelected = userOptions.filter(
-      (u) => !newOptionalSet.has(u.value)
-    ).length;
-    setShowSelectedOnly(remainingSelected > 0 ? showSelectedOnly : false);
+    setHasEngagedFullList(true);
+    if (!hasAllUsers) {
+      setPendingBulkAction('clear');
+      return;
+    }
+    applyBulkAction('clear', matchingUsernames);
   };
 
   const handleSelectAll = () => {
-    const allSelected =
-      scopedOptions.length > 0 && selectedScopedCount >= scopedOptions.length;
-    let next: string[];
-    if (allSelected) {
-      // Deselect all scoped (add them to optional)
-      const scopedValues = scopedOptions.map((o) => o.value);
-      const newlyOptional = scopedValues.filter(
-        (v) => !optionalUsernamesSet.has(v)
-      );
-      next = [...optionalUsers, ...newlyOptional];
-    } else {
-      // Select all scoped (remove them from optional)
-      const scopedSet = new Set(scopedOptions.map((o) => o.value));
-      next = optionalUsers.filter((v) => !scopedSet.has(v));
+    setHasEngagedFullList(true);
+    if (!hasAllUsers) {
+      setPendingBulkAction('select');
+      return;
     }
-    applyOptionalUsersUpdate(next);
+    applyBulkAction('select', matchingUsernames);
   };
 
   const handleToggle = (value: string, checked: boolean) => {
@@ -272,13 +323,15 @@ export const AccountUsersTable = ({
     <div>
       <AccountUsersTableToolbar
         hasInteracted={hasInteracted}
-        isLoading={isLoading}
+        isLoading={isLoadingUsers}
         onRefreshSorting={() => {
+          setHasEngagedFullList(true);
           setSortSnapshot(new Set(optionalUsernamesSet));
           setHasInteracted(false);
         }}
         onSearch={handleSearch}
         onSortOrderChange={(value) => {
+          setHasEngagedFullList(true);
           setSortOrder(value);
           setSortSnapshot(new Set(optionalUsernamesSet));
           setHasInteracted(false);
@@ -291,7 +344,7 @@ export const AccountUsersTable = ({
       <AccountUsersTableControls
         clearDisabled={clearDisabled}
         disabled={disabled}
-        filteredUsersCount={usersDataError ? 0 : userOptions.length}
+        filteredUsersCount={filteredUsersCount}
         onClear={handleClear}
         onSelectAll={handleSelectAll}
         scopedOptionsLength={usersDataError ? 0 : scopedOptions.length}
@@ -314,38 +367,16 @@ export const AccountUsersTable = ({
             selectedScopedCount={usersDataError ? 0 : selectedScopedCount}
           />
           <TableBody>
-            {errorText ? null : isLoading ? (
-              <TableRow>
-                <TableCell style={{ justifyContent: 'center' }}>
-                  <CircleProgress />
-                </TableCell>
-              </TableRow>
-            ) : (
-              paginatedRows.map((p) => (
-                <AccountUserRow
-                  checked={selectedUsersSet.has(p.option.value)}
-                  disabled={disabled}
-                  email={p.email}
-                  key={p.rank}
-                  onToggle={(checked) => handleToggle(p.option.value, checked)}
-                  username={p.name}
-                />
-              ))
-            )}
-            {showNoUsersText && (
-              <TableRow>
-                <TableCell style={{ justifyContent: 'center' }}>
-                  <p style={{ margin: '0 auto' }}>No users found</p>
-                </TableCell>
-              </TableRow>
-            )}
-            {errorText && (
-              <TableRow>
-                <TableCell style={{ justifyContent: 'center' }}>
-                  <p style={{ margin: '0 auto' }}>{errorText}</p>
-                </TableCell>
-              </TableRow>
-            )}
+            <AccountUsersTableBody
+              disabled={disabled}
+              errorText={errorText}
+              isLoading={isLoadingUsers}
+              loadingLabel={loadingLabel}
+              onToggle={handleToggle}
+              selectedUsersSet={selectedUsersSet}
+              showNoUsersText={showNoUsersText}
+              tableRows={tableRows}
+            />
           </TableBody>
         </Table>
 
@@ -360,7 +391,7 @@ export const AccountUsersTable = ({
           ) => pagination.handlePageSizeChange(Number(e.detail.pageSize))}
           page={pagination.page}
           pageSize={pagination.pageSize}
-          pageSizes={[MIN_PAGE_SIZE, 20, 50]}
+          pageSizes={[MIN_PAGE_SIZE, 50, 75]}
           style={{ borderTop: 0, borderBottom: 0 }}
         />
       </div>
