@@ -9,6 +9,7 @@ import {
   updateStream,
   verifyDestination,
 } from 'src/mocks/presets/crud/handlers/delivery';
+import { getQuotas } from 'src/mocks/presets/crud/handlers/quotas';
 
 import type { MockPresetCrud } from 'src/mocks/types';
 
@@ -24,6 +25,7 @@ export const deliveryCrudPreset: MockPresetCrud = {
     deleteDestination,
     updateDestination,
     verifyDestination,
+    getQuotas,
   ],
   id: 'delivery:crud',
   label: 'Delivery CRUD',

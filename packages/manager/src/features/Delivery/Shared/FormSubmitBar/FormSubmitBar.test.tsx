@@ -15,7 +15,8 @@ describe('StreamFormSubmitBar', () => {
     formType: FormType,
     mode: FormMode,
     blockSubmit = false,
-    connectionTested = false
+    connectionTested = false,
+    disableSubmit = false
   ) => {
     renderWithThemeAndHookFormContext({
       component: (
@@ -23,6 +24,7 @@ describe('StreamFormSubmitBar', () => {
           blockSubmit={blockSubmit}
           connectionTested={connectionTested}
           destinationType={destinationType.AkamaiObjectStorage}
+          disableSubmit={disableSubmit}
           formType={formType}
           isSubmitting={false}
           isTesting={false}
@@ -75,6 +77,15 @@ describe('StreamFormSubmitBar', () => {
           const submitButton = screen.getByText(createStreamButtonText);
 
           expect(submitButton).toBeEnabled();
+        });
+      });
+
+      describe('and disableSubmit is true', () => {
+        it('should keep Create Stream button disabled', async () => {
+          renderComponent('stream', 'create', true, true, true);
+          const submitButton = screen.getByText(createStreamButtonText);
+
+          expect(submitButton).toBeDisabled();
         });
       });
     });

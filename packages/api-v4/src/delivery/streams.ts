@@ -10,7 +10,12 @@ import Request, {
 } from '../request';
 
 import type { Filter, ResourcePage as Page, Params } from '../types';
-import type { CreateStreamPayload, Stream, UpdateStreamPayload } from './types';
+import type {
+  CreateStreamPayload,
+  Stream,
+  StreamsQuota,
+  UpdateStreamPayload,
+} from './types';
 
 /**
  * Returns all the information about a specified Stream.
@@ -70,4 +75,13 @@ export const deleteStream = (streamId: number) =>
   Request<{}>(
     setURL(`${API_ROOT}/monitor/streams/${encodeURIComponent(streamId)}`),
     setMethod('DELETE'),
+  );
+
+/**
+ * Returns the quota definitions available for the authenticated account's streams.
+ */
+export const getStreamsQuotas = () =>
+  Request<Page<StreamsQuota>>(
+    setURL(`${API_ROOT}/monitor/streams/quotas`),
+    setMethod('GET'),
   );

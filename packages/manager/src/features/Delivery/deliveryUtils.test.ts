@@ -6,12 +6,14 @@ import {
 } from '@linode/api-v4';
 import { expect } from 'vitest';
 
+import { streamFactory } from 'src/factories';
 import {
   getAuthenticationTypeOption,
   getContentTypeOption,
   getDestinationPayloadDetails,
   getDestinationTypeOption,
   getStreamTypeOption,
+  isStreamCreationLimitReached,
 } from 'src/features/Delivery/deliveryUtils';
 import {
   authenticationTypeOptions,
@@ -25,6 +27,7 @@ import type {
   AkamaiObjectStorageDetailsPayload,
   CustomHTTPSDetails,
   CustomHTTPSDetailsExtended,
+  StreamsQuota,
 } from '@linode/api-v4';
 
 describe('delivery utils functions', () => {
@@ -416,6 +419,59 @@ describe('delivery utils functions', () => {
         ) as CustomHTTPSDetailsExtended;
 
         expect(result.client_certificate_details).toBeUndefined();
+      });
+    });
+
+    describe('isStreamCreationLimitReached', () => {
+      it('returns false when quotas are missing', () => {
+        expect(isStreamCreationLimitReached(undefined, undefined)).toBe(false);
+      });
+
+      it('returns true when all stream type quotas are reached', () => {
+        const streams = [
+          streamFactory.build({ type: streamType.AuditLogs }),
+          streamFactory.build({ type: streamType.LKEAuditLogs }),
+        ];
+        const quotas: StreamsQuota[] = [
+          {
+            description: 'Current number of streams per account',
+            quota_id: 'aclp_logs',
+            quota_limit: 1,
+            quota_name: 'Number of Streams per type',
+            quota_type: 'logs-streams-audit_logs',
+          },
+          {
+            description: 'Current number of streams per account',
+            quota_id: 'aclp_lke_logs',
+            quota_limit: 1,
+            quota_name: 'Number of LKE Streams per type',
+            quota_type: 'logs-streams-lke_audit_logs',
+          },
+        ];
+
+        expect(isStreamCreationLimitReached(quotas, streams)).toBe(true);
+      });
+
+      it('returns false when at least one stream type quota is not reached', () => {
+        const streams = [streamFactory.build({ type: streamType.AuditLogs })];
+        const quotas: StreamsQuota[] = [
+          {
+            description: 'Current number of streams per account',
+            quota_id: 'aclp_logs',
+            quota_limit: 1,
+            quota_name: 'Number of Streams per type',
+            quota_type: 'logs-streams-audit_logs',
+          },
+          {
+            description: 'Current number of streams per account',
+            quota_id: 'aclp_lke_logs',
+            quota_limit: 2,
+            quota_name: 'Number of LKE Streams per type',
+            quota_type: 'logs-streams-lke_audit_logs',
+          },
+        ];
+
+        expect(isStreamCreationLimitReached(quotas, streams)).toBe(false);
       });
     });
   });

@@ -4,7 +4,10 @@ import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { beforeEach, describe, expect } from 'vitest';
 
-import { akamaiObjectStorageDestinationFactory } from 'src/factories';
+import {
+  akamaiObjectStorageDestinationFactory,
+  streamFactory,
+} from 'src/factories';
 import {
   fillOutAkamaiObjectStorageDestinationFields,
   mockScrollIntoView,
@@ -26,6 +29,14 @@ const mockDestinations = [
 describe('StreamCreate', () => {
   beforeEach(() => {
     mockScrollIntoView();
+    server.use(
+      http.get('*/monitor/streams/quotas', () => {
+        return HttpResponse.json(makeResourcePage([]));
+      }),
+      http.options('*/monitor/streams/quotas', () => {
+        return HttpResponse.json({});
+      })
+    );
   });
 
   const renderStreamCreate = () => {
@@ -216,6 +227,50 @@ describe('StreamCreate', () => {
         expect(verifyDestinationSpy).toHaveBeenCalled();
         expect(createStreamButton).toBeDisabled();
       });
+    });
+
+    it('should keep Create Stream button disabled when stream creation quota limit is reached', async () => {
+      server.use(
+        http.get('*/monitor/streams/destinations', () => {
+          return HttpResponse.json(makeResourcePage(mockDestinations));
+        }),
+        http.get('*/monitor/streams', () => {
+          return HttpResponse.json(
+            makeResourcePage([
+              streamFactory.build({ type: streamType.AuditLogs }),
+            ])
+          );
+        }),
+        http.get('*/monitor/streams/quotas', () => {
+          return HttpResponse.json(
+            makeResourcePage([
+              {
+                description: 'Current number of streams per account',
+                quota_id: 'aclp_logs',
+                quota_name: 'Number of Streams per type',
+                quota_limit: 1,
+                quota_type: 'logs-streams-audit_logs',
+              },
+            ])
+          );
+        })
+      );
+
+      renderStreamCreate();
+
+      const streamNameInput = screen.getByLabelText('Stream Name');
+      await user.type(streamNameInput, 'Test');
+      const destinationNameInput =
+        await screen.findByLabelText('Destination Name');
+      await user.click(destinationNameInput);
+      const existingDestination = screen.getByText('Destination 1');
+      await user.click(existingDestination);
+
+      const createStreamButton = screen.getByRole('button', {
+        name: 'Create Stream',
+      });
+
+      expect(createStreamButton).toBeDisabled();
     });
   });
 });

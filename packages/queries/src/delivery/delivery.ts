@@ -7,6 +7,7 @@ import {
   getDestinations,
   getStream,
   getStreams,
+  getStreamsQuotas,
   updateDestination,
   updateStream,
   verifyDestination,
@@ -31,6 +32,7 @@ import type {
   Params,
   ResourcePage,
   Stream,
+  StreamsQuota,
   UpdateDestinationPayloadWithId,
   UpdateStreamPayloadWithId,
 } from '@linode/api-v4';
@@ -42,6 +44,9 @@ export const getAllStreams = (
   getAll<Stream>((params, filter) =>
     getStreams({ ...params, ...passedParams }, { ...filter, ...passedFilter }),
   )().then((data) => data.data);
+
+export const getAllStreamsQuotas = () =>
+  getAll<StreamsQuota>(() => getStreamsQuotas())().then((data) => data.data);
 
 export const getAllDestinations = (
   passedParams: Params = {},
@@ -73,6 +78,15 @@ export const deliveryQueries = createQueryKeys('delivery', {
       paginated: (params: Params, filter: Filter) => ({
         queryFn: () => getStreams(params, filter),
         queryKey: [params, filter],
+      }),
+    },
+    queryKey: null,
+  },
+  streamsQuotas: {
+    contextQueries: {
+      all: () => ({
+        queryFn: () => getAllStreamsQuotas(),
+        queryKey: ['streamsQuotas'],
       }),
     },
     queryKey: null,
@@ -114,6 +128,12 @@ export const useAllStreamsQuery = (
 ) =>
   useQuery<Stream[], APIError[]>({
     ...deliveryQueries.streams._ctx.all(params, filter),
+    enabled,
+  });
+
+export const useStreamsQuotasQuery = (enabled = true) =>
+  useQuery<StreamsQuota[], APIError[]>({
+    ...deliveryQueries.streamsQuotas._ctx.all(),
     enabled,
   });
 

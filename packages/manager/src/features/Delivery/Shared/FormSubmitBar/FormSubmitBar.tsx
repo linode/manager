@@ -17,6 +17,7 @@ interface StreamFormSubmitBarProps {
   blockSubmit?: boolean;
   connectionTested: boolean;
   destinationType?: DestinationType;
+  disableSubmit?: boolean;
   disableTestConnection?: boolean;
   formType: FormType;
   isSubmitting: boolean;
@@ -32,6 +33,7 @@ export const FormSubmitBar = (props: StreamFormSubmitBarProps) => {
     blockSubmit,
     connectionTested,
     destinationType,
+    disableSubmit = false,
     formType,
     mode,
     onSubmit,
@@ -107,7 +109,7 @@ export const FormSubmitBar = (props: StreamFormSubmitBarProps) => {
           <Button
             buttonType="primary"
             data-pendo-id={`${pendoIdPrefix}${buttonLabel}`}
-            disabled={!enableSubmit}
+            disabled={!enableSubmit || disableSubmit}
             loading={isSubmitting}
             onClick={onSubmit}
             sx={(theme) => ({

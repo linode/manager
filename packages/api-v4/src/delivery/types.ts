@@ -192,3 +192,11 @@ export interface UpdateDestinationPayloadWithId
   extends UpdateDestinationPayload {
   id: number;
 }
+
+export interface StreamsQuota {
+  description: string;
+  quota_id: string;
+  quota_limit: number;
+  quota_name: string;
+  quota_type: string;
+}

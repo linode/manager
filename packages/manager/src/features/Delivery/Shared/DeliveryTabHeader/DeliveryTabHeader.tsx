@@ -14,6 +14,7 @@ export interface DeliveryTabHeaderProps {
   buttonDataAttrs?: { [key: string]: boolean | string };
   createButtonText?: string;
   disabledCreateButton?: boolean;
+  disabledCreateButtonTooltipText?: string;
   entity: string;
   isSearching?: boolean;
   onButtonClick?: () => void;
@@ -29,6 +30,7 @@ export const DeliveryTabHeader = ({
   buttonDataAttrs,
   createButtonText,
   disabledCreateButton,
+  disabledCreateButtonTooltipText,
   entity,
   onButtonClick,
   spacingBottom = 24,
@@ -113,6 +115,7 @@ export const DeliveryTabHeader = ({
               sx={{
                 whiteSpace: 'nowrap',
               }}
+              tooltipText={disabledCreateButtonTooltipText}
               {...buttonDataAttrs}
             >
               {createButtonText ?? `Create ${entity}`}

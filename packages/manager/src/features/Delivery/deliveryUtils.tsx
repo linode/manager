@@ -24,6 +24,7 @@ import { useFlags } from 'src/hooks/useFlags';
 import type {
   CustomHTTPSDetailsExtended,
   DestinationType,
+  StreamsQuota,
 } from '@linode/api-v4';
 import type { AutocompleteRenderOptionState } from '@mui/material';
 import type {
@@ -159,6 +160,23 @@ export const getStreamDescription = (stream: Stream) => {
 
 export const getDestinationDescription = (destination: Destination) => {
   return `${getDestinationTypeOption(destination.type)?.label}`;
+};
+
+export const isStreamCreationLimitReached = (
+  streamsQuotas: StreamsQuota[] | undefined,
+  allStreams: Stream[] | undefined
+) => {
+  if (!streamsQuotas?.length) {
+    return false;
+  }
+
+  return streamsQuotas.every(({ quota_limit, quota_type }) => {
+    const streamType = quota_type.replace('logs-streams-', '');
+    const streamsOfType = (allStreams ?? []).filter(
+      ({ type }) => type === streamType
+    );
+    return streamsOfType.length >= quota_limit;
+  });
 };
 
 export const useIsLkeEAuditLogsTypeSelectionEnabled = (): boolean => {

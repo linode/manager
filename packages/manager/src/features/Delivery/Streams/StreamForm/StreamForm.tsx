@@ -5,8 +5,10 @@ import {
   streamType,
 } from '@linode/api-v4';
 import {
+  useAllStreamsQuery,
   useCreateDestinationMutation,
   useCreateStreamMutation,
+  useStreamsQuotasQuery,
   useUpdateStreamMutation,
 } from '@linode/queries';
 import { Stack } from '@linode/ui';
@@ -21,6 +23,7 @@ import { type SubmitHandler, useFormContext, useWatch } from 'react-hook-form';
 import {
   getDestinationPayloadDetails,
   getStreamPayloadDetails,
+  isStreamCreationLimitReached,
 } from 'src/features/Delivery/deliveryUtils';
 import { FormSubmitBar } from 'src/features/Delivery/Shared/FormSubmitBar/FormSubmitBar';
 import { useVerifyDestination } from 'src/features/Delivery/Shared/useVerifyDestination';
@@ -77,6 +80,15 @@ export const StreamForm = (props: StreamFormProps) => {
     control,
     name: 'stream.status',
   });
+  const { data: allStreams } = useAllStreamsQuery({}, {}, mode === 'create');
+  const { data: streamsQuotas } = useStreamsQuotasQuery(mode === 'create');
+
+  const isStreamCreationLimitReachedOnCreate = useMemo(
+    () =>
+      mode === 'create' &&
+      isStreamCreationLimitReached(streamsQuotas, allStreams),
+    [allStreams, mode, streamsQuotas]
+  );
 
   const isStreamStatusBlocking =
     !!selectedStreamStatus &&
@@ -88,13 +100,20 @@ export const StreamForm = (props: StreamFormProps) => {
       ] as StreamStatus[]
     ).includes(selectedStreamStatus);
 
-  const submitButtonTooltip = useMemo(
-    () =>
-      isStreamStatusBlocking
-        ? `You cannot save changes while the stream status is ${selectedStreamStatus}`
-        : undefined,
-    [isStreamStatusBlocking, selectedStreamStatus]
-  );
+  const submitButtonTooltip = useMemo(() => {
+    if (isStreamStatusBlocking) {
+      return `You cannot save changes while the stream status is ${selectedStreamStatus}`;
+    }
+    if (isStreamCreationLimitReachedOnCreate) {
+      return 'You have reached the maximum number of allowed streams.';
+    }
+
+    return undefined;
+  }, [
+    isStreamCreationLimitReachedOnCreate,
+    isStreamStatusBlocking,
+    selectedStreamStatus,
+  ]);
 
   useEffect(() => {
     setDestinationVerified(false);
@@ -223,10 +242,13 @@ export const StreamForm = (props: StreamFormProps) => {
         <Grid size={{ lg: 3, md: 12, sm: 12, xs: 12 }}>
           <FormSubmitBar
             blockSubmit={
-              isStreamStatusBlocking || !selectedDestinations?.length
+              isStreamStatusBlocking ||
+              !selectedDestinations?.length ||
+              isStreamCreationLimitReachedOnCreate
             }
             connectionTested={destinationVerified}
             destinationType={destination?.type}
+            disableSubmit={isStreamCreationLimitReachedOnCreate}
             disableTestConnection={disableTestConnection}
             formType={'stream'}
             isSubmitting={isSubmitting}

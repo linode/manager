@@ -1,6 +1,11 @@
 import { getAPIErrorOrDefault } from '@akamai/compute-ui-core/api';
 import { streamStatus } from '@linode/api-v4';
-import { useStreamsQuery, useUpdateStreamMutation } from '@linode/queries';
+import {
+  useAllStreamsQuery,
+  useStreamsQuery,
+  useStreamsQuotasQuery,
+  useUpdateStreamMutation,
+} from '@linode/queries';
 import { CircleProgress, ErrorState, Hidden, Paper } from '@linode/ui';
 import { TableBody, TableCell, TableHead, TableRow } from '@mui/material';
 import { useNavigate, useSearch } from '@tanstack/react-router';
@@ -11,7 +16,10 @@ import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFoot
 import { Table } from 'src/components/Table';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { getStreamPayloadDetails } from 'src/features/Delivery/deliveryUtils';
+import {
+  getStreamPayloadDetails,
+  isStreamCreationLimitReached,
+} from 'src/features/Delivery/deliveryUtils';
 import { DeliveryTabHeader } from 'src/features/Delivery/Shared/DeliveryTabHeader/DeliveryTabHeader';
 import { streamStatusOptions } from 'src/features/Delivery/Shared/types';
 import {
@@ -59,6 +67,13 @@ export const StreamsLanding = () => {
   });
 
   const { mutateAsync: updateStream } = useUpdateStreamMutation();
+
+  const { data: allStreams } = useAllStreamsQuery();
+  const { data: streamsQuotas } = useStreamsQuotasQuery();
+
+  const isStreamCreationLimitReachedStatus = React.useMemo(() => {
+    return isStreamCreationLimitReached(streamsQuotas, allStreams);
+  }, [allStreams, streamsQuotas]);
 
   const filter = {
     ['+order']: order,
@@ -185,6 +200,12 @@ export const StreamsLanding = () => {
   return (
     <Paper>
       <DeliveryTabHeader
+        disabledCreateButton={isStreamCreationLimitReachedStatus}
+        disabledCreateButtonTooltipText={
+          isStreamCreationLimitReachedStatus
+            ? 'You have reached the maximum number of allowed streams.'
+            : undefined
+        }
         entity="Stream"
         onButtonClick={navigateToCreate}
         onSearch={onSearch}

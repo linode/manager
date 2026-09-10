@@ -11,7 +11,9 @@ const loadingTestId = 'circle-progress';
 const queryMocks = vi.hoisted(() => ({
   useNavigate: vi.fn(() => vi.fn()),
   useSearch: vi.fn(),
+  useAllStreamsQuery: vi.fn().mockReturnValue({ data: [] }),
   useStreamsQuery: vi.fn().mockReturnValue({}),
+  useStreamsQuotasQuery: vi.fn().mockReturnValue({ data: [] }),
   useUpdateStreamMutation: vi.fn().mockReturnValue({
     mutateAsync: vi.fn(),
   }),
@@ -33,7 +35,9 @@ vi.mock('@linode/queries', async () => {
   const actual = await vi.importActual('@linode/queries');
   return {
     ...actual,
+    useAllStreamsQuery: queryMocks.useAllStreamsQuery,
     useStreamsQuery: queryMocks.useStreamsQuery,
+    useStreamsQuotasQuery: queryMocks.useStreamsQuotasQuery,
     useUpdateStreamMutation: queryMocks.useUpdateStreamMutation,
     useDeleteStreamMutation: queryMocks.useDeleteStreamMutation,
   };
@@ -132,6 +136,94 @@ describe('Streams Landing Table', () => {
 
     const loadingElement = screen.queryByTestId(loadingTestId);
     expect(loadingElement).toBeInTheDocument();
+  });
+
+  it('should disable the Create Stream button when the stream creation quota limit is reached', () => {
+    queryMocks.useStreamsQuery.mockReturnValue({
+      data: { data: streams, results: 31 },
+      isLoading: false,
+    });
+    queryMocks.useAllStreamsQuery.mockReturnValue({
+      data: [streamFactory.build({ type: 'audit_logs' })],
+    });
+    queryMocks.useStreamsQuotasQuery.mockReturnValue({
+      data: [
+        {
+          quota_id: 'aclp_logs',
+          quota_name: 'Number of Streams per type',
+          description: 'Current number of streams per account',
+          quota_limit: 1,
+          quota_type: 'logs-streams-audit_logs',
+        },
+      ],
+    });
+
+    renderComponent();
+
+    const createButton = screen.getByText('Create Stream').closest('button');
+    expect(createButton).toHaveAttribute('aria-disabled', 'true');
+  });
+
+  it('should enable the Create Stream button when below the stream creation quota limit', () => {
+    queryMocks.useStreamsQuery.mockReturnValue({
+      data: { data: streams, results: 31 },
+      isLoading: false,
+    });
+    queryMocks.useAllStreamsQuery.mockReturnValue({
+      data: [],
+    });
+    queryMocks.useStreamsQuotasQuery.mockReturnValue({
+      data: [
+        {
+          quota_id: 'aclp_logs',
+          quota_name: 'Number of Streams per type',
+          description: 'Current number of streams per account',
+          quota_limit: 5,
+          quota_type: 'logs-streams-audit_logs',
+        },
+      ],
+    });
+
+    renderComponent();
+
+    const createButton = screen.getByText('Create Stream').closest('button');
+    expect(createButton).toHaveAttribute('aria-disabled', 'false');
+  });
+
+  it('should keep the Create Stream button enabled when one quota is still below its limit', () => {
+    queryMocks.useStreamsQuery.mockReturnValue({
+      data: { data: streams, results: 31 },
+      isLoading: false,
+    });
+    queryMocks.useAllStreamsQuery.mockReturnValue({
+      data: [
+        streamFactory.build({ type: 'audit_logs' }),
+        streamFactory.build({ type: 'lke_audit_logs' }),
+      ],
+    });
+    queryMocks.useStreamsQuotasQuery.mockReturnValue({
+      data: [
+        {
+          quota_id: 'aclp_logs',
+          quota_name: 'Number of Streams per type',
+          description: 'Current number of streams per account',
+          quota_limit: 2,
+          quota_type: 'logs-streams-audit_logs',
+        },
+        {
+          quota_id: 'aclp_lke_logs',
+          quota_name: 'Number of LKE Streams per type',
+          description: 'Current number of LKE streams per account',
+          quota_limit: 1,
+          quota_type: 'logs-streams-lke_audit_logs',
+        },
+      ],
+    });
+
+    renderComponent();
+
+    const createButton = screen.getByText('Create Stream').closest('button');
+    expect(createButton).toHaveAttribute('aria-disabled', 'false');
   });
 
   const clickOnActionMenu = async () => {
