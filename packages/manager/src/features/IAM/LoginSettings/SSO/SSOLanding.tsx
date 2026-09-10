@@ -5,12 +5,10 @@ import {
   Tab,
   Tabs,
 } from '@akamai/cds-components/react';
+import { Spacing } from '@akamai/cds-tokens';
 import { Outlet, useLocation, useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
-import { useFlags } from 'src/hooks/useFlags';
-
-import { useIsIAMEnabled } from '../../hooks/useIsIAMEnabled';
 import { useTabs } from '../../hooks/useTabs';
 import { IAM_LABEL, SSO_DOCS_LINK } from '../../Shared/constants';
 import { DocsLink } from '../../Shared/DocsLink/DocsLink';
@@ -21,12 +19,8 @@ import { IAM_SSO_ENFORCE_PENDO_IDS, IAM_SSO_IDP_PENDO_IDS } from '../constants';
 import type { TabsElement } from '@akamai/cds-components/react';
 
 export const SSOLanding = () => {
-  const flags = useFlags();
-  const { isIAMEnabled } = useIsIAMEnabled();
-
   const location = useLocation();
   const navigate = useNavigate();
-  const showNewBadge = flags.iamNewBadge && isIAMEnabled;
   const tabsRef = React.useRef<TabsElement>(null);
 
   const { tabs, tabIndex, handleTabChange } = useTabs(
@@ -60,14 +54,16 @@ export const SSOLanding = () => {
             onCdsBreadcrumbClick={() => navigate({ to: '/iam/users' })}
           >
             {IAM_LABEL}
-            {showNewBadge ? <Badge type="new" /> : null}
           </BreadcrumbItem>
           <BreadcrumbItem
             onCdsBreadcrumbClick={() => navigate({ to: '/iam/settings' })}
           >
             Settings
           </BreadcrumbItem>
-          <BreadcrumbItem>Manage SSO Enforcement</BreadcrumbItem>
+          <BreadcrumbItem>
+            Manage SSO Enforcement
+            <Badge style={{ marginLeft: Spacing.S4 }} type="new" />
+          </BreadcrumbItem>
         </Breadcrumb>
         <DocsLink href={SSO_DOCS_LINK} />
       </LandingHeader>

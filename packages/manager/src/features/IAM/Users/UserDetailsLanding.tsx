@@ -1,5 +1,4 @@
 import {
-  Badge,
   Breadcrumb,
   BreadcrumbItem,
   Tab,
@@ -13,10 +12,7 @@ import {
 } from '@tanstack/react-router';
 import React from 'react';
 
-import { useFlags } from 'src/hooks/useFlags';
-
 import { useDelegationRole } from '../hooks/useDelegationRole';
-import { useIsIAMEnabled } from '../hooks/useIsIAMEnabled';
 import { useTabs } from '../hooks/useTabs';
 import { IAM_USERS_PENDO_IDS } from '../LoginSettings/constants';
 import {
@@ -36,10 +32,7 @@ import type { TabsElement } from '@akamai/cds-components/react';
 const USERNAME_TRUNCATE_MAX_WINDOW_WIDTH = 1280;
 
 export const UserDetailsLanding = () => {
-  const flags = useFlags();
   const navigate = useNavigate();
-  const { isIAMEnabled } = useIsIAMEnabled();
-  const showNewBadge = flags.iamNewBadge && isIAMEnabled;
   const { username } = useParams({ from: '/iam/users/$username' });
   const { isParentUserType } = useDelegationRole();
   const tabsRef = React.useRef<TabsElement>(null);
@@ -90,7 +83,6 @@ export const UserDetailsLanding = () => {
             onCdsBreadcrumbClick={() => navigate({ to: '/iam/users' })}
           >
             {IAM_LABEL}
-            {showNewBadge ? <Badge type="new" /> : null}
           </BreadcrumbItem>
           <BreadcrumbItem
             onCdsBreadcrumbClick={() => navigate({ to: '/iam/users' })}

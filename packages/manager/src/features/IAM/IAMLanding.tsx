@@ -5,13 +5,11 @@ import {
   Tab,
   Tabs,
 } from '@akamai/cds-components/react';
+import { Spacing } from '@akamai/cds-tokens';
 import { Outlet, useLocation, useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
-import { useFlags } from 'src/hooks/useFlags';
-
 import { useDelegationRole } from './hooks/useDelegationRole';
-import { useIsIAMEnabled } from './hooks/useIsIAMEnabled';
 import { useIsIAMFederationEnabled } from './hooks/useIsIAMFederationEnabled';
 import { useIsIAMTfaEnforcementEnabled } from './hooks/useIsIAMTfaEnforcementEnabled';
 import { useTabs } from './hooks/useTabs';
@@ -29,9 +27,6 @@ import { SuspenseLoader } from './Shared/SuspenseLoader/SuspenseLoader';
 import type { TabsElement } from '@akamai/cds-components/react';
 
 export const IdentityAccessLanding = React.memo(() => {
-  const flags = useFlags();
-  const { isIAMEnabled } = useIsIAMEnabled();
-  const showNewBadge = flags.iamNewBadge && isIAMEnabled;
   const location = useLocation();
   const navigate = useNavigate();
   const { isParentUserType } = useDelegationRole();
@@ -87,10 +82,7 @@ export const IdentityAccessLanding = React.memo(() => {
     <>
       <LandingHeader>
         <Breadcrumb>
-          <BreadcrumbItem>
-            Identity and Access
-            {showNewBadge ? <Badge type="new">New</Badge> : null}
-          </BreadcrumbItem>
+          <BreadcrumbItem>Identity and Access</BreadcrumbItem>
         </Breadcrumb>
         <DocsLink href={docsLink} pendoId={IAM_LANDING_PENDO_IDS.docsLink} />
       </LandingHeader>
@@ -108,7 +100,12 @@ export const IdentityAccessLanding = React.memo(() => {
               key={String(tab.to)}
               label={tab.title}
             >
-              <span slot="tab-header">{tab.title}</span>
+              <span slot="tab-header">
+                {tab.title}
+                {tab.to === '/iam/settings' ? (
+                  <Badge style={{ marginLeft: Spacing.S8 }} type="new" />
+                ) : null}
+              </span>
             </Tab>
           ))}
         </Tabs>

@@ -1,5 +1,4 @@
 import {
-  Badge,
   Breadcrumb,
   BreadcrumbItem,
   Tab,
@@ -8,9 +7,6 @@ import {
 import { Outlet, useLocation, useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
-import { useFlags } from 'src/hooks/useFlags';
-
-import { useIsIAMEnabled } from '../../hooks/useIsIAMEnabled';
 import { useTabs } from '../../hooks/useTabs';
 import { IAM_LABEL } from '../../Shared/constants';
 import { LandingHeader } from '../../Shared/LandingHeader/LandingHeader';
@@ -21,10 +17,7 @@ import type { TabsElement } from '@akamai/cds-components/react';
 export const DefaultsLanding = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const flags = useFlags();
-  const { isIAMEnabled } = useIsIAMEnabled();
   const tabsRef = React.useRef<TabsElement>(null);
-  const showNewBadge = flags.iamNewBadge && isIAMEnabled;
 
   const { tabs, tabIndex, handleTabChange } = useTabs(
     [
@@ -50,7 +43,6 @@ export const DefaultsLanding = () => {
         <Breadcrumb>
           <BreadcrumbItem onCdsBreadcrumbClick={() => navigate({ to: '/iam' })}>
             {IAM_LABEL}
-            {showNewBadge ? <Badge type="new" /> : null}
           </BreadcrumbItem>
           <BreadcrumbItem
             onCdsBreadcrumbClick={() => navigate({ to: '/iam/roles' })}

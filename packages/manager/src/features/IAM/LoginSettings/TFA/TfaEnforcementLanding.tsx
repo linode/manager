@@ -21,10 +21,7 @@ import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 
-import { useFlags } from 'src/hooks/useFlags';
-
 import { useDiscardChanges } from '../../hooks/useDiscardChanges';
-import { useIsIAMEnabled } from '../../hooks/useIsIAMEnabled';
 import { usePermissions } from '../../hooks/usePermissions';
 import { useTfaUserCounts } from '../../hooks/useTfaUserCounts';
 import { Box } from '../../Shared/Box/Box';
@@ -50,8 +47,6 @@ export interface TfaEnforcementFormValues {
 
 export const TfaEnforcementLanding = () => {
   const navigate = useNavigate();
-  const flags = useFlags();
-  const { isIAMEnabled } = useIsIAMEnabled();
 
   const { data: permissions, error: permissionsError } = usePermissions(
     'account',
@@ -167,14 +162,16 @@ export const TfaEnforcementLanding = () => {
             onCdsBreadcrumbClick={() => navigate({ to: '/iam/users' })}
           >
             {IAM_LABEL}
-            {flags.iamNewBadge && isIAMEnabled ? <Badge type="new" /> : null}
           </BreadcrumbItem>
           <BreadcrumbItem
             onCdsBreadcrumbClick={() => navigate({ to: '/iam/settings' })}
           >
             Settings
           </BreadcrumbItem>
-          <BreadcrumbItem>Manage 2FA Enforcement</BreadcrumbItem>
+          <BreadcrumbItem>
+            Manage 2FA Enforcement
+            <Badge style={{ marginLeft: Spacing.S4 }} type="new" />
+          </BreadcrumbItem>
         </Breadcrumb>
         <DocsLink
           href={TFA_ENFORCEMENT_LINK}

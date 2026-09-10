@@ -1,4 +1,8 @@
-import { Button, NotificationBanner } from '@akamai/cds-components/react';
+import {
+  Badge,
+  Button,
+  NotificationBanner,
+} from '@akamai/cds-components/react';
 import { Spacing, Typography } from '@akamai/cds-tokens';
 import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
@@ -68,6 +72,7 @@ export const TFASection = ({ error, tfaSettings }: Props) => {
         }}
       >
         Enforce Two-Factor Authentication (2FA)
+        <Badge style={{ marginLeft: Spacing.S8 }} type="new" />
       </h2>
       <p>
         Secure your account by enforcing two-step login. Choose whether to apply
