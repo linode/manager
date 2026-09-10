@@ -42,39 +42,67 @@ export const CloudPulseDateTimeRangePicker = React.memo(
       props;
     const { data: profile } = useProfile();
     const flags = useFlags();
-    let defaultSelected = defaultValue as DateTimeWithPreset;
     const RESET = 'Reset';
     const theme = useTheme();
     const timezone =
-      defaultSelected?.timeZone ??
-      (profile?.timezone === 'GMT'
+      profile?.timezone === 'GMT'
         ? 'Etc/GMT' // this is present in timezone list for GMT
-        : (profile?.timezone ?? DateTime.local().zoneName));
-
-    if (!defaultSelected) {
-      const preset = serviceType
-        ? flags.aclpServices?.[serviceType]?.metrics?.defaultPreset
-        : undefined;
-      defaultSelected = defaultTimeDuration(timezone, preset);
-    } else {
-      defaultSelected = getTimeFromPreset(defaultSelected, timezone);
-    }
+        : (profile?.timezone ?? DateTime.local().zoneName);
     // Show button with preset value only if selected or default preset is not 'reset'
     const [selectedPreset, setSelectedPreset] = React.useState<
-      string | undefined
-    >(defaultSelected.preset);
+      DateTimeWithPreset | undefined
+    >();
 
     // Show calendar only if selected or default preset is 'reset' or button is clicked
     const [openCalendar, setOpenCalendar] = React.useState<boolean>(false);
-    React.useEffect(() => {
-      if (defaultSelected) {
-        handleStatsChange(defaultSelected);
-      }
-    }, []);
 
-    const handleClose = (selectedPreset: string) => {
+    // Applies the saved default or the service default exactly once. Never persists.
+    const hasAppliedInitialDefault = React.useRef(false);
+    React.useEffect(() => {
+      if (hasAppliedInitialDefault.current || !serviceType) {
+        return;
+      }
+      hasAppliedInitialDefault.current = true;
+
+      const preset = flags.aclpServices?.[serviceType]?.metrics?.defaultPreset;
+      const initialDuration = defaultValue
+        ? getTimeFromPreset(defaultValue as DateTimeWithPreset, timezone)
+        : defaultTimeDuration(timezone, preset);
+
+      setSelectedPreset(initialDuration);
+      handleStatsChange(initialDuration, false);
+    }, [
+      defaultValue,
+      flags.aclpServices,
+      handleStatsChange,
+      serviceType,
+      timezone,
+    ]);
+
+    // Recomputes a fresh default duration whenever the dashboard's service
+    // type changes post-mount. Persistence for this transition is owned by
+    // the dashboard-change handler, not here.
+    const previousServiceTypeRef = React.useRef(serviceType);
+    React.useEffect(() => {
+      if (
+        !hasAppliedInitialDefault.current ||
+        previousServiceTypeRef.current === serviceType
+      ) {
+        return;
+      }
+      previousServiceTypeRef.current = serviceType;
+
+      const preset = serviceType
+        ? flags.aclpServices?.[serviceType]?.metrics?.defaultPreset
+        : undefined;
+      const newDuration = defaultTimeDuration(timezone, preset);
+
+      setSelectedPreset(newDuration);
+      handleStatsChange(newDuration, false);
+    }, [flags.aclpServices, handleStatsChange, serviceType, timezone]);
+
+    const handleClose = (_selectedPreset: string) => {
       setOpenCalendar(false);
-      setSelectedPreset(selectedPreset);
     };
 
     const handleDateChange = (params: DateChangeProps) => {
@@ -83,7 +111,12 @@ export const CloudPulseDateTimeRangePicker = React.memo(
         return;
       }
       setOpenCalendar(selectedPreset !== RESET ? false : true);
-      setSelectedPreset(selectedPreset);
+      setSelectedPreset({
+        end: endDate,
+        preset: selectedPreset,
+        start: startDate,
+        timeZone,
+      });
       handleStatsChange(
         {
           end: endDate,
@@ -95,16 +128,16 @@ export const CloudPulseDateTimeRangePicker = React.memo(
       );
     };
 
-    const end = defaultSelected?.start
-      ? DateTime.fromISO(defaultSelected?.end, { zone: timezone })
+    const end = selectedPreset?.start
+      ? DateTime.fromISO(selectedPreset?.end, { zone: timezone })
       : undefined;
-    const start = defaultSelected?.end
-      ? DateTime.fromISO(defaultSelected?.start, { zone: timezone })
+    const start = selectedPreset?.end
+      ? DateTime.fromISO(selectedPreset?.start, { zone: timezone })
       : end;
 
     return (
       <Box alignItems={'center'} display={'flex'}>
-        {selectedPreset !== RESET && !openCalendar && (
+        {selectedPreset?.preset !== RESET && !openCalendar && (
           <Button
             buttonType="secondary"
             data-testid="preset-button"
@@ -128,10 +161,10 @@ export const CloudPulseDateTimeRangePicker = React.memo(
               },
             }}
           >
-            {defaultSelected.preset}
+            {selectedPreset?.preset}
           </Button>
         )}
-        {(selectedPreset === RESET || openCalendar) && (
+        {(selectedPreset?.preset === RESET || openCalendar) && (
           <DateTimeRangePicker
             endDateProps={{
               label: 'End Date',
@@ -144,7 +177,7 @@ export const CloudPulseDateTimeRangePicker = React.memo(
             onClose={handleClose}
             openCalendar={openCalendar}
             presetsProps={{
-              defaultValue: defaultSelected?.preset,
+              defaultValue: selectedPreset?.preset,
               enablePresets: true,
             }}
             startDateProps={{

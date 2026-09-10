@@ -27,9 +27,14 @@ export interface IntervalSelectProperties {
   duration: DateTimeWithPreset;
 
   /**
-   * Function to be triggered on aggregate function changed from dropdown
+   * Function to be triggered on aggregate function changed from dropdown.
+   * `reason` is 'user' for a manual selection, 'duration-change' when the
+   * selection was auto-reset because the current duration invalidated it.
    */
-  onIntervalChange: (intervalValue: TimeGranularity) => void;
+  onIntervalChange: (
+    intervalValue: TimeGranularity,
+    reason: 'duration-change' | 'user'
+  ) => void;
 
   /**
    * scrape intervalto filter out minimum time granularity
@@ -76,6 +81,39 @@ export const getDurationInSeconds = (duration: DateTimeWithPreset): number => {
   }
   const diff = end.diff(start, 'seconds').seconds;
   return diff > 0 ? diff : Infinity;
+};
+
+/**
+ * Pure check for whether a saved (non-Auto) granularity is still selectable
+ * for the given duration. Shared by the interval select UI and the
+ * duration-change preference reconciliation in UserPreference.ts.
+ */
+export const isIntervalValidForDuration = (
+  interval: TimeGranularity,
+  duration: DateTimeWithPreset
+): boolean => {
+  if (interval.unit === 'Auto') {
+    return true;
+  }
+
+  const presetIntervals = duration.preset
+    ? PRESET_TO_INTERVALS_MAP[duration.preset]
+    : undefined;
+
+  if (presetIntervals) {
+    return presetIntervals.some(
+      (option) =>
+        option.value === interval.value && option.unit === interval.unit
+    );
+  }
+
+  return (
+    getIntervalOptionInSeconds({
+      label: '',
+      unit: interval.unit,
+      value: interval.value,
+    }) <= getDurationInSeconds(duration)
+  );
 };
 
 // Intervals must be in ascending order here
@@ -178,7 +216,7 @@ export const CloudPulseIntervalSelect = React.memo(
             getIntervalOptionInSeconds(option) <= getDurationInSeconds(duration)
         );
 
-    let defaultValue =
+    const defaultValue =
       defaultInterval?.unit === 'Auto'
         ? autoIntervalOption
         : availableIntervalOptions.find(
@@ -187,15 +225,28 @@ export const CloudPulseIntervalSelect = React.memo(
               obj.unit === defaultInterval?.unit
           );
 
-    if (!defaultValue) {
-      defaultValue = autoIntervalOption;
-      onIntervalChange({
-        unit: defaultValue.unit,
-        value: defaultValue.value,
-      });
-    }
-    const [selectedInterval, setSelectedInterval] =
-      React.useState(defaultValue);
+    const [selectedInterval, setSelectedInterval] = React.useState(
+      defaultValue ?? autoIntervalOption
+    );
+
+    // Saved interval was invalid for the initial duration; notify the parent
+    // after mount instead of during render to avoid updating another
+    // component's state while this component is still rendering.
+    const hasNotifiedInitialFallback = React.useRef(false);
+    React.useEffect(() => {
+      if (!defaultValue && !hasNotifiedInitialFallback.current) {
+        hasNotifiedInitialFallback.current = true;
+        onIntervalChange(
+          {
+            unit: autoIntervalOption.unit,
+            value: autoIntervalOption.value,
+          },
+          'duration-change'
+        );
+      }
+      // Runs once on mount only; `defaultValue` is intentionally read from the closure of the first render.
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     // Stable key representing the effective duration: preset label for known presets,
     // or "start_end" string for custom ranges. Used as the effect dependency so the
@@ -215,10 +266,13 @@ export const CloudPulseIntervalSelect = React.memo(
         );
       if (!isStillValid) {
         setSelectedInterval(autoIntervalOption);
-        onIntervalChange({
-          unit: autoIntervalOption.unit,
-          value: autoIntervalOption.value,
-        });
+        onIntervalChange(
+          {
+            unit: autoIntervalOption.unit,
+            value: autoIntervalOption.value,
+          },
+          'duration-change'
+        );
       }
       // Re-evaluate only when the effective duration changes
       // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -238,10 +292,13 @@ export const CloudPulseIntervalSelect = React.memo(
           noMarginTop={true}
           onChange={(e, selectedInterval) => {
             setSelectedInterval(selectedInterval);
-            onIntervalChange({
-              unit: selectedInterval?.unit,
-              value: selectedInterval?.value,
-            });
+            onIntervalChange(
+              {
+                unit: selectedInterval?.unit,
+                value: selectedInterval?.value,
+              },
+              'user'
+            );
           }}
           options={[autoIntervalOption, ...availableIntervalOptions]}
           sx={getAutocompleteWidgetStyles}

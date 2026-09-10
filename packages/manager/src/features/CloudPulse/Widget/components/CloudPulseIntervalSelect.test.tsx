@@ -223,10 +223,13 @@ describe('Interval select component', () => {
       );
 
       expect(getByRole('combobox')).toHaveAttribute('value', 'Auto');
-      expect(onIntervalChange).toHaveBeenCalledWith({
-        unit: 'Auto',
-        value: -1,
-      });
+      expect(onIntervalChange).toHaveBeenCalledWith(
+        {
+          unit: 'Auto',
+          value: -1,
+        },
+        'duration-change'
+      );
     });
 
     it('renders Auto when defaultInterval is explicitly Auto', () => {
@@ -379,10 +382,13 @@ describe('Interval select component', () => {
       );
 
       expect(getByRole('combobox')).toHaveAttribute('value', 'Auto');
-      expect(onIntervalChange).toHaveBeenLastCalledWith({
-        unit: 'Auto',
-        value: -1,
-      });
+      expect(onIntervalChange).toHaveBeenLastCalledWith(
+        {
+          unit: 'Auto',
+          value: -1,
+        },
+        'duration-change'
+      );
     });
 
     it('does not reset when duration shrinks but selection remains valid', () => {

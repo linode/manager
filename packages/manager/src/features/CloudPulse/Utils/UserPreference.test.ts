@@ -1,6 +1,7 @@
+import { renderHook } from '@testing-library/react';
 import { vi } from 'vitest';
 
-import { usePreferencesToggle } from './UserPreference';
+import { useAclpPreference, usePreferencesToggle } from './UserPreference';
 
 const queryMocks = vi.hoisted(() => ({
   useMutatePreferences: vi.fn(),
@@ -14,6 +15,61 @@ vi.mock('@linode/queries', async () => {
     useMutatePreferences: queryMocks.useMutatePreferences,
     usePreferences: queryMocks.usePreferences,
   };
+});
+
+describe('useAclpPreference - updateTimeDurationPreference', () => {
+  it('resets only widget granularities invalidated by the new duration, in a single mutate call', () => {
+    const mockMutate = vi.fn().mockResolvedValue(undefined);
+    queryMocks.usePreferences.mockReturnValue({
+      data: {
+        aclpPreference: {
+          dateTimeDuration: {
+            end: '2026-01-01T01:00:00.000Z',
+            start: '2026-01-01T00:00:00.000Z',
+          },
+          widgets: {
+            'invalid-widget': {
+              label: 'invalid-widget',
+              timeGranularity: { unit: 'days', value: 1 },
+            },
+            'still-valid-widget': {
+              label: 'still-valid-widget',
+              timeGranularity: { unit: 'min', value: 1 },
+            },
+          },
+        },
+      },
+      isLoading: false,
+    });
+    queryMocks.useMutatePreferences.mockReturnValue({
+      mutateAsync: mockMutate,
+    });
+
+    const { result } = renderHook(() => useAclpPreference());
+
+    const newDuration = {
+      end: '2026-01-01T00:30:00.000Z',
+      start: '2026-01-01T00:00:00.000Z',
+    };
+    result.current.updateTimeDurationPreference(newDuration);
+
+    expect(mockMutate).toHaveBeenCalledTimes(1);
+    expect(mockMutate).toHaveBeenCalledWith({
+      aclpPreference: {
+        dateTimeDuration: newDuration,
+        widgets: {
+          'invalid-widget': {
+            label: 'invalid-widget',
+            timeGranularity: { label: 'Auto', unit: 'Auto', value: -1 },
+          },
+          'still-valid-widget': {
+            label: 'still-valid-widget',
+            timeGranularity: { unit: 'min', value: 1 },
+          },
+        },
+      },
+    });
+  });
 });
 
 describe('usePreferencesToggle', () => {

@@ -371,10 +371,12 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
   /**
    *
    * @param intervalValue : TimeGranularity object selected from the interval select
+   * @param reason : 'user' for a manual pick, 'duration-change' when the duration
+   * invalidated the previous selection (already persisted by the global duration update)
    */
   const handleIntervalChange = React.useCallback(
-    (intervalValue: TimeGranularity) => {
-      if (savePref) {
+    (intervalValue: TimeGranularity, reason: 'duration-change' | 'user') => {
+      if (savePref && reason === 'user') {
         updatePreferences(widget.label, {
           [TIME_GRANULARITY]: { ...intervalValue },
         });
@@ -387,7 +389,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
         };
       });
     },
-    []
+    [savePref, updatePreferences, widget.label]
   );
   const handleGroupByChange = React.useCallback(
     (

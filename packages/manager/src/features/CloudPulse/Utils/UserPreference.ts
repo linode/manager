@@ -1,16 +1,25 @@
 import { useMutatePreferences, usePreferences } from '@linode/queries';
 import { useRef } from 'react';
 
-import { DASHBOARD_ID, WIDGETS } from './constants';
+import {
+  autoIntervalOption,
+  isIntervalValidForDuration,
+} from '../Widget/components/CloudPulseIntervalSelect';
+import { DASHBOARD_ID, TIME_DURATION, WIDGETS } from './constants';
 import { FILTER_CONFIG } from './FilterConfig';
 
-import type { AclpConfig, AclpWidget } from '@linode/api-v4';
+import type {
+  AclpConfig,
+  AclpWidget,
+  DateTimeWithPreset,
+} from '@linode/api-v4';
 import type { ManagerPreferences } from '@linode/utilities';
 
 interface AclpPreferenceObject {
   isLoading: boolean;
   preferences: AclpConfig;
   updateGlobalFilterPreference: (data: AclpConfig) => void;
+  updateTimeDurationPreference: (duration: DateTimeWithPreset) => void;
   updateWidgetPreference: (label: string, data: Partial<AclpWidget>) => void;
 }
 
@@ -55,6 +64,40 @@ export const useAclpPreference = (): AclpPreferenceObject => {
 
   /**
    *
+   * @param duration new global time duration; resets any saved widget
+   * granularity that is no longer valid for this duration to Auto
+   */
+  const updateTimeDurationPreference = (duration: DateTimeWithPreset) => {
+    const currentWidgets = preferenceRef.current.widgets ?? {};
+    const updatedWidgets: Record<string, AclpWidget> = { ...currentWidgets };
+
+    for (const label of Object.keys(currentWidgets)) {
+      const widgetPreference = currentWidgets[label];
+      const timeGranularity = widgetPreference?.timeGranularity;
+
+      if (
+        timeGranularity &&
+        !isIntervalValidForDuration(timeGranularity, duration)
+      ) {
+        updatedWidgets[label] = {
+          ...widgetPreference,
+          timeGranularity: { ...autoIntervalOption },
+        };
+      }
+    }
+
+    const updatedPreferences = {
+      ...preferenceRef.current,
+      [TIME_DURATION]: duration,
+      [WIDGETS]: updatedWidgets,
+    };
+
+    preferenceRef.current = updatedPreferences;
+    updateFunction({ aclpPreference: updatedPreferences });
+  };
+
+  /**
+   *
    * @param label label of the widget that should be updated
    * @param data AclpWidget data for the label that is to be updated in preference
    */
@@ -79,6 +122,7 @@ export const useAclpPreference = (): AclpPreferenceObject => {
     isLoading,
     preferences: preferences?.aclpPreference ?? {},
     updateGlobalFilterPreference,
+    updateTimeDurationPreference,
     updateWidgetPreference,
   };
 };

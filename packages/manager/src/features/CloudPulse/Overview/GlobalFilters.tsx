@@ -91,6 +91,7 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
     preferences,
     updateGlobalFilterPreference: updatePreferences,
     isLoading: isPreferenceLoading,
+    updateTimeDurationPreference,
   } = useAclpPreference();
   const [selectedDashboard, setSelectedDashboard] = React.useState<
     Dashboard | undefined
@@ -128,7 +129,7 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
   const handleTimeRangeChange = React.useCallback(
     (timeDuration: DateTimeWithPreset, savePref: boolean = false) => {
       if (savePref) {
-        updatePreferences({ [TIME_DURATION]: timeDuration });
+        updateTimeDurationPreference(timeDuration);
       }
       setTimeDuration(timeDuration);
       handleTimeDurationChange({
@@ -142,21 +143,20 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
 
   const onDashboardChange = React.useCallback(
     (dashboard: Dashboard | undefined, savePref: boolean = false) => {
-      if (savePref) {
-        updatePreferences({
-          [DASHBOARD_ID]: dashboard?.id,
-        });
-      }
-      setSelectedDashboard(dashboard);
       const defaultTimeDurationPreset = dashboard?.service_type
         ? flags.aclpServices?.[dashboard?.service_type]?.metrics?.defaultPreset
         : undefined;
-
       const timeDuration = defaultTimeDuration(
         timezone,
         defaultTimeDurationPreset
       );
-
+      if (savePref) {
+        updatePreferences({
+          [DASHBOARD_ID]: dashboard?.id,
+          [TIME_DURATION]: timeDuration,
+        });
+      }
+      setSelectedDashboard(dashboard);
       setTimeDuration(timeDuration);
       handleDashboardChange(
         dashboard,

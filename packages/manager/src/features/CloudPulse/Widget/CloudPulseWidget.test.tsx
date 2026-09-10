@@ -218,4 +218,43 @@ describe('Cloud pulse widgets', () => {
       expect.any(Object)
     );
   });
+
+  it('should not persist widget preference when interval resets due to a duration change', () => {
+    const initialProps: CloudPulseWidgetProperties = {
+      ...props,
+      duration: {
+        end: DateTime.now().toISO(),
+        start: DateTime.now().minus({ hours: 1 }).toISO(),
+      },
+      widget: widgetFactory.build({
+        label: 'CPU Utilization',
+        time_granularity: { unit: 'min', value: 5 },
+      }),
+    };
+
+    const { getByRole, rerender } = renderWithTheme(
+      <CloudPulseWidget {...initialProps} />
+    );
+
+    expect(
+      getByRole('combobox', { name: 'Select an Interval' })
+    ).toHaveAttribute('value', '5 min');
+
+    mockUpdatePreferences.mockClear();
+
+    rerender(
+      <CloudPulseWidget
+        {...initialProps}
+        duration={{
+          end: DateTime.now().toISO(),
+          start: DateTime.now().minus({ minutes: 2 }).toISO(),
+        }}
+      />
+    );
+
+    expect(
+      getByRole('combobox', { name: 'Select an Interval' })
+    ).toHaveAttribute('value', 'Auto');
+    expect(mockUpdatePreferences).not.toHaveBeenCalled();
+  });
 });
