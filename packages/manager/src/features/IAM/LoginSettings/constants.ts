@@ -58,6 +58,11 @@ export const IAM_SSO_ENFORCE_PENDO_IDS = {
   excludedUsers: 'IAM Settings SSO Enforce-Excluded Users',
   updateSSOEnforcement: 'IAM Settings SSO Enforce-Update SSO Enforcement',
   consentChecked: 'IAM Settings SSO Enforce-Consent checked',
+  discardChangesModalView: 'IAM Settings SSO Enforce Discard Changes-View',
+  discardChangesModalDiscard:
+    'IAM Settings SSO Enforce Discard Changes-Discard Changes',
+  discardChangesModalGoBack:
+    'IAM Settings SSO Enforce Discard Changes-Go Back And Review Changes',
 };
 
 // Pendo IDs for IAM Create IDP drawer
@@ -155,6 +160,11 @@ export const IAM_TFA_ENFORCE_PENDO_IDS = {
   consentChecked: 'IAM Settings 2FA Enforce-Consent checked',
   updateTFAEnforcement:
     'IAM Settings 2FA Enforce-Update Two-Factor Authentication Enforcement',
+  discardChangesModalView: 'IAM Settings 2FA Enforce Discard Changes-View',
+  discardChangesModalDiscard:
+    'IAM Settings 2FA Enforce Discard Changes-Discard Changes',
+  discardChangesModalGoBack:
+    'IAM Settings 2FA Enforce Discard Changes-Go Back And Review Changes',
 };
 
 // Pendo IDs for IAM Users

@@ -233,6 +233,11 @@ export const EnforcementSettings = () => {
         onClose={handleCancelNavigation}
         onDiscard={handleProceedNavigation}
         open={status === 'blocked'}
+        pendoIds={{
+          view: IAM_SSO_ENFORCE_PENDO_IDS.discardChangesModalView,
+          discard: IAM_SSO_ENFORCE_PENDO_IDS.discardChangesModalDiscard,
+          goBack: IAM_SSO_ENFORCE_PENDO_IDS.discardChangesModalGoBack,
+        }}
       />
       <form
         onSubmit={handleSubmit(onSubmit)}

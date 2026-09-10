@@ -203,6 +203,11 @@ export const TfaEnforcementLanding = () => {
           onClose={handleCancelNavigation}
           onDiscard={handleProceedNavigation}
           open={status === 'blocked'}
+          pendoIds={{
+            view: IAM_TFA_ENFORCE_PENDO_IDS.discardChangesModalView,
+            discard: IAM_TFA_ENFORCE_PENDO_IDS.discardChangesModalDiscard,
+            goBack: IAM_TFA_ENFORCE_PENDO_IDS.discardChangesModalGoBack,
+          }}
         />
 
         <form
