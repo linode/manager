@@ -58,6 +58,7 @@ export const EndpointMultiSelect = ({
   return (
     <Autocomplete
       disabled={isFetching || disabled}
+      isOptionEqualToValue={(option, value) => option.label === value.label}
       label={showLabel ? 'Endpoints' : ''}
       loading={optionsLoading}
       multiple

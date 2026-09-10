@@ -34,6 +34,7 @@ export interface EnhancedAutocompleteProps<
   errorText?: string;
   /** Provides a hint with normal styling to assist users. */
   helperText?: TextFieldProps['helperText'];
+  isOptionEqualToValue?: (option: T, value: T) => boolean;
   /**
    * Keep the search input enabled on mobile.
    * Because of usability concerns, the search input is read-only on mobile by default. It prevents triggering the device keyboard once the Autocomplete is focused.
@@ -103,6 +104,7 @@ export const Autocomplete = <
     onSelectAllClick,
     options,
     placeholder,
+    isOptionEqualToValue,
     renderInput,
     renderOption,
     selectAllLabel = '',
@@ -134,6 +136,7 @@ export const Autocomplete = <
       defaultValue={defaultValue}
       disableCloseOnSelect={multiple}
       disablePortal={disablePortal}
+      isOptionEqualToValue={isOptionEqualToValue}
       limitTags={limitTags}
       loading={loading}
       loadingText={loadingText || 'Loading...'}
