@@ -1,6 +1,5 @@
 import { toast } from '@akamai/cds-components/notification-toast';
 import { fireEvent, screen, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { ERROR_STATE_TEXT, ERROR_STATE_TITLE } from '../../Shared/constants';

@@ -4,7 +4,6 @@ import * as React from 'react';
 
 import {
   getCdsButtonByText,
-  getCdsButtonHostByText,
   mockMatchMedia,
   mockScrollIntoView,
   renderWithProviders,
@@ -68,6 +67,11 @@ const makeUsers = (count = 2): User[] =>
       username,
     } as User;
   });
+
+const getUserRowByUsername = (container: HTMLElement, username: string) =>
+  Array.from(container.querySelectorAll<HTMLElement>('cds-table-row')).find(
+    (row) => row.textContent?.includes(username)
+  );
 
 const mockPaginatedUsers = (
   users: User[],
@@ -175,17 +179,10 @@ describe('AccountUsersTable', () => {
 
   it('updates optional users when toggling a checked row off', async () => {
     const { container } = renderComponent(['user-2'], 2);
-    const userRow = Array.from(
-      container.querySelectorAll<HTMLElement>('cds-table-row')
-    ).find((row) => {
-      const innerText = row.shadowRoot?.textContent ?? row.textContent ?? '';
-      return innerText.includes('user-1');
-    });
-    const checkbox = userRow?.querySelector('cds-checkbox');
+    const userRow = getUserRowByUsername(container, 'user-1');
 
-    expect(checkbox).toBeTruthy();
-
-    await userEvent.click(checkbox as HTMLElement);
+    expect(userRow).toBeTruthy();
+    await userEvent.click(userRow as HTMLElement);
 
     expect(mocks.setValue).toHaveBeenCalledWith(
       'tfaOptionalUsers',
@@ -203,16 +200,10 @@ describe('AccountUsersTable', () => {
     });
 
     const { container } = renderComponent(['user-2'], 2);
-    const userRow = Array.from(
-      container.querySelectorAll<HTMLElement>('cds-table-row')
-    ).find((row) => {
-      const innerText = row.shadowRoot?.textContent ?? row.textContent ?? '';
-      return innerText.includes('user-1');
-    });
-    const checkbox = userRow?.querySelector('cds-checkbox');
+    const userRow = getUserRowByUsername(container, 'user-1');
 
-    expect(checkbox).toBeTruthy();
-    await userEvent.click(checkbox as HTMLElement);
+    expect(userRow).toBeTruthy();
+    await userEvent.click(userRow as HTMLElement);
 
     expect(screen.getByText('Re-sort list')).toBeVisible();
 
@@ -296,10 +287,10 @@ describe('AccountUsersTable', () => {
 
     it('disables the Clear all button', async () => {
       const { container } = renderComponent(['user-2'], 2, undefined, tfaError);
-      const clearAllButton = getCdsButtonHostByText(container, 'Clear all');
+      const clearAllButton = await getCdsButtonByText(container, 'Clear all');
 
       expect(clearAllButton).toBeTruthy();
-      expect(clearAllButton).toHaveAttribute('disabled');
+      expect(clearAllButton).toBeDisabled();
     });
 
     it('does show pagination by default', () => {
