@@ -1,4 +1,4 @@
-import { type SubnetNATGatewayDetail } from '../natgateways/types';
+import { type AssignedNATGatewayDetail } from '../natgateways/types';
 
 export interface VPCIPv6 {
   range?: string;
@@ -66,7 +66,7 @@ export interface Subnet {
   ipv6?: VPCIPv6Subnet[];
   label: string;
   linodes: SubnetAssignedLinodeData[];
-  natgateway?: SubnetNATGatewayDetail;
+  natgateway?: AssignedNATGatewayDetail;
   nodebalancers: SubnetAssignedNodeBalancerData[];
   updated: string;
 }

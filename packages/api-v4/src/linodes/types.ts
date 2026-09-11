@@ -1,6 +1,7 @@
 import type { MaintenancePolicySlug } from '../account/types';
 import type { CloudPulseAlertsPayload } from '../cloudpulse/types';
 import type { LockType } from '../locks/types';
+import type { AssignedNATGatewayDetail } from '../natgateways/types';
 import type { IPAddress, IPRange } from '../networking/types';
 import type { LinodePlacementGroupPayload } from '../placement-groups/types';
 import type { Region, RegionSite } from '../regions';
@@ -322,6 +323,7 @@ export interface VPCInterfaceData {
       nat_1_1_address?: string;
       primary: boolean;
     }[];
+    natgateway?: AssignedNATGatewayDetail;
     ranges: { range: string }[];
   };
   ipv6?: IPv6Interface;

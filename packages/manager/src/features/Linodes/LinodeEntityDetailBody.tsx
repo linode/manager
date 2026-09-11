@@ -1,6 +1,11 @@
 import { pluralize } from '@akamai/compute-ui-core/formatting';
-import { useIPAddressQuery, usePreferences, useProfile } from '@linode/queries';
-import { Box, Stack, Typography } from '@linode/ui';
+import {
+  useIPAddressQuery,
+  useLinodeInterfacesQuery,
+  usePreferences,
+  useProfile,
+} from '@linode/queries';
+import { Box, Stack, TooltipIcon, Typography } from '@linode/ui';
 import { useMediaQuery } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import { useTheme } from '@mui/material/styles';
@@ -12,6 +17,7 @@ import { Link } from 'src/components/Link';
 import { useAPLAvailability } from 'src/features/Kubernetes/kubeUtils';
 import { AccessTable } from 'src/features/Linodes/AccessTable';
 import { ipTableId } from 'src/features/Linodes/LinodesDetail/LinodeNetworking/utils';
+import { useIsNATGatewaysEnabled } from 'src/features/NATGateways/utils';
 import { useVPCDualStack } from 'src/hooks/useVPCDualStack';
 import { useKubernetesClusterQuery } from 'src/queries/kubernetes';
 
@@ -150,6 +156,22 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
     id: linodeLkeClusterId ?? -1,
   });
 
+  const { data: linodeInterfaces } = useLinodeInterfacesQuery(linodeId);
+
+  const { isNATGatewaysEnabled } = useIsNATGatewaysEnabled();
+  // The interfaces endpoint's VPC IPv4 config is scoped to a single Linode,
+  // so its `natgateway.addresses` array will only ever contain the one
+  // NAT Gateway IP applicable to this Linode.
+  const natGatewayInterface = linodeInterfaces?.interfaces?.find(
+    (iface) => iface.vpc?.ipv4?.natgateway?.id
+  );
+  const natgateway = natGatewayInterface?.vpc?.ipv4?.natgateway;
+  const sxTooltipIcon = {
+    padding: '0',
+    margin: '0 0 2px 4px',
+  };
+  const natTooltipText = `Linodes in this VPC subnet share a single public IPv4 address, providing outbound-only internet access.`;
+
   return (
     <>
       <StyledBodyGrid container spacing={2} sx={{ mb: 0 }}>
@@ -276,6 +298,7 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
                   text: firstAddress,
                   disabled: isUnreachablePublicIPv4,
                   isReserved: firstIPAddress?.reserved,
+                  is1to1NAT: !!firstIPAddress?.vpc_nat_1_1?.address,
                 },
                 {
                   isMasked: maskSensitiveDataPreference,
@@ -360,15 +383,59 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
                 </StyledListItem>
               </StyledVPCBox>
               <StyledVPCBox>
-                <StyledListItem sx={{ ...sxLastListItem }}>
+                <StyledListItem>
                   <StyledLabelBox component="span" data-testid="subnets-string">
                     Subnet:
                   </StyledLabelBox>{' '}
                   {getSubnetsString(linodeAssociatedSubnets ?? [])}
                 </StyledListItem>
               </StyledVPCBox>
+              {isNATGatewaysEnabled && natgateway && (
+                <StyledVPCBox>
+                  <StyledListItem sx={{ ...sxLastListItem }}>
+                    <StyledLabelBox
+                      component="span"
+                      data-testid="natgateway-string"
+                    >
+                      NAT Gateway:
+                    </StyledLabelBox>{' '}
+                    <>
+                      <Link
+                        data-testid="assigned-nat-gateway-label"
+                        to={`/natgateways/${natgateway.id}`}
+                      >
+                        {natgateway.label}
+                      </Link>
+                      <span
+                        style={{ paddingLeft: 4 }}
+                      >{`(ID: ${natgateway.id})`}</span>
+                    </>
+                  </StyledListItem>
+                </StyledVPCBox>
+              )}
             </Stack>
             <StyledIPStack direction="row">
+              {isNATGatewaysEnabled && natgateway && (
+                <StyledIPBox>
+                  <StyledIPLabel data-testid="natgateway-ip-label">
+                    NAT Gateway IP
+                    <TooltipIcon
+                      data-qa-tooltip-icon
+                      labelTooltipIconSize="small"
+                      status="info"
+                      sxTooltipIcon={sxTooltipIcon}
+                      text={natTooltipText}
+                      tooltipPosition="top"
+                    />
+                  </StyledIPLabel>
+                  <StyledIPItem component="span" data-testid="natgateway-ip">
+                    <CopyTooltip copyableText text={natgateway.addresses[0]} />
+                    <Box sx={{ ml: 1, position: 'relative', top: 1 }}>
+                      <StyledCopyTooltip text={natgateway.addresses[0]} />
+                    </Box>
+                  </StyledIPItem>
+                </StyledIPBox>
+              )}
               {vpcIPv4 && (
                 <StyledIPBox>
                   <StyledIPLabel data-testid="vpc-ipv4-label">

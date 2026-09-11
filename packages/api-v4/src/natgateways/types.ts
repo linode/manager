@@ -89,7 +89,7 @@ export interface InterfaceNATGateway {
   portsets?: NATGatewayPortset[];
 }
 
-export interface SubnetNATGatewayDetail {
+export interface AssignedNATGatewayDetail {
   addresses: string[];
   id: number;
   label: string;

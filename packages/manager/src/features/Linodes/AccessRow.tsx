@@ -5,6 +5,7 @@ import React from 'react';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { TableCell } from 'src/components/TableCell';
+import { useIsNATGatewaysEnabled } from 'src/features/NATGateways/utils';
 import { useIsReserveIpEnabled } from 'src/features/ReservedIps/utils';
 
 import {
@@ -18,6 +19,7 @@ import { PublicIPAddressTooltip } from './PublicIPAddressTooltip';
 interface AccessRowProps {
   hasPublicInterface?: boolean;
   heading?: string;
+  is1to1NAT?: boolean;
   isDisabled: boolean;
   isLinodeInterface?: boolean;
   isReserved?: boolean;
@@ -30,6 +32,7 @@ export const AccessRow = (props: AccessRowProps) => {
     text,
     isDisabled,
     hasPublicInterface,
+    is1to1NAT,
     isLinodeInterface,
     isReserved,
   } = props;
@@ -39,6 +42,7 @@ export const AccessRow = (props: AccessRowProps) => {
   );
 
   const { isReserveIpEnabled } = useIsReserveIpEnabled();
+  const { isNATGatewaysEnabled } = useIsNATGatewaysEnabled();
 
   const [isTextMasked, setIsTextMasked] = React.useState(
     maskedPreferenceSetting
@@ -63,6 +67,7 @@ export const AccessRow = (props: AccessRowProps) => {
         </StyledGradientDiv>
         <Stack alignItems="center" direction="row" spacing={1}>
           {isReserveIpEnabled && isReserved && <Badge>Reserved</Badge>}
+          {isNATGatewaysEnabled && is1to1NAT && <Badge>1:1 NAT IP</Badge>}
           {isDisabled ? (
             <PublicIPAddressTooltip
               hasPublicInterface={Boolean(hasPublicInterface)}

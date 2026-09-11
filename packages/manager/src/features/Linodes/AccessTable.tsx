@@ -17,6 +17,7 @@ import type { MaskableTextLength } from 'src/components/MaskableText/MaskableTex
 interface AccessTableRow {
   disabled?: boolean;
   heading?: string;
+  is1to1NAT?: boolean;
   isMasked?: boolean;
   isReserved?: boolean;
   maskedTextLength?: MaskableTextLength;
@@ -64,6 +65,7 @@ export const AccessTable = React.memo((props: AccessTableProps) => {
                 <AccessRow
                   hasPublicInterface={!hasPublicInterface}
                   heading={thisRow.heading}
+                  is1to1NAT={thisRow.is1to1NAT}
                   isDisabled={Boolean(thisRow.disabled)}
                   isLinodeInterface={isLinodeInterface}
                   isReserved={thisRow.isReserved}
