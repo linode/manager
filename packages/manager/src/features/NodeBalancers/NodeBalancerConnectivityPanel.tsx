@@ -1,14 +1,6 @@
 import { Badge, RadioButton, RadioGroup } from '@akamai/cds-components/react';
 import { Font, Spacing } from '@akamai/cds-tokens';
-import {
-  Box,
-  FormControlLabel,
-  Notice,
-  Paper,
-  Stack,
-  TooltipIcon,
-  Typography,
-} from '@linode/ui';
+import { Box, Notice, Paper, Stack, TooltipIcon, Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { IPAddressSelection } from '../ReservedIps/IPAddressSelection/IPAddressSelection';
@@ -79,6 +71,8 @@ export const NodeBalancerConnectivityPanel = (props: Props) => {
       'Uses private IPv4 addresses to connect to backend nodes not assigned to a VPC.',
   };
 
+  const radioButtonSx = { padding: `${Spacing.S8} 0`, margin: 0 };
+
   return (
     <Paper>
       {isPremiumNodebalancerEnabled && (
@@ -147,26 +141,21 @@ export const NodeBalancerConnectivityPanel = (props: Props) => {
               }
               value={nodeBalancerFields.backend_connectivity ?? 'vpc'}
             >
-              <FormControlLabel
-                control={
-                  <RadioButton
-                    checked={nodeBalancerFields.backend_connectivity === 'vpc'}
-                    data-pendo-id="NodeBalancers Create Network Connectivity Backend-VPC"
-                    data-testid="backend-connectivity-vpc-radio"
-                    disabled={disabled}
-                    style={{
-                      padding: `${Spacing.S8} 0`,
-                      marginRight: '0px',
-                      marginLeft: Spacing.S12,
-                    }}
-                    value="vpc"
-                  />
-                }
-                data-pendo-id="NodeBalancers Create Network Connectivity Backend-VPC"
-                disabled={disabled}
-                key="vpc"
-                label={
-                  <Stack direction="row" mt={Spacing.S12} spacing={Spacing.S4}>
+              <Box
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                }}
+              >
+                <RadioButton
+                  checked={nodeBalancerFields.backend_connectivity === 'vpc'}
+                  data-pendo-id="NodeBalancers Create Network Connectivity Backend-VPC"
+                  data-testid="backend-connectivity-vpc-radio"
+                  disabled={disabled}
+                  style={radioButtonSx}
+                  value="vpc"
+                >
+                  <Stack direction="row" spacing={Spacing.S4}>
                     <Typography>VPC</Typography>
                     <TooltipIcon
                       status="info"
@@ -175,29 +164,17 @@ export const NodeBalancerConnectivityPanel = (props: Props) => {
                       tooltipPosition="right"
                     />
                   </Stack>
-                }
-                sx={{ alignItems: 'flex-start', display: 'flex' }}
-              />
-              <FormControlLabel
-                control={
-                  <RadioButton
-                    checked={nodeBalancerFields.backend_connectivity === 'ipv6'}
-                    data-pendo-id="NodeBalancers Create Network Connectivity Backend-IPv6"
-                    data-testid="backend-connectivity-ipv6-radio"
-                    disabled={disabled}
-                    style={{
-                      padding: `${Spacing.S8} 0`,
-                      marginRight: '0px',
-                      marginLeft: Spacing.S12,
-                    }}
-                    value="ipv6"
-                  />
-                }
-                data-pendo-id="NodeBalancers Create Network Connectivity Backend-IPv6"
-                disabled={disabled}
-                key="ipv6"
-                label={
-                  <Stack direction="row" mt={Spacing.S12} spacing={Spacing.S4}>
+                </RadioButton>
+
+                <RadioButton
+                  checked={nodeBalancerFields.backend_connectivity === 'ipv6'}
+                  data-pendo-id="NodeBalancers Create Network Connectivity Backend-IPv6"
+                  data-testid="backend-connectivity-ipv6-radio"
+                  disabled={disabled}
+                  style={radioButtonSx}
+                  value="ipv6"
+                >
+                  <Stack direction="row" spacing={Spacing.S4}>
                     <Typography>IPv6</Typography>
                     <TooltipIcon
                       status="info"
@@ -206,39 +183,20 @@ export const NodeBalancerConnectivityPanel = (props: Props) => {
                       tooltipPosition="right"
                     />
                   </Stack>
-                }
-                sx={{
-                  alignItems: 'flex-start',
-                  display: 'flex',
-                }}
-              />
-              {nodeBalancerFields.type !== 'premium' && (
-                <FormControlLabel
-                  control={
-                    <RadioButton
-                      checked={
-                        nodeBalancerFields.backend_connectivity === 'legacy'
-                      }
-                      data-pendo-id="NodeBalancers Create Network Connectivity Backend-Legacy"
-                      data-testid="backend-connectivity-legacy-radio"
-                      disabled={disabled}
-                      style={{
-                        padding: `${Spacing.S8} 0`,
-                        marginRight: '0px',
-                        marginLeft: Spacing.S12,
-                      }}
-                      value="legacy"
-                    />
-                  }
-                  data-pendo-id="NodeBalancers Create Network Connectivity Backend-Legacy"
-                  disabled={disabled}
-                  key="Legacy"
-                  label={
-                    <Stack
-                      direction="row"
-                      mt={Spacing.S12}
-                      spacing={Spacing.S4}
-                    >
+                </RadioButton>
+
+                {nodeBalancerFields.type !== 'premium' && (
+                  <RadioButton
+                    checked={
+                      nodeBalancerFields.backend_connectivity === 'legacy'
+                    }
+                    data-pendo-id="NodeBalancers Create Network Connectivity Backend-Legacy"
+                    data-testid="backend-connectivity-legacy-radio"
+                    disabled={disabled}
+                    style={radioButtonSx}
+                    value="legacy"
+                  >
+                    <Stack direction="row" spacing={Spacing.S4}>
                       <Typography>Legacy</Typography>
                       <TooltipIcon
                         status="info"
@@ -247,10 +205,9 @@ export const NodeBalancerConnectivityPanel = (props: Props) => {
                         tooltipPosition="right"
                       />
                     </Stack>
-                  }
-                  sx={{ alignItems: 'flex-start', display: 'flex' }}
-                />
-              )}
+                  </RadioButton>
+                )}
+              </Box>
             </RadioGroup>
           </Stack>
         )}

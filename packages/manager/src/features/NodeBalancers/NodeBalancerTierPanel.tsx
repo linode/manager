@@ -19,6 +19,28 @@ export interface Props {
 export const PREMIUM_NON_PREMIUM_NB_LINK =
   'https://techdocs.akamai.com/cloud-computing/docs/nodebalancer#premium-and-non-premium-nodebalancers';
 
+const cardBaseSx = {
+  alignContent: 'flex-start',
+  alignItems: 'center',
+  display: 'flex',
+  gap: `${Spacing.S4} 0`,
+};
+
+const cardHeadingSx = {
+  display: 'contents',
+  fontSize: Font.FontSize.Xs,
+};
+
+const cardIconSx = {
+  alignItems: 'center',
+  svg: { fontSize: Font.FontSize.L },
+};
+
+const cardSubheadingSx = {
+  paddingLeft: Spacing.S8,
+  flexBasis: '100%',
+};
+
 export const NodeBalancerTierPanel = (props: Props) => {
   const { disabled, error, tierChange, tierSelected } = props;
 
@@ -75,28 +97,13 @@ export const NodeBalancerTierPanel = (props: Props) => {
                   'For general purpose workloads',
                   'Shared infrastructure for load balancing',
                   'Supports up to 1,000 backend nodes',
-                  'Handles 10,000 concurrent connections',
-                  'Supports TCP, HTTP, or HTTPS configurations',
+                  'Handles up to 10,000 concurrent connections',
+                  'Supports TCP, HTTP, and HTTPS configurations',
                 ]}
-                sxCardBase={{
-                  alignContent: 'start',
-                  alignItems: 'center',
-                  display: 'grid',
-                  gap: `${Spacing.S4} 0`,
-                  gridTemplateColumns: 'auto 1fr',
-                }}
-                sxCardBaseHeading={{
-                  display: 'contents',
-                  fontSize: Font.FontSize.Xs,
-                }}
-                sxCardBaseIcon={{
-                  alignItems: 'center',
-                  svg: { fontSize: Font.FontSize.L },
-                }}
-                sxCardBaseSubheading={{
-                  gridColumn: '1 / -1',
-                  paddingLeft: Spacing.S12,
-                }}
+                sxCardBase={cardBaseSx}
+                sxCardBaseHeading={cardHeadingSx}
+                sxCardBaseIcon={cardIconSx}
+                sxCardBaseSubheading={cardSubheadingSx}
               />
               <SelectionCard
                 checked={tierSelected === 'premium'}
@@ -133,33 +140,19 @@ export const NodeBalancerTierPanel = (props: Props) => {
                   />
                 )}
                 subheadings={[
-                  'For high-scale workloads and LKE-Enterprise clusters',
+                  'For demanding workloads',
                   'Dedicated infrastructure for consistent performance',
                   'Supports up to 2,000 backend nodes',
-                  'Handles up to 100,000 concurrent connections, 80,000 for UDP',
-                  'Supports UDP, TCP, HTTP, or HTTPS configurations',
-                  'UDP (BETA) is managed through API',
+                  'Handles up to 100,000 concurrent connections',
+                  'Supports TCP, HTTP, and HTTPS configurations',
                 ]}
-                sxCardBase={{
-                  alignContent: 'start',
-                  alignItems: 'center',
-                  display: 'grid',
-                  gap: `${Spacing.S4} 0`,
-                  gridTemplateColumns: 'auto 1fr',
-                }}
+                sxCardBase={cardBaseSx}
                 sxCardBaseHeading={{
+                  ...cardHeadingSx,
                   '& .cardSubheadingTitle': { columnGap: 0 },
-                  display: 'contents',
-                  fontSize: Font.FontSize.Xs,
                 }}
-                sxCardBaseIcon={{
-                  alignItems: 'center',
-                  svg: { fontSize: Font.FontSize.L },
-                }}
-                sxCardBaseSubheading={{
-                  gridColumn: '1 / -1',
-                  paddingLeft: Spacing.S12,
-                }}
+                sxCardBaseIcon={cardIconSx}
+                sxCardBaseSubheading={cardSubheadingSx}
               />
             </Grid>
           </Box>

@@ -65,7 +65,7 @@ describe('NodeBalancerConnectivityPanel', () => {
   });
 
   it('renders the Networking section and backend radios when premium NodeBalancer is enabled', () => {
-    const { getByText, getByLabelText } = renderWithTheme(
+    const { getByText } = renderWithTheme(
       <NodeBalancerConnectivityPanel
         {...makeProps({ isPremiumNodebalancerEnabled: true })}
       />
@@ -78,15 +78,15 @@ describe('NodeBalancerConnectivityPanel', () => {
       )
     ).toBeVisible();
     // The IP selection label changes to "Frontend Connectivity" when premium is enabled
-    expect(getByText('Frontend Connectivity')).toBeInTheDocument();
+    expect(getByText('Frontend Connectivity')).toBeVisible();
     expect(getByText('Backend Connectivity')).toBeVisible();
-    expect(getByLabelText('VPC')).toBeInTheDocument();
-    expect(getByLabelText('IPv6')).toBeInTheDocument();
-    expect(getByLabelText('Legacy')).toBeInTheDocument();
+    expect(getByText('VPC')).toBeVisible();
+    expect(getByText('IPv6')).toBeVisible();
+    expect(getByText('Legacy')).toBeVisible();
   });
 
   it('hides the Legacy backend option when NodeBalancer tier is premium', () => {
-    const { getByLabelText, queryByLabelText } = renderWithTheme(
+    const { getByText, queryByText } = renderWithTheme(
       <NodeBalancerConnectivityPanel
         {...makeProps({
           isPremiumNodebalancerEnabled: true,
@@ -95,9 +95,9 @@ describe('NodeBalancerConnectivityPanel', () => {
       />
     );
 
-    expect(getByLabelText('VPC')).toBeInTheDocument();
-    expect(getByLabelText('IPv6')).toBeInTheDocument();
-    expect(queryByLabelText('Legacy')).not.toBeInTheDocument();
+    expect(getByText('VPC')).toBeVisible();
+    expect(getByText('IPv6')).toBeVisible();
+    expect(queryByText('Legacy')).not.toBeInTheDocument();
   });
 
   it('reflects the selected backend connectivity option', () => {

@@ -42,9 +42,7 @@ describe('NodeBalancerTierPanel', () => {
     expect(getByText('Basic')).toBeVisible();
     expect(getByText('Premium')).toBeVisible();
     // Premium-specific subheading
-    expect(
-      getByText('For high-scale workloads and LKE-Enterprise clusters')
-    ).toBeVisible();
+    expect(getByText('For demanding workloads')).toBeVisible();
     // Basic-specific subheading
     expect(getByText('For general purpose workloads')).toBeVisible();
   });
