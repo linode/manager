@@ -6,6 +6,7 @@ import ComputeIcon from 'src/assets/icons/entityIcons/compute.svg';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ResourcesSection } from 'src/components/EmptyLandingPageResources/ResourcesSection';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
+import { useLkePermissions } from 'src/features/IAM/hooks/useLkePermissions';
 
 import {
   gettingStartedGuides,
@@ -14,14 +15,12 @@ import {
   youtubeLinkData,
 } from './KubernetesLandingEmptyStateData';
 
-interface Props {
-  isRestricted: boolean;
-}
-
-export const KubernetesEmptyState = (props: Props) => {
-  const { isRestricted = false } = props;
-
+export const KubernetesEmptyState = () => {
   const navigate = useNavigate();
+
+  const { data: permissions } = useLkePermissions('account', [
+    'create_lkecluster',
+  ]);
 
   return (
     <React.Fragment>
@@ -30,7 +29,7 @@ export const KubernetesEmptyState = (props: Props) => {
         buttonProps={[
           {
             children: 'Create Cluster',
-            disabled: isRestricted,
+            disabled: !permissions.create_lkecluster,
             onClick: () => {
               sendEvent({
                 action: 'Click:button',

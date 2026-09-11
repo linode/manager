@@ -150,7 +150,7 @@ export const KubernetesLanding = () => {
   }
 
   if (data?.results === 0) {
-    return <KubernetesEmptyState isRestricted={isRestricted} />;
+    return <KubernetesEmptyState />;
   }
 
   return (
