@@ -118,14 +118,21 @@ const mockApiKey = apiKeyFactory.build({
 interface TestProps {
   apiKey: ApiKey | null;
   onClose: () => void;
-  onSave?: () => void;
+  onSave?: (
+    keyId: number,
+    updates: {
+      allowedModels: string[];
+      description: string;
+      label: string;
+    }
+  ) => Promise<void>;
   open: boolean;
 }
 
 const defaultProps: TestProps = {
   apiKey: mockApiKey,
   onClose: vi.fn(),
-  onSave: vi.fn(),
+  onSave: vi.fn().mockResolvedValue(undefined),
   open: true,
 };
 

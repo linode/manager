@@ -69,9 +69,11 @@ export const RevokeApiKeyDialog = ({
   return (
     <ConfirmationDialog
       actions={actions}
+      aria-modal="true"
       error={error?.[0]?.reason}
       onClose={handleClose}
       open={open}
+      role="alertdialog"
       title={`Revoke key ${apiKey?.label ?? ''}`}
     >
       <NotificationBanner

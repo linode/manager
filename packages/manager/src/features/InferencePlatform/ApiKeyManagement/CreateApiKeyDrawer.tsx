@@ -2,6 +2,7 @@ import {
   Button,
   DateField,
   Drawer,
+  FormError,
   FormField,
   FormLabel,
   NotificationBanner,
@@ -23,6 +24,8 @@ interface CreateApiKeyDrawerProps {
 }
 
 type ExpiryOption = '3months' | '6months' | 'custom' | 'never';
+
+const LABEL_MAX_LENGTH = 255;
 
 const getExpiryDate = (
   option: ExpiryOption,
@@ -73,11 +76,20 @@ export const CreateApiKeyDrawer = ({
     handleClose();
   };
 
+  const isLabelTooLong = label.length > LABEL_MAX_LENGTH;
+
   const handleSubmit = () => {
     setValidationError(null);
 
     if (!label.trim()) {
       setValidationError('Name is required');
+      return;
+    }
+
+    if (isLabelTooLong) {
+      setValidationError(
+        `Name must be ${LABEL_MAX_LENGTH} characters or fewer.`
+      );
       return;
     }
 
@@ -97,7 +109,22 @@ export const CreateApiKeyDrawer = ({
     });
   };
 
-  const error = validationError || apiError?.[0]?.reason;
+  // Prefix API validation errors with a human-readable field name so a
+  // generic message like "Length must be 0-255 characters" clearly points
+  // to the offending field (e.g. "Name: Length must be 0-255 characters").
+  const FIELD_LABELS: Record<string, string> = {
+    description: 'Description',
+    expiry: 'Expiry',
+    label: 'Name',
+  };
+  const firstApiError = apiError?.[0];
+  const apiErrorMessage = firstApiError
+    ? firstApiError.field && FIELD_LABELS[firstApiError.field]
+      ? `${FIELD_LABELS[firstApiError.field]}: ${firstApiError.reason}`
+      : firstApiError.reason
+    : undefined;
+
+  const error = validationError || apiErrorMessage;
 
   return (
     <>
@@ -111,13 +138,22 @@ export const CreateApiKeyDrawer = ({
               type="error"
             />
           )}
-          <FormField labelPosition="top" style={{ marginBottom: '16px' }}>
+          <FormField
+            annotation={`${label.length}/${LABEL_MAX_LENGTH}`}
+            annotationWhenError
+            error={isLabelTooLong}
+            labelPosition="top"
+            style={{ marginBottom: '16px' }}
+          >
             <FormLabel slot="label">Name</FormLabel>
             <TextField
               onChange={(e) => setLabel(String(e.detail))}
               placeholder=""
               value={label}
             />
+            <FormError slot="error">
+              Name cannot exceed {LABEL_MAX_LENGTH} characters.
+            </FormError>
           </FormField>
 
           <FormField labelPosition="top" style={{ marginBottom: '16px' }}>
@@ -203,6 +239,7 @@ export const CreateApiKeyDrawer = ({
             </Button>
             <Button
               data-testid="create-api-key-submit"
+              disabled={isLabelTooLong}
               onClick={handleSubmit}
               processing={isSubmitting}
               variant="primary"

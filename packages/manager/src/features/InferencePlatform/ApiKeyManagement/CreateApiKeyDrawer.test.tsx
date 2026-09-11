@@ -1,6 +1,7 @@
 import { waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
+import { act } from 'react';
 
 import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
@@ -134,9 +135,7 @@ describe('CreateApiKeyDrawer', () => {
     expect(defaultProps.onClose).toHaveBeenCalled();
   });
 
-  it.skip('creates an API key successfully', async () => {
-    // TODO [HELIX-355]: Fix this test - CDS text-field shadow DOM requires special handling for input events
-    // See getCdsTextFieldInput and changeCdsTextField helpers in IAM/utilities/testHelpers
+  it('creates an API key successfully', async () => {
     const user = userEvent.setup();
     server.use(
       http.post('*/v4beta/inference/api-keys', () => {
@@ -161,23 +160,15 @@ describe('CreateApiKeyDrawer', () => {
       <CreateApiKeyDrawer {...defaultProps} />
     );
 
-    // Find and type into the Name field
-    const labelInput = getCdsTextFieldByLabel(
-      container,
-      'Name'
-    ) as HTMLElement & { value?: string };
+    // Populate the Name field by dispatching the CDS `change` event, matching
+    // the way the component reads `e.detail` in its onChange handler.
+    const labelInput = getCdsTextFieldByLabel(container, 'Name');
     expect(labelInput).toBeInTheDocument();
-
-    // For CDS text-field, we need to set the value property
-    // eslint-disable-next-line testing-library/no-node-access -- CDS web component
-    const inputElement = labelInput?.shadowRoot?.querySelector('input');
-    if (inputElement) {
-      await user.type(inputElement, 'Test Key');
-    } else {
-      // Fallback: set value directly on the web component
-      labelInput!.setAttribute('value', 'Test Key');
-      labelInput!.dispatchEvent(new Event('input', { bubbles: true }));
-    }
+    act(() => {
+      labelInput!.dispatchEvent(
+        new CustomEvent('change', { bubbles: true, detail: 'Test Key' })
+      );
+    });
 
     const createButton = getCdsButtonHostByText(
       document.body,
@@ -200,5 +191,48 @@ describe('CreateApiKeyDrawer', () => {
     // eslint-disable-next-line testing-library/no-node-access, testing-library/no-container -- CDS web component
     const drawer = container.querySelector('cds-drawer');
     expect(drawer).not.toHaveAttribute('open');
+  });
+
+  it('shows an error and disables submit when Name exceeds 255 characters', () => {
+    const { container, getByText } = renderWithTheme(
+      <CreateApiKeyDrawer {...defaultProps} />
+    );
+
+    const labelInput = getCdsTextFieldByLabel(container, 'Name') as
+      | (HTMLElement & { value?: string })
+      | null;
+    expect(labelInput).toBeInTheDocument();
+
+    // Simulate a paste of 300 chars via a CDS-style change event.
+    const longString = 'a'.repeat(300);
+    act(() => {
+      labelInput!.dispatchEvent(
+        new CustomEvent('change', { bubbles: true, detail: longString })
+      );
+    });
+
+    const reflected =
+      labelInput!.value ?? labelInput!.getAttribute('value') ?? '';
+    expect(reflected.length).toBe(300);
+
+    // The character counter is rendered inside cds-form-field's shadow DOM,
+    // but its value is set on the host via the `annotation` property.
+    // eslint-disable-next-line testing-library/no-node-access, testing-library/no-container -- CDS web component with shadow DOM
+    const formField = container.querySelector('cds-form-field') as
+      | (HTMLElement & { annotation?: string; error?: boolean })
+      | null;
+    expect(formField?.annotation).toBe('300/255');
+    expect(formField?.error).toBe(true);
+
+    // Error message content is slotted as light DOM, so it is queryable.
+    getByText(/name cannot exceed 255 characters/i);
+
+    // Submit button is disabled while the value is too long. cds-button
+    // doesn't expose a native `button` role, so query by data-testid.
+    // eslint-disable-next-line testing-library/no-node-access, testing-library/no-container -- CDS web component
+    const submit = container.querySelector(
+      '[data-testid="create-api-key-submit"]'
+    ) as (HTMLElement & { disabled?: boolean }) | null;
+    expect(submit?.disabled).toBe(true);
   });
 });

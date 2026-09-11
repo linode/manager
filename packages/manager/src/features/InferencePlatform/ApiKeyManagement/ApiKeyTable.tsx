@@ -39,7 +39,7 @@ const ExpiresDisplay = ({ expiry }: { expiry: null | string }) => {
     return <Typography>Never</Typography>;
   }
 
-  return <DateTimeDisplay humanizeCutoff="month" value={expiry} />;
+  return <DateTimeDisplay displayTime value={expiry} />;
 };
 
 interface ApiKeyTableProps {
@@ -140,7 +140,7 @@ export const ApiKeyTable = ({
     return actions;
   };
 
-  const handleSaveApiKey = (
+  const handleSaveApiKey = async (
     keyId: number,
     updates: {
       allowedModels: string[];
@@ -148,7 +148,9 @@ export const ApiKeyTable = ({
       label: string;
     }
   ) => {
-    updateApiKey({
+    // Return the mutation promise so the drawer can await it, keep the drawer
+    // open on error, and close only after a successful update.
+    await updateApiKey({
       data: {
         allowed_models: updates.allowedModels,
         description: updates.description,
@@ -192,6 +194,16 @@ export const ApiKeyTable = ({
   // Sort the filtered array
   const sortedKeys = useMemo(() => {
     return [...filteredKeys].sort((a, b) => {
+      // Expiry column: "Never" (null) represents the maximum possible date,
+      // so it sorts last ascending / first descending.
+      if (orderBy === 'expiry') {
+        const toTime = (v: null | string) =>
+          v ? new Date(v).getTime() : Number.MAX_SAFE_INTEGER;
+        const diff = toTime(a.expiry) - toTime(b.expiry);
+        if (diff === 0) return 0;
+        return order === 'asc' ? diff : -diff;
+      }
+
       const aValue = a[orderBy as keyof typeof a] ?? '';
       const bValue = b[orderBy as keyof typeof b] ?? '';
       if (aValue === bValue) return 0;
@@ -317,8 +329,10 @@ export const ApiKeyTable = ({
                 Name
               </TableHeaderCell>
               <TableHeaderCell style={getCellStyle('key')}>Key</TableHeaderCell>
-              <TableHeaderCell style={getCellStyle('status')}>
-                Status
+              <TableHeaderCell
+                style={getCellStyle('allowedModels', { whiteSpace: 'nowrap' })}
+              >
+                Allowed Models
               </TableHeaderCell>
               <TableHeaderCell
                 onSort={(event) => handleSort(event, 'last_used')}
@@ -328,10 +342,8 @@ export const ApiKeyTable = ({
               >
                 Last used
               </TableHeaderCell>
-              <TableHeaderCell
-                style={getCellStyle('allowedModels', { whiteSpace: 'nowrap' })}
-              >
-                Allowed Models
+              <TableHeaderCell style={getCellStyle('status')}>
+                Status
               </TableHeaderCell>
               <TableHeaderCell
                 onSort={(event) => handleSort(event, 'expiry')}
@@ -339,7 +351,7 @@ export const ApiKeyTable = ({
                 sorted={orderBy === 'expiry' ? order : undefined}
                 style={getCellStyle('expires')}
               >
-                Expires
+                Expiry
               </TableHeaderCell>
               <TableHeaderCell style={getCellStyle('actions')} />
             </TableRow>
@@ -367,21 +379,21 @@ export const ApiKeyTable = ({
                 <TableCell style={getCellStyle('key')}>
                   {key.key_prefix}...
                 </TableCell>
-                <TableCell style={getCellStyle('status')}>
-                  <StatusBadge status={key.status} />
+                <TableCell style={getCellStyle('allowedModels')}>
+                  <ModelsPopover models={key.allowed_models} />
                 </TableCell>
                 <TableCell style={getCellStyle('lastUsed')}>
                   {key.last_used ? (
                     <DateTimeDisplay
-                      humanizeCutoff="day"
+                      humanizeCutoff="month"
                       value={key.last_used}
                     />
                   ) : (
-                    <Typography>Never</Typography>
+                    <Typography>Never Used</Typography>
                   )}
                 </TableCell>
-                <TableCell style={getCellStyle('allowedModels')}>
-                  <ModelsPopover models={key.allowed_models} />
+                <TableCell style={getCellStyle('status')}>
+                  <StatusBadge status={key.status} />
                 </TableCell>
                 <TableCell style={getCellStyle('expires')}>
                   <ExpiresDisplay expiry={key.expiry} />

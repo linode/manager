@@ -2,7 +2,10 @@ import {
   Button,
   Checkbox,
   Drawer,
+  FormError,
+  FormField,
   LoadingSpinner,
+  NotificationBanner,
   TextArea,
   TextField,
 } from '@akamai/cds-components/react';
@@ -21,6 +24,8 @@ import { UsageSparkline } from './UsageSparkline';
 
 import type { ApiKey } from '@linode/api-v4';
 
+const LABEL_MAX_LENGTH = 255;
+
 interface ApiKeyDetailsDrawerProps {
   apiKey: ApiKey | null;
   onClose: () => void;
@@ -31,7 +36,7 @@ interface ApiKeyDetailsDrawerProps {
       description: string;
       label: string;
     }
-  ) => void;
+  ) => Promise<void>;
   open: boolean;
 }
 
@@ -76,6 +81,8 @@ export const ApiKeyDetailsDrawer = ({
   const { models } = useInferencePlatform();
   const [selectedModels, setSelectedModels] = useState<string[]>([]);
   const [hasChanges, setHasChanges] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveError, setSaveError] = useState<null | string>(null);
 
   // Editable fields for user keys
   const [editLabel, setEditLabel] = useState('');
@@ -166,6 +173,8 @@ export const ApiKeyDetailsDrawer = ({
         }
       }
       setHasChanges(false);
+      setSaveError(null);
+      setIsSaving(false);
     }
   }, [apiKey, open, allModelIds]);
 
@@ -181,17 +190,53 @@ export const ApiKeyDetailsDrawer = ({
   const areAllModelsSelected =
     allModelIds.length > 0 && selectedModels.length === allModelIds.length;
 
-  const handleSave = () => {
-    if (apiKey && onSave) {
-      // If all models are selected, send ['*'] to indicate all models
-      const modelsToSave = areAllModelsSelected ? ['*'] : selectedModels;
-      onSave(apiKey.id, {
+  const handleSave = async () => {
+    if (!apiKey || !onSave) {
+      onClose();
+      return;
+    }
+
+    if (editLabel.length > LABEL_MAX_LENGTH) {
+      setSaveError(`Name must be ${LABEL_MAX_LENGTH} characters or fewer.`);
+      return;
+    }
+
+    // If all models are selected, send ['*'] to indicate all models
+    const modelsToSave = areAllModelsSelected ? ['*'] : selectedModels;
+
+    setIsSaving(true);
+    setSaveError(null);
+
+    try {
+      await onSave(apiKey.id, {
         allowedModels: modelsToSave,
         description: editDescription,
         label: editLabel,
       });
+      onClose();
+    } catch (err) {
+      const apiErrors = err as Array<{ field?: string; reason: string }>;
+      const firstError = Array.isArray(apiErrors) ? apiErrors[0] : undefined;
+      // Prefix the API validation error with the human-readable field name
+      // so a generic message like "Length must be 1-255 characters" clearly
+      // points to the offending field (e.g. "Name: Length must be ...").
+      const fieldLabels: Record<string, string> = {
+        description: 'Description',
+        expiry: 'Expiry',
+        label: 'Name',
+      };
+      let message = 'Failed to save changes. Please try again.';
+      if (firstError?.reason) {
+        const label =
+          firstError.field && fieldLabels[firstError.field]
+            ? `${fieldLabels[firstError.field]}: `
+            : '';
+        message = `${label}${firstError.reason}`;
+      }
+      setSaveError(message);
+    } finally {
+      setIsSaving(false);
     }
-    onClose();
   };
 
   const handleCancel = () => {
@@ -206,6 +251,13 @@ export const ApiKeyDetailsDrawer = ({
     <Drawer aria-label={apiKey.label} onClose={onClose} open={open}>
       <div slot="header">{apiKey.label}</div>
       <div slot="body">
+        {saveError && (
+          <NotificationBanner
+            style={{ marginBottom: '16px' }}
+            text={saveError}
+            type="error"
+          />
+        )}
         <DetailRow
           editable={isEditable}
           isEditing={isEditingLabel}
@@ -214,13 +266,25 @@ export const ApiKeyDetailsDrawer = ({
         >
           <Box alignItems="center" display="flex" gap={1}>
             {isEditingLabel ? (
-              <TextField
-                onChange={(e) => {
-                  setEditLabel(String(e.detail));
-                  setHasChanges(true);
-                }}
-                value={editLabel}
-              />
+              <Box sx={{ flex: 1 }}>
+                <FormField
+                  annotation={`${editLabel.length}/${LABEL_MAX_LENGTH}`}
+                  annotationWhenError
+                  error={editLabel.length > LABEL_MAX_LENGTH}
+                  labelPosition="top"
+                >
+                  <TextField
+                    onChange={(e) => {
+                      setEditLabel(String(e.detail));
+                      setHasChanges(true);
+                    }}
+                    value={editLabel}
+                  />
+                  <FormError slot="error">
+                    Name cannot exceed {LABEL_MAX_LENGTH} characters.
+                  </FormError>
+                </FormField>
+              </Box>
             ) : (
               <Typography>{apiKey.label}</Typography>
             )}
@@ -332,11 +396,20 @@ export const ApiKeyDetailsDrawer = ({
             mt: 3,
           }}
         >
-          <Button onClick={handleCancel} variant="secondary">
+          <Button
+            disabled={isSaving}
+            onClick={handleCancel}
+            variant="secondary"
+          >
             {hasChanges ? 'Cancel' : 'Close'}
           </Button>
           {hasChanges && (
-            <Button onClick={handleSave} variant="primary">
+            <Button
+              disabled={isSaving || editLabel.length > LABEL_MAX_LENGTH}
+              onClick={handleSave}
+              processing={isSaving}
+              variant="primary"
+            >
               Save Changes
             </Button>
           )}
