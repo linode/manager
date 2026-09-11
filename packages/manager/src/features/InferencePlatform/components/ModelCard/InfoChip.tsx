@@ -2,6 +2,8 @@ import { Tooltip } from '@akamai/cds-components/react/Tooltip';
 import { Box, Typography } from '@linode/ui';
 import React from 'react';
 
+import styles from './InfoChip.module.css';
+
 interface InfoChipProps {
   description?: string;
   key?: number | string;
@@ -22,12 +24,9 @@ const InfoChip = ({
 }: InfoChipProps) => {
   const titleNode = title ? (
     <Box
+      className={styles.titleNode}
       component={splitMetricRows ? 'div' : 'span'}
-      sx={(theme) => ({
-        font: theme.font.normal,
-        fontSize: 12,
-        paddingLeft: 0.2,
-      })}
+      sx={(theme) => ({ font: theme.font.normal })}
     >
       {title}
     </Box>
@@ -35,12 +34,10 @@ const InfoChip = ({
 
   const valueNode = value ? (
     <Box
+      className={type === 'metric' ? styles.metricValue : styles.useCaseValue}
       component="span"
       sx={(theme) => ({
-        ...(type === 'metric'
-          ? { font: theme.font.bold }
-          : { font: theme.font.normal }),
-        ...(type === 'metric' ? { fontSize: 14 } : { fontSize: 11 }),
+        font: type === 'metric' ? theme.font.bold : theme.font.normal,
       })}
     >
       {value}
@@ -65,36 +62,20 @@ const InfoChip = ({
   if (type === 'metric') {
     return (
       <Box
-        sx={(theme) => ({
-          background: theme.palette.background.default,
-          border: 0,
-          borderRadius: 0.6,
-          flex: 1,
-          px: 2,
-          py: 1,
-        })}
+        className={styles.metricChip}
+        sx={(theme) => ({ background: theme.palette.background.default })}
       >
-        <Typography sx={{ fontSize: 13 }}>{content}</Typography>
+        <Typography className={styles.metricChipText}>{content}</Typography>
       </Box>
     );
   }
 
   const chip = (
     <Box
-      sx={(theme) => ({
-        alignItems: 'center',
-        background: theme.palette.background.default,
-        border: 0,
-        borderRadius: 0.4,
-        display: 'flex',
-        flex: 1,
-        height: 22,
-        justifyContent: 'center',
-        px: 1.2,
-        whiteSpace: 'nowrap',
-      })}
+      className={styles.useCaseChip}
+      sx={(theme) => ({ background: theme.palette.background.default })}
     >
-      <Typography sx={{ fontSize: 11 }}>{content}</Typography>
+      <Typography className={styles.useCaseChipText}>{content}</Typography>
     </Box>
   );
 

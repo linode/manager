@@ -1,0 +1,76 @@
+.tabStrip {
+  margin-bottom: 12px;
+}
+
+.innerPaper {
+  border: none !important;
+  overflow-x: auto;
+  padding: 0 !important;
+}
+
+.contentBox {
+  position: relative;
+}
+[data-theme="light"] .contentBox pre {
+  background-color: hsl(240, 5%, 97%) !important;
+}
+[data-theme="dark"] .contentBox pre {
+  background-color: hsl(240, 2%, 19%) !important;
+}
+
+/* Gradient height is dynamic — only position/layout go here */
+.fadeOverlay {
+  align-items: flex-end;
+  background: linear-gradient(
+    to bottom,
+    transparent 40%,
+    var(--paper-background-color, white) 100%
+  );
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  left: 0;
+  padding-bottom: 8px;
+  position: absolute;
+  right: 0;
+}
+
+.viewLessContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+.toggleButton {
+  background-color: var(--paper-background-color, #ffffff);
+  border: 1px solid var(--token-alias-border-normal, #d6d6dd);
+  border-radius: 6px;
+  color: var(--token-alias-content-text-primary-default, #343438);
+  cursor: pointer;
+  font-size: var(--token-global-font-font-size-xxs, 0.813rem);
+  font-weight: 600;
+  min-width: 100px;
+  padding: 4px 1px 1px;
+  margin-bottom: 12px;
+}
+
+.toggleButton:hover {
+  border-color: var(--token-global-color-neutrals-40, #83838c);
+  box-shadow: 0 0 5px hsla(210, 50%, 30%, 0.1), 2px 3px 1px hsla(210, 50%, 30%, 0.1);
+}
+
+body[data-theme='dark'] .toggleButton {
+  border-color: var(--token-global-color-neutrals-70, #696970);
+}
+
+body[data-theme='dark'] .toggleButton:hover {
+  border-color: var(--token-global-color-neutrals-50, #a3a3ab);
+}
+
+.toggleButton:active {
+  border-color: var(--token-global-color-neutrals-20, #e5e5ea);
+}
+
+body[data-theme='dark'] .toggleButton:active {
+  border-color: var(--token-global-color-neutrals-60, #83838c);
+}

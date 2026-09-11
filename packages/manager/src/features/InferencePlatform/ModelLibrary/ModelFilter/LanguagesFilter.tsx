@@ -1,7 +1,7 @@
 import { Autocomplete, Box } from '@linode/ui';
 import React from 'react';
 
-import { ActiveFilterChip } from './ActiveFilterChip';
+import { ModelFeatureChip as ActiveFilterChip } from '../../components/ModelFeatureChip';
 
 import type { ModelFilterState } from '../modelLibrary.types';
 

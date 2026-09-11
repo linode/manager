@@ -1,0 +1,20 @@
+/**
+ * Inference Platform theme variables — LIGHT/DARK modes.
+ */
+body[data-theme='light'] .inference-platform {
+  --color-text-primary: #343438;
+  --color-text-tertiary: #108ad6;
+
+  --button-primary-default-text: #ffffff;
+  --button-primary-default-background: hsl(203, 99%, 37%);
+  --button-primary-default-background-hover: hsl(203, 99%, 32%);
+}
+
+body[data-theme='dark'] .inference-platform {
+    --color-text-primary: #ffffff;
+    --color-text-tertiary: hsl(203, 90%, 62%);
+
+    --button-primary-default-text: #ffffff;
+    --button-primary-default-background: hsl(203, 99%, 45%);
+    --button-primary-default-background-hover: hsl(203, 99%, 52%);
+}

@@ -1,0 +1,10 @@
+.paper {
+  border-radius: 0;
+  padding: 20px 28px 24px 28px;
+}
+
+.text {
+  font-size: var(--token-global-font-font-size-xs);
+  line-height: var(--token-global-font-line-height-xs);
+  font-weight: var(--token-global-font-font-weight-regular-normal);
+}

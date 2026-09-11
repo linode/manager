@@ -1,0 +1,68 @@
+.card {
+  border: 1px solid transparent;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 28px 28px 24px;
+}
+
+body[data-theme='light'] .card:hover {
+  border-color: hsl(220, 40%, 85%);
+  box-shadow: 0px 0px 10px hsla(220, 100%, 20%, 0.1), 3px 4px 3px hsla(220, 100%, 20%, 0.1);
+}
+
+body[data-theme='dark'] .card:hover {
+  border-color: hsl(220, 5%, 35%);
+}
+
+.card:active {
+  border-color: hsl(220, 40%, 70%);
+}
+
+body[data-theme='dark'] .card:active {
+  border-color: hsl(220, 5%, 40%);
+}
+
+/* bgcolor and color remain in sx — they use theme.palette.primary */
+.providerFallback {
+  align-items: center;
+  border-radius: 50%;
+  display: flex;
+  flex-shrink: 0;
+  font-size: 14px;
+  height: 36px;
+  justify-content: center;
+  width: 36px;
+}
+
+/* color remains a style prop — uses theme.palette.primary.main */
+.title {
+  font-family: var(--token-global-font-font-family-brand, 'Nunito Sans');
+  font-weight: var(--token-global-font-font-weight-bold, 700);
+  font-size: var(--token-global-font-font-size-s, 1.5rem);
+  line-height: var(--token-global-font-line-height-xs, 1.875rem);
+}
+
+.providerText {
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+/* fontFamily remains in style — uses theme.font.semibold */
+.description {
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  display: -webkit-box;
+  font-size: 0.875rem;
+  line-height: 1.43;
+  min-height: 58px;
+  overflow: hidden;
+}
+
+.skeletonCard {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+}

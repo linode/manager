@@ -97,6 +97,12 @@ export interface InferenceModelParameters {
   parameter_count_billions: number;
 }
 
+export interface InferenceModelPricePerMillionTokens {
+  cached?: number;
+  input?: number;
+  output?: number;
+}
+
 export interface InferenceModel {
   capabilities: string[];
   description: string;
@@ -104,11 +110,12 @@ export interface InferenceModel {
   label: string;
   lifecycle_status: string;
   modalities: InferenceModelModalities;
+  model_icon?: string;
   parameters: InferenceModelParameters;
   playground_available: boolean;
-  price_input_per_million?: number;
-  price_output_per_million?: number;
+  price_per_million_tokens?: InferenceModelPricePerMillionTokens;
   provider: InferenceModelProvider;
+  provider_icon?: string;
   regions: string[];
   tags: string[];
   type: string;

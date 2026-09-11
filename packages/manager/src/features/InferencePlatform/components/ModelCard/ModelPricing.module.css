@@ -1,0 +1,36 @@
+.modelPricing {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.price {
+  display: flex;
+  flex-direction: row;
+  gap: 3px;
+  font-size: inherit;
+  font-weight: 900;
+}
+
+.priceBlock {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--token-alias-background-neutral, #f7f7fa);
+  flex: 1;
+  padding: 5px 5px 5px 14px;
+  border-radius: 4px;
+}
+
+.amount {
+  font-size: inherit;
+  font-weight: 700;
+}
+.amountLabel {
+  font-size: inherit;
+  font-weight: 300;
+}
+
+.priceInputCached {
+    font-size: inherit;
+}

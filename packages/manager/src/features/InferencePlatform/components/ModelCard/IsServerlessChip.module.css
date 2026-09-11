@@ -1,0 +1,11 @@
+/* color remains in sx — uses theme.palette.warning.dark */
+.icon {
+  height: 14px;
+  width: 14px;
+}
+
+.label {
+  color: var(--token-alias-content-text-primary-default, #343438);
+  font-size: 12px;
+  font-weight: 600;
+}

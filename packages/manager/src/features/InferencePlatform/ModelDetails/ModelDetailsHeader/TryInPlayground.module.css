@@ -1,0 +1,32 @@
+.button {
+  align-items: center;
+  background-color: var(--button-primary-default-background);
+  color: var(--button-primary-default-text, #ffffff);
+  display: inline-flex;
+  font-size: var(--token-global-font-size-s);
+  font-weight: 600;
+  gap: 8px;
+  padding: 6px 16px;
+  text-decoration: none;
+  white-space: nowrap;
+  width: fit-content;
+}
+
+.button:hover {
+    text-decoration: none;
+}
+
+.button:hover {
+  color: var(--button-primary-default-text);
+  background-color: var(--button-primary-default-background-hover); /* Action Button Hover */
+}
+
+.playgroundIcon {
+  height: 18px;
+  width: 18px;
+}
+
+/* The SVG hardcodes --color-a inline, so override the path fill directly. */
+.playgroundIcon path {
+--color-a: var(--component-button-primary-default-text, #ffffff);
+}

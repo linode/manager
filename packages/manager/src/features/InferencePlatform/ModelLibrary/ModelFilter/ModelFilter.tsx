@@ -3,7 +3,6 @@ import React from 'react';
 
 import { ActiveFilters } from './ActiveFilters';
 import { InputModesFilter } from './InputModesFilter';
-import { LanguagesFilter } from './LanguagesFilter';
 import { MaxContextFilter } from './MaxContextFilter';
 import { OutputModesFilter } from './OutputModesFilter';
 import { ParametersFilter } from './ParametersFilter';
@@ -26,7 +25,8 @@ interface ModelFilterProps {
 export const ModelFilter = ({
   filterState,
   inputModes,
-  languages,
+  // Not currently rendered; the Languages dropdown is hidden for now.
+  languages: _languages,
   onFilterChange,
   outputModes,
   providers,
@@ -43,11 +43,11 @@ export const ModelFilter = ({
         p: 2,
       })}
     >
-      {/* Top row: Search / Parameters / Provider */}
+      {/* Top row: Search / Parameters / Max Context */}
       <Stack
         alignItems="flex-end"
         direction="row"
-        flexWrap="wrap"
+        flexWrap="nowrap"
         gap={4}
         sx={{ mb: 2, px: 1.5 }}
       >
@@ -70,16 +70,9 @@ export const ModelFilter = ({
           minContextLengthK={filterState.minContextLengthK}
           onFilterChange={onFilterChange}
         />
-
-        {/* Provider dropdown */}
-        <ProviderFilter
-          onFilterChange={onFilterChange}
-          providerLabel={filterState.providerLabel}
-          providers={providers}
-        />
       </Stack>
 
-      {/* Filter controls row: Serverless chip + Languages dropdown */}
+      {/* Filter controls row: Provider / Use Case / Input Modes / Output Modes */}
       <Stack
         alignItems="center"
         direction="row"
@@ -87,6 +80,13 @@ export const ModelFilter = ({
         gap={2}
         sx={{ px: 1.5 }}
       >
+        {/* Provider dropdown */}
+        <ProviderFilter
+          onFilterChange={onFilterChange}
+          providerLabel={filterState.providerLabel}
+          providers={providers}
+        />
+
         {/* Use-case tags multi-select */}
         <UseCaseFilter
           onFilterChange={onFilterChange}
@@ -107,15 +107,6 @@ export const ModelFilter = ({
           outputModes={outputModes}
           selectedOutputModes={filterState.outputModes}
         />
-
-        {/* Languages multi-select - only show if languages are available */}
-        {languages.length > 0 && (
-          <LanguagesFilter
-            languages={languages}
-            onFilterChange={onFilterChange}
-            selectedLanguages={filterState.languages}
-          />
-        )}
       </Stack>
 
       <ActiveFilters

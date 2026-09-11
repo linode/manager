@@ -1,0 +1,35 @@
+.pill {
+  align-items: center;
+  background-color: var(--token-alias-background-neutral);
+  border: 1px solid var(--token-alias-border-normal);
+  border-radius: 4px;
+  display: flex;
+  flex-direction: row;
+  padding: 2px 4px 1px 15px;
+  width: fit-content;
+}
+
+.id {
+  color: var(--color-text-primary);
+  font-family: var(--token-global-font-font-family-code, 'Fira Code');
+  font-weight: var(--token-global-font-font-weight-regular-normal, 400);
+  font-style: normal;
+  font-size: var(--token-global-font-font-size-xxs, 0.813rem);
+  line-height: var(--token-global-font-line-height-xs, 1.25rem);
+  letter-spacing: 0;
+  white-space: nowrap;
+  padding: 1px 12px 0 0;
+}
+
+.copyIcon {
+  display: inline-flex;
+  flex-shrink: 0;
+  height: 24px;
+  width: 24px;
+  margin-top: -3px;
+}
+
+.copyIcon svg,
+.copyIcon svg:hover {
+  color: var(--component-button-primary-default-background, #0174bc);
+}

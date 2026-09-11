@@ -1,8 +1,9 @@
 import { Box, Paper, Stack, Typography } from '@linode/ui';
-import { useTheme } from '@mui/material/styles';
 import React from 'react';
 
 import { CodeBlock } from 'src/components/CodeBlock/CodeBlock';
+
+import styles from './CodeSnippetBrowser.module.css';
 
 import type { SupportedLanguage } from 'src/utilities/syntax-highlighter';
 
@@ -25,37 +26,10 @@ const ViewSizeToggleButton = ({
   label,
   onClick,
 }: ViewSizeToggleButtonProps) => {
-  const cmTheme = useTheme();
   return (
-    <Box
-      component="button"
-      onClick={onClick}
-      sx={(theme) => ({
-        backgroundColor: theme.palette.background.paper,
-        border: `1px solid ${cmTheme.palette.mode === 'light' ? theme.palette.grey[400] : theme.palette.grey[700]}`,
-        borderRadius: 1.5,
-        color: theme.palette.text.primary,
-        cursor: 'pointer',
-        font: theme.font.semibold,
-        fontSize: theme.tokens.font.FontSize.Xxs,
-        minWidth: 100,
-        padding: '4px 1px 1px 1px',
-        '&:hover': {
-          borderColor:
-            cmTheme.palette.mode === 'light'
-              ? theme.palette.grey[600]
-              : theme.palette.grey[500],
-        },
-        '&:active': {
-          borderColor:
-            cmTheme.palette.mode === 'light'
-              ? theme.palette.grey[200]
-              : theme.palette.grey[600],
-        },
-      })}
-    >
+    <button className={styles.toggleButton} onClick={onClick} type="button">
       {label}
-    </Box>
+    </button>
   );
 };
 
@@ -160,7 +134,7 @@ export const CodeSnippetBrowser = ({
 
   return (
     <Paper sx={{ borderRadius: 1 }}>
-      <Stack direction="row" gap={0} sx={{ mt: 1 }}>
+      <Stack className={styles.tabStrip} direction="row" gap={0}>
         {languages.map((tab, index) => (
           <LanguageTab
             index={index}
@@ -174,19 +148,13 @@ export const CodeSnippetBrowser = ({
         ))}
       </Stack>
 
-      <Paper
-        sx={() => ({
-          border: 'none',
-          overflowX: 'auto',
-          p: 0,
-        })}
-      >
+      <Paper className={styles.innerPaper}>
         <Box
+          className={styles.contentBox}
           ref={contentBoxRef}
           sx={{
             height: effectivelyExpanded ? 'auto' : textAreaHeight,
             overflowY: effectivelyExpanded ? 'visible' : 'hidden',
-            position: 'relative',
           }}
         >
           <CodeBlock
@@ -196,35 +164,25 @@ export const CodeSnippetBrowser = ({
           />
 
           {viewMoreEnabled && !effectivelyExpanded && (
-            <Box
-              sx={(theme) => ({
-                alignItems: 'flex-end',
-                background: `linear-gradient(to bottom, transparent 0%, ${theme.palette.background.paper} 100%)`,
-                bottom: 0,
-                display: 'flex',
-                height: textAreaHeight / 2,
-                justifyContent: 'center',
-                left: 0,
-                pb: 1,
-                position: 'absolute',
-                right: 0,
-              })}
+            <div
+              className={styles.fadeOverlay}
+              style={{ height: textAreaHeight / 1.25 }}
             >
               <ViewSizeToggleButton
                 label="VIEW MORE"
                 onClick={() => setIsExpanded(true)}
               />
-            </Box>
+            </div>
           )}
         </Box>
 
         {viewMoreEnabled && isExpanded && !alwaysExpanded && (
-          <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+          <div className={styles.viewLessContainer}>
             <ViewSizeToggleButton
               label="VIEW LESS"
               onClick={() => setIsExpanded(false)}
             />
-          </Box>
+          </div>
         )}
       </Paper>
     </Paper>

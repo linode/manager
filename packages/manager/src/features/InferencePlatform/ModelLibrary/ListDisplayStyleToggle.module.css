@@ -1,0 +1,25 @@
+.mainContainer {
+  border-radius: 5px;
+  overflow: hidden;
+  background-color: 'red';
+}
+
+.button {
+  overflow: hidden;
+  background-color: 'red';
+}
+
+.button:first-child {
+  border-bottom-left-radius: 5px;
+  border-top-left-radius: 5px;
+}
+
+.button:last-child {
+  border-bottom-right-radius: 5px;
+  border-top-right-radius: 5px;
+}
+
+.icon {
+  height: 20px;
+  width: 20px;
+}

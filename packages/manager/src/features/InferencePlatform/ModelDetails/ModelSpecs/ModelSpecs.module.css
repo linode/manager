@@ -1,0 +1,112 @@
+.paper {
+  border-radius: 0;
+  padding: 24px 32px;
+}
+
+.title {
+  color: var(--color-text-primary);
+  font-family: var(--token-global-font-font-family-brand, 'Nunito Sans');
+  font-size: 18px;
+  font-weight: var(--token-global-font-font-weight-bold, 700);
+  margin-bottom: 8px;
+}
+
+.rows {
+  display: flex;
+  flex-direction: column;
+}
+
+.row {
+  align-items: center;
+  border-bottom: 1px solid var(--token-alias-border-normal, #e5e5ea);
+  display: flex;
+  justify-content: space-between;
+  min-height: 44px;
+  padding: 10px 0;
+  gap: 16px;
+}
+
+.row:last-child {
+  border-bottom: none;
+}
+
+.label {
+  color: var(--token-alias-content-text-secondary-default, #696970);
+  flex-shrink: 0;
+  font-size: 14px;
+}
+
+.value {
+  color: var(--color-text-primary);
+  font-size: 14px;
+  text-align: right;
+}
+
+/* Applied to values not yet supplied by model data — highlights missing fields. */
+.staticValue {
+  color: red;
+}
+
+.providerRow {
+  align-items: center;
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.providerIcon {
+  flex-shrink: 0;
+  height: 24px;
+  width: 24px;
+  margin-top: -2px
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  justify-content: flex-end;
+}
+
+.chip {
+  background-color: var(--token-alias-background-neutral, #f7f7fa);
+  border: 1px solid var(--token-alias-border-normal, #e5e5ea);
+  border-radius: 4px;
+  color: var(--color-text-primary);
+  font-size: 12px;
+  padding: 2px 8px;
+}
+
+.deployment {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  text-align: right;
+}
+
+.deploymentItem {
+  align-items: center;
+  color: var(--color-text-primary);
+  display: flex;
+  font-size: 14px;
+  gap: 4px;
+  justify-content: flex-end;
+}
+
+.checkIcon {
+  color: #2ecc71;
+  flex-shrink: 0;
+  font-size: 14px;
+}
+
+.compareLink {
+  color: var(--color-text-tertiary, #108ad6);
+  display: block;
+  font-size: 14px;
+  margin-top: 16px;
+  text-decoration: none;
+}
+
+.compareLink:hover {
+  text-decoration: underline;
+}

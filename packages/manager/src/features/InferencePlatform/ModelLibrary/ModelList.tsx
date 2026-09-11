@@ -1,17 +1,15 @@
-import {
-  SegmentedButton,
-  SegmentedButtonGroup,
-} from '@akamai/cds-components/react/SegmentedButton';
 import { Select } from '@akamai/cds-components/react/Select';
 import { Box, Stack, Typography } from '@linode/ui';
 import React, { useState } from 'react';
 
-import CardView from 'src/assets/icons/ai/cardview.svg';
-import GridViewIcon from 'src/assets/icons/grid-view.svg';
 import { storage } from 'src/utilities/storage';
 
-import { ModelCard, ModelCardSkeleton } from './ModelCard/ModelCard';
-import { ModelRow } from './ModelCard/ModelRow';
+import {
+  ModelCard,
+  ModelCardSkeleton,
+} from '../components/ModelCard/ModelCard';
+import { ModelRow } from '../components/ModelCard/ModelRow';
+import { ListDisplayStyleToggle } from './ListDisplayStyleToggle';
 import { applyModelSort } from './modelLibraryUtils';
 
 import type { Model, SortKey } from './modelLibrary.types';
@@ -74,41 +72,10 @@ export const ModelList = ({ height, isLoading, models }: ModelListProps) => {
         justifyContent="space-between"
         sx={{ mb: 2 }}
       >
-        <Stack alignItems="center" direction="row" gap={0}>
-          <SegmentedButtonGroup
-            onChange={(event) => {
-              const { value } = (event as CustomEvent<{ value: string }>)
-                .detail;
-              handleViewModeChange(value as ViewMode);
-            }}
-            size="small"
-            style={{ borderRadius: '5px', overflow: 'hidden' }}
-            value={viewMode}
-          >
-            <SegmentedButton
-              aria-label="Grid view"
-              style={{
-                borderBottomLeftRadius: '5px',
-                borderTopLeftRadius: '5px',
-                overflow: 'hidden',
-              }}
-              value="grid"
-            >
-              <Box component={CardView} sx={{ height: 20, width: 20 }} />
-            </SegmentedButton>
-            <SegmentedButton
-              aria-label="List view"
-              style={{
-                borderBottomRightRadius: '5px',
-                borderTopRightRadius: '5px',
-                overflow: 'hidden',
-              }}
-              value="list"
-            >
-              <Box component={GridViewIcon} sx={{ height: 20, width: 20 }} />
-            </SegmentedButton>
-          </SegmentedButtonGroup>
-        </Stack>
+        <ListDisplayStyleToggle
+          onChange={handleViewModeChange}
+          value={viewMode}
+        />
 
         <Box sx={{ minWidth: 200 }}>
           <Select<{ label: string; value: SortKey }>
@@ -157,7 +124,7 @@ export const ModelList = ({ height, isLoading, models }: ModelListProps) => {
           <Box
             sx={(theme) => ({
               display: 'grid',
-              gap: 2,
+              gap: '10px',
               gridTemplateColumns:
                 viewMode === 'list' ? '1fr' : 'repeat(2, 1fr)',
               [theme.breakpoints.down('sm')]: {

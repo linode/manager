@@ -1,0 +1,42 @@
+/* background remains in sx — uses theme.palette.background.default */
+.metricChip {
+  border: none;
+  border-radius: 5px;
+  flex: 1;
+  padding: 8px 16px;
+}
+
+.metricChipText {
+  font-size: 13px;
+}
+
+/* background remains in sx — uses theme.palette.background.default */
+.useCaseChip {
+  align-items: center;
+  border: none;
+  border-radius: 3px;
+  display: flex;
+  flex: 1;
+  height: 22px;
+  justify-content: center;
+  padding: 0 10px;
+  white-space: nowrap;
+}
+
+.useCaseChipText {
+  font-size: 11px;
+}
+
+/* font remains in sx — uses theme.font.normal */
+.titleNode {
+  font-size: 12px;
+  padding-left: 2px;
+}
+
+.metricValue {
+  font-size: 14px;
+}
+
+.useCaseValue {
+  font-size: 11px;
+}

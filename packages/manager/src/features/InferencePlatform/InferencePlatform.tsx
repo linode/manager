@@ -8,9 +8,9 @@ import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
-import { Tab, useTabs } from 'src/hooks/useTabs';
+import { useTabs } from 'src/hooks/useTabs';
 
-import { InferencePlatformProvider } from './InferencePlatformProvider';
+import { INFERENCE_PLATFORM_TABS } from './inferencePlatformTabs';
 
 const Dashboard = React.lazy(() =>
   import('./Dashboard/Dashboard').then((m) => ({
@@ -47,52 +47,43 @@ export const InferencePlatform = () => {
   // on navigation so useTabs can recompute the active tab index.
   useLocation();
 
-  const tabs: Tab[] = [
-    { title: 'Dashboard', to: '/inference-platform/dashboard' },
-    { title: 'Model Library', to: '/inference-platform/model-library' },
-    { title: 'Model Playground', to: '/inference-platform/model-playground' },
-    {
-      title: 'API Key Management',
-      to: '/inference-platform/api-key-management',
-    },
-    { title: 'Usage', to: '/inference-platform/usage' },
-  ];
+  // Spread into a new array each render so useTabs recomputes the active tab
+  // index on navigation (its memo keys off the tabs reference).
+  const tabs = [...INFERENCE_PLATFORM_TABS];
 
   const { handleTabChange, tabIndex } = useTabs(tabs);
 
   return (
-    <InferencePlatformProvider>
-      <React.Fragment>
-        <DocumentTitleSegment segment="Inference Platform" />
-        <LandingHeader
-          breadcrumbProps={{ pathname: '/inference-platform' }}
-          removeCrumbX={1}
-          spacingBottom={4}
-          title="Inference Platform"
-        />
-        <Tabs index={tabIndex} onChange={handleTabChange}>
-          <TanStackTabLinkList tabs={[...tabs]} />
-          <React.Suspense fallback={<SuspenseLoader />}>
-            <TabPanels>
-              <SafeTabPanel index={0}>
-                <Dashboard />
-              </SafeTabPanel>
-              <SafeTabPanel index={1}>
-                <ModelLibrary />
-              </SafeTabPanel>
-              <SafeTabPanel index={2}>
-                <ModelPlayground />
-              </SafeTabPanel>
-              <SafeTabPanel index={3}>
-                <ApiKeyManagement />
-              </SafeTabPanel>
-              <SafeTabPanel index={4}>
-                <Usage />
-              </SafeTabPanel>
-            </TabPanels>
-          </React.Suspense>
-        </Tabs>
-      </React.Fragment>
-    </InferencePlatformProvider>
+    <React.Fragment>
+      <DocumentTitleSegment segment="Inference Platform" />
+      <LandingHeader
+        breadcrumbProps={{ pathname: '/inference-platform' }}
+        removeCrumbX={1}
+        spacingBottom={4}
+        title="Inference Platform"
+      />
+      <Tabs index={tabIndex} onChange={handleTabChange}>
+        <TanStackTabLinkList tabs={[...tabs]} />
+        <React.Suspense fallback={<SuspenseLoader />}>
+          <TabPanels>
+            <SafeTabPanel index={0}>
+              <Dashboard />
+            </SafeTabPanel>
+            <SafeTabPanel index={1}>
+              <ModelLibrary />
+            </SafeTabPanel>
+            <SafeTabPanel index={2}>
+              <ModelPlayground />
+            </SafeTabPanel>
+            <SafeTabPanel index={3}>
+              <ApiKeyManagement />
+            </SafeTabPanel>
+            <SafeTabPanel index={4}>
+              <Usage />
+            </SafeTabPanel>
+          </TabPanels>
+        </React.Suspense>
+      </Tabs>
+    </React.Fragment>
   );
 };

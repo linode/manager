@@ -25,7 +25,7 @@ export const ProviderFilter = ({
     : null;
 
   return (
-    <Box sx={{ flex: '1 1 180px', minWidth: 160 }}>
+    <Box sx={{ flex: '1 1 0', minWidth: 200 }}>
       <Autocomplete
         disableClearable={false}
         label="Provider"

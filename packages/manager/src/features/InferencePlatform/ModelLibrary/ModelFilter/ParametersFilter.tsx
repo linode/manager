@@ -76,9 +76,8 @@ export const ParametersFilter = ({
   return (
     <Box
       sx={(theme) => ({
-        flex: '2 1 260px',
-        minWidth: 180,
-        maxWidth: 220,
+        flex: '1 1 35%',
+        minWidth: 0,
         paddingRight: 1,
       })}
     >

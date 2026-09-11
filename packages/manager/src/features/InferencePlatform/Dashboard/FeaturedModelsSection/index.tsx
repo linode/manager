@@ -7,7 +7,7 @@ import { Box, Stack, Typography } from '../../components';
 import {
   ModelCard,
   ModelCardSkeleton,
-} from '../../ModelLibrary/ModelCard/ModelCard';
+} from '../../components/ModelCard/ModelCard';
 import styles from './FeaturedModelsSection.module.css';
 
 import type { Model } from '../../ModelLibrary/modelLibrary.types';

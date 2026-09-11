@@ -1,12 +1,15 @@
 import {
   applyModelFilters,
   applyModelSort,
+  getContextTickValues,
   getInputModes,
   getLanguages,
   getOutputModes,
+  getParameterTickValues,
   getProviders,
   getUseCaseTags,
   mergeInferenceModel,
+  pinUseCaseTags,
 } from './modelLibraryUtils';
 
 import type { Model, ModelFilterState } from './modelLibrary.types';
@@ -655,5 +658,123 @@ describe('getUseCaseTags', () => {
       }),
     ];
     expect(getUseCaseTags(models)).toEqual(['AI Agent', 'Coding', 'Reasoning']);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// getContextTickValues
+// ---------------------------------------------------------------------------
+
+describe('getContextTickValues', () => {
+  it('returns a static fallback when no models have a context length', () => {
+    expect(getContextTickValues([])).toEqual([8, 32, 128, 256]);
+  });
+
+  it('returns a single value when all models share one context length', () => {
+    const models = [
+      makeModel({ contextLengthK: 128 }),
+      makeModel({ contextLengthK: 128 }),
+    ];
+    expect(getContextTickValues(models)).toEqual([128]);
+  });
+
+  it('spans the data min/max with log-spaced ticks in between', () => {
+    const models = [
+      makeModel({ contextLengthK: 8 }),
+      makeModel({ contextLengthK: 64 }),
+      makeModel({ contextLengthK: 256 }),
+    ];
+    const ticks = getContextTickValues(models);
+
+    // Endpoints are the exact data min/max.
+    expect(ticks[0]).toBe(8);
+    expect(ticks[ticks.length - 1]).toBe(256);
+    // A handful of ticks, strictly ascending.
+    expect(ticks.length).toBeGreaterThanOrEqual(2);
+    expect(ticks.length).toBeLessThanOrEqual(7);
+    for (let i = 1; i < ticks.length; i++) {
+      expect(ticks[i]).toBeGreaterThan(ticks[i - 1]);
+    }
+    // Log spacing → gaps grow, devoting more ticks to smaller numbers.
+    const firstGap = ticks[1] - ticks[0];
+    const lastGap = ticks[ticks.length - 1] - ticks[ticks.length - 2];
+    expect(lastGap).toBeGreaterThan(firstGap);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// getParameterTickValues
+// ---------------------------------------------------------------------------
+
+describe('getParameterTickValues', () => {
+  it('returns a static fallback when no models have a parameter count', () => {
+    expect(getParameterTickValues([])).toEqual([1, 8, 70, 1000]);
+  });
+
+  it('returns a single value when all models share one parameter count', () => {
+    const models = [
+      makeModel({ parametersB: 70 }),
+      makeModel({ parametersB: 70 }),
+    ];
+    expect(getParameterTickValues(models)).toEqual([70]);
+  });
+
+  it('spans the data min/max with log-spaced ticks in between', () => {
+    const models = [
+      makeModel({ parametersB: 4 }),
+      makeModel({ parametersB: 70 }),
+      makeModel({ parametersB: 2000 }),
+    ];
+    const ticks = getParameterTickValues(models);
+
+    expect(ticks[0]).toBe(4);
+    expect(ticks[ticks.length - 1]).toBe(2000);
+    expect(ticks.length).toBeGreaterThanOrEqual(2);
+    expect(ticks.length).toBeLessThanOrEqual(7);
+    for (let i = 1; i < ticks.length; i++) {
+      expect(ticks[i]).toBeGreaterThan(ticks[i - 1]);
+    }
+    const firstGap = ticks[1] - ticks[0];
+    const lastGap = ticks[ticks.length - 1] - ticks[ticks.length - 2];
+    expect(lastGap).toBeGreaterThan(firstGap);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// pinUseCaseTags
+// ---------------------------------------------------------------------------
+
+describe('pinUseCaseTags', () => {
+  const tags = [
+    { description: '', label: 'A' },
+    { description: '', label: 'B' },
+    { description: '', label: 'C' },
+    { description: '', label: 'D' },
+  ];
+
+  it('returns the tags unchanged when nothing is pinned', () => {
+    expect(pinUseCaseTags(tags, [])).toBe(tags);
+  });
+
+  it('returns the tags unchanged when no pinned label matches', () => {
+    expect(pinUseCaseTags(tags, ['Z'])).toBe(tags);
+  });
+
+  it('moves a matching tag to the front while preserving order', () => {
+    expect(pinUseCaseTags(tags, ['C']).map((t) => t.label)).toEqual([
+      'C',
+      'A',
+      'B',
+      'D',
+    ]);
+  });
+
+  it('keeps matched tags in their original order when several are pinned', () => {
+    expect(pinUseCaseTags(tags, ['C', 'A']).map((t) => t.label)).toEqual([
+      'A',
+      'C',
+      'B',
+      'D',
+    ]);
   });
 });

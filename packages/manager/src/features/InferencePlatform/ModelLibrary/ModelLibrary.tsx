@@ -1,6 +1,8 @@
 import { Box, Stack } from '@linode/ui';
 import React, { useLayoutEffect, useRef, useState } from 'react';
 
+import { FOOTER_HEIGHT } from 'src/features/Footer';
+
 import { useInferencePlatform } from '../InferencePlatformContext';
 import { ModelFilter } from './ModelFilter/ModelFilter';
 // import { INFERENCE_MODEL_STUBS } from './modelLibrary.supplementary-EXTRA';
@@ -31,13 +33,14 @@ const DEFAULT_FILTER_STATE: ModelFilterState = {
   useCaseTags: [],
 };
 
-const MODEL_LIST_BOTTOM_VIEWPORT_GAP = 48;
+// 32px = pb of #main-content in Root.tsx, FOOTER_HEIGHT = the footer below it.
+const MODEL_LIST_BOTTOM_VIEWPORT_GAP = FOOTER_HEIGHT + 32;
 
 export const ModelLibrary = () => {
   const { isModelsLoading, models: rawModels } = useInferencePlatform();
   const filterContainerRef = useRef<HTMLDivElement | null>(null);
   const listContainerRef = useRef<HTMLDivElement | null>(null);
-  // const apiIds = new Set(rawModels.map((m) => m.id));
+
   const inferenceModels = [
     ...rawModels,
     // ...INFERENCE_MODEL_STUBS.filter((s) => !apiIds.has(s.id)),
@@ -73,11 +76,15 @@ export const ModelLibrary = () => {
       const paddingBottom = Number.isNaN(parsedPaddingBottom)
         ? 0
         : parsedPaddingBottom;
+      // Gap the outer Stack applies between the filter bar and the list.
+      const parsedRowGap = Number.parseFloat(listStyles.rowGap);
+      const rowGap = Number.isNaN(parsedRowGap) ? 0 : parsedRowGap;
 
       const availableHeight = Math.floor(
         window.innerHeight -
           filterBottom -
           paddingBottom -
+          rowGap -
           MODEL_LIST_BOTTOM_VIEWPORT_GAP
       );
 
@@ -105,7 +112,7 @@ export const ModelLibrary = () => {
   }, []);
 
   return (
-    <Stack gap={2} ref={listContainerRef} sx={{ pt: 1, px: 2 }}>
+    <Stack gap={2} ref={listContainerRef} sx={{ pt: 1 }}>
       <Box ref={filterContainerRef}>
         <ModelFilter
           filterState={filterState}
@@ -117,6 +124,7 @@ export const ModelLibrary = () => {
           useCaseTags={useCaseTags}
         />
       </Box>
+
       <ModelList
         height={modelListHeight}
         isLoading={isModelsLoading}

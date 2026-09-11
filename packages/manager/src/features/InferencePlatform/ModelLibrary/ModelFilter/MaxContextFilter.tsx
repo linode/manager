@@ -74,7 +74,12 @@ export const MaxContextFilter = ({
 
   return (
     <Box
-      sx={{ flex: '2 1 260px', minWidth: 180, maxWidth: 200, paddingLeft: 1 }}
+      sx={{
+        flex: '1 1 35%',
+        minWidth: 0,
+        paddingLeft: 1,
+        paddingRight: '18px',
+      }}
     >
       <Typography
         sx={{

@@ -74,6 +74,15 @@ const inferencePlatformModelLibraryRoute = createRoute({
   )
 );
 
+const inferencePlatformModelDetailsRoute = createRoute({
+  getParentRoute: () => inferencePlatformRoute,
+  path: 'model-library/$modelId',
+}).lazy(() =>
+  import(
+    'src/features/InferencePlatform/ModelDetails/modelDetailsLazyRoute'
+  ).then((m) => m.modelDetailsLazyRoute)
+);
+
 const inferencePlatformUsageRoute = createRoute({
   getParentRoute: () => inferencePlatformRoute,
   path: 'usage',
@@ -88,6 +97,7 @@ export const inferencePlatformRouteTree = inferencePlatformRoute.addChildren([
   inferencePlatformDashboardRoute,
   inferencePlatformInferenceHubRoute,
   inferencePlatformModelLibraryRoute,
+  inferencePlatformModelDetailsRoute,
   inferencePlatformModelPlaygroundRoute,
   inferencePlatformApiKeyManagementRoute,
   inferencePlatformUsageRoute,

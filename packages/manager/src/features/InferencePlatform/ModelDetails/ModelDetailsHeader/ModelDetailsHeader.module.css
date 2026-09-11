@@ -1,0 +1,65 @@
+.root {
+  gap: 8px;
+}
+
+/* Row A — two full-width columns */
+.rowA {
+  gap: 24px;
+}
+
+/* Identity — logo column + info column */
+.identity {
+  flex: 1;
+  gap: 12px;
+  min-width: 0;
+}
+
+/* Info — stacked name/ID row + provider row */
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.infoTop {
+  gap: 8px;
+}
+
+.providerName {
+  color: var(--color-text-primary);
+  font-family: var(--token-global-font-font-family-brand, 'Nunito Sans');
+  font-weight: var(--token-global-font-font-weight-bold, 700);
+  font-size: var(--token-global-font-font-size-s, 1.5rem);
+  line-height: var(--token-global-font-line-height-xs, 1.875rem);
+  letter-spacing: 0;
+}
+
+
+
+.modelLogo {
+    height: 45px;
+    width: 45px;
+    flex-shrink: 0;
+}
+
+.modelName {
+  color: var(--color-text-primary);
+  font-size: var(--token-global-font-font-size-xl, 28px);
+  font-weight: 700;
+  line-height: 1.1;
+  margin: 0;
+}
+
+/* Column RIGHT — actions */
+.right {
+  flex-shrink: 0;
+  gap: 20px;
+}
+
+/* Row B */
+.rowC {
+  margin-top: 5px;
+  margin-bottom: 9px;
+  min-height: 0;
+}

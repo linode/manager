@@ -1,0 +1,29 @@
+.paper {
+  border-radius: 0;
+  padding: 22px 0px 12px 0px;
+}
+
+.title {
+    font-size: 16px;
+}
+
+.headerRow {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding-left: 24px;
+  padding-right: 42px;
+}
+
+.linksRow {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  gap: 14px;
+}
+
+.docsLink span svg {
+  height: 16px;
+  width: 16px;
+  margin-top: -12px;
+}

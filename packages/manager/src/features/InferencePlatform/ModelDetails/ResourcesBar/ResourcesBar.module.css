@@ -1,0 +1,12 @@
+.paper {
+  align-items: center;
+  border-radius: 0;
+  display: flex;
+  justify-content: center;
+  min-height: 90px;
+  padding: 20px 28px;
+}
+
+.label {
+  color: var(--color-text-primary);
+}

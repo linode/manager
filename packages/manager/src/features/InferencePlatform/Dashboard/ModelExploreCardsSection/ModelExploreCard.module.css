@@ -36,9 +36,10 @@ body[data-theme='dark'] .paper {
 }
 
 .boxIcon{
-  height: 20px;
-  width: 20px;
+  height: 22px;
+  width: 22px;
   --color-a: var(--token-global-color-neutrals-100);
+  margin-top: -2px;
 }
 
 body[data-theme='dark'] .boxIcon {
@@ -47,7 +48,7 @@ body[data-theme='dark'] .boxIcon {
 
 .typographyTitle{
   font-size: 18px;
-  padding-left: 4px;
+  padding-left: 5px;
   font-weight: 700;
   color: var(--color-text-primary);
 }

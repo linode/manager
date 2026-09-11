@@ -3,16 +3,25 @@ export interface ModelCapability {
   label: string;
 }
 
+export interface ModelHighlight {
+  item_text: string;
+  title: string;
+}
+
 export interface Model {
   contextLengthK: number;
   description: string;
+  descriptionLong?: string;
   descriptionShort: string;
+  highlights?: ModelHighlight[];
   id: string;
   inputModes: ModelCapability[];
   isServerless: boolean;
+  modelLogo?: string;
   outputModes: ModelCapability[];
   parametersB: number;
   playgroundAvailable: boolean;
+  priceInputCachedPerMillion?: number;
   priceInputPerMillion?: number;
   priceOutputPerMillion?: number;
   providerLogo: string;

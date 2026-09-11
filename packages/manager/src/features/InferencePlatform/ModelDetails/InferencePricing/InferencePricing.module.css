@@ -1,0 +1,47 @@
+.paper {
+  color: var(--color-text-primary);
+  font-family: var(--token-global-font-font-family-brand, 'Nunito Sans');
+  border-radius: 0;
+  padding: 20px 24px;
+}
+
+.header {
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.title {
+  color: var(--color-text-primary);
+  font-size: var(--token-global-font-font-size-s);
+  font-weight: var(--token-global-font-font-weight-bold, 700);
+}
+
+.subtitle {
+font-size: var(--token-global-font-font-size-xs);
+}
+
+.grid {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.cell {
+  align-items: center;
+  background-color: var(--token-alias-background-neutral, #f7f7fa);
+  border-radius: 6px;
+  gap: 4px;
+  padding: 10px 10px 15px 10px;
+}
+
+.cellLabel {
+  font-size: var(--token-global-font-font-size-xxxs);
+}
+
+.cellPrice {
+  color: var(--color-text-primary);
+  font-size: var(--token-global-font-font-size-m);
+  font-weight: var(--token-global-font-font-weight-bold, 700);
+  line-height: 1;
+}

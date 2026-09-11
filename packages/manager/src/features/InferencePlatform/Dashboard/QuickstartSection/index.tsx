@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { CodeSnippetBrowser } from 'src/components/CodeSnippetBrowser';
 import { Link } from 'src/components/Link';
+import { CodeSnippetBrowser } from 'src/features/InferencePlatform/components/CodeSnippetBrowser';
 
 import { Paper, Stack, Typography } from '../../components';
 import styles from './QuickstartSection.module.css';

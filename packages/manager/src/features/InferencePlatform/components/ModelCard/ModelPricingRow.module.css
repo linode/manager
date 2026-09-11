@@ -1,0 +1,49 @@
+.pricingForRow {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+}
+
+.modelPricing {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  white-space: nowrap;
+}
+
+.price {
+  display: flex;
+  flex-direction: row;
+  gap: 3px;
+  font-weight: 900;
+}
+
+.pricingTitle {
+  font-size: var(--token-global-font-font-size-xxs);
+  font-weight: var(--token-global-font-font-weight-bold, 700);
+}
+
+.pricingSubTitle {
+  font-size: var(--token-global-font-font-size-xxs);
+  font-weight: var(--token-global-font-font-weight-light, 100);
+}
+
+.amountLabel {
+  display: inline;
+  flex-direction: row;
+  font-weight: 300;
+  padding-right: 3px;
+}
+
+.priceBlock {
+  gap: 3px;
+  padding-right: 10px;
+}
+
+.amount {
+  font-weight: var(--token-global-font-font-weight-bold, 700);
+}
+
+.priceInputCached {
+    font-size: inherit;
+}

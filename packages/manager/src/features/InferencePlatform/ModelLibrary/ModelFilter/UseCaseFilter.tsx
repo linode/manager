@@ -1,7 +1,7 @@
 import { Autocomplete, Box } from '@linode/ui';
 import React from 'react';
 
-import { ActiveFilterChip } from './ActiveFilterChip';
+import { ModelFeatureChip as ActiveFilterChip } from '../../components/ModelFeatureChip';
 
 import type { ModelFilterState } from '../modelLibrary.types';
 
@@ -25,7 +25,7 @@ export const UseCaseFilter = ({
   }));
 
   return (
-    <Box sx={{ minWidth: 200 }}>
+    <Box sx={{ flex: '1 1 0', minWidth: 200 }}>
       <Autocomplete
         getOptionDisabled={(option) =>
           selectedUseCaseTags.includes(

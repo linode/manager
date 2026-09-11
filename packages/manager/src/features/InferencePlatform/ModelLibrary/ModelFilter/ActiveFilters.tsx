@@ -1,13 +1,11 @@
 import { Button } from '@akamai/cds-components/react/Button';
 import { Close } from '@akamai/cds-icons/react';
 import { Box, Divider, Stack } from '@linode/ui';
-import { useTheme } from '@mui/material/styles';
 import React from 'react';
 
 import FilterOutline from 'src/assets/icons/filter.svg';
 
-import { providerIcon, providerIconStyles } from '../../utils';
-import { ActiveFilterChip } from './ActiveFilterChip';
+import { ModelFeatureChip as ActiveFilterChip } from '../../components/ModelFeatureChip';
 import { CTX_MAX, CTX_MIN, formatContextLabel } from './MaxContextFilter';
 import { formatParamLabel, PARAM_MAX, PARAM_MIN } from './ParametersFilter';
 
@@ -44,8 +42,6 @@ export const ActiveFilters = ({
   searchQuery,
   useCaseTags,
 }: ActiveFiltersProps) => {
-  const cmTheme = useTheme();
-
   const hasActiveFilters =
     isServerless ||
     !!providerLabel ||
@@ -71,20 +67,6 @@ export const ActiveFilters = ({
     prevHasActiveFilters.current = hasActiveFilters;
     return () => clearTimeout(timer);
   }, [hasActiveFilters]);
-
-  const activeProviderIconEl = providerLabel
-    ? (() => {
-        const Icon = providerIcon(providerLabel);
-        return Icon ? (
-          <Box
-            component={Icon}
-            height={16}
-            style={providerIconStyles(providerLabel, cmTheme)}
-            width={16}
-          />
-        ) : undefined;
-      })()
-    : undefined;
 
   return (
     <Box>
@@ -124,30 +106,29 @@ export const ActiveFilters = ({
             })}
             width={16}
           />
-          {hasActiveFilters && (
-            <Button
-              aria-label="Clear all filters"
-              onClick={() =>
-                onFilterChange({
-                  inputModes: [],
-                  isServerless: false,
-                  languages: [],
-                  maxContextLengthK: null,
-                  maxParametersB: null,
-                  minContextLengthK: CTX_MIN,
-                  minParametersB: PARAM_MIN,
-                  outputModes: [],
-                  providerLabel: null,
-                  searchQuery: '',
-                  useCaseTags: [],
-                })
-              }
-              size="small"
-              variant="icon"
-            >
-              <Close height={14} width={14} />
-            </Button>
-          )}
+          <Button
+            aria-label="Clear all filters"
+            disabled={!hasActiveFilters}
+            onClick={() =>
+              onFilterChange({
+                inputModes: [],
+                isServerless: false,
+                languages: [],
+                maxContextLengthK: null,
+                maxParametersB: null,
+                minContextLengthK: CTX_MIN,
+                minParametersB: PARAM_MIN,
+                outputModes: [],
+                providerLabel: null,
+                searchQuery: '',
+                useCaseTags: [],
+              })
+            }
+            size="small"
+            variant="icon"
+          >
+            <Close height={14} width={14} />
+          </Button>
         </Box>
 
         <Divider flexItem orientation="vertical" sx={{ mx: 0.5 }} />
@@ -201,7 +182,6 @@ export const ActiveFilters = ({
 
         {providerLabel && (
           <ActiveFilterChip
-            icon={activeProviderIconEl}
             label={`Provider: ${providerLabel}`}
             onDelete={() => onFilterChange({ providerLabel: null })}
             type="provider"

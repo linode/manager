@@ -1,5 +1,5 @@
 import { SearchField } from '@akamai/cds-components/react/SearchField';
-import { Box } from '@linode/ui';
+import { Box, Typography } from '@linode/ui';
 import React from 'react';
 
 import type { ModelFilterState } from '../modelLibrary.types';
@@ -14,7 +14,20 @@ export const SearchFilter = ({
   searchQuery,
 }: SearchFilterProps) => {
   return (
-    <Box sx={{ flex: '1 1 220px', minWidth: 180, maxWidth: 240 }}>
+    <Box sx={{ flex: '1 1 30%', minWidth: 0 }}>
+      <Typography
+        sx={(theme) => ({
+          display: 'block',
+          fontSize: 14,
+          fontFamily: theme.font.semibold,
+          mb: 1.4,
+          textTransform: 'none',
+        })}
+        variant="caption"
+      >
+        Search
+      </Typography>
+
       <SearchField
         aria-label="Search"
         onChange={(e: CustomEvent<{ value: string }>) =>

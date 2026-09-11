@@ -1,7 +1,7 @@
 import React from 'react';
 
-import Playground from 'src/assets/icons/ai/playground.svg';
-import Stars from 'src/assets/icons/ai/stars.svg';
+import Stars from 'src/features/InferencePlatform/assets/icons/ai.svg';
+import Playground from 'src/features/InferencePlatform/assets/icons/playground.svg';
 
 import { Box } from '../../components';
 import { ModelExploreCard } from './ModelExploreCard';

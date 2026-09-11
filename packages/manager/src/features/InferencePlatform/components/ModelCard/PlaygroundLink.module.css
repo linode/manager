@@ -1,0 +1,42 @@
+a.link {
+  flex-shrink: 0;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.content {
+  align-items: center;
+  display: flex;
+  gap: 2px;
+}
+
+.text {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+
+body[data-theme='light'] .text {
+    color: hsl(210, 100%, 30%);
+}
+body[data-theme='light'] .content:hover .text {
+    color: hsl(210, 70%, 60%);
+}
+
+
+body[data-theme='dark'] .text {
+  color: hsl(210, 100%, 60%);
+}
+body[data-theme='dark'] .content:hover .text {
+    color: hsl(210, 100%, 60%);
+}
+
+
+.arrow {
+  transform: rotate(180deg);
+  transition: transform 75ms ease-in;
+}
+.content:hover .arrow {
+    transform: rotate(180deg) translate(-1.5px, 0);
+    transition: transform 150ms ease-out;
+}
