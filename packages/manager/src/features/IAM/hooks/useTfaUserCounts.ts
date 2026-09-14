@@ -1,5 +1,7 @@
 import { useAccountUsers, useGetTfaOptionalUsersQuery } from '@linode/queries';
 
+import { useDelegationRole } from './useDelegationRole';
+
 interface UseTfaUserCountsResult {
   enforcedUsersCount: number;
   isError: boolean;
@@ -18,11 +20,17 @@ interface UseTfaUserCountsResult {
 export const useTfaUserCounts = (
   isEnforced: boolean
 ): UseTfaUserCountsResult => {
+  // Filter out delegate users from the users list if user is a child or delegate user
+  const { isChildUserType, isDelegateUserType } = useDelegationRole();
+
+  const isChildOrDelegate = isChildUserType || isDelegateUserType;
+
   const {
     data: allUsersData,
     isLoading: isAllUsersLoading,
     isError: isAllUsersError,
   } = useAccountUsers({
+    filters: isChildOrDelegate ? { user_type: 'child' } : undefined,
     params: { page_size: 25 },
   });
   const {

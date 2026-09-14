@@ -71,8 +71,10 @@ export const AccountUsersTable = ({
     () => new Set(tfaOptionalUsers ?? [])
   );
 
-  // Filter out delegate users from the users if user is a child user.
-  const { isChildUserType } = useDelegationRole();
+  // Filter out delegate users from the users if user is a child or delegate user.
+  const { isChildUserType, isDelegateUserType } = useDelegationRole();
+
+  const isChildOrDelegate = isChildUserType || isDelegateUserType;
   const { data: permissions } = usePermissions('account', ['view_user']);
 
   const { error: searchError, filter } = getAPIFilterFromQuery(query ?? '', {
@@ -93,7 +95,7 @@ export const AccountUsersTable = ({
     ['+order']: order.order,
     ['+order_by']: order.orderBy,
     ...filter,
-    ...(isChildUserType
+    ...(isChildOrDelegate
       ? {
           user_type: 'child',
         }
