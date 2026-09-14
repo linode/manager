@@ -96,10 +96,11 @@ export type AllHandled = AssertNever<
 
 type KnownAccessKeys = keyof typeof PermissionByAccessKnown & AccessType;
 
-type AllowedPermissionsFor<A extends AccessType> = A extends KnownAccessKeys
-  ? (typeof PermissionByAccessKnown)[A]
-  : // exhaustiveness check, no fallback
-    never;
+export type AllowedPermissionsFor<A extends AccessType> =
+  A extends KnownAccessKeys
+    ? (typeof PermissionByAccessKnown)[A]
+    : // exhaustiveness check, no fallback
+      never;
 
 export type PermissionsResult<T extends readonly PermissionType[]> = {
   data: Record<T[number], boolean>;

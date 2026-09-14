@@ -1,6 +1,9 @@
 import { useAllQuotasQuery, useQuotaUsageQueries } from '@linode/queries';
 import * as React from 'react';
 
+import { useIsQuotasIamEnabled } from 'src/features/IAM/hooks/useIsQuotasIamEnabled';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
+
 import type { APIError, Filter, QuotaUsage } from '@linode/api-v4';
 import type { UseQueryResult } from '@tanstack/react-query';
 import type {
@@ -31,6 +34,17 @@ export const useQuotasWithUsageQuery = ({
   scopeValue,
   enabled = true,
 }: QuotasWithUsageQueryProps): QuotasWithUsageQueryResult => {
+  const { isQuotasIamEnabled } = useIsQuotasIamEnabled();
+  const usagePermission = service.quotaUsagePermission;
+  const { data: permissions } = usePermissions(
+    'account',
+    usagePermission ? [usagePermission] : [],
+    undefined,
+    isQuotasIamEnabled && Boolean(usagePermission)
+  );
+  const canViewUsage =
+    !isQuotasIamEnabled || !usagePermission || permissions[usagePermission];
+
   // The provided scope should always be supported by the provided service, but just
   // for the sake of error handling, fallback to a default scope if it's not
   const scopeDefinition: QuotaScopeDefinition = service.scopes[scope] ?? {
@@ -66,7 +80,7 @@ export const useQuotasWithUsageQuery = ({
     service.type,
     scopeDefinition.quotaCollection,
     quotaIdsHavingUsage,
-    enabled
+    enabled && canViewUsage
   );
 
   const usageQueryByQuotaId = React.useMemo(() => {

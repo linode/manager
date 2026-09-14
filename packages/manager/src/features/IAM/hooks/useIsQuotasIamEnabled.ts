@@ -6,11 +6,11 @@ import { useIsIAMEnabled } from './useIsIAMEnabled';
  * Whether Quotas IAM RBAC is active for permission checks.
  * Requires global IAM and the Quotas product flag.
  */
-export const useIsQuotasEnabled = () => {
+export const useIsQuotasIamEnabled = () => {
   const flags = useFlags();
   const { isIAMEnabled } = useIsIAMEnabled();
 
   return {
-    isQuotasEnabled: Boolean(flags.iamQuotas) && isIAMEnabled,
+    isQuotasIamEnabled: Boolean(flags.iamQuotas) && isIAMEnabled,
   };
 };

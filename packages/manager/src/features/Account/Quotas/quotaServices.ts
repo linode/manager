@@ -9,6 +9,7 @@ import type {
   QuotaServiceType,
   VolumesQuota,
 } from '@linode/api-v4';
+import type { AllowedPermissionsFor } from 'src/features/IAM/hooks/usePermissions';
 
 /**
  * Represents the different scopes that a quota can have.
@@ -106,6 +107,18 @@ export interface QuotaService<Q extends Quota = Quota> {
    * A user-friendly label for the service, e.g. "Linodes" or "Object Storage".
    */
   label: string;
+
+  /**
+   * An optional account permission required to list this service's quotas.
+   * When omitted, no IAM permission check is applied.
+   */
+  quotaPermission?: AllowedPermissionsFor<'account'> | null;
+
+  /**
+   * An optional account permission required to view this service's quota usage.
+   * When omitted, no IAM permission check is applied.
+   */
+  quotaUsagePermission?: AllowedPermissionsFor<'account'> | null;
 
   /**
    * Defines the different scopes available for this service, such as global, region, or Object Storage endpoint.
@@ -243,6 +256,8 @@ const volumeQuotaTransformFunction = (quota: VolumesQuota): VolumesQuota => {
 export const volumesQuotaService: QuotaService<VolumesQuota> = {
   type: 'volumes',
   label: 'Volumes',
+  quotaPermission: 'list_volume_quotas',
+  quotaUsagePermission: 'view_volume_quota_usage',
   scopes: {
     global: {
       quotaCollection: 'quotas',
