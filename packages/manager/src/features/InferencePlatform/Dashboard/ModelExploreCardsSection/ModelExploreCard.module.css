@@ -1,60 +1,116 @@
+.cardLink{
+  color: inherit;
+  cursor: pointer;
+  display: block;
+  text-decoration: none;
+}
+.cardLink:hover,
+.cardLink:focus-visible{
+  text-decoration: none;
+}
+
 .paper{
   overflow: hidden;
-  padding-left: 26px;
-  padding-right: 26px;
-  padding-top: 24px;
-  padding-bottom: 17.6px;
+  padding: 28px 32px;
   position: relative;
-  background: linear-gradient(
-    140deg,
-    var(--token-global-color-ultramarine-20) 0%,
-    var(--token-global-color-ultramarine-30) 100%
-  );
+  /* transparent by default so the hover border adds no layout shift */
+  border: 1px solid transparent;
+  background: linear-gradient(140deg,
+    hsl(220, 45%, 92%) 0%,
+    hsl(220, 45%, 90%) 100%);
+}
+
+.cardLink:hover .paper,
+.cardLink:focus-visible .paper{
+  border-color: hsla(220, 20%, 25%, 0.15);
+}
+body[data-theme='dark'] .cardLink:hover .paper,
+body[data-theme='dark'] .cardLink:focus-visible .paper{
+  border-color: hsla(220, 35%, 85%, 0.3);
 }
 
 body[data-theme='dark'] .paper {
   background: linear-gradient(
     140deg,
-    var(--token-global-color-ultramarine-100) 0%,
-    var(--token-global-color-ultramarine-90) 100%
+    hsl(220, 15%, 19%) 0%,
+    hsl(220, 15%, 16%) 100%
   );
 }
 
-.stackZero{
-  gap: 0px;
-}
 .stackFlex{
   flex-direction: row;
-  gap: 0px;
-  height: 28px;
-  justify-content: space-between;
+  gap: 20px;
 }
 
-.stackRow{
-  flex-direction: row;
-  gap: 1.1px;
+.iconCircle{
+  align-items: center;
+  background-color: var(--token-global-color-neutrals-5, #fff);
+  border-radius: 50%;
+  display: flex;
+  flex-shrink: 0;
+  height: 68px;
+  justify-content: center;
+  width: 68px;
+}
+body[data-theme='dark'] .iconCircle {
+  background-color: var(--token-global-color-neutrals-9, hsl(220, 25%, 12%));
 }
 
 .boxIcon{
-  height: 22px;
-  width: 22px;
-  --color-a: var(--token-global-color-neutrals-100);
-  margin-top: -2px;
+  height: 36px;
+  width: 36px;
+  color: hsl(222, 50%, 48%);
+  --color-a: hsl(215, 50%, 55%) !important;
+  --color-b: hsl(0, 100%, 100%) !important;
 }
 
 body[data-theme='dark'] .boxIcon {
-  --color-a: var(--token-global-color-neutrals-10);
+  --color-a: hsl(215, 100%, 68%) !important;
+  --color-b: hsl(220, 25%, 16%) !important;
+}
+
+.textColumn{
+  flex: 1;
+  gap: 8px;
+  min-width: 0;
+}
+
+.headerRow{
+  flex-direction: row;
+  gap: 12px;
+  justify-content: space-between;
+}
+
+/* "View" indicator; the whole card is the link, so this is non-interactive. */
+.paper .viewChip{
+  align-items: center;
+  background-color: transparent;
+  border-radius: 0;
+  color: hsl(222, 50%, 48%);
+  flex-shrink: 0;
+  font-size: 16px;
+  font-weight: 600;
+  gap: 6px;
+  padding: 0;
+  white-space: nowrap;
+}
+body[data-theme='dark'] .paper .viewChip {
+  color: hsl(222, 75%, 78%);
 }
 
 .typographyTitle{
-  font-size: 18px;
-  padding-left: 5px;
+  font-size: 24px;
   font-weight: 700;
-  color: var(--color-text-primary);
+  line-height: 1.2;
+  color: hsl(222, 50%, 48%);
+}
+body[data-theme='dark'] .typographyTitle {
+  color: hsl(222, 75%, 68%);
 }
 
 .typographyDescription{
-  font-size: 16px;
+  font-size: 17px;
   line-height: 1.4;
+  font-weight: 500;
   color: var(--color-text-primary);
 }

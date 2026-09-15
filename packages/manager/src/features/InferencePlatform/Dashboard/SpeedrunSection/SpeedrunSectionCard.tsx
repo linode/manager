@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Box, Paper, Stack, Typography } from '../../components';
+import { Box, Chip, Paper, Stack, Typography } from '../../components';
 import styles from './SpeedrunSectionCard.module.css';
 
 export interface SpeedrunStep {
@@ -13,32 +13,43 @@ interface SpeedrunSectionCardProps {
   stepNumber: number;
 }
 
+const stepColorClasses = [styles.stepOne, styles.stepTwo, styles.stepThree];
+
 export const SpeedrunSectionCard = ({
   step,
   stepNumber,
 }: SpeedrunSectionCardProps) => {
+  const colorClass =
+    stepColorClasses[(stepNumber - 1) % stepColorClasses.length];
+
   return (
-    <Paper className={styles.speedrunSectionCard}>
-      <Stack className={styles.speedrunSectionCardContent}>
-        <Stack
-          className={styles.speedrunSectionCardContentHeader}
-          direction="row"
-        >
-          <Box className={styles.speedrunSectionCardStepNumber}>
-            {stepNumber}
-          </Box>
+    <Box className={`${styles.speedrunSectionCardWrapper} ${colorClass}`}>
+      <Box className={styles.speedrunSectionCardTab} />
+      <Paper className={styles.speedrunSectionCard}>
+        <Stack className={styles.speedrunSectionCardContent}>
+          <Stack
+            className={styles.speedrunSectionCardContentHeader}
+            direction="row"
+          >
+            <Chip className={styles.speedrunSectionCardStepNumber}>
+              {stepNumber}
+            </Chip>
 
-          <Stack className={styles.speedrunSectionCardText} direction="column">
-            <Typography className={styles.speedrunSectionCardTitle}>
-              {step.title}
-            </Typography>
+            <Stack
+              className={styles.speedrunSectionCardText}
+              direction="column"
+            >
+              <Typography className={styles.speedrunSectionCardTitle}>
+                {step.title}
+              </Typography>
 
-            <Typography className={styles.speedrunSectionCardDescription}>
-              {step.description}
-            </Typography>
+              <Typography className={styles.speedrunSectionCardDescription}>
+                {step.description}
+              </Typography>
+            </Stack>
           </Stack>
         </Stack>
-      </Stack>
-    </Paper>
+      </Paper>
+    </Box>
   );
 };

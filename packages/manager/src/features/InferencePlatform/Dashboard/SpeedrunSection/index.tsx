@@ -8,16 +8,18 @@ import type { SpeedrunStep } from './SpeedrunSectionCard';
 
 const steps: SpeedrunStep[] = [
   {
-    description: 'and save it to your application folder.',
+    description:
+      'Create an inference API key and store as an environment variable.',
     title: 'Create API Key',
   },
   {
     description: 'and paste this into your applications code.',
-    title: 'Copy the OpenAPI Snippet',
+    title: 'Grab OpenAPI snippet',
   },
   {
-    description: 'Enter a prompt and observe the results.',
-    title: 'Test your Inference',
+    description:
+      'Execute your code and experience inference running on Akamai!.',
+    title: 'Run inference',
   },
 ];
 

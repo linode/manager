@@ -1,6 +1,74 @@
+/* Per-step accent (tab) and de-saturated disk colours, in HSL. */
+.stepOne {
+  --speedrun-accent-color: hsl(215, 51%, 48%);
+  --speedrun-disk-color: hsl(231, 83.3%, 95.3%);
+  --speedrun-number-color: hsl(215, 100%, 35%);
+}
+
+.stepTwo {
+  --speedrun-accent-color: hsl(171.2, 33.9%, 47.5%);
+  --speedrun-disk-color: hsl(170, 46.2%, 94.9%);
+  --speedrun-number-color: hsl(171, 100%, 28%);
+}
+
+.stepThree {
+  --speedrun-accent-color: hsl(264.6, 51.4%, 48.4%);
+  --speedrun-disk-color: hsl(252.9, 73.7%, 92.5%);
+  --speedrun-number-color: hsl(264.6, 100%, 35%);
+}
+
+
+body[data-theme='dark'] .stepOne {
+  --speedrun-accent-color: hsl(215, 65%, 58%);
+  --speedrun-disk-color: hsl(220, 25%, 12%);
+  --speedrun-number-color: hsl(215, 100%, 75%);
+}
+
+body[data-theme='dark'] .stepTwo {
+  --speedrun-accent-color: hsl(171.2, 65%, 44%);
+  --speedrun-disk-color: hsl(220, 25%, 12%);
+  --speedrun-number-color: hsl(171.2, 100%, 75%);
+}
+
+body[data-theme='dark'] .stepThree {
+  --speedrun-accent-color: hsl(264.6, 65%, 62.4%);
+  --speedrun-disk-color: hsl(220, 25%, 12%);
+  --speedrun-number-color: hsl(264.6, 100%, 75%);
+}
+
+
+.speedrunSectionCardWrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  position: relative;
+}
+
+/* Coloured tab sits behind the card and peeks ~4px above its top edge. */
+.speedrunSectionCardTab {
+  background-color: var(--speedrun-accent-color);
+  border-radius: 5px 5px 0 0;
+  height: 10px;
+  left: 0;
+  margin-top: -3px;
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 0;
+}
+
 .speedrunSectionCard {
-  border-radius: 4px;
-  padding: 12px;
+  background-color: hsl(220, 0%, 100%);
+  border-radius: 3px;
+  box-sizing: border-box;
+  flex: 1;
+  /* +3px over the tallest card's natural height */
+  padding: 12px 12px 15px;
+  position: relative;
+  z-index: 1;
+}
+body[data-theme='dark'] .speedrunSectionCard {
+  background-color: hsl(220, 11%, 18%);
 }
 
 .speedrunSectionCardContent {
@@ -10,21 +78,25 @@
 .speedrunSectionCardContentHeader{
   align-items: flex-start;
   flex-direction: row;
+  align-items: center;
   gap: 11.2px;
 }
 
-.speedrunSectionCardStepNumber {
+/* Scoped to win over the base Chip styles and stay a circle. */
+.speedrunSectionCardWrapper .speedrunSectionCardStepNumber {
   align-items: center;
-  background-color: var(--token-global-color-ultramarine-10);
+  background-color: var(--speedrun-disk-color);
   border-radius: 50%;
-  color: var(--token-global-color-neutrals-90);
+  color: var(--speedrun-number-color);
   display: inline-flex;
-  font-family: 'Nunito Sans';
-  font-weight: 700;
-  height: 40px;
-  justify-content: center;
-  width: 40px;
   flex-shrink: 0;
+  font-family: 'Nunito Sans';
+  font-size: 17px;
+  font-weight: 700;
+  height: 52px;
+  justify-content: center;
+  padding: 0;
+  width: 52px;
 }
 
 .speedrunSectionCardText {
@@ -34,17 +106,17 @@
 }
 
 .speedrunSectionCardTitle {
-  font-size: 14px;
-  color: var(--token-global-color-brand-80);
+  font-size: 16px;
+  color: var(--token-global-color-brand-90);
   font-weight: 700;
   font-family: 'Nunito Sans';
   line-height: 1.25rem;
-  padding-top: 2px;
+  padding-top: 0px;
 }
 
 .speedrunSectionCardDescription {
-  font-size: 12px;
-  line-height: 18px;
+  font-size: 13px;
+  line-height: 20px;
   color: var(--token-alias-content-text-secondary-default);
   font-weight: 600;
   font-family: 'Nunito Sans';

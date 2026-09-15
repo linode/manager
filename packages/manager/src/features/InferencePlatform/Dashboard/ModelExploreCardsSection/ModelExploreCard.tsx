@@ -3,7 +3,7 @@ import React from 'react';
 import LeftArrowIcon from 'src/assets/icons/arrow-left.svg';
 import { Link } from 'src/components/Link';
 
-import { Box, Paper, Stack, Typography } from '../../components';
+import { Box, Chip, Paper, Stack, Typography } from '../../components';
 import styles from './ModelExploreCard.module.css';
 
 export interface ModelExploreCardData {
@@ -19,39 +19,45 @@ interface ModelExploreCardProps {
 
 export const ModelExploreCard = ({ card }: ModelExploreCardProps) => {
   return (
-    <Paper className={styles.paper}>
-      <Stack className={styles.stackZero}>
-        <Stack
-          alignItems="flex-start"
-          className={styles.stackFlex}
-          direction="row"
-        >
-          <Stack
-            alignItems="center"
-            className={styles.stackRow}
-            direction="row"
-          >
-            {card.icon && (
+    <Link
+      accessibleAriaLabel={`Explore ${card.title}`}
+      className={styles.cardLink}
+      to={card.to}
+    >
+      <Paper className={styles.paper}>
+        <Stack alignItems="center" className={styles.stackFlex} direction="row">
+          {card.icon && (
+            <Box className={styles.iconCircle}>
               <Box className={styles.boxIcon} component={card.icon} />
-            )}
-            <Typography className={styles.typographyTitle}>
-              {card.title}
+            </Box>
+          )}
+
+          <Stack className={styles.textColumn}>
+            <Stack
+              alignItems="flex-start"
+              className={styles.headerRow}
+              direction="row"
+            >
+              <Typography className={styles.typographyTitle}>
+                {card.title}
+              </Typography>
+
+              <Chip className={styles.viewChip} component="span">
+                View
+                <LeftArrowIcon
+                  height={20}
+                  style={{ transform: 'rotate(180deg)' }}
+                  width={20}
+                />
+              </Chip>
+            </Stack>
+
+            <Typography className={styles.typographyDescription}>
+              {card.description}
             </Typography>
           </Stack>
-
-          <Link accessibleAriaLabel={`Explore ${card.title}`} to={card.to}>
-            <LeftArrowIcon
-              height={28}
-              style={{ transform: 'rotate(180deg)' }}
-              width={28}
-            />
-          </Link>
         </Stack>
-
-        <Typography className={styles.typographyDescription}>
-          {card.description}
-        </Typography>
-      </Stack>
-    </Paper>
+      </Paper>
+    </Link>
   );
 };

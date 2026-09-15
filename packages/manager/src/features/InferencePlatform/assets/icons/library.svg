@@ -1,0 +1,22 @@
+<svg style="--color-a: hsl(203.1, 98.9%, 37.1%); --color-b: hsl(0, 100%, 100%);" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    
+    <g transform="scale(0.95) translate(0.6 2.6)">
+        <mask id="path-1-inside-1_3781_6961" fill="white">
+            <rect width="15.5556" height="11.1112" rx="2"/>
+        </mask>
+
+        <rect width="15.5556" height="11.1112" rx="2" fill="var(--color-b)" stroke="var(--color-a)" stroke-width="4.4" mask="url(#path-1-inside-1_3781_6961)"/>
+        
+        <mask id="path-2-inside-2_3781_6961" fill="white">
+            <rect x="4.22168" y="4.22241" width="15.5556" height="11.1112" rx="2"/>
+        </mask>
+
+        <rect x="4.22168" y="4.22241" width="15.5556" height="11.1112" rx="2" fill="var(--color-b)" stroke="var(--color-a)" stroke-width="4.4" mask="url(#path-2-inside-2_3781_6961)"/>
+        
+        <mask id="path-3-inside-3_3781_6961" fill="white">
+            <rect x="8.44482" y="8.4444" width="15.5556" height="11.1112" rx="2"/>
+        </mask>
+
+        <rect x="8.44482" y="8.4444" width="15.5556" height="11.1112" rx="2" fill="var(--color-b)" stroke="var(--color-a)" stroke-width="4.4" mask="url(#path-3-inside-3_3781_6961)"/>
+    </g>
+</svg>

@@ -1,7 +1,7 @@
 import React from 'react';
 
-import Stars from 'src/features/InferencePlatform/assets/icons/ai.svg';
-import Playground from 'src/features/InferencePlatform/assets/icons/playground.svg';
+import Beaker from 'src/features/InferencePlatform/assets/icons/beaker.svg';
+import Library from 'src/features/InferencePlatform/assets/icons/library.svg';
 
 import { Box } from '../../components';
 import { ModelExploreCard } from './ModelExploreCard';
@@ -13,14 +13,14 @@ const cards: ModelExploreCardData[] = [
   {
     description:
       'Browse the latest models, compare capabilities, and shortlist the best options for your use case.',
-    icon: Stars,
+    icon: Library,
     title: 'Model Library',
     to: '/inference-platform/model-library',
   },
   {
     description:
       'Run prompts against production-ready models and tune your request settings in real time.',
-    icon: Playground,
+    icon: Beaker,
     title: 'Model Playground',
     to: '/inference-platform/model-playground',
   },

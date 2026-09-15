@@ -75,9 +75,9 @@ const getChipStyles = (type: string, theme: 'dark' | 'light'): object => {
       };
     case 'useCaseTags':
       return {
-        color: theme === 'light' ? 'hsl(330, 75%, 50%)' : 'hsl(330, 100%, 90%)',
+        color: theme === 'light' ? 'hsl(280, 75%, 50%)' : 'hsl(280, 100%, 90%)',
         backgroundColor:
-          theme === 'light' ? 'hsl(330, 100%, 96%)' : 'hsl(330, 15%, 34%)',
+          theme === 'light' ? 'hsl(280, 100%, 96%)' : 'hsl(280, 15%, 34%)',
       };
     default:
       return {

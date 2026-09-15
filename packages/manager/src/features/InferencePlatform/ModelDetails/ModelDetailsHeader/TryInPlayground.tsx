@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Link } from 'src/components/Link';
-import Playground from 'src/features/InferencePlatform/assets/icons/playground.svg';
+import Beaker from 'src/features/InferencePlatform/assets/icons/beaker.svg';
 
 import { Box } from '../../components';
 import styles from './TryInPlayground.module.css';
@@ -23,7 +23,7 @@ export const TryInPlayground = ({ modelId }: TryInPlaygroundProps) => {
       search={{ model: modelId }}
       to="/inference-platform/model-playground"
     >
-      <Box className={styles.playgroundIcon} component={Playground} />
+      <Box className={styles.playgroundIcon} component={Beaker} />
       Try in Playground
     </Link>
   );
