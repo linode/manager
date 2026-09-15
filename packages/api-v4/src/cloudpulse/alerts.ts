@@ -3,6 +3,7 @@ import {
   createNotificationChannelPayloadSchema,
   editAlertDefinitionSchema,
   editNotificationChannelPayloadSchema,
+  verifyNotificationChannelPayloadSchema,
 } from '@linode/validation';
 
 import { BETA_API_ROOT as API_ROOT } from '../constants';
@@ -25,6 +26,8 @@ import type {
   Entities,
   NotificationChannel,
   NotificationChannelAlerts,
+  VerifyNotificationChannelPayload,
+  VerifyNotificationChannelResponse,
 } from './types';
 
 export const createAlertDefinition = (
@@ -181,6 +184,20 @@ export const deleteNotificationChannel = (channelId: number) =>
       `${API_ROOT}/monitor/alert-channels/${encodeURIComponent(channelId)}`,
     ),
     setMethod('DELETE'),
+  );
+
+/**
+ * Tests a notification channel's connection details (e.g. a webhook's
+ * endpoint/authentication/certificate configuration) without creating or
+ * saving the channel.
+ */
+export const verifyNotificationChannel = (
+  data: VerifyNotificationChannelPayload,
+) =>
+  Request<VerifyNotificationChannelResponse>(
+    setURL(`${API_ROOT}/monitor/alert-channels/verify`),
+    setMethod('POST'),
+    setData(data, verifyNotificationChannelPayloadSchema),
   );
 
 export const getAlertsByNotificationChannelId = (

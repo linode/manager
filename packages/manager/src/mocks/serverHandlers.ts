@@ -4011,8 +4011,25 @@ export const handlers = [
     notificationChannels.push(...notificationChannelFactory.buildList(3));
     return HttpResponse.json(makeResourcePage(notificationChannels));
   }),
-  http.post('*/monitor/alert-channels', () => {
-    return HttpResponse.json(notificationChannelFactory.build());
+  http.post('*/monitor/alert-channels', async ({ request }) => {
+    const body = await request.json();
+    const payload = body as any;
+    return HttpResponse.json(
+      notificationChannelFactory.build({
+        label: payload.label,
+        channel_type: payload.channel_type,
+        details: payload.details,
+      })
+    );
+  }),
+  http.post('*/monitor/alert-channels/verify', async ({}) => {
+    return HttpResponse.json({
+      webhook: {
+        http_status: 200,
+        response:
+          'Webhook connection test succeeded. Notifications can be delivered to the configured endpoint.',
+      },
+    });
   }),
   http.put('*/monitor/alert-channels/:id', () => {
     return HttpResponse.json(notificationChannelFactory.build());

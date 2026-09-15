@@ -1,6 +1,197 @@
-import { array, number, object, string } from 'yup';
+import ipaddr from 'ipaddr.js';
+import { array, mixed, number, object, string, ValidationError } from 'yup';
 
 const fieldErrorMessage = 'This field is required.';
+
+const restrictedCustomHeaderNames = [
+  'encoding',
+  'authorization',
+  'host',
+  'akamai',
+  'content-length',
+  'transfer-encoding',
+  'connection',
+  'content-type',
+  'cookie',
+  'set-cookie',
+  'upgrade',
+  'expect',
+];
+
+const hasValue = (value: unknown) =>
+  typeof value === 'string' && value.trim().length > 0;
+
+const isValidUrl = (
+  input: string,
+  checkProtocol = true,
+  prohibitIp = false,
+): boolean => {
+  if (/\s/.test(input)) {
+    return false;
+  }
+
+  try {
+    const urlToCheck =
+      checkProtocol || input.startsWith('http') ? input : `https://${input}`;
+
+    const { protocol, hostname } = new URL(urlToCheck);
+
+    const unwrappedHostname =
+      hostname.startsWith('[') && hostname.endsWith(']')
+        ? hostname.slice(1, -1)
+        : hostname;
+    const hasIpAddress = ipaddr.isValid(unwrappedHostname);
+
+    return (
+      ['http:', 'https:'].includes(protocol) &&
+      !['127.0.0.1', '[::1]', 'localhost'].includes(hostname) &&
+      (hostname.includes('.') || hostname.includes(':')) &&
+      (!prohibitIp || !hasIpAddress)
+    );
+  } catch {
+    return false;
+  }
+};
+
+const webhookAuthenticationSchema = object({
+  type: string().oneOf(['none', 'basic']).optional(),
+  details: mixed()
+    .nullable()
+    .when('type', ([type], schema) => {
+      if (type === 'basic') {
+        return object({
+          basic_authentication_user: string()
+            .required(fieldErrorMessage)
+            .test(
+              'non-empty-user',
+              'Basic authentication username cannot be empty or whitespace only.',
+              (value) => hasValue(value),
+            ),
+          basic_authentication_password: string()
+            .required(fieldErrorMessage)
+            .test(
+              'non-empty-password',
+              'Basic authentication password cannot be empty or whitespace only.',
+              (value) => hasValue(value),
+            ),
+        }).required(fieldErrorMessage);
+      }
+      return schema;
+    }),
+}).optional();
+
+const webhookClientCertificateDetailsSchema = object({
+  tls_hostname: string()
+    .optional()
+    .test(
+      'is-valid-url',
+      'TLS hostname must be a valid URL.',
+      (value) => !value || isValidUrl(value, false),
+    ),
+  client_ca_certificate: string().optional(),
+  client_certificate: string().optional(),
+  client_private_key: string().optional(),
+})
+  .nullable()
+  .optional()
+  .test(
+    'all-or-nothing-cert-details',
+    'If any certificate detail is provided, all are required.',
+    function (value) {
+      if (!value) {
+        return true;
+      }
+
+      const {
+        client_ca_certificate: caCert,
+        client_certificate: clientCert,
+        client_private_key: privateKey,
+      } = value;
+      const requiredFields = [caCert, clientCert, privateKey];
+      const hasAnyValue = requiredFields.some(hasValue);
+      const hasAllValues = requiredFields.every(hasValue);
+
+      if (!hasAnyValue || hasAllValues) {
+        return true;
+      }
+
+      const errors: ValidationError[] = [];
+      if (!hasValue(caCert)) {
+        errors.push(
+          this.createError({
+            path: `${this.path}.client_ca_certificate`,
+            message:
+              'CA Certificate is required when other client certificate details are provided.',
+          }),
+        );
+      }
+      if (!hasValue(clientCert)) {
+        errors.push(
+          this.createError({
+            path: `${this.path}.client_certificate`,
+            message:
+              'Client Certificate is required when other client certificate details are provided.',
+          }),
+        );
+      }
+      if (!hasValue(privateKey)) {
+        errors.push(
+          this.createError({
+            path: `${this.path}.client_private_key`,
+            message:
+              'Client Private Key is required when other client certificate details are provided.',
+          }),
+        );
+      }
+
+      return new ValidationError(errors);
+    },
+  );
+
+const webhookCustomHeaderSchema = object({
+  name: string()
+    .required(fieldErrorMessage)
+    .test(
+      'non-empty-name',
+      'Custom Header name cannot be empty or whitespace only.',
+      (value) => hasValue(value),
+    )
+    .test(
+      'not-restricted-header',
+      'This Custom Header name cannot be used.',
+      (value) => {
+        const normalizedValue = (value ?? '').trim().toLowerCase();
+        return !restrictedCustomHeaderNames.includes(normalizedValue);
+      },
+    ),
+  value: string()
+    .required(fieldErrorMessage)
+    .test(
+      'non-empty-name',
+      'Custom Header value cannot be empty or whitespace only.',
+      (value) => hasValue(value),
+    ),
+});
+
+export const webhookDetailSchema = object({
+  endpoint_url: string()
+    .required(fieldErrorMessage)
+    .test('is-valid-url', 'Enter a valid URL.', (value) =>
+      isValidUrl((value ?? '').trim()),
+    )
+    .test(
+      'no-query-params',
+      'Endpoint URL cannot contain query parameters.',
+      (value) => !(value ?? '').trim().includes('?'),
+    )
+    .test('https-always', 'Endpoint URL must always use HTTPS.', (value) =>
+      (value ?? '').trim().startsWith('https://'),
+    ),
+  authentication: webhookAuthenticationSchema,
+  data_compression: string().oneOf(['gzip', 'none']).optional(),
+  client_certificate_details: webhookClientCertificateDetailsSchema,
+  custom_headers: array().of(webhookCustomHeaderSchema).optional(),
+});
 
 export const dimensionFilters = object({
   dimension_label: string().required(fieldErrorMessage),
@@ -175,14 +366,21 @@ export const createNotificationChannelPayloadSchema = object({
   channel_type: string()
     .oneOf(['email', 'webhook', 'pagerduty', 'slack'])
     .required(fieldErrorMessage),
-  details: object({
-    email: object({
-      usernames: array()
-        .of(string())
-        .min(1, fieldErrorMessage)
-        .required(fieldErrorMessage),
-    }).required(),
-  }).required(),
+  details: object().when('channel_type', ([channelType], schema) => {
+    if (channelType === 'webhook') {
+      return object({
+        webhook: webhookDetailSchema.required(),
+      }).required();
+    }
+    return object({
+      email: object({
+        usernames: array()
+          .of(string())
+          .min(1, fieldErrorMessage)
+          .required(fieldErrorMessage),
+      }).required(),
+    }).required();
+  }),
 });
 
 export const editNotificationChannelPayloadSchema = object({
@@ -211,4 +409,8 @@ export const editNotificationChannelPayloadSchema = object({
         .required(fieldErrorMessage),
     }).required(),
   }).required(),
+});
+
+export const verifyNotificationChannelPayloadSchema = object({
+  webhook: webhookDetailSchema.required(),
 });

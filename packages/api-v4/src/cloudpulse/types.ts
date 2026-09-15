@@ -343,21 +343,35 @@ interface NotificationChannelPagerDuty extends NotificationChannelBase {
     };
   };
 }
+export type WebhookAuthenticationType = 'basic' | 'none';
+export type WebhookDataCompressionType = 'gzip' | 'none';
+
+export interface WebhookCustomHeader {
+  name: string;
+  value: string;
+}
+
+/**
+ * Client certificate details as returned by the API. The `client_private_key`
+ * is write-only and is never included in the response.
+ */
+export interface WebhookClientCertificateDetailsResponse {
+  client_ca_certificate: string;
+  client_certificate: string;
+  tls_hostname?: string;
+}
+
 interface NotificationChannelWebHook extends NotificationChannelBase {
   channel_type: AlertNotificationWebHook;
   details: {
     webhook: {
-      alert_body: {
-        body: string;
-        subject: string;
+      authentication: {
+        type: WebhookAuthenticationType;
       };
-      http_headers: {
-        header_key: string;
-        header_value: string;
-      }[];
-      method: 'GET' | 'POST' | 'PUT';
-      request_body: string;
-      webhook_url: string;
+      client_certificate_details?: WebhookClientCertificateDetailsResponse;
+      custom_headers: WebhookCustomHeader[];
+      data_compression: WebhookDataCompressionType;
+      endpoint_url: string;
     };
   };
 }
@@ -444,39 +458,113 @@ interface EmailDetail {
   };
 }
 
-export interface CreateNotificationChannelPayload {
-  /**
-   * The type of channel to create.
-   */
-  channel_type: ChannelType;
-  /**
-   * The details of the channel to create.
-   */
-  details: EmailDetail;
-  /**
-   * The label of the channel to create.
-   */
-  label: string;
+/**
+ * The webhook `authentication`/`client_certificate_details` shapes used when
+ * writing (create/edit/verify) a webhook channel. These include write-only
+ * secrets (password, private key) that are never returned by the API.
+ */
+export interface WebhookAuthenticationPayload {
+  details?: null | {
+    basic_authentication_password: string;
+    basic_authentication_user: string;
+  };
+  type?: WebhookAuthenticationType;
 }
 
-export interface EditNotificationChannelPayload {
-  /**
-   * The details of the channel to edit.
-   */
-  details: EmailDetail;
-  /**
-   * The label of the channel to edit.
-   */
-  label: string;
+export interface WebhookClientCertificateDetailsPayload {
+  client_ca_certificate: string;
+  client_certificate: string;
+  client_private_key: string;
+  tls_hostname?: string;
 }
 
-export interface EditNotificationChannelPayloadWithId
-  extends EditNotificationChannelPayload {
-  /**
-   * The ID of the channel to edit.
-   */
-  channelId: number;
+export interface WebhookDetailPayload {
+  authentication?: WebhookAuthenticationPayload;
+  client_certificate_details?: null | WebhookClientCertificateDetailsPayload;
+  custom_headers?: WebhookCustomHeader[];
+  data_compression?: WebhookDataCompressionType;
+  endpoint_url: string;
 }
+
+interface WebhookDetail {
+  webhook: WebhookDetailPayload;
+}
+
+export type CreateNotificationChannelPayload =
+  | {
+      /**
+       * The type of channel to create.
+       */
+      channel_type: AlertNotificationEmail;
+      /**
+       * The details of the channel to create.
+       */
+      details: EmailDetail;
+      /**
+       * The label of the channel to create.
+       */
+      label: string;
+    }
+  | {
+      /**
+       * The type of channel to create.
+       */
+      channel_type: AlertNotificationWebHook;
+      /**
+       * The details of the channel to create.
+       */
+      details: WebhookDetail;
+      /**
+       * The label of the channel to create.
+       */
+      label: string;
+    };
+
+export type EditNotificationChannelPayload =
+  | {
+      /**
+       * The details of the channel to edit.
+       */
+      details: EmailDetail;
+      /**
+       * The label of the channel to edit.
+       */
+      label: string;
+    }
+  | {
+      /**
+       * The details of the channel to edit.
+       */
+      details: WebhookDetail;
+      /**
+       * The label of the channel to edit.
+       */
+      label: string;
+    };
+
+/**
+ * Payload/response for the `/monitor/alert-channels/verify` endpoint, used to
+ * test a channel's connection details before creating/saving it. Only
+ * `webhook` is supported today; other channel types can be added here later.
+ */
+export interface VerifyNotificationChannelPayload {
+  webhook: WebhookDetailPayload;
+}
+
+export interface VerifyNotificationChannelResponse {
+  webhook: {
+    http_status: number;
+    response: string;
+  };
+}
+
+export type EditNotificationChannelPayloadWithId =
+  EditNotificationChannelPayload & {
+    /**
+     * The ID of the channel to edit.
+     */
+    channelId: number;
+  };
 
 export interface DeleteChannelPayload {
   /**

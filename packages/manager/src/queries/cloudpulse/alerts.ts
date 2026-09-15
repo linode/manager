@@ -9,6 +9,7 @@ import {
   editAlertDefinition,
   updateNotificationChannel,
   updateServiceAlerts,
+  verifyNotificationChannel,
 } from '@linode/api-v4/lib/cloudpulse';
 import { queryPresets } from '@linode/queries';
 import {
@@ -39,6 +40,8 @@ import type {
   EntityAlertUpdatePayload,
   NotificationChannel,
   NotificationChannelAlerts,
+  VerifyNotificationChannelPayload,
+  VerifyNotificationChannelResponse,
 } from '@linode/api-v4/lib/cloudpulse';
 import type { APIError, Filter, Params } from '@linode/api-v4/lib/types';
 import type { UseQueryOptions } from '@tanstack/react-query';
@@ -368,11 +371,8 @@ export const useUpdateNotificationChannel = () => {
     EditNotificationChannelPayloadWithId
   >({
     mutationFn: async (payload: EditNotificationChannelPayloadWithId) => {
-      const { channelId, details, label } = payload;
-      return updateNotificationChannel(channelId, {
-        details,
-        label,
-      });
+      const { channelId, ...data } = payload;
+      return updateNotificationChannel(channelId, data);
     },
     onSuccess: (updatedChannel) => {
       const allChannelsKey =
@@ -441,6 +441,21 @@ export const useAllAlertsByNotificationChannelIdQuery = (channelId: number) => {
   return useQuery<NotificationChannelAlerts[], APIError[]>({
     ...queryFactory.notificationChannelAlerts(channelId),
     refetchInterval: 120000,
+  });
+};
+
+/**
+ * Tests a notification channel's connection details (e.g. a webhook's
+ * endpoint/authentication/certificate configuration) without creating or
+ * saving the channel. This is a one-off action with no cache side effects.
+ */
+export const useVerifyNotificationChannel = () => {
+  return useMutation<
+    VerifyNotificationChannelResponse,
+    APIError[],
+    VerifyNotificationChannelPayload
+  >({
+    mutationFn: verifyNotificationChannel,
   });
 };
 

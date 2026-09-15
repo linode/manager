@@ -42,7 +42,7 @@ import type {
   Params,
 } from '@linode/api-v4';
 
-const key = 'Clousepulse';
+const key = 'Cloudpulse';
 
 export const queryFactory = createQueryKeys(key, {
   alerts: {

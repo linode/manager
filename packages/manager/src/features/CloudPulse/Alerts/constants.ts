@@ -145,6 +145,10 @@ export const channelTypeOptions: Item<string, ChannelType>[] = [
     label: 'Email',
     value: 'email',
   },
+  {
+    label: 'Webhook',
+    value: 'webhook',
+  },
 ];
 
 export const channelTypeMap: Record<ChannelType, string> = {

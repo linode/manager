@@ -1,5 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { ActionsPanel, TextField, Typography } from '@linode/ui';
+import { scrollErrorIntoViewV2 } from '@linode/utilities';
 import { Paper } from '@mui/material';
 import { useNavigate } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
@@ -15,8 +16,10 @@ import {
   CREATE_CHANNEL_SUCCESS_MESSAGE,
 } from '../../constants';
 import { NotificationChannelTypeSelect } from './NotificationChannelTypeSelect';
+import { NotificationChannelWebhook } from './NotificationChannelWebhook';
 import { NotificationRecipients } from './NotificationRecipients';
 import { createNotificationChannelSchema } from './schemas';
+import { defaultWebhookFormValues } from './types';
 import { filterCreateChannelFormValues } from './utilities';
 
 import type { CreateNotificationChannelForm } from './types';
@@ -38,11 +41,13 @@ const initialValues: CreateNotificationChannelForm = {
     email: {
       usernames: [],
     },
+    webhook: defaultWebhookFormValues,
   },
 };
 
 export const CreateNotificationChannel = () => {
   const navigate = useNavigate();
+  const formRef = React.useRef<HTMLFormElement>(null);
   // Navigate to the notification channels listing page on exit, e.g. on cancel or successful save
   const createChannelExit = () => {
     navigate({ to: '/alerts/notification-channels' });
@@ -64,32 +69,42 @@ export const CreateNotificationChannel = () => {
 
   const channelTypeWatcher = useWatch({ control, name: 'channel_type' });
 
+  // Webhook channels must have a successful Test Connection before they can be submitted.
+  const [isWebhookConnectionVerified, setIsWebhookConnectionVerified] =
+    React.useState(false);
+
   const { mutateAsync: createChannel } = useCreateNotificationChannel();
 
   const { enqueueSnackbar } = useSnackbar();
 
   // submit the form and create the notification channel on success and show snackbar message on success or failure
-  const onSubmit = handleSubmit(async (values) => {
-    try {
-      await createChannel(filterCreateChannelFormValues(values));
-      enqueueSnackbar(CREATE_CHANNEL_SUCCESS_MESSAGE, {
-        variant: 'success',
-      });
-      createChannelExit();
-    } catch (errors) {
-      for (const error of errors) {
-        if (error.field) {
-          setError(error.field, {
-            message: error.reason ?? CREATE_CHANNEL_FAILED_MESSAGE,
-          });
-        } else {
-          enqueueSnackbar(error.reason ?? CREATE_CHANNEL_FAILED_MESSAGE, {
-            variant: 'error',
-          });
+  const onSubmit = handleSubmit(
+    async (values) => {
+      try {
+        await createChannel(filterCreateChannelFormValues(values));
+        enqueueSnackbar(CREATE_CHANNEL_SUCCESS_MESSAGE, {
+          variant: 'success',
+        });
+        createChannelExit();
+      } catch (errors) {
+        for (const error of errors) {
+          if (error.field) {
+            setError(error.field, {
+              message: error.reason ?? CREATE_CHANNEL_FAILED_MESSAGE,
+            });
+          } else {
+            enqueueSnackbar(error.reason ?? CREATE_CHANNEL_FAILED_MESSAGE, {
+              variant: 'error',
+            });
+          }
         }
       }
-    }
-  });
+    },
+    () => scrollErrorIntoViewV2(formRef)
+  );
+
+  const isSubmitBlocked =
+    channelTypeWatcher === 'webhook' && !isWebhookConnectionVerified;
 
   return (
     <Paper sx={{ paddingLeft: 1, paddingRight: 1, paddingTop: 2 }}>
@@ -101,7 +116,7 @@ export const CreateNotificationChannel = () => {
         pathname="/NotificationChannels/Create Channel"
       />
       <FormProvider {...formMethods}>
-        <form onSubmit={onSubmit}>
+        <form onSubmit={onSubmit} ref={formRef}>
           <Typography
             data-qa-header="Channel Settings"
             marginTop={2}
@@ -113,11 +128,19 @@ export const CreateNotificationChannel = () => {
             control={control}
             name="channel_type"
             render={({ field, fieldState }) => {
-              // Reset the name field when the channel type changes
+              // Reset the name and details fields when the channel type changes
               const handleChannelTypeChange = (value: ChannelType | null) => {
+                if (value === field.value) {
+                  return;
+                }
+
                 field.onChange(value);
                 resetField('label', { defaultValue: '' });
                 resetField('details.email.usernames', { defaultValue: [] });
+                resetField('details.webhook', {
+                  defaultValue: defaultWebhookFormValues,
+                });
+                setIsWebhookConnectionVerified(false);
               };
 
               return (
@@ -142,10 +165,18 @@ export const CreateNotificationChannel = () => {
                   data-testid="alert-name"
                   errorText={fieldState.error?.message}
                   label="Name"
-                  placeholder="Enter a name for the channel"
+                  placeholder="Enter a name"
                   value={field.value ?? ''}
                 />
               )}
+            />
+          )}
+          {channelTypeWatcher === 'webhook' && (
+            <NotificationChannelWebhook
+              formRef={formRef}
+              isConnectionVerified={isWebhookConnectionVerified}
+              name="details.webhook"
+              onConnectionVerificationChange={setIsWebhookConnectionVerified}
             />
           )}
           {channelTypeWatcher === 'email' && (
@@ -164,6 +195,7 @@ export const CreateNotificationChannel = () => {
           )}
           <ActionsPanel
             primaryButtonProps={{
+              disabled: isSubmitBlocked,
               label: 'Submit',
               loading: isSubmitting,
               type: 'submit',

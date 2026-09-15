@@ -16,6 +16,7 @@ import {
 import { NotificationChannelTypeSelect } from '../CreateChannel/NotificationChannelTypeSelect';
 import { NotificationRecipients } from '../CreateChannel/NotificationRecipients';
 import { createNotificationChannelSchema } from '../CreateChannel/schemas';
+import { defaultWebhookFormValues } from '../CreateChannel/types';
 import { filterEditChannelFormValues } from './utilities';
 
 import type { CreateNotificationChannelForm } from '../CreateChannel/types';
@@ -64,6 +65,7 @@ export const EditNotificationChannel = (
               ? (channelData.details?.email.usernames ?? [])
               : [],
         },
+        webhook: defaultWebhookFormValues,
       },
     },
     mode: 'onBlur',

@@ -124,8 +124,10 @@ describe('NotificationChannelTableRow', () => {
       channel_type: 'webhook',
       details: {
         webhook: {
-          http_headers: [],
-          webhook_url: 'url',
+          authentication: { type: 'none' },
+          custom_headers: [],
+          data_compression: 'none',
+          endpoint_url: 'url',
         },
       },
     });

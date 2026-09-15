@@ -1,6 +1,9 @@
+import { webhookDetailSchema } from '@linode/validation';
 import { array, mixed, object, string } from 'yup';
 
+import type { CreateNotificationChannelForm } from './types';
 import type { ChannelType } from '@linode/api-v4';
+import type { ObjectSchema } from 'yup';
 
 const fieldErrorMessage = 'This field is required.';
 
@@ -29,12 +32,23 @@ export const createNotificationChannelSchema = object({
     .required(fieldErrorMessage)
     .nullable()
     .test('nonNull', fieldErrorMessage, (value) => value !== null),
-  details: object({
-    email: object({
-      usernames: array()
-        .of(string().defined())
-        .required(fieldErrorMessage)
-        .min(1, fieldErrorMessage),
-    }),
-  }),
+  details: object()
+    .when('channel_type', ([channelType]) => {
+      if (channelType === 'webhook') {
+        return object({
+          webhook: webhookDetailSchema.required(),
+        });
+      }
+      return object({
+        email: object({
+          usernames: array()
+            .of(string().defined())
+            .required(fieldErrorMessage)
+            .min(1, fieldErrorMessage),
+        }),
+      });
+    })
+    .required() as unknown as ObjectSchema<
+    CreateNotificationChannelForm['details']
+  >,
 });
