@@ -4,13 +4,12 @@ import React, { useCallback, useContext, useEffect, useMemo } from 'react';
 
 import { Box, Typography } from '../components';
 import { useInferencePlatform } from '../InferencePlatformContext';
-import { MODEL_SUPPLEMENTARY } from '../ModelLibrary/modelLibrary.supplementary';
-import { providerIcon, providerIconStyles } from '../utils';
+import { modelIcon, modelIconStyles } from '../utils';
 import { ModelPlaygroundModelContext } from './ModelPlaygroundContext';
 
 import type { SelectElement } from '@akamai/cds-components';
 
-type ModelOption = { label: string; value: string };
+type ModelOption = { label: string; modelIcon?: string; value: string };
 
 export const ModelSelector = () => {
   const { onModelChange, selectedModel } = useContext(
@@ -19,13 +18,12 @@ export const ModelSelector = () => {
   const { isModelsLoading, models } = useInferencePlatform();
   const theme = useTheme();
 
-  // There is currently no information in the API response to determine if the
-  // model is compatible with the model playground besides the presence of
-  // "embedding" in the model ID, so we filter those out here.
+  // Only models explicitly marked as playground-compatible can be selected.
   const options: ModelOption[] = useMemo(() => {
-    const filtered = models.filter((m) => !m.id.includes('embedding'));
+    const filtered = models.filter((model) => model.playground_available);
     return filtered.map((m) => ({
-      label: MODEL_SUPPLEMENTARY[m.id]?.title ?? m.id,
+      label: m.label ?? m.id,
+      modelIcon: m.model_icon,
       value: m.id,
     }));
   }, [models]);
@@ -47,8 +45,8 @@ export const ModelSelector = () => {
 
   const renderModelItem = useCallback(
     (item: ModelOption, bold = false) => {
-      const logo = MODEL_SUPPLEMENTARY[item.value]?.providerLogo ?? null;
-      const Icon = logo ? providerIcon(logo) : null;
+      const logo = item.modelIcon ?? null;
+      const Icon = logo ? modelIcon(logo) : null;
       return (
         <span style={{ alignItems: 'center', display: 'flex', gap: '8px' }}>
           {Icon && (
@@ -57,7 +55,7 @@ export const ModelSelector = () => {
                 flexShrink: 0,
                 height: '16px',
                 width: '16px',
-                ...providerIconStyles(logo!, theme),
+                ...modelIconStyles(logo!, theme),
               }}
             />
           )}

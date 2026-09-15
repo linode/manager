@@ -1,8 +1,9 @@
 import React from 'react';
 
-import { DEFAULT_PLAYGROUND_SETTINGS } from './types';
+import { INITIAL_PLAYGROUND_SETTINGS } from './utils';
 
 import type { PlaygroundSettings } from './types';
+import type { InferenceModel } from '@linode/api-v4';
 
 export interface MessageMetadata {
   cancelled?: boolean;
@@ -34,6 +35,9 @@ export interface ModelPlaygroundInputContextValue {
 }
 
 export interface ModelPlaygroundModelContextValue {
+  isModelDetailsError: boolean;
+  isModelDetailsLoading: boolean;
+  modelDetails?: InferenceModel;
   onModelChange: (model: string) => void;
   selectedModel: string;
 }
@@ -58,6 +62,9 @@ export const ModelPlaygroundInputContext =
 
 export const ModelPlaygroundModelContext =
   React.createContext<ModelPlaygroundModelContextValue>({
+    isModelDetailsError: false,
+    isModelDetailsLoading: false,
+    modelDetails: undefined,
     onModelChange: () => undefined,
     selectedModel: 'qwen3-8b',
   });
@@ -77,5 +84,5 @@ export interface ModelPlaygroundOptionsContextValue {
 export const ModelPlaygroundOptionsContext =
   React.createContext<ModelPlaygroundOptionsContextValue>({
     onSettingsChange: () => undefined,
-    settings: DEFAULT_PLAYGROUND_SETTINGS,
+    settings: INITIAL_PLAYGROUND_SETTINGS,
   });

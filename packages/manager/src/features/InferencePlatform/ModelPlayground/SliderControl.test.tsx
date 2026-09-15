@@ -26,8 +26,16 @@ vi.mock('@akamai/cds-components/react', () => ({
       type="number"
     />
   ),
-  Tooltip: ({ children }: { children: React.ReactNode }) => (
-    <span>{children}</span>
+  Tooltip: ({
+    children,
+    tooltipText,
+  }: {
+    children: React.ReactNode;
+    tooltipText: string;
+  }) => (
+    <span aria-label={tooltipText} role="tooltip">
+      {children}
+    </span>
   ),
 }));
 
@@ -59,6 +67,16 @@ describe('SliderControl', () => {
         <SliderControl {...defaultProps} value={0.5} />
       );
       expect(getByRole('spinbutton')).toHaveValue(0.5);
+    });
+  });
+
+  describe('tooltip', () => {
+    it('does not render when a description is unavailable', () => {
+      const { queryByRole } = renderWithTheme(
+        <SliderControl {...defaultProps} tooltip={undefined} />
+      );
+
+      expect(queryByRole('tooltip')).not.toBeInTheDocument();
     });
   });
 
@@ -120,5 +138,47 @@ describe('SliderControl', () => {
         String(defaultProps.min)
       );
     });
+  });
+
+  describe('parameters without both bounds', () => {
+    it.each([
+      { max: undefined, min: 0 },
+      { max: 2, min: undefined },
+      { max: undefined, min: undefined },
+    ])('renders only an unconstrained number input', ({ max, min }) => {
+      const { getByRole, queryByRole } = renderWithTheme(
+        <SliderControl {...defaultProps} max={max} min={min} />
+      );
+
+      expect(getByRole('spinbutton')).toBeVisible();
+      expect(queryByRole('slider')).not.toBeInTheDocument();
+    });
+
+    it.each([
+      { expectedValue: 0, max: undefined, min: 0, typedValue: '-1' },
+      { expectedValue: 2, max: 2, min: undefined, typedValue: '999' },
+      { expectedValue: 999, max: undefined, min: undefined, typedValue: '999' },
+    ])(
+      'clamps to a defined bound without rendering a slider',
+      async ({ expectedValue, max, min, typedValue }) => {
+        const user = userEvent.setup();
+        const onChange = vi.fn();
+        const { getByRole } = renderWithTheme(
+          <SliderControl
+            {...defaultProps}
+            max={max}
+            min={min}
+            onChange={onChange}
+            value={1}
+          />
+        );
+
+        const input = getByRole('spinbutton');
+        await user.clear(input);
+        await user.type(input, typedValue);
+
+        expect(onChange).toHaveBeenCalledWith(expectedValue);
+      }
+    );
   });
 });

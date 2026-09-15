@@ -2,6 +2,7 @@ import {
   createApiKey,
   deleteApiKey,
   getApiKeys,
+  getInferenceModelDetail,
   getInferenceModels,
   getInferenceUsage,
   revokeApiKey,
@@ -23,6 +24,7 @@ import type {
   CreateApiKeyPayload,
   CreateApiKeyResponse,
   Filter,
+  InferenceModel,
   InferenceModelsResponse,
   InferenceUsage,
   InferenceUsageRequest,
@@ -63,6 +65,10 @@ export const inferenceQueries = createQueryKeys('inference', {
     queryFn: getInferenceModels,
     queryKey: null,
   },
+  modelDetail: (modelId: string) => ({
+    queryFn: () => getInferenceModelDetail(modelId),
+    queryKey: [modelId],
+  }),
   usage: (data?: InferenceUsageRequest) => ({
     queryFn: () => getInferenceUsage(data),
     queryKey: [data],
@@ -106,6 +112,16 @@ export const useInferenceModelsQuery = (enabled = true) =>
     ...inferenceQueries.models,
     enabled,
     staleTime: 5 * 60 * 1000, // Cache for 5 minutes
+  });
+
+/**
+ * Hook to fetch full details for one inference model.
+ */
+export const useInferenceModelDetailQuery = (modelId: string, enabled = true) =>
+  useQuery<InferenceModel, APIError[]>({
+    ...inferenceQueries.modelDetail(modelId),
+    enabled: enabled && Boolean(modelId),
+    staleTime: 5 * 60 * 1000,
   });
 
 /**

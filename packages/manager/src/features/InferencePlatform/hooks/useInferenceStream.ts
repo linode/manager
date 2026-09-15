@@ -11,14 +11,16 @@ import {
   requestInferenceChatCompletion,
 } from '../inferenceService';
 import {
-  DEFAULT_PLAYGROUND_SETTINGS,
-  mapSettingsToApiOptions,
-} from '../ModelPlayground/types';
-import { parseThinking, parseThinkingLive } from '../ModelPlayground/utils';
+  buildApiOptionsForModel,
+  INITIAL_PLAYGROUND_SETTINGS,
+  parseThinking,
+  parseThinkingLive,
+} from '../ModelPlayground/utils';
 
 import type { InferenceChatMessage } from '../inferenceService';
 import type { MessageMetadata } from '../ModelPlayground/ModelPlaygroundContext';
 import type { PlaygroundSettings } from '../ModelPlayground/types';
+import type { InferenceModel } from '@linode/api-v4';
 
 // Flush streaming UI updates at a fixed cadence to reduce render pressure
 // from very small, high-frequency token chunks.
@@ -62,7 +64,8 @@ export const useInferenceStream = () => {
       model: string,
       apiKey: string,
       { onChunk, onComplete, onError, onStart }: StreamCallbacks,
-      settings: PlaygroundSettings = DEFAULT_PLAYGROUND_SETTINGS
+      settings: PlaygroundSettings = INITIAL_PLAYGROUND_SETTINGS,
+      modelDetails?: InferenceModel
     ) => {
       const assistantId = crypto.randomUUID();
       let rawContent = '';
@@ -100,7 +103,7 @@ export const useInferenceStream = () => {
 
       onStart(assistantId, startTime);
 
-      const apiOptions = mapSettingsToApiOptions(settings);
+      const apiOptions = buildApiOptionsForModel(settings, modelDetails);
       const allMessages: InferenceChatMessage[] = settings.systemPrompt
         ? [{ content: settings.systemPrompt, role: 'system' }, ...messages]
         : messages;

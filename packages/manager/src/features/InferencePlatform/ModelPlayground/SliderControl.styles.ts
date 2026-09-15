@@ -8,6 +8,7 @@ export const StyledSlider = styled(MuiSlider, {
     backgroundColor: theme.tokens.color.Ultramarine[70],
     border: '1px solid white',
     height: 16,
+    transition: 'none',
     width: 16,
   },
   '& .MuiSlider-rail': {
@@ -19,6 +20,7 @@ export const StyledSlider = styled(MuiSlider, {
     background: `linear-gradient(to right, ${theme.tokens.color.Ultramarine[60]}, ${theme.tokens.color.Ultramarine[70]})`,
     border: 'none',
     height: 4,
+    transition: 'none',
   },
   color: theme.tokens.color.Ultramarine[70],
 }));

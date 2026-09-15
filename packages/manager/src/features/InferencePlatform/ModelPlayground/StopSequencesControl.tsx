@@ -6,14 +6,18 @@ import React from 'react';
 import { Box, Typography } from '../components';
 
 interface StopSequencesControlProps {
+  label?: string;
   onChange: (value: string[] | undefined) => void;
+  tooltip?: string;
   value: string[] | undefined;
 }
 
 const EMPTY_SEQUENCES: string[] = [];
 
 export const StopSequencesControl = ({
+  label = 'Stop Sequences',
   onChange,
+  tooltip = 'Text strings that immediately halt generation when produced. Useful for ending a response at a known marker.',
   value,
 }: StopSequencesControlProps) => {
   const sequences = value ?? EMPTY_SEQUENCES;
@@ -34,8 +38,8 @@ export const StopSequencesControl = ({
           marginBottom: '8px',
         }}
       >
-        <Typography style={{ fontSize: '0.875rem' }}>Stop Sequences</Typography>
-        <Tooltip tooltipText="Text strings that immediately halt generation when produced. Useful for ending a response at a known marker.">
+        <Typography style={{ fontSize: '0.875rem' }}>{label}</Typography>
+        <Tooltip tooltipText={tooltip}>
           <span
             style={{
               alignItems: 'center',

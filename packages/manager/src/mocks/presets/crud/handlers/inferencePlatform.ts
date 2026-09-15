@@ -10,6 +10,7 @@ import type {
   ApiKeyType,
   ChatResponseBody,
   InferenceModel,
+  InferenceParameterDef,
   InferenceUsage,
   InferenceUsageTimeSeries,
 } from '@linode/api-v4';
@@ -596,6 +597,184 @@ const mockModels: InferenceModel[] = [
   },
 ];
 
+type ReasoningConfig = {
+  default: string;
+  enum: string[];
+};
+
+type SamplingDefaults = {
+  temperature: number;
+  topP: number;
+};
+
+const DEFAULT_SAMPLING: SamplingDefaults = { temperature: 1, topP: 1 };
+
+const SAMPLING_DEFAULTS: Record<string, SamplingDefaults> = {
+  'deepseek-r1-0528': { temperature: 0.6, topP: 0.95 },
+  'kimi-k2.7-code': { temperature: 1, topP: 0.95 },
+  'llama-3.3-70b-instruct': { temperature: 0.6, topP: 0.9 },
+  'qwen3-4b': { temperature: 0.6, topP: 0.95 },
+  'qwen3-8b': { temperature: 0.6, topP: 0.95 },
+};
+
+const THINKING_DEFAULTS: Record<string, boolean> = {
+  'deepseek-v4-flash': true,
+  'deepseek-v4-pro': true,
+  'gemma-4-26b-a4b-it': false,
+  'glm-5.2': true,
+  'llama-3.1-nemotron-ultra-253b-v1': true,
+  'qwen3-4b': true,
+  'qwen3-8b': true,
+};
+
+const REASONING_CONFIGS: Record<string, ReasoningConfig> = {
+  'deepseek-v4-flash': { default: 'high', enum: ['low', 'high', 'max'] },
+  'deepseek-v4-pro': { default: 'high', enum: ['low', 'high', 'max'] },
+  'glm-5.2': { default: 'max', enum: ['high', 'max'] },
+  'kimi-k3': { default: 'max', enum: ['low', 'high', 'max'] },
+};
+
+const MAX_TOKEN_BOUNDS: Record<
+  string,
+  Pick<InferenceParameterDef, 'maximum' | 'minimum'>
+> = {
+  'deepseek-r1-0528': { maximum: 65536, minimum: 1 },
+  'gemma-4-26b-a4b-it': { maximum: 8192, minimum: 1 },
+};
+
+const TOP_K_DEFAULTS: Record<string, number> = {
+  'gemma-4-26b-a4b-it': 64,
+  'qwen3-4b': 20,
+  'qwen3-8b': 20,
+};
+
+const COMMON_PARAMETERS: Record<string, InferenceParameterDef> = {
+  frequency_penalty: {
+    default: 0,
+    description:
+      "Reduces repetition by penalizing tokens in proportion to how often they've already appeared.",
+    label: 'Frequency Penalty',
+    maximum: 2,
+    minimum: -2,
+    type: 'number',
+  },
+  min_p: {
+    default: 0,
+    description:
+      'Sets the minimum probability a token needs (relative to the most likely token) to be considered.',
+    label: 'Min P',
+    maximum: 1,
+    minimum: 0,
+    type: 'number',
+  },
+  presence_penalty: {
+    default: 0,
+    description:
+      'Discourages reusing any token that has already appeared, nudging the model towards new topics.',
+    label: 'Presence Penalty',
+    maximum: 2,
+    minimum: -2,
+    type: 'number',
+  },
+  seed: {
+    default: null,
+    description:
+      'Fixes the random seed so identical inputs produce identical output.',
+    label: 'Seed',
+    type: 'integer',
+  },
+  stop: {
+    default: [],
+    description: 'Text strings that halt generation when produced.',
+    items: { type: 'string' },
+    label: 'Stop Sequences',
+    type: 'array',
+  },
+  stream: {
+    default: false,
+    description: 'Whether the response is returned incrementally.',
+    label: 'Stream Response',
+    type: 'boolean',
+  },
+};
+
+const EMBEDDING_PARAMETERS: Record<string, InferenceParameterDef> = {
+  dimensions: {
+    default: 2560,
+    label: 'Dimensions',
+    maximum: 2560,
+    minimum: 32,
+    type: 'integer',
+  },
+};
+
+const getInferenceParameters = (
+  modelId: string
+): Record<string, InferenceParameterDef> => {
+  if (modelId === 'qwen3-embedding-4b') {
+    return EMBEDDING_PARAMETERS;
+  }
+
+  const sampling = SAMPLING_DEFAULTS[modelId] ?? DEFAULT_SAMPLING;
+  const enableThinking = THINKING_DEFAULTS[modelId];
+  const reasoning = REASONING_CONFIGS[modelId];
+
+  return {
+    ...COMMON_PARAMETERS,
+    ...(enableThinking === undefined
+      ? {}
+      : {
+          enable_thinking: {
+            default: enableThinking,
+            description: 'Enables the model reasoning mode.',
+            label: 'Enable Thinking',
+            type: 'boolean',
+          },
+        }),
+    ...(reasoning === undefined
+      ? {}
+      : {
+          reasoning_effort: {
+            ...reasoning,
+            description: 'Controls how much reasoning the model performs.',
+            label: 'Thinking Effort',
+            type: 'string',
+          },
+        }),
+    max_tokens: {
+      default: null,
+      description: 'The maximum length of the model response in tokens.',
+      label: 'Max Output Tokens',
+      minimum: 1,
+      ...MAX_TOKEN_BOUNDS[modelId],
+      type: 'integer',
+    },
+    temperature: {
+      default: sampling.temperature,
+      description: 'Controls randomness in generated output.',
+      label: 'Temperature',
+      maximum: 2,
+      minimum: 0,
+      type: 'number',
+    },
+    top_k: {
+      default: TOP_K_DEFAULTS[modelId] ?? 0,
+      description: 'Limits sampling to the most likely next tokens.',
+      label: 'Top K',
+      minimum: 0,
+      type: 'integer',
+    },
+    top_p: {
+      default: sampling.topP,
+      description: 'Limits sampling to the most likely token mass.',
+      exclusiveMinimum: 0,
+      label: 'Top P',
+      maximum: 1,
+      type: 'number',
+    },
+  };
+};
+
 // Canned markdown response returned by the mock inference endpoint.
 const CANNED_RESPONSE_CONTENT = `Serverless inference is a great choice for **variable or bursty workloads**. Here's a quick breakdown:
 
@@ -654,6 +833,20 @@ export const createChatCompletion = (_mockState: MockState) => [
  * Returns list of available models
  */
 export const getModels = (_mockState: MockState) => [
+  http.get('*/v4beta/inference/models/:modelId/detail', async ({ params }) => {
+    const model = mockModels.find((entry) => entry.id === params.modelId);
+
+    if (!model) {
+      return new Response(null, { status: 404 });
+    }
+
+    const details: InferenceModel = {
+      ...model,
+      inference_parameters: getInferenceParameters(model.id),
+    };
+
+    return makeResponse(details);
+  }),
   http.get('*/v4beta/inference/models', async () => {
     // Simulate network delay
     await new Promise((resolve) => setTimeout(resolve, 300));

@@ -14,6 +14,7 @@ import type {
   ChatResponseBody,
   CreateApiKeyPayload,
   CreateApiKeyResponse,
+  InferenceModel,
   InferenceModelsResponse,
   InferenceUsage,
   InferenceUsageRequest,
@@ -122,6 +123,19 @@ export const getInferenceModelsResourcePage = (
     setMethod('GET'),
     setParams(params),
     setXFilter(filter),
+  );
+
+/**
+ * getInferenceModelDetail
+ *
+ * Returns the full details for a single inference model.
+ */
+export const getInferenceModelDetail = (modelId: string) =>
+  Request<InferenceModel>(
+    setURL(
+      `${BETA_API_ROOT}/inference/models/${encodeURIComponent(modelId)}/detail`,
+    ),
+    setMethod('GET'),
   );
 
 /**

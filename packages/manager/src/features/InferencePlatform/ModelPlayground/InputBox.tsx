@@ -28,13 +28,16 @@ export const InputBox = () => {
   const { inputValue, isLoading, onCancel, onInputChange, onSend } = useContext(
     ModelPlaygroundInputContext
   );
-  const { selectedModel } = useContext(ModelPlaygroundModelContext);
+  const { isModelDetailsLoading, selectedModel } = useContext(
+    ModelPlaygroundModelContext
+  );
   const { messages } = useContext(ModelPlaygroundOutputContext);
   const { isModelsLoading } = useInferencePlatform();
   const theme = useTheme();
   const inputRef = useRef<React.ComponentRef<typeof TextArea>>(null);
 
-  const isDisabled = isLoading || isModelsLoading || !selectedModel;
+  const isDisabled =
+    isLoading || isModelsLoading || isModelDetailsLoading || !selectedModel;
   const hasInput = Boolean(inputValue.trim());
   const canSend = hasInput && !isDisabled;
 

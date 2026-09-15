@@ -8,23 +8,21 @@ import type { PlaygroundSettings } from './types';
 
 interface Props {
   label: string;
-  onChange: (value: PlaygroundSettings['reasoning_effort']) => void;
+  onChange: (value: string) => void;
+  options: string[];
   tooltip: string;
   value: PlaygroundSettings['reasoning_effort'];
 }
 
-const effortLevels: Array<{
-  label: string;
-  value: PlaygroundSettings['reasoning_effort'];
-}> = [
-  { label: 'Low', value: 'low' },
-  { label: 'Medium', value: 'medium' },
-  { label: 'High', value: 'high' },
-];
-
-export const EffortControl = ({ label, onChange, tooltip, value }: Props) => {
+export const EffortControl = ({
+  label,
+  onChange,
+  options,
+  tooltip,
+  value,
+}: Props) => {
   const handleChange = (e: CustomEvent) => {
-    onChange(e.detail.value as PlaygroundSettings['reasoning_effort']);
+    onChange(e.detail.value as string);
   };
 
   return (
@@ -43,16 +41,16 @@ export const EffortControl = ({ label, onChange, tooltip, value }: Props) => {
           </span>
         </Tooltip>
       </Box>
-      <Box style={{ display: 'flex', gap: '8px' }}>
-        {effortLevels.map((level) => (
+      <Box style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+        {options.map((option) => (
           <SegmentedButton
-            checked={value === level.value}
-            key={level.value}
+            checked={value === option}
+            key={option}
             onChange={handleChange}
-            style={{ borderRadius: '4px', flex: 1 }}
-            value={level.value}
+            style={{ borderRadius: '4px', flex: 'none' }}
+            value={option}
           >
-            {level.label}
+            {option}
           </SegmentedButton>
         ))}
       </Box>

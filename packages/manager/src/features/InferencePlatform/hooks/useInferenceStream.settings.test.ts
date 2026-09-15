@@ -2,8 +2,17 @@ import { renderHook } from '@testing-library/react';
 import { vi } from 'vitest';
 
 import * as inferenceService from '../inferenceService';
-import { DEFAULT_PLAYGROUND_SETTINGS } from '../ModelPlayground/types';
+import { INITIAL_PLAYGROUND_SETTINGS } from '../ModelPlayground/utils';
 import { useInferenceStream } from './useInferenceStream';
+
+import type { InferenceModel } from '@linode/api-v4';
+
+const createModelDetails = (parameterNames: string[]): InferenceModel =>
+  ({
+    inference_parameters: Object.fromEntries(
+      parameterNames.map((name) => [name, { label: name, type: 'number' }])
+    ),
+  }) as InferenceModel;
 
 const makeStream = (lines: string[]): ReadableStream<Uint8Array> => {
   const encoder = new TextEncoder();
@@ -60,7 +69,7 @@ describe('useInferenceStream — settings forwarding', () => {
       MOCK_API_KEY,
       mockCallbacks(),
       {
-        ...DEFAULT_PLAYGROUND_SETTINGS,
+        ...INITIAL_PLAYGROUND_SETTINGS,
         systemPrompt: 'You are a helpful assistant.',
       }
     );
@@ -84,7 +93,7 @@ describe('useInferenceStream — settings forwarding', () => {
       MOCK_API_KEY,
       mockCallbacks(),
       {
-        ...DEFAULT_PLAYGROUND_SETTINGS,
+        ...INITIAL_PLAYGROUND_SETTINGS,
         systemPrompt: '',
       }
     );
@@ -98,11 +107,18 @@ describe('useInferenceStream — settings forwarding', () => {
   it('forwards mapped api options as the third argument', async () => {
     const { result } = renderHook(() => useInferenceStream());
 
-    await result.current.stream([], 'model-a', MOCK_API_KEY, mockCallbacks(), {
-      ...DEFAULT_PLAYGROUND_SETTINGS,
-      max_tokens: 512,
-      temperature: 0.9,
-    });
+    await result.current.stream(
+      [],
+      'model-a',
+      MOCK_API_KEY,
+      mockCallbacks(),
+      {
+        ...INITIAL_PLAYGROUND_SETTINGS,
+        max_tokens: 512,
+        temperature: 0.9,
+      },
+      createModelDetails(['max_tokens', 'temperature'])
+    );
 
     const apiOptions = vi.mocked(
       inferenceService.requestInferenceChatCompletion
@@ -110,7 +126,7 @@ describe('useInferenceStream — settings forwarding', () => {
     expect(apiOptions).toMatchObject({ max_tokens: 512, temperature: 0.9 });
   });
 
-  it('uses DEFAULT_PLAYGROUND_SETTINGS when no settings are provided', async () => {
+  it('uses neutral initial settings when no settings are provided', async () => {
     const { result } = renderHook(() => useInferenceStream());
 
     await result.current.stream([], 'model-a', MOCK_API_KEY, mockCallbacks());
@@ -118,22 +134,26 @@ describe('useInferenceStream — settings forwarding', () => {
     const apiOptions = vi.mocked(
       inferenceService.requestInferenceChatCompletion
     ).mock.calls[0][3];
-    expect(apiOptions).toMatchObject({
-      chat_template_kwargs: { enable_thinking: true },
-      max_tokens: 4096,
-      reasoning_effort: 'medium',
-      stream: true,
-      temperature: 0.6,
+    expect(apiOptions).toEqual({
+      stream: false,
+      stream_options: null,
     });
   });
 
   it('maps enableThinking to chat_template_kwargs.enable_thinking', async () => {
     const { result } = renderHook(() => useInferenceStream());
 
-    await result.current.stream([], 'model-a', MOCK_API_KEY, mockCallbacks(), {
-      ...DEFAULT_PLAYGROUND_SETTINGS,
-      enableThinking: false,
-    });
+    await result.current.stream(
+      [],
+      'model-a',
+      MOCK_API_KEY,
+      mockCallbacks(),
+      {
+        ...INITIAL_PLAYGROUND_SETTINGS,
+        enableThinking: false,
+      },
+      createModelDetails(['enable_thinking'])
+    );
 
     const apiOptions = vi.mocked(
       inferenceService.requestInferenceChatCompletion
@@ -143,18 +163,25 @@ describe('useInferenceStream — settings forwarding', () => {
     });
   });
 
-  it('sets reasoning_effort to null when enableThinking is false', async () => {
+  it('omits unsupported reasoning_effort when enableThinking is false', async () => {
     const { result } = renderHook(() => useInferenceStream());
 
-    await result.current.stream([], 'model-a', MOCK_API_KEY, mockCallbacks(), {
-      ...DEFAULT_PLAYGROUND_SETTINGS,
-      enableThinking: false,
-      reasoning_effort: 'high',
-    });
+    await result.current.stream(
+      [],
+      'model-a',
+      MOCK_API_KEY,
+      mockCallbacks(),
+      {
+        ...INITIAL_PLAYGROUND_SETTINGS,
+        enableThinking: false,
+        reasoning_effort: 'high',
+      },
+      createModelDetails(['enable_thinking'])
+    );
 
     const apiOptions = vi.mocked(
       inferenceService.requestInferenceChatCompletion
     ).mock.calls[0][3];
-    expect(apiOptions).toMatchObject({ reasoning_effort: null });
+    expect(apiOptions?.reasoning_effort).toBeUndefined();
   });
 });

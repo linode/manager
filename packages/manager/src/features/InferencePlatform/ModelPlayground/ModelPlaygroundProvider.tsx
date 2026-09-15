@@ -1,5 +1,5 @@
 import { createChatCompletion } from '@linode/api-v4';
-import { useProfile } from '@linode/queries';
+import { useInferenceModelDetailQuery, useProfile } from '@linode/queries';
 import { useNavigate, useSearch } from '@tanstack/react-router';
 import React, {
   useCallback,
@@ -31,8 +31,12 @@ import {
   ModelPlaygroundOptionsContext,
   ModelPlaygroundOutputContext,
 } from './ModelPlaygroundContext';
-import { mapSettingsToApiOptions } from './types';
-import { parseThinking } from './utils';
+import {
+  buildApiOptionsForModel,
+  getPlaygroundSettingsFromModelDetails,
+  INITIAL_PLAYGROUND_SETTINGS,
+  parseThinking,
+} from './utils';
 
 const MOCK_PROVIDER = 'google';
 
@@ -54,18 +58,31 @@ export const ModelPlaygroundProvider = ({ children }: Props) => {
   );
   const [selectedModel, setSelectedModel] = useState(modelFromUrl ?? '');
 
-  const { settings } = useContext(ModelPlaygroundOptionsContext);
+  const { onSettingsChange, settings } = useContext(
+    ModelPlaygroundOptionsContext
+  );
+  const {
+    data: modelDetails,
+    isError: isModelDetailsError,
+    isLoading: isModelDetailsLoading,
+  } = useInferenceModelDetailQuery(selectedModel);
 
   const onModelChange = useCallback(
     (model: string) => {
       setSelectedModel(model);
+      onSettingsChange(INITIAL_PLAYGROUND_SETTINGS);
       navigate({
         search: (prev) => ({ ...prev, model: model || undefined }),
         to: '/inference-platform/model-playground',
       });
     },
-    [navigate]
+    [navigate, onSettingsChange]
   );
+
+  useEffect(() => {
+    if (!modelDetails || modelDetails.id !== selectedModel) return;
+    onSettingsChange(getPlaygroundSettingsFromModelDetails(modelDetails));
+  }, [modelDetails, onSettingsChange, selectedModel]);
 
   const { cancel, stream } = useInferenceStream();
   const nonStreamAbortRef = useRef<AbortController | null>(null);
@@ -82,12 +99,14 @@ export const ModelPlaygroundProvider = ({ children }: Props) => {
   const inputValueRef = useRef(inputValue);
   const isLoadingRef = useRef(isLoading);
   const messagesRef = useRef(messages);
+  const modelDetailsRef = useRef(modelDetails);
   const selectedModelRef = useRef(selectedModel);
   const settingsRef = useRef(settings);
 
   inputValueRef.current = inputValue;
   isLoadingRef.current = isLoading;
   messagesRef.current = messages;
+  modelDetailsRef.current = modelDetails;
   selectedModelRef.current = selectedModel;
   settingsRef.current = settings;
 
@@ -207,7 +226,8 @@ export const ModelPlaygroundProvider = ({ children }: Props) => {
             onError: applyStreamError,
             onStart: applyStreamStart,
           },
-          settingsRef.current
+          settingsRef.current,
+          modelDetailsRef.current
         );
         return;
       }
@@ -224,7 +244,10 @@ export const ModelPlaygroundProvider = ({ children }: Props) => {
       }, INFERENCE_REQUEST_TIMEOUT_MS);
 
       try {
-        const apiOptions = mapSettingsToApiOptions(settingsRef.current);
+        const apiOptions = buildApiOptionsForModel(
+          settingsRef.current,
+          modelDetailsRef.current
+        );
         const requestMessages = settingsRef.current.systemPrompt
           ? [
               {
@@ -367,10 +390,19 @@ export const ModelPlaygroundProvider = ({ children }: Props) => {
 
   const modelContextValue = useMemo(
     () => ({
+      isModelDetailsError,
+      isModelDetailsLoading,
+      modelDetails,
       onModelChange,
       selectedModel,
     }),
-    [onModelChange, selectedModel]
+    [
+      isModelDetailsError,
+      isModelDetailsLoading,
+      modelDetails,
+      onModelChange,
+      selectedModel,
+    ]
   );
 
   const outputContextValue = useMemo(

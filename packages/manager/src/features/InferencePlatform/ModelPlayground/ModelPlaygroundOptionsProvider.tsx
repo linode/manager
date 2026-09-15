@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useState } from 'react';
 
 import { ModelPlaygroundOptionsContext } from './ModelPlaygroundContext';
-import { DEFAULT_PLAYGROUND_SETTINGS } from './types';
+import { INITIAL_PLAYGROUND_SETTINGS } from './utils';
 
 import type { PlaygroundSettings } from './types';
 
@@ -11,7 +11,7 @@ interface Props {
 
 export const ModelPlaygroundOptionsProvider = ({ children }: Props) => {
   const [settings, setSettings] = useState<PlaygroundSettings>(
-    DEFAULT_PLAYGROUND_SETTINGS
+    INITIAL_PLAYGROUND_SETTINGS
   );
 
   const onSettingsChange = useCallback(

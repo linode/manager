@@ -20,11 +20,11 @@ const roundedDecrement = (value: null | number, step: number): number => {
 
 export interface SliderControlProps {
   label: string;
-  max: number;
-  min: number;
+  max: number | undefined;
+  min: number | undefined;
   onChange: (value: number) => void;
   step: number;
-  tooltip: string;
+  tooltip?: string;
   value: number | undefined;
 }
 
@@ -37,11 +37,18 @@ export const SliderControl = ({
   tooltip,
   value,
 }: SliderControlProps) => {
-  const effectiveValue = value ?? min;
+  const hasBounds = min !== undefined && max !== undefined;
+  const effectiveValue = value ?? min ?? null;
 
   const handleInputChange = (e: CustomEvent<null | number>) => {
     if (e.detail !== null) {
-      onChange(Math.min(max, Math.max(min, e.detail)));
+      const minimumClampedValue =
+        min === undefined ? e.detail : Math.max(min, e.detail);
+      const clampedValue =
+        max === undefined
+          ? minimumClampedValue
+          : Math.min(max, minimumClampedValue);
+      onChange(clampedValue);
     }
   };
 
@@ -56,17 +63,19 @@ export const SliderControl = ({
       >
         <Box style={{ alignItems: 'center', display: 'flex', gap: '8px' }}>
           <Typography style={{ fontSize: '0.875rem' }}>{label}</Typography>
-          <Tooltip tooltipText={tooltip}>
-            <span
-              style={{
-                alignItems: 'center',
-                display: 'flex',
-                marginRight: 8,
-              }}
-            >
-              <InfoOutline height={16} width={16} />
-            </span>
-          </Tooltip>
+          {tooltip && (
+            <Tooltip tooltipText={tooltip}>
+              <span
+                style={{
+                  alignItems: 'center',
+                  display: 'flex',
+                  marginRight: 8,
+                }}
+              >
+                <InfoOutline height={16} width={16} />
+              </span>
+            </Tooltip>
+          )}
         </Box>
         <NumericSpinner
           decrementFn={roundedDecrement}
@@ -79,14 +88,16 @@ export const SliderControl = ({
           value={effectiveValue}
         />
       </Box>
-      <StyledSlider
-        max={max}
-        min={min}
-        onChange={(_e, val) => onChange(val as number)}
-        size="small"
-        step={step}
-        value={effectiveValue}
-      />
+      {hasBounds && (
+        <StyledSlider
+          max={max}
+          min={min}
+          onChange={(_e, val) => onChange(val as number)}
+          size="small"
+          step={step}
+          value={value ?? min!}
+        />
+      )}
     </Box>
   );
 };

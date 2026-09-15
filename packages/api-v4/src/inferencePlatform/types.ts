@@ -97,6 +97,23 @@ export interface InferenceModelParameters {
   parameter_count_billions: number;
 }
 
+export type InferenceParameterValue = boolean | number | string;
+
+export interface InferenceParameterDef {
+  default?: Array<InferenceParameterValue> | InferenceParameterValue | null;
+  description?: string;
+  enum?: InferenceParameterValue[];
+  exclusiveMaximum?: number;
+  exclusiveMinimum?: number;
+  items?: {
+    type: 'boolean' | 'integer' | 'number' | 'string';
+  };
+  label?: string;
+  maximum?: number;
+  minimum?: number;
+  type: 'array' | 'boolean' | 'integer' | 'number' | 'string';
+}
+
 export interface InferenceModelPricePerMillionTokens {
   cached?: number;
   input?: number;
@@ -107,6 +124,7 @@ export interface InferenceModel {
   capabilities: string[];
   description: string;
   id: string;
+  inference_parameters?: Record<string, InferenceParameterDef>;
   label: string;
   lifecycle_status: string;
   modalities: InferenceModelModalities;

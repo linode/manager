@@ -48,7 +48,7 @@ export interface ChatCompletionOptions {
   n?: null | number;
   presence_penalty?: null | number;
   prompt_logprobs?: null | number;
-  reasoning_effort?: 'high' | 'low' | 'medium' | null;
+  reasoning_effort?: null | string;
   repetition_penalty?: null | number;
   seed?: null | number;
   skip_special_tokens?: boolean | null;
