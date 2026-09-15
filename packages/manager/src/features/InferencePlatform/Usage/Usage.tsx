@@ -1,4 +1,7 @@
-import { useInferenceUsageQuery } from '@linode/queries';
+import {
+  useInferenceTokenLimitsQuery,
+  useInferenceUsageQuery,
+} from '@linode/queries';
 import { Box, Stack } from '@linode/ui';
 import React from 'react';
 
@@ -7,6 +10,7 @@ import { ChartCard } from 'src/features/InferencePlatform/Usage/ChartCard/ChartC
 import { DonutChartDynamic } from 'src/features/InferencePlatform/Usage/DonutChartDynamic/DonutChartDynamic';
 import { FilterBar } from 'src/features/InferencePlatform/Usage/FilterBar/FilterBar';
 import { MetricsByToolbar } from 'src/features/InferencePlatform/Usage/MetricsByToolbar/MetricsByToolbar';
+import { TokenLimitStatus } from 'src/features/InferencePlatform/Usage/TokenLimitStatus/TokenLimitStatus';
 import { TokensUsedChart } from 'src/features/InferencePlatform/Usage/TokensUsedChart/TokensUsedChart';
 import {
   InputTokensChartDynamic,
@@ -66,6 +70,9 @@ const UsageContent = ({
   selectedValue,
 }: UsageContentProps) => {
   const dynamicData = useUsageData();
+
+  const { data: tokenLimit, isLoading: isTokenLimitLoading } =
+    useInferenceTokenLimitsQuery();
 
   // Check if we have real data or just the "no-data" placeholder
   const hasRealData = React.useMemo(() => {
@@ -148,6 +155,11 @@ const UsageContent = ({
         onModelChange={onSelectionChange}
         selectedApiKey={selectedValue}
         selectedModel={selectedValue}
+      />
+
+      <TokenLimitStatus
+        isLoading={isTokenLimitLoading}
+        tokenLimit={tokenLimit}
       />
 
       <Stack direction={{ lg: 'row', xs: 'column' }} gap={2}>

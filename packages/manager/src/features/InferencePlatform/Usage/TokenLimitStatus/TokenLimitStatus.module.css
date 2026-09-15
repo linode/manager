@@ -1,0 +1,97 @@
+.paper {
+  border-width: 0;
+  padding: 16px 16px 18px 16px;
+}
+
+/* Risk tiers applied at the widget root based on tokens-used %. */
+body[data-theme='light'] .Nominal {
+  --bar-color: var(--token-global-color-brand-70);
+  --pct-text-color: var(--token-global-color-brand-80);
+}
+body[data-theme='dark'] .Nominal {
+    --bar-color: var(--token-global-color-brand-80);
+    --pct-text-color: var(--token-global-color-brand-80);
+}
+
+body[data-theme='light'] .MediumRisk {
+  --bar-color: var(--token-global-color-orange-70);
+  --pct-text-color: var(--token-global-color-orange-80);
+}
+body[data-theme='dark'] .MediumRisk {
+    --bar-color: var(--token-global-color-orange-80);
+    --pct-text-color: var(--token-global-color-orange-70);
+}
+
+body[data-theme='light'] .HighRisk {
+  --bar-color: var(--token-global-color-red-70);
+  --pct-text-color: var(--token-global-color-red-70);
+}
+body[data-theme='dark'] .HighRisk {
+    --bar-color: var(--token-global-color-red-90);
+    --pct-text-color: var(--token-global-color-red-80);
+}
+
+.title {
+  font-family: 'Nunito Sans';
+  font-weight: 700;
+  font-size: var(--token-global-font-font-size-s); /* 18px */
+  line-height: var(--token-global-font-line-height-s); /* 24px */
+  color: var(--token-alias-content-text-primary-default);
+  margin: 0 0 8px;
+}
+
+.gaugeRow {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.gauge {
+  flex: 1;
+  --bar-height: 11px;
+  --bar-radius: 11px;
+  padding-left: 12px;
+}
+body[data-theme='light'] .gauge {
+    --bar-shadow: inset 1px 2px 3px hsla(210, 10%, 30%, 0.2);
+}
+body[data-theme='dark'] .gauge {
+    --bar-shadow: inset 1px 2px 5px hsla(210, 10%, 3%, 0.2);
+}
+
+.gauge :global(.MuiLinearProgress-root) {
+  height: var(--bar-height);
+  padding: 0;
+  border-radius: var(--bar-radius);
+  box-shadow: var(--bar-shadow);
+}
+
+.percent {
+  color: var(--pct-text-color);
+  font-family: 'Nunito Sans';
+  font-weight: 700;
+  font-size: var(--token-global-font-font-size-xl); /* 24px */
+  line-height: var(--token-global-font-line-height-l); /* 30px */
+  white-space: nowrap;
+}
+
+.footerRow {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 4px;
+  padding-left: 12px;
+}
+
+.description {
+  font-family: 'Nunito Sans';
+  font-size: var(--token-global-font-font-size-xs); /* 14px */
+  line-height: var(--token-global-font-line-height-xs); /* 20px */
+  color: var(--token-alias-content-text-primary-default);
+  margin: 0;
+}
+
+.descriptionPercent {
+  font-weight: 700;
+}

@@ -115,6 +115,7 @@ export type MockPresetExtraId =
   | 'inferencePlatform:api-keys'
   | 'inferencePlatform:chat-completions'
   | 'inferencePlatform:models'
+  | 'inferencePlatform:token-limits'
   | 'inferencePlatform:usage'
   | 'limits:linode-limits'
   | 'limits:lke-limits'

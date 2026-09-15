@@ -18,6 +18,7 @@ import {
   inferencePlatformApiKeysPreset,
   inferencePlatformModelsPreset,
   inferencePlatformPreset,
+  inferencePlatformTokenLimitsPreset,
   inferencePlatformUsagePreset,
 } from './extra/inferencePlatform/inferencePlatform';
 import { linodeLimitsPreset } from './extra/limits/linode-limits';
@@ -63,6 +64,7 @@ export const extraMockPresets: MockPresetExtra[] = [
   inferencePlatformApiKeysPreset,
   inferencePlatformUsagePreset,
   inferencePlatformModelsPreset,
+  inferencePlatformTokenLimitsPreset,
   linodeLimitsPreset,
   lkeLimitsPreset,
   managedEnabledPreset,

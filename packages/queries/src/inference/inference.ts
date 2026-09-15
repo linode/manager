@@ -4,6 +4,7 @@ import {
   getApiKeys,
   getInferenceModelDetail,
   getInferenceModels,
+  getInferenceTokenLimits,
   getInferenceUsage,
   revokeApiKey,
   updateApiKey,
@@ -26,6 +27,7 @@ import type {
   Filter,
   InferenceModel,
   InferenceModelsResponse,
+  InferenceTokenLimit,
   InferenceUsage,
   InferenceUsageRequest,
   Params,
@@ -61,14 +63,18 @@ export const inferenceQueries = createQueryKeys('inference', {
     queryFn: () => getApiKeys(params, filter),
     queryKey: [params, filter],
   }),
-  models: {
-    queryFn: getInferenceModels,
-    queryKey: null,
-  },
   modelDetail: (modelId: string) => ({
     queryFn: () => getInferenceModelDetail(modelId),
     queryKey: [modelId],
   }),
+  models: {
+    queryFn: getInferenceModels,
+    queryKey: null,
+  },
+  tokenLimits: {
+    queryFn: getInferenceTokenLimits,
+    queryKey: null,
+  },
   usage: (data?: InferenceUsageRequest) => ({
     queryFn: () => getInferenceUsage(data),
     queryKey: [data],
@@ -135,6 +141,16 @@ export const useInferenceUsageQuery = (
     ...inferenceQueries.usage(data),
     enabled,
     placeholderData: keepPreviousData,
+  });
+
+/**
+ * Hook to fetch the current token limit status for the Inference Platform.
+ */
+export const useInferenceTokenLimitsQuery = (enabled = true) =>
+  useQuery<InferenceTokenLimit, APIError[]>({
+    ...inferenceQueries.tokenLimits,
+    enabled,
+    staleTime: 5 * 60 * 1000, // Cache for 5 minutes
   });
 
 /**

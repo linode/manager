@@ -192,3 +192,10 @@ export interface InferenceUsageRequest {
   start_date?: string;
   top_n?: number;
 }
+
+// Token limit types
+export interface InferenceTokenLimit {
+  percent_used: number;
+  tokens_limit: number;
+  tokens_used: number;
+}

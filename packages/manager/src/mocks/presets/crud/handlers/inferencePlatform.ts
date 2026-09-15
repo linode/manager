@@ -11,6 +11,7 @@ import type {
   ChatResponseBody,
   InferenceModel,
   InferenceParameterDef,
+  InferenceTokenLimit,
   InferenceUsage,
   InferenceUsageTimeSeries,
 } from '@linode/api-v4';
@@ -854,6 +855,33 @@ export const getModels = (_mockState: MockState) => [
     return makeResponse({
       data: mockModels,
     });
+  }),
+];
+
+// Derive a deterministic token limit status for the account-level widget.
+const generateMockTokenLimit = (): InferenceTokenLimit => {
+  // Fixed values keep the mocked widget stable across renders.
+  const tokensLimit = 10_000_000;
+  const tokensUsed = 7_400_000;
+
+  return {
+    percent_used: Math.round((tokensUsed / tokensLimit) * 1000) / 10,
+    tokens_limit: tokensLimit,
+    tokens_used: tokensUsed,
+  };
+};
+
+/**
+ * GET /v4beta/inference/token-limits
+ * Returns the account's current token limit status: the percentage of the
+ * allowed tokens used.
+ */
+export const getTokenLimits = (_mockState: MockState) => [
+  http.get('*/v4beta/inference/token-limits', async () => {
+    // Simulate network delay
+    await new Promise((resolve) => setTimeout(resolve, 300));
+
+    return makeResponse(generateMockTokenLimit());
   }),
 ];
 

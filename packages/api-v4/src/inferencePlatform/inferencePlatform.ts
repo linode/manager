@@ -16,6 +16,7 @@ import type {
   CreateApiKeyResponse,
   InferenceModel,
   InferenceModelsResponse,
+  InferenceTokenLimit,
   InferenceUsage,
   InferenceUsageRequest,
   UpdateApiKeyPayload,
@@ -150,4 +151,16 @@ export const getInferenceUsage = (data?: InferenceUsageRequest) =>
     setURL(`${BETA_API_ROOT}/inference/usage`),
     setMethod('POST'),
     setData(data),
+  );
+
+/**
+ * getInferenceTokenLimits
+ *
+ * Returns the current token limit status for the Inference Platform: the
+ * percentage of the allowed tokens consumed.
+ */
+export const getInferenceTokenLimits = () =>
+  Request<InferenceTokenLimit>(
+    setURL(`${BETA_API_ROOT}/inference/token-limits`),
+    setMethod('GET'),
   );

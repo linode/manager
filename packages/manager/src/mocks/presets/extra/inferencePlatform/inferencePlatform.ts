@@ -5,6 +5,7 @@ import {
   getApiKey,
   getApiKeys,
   getModels,
+  getTokenLimits,
   getUsage,
   revokeApiKey,
   updateApiKey,
@@ -61,6 +62,17 @@ export const inferencePlatformUsagePreset: MockPresetExtra = {
   handlers: [getUsage],
   id: 'inferencePlatform:usage',
   label: 'Usage',
+};
+
+export const inferencePlatformTokenLimitsPreset: MockPresetExtra = {
+  desc: 'Mocks the inference platform token limits endpoint.',
+  group: {
+    id: 'Inference Platform',
+    type: 'checkbox',
+  },
+  handlers: [getTokenLimits],
+  id: 'inferencePlatform:token-limits',
+  label: 'Token Limits',
 };
 
 // Keep the old export for backward compatibility
