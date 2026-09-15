@@ -23,6 +23,7 @@ import React, { useState } from 'react';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { useDelegationRole } from '../../hooks/useDelegationRole';
 import { useHasTableStripingEnabled } from '../../hooks/useHasTableStripingEnabled';
+import { useOrder } from '../../hooks/useOrder';
 import { usePagination } from '../../hooks/usePagination';
 import { usePermissions } from '../../hooks/usePermissions';
 import { Box } from '../../Shared/Box/Box';
@@ -43,7 +44,6 @@ import { RolesTableActionMenu } from './RolesTableActionMenu';
 import { RolesTableExpandedRow } from './RolesTableExpandedRow';
 
 import type { RoleView, SelectOption } from '../../Shared/types';
-import type { Order } from '@akamai/cds-components/react/Table';
 import type { AccessType } from '@linode/api-v4';
 
 const COLUMN_WIDTHS = {
@@ -52,6 +52,12 @@ const COLUMN_WIDTHS = {
   description: '38%',
   actions: '10%',
 };
+
+/** URL / useOrder keys → RoleView fields used by sortRows */
+const SORT_COLUMN_TO_FIELD = {
+  role: 'name',
+  role_type: 'access',
+} as const;
 
 const TABLE_CELL_BASE_STYLE = {
   boxSizing: 'border-box' as const,
@@ -71,9 +77,17 @@ export const RolesTable = ({ roles = [] }: Props) => {
   });
   const hasTableStripingEnabled = useHasTableStripingEnabled();
 
-  const [sort, setSort] = useState<
-    undefined | { column: string; order: Order }
-  >({ column: 'name', order: 'asc' });
+  const order = useOrder({
+    initialRoute: {
+      defaultOrder: {
+        order: 'asc',
+        orderBy: 'role',
+      },
+      from: ROLES_URL,
+    },
+    preferenceKey: `${ROLES_TABLE_PREFERENCE_KEY}-order`,
+  });
+
   const [selectedRows, setSelectedRows] = useState<RoleView[]>([]);
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
 
@@ -101,9 +115,12 @@ export const RolesTable = ({ roles = [] }: Props) => {
   }, [filterableOptions, roleTypeParam]);
 
   const sortedRows = React.useMemo(() => {
-    if (!sort) return filteredRows;
-    return sortRows(filteredRows, sort.order, sort.column);
-  }, [filteredRows, sort]);
+    const sortField =
+      SORT_COLUMN_TO_FIELD[
+        order.orderBy as keyof typeof SORT_COLUMN_TO_FIELD
+      ] ?? order.orderBy;
+    return sortRows(filteredRows, order.order, sortField);
+  }, [filteredRows, order.order, order.orderBy]);
 
   const pagination = usePagination({
     currentRoute: ROLES_URL,
@@ -120,10 +137,6 @@ export const RolesTable = ({ roles = [] }: Props) => {
       pagination.paginatedData?.length === selectedRows?.length
     );
   }, [pagination.paginatedData, selectedRows]);
-
-  const handleSort = (event: CustomEvent, column: string) => {
-    setSort({ column, order: event.detail as Order });
-  };
 
   const handleSelect = (event: CustomEvent, row: 'all' | RoleView) => {
     if (row === 'all') {
@@ -271,9 +284,16 @@ export const RolesTable = ({ roles = [] }: Props) => {
               selected={areAllSelected}
             >
               <TableHeaderCell
-                onSort={(event) => handleSort(event, 'name')}
+                onSort={() =>
+                  order.handleOrderChange(
+                    'role',
+                    order.order === 'asc' && order.orderBy === 'role'
+                      ? 'desc'
+                      : 'asc'
+                  )
+                }
                 sortable
-                sorted={sort?.column === 'name' ? sort.order : undefined}
+                sorted={order.orderBy === 'role' ? order.order : undefined}
                 style={{
                   minWidth: COLUMN_WIDTHS.name,
                   ...TABLE_CELL_BASE_STYLE,
@@ -283,9 +303,18 @@ export const RolesTable = ({ roles = [] }: Props) => {
               </TableHeaderCell>
               {isSmUp && (
                 <TableHeaderCell
-                  onSort={(event) => handleSort(event, 'access')}
+                  onSort={() =>
+                    order.handleOrderChange(
+                      'role_type',
+                      order.order === 'asc' && order.orderBy === 'role_type'
+                        ? 'desc'
+                        : 'asc'
+                    )
+                  }
                   sortable
-                  sorted={sort?.column === 'access' ? sort.order : undefined}
+                  sorted={
+                    order.orderBy === 'role_type' ? order.order : undefined
+                  }
                   style={{
                     minWidth: COLUMN_WIDTHS.access,
                     ...TABLE_CELL_BASE_STYLE,
