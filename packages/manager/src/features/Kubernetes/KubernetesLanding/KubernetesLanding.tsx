@@ -21,9 +21,9 @@ import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { TransferDisplay } from 'src/components/TransferDisplay/TransferDisplay';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
+import { useLkePermissions } from 'src/features/IAM/hooks/useLkePermissions';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
-import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useKubernetesClustersQuery } from 'src/queries/kubernetes';
 
 import { KubernetesClusterRow } from '../ClusterList/KubernetesClusterRow';
@@ -90,9 +90,9 @@ export const KubernetesLanding = () => {
     ['+order_by']: orderBy,
   };
 
-  const isRestricted = useRestrictedGlobalGrantCheck({
-    globalGrantType: 'add_lkes',
-  });
+  const { data: permissions } = useLkePermissions('account', [
+    'create_lkecluster',
+  ]);
 
   const { data, error, isLoading } = useKubernetesClustersQuery({
     filter,
@@ -175,7 +175,7 @@ export const KubernetesLanding = () => {
             resourceType: 'LKE Clusters',
           }),
         }}
-        disabledCreateButton={isRestricted}
+        disabledCreateButton={!permissions.create_lkecluster}
         docsLink="https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-lke-linode-kubernetes-engine"
         entity="Cluster"
         onButtonClick={() => navigate({ to: '/kubernetes/create' })}
