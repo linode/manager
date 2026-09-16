@@ -291,4 +291,84 @@ describe('ApiKeyDetailsDrawer', () => {
     expect(getByText('Created')).toBeVisible();
     expect(getByText('Updated')).toBeVisible();
   });
+
+  describe('Allowed models', () => {
+    /**
+     * Locate a CDS checkbox host by its slotted label text.
+     */
+    const getCheckbox = (root: ParentNode, label: string) =>
+      // eslint-disable-next-line testing-library/no-node-access -- CDS web component
+      Array.from(root.querySelectorAll<HTMLElement>('cds-checkbox')).find(
+        (el) => el.textContent?.trim() === label
+      );
+
+    it('renders "All" checked and hides model list when allowed_models is ["*"]', () => {
+      const { container } = renderWithContext();
+      const all = getCheckbox(container, 'All') as
+        | (HTMLElement & { checked?: boolean })
+        | undefined;
+      expect(all?.checked).toBe(true);
+      expect(getCheckbox(container, 'model-1')).toBeUndefined();
+    });
+
+    it('renders "All" checked and hides model list when allowed_models is empty', () => {
+      const { container } = renderWithContext({
+        ...defaultProps,
+        apiKey: apiKeyFactory.build({ allowed_models: [] }),
+      });
+      const all = getCheckbox(container, 'All') as
+        | (HTMLElement & { checked?: boolean })
+        | undefined;
+      expect(all?.checked).toBe(true);
+      expect(getCheckbox(container, 'model-1')).toBeUndefined();
+    });
+
+    it('renders "All" unchecked with the subset preselected and in alphabetical order', () => {
+      const { container } = renderWithContext({
+        ...defaultProps,
+        apiKey: apiKeyFactory.build({
+          allowed_models: ['model-2', 'model-1'],
+        }),
+      });
+
+      const all = getCheckbox(container, 'All') as
+        | (HTMLElement & { checked?: boolean })
+        | undefined;
+      expect(all?.checked).toBe(false);
+
+      // eslint-disable-next-line testing-library/no-node-access, testing-library/no-container -- CDS web component
+      const rendered = Array.from(container.querySelectorAll('cds-checkbox'))
+        .map((el) => el.textContent?.trim() ?? '')
+        .filter((t) => t !== 'All');
+      expect(rendered).toEqual(['model-1', 'model-2', 'model-3']);
+
+      const m1 = getCheckbox(container, 'model-1') as
+        | (HTMLElement & { checked?: boolean })
+        | undefined;
+      const m2 = getCheckbox(container, 'model-2') as
+        | (HTMLElement & { checked?: boolean })
+        | undefined;
+      const m3 = getCheckbox(container, 'model-3') as
+        | (HTMLElement & { checked?: boolean })
+        | undefined;
+      expect(m1?.checked).toBe(true);
+      expect(m2?.checked).toBe(true);
+      expect(m3?.checked).toBe(false);
+    });
+
+    it('disables model checkboxes when the key is expired', () => {
+      const { container } = renderWithContext({
+        ...defaultProps,
+        apiKey: apiKeyFactory.build({
+          allowed_models: ['model-1'],
+          status: 'expired',
+        }),
+      });
+
+      const m1 = getCheckbox(container, 'model-1') as
+        | (HTMLElement & { disabled?: boolean })
+        | undefined;
+      expect(m1?.disabled).toBe(true);
+    });
+  });
 });

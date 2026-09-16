@@ -14,9 +14,10 @@ export const ModelsPopover = ({ models }: ModelsPopoverProps) => {
   // If no models specified or ['*'], it means all models are allowed
   const isAllModels =
     models.length === 0 || (models.length === 1 && models[0] === '*');
-  const displayModels = isAllModels
-    ? allAvailableModels.map((m) => m.id)
-    : models;
+  const displayModels = React.useMemo(() => {
+    const list = isAllModels ? allAvailableModels.map((m) => m.id) : models;
+    return [...list].sort((a, b) => a.localeCompare(b));
+  }, [isAllModels, allAvailableModels, models]);
 
   return (
     <Box sx={{ display: 'inline-block' }}>

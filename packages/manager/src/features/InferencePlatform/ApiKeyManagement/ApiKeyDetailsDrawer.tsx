@@ -79,7 +79,12 @@ export const ApiKeyDetailsDrawer = ({
   open,
 }: ApiKeyDetailsDrawerProps) => {
   const { models } = useInferencePlatform();
+  const sortedModels = useMemo(
+    () => [...models].sort((a, b) => a.id.localeCompare(b.id)),
+    [models]
+  );
   const [selectedModels, setSelectedModels] = useState<string[]>([]);
+  const [allModelsAllowed, setAllModelsAllowed] = useState(true);
   const [hasChanges, setHasChanges] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState<null | string>(null);
@@ -137,15 +142,10 @@ export const ApiKeyDetailsDrawer = ({
     apiKey?.status === 'expired' || apiKey?.status === 'revoked';
   const isEditable = isUserKey && !isDisabled;
 
-  // For current implementation we are not allowing to edit models, but we want to keep the logic in place to allow editing models in the future.
-  // Check if all models are allowed (either empty array or ['*'])
-  // const isAllModelsAllowed =
-  //   apiKey?.allowed_models.length === 0 ||
-  //   (apiKey?.allowed_models.length === 1 && apiKey?.allowed_models[0] === '*');
-
-  const isAllModelsAllowed = true;
-  // Models are not editable if key is disabled OR if all models are allowed
-  const areModelsEditable = !isDisabled && !isAllModelsAllowed;
+  // Models are editable when the key is a user key that is not disabled and
+  // the user has opted out of "All" (i.e. wants to pick a specific subset).
+  // Playground keys are read-only.
+  const areModelsEditable = isUserKey && !isDisabled && !allModelsAllowed;
 
   // Reset selected models and editable fields when the drawer opens with a new key
   useEffect(() => {
@@ -166,9 +166,10 @@ export const ApiKeyDetailsDrawer = ({
           (apiKey.allowed_models.length === 1 &&
             apiKey.allowed_models[0] === '*')
         ) {
-          setSelectedModels([...allModelIds]);
+          setAllModelsAllowed(true);
+          setSelectedModels([]);
         } else {
-          // Show only the specific allowed models as checked
+          setAllModelsAllowed(false);
           setSelectedModels(apiKey.allowed_models);
         }
       }
@@ -201,8 +202,9 @@ export const ApiKeyDetailsDrawer = ({
       return;
     }
 
-    // If all models are selected, send ['*'] to indicate all models
-    const modelsToSave = areAllModelsSelected ? ['*'] : selectedModels;
+    // If "All" is checked, send ['*'] to indicate all models.
+    const modelsToSave =
+      allModelsAllowed || areAllModelsSelected ? ['*'] : selectedModels;
 
     setIsSaving(true);
     setSaveError(null);
@@ -350,41 +352,40 @@ export const ApiKeyDetailsDrawer = ({
         <DetailRow label="Allowed models">
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
             <Checkbox
-              checked={
-                allModelIds.length > 0 &&
-                selectedModels.length === allModelIds.length
-              }
-              disabled={!areModelsEditable || allModelIds.length === 0}
+              checked={allModelsAllowed}
+              disabled={!isEditable || allModelIds.length === 0}
               indeterminate={
+                !allModelsAllowed &&
                 selectedModels.length > 0 &&
                 selectedModels.length < allModelIds.length
               }
-              onChange={() => {
-                if (selectedModels.length === allModelIds.length) {
+              onChange={(e) => {
+                const checked = Boolean(e.detail);
+                setAllModelsAllowed(checked);
+                if (checked) {
                   setSelectedModels([]);
-                } else {
-                  setSelectedModels([...allModelIds]);
                 }
                 setHasChanges(true);
               }}
             >
               All
             </Checkbox>
-            {models.map((model) => (
-              <Checkbox
-                checked={selectedModels.includes(model.id)}
-                disabled={!areModelsEditable}
-                key={model.id}
-                onChange={() =>
-                  handleModelToggle(
-                    model.id,
-                    !selectedModels.includes(model.id)
-                  )
-                }
-              >
-                {model.id}
-              </Checkbox>
-            ))}
+            {!allModelsAllowed &&
+              sortedModels.map((model) => (
+                <Checkbox
+                  checked={selectedModels.includes(model.id)}
+                  disabled={!areModelsEditable}
+                  key={model.id}
+                  onChange={() =>
+                    handleModelToggle(
+                      model.id,
+                      !selectedModels.includes(model.id)
+                    )
+                  }
+                >
+                  {model.id}
+                </Checkbox>
+              ))}
           </Box>
         </DetailRow>
 

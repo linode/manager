@@ -6,7 +6,10 @@ import { act } from 'react';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
+import { InferencePlatformContext } from '../InferencePlatformContext';
 import { CreateApiKeyDrawer } from './CreateApiKeyDrawer';
+
+import type { InferenceModel } from '@linode/api-v4';
 
 const defaultProps = {
   onClose: vi.fn(),
@@ -234,5 +237,226 @@ describe('CreateApiKeyDrawer', () => {
       '[data-testid="create-api-key-submit"]'
     ) as (HTMLElement & { disabled?: boolean }) | null;
     expect(submit?.disabled).toBe(true);
+  });
+
+  describe('Allowed models', () => {
+    const buildModel = (id: string): InferenceModel =>
+      ({
+        id,
+        label: id,
+        lifecycle_status: 'active',
+        modalities: { input: ['text'], output: ['text'] },
+        playground_available: true,
+        provider: { id: 'test', name: 'Test' },
+        regions: ['us-ord'],
+        tags: [],
+        type: 'text-generation',
+        use_cases: [],
+      }) as unknown as InferenceModel;
+
+    const models = [
+      buildModel('zeta-1'),
+      buildModel('alpha-1'),
+      buildModel('mu-1'),
+    ];
+
+    const renderWithModels = () =>
+      renderWithTheme(
+        <InferencePlatformContext.Provider
+          value={{ isModelsLoading: false, models }}
+        >
+          <CreateApiKeyDrawer {...defaultProps} />
+        </InferencePlatformContext.Provider>
+      );
+
+    /**
+     * Locate a CDS checkbox host by its slotted label text.
+     */
+    const getCheckbox = (root: ParentNode, label: string) =>
+      // eslint-disable-next-line testing-library/no-node-access -- CDS web component
+      Array.from(root.querySelectorAll<HTMLElement>('cds-checkbox')).find(
+        (el) => el.textContent?.trim() === label
+      );
+
+    it('has "All" checked by default and does not render per-model checkboxes', () => {
+      const { container } = renderWithModels();
+      const all = getCheckbox(container, 'All') as
+        | (HTMLElement & { checked?: boolean })
+        | undefined;
+      expect(all?.checked).toBe(true);
+      expect(getCheckbox(container, 'alpha-1')).toBeUndefined();
+      expect(getCheckbox(container, 'mu-1')).toBeUndefined();
+      expect(getCheckbox(container, 'zeta-1')).toBeUndefined();
+    });
+
+    it('reveals model checkboxes in alphabetical order when "All" is unchecked', () => {
+      const { container } = renderWithModels();
+      const all = getCheckbox(container, 'All')!;
+      act(() => {
+        all.dispatchEvent(
+          new CustomEvent('change', { bubbles: true, detail: false })
+        );
+      });
+
+      // eslint-disable-next-line testing-library/no-node-access, testing-library/no-container -- CDS web component
+      const rendered = Array.from(container.querySelectorAll('cds-checkbox'))
+        .map((el) => el.textContent?.trim() ?? '')
+        .filter((t) => t !== 'All');
+      expect(rendered).toEqual(['alpha-1', 'mu-1', 'zeta-1']);
+    });
+
+    it('submits allowed_models: ["*"] when "All" is checked', async () => {
+      const user = userEvent.setup();
+      let capturedBody: unknown = null;
+      server.use(
+        http.post('*/v4beta/inference/api-keys', async ({ request }) => {
+          capturedBody = await request.json();
+          return HttpResponse.json({
+            allowed_models: ['*'],
+            created: '2024-01-01T00:00:00Z',
+            description: '',
+            expiry: null,
+            id: 1,
+            key: 'linf_abc123_full_secret_key',
+            key_prefix: 'linf_abc123',
+            key_type: 'user',
+            label: 'Test Key',
+            last_used: null,
+            status: 'active',
+            updated: '2024-01-01T00:00:00Z',
+          });
+        })
+      );
+
+      const { container } = renderWithModels();
+
+      const labelInput = getCdsTextFieldByLabel(container, 'Name');
+      act(() => {
+        labelInput!.dispatchEvent(
+          new CustomEvent('change', { bubbles: true, detail: 'Test Key' })
+        );
+      });
+
+      const submit = getCdsButtonHostByText(document.body, 'Create API key');
+      await user.click(submit!);
+
+      await waitFor(() => {
+        expect(
+          (capturedBody as { allowed_models?: string[] })?.allowed_models
+        ).toEqual(['*']);
+      });
+    });
+
+    it('submits the selected subset when "All" is unchecked', async () => {
+      const user = userEvent.setup();
+      let capturedBody: unknown = null;
+      server.use(
+        http.post('*/v4beta/inference/api-keys', async ({ request }) => {
+          capturedBody = await request.json();
+          return HttpResponse.json({
+            allowed_models: ['alpha-1', 'mu-1'],
+            created: '2024-01-01T00:00:00Z',
+            description: '',
+            expiry: null,
+            id: 1,
+            key: 'linf_abc123',
+            key_prefix: 'linf_abc',
+            key_type: 'user',
+            label: 'Test Key',
+            last_used: null,
+            status: 'active',
+            updated: '2024-01-01T00:00:00Z',
+          });
+        })
+      );
+
+      const { container } = renderWithModels();
+
+      // Uncheck "All"
+      const all = getCheckbox(container, 'All')!;
+      act(() => {
+        all.dispatchEvent(
+          new CustomEvent('change', { bubbles: true, detail: false })
+        );
+      });
+
+      // Select two models
+      act(() => {
+        getCheckbox(container, 'alpha-1')!.dispatchEvent(
+          new CustomEvent('change', { bubbles: true, detail: true })
+        );
+        getCheckbox(container, 'mu-1')!.dispatchEvent(
+          new CustomEvent('change', { bubbles: true, detail: true })
+        );
+      });
+
+      // Fill Name
+      const labelInput = getCdsTextFieldByLabel(container, 'Name');
+      act(() => {
+        labelInput!.dispatchEvent(
+          new CustomEvent('change', { bubbles: true, detail: 'Test Key' })
+        );
+      });
+
+      const submit = getCdsButtonHostByText(document.body, 'Create API key');
+      await user.click(submit!);
+
+      await waitFor(() => {
+        expect(
+          (capturedBody as { allowed_models?: string[] })?.allowed_models
+        ).toEqual(['alpha-1', 'mu-1']);
+      });
+    });
+
+    it('submits allowed_models: ["*"] when "All" is unchecked and no model is selected', async () => {
+      const user = userEvent.setup();
+      let capturedBody: unknown = null;
+      server.use(
+        http.post('*/v4beta/inference/api-keys', async ({ request }) => {
+          capturedBody = await request.json();
+          return HttpResponse.json({
+            allowed_models: ['*'],
+            created: '2024-01-01T00:00:00Z',
+            description: '',
+            expiry: null,
+            id: 1,
+            key: 'linf_abc123',
+            key_prefix: 'linf_abc',
+            key_type: 'user',
+            label: 'Test Key',
+            last_used: null,
+            status: 'active',
+            updated: '2024-01-01T00:00:00Z',
+          });
+        })
+      );
+
+      const { container } = renderWithModels();
+
+      // Uncheck "All"
+      const all = getCheckbox(container, 'All')!;
+      act(() => {
+        all.dispatchEvent(
+          new CustomEvent('change', { bubbles: true, detail: false })
+        );
+      });
+
+      // Fill Name so we get past label validation
+      const labelInput = getCdsTextFieldByLabel(container, 'Name');
+      act(() => {
+        labelInput!.dispatchEvent(
+          new CustomEvent('change', { bubbles: true, detail: 'Test Key' })
+        );
+      });
+
+      const submit = getCdsButtonHostByText(document.body, 'Create API key');
+      await user.click(submit!);
+
+      await waitFor(() => {
+        expect(
+          (capturedBody as { allowed_models?: string[] })?.allowed_models
+        ).toEqual(['*']);
+      });
+    });
   });
 });

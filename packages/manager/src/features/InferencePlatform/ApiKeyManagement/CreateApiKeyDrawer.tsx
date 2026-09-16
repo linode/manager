@@ -1,5 +1,6 @@
 import {
   Button,
+  Checkbox,
   DateField,
   Drawer,
   FormError,
@@ -17,6 +18,8 @@ import { DateTime } from 'luxon';
 import React from 'react';
 
 import { SecretTokenDialog } from 'src/features/Profile/SecretTokenDialog/SecretTokenDialog';
+
+import { useInferencePlatform } from '../InferencePlatformContext';
 
 interface CreateApiKeyDrawerProps {
   onClose: () => void;
@@ -44,6 +47,16 @@ export const CreateApiKeyDrawer = ({
   onClose,
   open,
 }: CreateApiKeyDrawerProps) => {
+  const { models } = useInferencePlatform();
+  const sortedModels = React.useMemo(
+    () => [...models].sort((a, b) => a.id.localeCompare(b.id)),
+    [models]
+  );
+  const allModelIds = React.useMemo(
+    () => sortedModels.map((m) => m.id),
+    [sortedModels]
+  );
+
   const [label, setLabel] = React.useState('');
   const [description, setDescription] = React.useState('');
   const [expiry, setExpiry] = React.useState<ExpiryOption>('6months');
@@ -53,6 +66,16 @@ export const CreateApiKeyDrawer = ({
   const [validationError, setValidationError] = React.useState<null | string>(
     null
   );
+  // Default: all models allowed. When the user unchecks "All", they can
+  // pick a subset. Empty array while "All" is checked means "send ['*']".
+  const [allModelsAllowed, setAllModelsAllowed] = React.useState(true);
+  const [selectedModels, setSelectedModels] = React.useState<string[]>([]);
+
+  const toggleModel = (modelId: string, checked: boolean) => {
+    setSelectedModels((prev) =>
+      checked ? [...prev, modelId] : prev.filter((id) => id !== modelId)
+    );
+  };
 
   const {
     error: apiError,
@@ -67,6 +90,8 @@ export const CreateApiKeyDrawer = ({
     setExpiry('6months');
     setCustomExpiryDate(null);
     setValidationError(null);
+    setAllModelsAllowed(true);
+    setSelectedModels([]);
     reset();
     onClose();
   };
@@ -98,7 +123,13 @@ export const CreateApiKeyDrawer = ({
       return;
     }
 
+    // Treat an empty subset as "all models" — if the user unchecks "All"
+    // but selects nothing, save the key with wildcard access.
+    const allowedModels =
+      allModelsAllowed || selectedModels.length === 0 ? ['*'] : selectedModels;
+
     createApiKey({
+      allowed_models: allowedModels,
       description,
       expiry: getExpiryDate(expiry, customExpiryDate),
       key_type: 'user',
@@ -220,6 +251,45 @@ export const CreateApiKeyDrawer = ({
                 </FormField>
               </Box>
             )}
+          </Box>
+
+          <Box sx={{ mb: 2, mt: 2 }}>
+            <Typography
+              sx={{ fontFamily: 'LatoWebBold, sans-serif', mb: 1 }}
+              variant="body1"
+            >
+              Allowed models
+            </Typography>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+              <Checkbox
+                checked={allModelsAllowed}
+                disabled={allModelIds.length === 0}
+                indeterminate={
+                  !allModelsAllowed &&
+                  selectedModels.length > 0 &&
+                  selectedModels.length < allModelIds.length
+                }
+                onChange={(e) => {
+                  const checked = Boolean(e.detail);
+                  setAllModelsAllowed(checked);
+                  if (checked) {
+                    setSelectedModels([]);
+                  }
+                }}
+              >
+                All
+              </Checkbox>
+              {!allModelsAllowed &&
+                sortedModels.map((model) => (
+                  <Checkbox
+                    checked={selectedModels.includes(model.id)}
+                    key={model.id}
+                    onChange={(e) => toggleModel(model.id, Boolean(e.detail))}
+                  >
+                    {model.id}
+                  </Checkbox>
+                ))}
+            </Box>
           </Box>
 
           <Box
