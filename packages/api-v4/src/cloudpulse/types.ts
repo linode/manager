@@ -480,10 +480,10 @@ interface EmailDetail {
  * secrets (password, private key) that are never returned by the API.
  */
 export interface WebhookAuthenticationPayload {
-  details?: null | {
+  details?: null | Partial<{
     basic_authentication_password: string;
     basic_authentication_user: string;
-  };
+  }>;
   type?: WebhookAuthenticationType;
 }
 
@@ -496,7 +496,7 @@ export interface WebhookClientCertificateDetailsPayload {
 
 export interface WebhookDetailPayload {
   authentication?: WebhookAuthenticationPayload;
-  client_certificate_details?: null | WebhookClientCertificateDetailsPayload;
+  client_certificate_details?: null | Partial<WebhookClientCertificateDetailsPayload>;
   custom_headers?: WebhookCustomHeader[];
   data_compression?: WebhookDataCompressionType;
   endpoint_url: string;

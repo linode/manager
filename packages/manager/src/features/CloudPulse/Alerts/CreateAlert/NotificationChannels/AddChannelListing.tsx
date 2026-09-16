@@ -7,7 +7,7 @@ import type { FieldPathByValue } from 'react-hook-form';
 import { useFlags } from 'src/hooks/useFlags';
 import { useAllAlertNotificationChannelsQuery } from 'src/queries/cloudpulse/alerts';
 
-import { channelTypeOptions, MULTILINE_ERROR_SEPARATOR } from '../../constants';
+import { MULTILINE_ERROR_SEPARATOR } from '../../constants';
 import { AlertListNoticeMessages } from '../../Utils/AlertListNoticeMessages';
 import { getAlertBoxStyles } from '../../Utils/utils';
 import { ClearIconButton } from '../Criteria/ClearIconButton';
@@ -140,26 +140,7 @@ export const AddChannelListing = (props: AddChannelListingProps) => {
             </Typography>
             <ClearIconButton handleClick={() => handleRemove(id)} />
           </Stack>
-          <Stack alignItems="baseline" direction="row">
-            <Typography data-qa-type variant="h3" width={100}>
-              Type:
-            </Typography>
-            <Typography data-qa-channel-type variant="subtitle2">
-              {
-                channelTypeOptions.find(
-                  (option) => option.value === notification?.channel_type
-                )?.label
-              }
-            </Typography>
-          </Stack>
-          <Stack alignItems="baseline" direction="row">
-            <Typography data-qa-to variant="h3" width={100}>
-              To:
-            </Typography>
-            <Typography data-qa-channel-details variant="subtitle2">
-              {notification && <RenderChannelDetails template={notification} />}
-            </Typography>
-          </Stack>
+          <RenderChannelDetails template={notification} />
         </Box>
       );
     },

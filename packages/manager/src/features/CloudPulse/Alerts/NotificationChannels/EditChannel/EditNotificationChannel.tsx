@@ -1,5 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { ActionsPanel, Paper, TextField, Typography } from '@linode/ui';
+import { scrollErrorIntoViewV2 } from '@linode/utilities';
 import { useNavigate } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import React from 'react';
@@ -14,10 +15,14 @@ import {
   UPDATE_CHANNEL_SUCCESS_MESSAGE,
 } from '../../constants';
 import { NotificationChannelTypeSelect } from '../CreateChannel/NotificationChannelTypeSelect';
+import { NotificationChannelWebhook } from '../CreateChannel/NotificationChannelWebhook';
 import { NotificationRecipients } from '../CreateChannel/NotificationRecipients';
 import { createNotificationChannelSchema } from '../CreateChannel/schemas';
-import { defaultWebhookFormValues } from '../CreateChannel/types';
-import { filterEditChannelFormValues } from './utilities';
+import { normalizeFieldPath } from '../CreateChannel/utilities';
+import {
+  filterEditChannelFormValues,
+  getEditChannelFormValues,
+} from './utilities';
 
 import type { CreateNotificationChannelForm } from '../CreateChannel/types';
 import type { NotificationChannel } from '@linode/api-v4';
@@ -51,23 +56,14 @@ export const EditNotificationChannel = (
   const { channelData, channelId } = props;
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
+  const formRef = React.useRef<HTMLFormElement>(null);
+  const [isWebhookConnectionVerified, setIsWebhookConnectionVerified] =
+    React.useState(false);
 
   const { mutateAsync: updateChannel } = useUpdateNotificationChannel();
 
   const formMethods = useForm<CreateNotificationChannelForm>({
-    defaultValues: {
-      label: channelData.label,
-      channel_type: channelData.channel_type,
-      details: {
-        email: {
-          usernames:
-            channelData.channel_type === 'email'
-              ? (channelData.details?.email.usernames ?? [])
-              : [],
-        },
-        webhook: defaultWebhookFormValues,
-      },
-    },
+    defaultValues: getEditChannelFormValues(channelData),
     mode: 'onBlur',
     resolver: yupResolver(createNotificationChannelSchema),
   });
@@ -85,17 +81,27 @@ export const EditNotificationChannel = (
         variant: 'success',
       });
       navigate({ to: CHANNEL_LANDING });
-    } catch (errors) {
-      for (const error of errors) {
-        if (error.field) {
-          formMethods.setError(error.field, {
-            message: error.reason ?? UPDATE_CHANNEL_FAILED_MESSAGE,
-          });
+    } catch (apiErrors) {
+      let hasFieldError = false;
+
+      for (const apiError of apiErrors) {
+        if (apiError.field) {
+          hasFieldError = true;
+          formMethods.setError(
+            normalizeFieldPath<CreateNotificationChannelForm>(apiError.field),
+            {
+              message: apiError.reason ?? UPDATE_CHANNEL_FAILED_MESSAGE,
+            }
+          );
         } else {
-          enqueueSnackbar(error.reason ?? UPDATE_CHANNEL_FAILED_MESSAGE, {
+          enqueueSnackbar(apiError.reason ?? UPDATE_CHANNEL_FAILED_MESSAGE, {
             variant: 'error',
           });
         }
+      }
+
+      if (hasFieldError) {
+        scrollErrorIntoViewV2(formRef);
       }
     }
   });
@@ -105,14 +111,17 @@ export const EditNotificationChannel = (
   };
 
   return (
-    <Paper sx={{ paddingLeft: 1, paddingRight: 1, paddingTop: 2 }}>
+    <Paper
+      data-pendo-id="monitor-alerts-notification-channels-edit-page"
+      sx={{ paddingLeft: 1, paddingRight: 1, paddingTop: 2 }}
+    >
       <Breadcrumb
         breadcrumbDataAttrs={{ 'data-testid': true }}
         crumbOverrides={overrides}
         pathname={pathname}
       />
       <FormProvider {...formMethods}>
-        <form onSubmit={onSubmit}>
+        <form onSubmit={onSubmit} ref={formRef}>
           <Typography marginTop={2} variant="h2">
             Channel Settings
           </Typography>
@@ -143,22 +152,36 @@ export const EditNotificationChannel = (
               />
             )}
           />
-          <Controller
-            control={control}
-            name="details.email.usernames"
-            render={({ field, fieldState }) => (
-              <NotificationRecipients
-                error={fieldState.error?.message}
-                onBlur={field.onBlur}
-                onChange={field.onChange}
-                onError={handleRecipientsError}
-                value={field.value ?? []}
-              />
-            )}
-          />
+          {channelData.channel_type === 'email' && (
+            <Controller
+              control={control}
+              name="details.email.usernames"
+              render={({ field, fieldState }) => (
+                <NotificationRecipients
+                  error={fieldState.error?.message}
+                  onBlur={field.onBlur}
+                  onChange={field.onChange}
+                  onError={handleRecipientsError}
+                  value={field.value ?? []}
+                />
+              )}
+            />
+          )}
+          {channelData.channel_type === 'webhook' && (
+            <NotificationChannelWebhook
+              action="editing"
+              formRef={formRef}
+              isConnectionVerified={isWebhookConnectionVerified}
+              name="details.webhook"
+              onConnectionVerificationChange={setIsWebhookConnectionVerified}
+            />
+          )}
 
           <ActionsPanel
             primaryButtonProps={{
+              disabled:
+                channelData.channel_type === 'webhook' &&
+                !isWebhookConnectionVerified,
               'data-testid': 'save-edit-channel',
               'data-pendo-id':
                 'monitor-alerts-notification-channels-edit-Submit',

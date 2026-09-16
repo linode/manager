@@ -1,5 +1,5 @@
 import { useAllAccountUsersQuery } from '@linode/queries';
-import { CircleProgress, Typography } from '@linode/ui';
+import { CircleProgress, Stack, Typography } from '@linode/ui';
 import GridLegacy from '@mui/material/GridLegacy';
 import React from 'react';
 
@@ -13,6 +13,8 @@ interface NotificationChannelRecipientsProps {
    */
   channelDetails: NotificationChannel;
 }
+
+const MASKED_SECRET = '*****************';
 
 export const NotificationChannelRecipients = React.memo(
   (props: NotificationChannelRecipientsProps) => {
@@ -28,7 +30,90 @@ export const NotificationChannelRecipients = React.memo(
       '+order_by': 'username',
     });
 
-    // Only email channels have recipient details
+    if (channelDetails.channel_type === 'webhook') {
+      const webhook = channelDetails.details.webhook;
+      const certificate = webhook.client_certificate_details;
+      const isBasicAuthentication = webhook.authentication.type === 'basic';
+
+      return (
+        <>
+          <Typography marginBottom={1} variant="h2">
+            Details
+          </Typography>
+          <Stack spacing={1}>
+            <DisplayAlertDetailChips
+              label="Endpoint URL"
+              values={[webhook.endpoint_url]}
+            />
+            <DisplayAlertDetailChips
+              label="Compressed Data"
+              values={[webhook.data_compression === 'gzip' ? 'Yes' : 'No']}
+            />
+            <DisplayAlertDetailChips
+              label="Authentication"
+              values={[isBasicAuthentication ? 'Basic' : 'None']}
+            />
+            {isBasicAuthentication && (
+              <>
+                <DisplayAlertDetailChips
+                  label="Username"
+                  values={[MASKED_SECRET]}
+                />
+                <DisplayAlertDetailChips
+                  label="Password"
+                  values={[MASKED_SECRET]}
+                />
+              </>
+            )}
+            {certificate && (
+              <>
+                <Typography paddingTop={1} variant="h2">
+                  Client Certificate Authentication
+                </Typography>
+                {certificate.tls_hostname && (
+                  <DisplayAlertDetailChips
+                    copyable
+                    label="TLS Hostname"
+                    values={[certificate.tls_hostname]}
+                  />
+                )}
+                <DisplayAlertDetailChips
+                  copyable
+                  label="CA Certificate"
+                  truncate
+                  values={[certificate.client_ca_certificate]}
+                />
+                <DisplayAlertDetailChips
+                  copyable
+                  label="Client Certificate"
+                  truncate
+                  values={[certificate.client_certificate]}
+                />
+                <DisplayAlertDetailChips
+                  label="Client Private Key"
+                  values={[MASKED_SECRET]}
+                />
+              </>
+            )}
+            {webhook.custom_headers.length > 0 && (
+              <>
+                <Typography paddingTop={1} variant="h2">
+                  HTTPS Headers
+                </Typography>
+                {webhook.custom_headers.map((header, index) => (
+                  <DisplayAlertDetailChips
+                    key={`${header.name}-${index}`}
+                    label={`Custom Header ${index + 1}`}
+                    values={[header.name]}
+                  />
+                ))}
+              </>
+            )}
+          </Stack>
+        </>
+      );
+    }
+
     if (!isEmailChannel) {
       return null;
     }

@@ -271,7 +271,7 @@ export const getChipLabels = (
     };
   } else {
     return {
-      label: 'Webhook URL',
+      label: 'Endpoint URL',
       values: [value.details.webhook.endpoint_url ?? ''],
     };
   }

@@ -29,7 +29,17 @@ export const NotificationChannelDetail = () => {
 
   const theme = useTheme();
   const nonSuccessBoxHeight = '600px';
-  const sectionMaxHeight = '290px';
+  const webhookDetails =
+    channelDetails?.channel_type === 'webhook'
+      ? channelDetails.details.webhook
+      : undefined;
+  const hasExtendedWebhookDetails = Boolean(
+    webhookDetails &&
+      (webhookDetails.authentication.type === 'basic' ||
+        webhookDetails.client_certificate_details ||
+        webhookDetails.custom_headers.length > 0)
+  );
+  const sectionHeight = hasExtendedWebhookDetails ? '507px' : '286px';
 
   const overrides: CrumbOverridesProps[] = [
     {
@@ -113,8 +123,8 @@ export const NotificationChannelDetail = () => {
             <Box
               data-qa-section="Overview"
               flexBasis="50%"
-              maxHeight={sectionMaxHeight}
-              sx={{ ...getAlertBoxStyles(theme), overflow: 'auto' }}
+              height={sectionHeight}
+              sx={{ ...getAlertBoxStyles(theme), overflow: 'hidden' }}
             >
               <NotificationChannelDetailOverview
                 channelDetails={channelDetails}
@@ -123,7 +133,7 @@ export const NotificationChannelDetail = () => {
             <Box
               data-qa-section="Details"
               flexBasis="50%"
-              maxHeight={sectionMaxHeight}
+              height={sectionHeight}
               sx={{
                 ...getAlertBoxStyles(theme),
                 scrollbarWidth: 'thin',

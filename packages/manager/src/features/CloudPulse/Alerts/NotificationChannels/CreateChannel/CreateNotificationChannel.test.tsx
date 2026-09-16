@@ -250,6 +250,36 @@ describe('CreateNotificationChannel', () => {
 
       expect(await screen.findByText('There is an error')).toBeVisible();
     });
+
+    it('should show and scroll to a field-specific API error', async () => {
+      queryMocks.mutateAsync.mockRejectedValue([
+        { field: 'label', reason: 'Name already exists' },
+      ]);
+
+      const user = userEvent.setup();
+
+      renderWithTheme(<CreateNotificationChannel />);
+
+      await selectChannelType(user, EMAIL_OPTION_LABEL);
+      await user.type(screen.getByLabelText(NAME_LABEL), CHANNEL_NAME_VALUE);
+
+      const recipientsSelect = screen.getByTestId('recipients-select');
+      await user.click(
+        within(recipientsSelect).getByRole('button', {
+          name: OPEN_BUTTON_LABEL,
+        })
+      );
+      await user.click(
+        screen.getByRole('option', { name: 'testuser1 (testuser1@mail.com)' })
+      );
+
+      await user.click(screen.getByRole('button', { name: 'Submit' }));
+
+      expect(await screen.findByText('Name already exists')).toBeVisible();
+      await waitFor(() => {
+        expect(Element.prototype.scrollIntoView).toHaveBeenCalled();
+      });
+    });
   });
 
   describe('Webhook integration', () => {

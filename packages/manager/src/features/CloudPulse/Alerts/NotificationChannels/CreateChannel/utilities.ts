@@ -1,4 +1,4 @@
-import type { FieldPath, FieldPathByValue } from 'react-hook-form';
+import type { FieldPath, FieldValues } from 'react-hook-form';
 
 import type { CreateNotificationChannelForm, WebhookFormValues } from './types';
 import type {
@@ -124,31 +124,9 @@ export const buildVerifyWebhookPayload = (
   webhook: buildWebhookDetailPayload(webhook),
 });
 
-/**
- * Maps a raw API `error.field` string (API `webhook.*` naming, e.g.
- * `webhook.endpoint_url` or `webhook.custom_headers[0].name`) to a typed
- * react-hook-form path relative to the rendered webhook `name` (e.g.
- * `details.webhook.custom_headers.0.name`).
- *
- * Returns `undefined` for fields that are not webhook-scoped so the caller
- * can fall back to a general error.
- */
-export const resolveWebhookErrorField = (
-  field: string,
-  name: FieldPathByValue<CreateNotificationChannelForm, WebhookFormValues>
-): FieldPath<CreateNotificationChannelForm> | undefined => {
-  if (!field.startsWith('webhook.')) {
-    return undefined;
-  }
-
-  if (field.startsWith('webhook.custom_headers[')) {
-    const index = Number(field.split('[')[1].split(']')[0]);
-    const leaf = field.endsWith('.value') ? 'value' : 'name';
-    return `${name}.custom_headers.${index}.${leaf}`;
-  }
-
-  return `${name}.${field.slice('webhook.'.length)}` as FieldPath<CreateNotificationChannelForm>;
-};
+export const normalizeFieldPath = <T extends FieldValues>(
+  field: string
+): FieldPath<T> => field.replace(/\[(\d+)\]/g, '.$1') as FieldPath<T>;
 
 export const filterCreateChannelFormValues = (
   formValues: CreateNotificationChannelForm

@@ -20,7 +20,7 @@ import { NotificationChannelWebhook } from './NotificationChannelWebhook';
 import { NotificationRecipients } from './NotificationRecipients';
 import { createNotificationChannelSchema } from './schemas';
 import { defaultWebhookFormValues } from './types';
-import { filterCreateChannelFormValues } from './utilities';
+import { filterCreateChannelFormValues, normalizeFieldPath } from './utilities';
 
 import type { CreateNotificationChannelForm } from './types';
 import type { ChannelType } from '@linode/api-v4';
@@ -87,16 +87,26 @@ export const CreateNotificationChannel = () => {
         });
         createChannelExit();
       } catch (errors) {
+        let hasFieldError = false;
+
         for (const error of errors) {
           if (error.field) {
-            setError(error.field, {
-              message: error.reason ?? CREATE_CHANNEL_FAILED_MESSAGE,
-            });
+            hasFieldError = true;
+            setError(
+              normalizeFieldPath<CreateNotificationChannelForm>(error.field),
+              {
+                message: error.reason ?? CREATE_CHANNEL_FAILED_MESSAGE,
+              }
+            );
           } else {
             enqueueSnackbar(error.reason ?? CREATE_CHANNEL_FAILED_MESSAGE, {
               variant: 'error',
             });
           }
+        }
+
+        if (hasFieldError) {
+          scrollErrorIntoViewV2(formRef);
         }
       }
     },
@@ -107,7 +117,10 @@ export const CreateNotificationChannel = () => {
     channelTypeWatcher === 'webhook' && !isWebhookConnectionVerified;
 
   return (
-    <Paper sx={{ paddingLeft: 1, paddingRight: 1, paddingTop: 2 }}>
+    <Paper
+      data-pendo-id="monitor-alerts-notification-channels-create-page"
+      sx={{ paddingLeft: 1, paddingRight: 1, paddingTop: 2 }}
+    >
       <Breadcrumb
         breadcrumbDataAttrs={{
           'data-qa-breadcrumb': true,

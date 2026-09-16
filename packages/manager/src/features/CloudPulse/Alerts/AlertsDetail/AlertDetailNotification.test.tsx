@@ -79,4 +79,30 @@ describe('AlertDetailNotification component tests', () => {
     expect(getByText(notificationChannel)).toBeInTheDocument();
     expect(getByText(noDataText)).toBeInTheDocument();
   });
+
+  it('should render webhook header names without values', () => {
+    const webhookChannel = notificationChannelFactory.build({
+      channel_type: 'webhook',
+      details: {
+        webhook: {
+          authentication: { type: 'none' },
+          custom_headers: [{ name: 'X-API-Key', value: 'secret value' }],
+          data_compression: 'none',
+          endpoint_url: 'https://example.com/webhook',
+        },
+      },
+    });
+    queryMocks.useAllAlertNotificationChannelsQuery.mockReturnValue({
+      data: [webhookChannel],
+      isError: false,
+      isFetching: false,
+    });
+
+    const { getByText, queryByText } = renderWithTheme(
+      <AlertDetailNotification channelIds={[webhookChannel.id]} />
+    );
+
+    expect(getByText('X-API-Key')).toBeVisible();
+    expect(queryByText('secret value')).not.toBeInTheDocument();
+  });
 });

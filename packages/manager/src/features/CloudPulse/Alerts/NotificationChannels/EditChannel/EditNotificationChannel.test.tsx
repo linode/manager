@@ -8,17 +8,26 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { UPDATE_CHANNEL_SUCCESS_MESSAGE } from '../../constants';
 import { EditNotificationChannel } from './EditNotificationChannel';
 
+import type { NotificationChannel } from '@linode/api-v4';
+
+Element.prototype.scrollIntoView = vi.fn();
+
 const navigate = vi.fn();
 const queryMocks = vi.hoisted(() => ({
   mutateAsync: vi.fn(),
   useNavigate: vi.fn(() => navigate),
   useUpdateNotificationChannel: vi.fn(),
   useAllAccountUsersQuery: vi.fn(),
+  verifyMutateAsync: vi.fn(),
 }));
 
 vi.mock('src/queries/cloudpulse/alerts', () => ({
   ...vi.importActual('src/queries/cloudpulse/alerts'),
   useUpdateNotificationChannel: queryMocks.useUpdateNotificationChannel,
+  useVerifyNotificationChannel: vi.fn(() => ({
+    isPending: false,
+    mutateAsync: queryMocks.verifyMutateAsync,
+  })),
 }));
 
 vi.mock('@linode/queries', async () => {
@@ -56,7 +65,14 @@ vi.mock('@linode/queries', async () => {
 });
 
 beforeEach(() => {
+  vi.mocked(Element.prototype.scrollIntoView).mockClear();
+  queryMocks.mutateAsync.mockClear();
+  queryMocks.verifyMutateAsync.mockClear();
+  navigate.mockClear();
   queryMocks.mutateAsync.mockResolvedValue({});
+  queryMocks.verifyMutateAsync.mockResolvedValue({
+    webhook: { http_status: 200, response: 'OK' },
+  });
   queryMocks.useUpdateNotificationChannel.mockReturnValue({
     mutateAsync: queryMocks.mutateAsync,
     reset: vi.fn(),
@@ -83,6 +99,24 @@ const channelData = notificationChannelFactory.build({
   id: 1,
   label: LABEL,
 });
+
+const webhookChannelData: NotificationChannel = {
+  ...channelData,
+  channel_type: 'webhook',
+  details: {
+    webhook: {
+      authentication: { type: 'basic' },
+      client_certificate_details: {
+        tls_hostname: 'webhook.example.com',
+        client_ca_certificate: 'CA certificate',
+        client_certificate: 'Client certificate',
+      },
+      custom_headers: [{ name: 'X-API-Key', value: 'header value' }],
+      data_compression: 'gzip',
+      endpoint_url: 'https://example.com/webhook',
+    },
+  },
+};
 
 describe('EditNotificationChannel component', () => {
   it('should render the breadcrumb, form components, and initial values', async () => {
@@ -122,6 +156,76 @@ describe('EditNotificationChannel component', () => {
       screen.getByTestId('channel-name')
     ).getByTestId('textfield-input');
     expect(textfieldInput).toHaveAttribute('value', UPDATED_CHANNEL_NAME);
+  });
+
+  it('should populate returned webhook fields and leave secrets empty', () => {
+    renderWithTheme(
+      <EditNotificationChannel channelData={webhookChannelData} channelId={1} />
+    );
+
+    expect(screen.getByLabelText('Endpoint URL')).toHaveValue(
+      'https://example.com/webhook'
+    );
+    expect(screen.getByLabelText('Username')).toHaveValue('');
+    expect(screen.getByLabelText('Password')).toHaveValue('');
+    expect(screen.getByLabelText('TLS Hostname')).toHaveValue(
+      'webhook.example.com'
+    );
+    expect(screen.getByLabelText('CA Certificate')).toHaveValue(
+      'CA certificate'
+    );
+    expect(screen.getByLabelText('Client Certificate')).toHaveValue(
+      'Client certificate'
+    );
+    expect(screen.getByLabelText('Client Private Key')).toHaveValue('');
+  });
+
+  it('should require verification and submit webhook values', async () => {
+    const user = userEvent.setup();
+    const channelWithoutWriteOnlyFields: NotificationChannel = {
+      ...webhookChannelData,
+      details: {
+        webhook: {
+          ...webhookChannelData.details.webhook,
+          authentication: { type: 'none' },
+          client_certificate_details: undefined,
+        },
+      },
+    };
+
+    renderWithTheme(
+      <EditNotificationChannel
+        channelData={channelWithoutWriteOnlyFields}
+        channelId={1}
+      />
+    );
+
+    const saveButton = screen.getByRole('button', { name: 'Save' });
+    const testConnectionButton = screen.getByRole('button', {
+      name: 'Test Connection',
+    });
+
+    expect(saveButton).toBeDisabled();
+    await user.click(testConnectionButton);
+
+    await waitFor(() => expect(saveButton).toBeEnabled());
+    await user.click(saveButton);
+
+    await waitFor(() => {
+      expect(queryMocks.mutateAsync).toHaveBeenCalledWith({
+        channelId: 1,
+        label: LABEL,
+        details: {
+          webhook: {
+            authentication: { type: 'none', details: null },
+            client_certificate_details: {},
+            custom_headers: [{ name: 'X-API-Key', value: 'header value' }],
+            data_compression: 'gzip',
+            endpoint_url: 'https://example.com/webhook',
+          },
+        },
+      });
+    });
   });
 
   it('should display validation error for name field with special characters', async () => {
@@ -235,5 +339,8 @@ describe('EditNotificationChannel component', () => {
     // Submit the form
     await user.click(screen.getByRole('button', { name: 'Save' }));
     expect(screen.getByText('Name already exists')).toBeVisible();
+    await waitFor(() => {
+      expect(Element.prototype.scrollIntoView).toHaveBeenCalled();
+    });
   });
 });

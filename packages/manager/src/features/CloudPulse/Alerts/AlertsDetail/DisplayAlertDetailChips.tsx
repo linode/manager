@@ -1,10 +1,13 @@
-import { GridLegacy, useTheme } from '@mui/material';
+import { Box, GridLegacy, useTheme } from '@mui/material';
 import React from 'react';
+
+import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 
 import { getAlertChipBorderRadius } from '../Utils/utils';
 import { StyledAlertChip, StyledAlertTypography } from './AlertDetail';
 
 export interface AlertDimensionsProp {
+  copyable?: boolean;
   /**
    * The label or title of the chips
    */
@@ -19,6 +22,7 @@ export interface AlertDimensionsProp {
    * or merged into a single row
    */
   mergeChips?: boolean;
+  truncate?: boolean;
   /**
    * Number of grid columns for the value on medium to larger screens.
    * Defaults to 8. This controls the width of the value in the grid layout.
@@ -35,9 +39,11 @@ export interface AlertDimensionsProp {
 export const DisplayAlertDetailChips = React.memo(
   (props: AlertDimensionsProp) => {
     const {
+      copyable,
       label,
       labelGridColumns = 4,
       mergeChips,
+      truncate,
       valueGridColumns = 8,
       values: values,
     } = props;
@@ -71,21 +77,43 @@ export const DisplayAlertDetailChips = React.memo(
                   <GridLegacy
                     item
                     key={index}
-                    sx={{
-                      marginLeft: mergeChips && index > 0 ? -1 : 0,
-                    }}
+                    sx={truncate ? { minWidth: 0, width: '100%' } : undefined}
                   >
-                    <StyledAlertChip
-                      borderRadius={getAlertChipBorderRadius({
-                        borderRadiusPxValue: theme.spacing(0.3),
-                        index,
-                        length: value.length,
-                        mergeChips,
-                      })}
-                      data-qa-chip={label}
-                      label={label}
-                      variant="outlined"
-                    />
+                    <Box
+                      alignItems="center"
+                      display="flex"
+                      gap={copyable ? 1 : 0}
+                      marginLeft={mergeChips && index > 0 ? -1 : 0}
+                      minWidth={0}
+                      width={truncate ? '100%' : undefined}
+                    >
+                      <StyledAlertChip
+                        borderRadius={getAlertChipBorderRadius({
+                          borderRadiusPxValue: theme.spacing(0.3),
+                          index,
+                          length: value.length,
+                          mergeChips,
+                        })}
+                        data-qa-chip={label}
+                        label={label}
+                        sx={{
+                          flex: truncate ? 1 : undefined,
+                          height: '16px',
+                          minWidth: 0,
+                          ...(truncate && {
+                            overflow: 'hidden',
+                            '& .MuiChip-label': {
+                              display: 'block',
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                              whiteSpace: 'nowrap',
+                            },
+                          }),
+                        }}
+                        variant="outlined"
+                      />
+                      {copyable && <CopyTooltip text={label} />}
+                    </Box>
                   </GridLegacy>
                 ))}
               </GridLegacy>

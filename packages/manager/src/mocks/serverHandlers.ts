@@ -170,6 +170,7 @@ import type {
   Dashboard,
   Database,
   FirewallStatus,
+  NotificationChannel,
   NotificationType,
   ObjectStorageEndpointTypes,
   SecurityQuestionsPayload,
@@ -194,6 +195,140 @@ export const makeResourcePage = <T>(
   pages: override.pages ?? 1,
   results: override.results ?? e.length,
 });
+
+const webhookNotificationChannels: NotificationChannel[] = [
+  {
+    alerts: {
+      alert_count: 0,
+      type: 'alerts-definitions',
+      url: 'monitor/alert-channels/101/alerts',
+    },
+    channel_type: 'webhook',
+    created: '2026-08-01T10:00:00',
+    created_by: 'dev_user',
+    details: {
+      webhook: {
+        authentication: { type: 'none' },
+        custom_headers: [],
+        data_compression: 'gzip',
+        endpoint_url: 'https://hooks.example.com/alerts',
+      },
+    },
+    id: 101,
+    label: 'Webhook No Authentication',
+    status: 'Enabled',
+    type: 'user',
+    updated: '2026-08-01T10:00:00',
+    updated_by: 'dev_user',
+  },
+  {
+    alerts: {
+      alert_count: 2,
+      type: 'alerts-definitions',
+      url: 'monitor/alert-channels/102/alerts',
+    },
+    channel_type: 'webhook',
+    created: '2026-08-02T10:00:00',
+    created_by: 'dev_user',
+    details: {
+      webhook: {
+        authentication: { type: 'basic' },
+        custom_headers: [{ name: 'X-API-Key', value: 'mock-api-key-value' }],
+        data_compression: 'none',
+        endpoint_url: 'https://alerts.example.com/webhook',
+      },
+    },
+    id: 102,
+    label: 'Webhook Basic Authentication',
+    status: 'Enabled',
+    type: 'user',
+    updated: '2026-08-03T10:00:00',
+    updated_by: 'admin_user',
+  },
+  {
+    alerts: {
+      alert_count: 1,
+      type: 'alerts-definitions',
+      url: 'monitor/alert-channels/103/alerts',
+    },
+    channel_type: 'webhook',
+    created: '2026-08-04T10:00:00',
+    created_by: 'ops_user',
+    details: {
+      webhook: {
+        authentication: { type: 'none' },
+        custom_headers: [{ name: 'X-API-Key', value: 'mock-api-key-value' }],
+        data_compression: 'gzip',
+        endpoint_url: 'https://events.example.com/alert-receiver',
+      },
+    },
+    id: 103,
+    label: 'Webhook One Header',
+    status: 'Enabled',
+    type: 'user',
+    updated: '2026-08-04T10:00:00',
+    updated_by: 'ops_user',
+  },
+  {
+    alerts: {
+      alert_count: 3,
+      type: 'alerts-definitions',
+      url: 'monitor/alert-channels/104/alerts',
+    },
+    channel_type: 'webhook',
+    created: '2026-08-05T10:00:00',
+    created_by: 'alerts_user',
+    details: {
+      webhook: {
+        authentication: { type: 'none' },
+        custom_headers: [
+          { name: 'X-API-Key', value: 'mock-api-key-value' },
+          { name: 'X-Environment', value: 'development' },
+          { name: 'X-Alert-Source', value: 'cloudpulse' },
+        ],
+        data_compression: 'gzip',
+        endpoint_url: 'https://integrations.example.com/cloudpulse',
+      },
+    },
+    id: 104,
+    label: 'Webhook Multiple Headers',
+    status: 'Enabled',
+    type: 'user',
+    updated: '2026-08-06T10:00:00',
+    updated_by: 'alerts_user',
+  },
+  {
+    alerts: {
+      alert_count: 5,
+      type: 'alerts-definitions',
+      url: 'monitor/alert-channels/105/alerts',
+    },
+    channel_type: 'webhook',
+    created: '2026-08-07T10:00:00',
+    created_by: 'security_user',
+    details: {
+      webhook: {
+        authentication: { type: 'basic' },
+        client_certificate_details: {
+          tls_hostname: 'secure-hooks.example.com',
+          client_ca_certificate:
+            '-----BEGIN CERTIFICATE-----\nMock CA certificate\n-----END CERTIFICATE-----',
+          client_certificate:
+            '-----BEGIN CERTIFICATE-----\nMock client certificate\n-----END CERTIFICATE-----',
+        },
+        custom_headers: [{ name: 'X-Integration', value: 'cloudpulse' }],
+        data_compression: 'gzip',
+        endpoint_url: 'https://secure-hooks.example.com/alerts',
+      },
+    },
+    id: 105,
+    label: 'Webhook Basic Authentication mTLS',
+    status: 'Enabled',
+    type: 'user',
+    updated: '2026-08-08T10:00:00',
+    updated_by: 'security_user',
+  },
+];
 
 const makeMockDatabase = (params: PathParams): Database => {
   const db: Record<string, boolean | number | string | undefined> = {
@@ -4010,6 +4145,7 @@ export const handlers = [
         type: 'system',
       })
     );
+    notificationChannels.push(...webhookNotificationChannels);
     notificationChannels.push(...notificationChannelFactory.buildList(3));
     return HttpResponse.json(makeResourcePage(notificationChannels));
   }),
@@ -4069,6 +4205,12 @@ export const handlers = [
           },
         })
       );
+    }
+    const webhookChannel = webhookNotificationChannels.find(
+      ({ id }) => String(id) === params.id
+    );
+    if (webhookChannel) {
+      return HttpResponse.json(webhookChannel);
     }
     return HttpResponse.json(
       notificationChannelFactory.build({

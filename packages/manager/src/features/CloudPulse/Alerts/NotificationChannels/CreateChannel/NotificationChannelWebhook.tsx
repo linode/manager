@@ -1,5 +1,4 @@
 import { Font } from '@akamai/cds-tokens';
-import { getAPIErrorOrDefault } from '@akamai/compute-ui-core/api';
 import {
   ActionsPanel,
   Autocomplete,
@@ -27,23 +26,21 @@ import {
   WEBHOOK_VERIFY_SUCCESS_MESSAGE,
 } from './constants';
 import { NotificationChannelWebhookCustomHeaders } from './NotificationChannelWebhookCustomHeaders';
-import {
-  buildVerifyWebhookPayload,
-  resolveWebhookErrorField,
-} from './utilities';
+import { buildVerifyWebhookPayload, normalizeFieldPath } from './utilities';
 
 import type { Item } from '../../constants';
 import type { CreateNotificationChannelForm, WebhookFormValues } from './types';
-import type { APIError, WebhookAuthenticationType } from '@linode/api-v4';
+import type { WebhookAuthenticationType } from '@linode/api-v4';
 
 const authenticationTypeOptions: Item<string, WebhookAuthenticationType>[] = [
   { label: 'None', value: 'none' },
   { label: 'Basic', value: 'basic' },
 ];
 
-const PENDO_ID_PREFIX = 'monitor-alerts-notification-channels-create-webhook';
+const PENDO_ID_PREFIX = 'monitor-alerts-notification-channels-webhook';
 
 export interface NotificationChannelWebhookProps {
+  action?: 'creating' | 'editing';
   /**
    * Form reference for the scrolling errors into view
    */
@@ -69,6 +66,7 @@ export const NotificationChannelWebhook = (
   props: NotificationChannelWebhookProps
 ) => {
   const {
+    action = 'creating',
     formRef,
     isConnectionVerified,
     name,
@@ -130,39 +128,29 @@ export const NotificationChannelWebhook = (
           : WEBHOOK_VERIFY_FAILURE_MESSAGE,
         { variant: isSuccessfulConnection ? 'success' : 'error' }
       );
-    } catch (error) {
+    } catch (apiErrors) {
       onConnectionVerificationChange(false);
 
-      const apiErrors = getAPIErrorOrDefault(
-        error,
-        WEBHOOK_VERIFY_FAILURE_MESSAGE
-      );
-
-      const fieldErrors: APIError[] = [];
-      const generalErrors: APIError[] = [];
+      let hasFieldError = false;
 
       for (const apiError of apiErrors) {
-        const fieldName = apiError.field
-          ? resolveWebhookErrorField(apiError.field, name)
-          : undefined;
-
-        if (!fieldName) {
-          generalErrors.push(apiError);
-          continue;
+        if (apiError.field?.startsWith('webhook.')) {
+          hasFieldError = true;
+          setError(
+            normalizeFieldPath<CreateNotificationChannelForm>(
+              `details.${apiError.field}`
+            ),
+            { message: apiError.reason ?? WEBHOOK_VERIFY_FAILURE_MESSAGE }
+          );
+        } else {
+          enqueueSnackbar(apiError.reason ?? WEBHOOK_VERIFY_FAILURE_MESSAGE, {
+            variant: 'error',
+          });
         }
-
-        fieldErrors.push(apiError);
-        setError(fieldName, { message: apiError.reason });
       }
 
-      if (fieldErrors.length > 0) {
+      if (hasFieldError) {
         scrollErrorIntoViewV2(formRef);
-      }
-
-      if (generalErrors.length > 0) {
-        enqueueSnackbar(generalErrors[0].reason, { variant: 'error' });
-      } else if (apiErrors.length === 0) {
-        enqueueSnackbar(WEBHOOK_VERIFY_FAILURE_MESSAGE, { variant: 'error' });
       }
     }
   };
@@ -428,7 +416,7 @@ export const NotificationChannelWebhook = (
           letterSpacing: 0,
         }}
       >
-        A successful connection test is required to finish creating this
+        A successful connection test is required to finish {action} this
         notification channel. If you make changes after testing, you&apos;ll
         need to test the connection again.
       </Typography>

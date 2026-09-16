@@ -197,26 +197,31 @@ export const AddNotificationChannelDrawer = (
                 )}
               />
             </Box>
-            {selectedTemplate && selectedTemplate.channel_type === 'email' && (
-              <Box paddingTop={2}>
-                <GridLegacy container>
-                  <GridLegacy item md={1} sm={1} xs={2}>
-                    <Typography variant="h3">To:</Typography>
+            {selectedTemplate &&
+              (selectedTemplate.channel_type === 'email' ||
+                selectedTemplate.channel_type === 'webhook') && (
+                <Box paddingTop={2}>
+                  <GridLegacy container>
+                    <GridLegacy item md={1} sm={1} xs={2}>
+                      <Typography variant="h3">To:</Typography>
+                    </GridLegacy>
+                    <GridLegacy
+                      item
+                      md="auto"
+                      sx={{
+                        overflow: 'auto',
+                        paddingRight: 1,
+                      }}
+                      xs={12}
+                    >
+                      <RenderChannelDetails
+                        template={selectedTemplate}
+                        variant="drawer"
+                      />
+                    </GridLegacy>
                   </GridLegacy>
-                  <GridLegacy
-                    item
-                    md="auto"
-                    sx={{
-                      overflow: 'auto',
-                      paddingRight: 1,
-                    }}
-                    xs={12}
-                  >
-                    <RenderChannelDetails template={selectedTemplate} />
-                  </GridLegacy>
-                </GridLegacy>
-              </Box>
-            )}
+                </Box>
+              )}
           </Box>
           <ActionsPanel
             primaryButtonProps={{

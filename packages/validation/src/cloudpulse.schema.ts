@@ -1,5 +1,13 @@
 import ipaddr from 'ipaddr.js';
-import { array, mixed, number, object, string, ValidationError } from 'yup';
+import {
+  array,
+  lazy,
+  mixed,
+  number,
+  object,
+  string,
+  ValidationError,
+} from 'yup';
 
 const fieldErrorMessage = 'This field is required.';
 
@@ -401,14 +409,18 @@ export const editNotificationChannelPayloadSchema = object({
         );
       },
     ),
-  details: object({
-    email: object({
-      usernames: array()
-        .of(string())
-        .min(1, fieldErrorMessage)
-        .required(fieldErrorMessage),
-    }).required(),
-  }).required(),
+  details: lazy((details) =>
+    details?.webhook
+      ? object({ webhook: webhookDetailSchema.required() }).required()
+      : object({
+          email: object({
+            usernames: array()
+              .of(string())
+              .min(1, fieldErrorMessage)
+              .required(fieldErrorMessage),
+          }).required(),
+        }).required(),
+  ),
 });
 
 export const verifyNotificationChannelPayloadSchema = object({

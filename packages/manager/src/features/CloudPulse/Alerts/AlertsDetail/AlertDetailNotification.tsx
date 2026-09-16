@@ -88,6 +88,22 @@ export const AlertDetailNotification = React.memo(
                     valueGridColumns={10}
                   />
                 </GridLegacy>
+                {notificationChannel.channel_type === 'webhook' &&
+                  notificationChannel.details.webhook.custom_headers.length >
+                    0 && (
+                    <GridLegacy item xs={12}>
+                      <DisplayAlertDetailChips
+                        label="Custom Headers"
+                        labelGridColumns={2}
+                        valueGridColumns={10}
+                        values={[
+                          notificationChannel.details.webhook.custom_headers.map(
+                            ({ name }) => name
+                          ),
+                        ]}
+                      />
+                    </GridLegacy>
+                  )}
                 {channels.length > 1 && index !== channels.length - 1 && (
                   <GridLegacy item xs={12}>
                     <Divider />

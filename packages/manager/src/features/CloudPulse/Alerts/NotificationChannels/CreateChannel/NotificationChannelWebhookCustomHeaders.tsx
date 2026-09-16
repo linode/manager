@@ -55,7 +55,7 @@ interface NotificationChannelWebhookCustomHeadersProps {
   >;
 }
 
-const PENDO_ID_PREFIX = 'monitor-alerts-notification-channels-create-webhook';
+const PENDO_ID_PREFIX = 'monitor-alerts-notification-channels-webhook';
 
 const CustomHeaderTitle = (props: CustomHeaderTitleProps) => {
   const { fallbackLabel, name } = props;

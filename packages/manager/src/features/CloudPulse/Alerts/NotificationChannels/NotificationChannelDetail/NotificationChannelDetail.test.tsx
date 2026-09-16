@@ -5,6 +5,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { NotificationChannelDetail } from './NotificationChannelDetail';
 
+import type { NotificationChannel } from '@linode/api-v4';
 // Mock Queries
 const queryMocks = vi.hoisted(() => ({
   useAllAlertsByNotificationChannelIdQuery: vi.fn(),
@@ -207,5 +208,34 @@ describe('NotificationChannelDetail component tests', () => {
     expect(getByText('ops_team')).toBeVisible();
     expect(getByText('Associated Alerts')).toBeVisible();
     expect(getByText('Critical CPU Alert')).toBeVisible();
+  });
+
+  it('should use expanded height for extended webhook details', () => {
+    const channelDetails: NotificationChannel = {
+      ...notificationChannelFactory.build(),
+      channel_type: 'webhook',
+      details: {
+        webhook: {
+          authentication: { type: 'basic' },
+          custom_headers: [],
+          data_compression: 'gzip',
+          endpoint_url: 'https://example.com/webhook',
+        },
+      },
+    };
+    queryMocks.useNotificationChannelQuery.mockReturnValue({
+      data: channelDetails,
+      isError: false,
+      isLoading: false,
+    });
+
+    const { container } = renderWithTheme(<NotificationChannelDetail />, {
+      flags: mockFlags,
+      initialRoute,
+    });
+
+    expect(container.querySelector('[data-qa-section="Details"]')).toHaveStyle({
+      height: '507px',
+    });
   });
 });

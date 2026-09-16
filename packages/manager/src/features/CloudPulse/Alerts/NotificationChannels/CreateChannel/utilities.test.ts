@@ -2,10 +2,10 @@ import {
   buildVerifyWebhookPayload,
   buildWebhookDetailPayload,
   filterCreateChannelFormValues,
-  resolveWebhookErrorField,
+  normalizeFieldPath,
 } from './utilities';
 
-import type { WebhookFormValues } from './types';
+import type { CreateNotificationChannelForm, WebhookFormValues } from './types';
 import type { WebhookDetailPayload } from '@linode/api-v4';
 
 const baseWebhook: WebhookFormValues = {
@@ -183,37 +183,20 @@ describe('filterCreateChannelFormValues', () => {
   });
 });
 
-describe('resolveWebhookErrorField', () => {
-  const name = 'details.webhook';
-
-  it('maps a static webhook field to the form path', () => {
-    expect(resolveWebhookErrorField('webhook.endpoint_url', name)).toBe(
-      'details.webhook.endpoint_url'
-    );
-    expect(resolveWebhookErrorField('webhook.authentication.type', name)).toBe(
-      'details.webhook.authentication.type'
-    );
-  });
-
-  it('maps an indexed custom header name field to the row field', () => {
+describe('normalizeFieldPath', () => {
+  it('converts API bracket notation to react-hook-form dot notation', () => {
     expect(
-      resolveWebhookErrorField('webhook.custom_headers[0].name', name)
+      normalizeFieldPath<CreateNotificationChannelForm>(
+        'details.webhook.custom_headers[0].name'
+      )
     ).toBe('details.webhook.custom_headers.0.name');
-    expect(
-      resolveWebhookErrorField('webhook.custom_headers[3].name', name)
-    ).toBe('details.webhook.custom_headers.3.name');
   });
 
-  it('maps an indexed custom header value field to the row field', () => {
+  it('leaves non-indexed field paths unchanged', () => {
     expect(
-      resolveWebhookErrorField('webhook.custom_headers[1].value', name)
-    ).toBe('details.webhook.custom_headers.1.value');
-  });
-
-  it('returns undefined for non-webhook-scoped fields', () => {
-    expect(resolveWebhookErrorField('label', name)).toBeUndefined();
-    expect(
-      resolveWebhookErrorField('details.email.usernames', name)
-    ).toBeUndefined();
+      normalizeFieldPath<CreateNotificationChannelForm>(
+        'details.webhook.client_certificate_details.client_ca_certificate'
+      )
+    ).toBe('details.webhook.client_certificate_details.client_ca_certificate');
   });
 });

@@ -6,6 +6,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { NotificationChannelRecipients } from './NotificationChannelDetailRecipients';
 
+import type { NotificationChannel } from '@linode/api-v4';
 const queryMocks = vi.hoisted(() => ({
   useAllAccountUsersQuery: vi.fn(),
 }));
@@ -76,6 +77,34 @@ describe('NotificationChannelRecipients', () => {
     manyUsernames.forEach((username) => {
       expect(screen.getByText(username)).toBeVisible();
     });
+  });
+
+  it('should render webhook details and mask write-only values', () => {
+    const channel: NotificationChannel = {
+      ...notificationChannelFactory.build(),
+      channel_type: 'webhook',
+      details: {
+        webhook: {
+          authentication: { type: 'basic' },
+          client_certificate_details: {
+            tls_hostname: 'webhook.example.com',
+            client_ca_certificate: 'CA certificate',
+            client_certificate: 'Client certificate',
+          },
+          custom_headers: [{ name: 'X-API-Key', value: 'secret value' }],
+          data_compression: 'gzip',
+          endpoint_url: 'https://example.com/webhook',
+        },
+      },
+    };
+
+    renderWithTheme(<NotificationChannelRecipients channelDetails={channel} />);
+
+    expect(screen.getByText('https://example.com/webhook')).toBeVisible();
+    expect(screen.getByText('Basic')).toBeVisible();
+    expect(screen.getAllByText('*****************')).toHaveLength(3);
+    expect(screen.getByText('X-API-Key')).toBeVisible();
+    expect(screen.queryByText('secret value')).not.toBeInTheDocument();
   });
 
   it('should render loading state for recipients while account users are loading', () => {
