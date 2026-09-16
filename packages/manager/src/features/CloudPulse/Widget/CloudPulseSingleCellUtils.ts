@@ -1,3 +1,4 @@
+import { convertStringToCamelCasesWithSpaces } from '../Utils/utils';
 import {
   formatDateTime,
   formatTimestamp,
@@ -65,22 +66,24 @@ export const getWidgetPeriodLabel = (
   data: ChartData[]
 ): string => {
   if (duration.preset !== 'Reset') {
-    return duration.preset ?? 'Custom';
+    return convertStringToCamelCasesWithSpaces(duration.preset ?? 'Custom');
   }
 
   if (data && data.length > 0) {
     const startFormatted = formatTimestamp(
       data[0].timestamp * 1000,
-      duration.timeZone
+      duration.timeZone,
+      false
     );
     const endFormatted = formatTimestamp(
       data[data.length - 1].timestamp * 1000,
-      duration.timeZone
+      duration.timeZone,
+      false
     );
     return `${startFormatted} - ${endFormatted}`;
   }
 
-  return `${formatDateTime(duration.start, duration.timeZone, false)} - ${formatDateTime(duration.end, duration.timeZone, false)}`;
+  return `${formatDateTime(duration.start, duration.timeZone, false, false)} - ${formatDateTime(duration.end, duration.timeZone, false, false)}`;
 };
 
 export const isCloudPulseMetricsResponse = (

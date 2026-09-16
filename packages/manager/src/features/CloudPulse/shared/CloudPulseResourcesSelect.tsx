@@ -27,7 +27,7 @@ export interface CloudPulseResources {
   entities?: Record<string, string>;
   id: string;
   label: string;
-  model_name?: string[];
+  model_id?: string[];
   region?: string;
   tags?: string[];
   volumeLinodeId?: string;

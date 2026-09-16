@@ -218,6 +218,10 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
     false;
   const isDashboardDiscoveryReady = dashboardDiscoveryState.status === 'ready';
 
+  const isGlobalGroupByNotNeeded = selectedDashboard?.widget_groups?.some(
+    (widgetGroup) => widgetGroup.group_by_type === 'toggles'
+  );
+
   return (
     <GridLegacy container>
       <GridLegacy item xs={12}>
@@ -296,16 +300,18 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
                 </IconButton>
               </CloudPulseTooltip>
             )}
-            <GlobalFilterGroupByRenderer
-              handleChange={onGroupByChange}
-              preferenceGroupBy={preferences?.[GROUP_BY]}
-              savePreferences={!isImpersonatedUser} // no need to save preferences impersonated user, as it is disabled
-              selectedDashboard={
-                preferences?.[DASHBOARD_ID] === selectedDashboard?.id // wait for dashboard id in preference to match selected dashboard id
-                  ? selectedDashboard
-                  : undefined
-              }
-            />
+            {!isGlobalGroupByNotNeeded && (
+              <GlobalFilterGroupByRenderer
+                handleChange={onGroupByChange}
+                preferenceGroupBy={preferences?.[GROUP_BY]}
+                savePreferences={!isImpersonatedUser} // no need to save preferences impersonated user, as it is disabled
+                selectedDashboard={
+                  preferences?.[DASHBOARD_ID] === selectedDashboard?.id // wait for dashboard id in preference to match selected dashboard id
+                    ? selectedDashboard
+                    : undefined
+                }
+              />
+            )}
           </Box>
         </Box>
       </GridLegacy>

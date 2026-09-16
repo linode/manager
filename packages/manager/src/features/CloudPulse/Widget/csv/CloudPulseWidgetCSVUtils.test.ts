@@ -3,6 +3,8 @@ import { describe, expect, it } from 'vitest';
 import { FILTER_CONFIG } from '../../Utils/FilterConfig';
 import {
   buildWidgetFilterString,
+  formatDateTime,
+  formatTimestamp,
   generateCSVData,
 } from './CloudPulseWidgetCSVUtils';
 
@@ -16,6 +18,21 @@ const DASHBOARD_NAME = 'Test Dashboard';
 const START_TIME_LABEL = 'Start Time';
 const DATA_INTERVAL_LABEL = 'Data Aggregation Interval';
 const DIMENSION_FILTERS_LABEL = 'Dimension Filters';
+
+describe('date-time formatting', () => {
+  const iso = '2026-08-27T10:00:00Z';
+  const millis = Date.parse(iso);
+
+  it('includes the year by default', () => {
+    expect(formatDateTime(iso, 'UTC')).toContain('2026');
+    expect(formatTimestamp(millis, 'UTC')).toContain('2026');
+  });
+
+  it('omits the year when requested', () => {
+    expect(formatDateTime(iso, 'UTC', false, false)).not.toContain('2026');
+    expect(formatTimestamp(millis, 'UTC', false)).not.toContain('2026');
+  });
+});
 
 const baseProps: CSVDataProps = {
   dashboardName: DASHBOARD_NAME,

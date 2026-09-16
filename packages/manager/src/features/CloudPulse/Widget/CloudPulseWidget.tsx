@@ -107,6 +107,11 @@ export interface CloudPulseWidgetProperties {
   globalFilterGroupBy: string[];
 
   /**
+   * False when the widget's group is mounted but hidden behind another tab.
+   */
+  isActiveGroup?: boolean;
+
+  /**
    * Jwe token fetching status check
    */
   isJweTokenFetching: boolean;
@@ -211,6 +216,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     dashboardId,
     region,
     showNonTableLegend = false,
+    isActiveGroup = true,
   } = props;
   const [dimensionFilters, setDimensionFilters] = React.useState<
     MetricsDimensionFilter[] | undefined
@@ -477,7 +483,8 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
       label: widget.label,
       timeStamp,
       url: flags.aclpReadEndpoint!,
-      shouldRefresh: !isZoomed,
+      shouldRefresh: !isZoomed && isActiveGroup,
+      isActiveGroup: isActiveGroup ?? false,
     }
   );
   let data: DataSet[] = [];
@@ -577,6 +584,10 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
   const resourceLabels = resources
     .filter((resource) => entityIds.includes(resource.id.toString()))
     .map((resource) => resource.label);
+  const isWidgetGroupByNotNeeded =
+    getGlobalSelectedDashboard()?.widget_groups?.some(
+      (widgetGroup) => widgetGroup.group_by_type === 'toggles'
+    );
   return (
     <>
       <GridLegacy container item lg={widget.size} xs={12}>
@@ -683,20 +694,21 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
                   />
                 )}
                 <Box sx={{ display: 'flex', gap: 1, marginTop: 1 }}>
-                  {flags.aclp?.showWidgetDimensionFilters && (
-                    <CloudPulseDimensionFiltersSelect
-                      dashboardId={dashboardId}
-                      dimensionOptions={filteredDimensions ?? []}
-                      drawerLabel={availableMetrics?.label ?? ''}
-                      handleSelectionChange={handleDimensionFiltersChange}
-                      selectedDimensions={filteredSelections}
-                      selectedEntities={entityIds}
-                      selectedRegions={
-                        linodeRegion ? [linodeRegion] : undefined
-                      }
-                      serviceType={serviceType}
-                    />
-                  )}
+                  {flags.aclp?.showWidgetDimensionFilters &&
+                    serviceType !== 'inference' && (
+                      <CloudPulseDimensionFiltersSelect
+                        dashboardId={dashboardId}
+                        dimensionOptions={filteredDimensions ?? []}
+                        drawerLabel={availableMetrics?.label ?? ''}
+                        handleSelectionChange={handleDimensionFiltersChange}
+                        selectedDimensions={filteredSelections}
+                        selectedEntities={entityIds}
+                        selectedRegions={
+                          linodeRegion ? [linodeRegion] : undefined
+                        }
+                        serviceType={serviceType}
+                      />
+                    )}
                   {filterConfig && flags.aclp?.enableCSVDownload && (
                     <CloudPulseTooltip
                       key="csv-download-tooltip"
@@ -737,15 +749,17 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
                       />
                     </CloudPulseTooltip>
                   )}
-                  <WidgetFilterGroupByRenderer
-                    dashboardId={dashboardId}
-                    handleChange={handleGroupByChange}
-                    label={widget.label}
-                    metric={widget.metric}
-                    preferenceGroupBy={groupBy}
-                    savePreferences={savePref}
-                    serviceType={serviceType}
-                  />
+                  {!isWidgetGroupByNotNeeded && (
+                    <WidgetFilterGroupByRenderer
+                      dashboardId={dashboardId}
+                      handleChange={handleGroupByChange}
+                      label={widget.label}
+                      metric={widget.metric}
+                      preferenceGroupBy={groupBy}
+                      savePreferences={savePref}
+                      serviceType={serviceType}
+                    />
+                  )}
                   <ZoomIcon
                     handleZoomToggle={handleZoomToggle}
                     zoomIn={widget?.size === 12}
@@ -783,7 +797,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
           </Paper>
         </Stack>
       </GridLegacy>
-      {isExporting && (
+      {isExporting && isActiveGroup && (
         <Box
           sx={{
             position: 'absolute',

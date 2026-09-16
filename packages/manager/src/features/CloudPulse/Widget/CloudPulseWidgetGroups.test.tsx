@@ -1,4 +1,5 @@
 import { within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { DateTime } from 'luxon';
 import React from 'react';
 
@@ -12,7 +13,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { CloudPulseWidgetGroups } from './CloudPulseWidgetGroups';
 
 import type { WidgetProps } from './CloudPulseWidgetRenderer';
-import type { Widgets } from '@linode/api-v4';
+import type { WidgetGroup, Widgets } from '@linode/api-v4';
 
 const props: WidgetProps = {
   additionalFilters: [],
@@ -42,13 +43,61 @@ vi.mock('@akamai/cds-components/react', () => ({
       {children}
     </section>
   ),
-  Tabs: ({ children }: { children: React.ReactNode }) => (
-    <div aria-label="tabs">{children}</div>
+  SegmentedButton: ({
+    children,
+    value,
+  }: {
+    children: React.ReactNode;
+    value: string;
+  }) => (
+    <button type="button" value={value}>
+      {children}
+    </button>
+  ),
+  SegmentedButtonGroup: ({ children }: { children: React.ReactNode }) => (
+    <div>{children}</div>
+  ),
+  Tabs: ({
+    children,
+    onTabsChange,
+  }: {
+    children: React.ReactNode;
+    onTabsChange: (event: CustomEvent<{ index: number }>) => void;
+  }) => (
+    <div aria-label="tabs">
+      {React.Children.map(children, (child, index) => {
+        if (!React.isValidElement<{ label: string }>(child)) {
+          return child;
+        }
+
+        return (
+          <React.Fragment key={child.props.label}>
+            <button
+              onClick={() =>
+                onTabsChange(
+                  new CustomEvent('tabs-change', { detail: { index } })
+                )
+              }
+              role="tab"
+              type="button"
+            >
+              {child.props.label}
+            </button>
+            {child}
+          </React.Fragment>
+        );
+      })}
+    </div>
   ),
 }));
 
 vi.mock('./CloudPulseWidgetRenderer', () => ({
-  RenderWidgets: ({ dashboard, widgetGroup, widgetGroups }: WidgetProps) => {
+  RenderWidgets: ({
+    dashboard,
+    groupBy,
+    widgetGroup,
+    widgetGroups,
+  }: WidgetProps) => {
     const widgets =
       widgetGroup && widgetGroups
         ? (widgetGroups.get(widgetGroup) ?? [])
@@ -56,6 +105,7 @@ vi.mock('./CloudPulseWidgetRenderer', () => ({
 
     return (
       <div aria-label={widgetGroup ? `widgets-${widgetGroup}` : 'widgets'}>
+        <span>Group by: {groupBy.join(',')}</span>
         {widgets.map((widget) => (
           <span key={widget.label}>{widget.label}</span>
         ))}
@@ -75,9 +125,12 @@ const createWidget = (
     widget_grouping: widgetGrouping,
   });
 
-const createProps = (widgets: Widgets[]): WidgetProps => ({
+const createProps = (
+  widgets: Widgets[],
+  widgetGroups?: WidgetGroup[]
+): WidgetProps => ({
   ...props,
-  dashboard: { ...props.dashboard, widgets },
+  dashboard: { ...props.dashboard, widget_groups: widgetGroups, widgets },
 });
 
 describe('CloudPulseWidgetGroups', () => {
@@ -96,26 +149,81 @@ describe('CloudPulseWidgetGroups', () => {
     expect(queryByLabelText('tabs')).not.toBeInTheDocument();
   });
 
-  it('renders groups and their widgets in widget order', () => {
-    const { getByLabelText, getAllByRole } = renderWithTheme(
-      <CloudPulseWidgetGroups
-        {...createProps([
-          createWidget('Group B later', 4, 'Group B'),
-          createWidget('Group A later', 3, 'Group A'),
-          createWidget('Group B first', 1, 'Group B'),
-          createWidget('Group A first', 2, 'Group A'),
-        ])}
-      />
-    );
+  it('renders only the active group widgets in widget order', async () => {
+    const groupAWidgetsLabel = 'widgets-Group A';
+    const groupBWidgetsLabel = 'widgets-Group B';
+    const user = userEvent.setup();
+    const { getByLabelText, getAllByRole, getByRole, queryByLabelText } =
+      renderWithTheme(
+        <CloudPulseWidgetGroups
+          {...createProps([
+            createWidget('Group B later', 4, 'Group B'),
+            createWidget('Group A later', 3, 'Group A'),
+            createWidget('Group B first', 1, 'Group B'),
+            createWidget('Group A first', 2, 'Group A'),
+          ])}
+        />
+      );
 
     const groupTabs = getAllByRole('heading');
     expect(groupTabs[0]).toHaveTextContent('Group B');
     expect(groupTabs[1]).toHaveTextContent('Group A');
     expect(
-      within(getByLabelText('widgets-Group B')).getByText('Group B first')
+      within(getByLabelText(groupBWidgetsLabel)).getByText('Group B first')
     ).toBeInTheDocument();
-    expect(getByLabelText('widgets-Group A')).toHaveTextContent(
+    expect(getByLabelText(groupBWidgetsLabel)).toBeVisible();
+    expect(queryByLabelText(groupAWidgetsLabel)).not.toBeInTheDocument();
+
+    await user.click(getByRole('tab', { name: 'Group A' }));
+
+    expect(getByLabelText(groupBWidgetsLabel)).not.toBeVisible();
+    expect(getByLabelText(groupAWidgetsLabel)).toBeVisible();
+    expect(getByLabelText(groupAWidgetsLabel)).toHaveTextContent(
       'Group A firstGroup A later'
+    );
+  });
+
+  it('uses the first toggle dimension for each group', async () => {
+    const user = userEvent.setup();
+    const { getByLabelText, getByRole } = renderWithTheme(
+      <CloudPulseWidgetGroups
+        {...createProps(
+          [
+            createWidget('Group A widget', 1, 'Group A'),
+            createWidget('Group B widget', 2, 'Group B'),
+          ],
+          [
+            {
+              group_by_type: 'toggles',
+              name: 'Group A',
+              options: {
+                toggles: [
+                  { dimension: 'region', is_checked: true, name: 'Region' },
+                ],
+              },
+            },
+            {
+              group_by_type: 'toggles',
+              name: 'Group B',
+              options: {
+                toggles: [
+                  { dimension: 'status', is_checked: true, name: 'Status' },
+                ],
+              },
+            },
+          ]
+        )}
+      />
+    );
+
+    expect(getByLabelText('widgets-Group A')).toHaveTextContent(
+      'Group by: region'
+    );
+
+    await user.click(getByRole('tab', { name: 'Group B' }));
+
+    expect(getByLabelText('widgets-Group B')).toHaveTextContent(
+      'Group by: status'
     );
   });
 });

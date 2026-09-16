@@ -28,7 +28,7 @@ import {
   convertToGmt,
   defaultTimeDuration,
 } from '../Utils/CloudPulseDateTimePickerUtils';
-import { PARENT_ENTITY_REGION, REFRESH } from '../Utils/constants';
+import { PARENT_ENTITY_REGION, REFRESH, RESOURCE_ID } from '../Utils/constants';
 import { FILTER_CONFIG } from '../Utils/FilterConfig';
 import {
   checkIfFilterBuilderNeeded,
@@ -233,6 +233,26 @@ const CloudPulseDashboardWithFiltersRenderer = React.memo(
     const isDashboardDiscoveryReady =
       dashboardDiscoveryState.status === 'ready';
 
+    const inferenceResources =
+      serviceType === 'inference' &&
+      filterData.id[RESOURCE_ID] &&
+      Array.isArray(filterData.id[RESOURCE_ID])
+        ? filterData.id[RESOURCE_ID].map(String)
+        : [''];
+
+    const dashboardProperties = getDashboardProperties({
+      dashboardObj: currentDashboard,
+      filterValue: filterData.id,
+      resource,
+      region,
+      timeDuration,
+      groupBy,
+    });
+
+    const isGlobalGroupByNotNeeded = currentDashboard?.widget_groups?.some(
+      (group) => group.group_by_type === 'toggles'
+    );
+
     return (
       <Box display="flex" flexDirection="column" gap={2.5}>
         <Paper
@@ -317,10 +337,12 @@ const CloudPulseDashboardWithFiltersRenderer = React.memo(
                       </IconButton>
                     </CloudPulseTooltip>
                   )}
-                  <GlobalFilterGroupByRenderer
-                    handleChange={handleGroupByChange}
-                    selectedDashboard={currentDashboard}
-                  />
+                  {!isGlobalGroupByNotNeeded && (
+                    <GlobalFilterGroupByRenderer
+                      handleChange={handleGroupByChange}
+                      selectedDashboard={currentDashboard}
+                    />
+                  )}
                 </Box>
               </Box>
             </GridLegacy>
@@ -367,18 +389,16 @@ const CloudPulseDashboardWithFiltersRenderer = React.memo(
         </Paper>
         {isDashboardDiscoveryReady && isMandatoryFiltersSelected ? (
           <CloudPulseDashboard
-            {...getDashboardProperties({
-              dashboardObj: currentDashboard,
-              filterValue: filterData.id,
-              resource,
-              region,
-              timeDuration,
-              groupBy,
-            })}
             linodeRegion={
               filterData.id[PARENT_ENTITY_REGION]
                 ? (filterData.id[PARENT_ENTITY_REGION] as string)
                 : undefined
+            }
+            {...dashboardProperties}
+            resources={
+              serviceType === 'inference'
+                ? inferenceResources
+                : dashboardProperties.resources
             }
           />
         ) : (

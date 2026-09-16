@@ -40,6 +40,7 @@ export const usePdfExport = ({
     getGlobalGroupBy,
     captureForExport,
     getCurrentServiceLabel,
+    getActiveWidgetGroup,
   } = useCloudPulseContext();
 
   const [isDownloadingPdf, setIsDownloadingPdf] = React.useState(false);
@@ -77,6 +78,7 @@ export const usePdfExport = ({
           filterData,
           filterConfig,
           globalGroupBy: getGlobalGroupBy() || [],
+          currentGroupView: getActiveWidgetGroup(),
         };
         await captureForExport();
         await constructPdfDashboardData(pdfUtilProps, getDashboardPdfData());
@@ -102,6 +104,7 @@ export const usePdfExport = ({
     timezone,
     enqueueSnackbar,
     getCurrentServiceLabel,
+    getActiveWidgetGroup,
   ]);
 
   const handleDownloadPDF = React.useCallback(() => {

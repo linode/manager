@@ -173,7 +173,11 @@ export const SingleKpiChart = ({
             aria-label={`single-metric-chart-container - ${label}`}
             sx={{ height: 50, width: '100%' }}
           >
-            <ResponsiveContainer height="100%" width="100%">
+            <ResponsiveContainer
+              height="100%"
+              initialDimension={{ width: 1, height: 1 }}
+              width="100%"
+            >
               <AreaChart data={chartData}>
                 <YAxis domain={['dataMin - 0.05', 'dataMax + 0.05']} hide />
                 <Area

@@ -128,7 +128,7 @@ it('defaults model names to all options without a saved preference', () => {
   ];
 
   const result = getInitialDefaultSelections({
-    filterKey: 'model_name',
+    filterKey: 'model_id',
     handleSelectionChange,
     isMultiSelect: true,
     options,
@@ -137,7 +137,7 @@ it('defaults model names to all options without a saved preference', () => {
 
   expect(result).toEqual(options);
   expect(handleSelectionChange).toHaveBeenCalledWith(
-    'model_name',
+    'model_id',
     ['model-1', 'model-2'],
     ['Model 1', 'Model 2']
   );
@@ -152,7 +152,7 @@ it('honors saved model-name preferences', () => {
 
   const result = getInitialDefaultSelections({
     defaultValue: ['model-2'],
-    filterKey: 'model_name',
+    filterKey: 'model_id',
     handleSelectionChange,
     isMultiSelect: true,
     options,
@@ -161,7 +161,7 @@ it('honors saved model-name preferences', () => {
 
   expect(result).toEqual([options[1]]);
   expect(handleSelectionChange).toHaveBeenCalledWith(
-    'model_name',
+    'model_id',
     ['model-2'],
     ['Model 2']
   );
@@ -176,7 +176,7 @@ it('honors saved model-name preferences when saving is disabled', () => {
 
   const result = getInitialDefaultSelections({
     defaultValue: ['model-1'],
-    filterKey: 'model_name',
+    filterKey: 'model_id',
     handleSelectionChange,
     isMultiSelect: true,
     options,
@@ -185,7 +185,7 @@ it('honors saved model-name preferences when saving is disabled', () => {
 
   expect(result).toEqual([options[0]]);
   expect(handleSelectionChange).toHaveBeenCalledWith(
-    'model_name',
+    'model_id',
     ['model-1'],
     ['Model 1']
   );

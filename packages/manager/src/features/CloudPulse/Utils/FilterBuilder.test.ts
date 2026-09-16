@@ -651,12 +651,12 @@ describe('filterUsingDependentFilters', () => {
 
   it('should match resources available for all models', () => {
     const resources = [
-      { ...mockData[0], model_name: ['*'] },
-      { ...mockData[1], model_name: ['specific-model'] },
+      { ...mockData[0], model_id: ['*'] },
+      { ...mockData[1], model_id: ['specific-model'] },
     ];
 
     const result = filterUsingDependentFilters(resources, {
-      model_name: ['another-model'],
+      model_id: ['another-model'],
     });
 
     expect(result).toEqual([resources[0]]);

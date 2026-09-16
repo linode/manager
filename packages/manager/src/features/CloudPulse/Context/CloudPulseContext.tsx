@@ -7,6 +7,7 @@ import type { Dashboard } from '@linode/api-v4';
 export type CloudPulseRegistry = {
   captureForExport: () => Promise<void>; // a wait function that resolves when all widgets have reported their export data
   clearDashboardPdfData: () => void;
+  getActiveWidgetGroup: () => string | undefined;
   getCurrentServiceLabel: () => string;
   getDashboardPdfData: () => PdfData[];
   getGlobalFilterData: () => FilterData | undefined;
@@ -14,6 +15,7 @@ export type CloudPulseRegistry = {
   getGlobalSelectedDashboard: () => Dashboard | undefined;
   isExporting: boolean;
   isWidgetLoading: boolean;
+  setActiveWidgetGroup: (widgetGroup?: string) => void;
   setCurrentServiceLabel: (label: string) => void;
   setDashboardIsExporting: (isExporting: boolean) => void;
   setDashboardPdfData: (pdfData: PdfData) => void;
@@ -24,6 +26,7 @@ export type CloudPulseRegistry = {
 };
 
 export const CloudPulseContext = React.createContext<CloudPulseRegistry>({
+  getActiveWidgetGroup: () => undefined,
   getGlobalFilterData: () => undefined,
   getGlobalSelectedDashboard: () => undefined,
   setGlobalSelectedDashboard: () => null,
@@ -37,6 +40,7 @@ export const CloudPulseContext = React.createContext<CloudPulseRegistry>({
   isExporting: false,
   setDashboardIsExporting: () => null,
   captureForExport: () => Promise.resolve(),
+  setActiveWidgetGroup: () => null,
   setWidgetLoading: () => null,
   setCurrentServiceLabel: () => null,
   getCurrentServiceLabel: () => '',

@@ -1,24 +1,33 @@
 import { act, renderHook } from '@testing-library/react';
 import React from 'react';
 
-import { dashboardFactory } from 'src/factories';
+import { dashboardFactory, widgetFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { CloudPulseContext } from './CloudPulseContext';
 import { CloudPulseContextProvider } from './CloudPulseContextProvider';
 
 import type { FilterData } from '../Dashboard/CloudPulseDashboardLanding';
+import type { PdfData } from '../Dashboard/pdf/types';
+
+const pdfDataFactory = (widgetLabel: string): PdfData => ({
+  widgetLabel,
+  filterString: '',
+  graphSVG: null,
+  legendRowData: [],
+  loading: false,
+  widgetLabelWithUnit: widgetLabel,
+});
 
 describe('CloudPulseContextProvider', () => {
   it('should render children correctly', () => {
     const TestChild = () => <div data-testid="test-child">Test Child</div>;
-    const { getByTestId } = renderWithTheme(
+    const { getByText } = renderWithTheme(
       <CloudPulseContextProvider>
         <TestChild />
       </CloudPulseContextProvider>
     );
-    const childElement = getByTestId('test-child');
-    expect(childElement).toHaveTextContent('Test Child');
+    expect(getByText('Test Child')).toBeVisible();
   });
   it('should provide context methods to children', () => {
     const { result } = renderHook(() => React.useContext(CloudPulseContext), {
@@ -28,6 +37,8 @@ describe('CloudPulseContextProvider', () => {
     expect(result.current.getGlobalFilterData).toBeDefined();
     expect(result.current.setGlobalSelectedDashboard).toBeDefined();
     expect(result.current.getGlobalSelectedDashboard).toBeDefined();
+    expect(result.current.setActiveWidgetGroup).toBeDefined();
+    expect(result.current.getActiveWidgetGroup).toBeDefined();
     expect(result.current.setGlobalGroupBy).toBeDefined();
     expect(result.current.getGlobalGroupBy).toBeDefined();
   });
@@ -98,6 +109,21 @@ describe('CloudPulseContextProvider', () => {
     const retrievedDashboard = result.current.getGlobalSelectedDashboard();
     expect(retrievedDashboard).toBeUndefined();
   });
+  it('should set and get active widget group correctly', () => {
+    const { result } = renderHook(() => React.useContext(CloudPulseContext), {
+      wrapper: CloudPulseContextProvider,
+    });
+
+    act(() => {
+      result.current.setActiveWidgetGroup('Group A');
+    });
+    expect(result.current.getActiveWidgetGroup()).toBe('Group A');
+
+    act(() => {
+      result.current.setActiveWidgetGroup(undefined);
+    });
+    expect(result.current.getActiveWidgetGroup()).toBeUndefined();
+  });
   it('should set and get group by correctly', () => {
     const { result } = renderHook(() => React.useContext(CloudPulseContext), {
       wrapper: CloudPulseContextProvider,
@@ -147,5 +173,68 @@ describe('CloudPulseContextProvider', () => {
       result.current.setWidgetLoading('widget-1', false);
     });
     expect(result.current.isWidgetLoading).toBe(false);
+  });
+  it('should resolve PDF export after active widget group data is ready', async () => {
+    const { result } = renderHook(() => React.useContext(CloudPulseContext), {
+      wrapper: CloudPulseContextProvider,
+    });
+    const dashboard = dashboardFactory.build({
+      widgets: [
+        widgetFactory.build({ label: 'Group A widget', widget_grouping: 'A' }),
+        widgetFactory.build({ label: 'Group B widget', widget_grouping: 'B' }),
+      ],
+    });
+
+    act(() => {
+      result.current.setGlobalSelectedDashboard(dashboard);
+      result.current.setActiveWidgetGroup('B');
+    });
+
+    let capturePromise: Promise<void> | undefined;
+    act(() => {
+      capturePromise = result.current.captureForExport();
+    });
+
+    act(() => {
+      result.current.setDashboardPdfData(pdfDataFactory('Group B widget'));
+    });
+
+    await expect(capturePromise).resolves.toBeUndefined();
+  });
+  it('should resolve PDF export after all dashboard widget data is ready when no active widget group is set', async () => {
+    const { result } = renderHook(() => React.useContext(CloudPulseContext), {
+      wrapper: CloudPulseContextProvider,
+    });
+    const dashboard = dashboardFactory.build({
+      widgets: [
+        widgetFactory.build({ label: 'First widget' }),
+        widgetFactory.build({ label: 'Second widget' }),
+      ],
+    });
+    let didResolve = false;
+
+    act(() => {
+      result.current.setGlobalSelectedDashboard(dashboard);
+    });
+
+    let capturePromise: Promise<void> | undefined;
+    act(() => {
+      capturePromise = result.current.captureForExport();
+      capturePromise.then(() => {
+        didResolve = true;
+      });
+    });
+
+    act(() => {
+      result.current.setDashboardPdfData(pdfDataFactory('First widget'));
+    });
+    await Promise.resolve();
+    expect(didResolve).toBe(false);
+
+    act(() => {
+      result.current.setDashboardPdfData(pdfDataFactory('Second widget'));
+    });
+
+    await expect(capturePromise).resolves.toBeUndefined();
   });
 });

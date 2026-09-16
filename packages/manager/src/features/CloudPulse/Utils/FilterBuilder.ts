@@ -725,7 +725,7 @@ export const filterUsingDependentFilters = (
       const resourceValue = resource[key as keyof CloudPulseResources];
 
       if (
-        key === 'model_name' &&
+        key === 'model_id' &&
         Array.isArray(resourceValue) &&
         resourceValue.includes('*')
       ) {

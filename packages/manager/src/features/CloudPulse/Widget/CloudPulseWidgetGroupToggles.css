@@ -1,0 +1,11 @@
+.cloud-pulse-widget-group-toggles {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+@media (max-width: 960px) {
+    .cloud-pulse-widget-group-toggles {
+        flex-direction: column;
+    }
+}

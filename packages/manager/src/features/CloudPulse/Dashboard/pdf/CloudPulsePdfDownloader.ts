@@ -67,6 +67,7 @@ export const constructPdfDashboardData = async (
     filterData,
     filterConfig,
     globalGroupBy,
+    currentGroupView,
   } = props;
   // Initialize PDF document with pixel units
   const pdf = new jsPDF({ unit: 'px' });
@@ -90,6 +91,7 @@ export const constructPdfDashboardData = async (
     pdf,
     globalGroupBy,
     resourceLabels: pdfData[0]?.resourceLabels, // use resource label from first widget, we are sure it's same across all widgets in the dashboard
+    currentGroupView,
   };
 
   // Render first page headers and get starting Y position

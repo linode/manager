@@ -34,6 +34,10 @@ export interface WidgetProps {
   dashboard: Dashboard;
   duration: DateTimeWithPreset;
   groupBy: string[];
+  /**
+   * False when the widget group is mounted but hidden behind another tab.
+   */
+  isActiveGroup?: boolean;
   isJweTokenFetching: boolean;
   jweToken?: JWEToken | undefined;
   linodeRegion?: string;
@@ -80,6 +84,7 @@ export const RenderWidgets = React.memo(
       region,
       widgetGroup,
       widgetGroups,
+      isActiveGroup = true,
     } = props;
 
     const flags = useFlags();
@@ -105,7 +110,10 @@ export const RenderWidgets = React.memo(
         widget: {
           ...widget,
           time_granularity: autoIntervalOption,
-          group_by: undefined,
+          group_by:
+            dashboard?.service_type === 'inference'
+              ? widget.group_by
+              : undefined,
         },
       };
       if (savePref) {
@@ -123,7 +131,7 @@ export const RenderWidgets = React.memo(
     const setPreferredWidgetPlan = (widgetObj: Widgets): Widgets => {
       const widgetPreferences = preferences?.widgets;
       const pref = widgetPreferences?.[widgetObj.label];
-      if (pref) {
+      if (pref && widgetObj.chart_type !== 'kpi') {
         return {
           ...widgetObj,
           aggregate_function:
@@ -132,7 +140,7 @@ export const RenderWidgets = React.memo(
           time_granularity: {
             ...(pref.timeGranularity ?? autoIntervalOption),
           },
-          group_by: pref.groupBy,
+          group_by: pref.groupBy ?? widgetObj.group_by,
           filters: flags.aclp?.showWidgetDimensionFilters
             ? (pref.filters ?? widgetObj.filters)
             : widgetObj.filters,
@@ -141,7 +149,10 @@ export const RenderWidgets = React.memo(
         return {
           ...widgetObj,
           time_granularity: autoIntervalOption,
-          group_by: undefined,
+          group_by:
+            dashboard?.service_type === 'inference'
+              ? widgetObj.group_by
+              : undefined,
         };
       }
     };
@@ -204,6 +215,8 @@ export const RenderWidgets = React.memo(
               }
               return (
                 <Box
+                  data-pendo-id={`cloud-pulse-single-cell-widget-${widget.label}`}
+                  data-qa-id={`cloud-pulse-single-cell-widget-${widget.label}`}
                   key={index}
                   sx={{
                     borderRadius: 1,
@@ -216,6 +229,7 @@ export const RenderWidgets = React.memo(
                     key={widget.label}
                     {...cloudPulseWidgetProperties}
                     authToken={jweToken?.token}
+                    isActiveGroup={isActiveGroup}
                     isJweTokenFetching={isJweTokenFetching}
                     linodeRegion={linodeRegion}
                     region={region}
@@ -263,12 +277,17 @@ export const RenderWidgets = React.memo(
                   {...cloudPulseWidgetProperties}
                   authToken={jweToken?.token}
                   availableMetrics={availMetrics}
+                  isActiveGroup={isActiveGroup}
                   isJweTokenFetching={isJweTokenFetching}
                   linodeRegion={linodeRegion}
                   region={region}
                   resources={resourceList!}
                   savePref={savePref}
-                  showNonTableLegend={!widget.legacy_legend}
+                  showNonTableLegend={
+                    widget.legacy_legend === undefined
+                      ? false
+                      : !widget.legacy_legend
+                  }
                 />
               );
             } else {
@@ -288,6 +307,9 @@ export const RenderWidgets = React.memo(
       'resources',
       'additionalFilters',
       'groupBy',
+      'widgetGroup',
+      'widgetGroups',
+      'isActiveGroup',
     ];
 
     for (const key of keysToCompare) {

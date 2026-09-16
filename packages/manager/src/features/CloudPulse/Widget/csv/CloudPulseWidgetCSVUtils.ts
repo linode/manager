@@ -117,10 +117,21 @@ type CSVData = CSVRow[];
 export const formatDateTime = (
   iso: string,
   timeZone: string | undefined,
-  zoneNeeded: boolean = true
+  zoneNeeded: boolean = true,
+  yearNeeded: boolean = true
 ) => {
   const dateTime = DateTime.fromISO(iso).setZone(timeZone);
-  return `${dateTime.toLocaleString(DateTime.DATETIME_MED)} ${zoneNeeded ? dateTime.offsetNameShort : ''}`;
+  const formattedDateTime = dateTime.toLocaleString(
+    yearNeeded
+      ? DateTime.DATETIME_MED
+      : {
+          day: 'numeric',
+          hour: 'numeric',
+          minute: '2-digit',
+          month: 'short',
+        }
+  );
+  return `${formattedDateTime}${zoneNeeded ? ` ${dateTime.offsetNameShort}` : ''}`;
 };
 /**
  * @param millis The timestamp to be formatted in milliseconds
@@ -129,10 +140,20 @@ export const formatDateTime = (
  */
 export const formatTimestamp = (
   millis: number,
-  timeZone: string | undefined
+  timeZone: string | undefined,
+  yearNeeded: boolean = true
 ) => {
   const dateTime = DateTime.fromMillis(millis).setZone(timeZone);
-  return dateTime.toLocaleString(DateTime.DATETIME_MED);
+  return dateTime.toLocaleString(
+    yearNeeded
+      ? DateTime.DATETIME_MED
+      : {
+          day: 'numeric',
+          hour: 'numeric',
+          minute: '2-digit',
+          month: 'short',
+        }
+  );
 };
 /**
  * @param dimensions The dimensions to be transformed into a map of dimension label to dimension name, used to create a mapping of dimension labels to user-friendly names for better readability in the CSV

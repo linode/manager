@@ -171,12 +171,14 @@ export const CloudPulseDashboardLanding = () => {
             </Box>
           </Paper>
         </GridLegacy>
-        <CloudPulseDashboardRenderer
-          dashboard={dashboard}
-          filterValue={filterData.id}
-          groupBy={groupBy}
-          timeDuration={timeDuration}
-        />
+        <GridLegacy item xs={12}>
+          <CloudPulseDashboardRenderer
+            dashboard={dashboard}
+            filterValue={filterData.id}
+            groupBy={groupBy}
+            timeDuration={timeDuration}
+          />
+        </GridLegacy>
       </GridLegacy>
     </React.Suspense>
   );

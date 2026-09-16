@@ -707,6 +707,213 @@ const networkLoadBalancerDimensions: Dimension[] = [
     values: [],
   },
 ];
+
+export const inferenceMetricCriteria: MetricDefinition[] = [
+  {
+    label: 'Token Usage',
+    metric: 'inference_tokens_usage',
+    unit: 'Count',
+    metric_type: 'gauge',
+    scrape_interval: '60s',
+    is_alertable: true,
+    available_aggregate_functions: ['sum', 'avg'],
+    dimensions: [
+      {
+        label: 'Model',
+        dimension_label: 'model_id',
+        values: [],
+      },
+      {
+        label: 'Api Key',
+        dimension_label: 'entity_id',
+        values: [],
+      },
+      {
+        label: 'Token Type',
+        dimension_label: 'token_type',
+        values: ['input', 'output', 'cached'],
+      }
+    ],
+  },
+  {
+    label: 'Time to First Token (TTFT) p50',
+    metric: 'inference_tokens_ttft_ms_p50',
+    unit: 'ms',
+    metric_type: 'gauge',
+    scrape_interval: '60s',
+    is_alertable: true,
+    available_aggregate_functions: ['avg'],
+    dimensions: [
+      {
+        label: 'Model',
+        dimension_label: 'model_id',
+        values: [],
+      },
+      {
+        label: 'Api Key',
+        dimension_label: 'entity_id',
+        values: [],
+      },
+    ],
+  },
+  {
+    label: 'Time to First Token (TTFT) p95',
+    metric: 'inference_tokens_ttft_ms_p95',
+    unit: 'ms',
+    metric_type: 'gauge',
+    scrape_interval: '60s',
+    is_alertable: true,
+    available_aggregate_functions: ['avg'],
+    dimensions: [
+      {
+        label: 'Model',
+        dimension_label: 'model_id',
+        values: [],
+      },
+      {
+        label: 'Api Key',
+        dimension_label: 'entity_id',
+        values: [],
+      },
+    ],
+  },
+  {
+    label: 'Time to First Token (TTFT) p99',
+    metric: 'inference_tokens_ttft_ms_p99',
+    unit: 'ms',
+    metric_type: 'gauge',
+    scrape_interval: '60s',
+    is_alertable: true,
+    available_aggregate_functions: ['avg'],
+    dimensions: [
+      {
+        label: 'Model',
+        dimension_label: 'model_id',
+        values: [],
+      },
+      {
+        label: 'Api Key',
+        dimension_label: 'entity_id',
+        values: [],
+      },
+    ],
+  },
+  {
+    label: 'Time per Output Token (TPOT) p50',
+    metric: 'inference_tokens_tpot_ms_p50',
+    unit: 'ms',
+    metric_type: 'gauge',
+    scrape_interval: '60s',
+    is_alertable: true,
+    available_aggregate_functions: ['avg'],
+    dimensions: [
+      {
+        label: 'Model',
+        dimension_label: 'model_id',
+        values: [],
+      },
+      {
+        label: 'Api Key',
+        dimension_label: 'entity_id',
+        values: [],
+      },
+    ],
+  },
+  {
+    label: 'Time per Output Token (TPOT) p95',
+    metric: 'inference_tokens_tpot_ms_p95',
+    unit: 'ms',
+    metric_type: 'gauge',
+    scrape_interval: '60s',
+    is_alertable: true,
+    available_aggregate_functions: ['avg'],
+    dimensions: [
+      {
+        label: 'Model',
+        dimension_label: 'model_id',
+        values: [],
+      },
+      {
+        label: 'Api Key',
+        dimension_label: 'entity_id',
+        values: [],
+      },
+    ],
+  },
+  {
+    label: 'Time per Output Token (TPOT) p99',
+    metric: 'inference_tokens_tpot_ms_p99',
+    unit: 'ms',
+    metric_type: 'gauge',
+    scrape_interval: '60s',
+    is_alertable: true,
+    available_aggregate_functions: ['avg'],
+    dimensions: [
+      {
+        label: 'Model',
+        dimension_label: 'model_id',
+        values: [],
+      },
+      {
+        label: 'Api Key',
+        dimension_label: 'entity_id',
+        values: [],
+      },
+    ],
+  },
+  {
+    label: 'Request Volume',
+    metric: 'inference_requests_status_success_rps',
+    unit: 'Requests per second',
+    metric_type: 'gauge',
+    scrape_interval: '60s',
+    is_alertable: true,
+    available_aggregate_functions: ['avg'],
+    dimensions: [
+      {
+        label: 'Model',
+        dimension_label: 'model_id',
+        values: [],
+      },
+      {
+        label: 'Api Key',
+        dimension_label: 'entity_id',
+        values: [],
+      },
+      {
+        label: 'Status Code',
+        dimension_label: 'status_code',
+        values: ['success'],
+      },
+    ],
+  },
+  {
+    label: 'Error Breakdown',
+    metric: 'inference_requests_status_error_total',
+    unit: '%',
+    metric_type: 'gauge',
+    scrape_interval: '60s',
+    is_alertable: true,
+    available_aggregate_functions: ['avg'],
+    dimensions: [
+      {
+        label: 'Model',
+        dimension_label: 'model_id',
+        values: [],
+      },
+      {
+        label: 'Api Key',
+        dimension_label: 'entity_id',
+        values: [],
+      },
+      {
+        label: 'Status Code',
+        dimension_label: 'status_code',
+        values: ['400', '403', '404', '422', '429', '4xx(other)', '5xx'],
+      },
+    ],
+  }
+];
 export const networkLoadBalancerMetricCriteria: MetricDefinition[] = [
   {
     label: 'Ingress Traffic Rate',

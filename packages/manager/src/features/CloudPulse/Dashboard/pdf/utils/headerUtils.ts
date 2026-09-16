@@ -26,7 +26,10 @@ interface PageHeaderParams
 }
 
 interface GlobalFilterBoxParams
-  extends Pick<PDFUtilProps, 'globalGroupBy' | 'pageWidth' | 'pdf'> {
+  extends Pick<
+    PDFUtilProps,
+    'currentGroupView' | 'globalGroupBy' | 'pageWidth' | 'pdf'
+  > {
   /**
    * The filter criteria string to be displayed in the global filter information box, derived from the filterData and filterConfig props in HeaderUtilProps and formatted using the appendAppliedFilters function to create a user-friendly representation of the applied filters
    */
@@ -92,10 +95,11 @@ const drawGlobalFilterBox = ({
   filterString,
   pageWidth,
   globalGroupBy,
+  currentGroupView,
 }: GlobalFilterBoxParams): number => {
   let filterStringWithGroupBy = filterString;
   const boxStartGapFromHeader = 38; // Gap between header bar and filter box
-  if (globalGroupBy?.length) {
+  if (globalGroupBy?.length && !currentGroupView) {
     filterStringWithGroupBy +=
       (filterString ? ' | ' : '') + `Group By: ${globalGroupBy.join(', ')}`;
   }
@@ -107,10 +111,16 @@ const drawGlobalFilterBox = ({
   pdf.setFont(PDF_FONT, 'bold');
   pdf.setFontSize(8);
 
-  const lines: string[] = pdf.splitTextToSize(
-    filterStringWithGroupBy,
-    pageWidth - MARGIN * 3
-  );
+  let lines: string[] = currentGroupView
+    ? [
+        `View: ${currentGroupView} ${globalGroupBy ? `(Metrics by ${globalGroupBy.join(', ')})` : ''}`,
+      ]
+    : [];
+
+  lines = [
+    ...lines,
+    ...pdf.splitTextToSize(filterStringWithGroupBy, pageWidth - MARGIN * 3),
+  ];
 
   const boxHeight = lines.length * FILTER_LINE_SPACING + 10;
   pdf.rect(
@@ -175,6 +185,7 @@ export const createPageHeaders = ({
   akamaiLogoDataUrl,
   globalGroupBy,
   resourceLabels,
+  currentGroupView,
 }: PDFUtilProps): number => {
   // Format the time range string from preset or custom range
   const start = formatDateTime(
@@ -222,6 +233,7 @@ export const createPageHeaders = ({
     }),
     pageWidth,
     globalGroupBy,
+    currentGroupView,
   });
 
   // Return Y position with 10px gap for content

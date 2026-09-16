@@ -689,7 +689,7 @@ export const AI_INFERENCE_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
   filters: [
     {
       configuration: {
-        filterKey: 'model_name',
+        filterKey: 'model_id',
         children: ['resource_id'],
         filterType: 'string',
         isFilterable: true,
@@ -712,7 +712,7 @@ export const AI_INFERENCE_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
     },
     {
       configuration: {
-        dependency: ['model_name'],
+        dependency: ['model_id'],
         filterKey: 'resource_id',
         filterType: 'string',
         isFilterable: true,

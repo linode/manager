@@ -49,6 +49,7 @@ type AlertNotificationEmail = 'email';
 type AlertNotificationSlack = 'slack';
 type AlertNotificationPagerDuty = 'pagerduty';
 type AlertNotificationWebHook = 'webhook';
+export type WidgetGroupByType = 'default' | 'toggles';
 export type EmailRecipientType =
   | 'admin_users'
   | 'read_users'
@@ -62,7 +63,22 @@ export interface Dashboard {
   service_type: CloudPulseServiceType;
   time_duration: TimeDuration;
   updated: string;
+  widget_groups?: WidgetGroup[];
   widgets: Widgets[];
+}
+
+export interface WidgetGroup {
+  group_by_type: WidgetGroupByType;
+  name: string;
+  options?: {
+    toggles: WidgetGroupOptions[];
+  };
+}
+
+export interface WidgetGroupOptions {
+  dimension: string;
+  is_checked: boolean;
+  name: string;
 }
 
 export interface TimeGranularity {
@@ -85,7 +101,7 @@ export interface DateTimeWithPreset {
 
 export interface Widgets {
   aggregate_function: string;
-  chart_type: 'area' | 'kpi' | 'line';
+  chart_type: 'area' | 'bar' | 'kpi' | 'line' | 'stacked-bar';
   color: string;
   description: string;
   entity_ids: string[];

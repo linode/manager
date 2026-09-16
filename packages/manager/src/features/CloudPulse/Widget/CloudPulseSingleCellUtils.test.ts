@@ -99,12 +99,14 @@ describe('getWidgetPeriodLabel', () => {
     expect(formatTimestamp).toHaveBeenNthCalledWith(
       1,
       100000,
-      'America/New_York'
+      'America/New_York',
+      false
     );
     expect(formatTimestamp).toHaveBeenNthCalledWith(
       2,
       300000,
-      'America/New_York'
+      'America/New_York',
+      false
     );
     expect(label).toBe('formatted-ts-100000 - formatted-ts-300000');
   });
@@ -123,12 +125,14 @@ describe('getWidgetPeriodLabel', () => {
       1,
       '2026-08-27T00:00:00Z',
       'UTC',
+      false,
       false
     );
     expect(formatDateTime).toHaveBeenNthCalledWith(
       2,
       '2026-08-27T10:00:00Z',
       'UTC',
+      false,
       false
     );
     expect(label).toBe(

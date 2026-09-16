@@ -5,6 +5,7 @@ import { useFlags } from 'src/hooks/useFlags';
 import { useCloudPulseMetricsQuery } from 'src/queries/cloudpulse/metrics';
 
 import { getCloudPulseMetricRequest } from '../Utils/CloudPulseWidgetUtils';
+import { constructAdditionalRequestFilters } from '../Utils/FilterBuilder';
 import { humanizeLargeData } from '../Utils/utils';
 import {
   calculateAggregatedValue,
@@ -28,7 +29,11 @@ export const CloudPulseSingleCellWidget = React.memo(
       authToken,
       isJweTokenFetching,
       timeStamp,
+      additionalFilters,
+      isActiveGroup,
     } = props;
+
+    const filters = constructAdditionalRequestFilters(additionalFilters ?? []); // any global level filters should be passed
 
     const {
       data: metricsList,
@@ -46,6 +51,9 @@ export const CloudPulseSingleCellWidget = React.memo(
           region,
           serviceType,
         }),
+        filters: filters.length
+          ? [...filters, ...(widget.filters ?? [])]
+          : undefined,
       },
       {
         authToken,
@@ -53,6 +61,8 @@ export const CloudPulseSingleCellWidget = React.memo(
         label: widget.label,
         timeStamp,
         url: flags.aclpReadEndpoint!,
+        shouldRefresh: isActiveGroup,
+        isActiveGroup: isActiveGroup ?? false,
       }
     );
     const singleMetricChartData = React.useMemo(() => {

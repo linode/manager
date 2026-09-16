@@ -20,6 +20,7 @@ export const CloudPulseContextProvider = ({
   const globalSelectedDashboard = React.useRef<Dashboard | undefined>(
     undefined
   );
+  const activeWidgetGroup = React.useRef<string | undefined>(undefined);
   const globalGroupBy = React.useRef<string[]>([]);
   const pdfData = React.useRef<Map<string, PdfData>>(undefined);
   const loadingWidgets = React.useRef<Set<string>>(new Set());
@@ -48,6 +49,14 @@ export const CloudPulseContextProvider = ({
     return globalSelectedDashboard.current;
   }, []);
 
+  const setActiveWidgetGroup = React.useCallback((widgetGroup?: string) => {
+    activeWidgetGroup.current = widgetGroup;
+  }, []);
+
+  const getActiveWidgetGroup = React.useCallback(() => {
+    return activeWidgetGroup.current;
+  }, []);
+
   const setGlobalGroupBy = React.useCallback((groupBy: string[]) => {
     globalGroupBy.current = groupBy;
   }, []);
@@ -65,7 +74,14 @@ export const CloudPulseContextProvider = ({
         pdfData.current.set(data.widgetLabel, data);
 
         // After setting, check if we hit the target
-        const targetCount = getGlobalSelectedDashboard()?.widgets?.length || 0;
+        const dashboardWidgets = getGlobalSelectedDashboard()?.widgets ?? [];
+        const currentWidgetGroup = getActiveWidgetGroup();
+        const targetCount = currentWidgetGroup
+          ? dashboardWidgets.filter(
+              ({ widget_grouping: widgetGrouping, chart_type: chartType }) =>
+                widgetGrouping === currentWidgetGroup && chartType !== 'kpi'
+            ).length
+          : dashboardWidgets.length;
 
         if (pdfData.current.size === targetCount) {
           // All widgets have reported in! Trigger the resolve.
@@ -76,7 +92,7 @@ export const CloudPulseContextProvider = ({
         }
       }
     },
-    [getGlobalSelectedDashboard]
+    [getActiveWidgetGroup, getGlobalSelectedDashboard]
   );
 
   const setWidgetLoading = React.useCallback(
@@ -149,6 +165,8 @@ export const CloudPulseContextProvider = ({
       value={{
         setGlobalFilterData,
         getGlobalFilterData,
+        setActiveWidgetGroup,
+        getActiveWidgetGroup,
         setGlobalSelectedDashboard,
         getGlobalSelectedDashboard,
         setGlobalGroupBy,

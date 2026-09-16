@@ -50,6 +50,10 @@ export interface PDFUtilProps {
    */
   akamaiLogoDataUrl?: string;
   /**
+   * The current group view selected in the dashboard, used to display the group view information in the header
+   */
+  currentGroupView?: string;
+  /**
    * The name of the dashboard to be displayed in the header
    */
   dashboardName: string;
@@ -69,6 +73,7 @@ export interface PDFUtilProps {
    * The width of the page
    */
   pageWidth: number;
+
   /**
    * The jsPDF document instance used to render the header elements on the PDF page
    */
