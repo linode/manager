@@ -5,14 +5,15 @@ import {
   makeResponse,
 } from 'src/mocks/utilities/response';
 
+import { getInferenceParameters, mockModels } from './mockInferenceModels';
+
 import type {
   ApiKey,
   ApiKeyType,
   ChatResponseBody,
   InferenceModel,
-  InferenceParameterDef,
-  InferenceTokenLimit,
   InferenceUsage,
+  InferenceUsageCredits,
   InferenceUsageTimeSeries,
 } from '@linode/api-v4';
 import type { StrictResponse } from 'msw';
@@ -152,630 +153,6 @@ const mockApiKeys: ApiKey[] = [
   }),
 ];
 
-// Mock Models data
-const mockModels: InferenceModel[] = [
-  {
-    capabilities: ['chat', 'completion'],
-    description:
-      "Google DeepMind's open MoE model with 3.8B active params, 256K context, frontier reasoning, coding, and multimodal understanding.",
-    id: 'gemma-4-26b-a4b-it',
-    label: 'Gemma 4 26B A4B IT',
-    lifecycle_status: 'beta',
-    modalities: {
-      input: ['text', 'image'],
-      output: ['text'],
-    },
-    parameters: {
-      context_window: 262144,
-      max_output_tokens: 8192,
-      parameter_count_billions: 26,
-    },
-    playground_available: true,
-    model_icon: 'gemma4',
-    provider_icon: 'Google',
-    price_per_million_tokens: {
-      input: 0.2,
-      output: 0.5,
-    },
-    provider: {
-      id: 'google',
-      name: 'Google',
-    },
-    regions: ['us-ord', 'us-sea', 'eu-mil'],
-    tags: [
-      'instruction-tuned',
-      'moe',
-      'multimodal',
-      'thinking',
-      'long-context',
-    ],
-    type: 'text-generation',
-    use_cases: [
-      'chatbots',
-      'reasoning',
-      'coding',
-      'multimodal-analysis',
-      'content-generation',
-      'long-context',
-    ],
-  },
-  {
-    capabilities: ['chat', 'completion'],
-    description:
-      "Alibaba's compact open-weights model with hybrid thinking, 119-language support, and strong coding and reasoning performance.",
-    id: 'qwen3-4b',
-    label: 'Qwen3 4B',
-    lifecycle_status: 'beta',
-    modalities: {
-      input: ['text'],
-      output: ['text'],
-    },
-    parameters: {
-      context_window: 32768,
-      max_output_tokens: 8192,
-      parameter_count_billions: 4,
-    },
-    playground_available: true,
-    model_icon: 'qwen',
-    provider_icon: 'alibaba',
-    price_per_million_tokens: {
-      input: 0.04,
-      output: 0.12,
-    },
-    provider: {
-      id: 'qwen',
-      name: 'Qwen',
-    },
-    regions: ['us-ord', 'us-sea'],
-    tags: ['instruction-tuned', 'efficient', 'thinking', 'multilingual'],
-    type: 'text-generation',
-    use_cases: ['chatbots', 'content-generation', 'reasoning', 'coding'],
-  },
-  {
-    capabilities: ['embedding'],
-    description:
-      'Qwen3-based embedding model supporting 100+ languages, flexible vector dimensions, and instruction-aware retrieval for RAG and semantic search.',
-    id: 'qwen3-embedding-4b',
-    label: 'Qwen3 Embedding 4B',
-    lifecycle_status: 'beta',
-    modalities: {
-      input: ['text'],
-      output: ['embedding'],
-    },
-    parameters: {
-      context_window: 32768,
-      max_output_tokens: 0,
-      parameter_count_billions: 4,
-    },
-    playground_available: false,
-    model_icon: 'qwen',
-    provider_icon: 'alibaba',
-    price_per_million_tokens: {
-      input: 0.05,
-      output: 0.0,
-    },
-    provider: {
-      id: 'qwen',
-      name: 'Qwen',
-    },
-    regions: ['us-ord'],
-    tags: ['embedding', 'multilingual', 'mrl'],
-    type: 'embedding',
-    use_cases: ['semantic-search', 'rag', 'reranking', 'text-classification'],
-  },
-  {
-    capabilities: ['chat', 'completion'],
-    description:
-      "Alibaba's 8B open-weights model with 128K context, hybrid thinking modes, and competitive reasoning across 119 languages.",
-    id: 'qwen3-8b',
-    label: 'Qwen3 8B',
-    lifecycle_status: 'beta',
-    modalities: {
-      input: ['text'],
-      output: ['text'],
-    },
-    parameters: {
-      context_window: 131072,
-      max_output_tokens: 8192,
-      parameter_count_billions: 8,
-    },
-    playground_available: true,
-    model_icon: 'qwen',
-    provider_icon: 'alibaba',
-    price_per_million_tokens: {
-      input: 0.06,
-      output: 0.18,
-    },
-    provider: {
-      id: 'qwen',
-      name: 'Qwen',
-    },
-    regions: ['us-ord', 'us-sea'],
-    tags: ['instruction-tuned', 'thinking', 'multilingual', 'long-context'],
-    type: 'text-generation',
-    use_cases: [
-      'chatbots',
-      'content-generation',
-      'reasoning',
-      'coding',
-      'long-context',
-    ],
-  },
-  {
-    capabilities: ['chat', 'completion'],
-    description:
-      "Moonshot AI's 2.8T-parameter open model with 1M-token context, visual understanding, and always-on deep reasoning.",
-    id: 'kimi-k3',
-    label: 'Kimi K3',
-    lifecycle_status: 'beta',
-    modalities: {
-      input: ['text', 'image', 'video'],
-      output: ['text'],
-    },
-    parameters: {
-      context_window: 1048576,
-      max_output_tokens: 131072,
-      parameter_count_billions: 2800,
-    },
-    playground_available: true,
-    model_icon: 'moonshot',
-    provider_icon: 'moonshot',
-    price_per_million_tokens: {
-      input: 3.0,
-      output: 15.0,
-    },
-    provider: {
-      id: 'moonshot',
-      name: 'Moonshot AI',
-    },
-    regions: ['us-ord', 'us-sea'],
-    tags: [
-      'reasoning',
-      'instruction-tuned',
-      'long-context',
-      'multimodal',
-      'moe',
-      'thinking',
-    ],
-    type: 'text-generation',
-    use_cases: [
-      'coding',
-      'reasoning',
-      'agents',
-      'long-context',
-      'knowledge-work',
-      'multimodal-analysis',
-    ],
-  },
-  {
-    capabilities: ['chat', 'completion'],
-    description:
-      "Moonshot AI's coding-focused model with 256K context, multimodal input, and deep thinking for complex engineering tasks.",
-    id: 'kimi-k2.7-code',
-    label: 'Kimi K2.7 Code',
-    lifecycle_status: 'beta',
-    modalities: {
-      input: ['text', 'image', 'video'],
-      output: ['text'],
-    },
-    parameters: {
-      context_window: 262144,
-      max_output_tokens: 65536,
-      parameter_count_billions: 1000,
-    },
-    playground_available: true,
-    model_icon: 'moonshot',
-    provider_icon: 'moonshot',
-    price_per_million_tokens: {
-      input: 0.95,
-      output: 4.0,
-    },
-    provider: {
-      id: 'moonshot',
-      name: 'Moonshot AI',
-    },
-    regions: ['us-ord', 'us-sea'],
-    tags: [
-      'coding',
-      'instruction-tuned',
-      'thinking',
-      'long-context',
-      'multimodal',
-    ],
-    type: 'text-generation',
-    use_cases: ['coding', 'code-generation', 'reasoning', 'agents'],
-  },
-  {
-    capabilities: ['chat', 'completion'],
-    description:
-      "DeepSeek's 284B MoE model with 1M context, three reasoning modes, and competitive pricing for production workloads.",
-    id: 'deepseek-v4-flash',
-    label: 'DeepSeek V4 Flash',
-    lifecycle_status: 'beta',
-    modalities: {
-      input: ['text'],
-      output: ['text'],
-    },
-    parameters: {
-      context_window: 1000000,
-      max_output_tokens: 384000,
-      parameter_count_billions: 284,
-    },
-    playground_available: true,
-    model_icon: 'deepseek',
-    provider_icon: 'deepseek',
-    price_per_million_tokens: {
-      input: 0.44,
-      output: 1.32,
-    },
-    provider: {
-      id: 'deepseek',
-      name: 'DeepSeek',
-    },
-    regions: ['us-ord', 'us-sea'],
-    tags: ['moe', 'reasoning', 'thinking', 'long-context'],
-    type: 'text-generation',
-    use_cases: ['chatbots', 'coding', 'reasoning', 'agents', 'long-context'],
-  },
-  {
-    capabilities: ['chat', 'completion'],
-    description:
-      "DeepSeek's frontier 1.6T MoE model with 1M context and Think Max mode matching the best closed-source models.",
-    id: 'deepseek-v4-pro',
-    label: 'DeepSeek V4 Pro',
-    lifecycle_status: 'beta',
-    modalities: {
-      input: ['text'],
-      output: ['text'],
-    },
-    parameters: {
-      context_window: 1000000,
-      max_output_tokens: 384000,
-      parameter_count_billions: 1600,
-    },
-    playground_available: true,
-    model_icon: 'deepseek',
-    provider_icon: 'deepseek',
-    price_per_million_tokens: {
-      input: 1.32,
-      output: 3.96,
-    },
-    provider: {
-      id: 'deepseek',
-      name: 'DeepSeek',
-    },
-    regions: ['us-ord', 'us-sea'],
-    tags: ['moe', 'reasoning', 'thinking', 'long-context', 'frontier'],
-    type: 'text-generation',
-    use_cases: [
-      'chatbots',
-      'coding',
-      'reasoning',
-      'agents',
-      'long-context',
-      'content-generation',
-    ],
-  },
-  {
-    capabilities: ['chat', 'completion'],
-    description:
-      "ZhipuAI's frontier model with 50% coding improvement, 1M lossless context, and strong long-horizon agent capabilities.",
-    id: 'glm-5.2',
-    label: 'GLM 5.2',
-    lifecycle_status: 'beta',
-    modalities: {
-      input: ['text'],
-      output: ['text'],
-    },
-    parameters: {
-      context_window: 1000000,
-      max_output_tokens: 32768,
-      parameter_count_billions: 130,
-    },
-    playground_available: true,
-    model_icon: 'glm5',
-    provider_icon: 'zhipuai',
-    price_per_million_tokens: {
-      input: 1.11,
-      output: 3.88,
-    },
-    provider: {
-      id: 'zhipuai',
-      name: 'ZhipuAI',
-    },
-    regions: ['us-ord'],
-    tags: ['instruction-tuned', 'coding', 'long-context', 'agents'],
-    type: 'text-generation',
-    use_cases: [
-      'coding',
-      'agents',
-      'long-context',
-      'content-generation',
-      'chatbots',
-    ],
-  },
-  {
-    capabilities: ['chat', 'completion'],
-    description:
-      "NVIDIA's 253B reasoning model from Llama 3.1 405B with switchable thinking, function calling, and frontier accuracy.",
-    id: 'llama-3.1-nemotron-ultra-253b-v1',
-    label: 'Nemotron Ultra 253B',
-    lifecycle_status: 'beta',
-    modalities: {
-      input: ['text'],
-      output: ['text'],
-    },
-    parameters: {
-      context_window: 131072,
-      max_output_tokens: 32768,
-      parameter_count_billions: 253,
-    },
-    playground_available: true,
-    model_icon: 'nemotron',
-    provider_icon: 'nvidia',
-    price_per_million_tokens: {
-      input: 0.4,
-      output: 1.2,
-    },
-    provider: {
-      id: 'nvidia',
-      name: 'NVIDIA',
-    },
-    regions: ['us-ord', 'us-sea'],
-    tags: ['reasoning', 'instruction-tuned', 'thinking', 'function-calling'],
-    type: 'text-generation',
-    use_cases: [
-      'reasoning',
-      'coding',
-      'chatbots',
-      'agents',
-      'content-generation',
-    ],
-  },
-  {
-    capabilities: ['chat', 'completion'],
-    description:
-      "Meta's 70B instruction-tuned model optimised for complex reasoning and multilingual instruction following.",
-    id: 'llama-3.3-70b-instruct',
-    label: 'Llama 3.3 70B Instruct',
-    lifecycle_status: 'active',
-    modalities: {
-      input: ['text'],
-      output: ['text'],
-    },
-    parameters: {
-      context_window: 131072,
-      max_output_tokens: 8192,
-      parameter_count_billions: 70,
-    },
-    playground_available: true,
-    model_icon: 'metaLlama',
-    provider_icon: 'meta',
-    price_per_million_tokens: {
-      input: 0.2,
-      output: 0.5,
-    },
-    provider: {
-      id: 'meta',
-      name: 'Meta',
-    },
-    regions: ['us-ord', 'us-sea'],
-    tags: ['instruction-tuned', 'large'],
-    type: 'text-generation',
-    use_cases: ['chatbots', 'content-generation', 'reasoning'],
-  },
-  {
-    capabilities: ['chat', 'completion'],
-    description:
-      "DeepSeek's open-source reasoning model with chain-of-thought thinking and strong performance on math and code.",
-    id: 'deepseek-r1-0528',
-    label: 'DeepSeek R1',
-    lifecycle_status: 'active',
-    modalities: {
-      input: ['text'],
-      output: ['text'],
-    },
-    parameters: {
-      context_window: 65536,
-      max_output_tokens: 8192,
-      parameter_count_billions: 67,
-    },
-    playground_available: true,
-    model_icon: 'deepseek',
-    provider_icon: 'deepseek',
-    price_per_million_tokens: {
-      input: 0.2,
-      output: 0.5,
-    },
-    provider: {
-      id: 'deepseek',
-      name: 'DeepSeek',
-    },
-    regions: ['us-ord', 'us-sea'],
-    tags: ['reasoning'],
-    type: 'text-generation',
-    use_cases: ['reasoning', 'code-generation'],
-  },
-];
-
-type ReasoningConfig = {
-  default: string;
-  enum: string[];
-};
-
-type SamplingDefaults = {
-  temperature: number;
-  topP: number;
-};
-
-const DEFAULT_SAMPLING: SamplingDefaults = { temperature: 1, topP: 1 };
-
-const SAMPLING_DEFAULTS: Record<string, SamplingDefaults> = {
-  'deepseek-r1-0528': { temperature: 0.6, topP: 0.95 },
-  'kimi-k2.7-code': { temperature: 1, topP: 0.95 },
-  'llama-3.3-70b-instruct': { temperature: 0.6, topP: 0.9 },
-  'qwen3-4b': { temperature: 0.6, topP: 0.95 },
-  'qwen3-8b': { temperature: 0.6, topP: 0.95 },
-};
-
-const THINKING_DEFAULTS: Record<string, boolean> = {
-  'deepseek-v4-flash': true,
-  'deepseek-v4-pro': true,
-  'gemma-4-26b-a4b-it': false,
-  'glm-5.2': true,
-  'llama-3.1-nemotron-ultra-253b-v1': true,
-  'qwen3-4b': true,
-  'qwen3-8b': true,
-};
-
-const REASONING_CONFIGS: Record<string, ReasoningConfig> = {
-  'deepseek-v4-flash': { default: 'high', enum: ['low', 'high', 'max'] },
-  'deepseek-v4-pro': { default: 'high', enum: ['low', 'high', 'max'] },
-  'glm-5.2': { default: 'max', enum: ['high', 'max'] },
-  'kimi-k3': { default: 'max', enum: ['low', 'high', 'max'] },
-};
-
-const MAX_TOKEN_BOUNDS: Record<
-  string,
-  Pick<InferenceParameterDef, 'maximum' | 'minimum'>
-> = {
-  'deepseek-r1-0528': { maximum: 65536, minimum: 1 },
-  'gemma-4-26b-a4b-it': { maximum: 8192, minimum: 1 },
-};
-
-const TOP_K_DEFAULTS: Record<string, number> = {
-  'gemma-4-26b-a4b-it': 64,
-  'qwen3-4b': 20,
-  'qwen3-8b': 20,
-};
-
-const COMMON_PARAMETERS: Record<string, InferenceParameterDef> = {
-  frequency_penalty: {
-    default: 0,
-    description:
-      "Reduces repetition by penalizing tokens in proportion to how often they've already appeared.",
-    label: 'Frequency Penalty',
-    maximum: 2,
-    minimum: -2,
-    type: 'number',
-  },
-  min_p: {
-    default: 0,
-    description:
-      'Sets the minimum probability a token needs (relative to the most likely token) to be considered.',
-    label: 'Min P',
-    maximum: 1,
-    minimum: 0,
-    type: 'number',
-  },
-  presence_penalty: {
-    default: 0,
-    description:
-      'Discourages reusing any token that has already appeared, nudging the model towards new topics.',
-    label: 'Presence Penalty',
-    maximum: 2,
-    minimum: -2,
-    type: 'number',
-  },
-  seed: {
-    default: null,
-    description:
-      'Fixes the random seed so identical inputs produce identical output.',
-    label: 'Seed',
-    type: 'integer',
-  },
-  stop: {
-    default: [],
-    description: 'Text strings that halt generation when produced.',
-    items: { type: 'string' },
-    label: 'Stop Sequences',
-    type: 'array',
-  },
-  stream: {
-    default: false,
-    description: 'Whether the response is returned incrementally.',
-    label: 'Stream Response',
-    type: 'boolean',
-  },
-};
-
-const EMBEDDING_PARAMETERS: Record<string, InferenceParameterDef> = {
-  dimensions: {
-    default: 2560,
-    label: 'Dimensions',
-    maximum: 2560,
-    minimum: 32,
-    type: 'integer',
-  },
-};
-
-const getInferenceParameters = (
-  modelId: string
-): Record<string, InferenceParameterDef> => {
-  if (modelId === 'qwen3-embedding-4b') {
-    return EMBEDDING_PARAMETERS;
-  }
-
-  const sampling = SAMPLING_DEFAULTS[modelId] ?? DEFAULT_SAMPLING;
-  const enableThinking = THINKING_DEFAULTS[modelId];
-  const reasoning = REASONING_CONFIGS[modelId];
-
-  return {
-    ...COMMON_PARAMETERS,
-    ...(enableThinking === undefined
-      ? {}
-      : {
-          enable_thinking: {
-            default: enableThinking,
-            description: 'Enables the model reasoning mode.',
-            label: 'Enable Thinking',
-            type: 'boolean',
-          },
-        }),
-    ...(reasoning === undefined
-      ? {}
-      : {
-          reasoning_effort: {
-            ...reasoning,
-            description: 'Controls how much reasoning the model performs.',
-            label: 'Thinking Effort',
-            type: 'string',
-          },
-        }),
-    max_tokens: {
-      default: null,
-      description: 'The maximum length of the model response in tokens.',
-      label: 'Max Output Tokens',
-      minimum: 1,
-      ...MAX_TOKEN_BOUNDS[modelId],
-      type: 'integer',
-    },
-    temperature: {
-      default: sampling.temperature,
-      description: 'Controls randomness in generated output.',
-      label: 'Temperature',
-      maximum: 2,
-      minimum: 0,
-      type: 'number',
-    },
-    top_k: {
-      default: TOP_K_DEFAULTS[modelId] ?? 0,
-      description: 'Limits sampling to the most likely next tokens.',
-      label: 'Top K',
-      minimum: 0,
-      type: 'integer',
-    },
-    top_p: {
-      default: sampling.topP,
-      description: 'Limits sampling to the most likely token mass.',
-      exclusiveMinimum: 0,
-      label: 'Top P',
-      maximum: 1,
-      type: 'number',
-    },
-  };
-};
-
 // Canned markdown response returned by the mock inference endpoint.
 const CANNED_RESPONSE_CONTENT = `Serverless inference is a great choice for **variable or bursty workloads**. Here's a quick breakdown:
 
@@ -831,9 +208,24 @@ export const createChatCompletion = (_mockState: MockState) => [
 
 /**
  * GET /v4beta/inference/models
- * Returns list of available models
+ * Returns the list of available models.
  */
 export const getModels = (_mockState: MockState) => [
+  http.get('*/v4beta/inference/models', async () => {
+    await new Promise((resolve) => setTimeout(resolve, 300));
+
+    return makeResponse({
+      data: mockModels,
+    });
+  }),
+];
+
+/**
+ * GET /v4beta/inference/models/:modelId/detail
+ * Returns a single model with `inference_parameters` (used by the playground
+ * options sidebar to render dynamic controls).
+ */
+export const getModelDetail = (_mockState: MockState) => [
   http.get('*/v4beta/inference/models/:modelId/detail', async ({ params }) => {
     const model = mockModels.find((entry) => entry.id === params.modelId);
 
@@ -848,40 +240,30 @@ export const getModels = (_mockState: MockState) => [
 
     return makeResponse(details);
   }),
-  http.get('*/v4beta/inference/models', async () => {
-    // Simulate network delay
-    await new Promise((resolve) => setTimeout(resolve, 300));
-
-    return makeResponse({
-      data: mockModels,
-    });
-  }),
 ];
 
-// Derive a deterministic token limit status for the account-level widget.
-const generateMockTokenLimit = (): InferenceTokenLimit => {
-  // Fixed values keep the mocked widget stable across renders.
-  const tokensLimit = 10_000_000;
-  const tokensUsed = 7_400_000;
-
-  return {
-    percent_used: Math.round((tokensUsed / tokensLimit) * 1000) / 10,
-    tokens_limit: tokensLimit,
-    tokens_used: tokensUsed,
-  };
-};
-
 /**
- * GET /v4beta/inference/token-limits
- * Returns the account's current token limit status: the percentage of the
- * allowed tokens used.
+ * GET /v4beta/inference/usage/credits
+ * Returns the current credits (max, used) for the account.
+ * The UI derives `percent_used` from `used_credits / max_credits`.
  */
-export const getTokenLimits = (_mockState: MockState) => [
-  http.get('*/v4beta/inference/token-limits', async () => {
-    // Simulate network delay
-    await new Promise((resolve) => setTimeout(resolve, 300));
+export const getUsageCreditsSummary = (_mockState: MockState) => [
+  http.get('*/v4beta/inference/usage/credits', async () => {
+    await new Promise((resolve) => setTimeout(resolve, 200));
 
-    return makeResponse(generateMockTokenLimit());
+    // Randomize between 100M and 500M max credits, in 50M increments.
+    const maxCreditsMillions = 100 + Math.floor(Math.random() * 9) * 50;
+    // Used credits: between 5% and 95% of max, rounded to 0.01M precision.
+    const usedRatio = Math.random() * 0.9 + 0.05;
+    const usedCreditsMillions =
+      Math.round(maxCreditsMillions * usedRatio * 100) / 100;
+
+    const credits: InferenceUsageCredits = {
+      max_credits: maxCreditsMillions * 1_000_000,
+      used_credits: usedCreditsMillions * 1_000_000,
+    };
+
+    return makeResponse(credits);
   }),
 ];
 

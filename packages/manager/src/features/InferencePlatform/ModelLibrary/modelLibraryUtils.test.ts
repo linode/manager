@@ -15,6 +15,12 @@ import {
 import type { Model, ModelFilterState } from './modelLibrary.types';
 import type { InferenceModel } from '@linode/api-v4';
 
+// Force supplementary enrichment on in tests (mimics MSW mode).
+vi.mock('src/dev-tools/utils', async (importOriginal) => {
+  const actual = (await importOriginal()) as Record<string, unknown>;
+  return { ...actual, isMSWEnabled: true };
+});
+
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
@@ -168,7 +174,61 @@ describe('mergeInferenceModel', () => {
 
     expect(result.providerName).not.toBe('Unknown');
     expect(result.useCaseTags.length).toBeGreaterThan(0);
-    expect(result.descriptionShort).not.toBe('');
+    expect(result.title).not.toBe(result.id);
+  });
+
+  describe('provider/model icon fallbacks', () => {
+    it('uses the API provider_icon URL when present', () => {
+      const result = mergeInferenceModel(
+        makeInferenceModel({
+          id: 'unknown-model',
+          provider: {
+            id: 'acme',
+            name: 'Acme',
+            provider_icon: 'https://example.com/acme.svg',
+          },
+        })
+      );
+      expect(result.providerLogo).toBe('https://example.com/acme.svg');
+    });
+
+    it('uses the API model_icon URL when present', () => {
+      const result = mergeInferenceModel(
+        makeInferenceModel({
+          id: 'unknown-model',
+          model_icon: 'https://example.com/model.svg',
+        })
+      );
+      expect(result.modelLogo).toBe('https://example.com/model.svg');
+    });
+
+    it('falls back to the provider-name slug when API and supplementary are empty', () => {
+      const result = mergeInferenceModel(
+        makeInferenceModel({
+          id: 'unknown-model',
+          model_icon: '',
+          provider: { id: 'meta', name: 'Meta', provider_icon: '' },
+        })
+      );
+      expect(result.providerLogo).toBe('meta');
+      expect(result.modelLogo).toBe('meta');
+    });
+
+    it('lowercases the provider name when using it as a slug', () => {
+      const result = mergeInferenceModel(
+        makeInferenceModel({
+          id: 'unknown-model',
+          model_icon: '',
+          provider: {
+            id: 'openai',
+            name: 'OpenAI',
+            provider_icon: '',
+          },
+        })
+      );
+      expect(result.providerLogo).toBe('openai');
+      expect(result.modelLogo).toBe('openai');
+    });
   });
 });
 

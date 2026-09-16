@@ -1,11 +1,9 @@
-import { useTheme } from '@linode/ui';
 import React from 'react';
 
-import { Box } from '../../components/Box/Box';
 import { ModelFeatureChip } from '../../components/ModelFeatureChip';
 import { Paper } from '../../components/Paper/Paper';
 import { Typography } from '../../components/Typography/Typography';
-import { providerIcon, providerIconStyles } from '../../utils';
+import { InferenceLogo } from '../../InferenceLogo';
 import styles from './ModelSpecs.module.css';
 
 import type { Model } from '../../ModelLibrary/modelLibrary.types';
@@ -16,12 +14,15 @@ interface ModelSpecsProps {
 
 const formatReleaseDate = (iso?: string): string => {
   if (!iso) return '—';
+  // Date-only strings ("YYYY-MM-DD") are parsed as UTC midnight; render them
+  // in UTC so a west-of-UTC viewer doesn't see the previous day.
   const d = new Date(iso);
   return isNaN(d.getTime())
     ? '—'
     : d.toLocaleDateString('en-US', {
         day: 'numeric',
         month: 'long',
+        timeZone: 'UTC',
         year: 'numeric',
       });
 };
@@ -35,11 +36,6 @@ const formatReleaseDate = (iso?: string): string => {
  * block below.
  */
 export const ModelSpecs = ({ model }: ModelSpecsProps) => {
-  const cmTheme = useTheme();
-  const ProviderIcon = model?.providerLogo
-    ? providerIcon(model.providerLogo)
-    : null;
-
   const category = model?.useCaseTags?.[0]?.label ?? '—';
 
   const modalities = model?.inputModes?.length
@@ -63,11 +59,12 @@ export const ModelSpecs = ({ model }: ModelSpecsProps) => {
             Provider
           </Typography>
           <div className={styles.providerRow}>
-            {ProviderIcon && (
-              <Box
+            {model?.providerLogo && (
+              <InferenceLogo
+                alt={model?.providerName ?? ''}
                 className={styles.providerIcon}
-                component={ProviderIcon}
-                style={providerIconStyles(model!.providerLogo, cmTheme)}
+                kind="provider"
+                value={model.providerLogo}
               />
             )}
             <Typography className={styles.value} component="span">
@@ -102,7 +99,8 @@ export const ModelSpecs = ({ model }: ModelSpecsProps) => {
             Parameters
           </Typography>
           <Typography className={styles.value} component="span">
-            {model?.parametersB ? `${model.parametersB} B` : '—'}
+            {model?.totalParams ??
+              (model?.parametersB ? `${model.parametersB}B` : '—')}
           </Typography>
         </div>
 

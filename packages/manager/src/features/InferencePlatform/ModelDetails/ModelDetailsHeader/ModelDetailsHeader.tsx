@@ -1,11 +1,9 @@
-import { useTheme } from '@linode/ui';
 import React from 'react';
 
-import { Box } from '../../components/Box/Box';
 import { ModelFeaturesList } from '../../components/ModelFeaturesList';
 import { Stack } from '../../components/Stack/Stack';
 import { Typography } from '../../components/Typography/Typography';
-import { modelIcon, modelIconStyles } from '../../utils';
+import { InferenceLogo } from '../../InferenceLogo';
 import { InferenceModelID } from './InferenceModelID';
 import styles from './ModelDetailsHeader.module.css';
 import { TryInPlayground } from './TryInPlayground';
@@ -29,9 +27,6 @@ export const ModelDetailsHeader = ({
   model,
   modelId,
 }: ModelDetailsHeaderProps) => {
-  const cmTheme = useTheme();
-  const ProviderIcon = model?.modelLogo ? modelIcon(model.modelLogo) : null;
-
   return (
     <Stack className={styles.root} width="100%">
       {/* Row A */}
@@ -49,11 +44,12 @@ export const ModelDetailsHeader = ({
           direction="row"
         >
           {/* Left column: model logo */}
-          {ProviderIcon && (
-            <Box
+          {model?.modelLogo && (
+            <InferenceLogo
+              alt={model?.title ?? ''}
               className={styles.modelLogo}
-              component={ProviderIcon}
-              style={modelIconStyles(model!.modelLogo || '', cmTheme)}
+              kind="model"
+              value={model.modelLogo}
             />
           )}
 

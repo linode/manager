@@ -1,3 +1,5 @@
+import { isMSWEnabled } from 'src/dev-tools/utils';
+
 import { MODEL_SUPPLEMENTARY } from './modelLibrary.supplementary';
 
 import type { Model, ModelFilterState, SortKey } from './modelLibrary.types';
@@ -52,6 +54,27 @@ function toCapabilities(
 }
 
 /**
+ * Best-effort mapping from a model id/label to a slug recognised by the
+ * local `modelIcon` / `providerIcon` switch in `utils.ts`. Used as a
+ * fallback when the API returns no `model_icon` and no supplementary entry
+ * exists, so the UI still renders a family-specific SVG instead of the
+ * default (Google) fallback.
+ */
+export const modelSlugFromId = (id: string): string => {
+  const s = id.toLowerCase();
+  if (s.includes('gemma')) return 'gemma4';
+  if (s.includes('llama') && s.includes('nemotron')) return 'nemotron';
+  if (s.includes('nemotron')) return 'nemotron';
+  if (s.includes('llama')) return 'metaLlama';
+  if (s.includes('deepseek')) return 'deepseek';
+  if (s.includes('qwen')) return 'qwen';
+  if (s.includes('kimi') || s.includes('moonshot')) return 'moonshot';
+  if (s.includes('glm')) return 'glm5';
+  if (s.includes('gpt') || s.includes('openai')) return 'openai';
+  return '';
+};
+
+/**
  * Merge a single InferenceModel entry with its supplementary metadata.
  * In development/mock mode, supplementary data fills in fields not provided
  * by the API (like pricing, etc.). Provider logos are always used from
@@ -60,8 +83,9 @@ function toCapabilities(
 export function mergeInferenceModel(m: InferenceModel): Model {
   const logoData = MODEL_SUPPLEMENTARY[m.id] ?? {};
 
-  // Only use full supplementary data in development/mock mode
-  const supp = import.meta.env.DEV ? logoData : {};
+  // Only use supplementary data when MSW is enabled (mock mode). With MSW off
+  // we hit the real API and must not leak stale mock text/pricing/icons.
+  const supp = isMSWEnabled ? logoData : {};
 
   // Convert context_window from tokens to K (thousands)
   const contextLengthK = m.parameters?.context_window
@@ -85,19 +109,35 @@ export function mergeInferenceModel(m: InferenceModel): Model {
   const suppFiltered = { ...supp };
   delete suppFiltered.priceInputPerMillion;
   delete suppFiltered.priceOutputPerMillion;
+  // Description/highlights come from the API's `more_info`; strip
+  // supplementary copies so stale mock text can't leak through.
+  delete suppFiltered.description;
+  delete suppFiltered.descriptionLong;
+  delete suppFiltered.descriptionShort;
+  delete suppFiltered.highlights;
+  // Dates come from the API; strip supplementary copies so they can't leak.
+  delete suppFiltered.releasedAt;
+  delete suppFiltered.updatedAt;
+
+  // Map API `prices` rows (by id) to the flat per-million fields used in the UI.
+  const priceByRow = (rowId: string) =>
+    m.prices?.find((p) => p.id === rowId)?.price?.hourly ?? undefined;
+  const priceInput = priceByRow('price_per_million_tokens_input');
+  const priceOutput = priceByRow('price_per_million_tokens_output');
+  const priceCached = priceByRow('price_per_million_tokens_cached');
 
   return {
     // Defaults for fields not in API
     descriptionShort: '',
     isServerless: false,
-    releasedAt: '',
     supportedLanguages: [],
-    updatedAt: '',
     // Supplementary overrides (only in dev mode)
     ...suppFiltered,
     // API data takes precedence for fields it provides
     contextLengthK: contextLengthK || suppFiltered.contextLengthK || 0,
-    description: m.description || suppFiltered.description || '',
+    description: m.description || '',
+    descriptionLong: m.more_info?.long_description,
+    highlights: m.more_info?.highlights,
     id: m.id,
     inputModes:
       inputModes.length > 0 ? inputModes : (suppFiltered.inputModes ?? []),
@@ -106,15 +146,28 @@ export function mergeInferenceModel(m: InferenceModel): Model {
     parametersB:
       m.parameters?.parameter_count_billions ?? suppFiltered.parametersB ?? 0,
     playgroundAvailable: m.playground_available ?? false,
-    // Pricing only from API (not from supplementary), except cached which the API doesn't return yet
+    releasedAt: m.version_info?.release_date ?? m.created_at ?? '',
+    totalParams: m.parameters?.total_params,
+    updatedAt: m.updated_at ?? '',
+    // Pricing only from API (via `prices` rows, with legacy
+    // `price_per_million_tokens` fallback). Not from supplementary.
     priceInputCachedPerMillion:
-      m.price_per_million_tokens?.cached ??
-      suppFiltered.priceInputCachedPerMillion,
-    priceInputPerMillion: m.price_per_million_tokens?.input ?? undefined,
-    priceOutputPerMillion: m.price_per_million_tokens?.output ?? undefined,
-    // Icons from API, falling back to supplementary mock data if unset
-    modelLogo: m.model_icon ?? suppFiltered.modelLogo,
-    providerLogo: m.provider_icon ?? logoData.providerLogo ?? '',
+      priceCached ?? suppFiltered.priceInputCachedPerMillion,
+    priceInputPerMillion: priceInput ?? undefined,
+    priceOutputPerMillion: priceOutput ?? undefined,
+    // Icons from API, falling back to supplementary mock data. When the API
+    // returns an empty `provider_icon` / `model_icon`, fall back to a slug
+    // derived from the provider name so the local `providerIcon` / `modelIcon`
+    // switch in `utils.ts` can still resolve a bundled SVG.
+    modelLogo:
+      m.model_icon ||
+      suppFiltered.modelLogo ||
+      modelSlugFromId(m.id || m.label || '') ||
+      (m.provider?.name ?? '').toLowerCase(),
+    providerLogo:
+      m.provider?.provider_icon ||
+      suppFiltered.providerLogo ||
+      (m.provider?.name ?? '').toLowerCase(),
     providerName: m.provider?.name || suppFiltered.providerName || 'Unknown',
     title: m.label || suppFiltered.title || m.id,
     useCaseTags:

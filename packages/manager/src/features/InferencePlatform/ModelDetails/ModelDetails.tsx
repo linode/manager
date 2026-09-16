@@ -1,3 +1,4 @@
+import { useInferenceModelDetailQuery } from '@linode/queries';
 import { useLocation, useParams } from '@tanstack/react-router';
 import React from 'react';
 
@@ -8,7 +9,6 @@ import { useTabs } from 'src/hooks/useTabs';
 
 import { Box } from '../components/Box/Box';
 import { Stack } from '../components/Stack/Stack';
-import { useInferencePlatform } from '../InferencePlatformContext';
 import { INFERENCE_PLATFORM_TABS } from '../inferencePlatformTabs';
 import { mergeInferenceModel } from '../ModelLibrary/modelLibraryUtils';
 import { CodeSnippetSection } from './CodeSnippetSection/CodeSnippetSection';
@@ -36,12 +36,15 @@ export const ModelDetails = () => {
 
   const { handleTabChange, tabIndex } = useTabs(tabs);
 
-  // Re-uses the same query (and cache) the Model Cards are populated from —
-  // there is no single-model endpoint, so we select the model by id from the
-  // shared list and run it through the same supplementary merge.
-  const { isModelsLoading, models } = useInferencePlatform();
+  // The Model Details page is driven by the per-model detail endpoint
+  // (`GET /v4beta/inference/models/:id/detail`), which returns the rich
+  // `more_info`, `license`, `limits`, `performance`, etc. fields not
+  // available on the list endpoint.
+  const { data: apiModel, isLoading } = useInferenceModelDetailQuery(
+    modelId ?? '',
+    Boolean(modelId)
+  );
 
-  const apiModel = models.find((m) => m.id === modelId);
   const model = apiModel ? mergeInferenceModel(apiModel) : undefined;
 
   return (
@@ -72,7 +75,7 @@ export const ModelDetails = () => {
         >
           {/* LEFT column */}
           <Stack spacing={16}>
-            <ModelDescription isLoading={isModelsLoading} model={model} />
+            <ModelDescription isLoading={isLoading} model={model} />
             <CodeSnippetSection modelId={modelId ?? ''} />
             <ModelHighlights model={model} />
             {showPlaceholderSections && <ResourcesBar />}

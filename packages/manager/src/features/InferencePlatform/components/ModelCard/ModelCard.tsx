@@ -4,7 +4,7 @@ import React from 'react';
 
 import { Skeleton } from 'src/components/Skeleton';
 
-import { modelIcon, modelIconStyles } from '../../utils';
+import { InferenceLogo } from '../../InferenceLogo';
 import { Box } from '../Box/Box';
 import { ModelFeatureChip } from '../ModelFeatureChip';
 import { Paper } from '../Paper/Paper';
@@ -54,14 +54,12 @@ export const ModelCard = ({ model, location }: ModelCardProps) => {
         justifyContent="space-between"
       >
         <Stack alignItems="flex-start" direction="row" spacing="12px">
-          {model.modelLogo && modelIcon(model.modelLogo) ? (
-            <Box
-              component={modelIcon(model.modelLogo)!}
-              style={{
-                height: 36,
-                width: 36,
-                ...modelIconStyles(model.modelLogo, cmTheme),
-              }}
+          {model.modelLogo ? (
+            <InferenceLogo
+              alt={model.title}
+              kind="model"
+              style={{ height: 36, width: 36 }}
+              value={model.modelLogo}
             />
           ) : (
             <Box

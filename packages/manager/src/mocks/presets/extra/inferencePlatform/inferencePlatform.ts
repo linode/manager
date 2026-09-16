@@ -4,9 +4,10 @@ import {
   deleteApiKey,
   getApiKey,
   getApiKeys,
+  getModelDetail,
   getModels,
-  getTokenLimits,
   getUsage,
+  getUsageCreditsSummary,
   revokeApiKey,
   updateApiKey,
 } from 'src/mocks/presets/crud/handlers/inferencePlatform';
@@ -48,7 +49,7 @@ export const inferencePlatformModelsPreset: MockPresetExtra = {
     id: 'Inference Platform',
     type: 'checkbox',
   },
-  handlers: [getModels],
+  handlers: [getModels, getModelDetail],
   id: 'inferencePlatform:models',
   label: 'Model Library',
 };
@@ -59,20 +60,20 @@ export const inferencePlatformUsagePreset: MockPresetExtra = {
     id: 'Inference Platform',
     type: 'checkbox',
   },
-  handlers: [getUsage],
+  handlers: [getUsage, getUsageCreditsSummary],
   id: 'inferencePlatform:usage',
   label: 'Usage',
 };
 
 export const inferencePlatformTokenLimitsPreset: MockPresetExtra = {
-  desc: 'Mocks the inference platform token limits endpoint.',
+  desc: 'Mocks the inference platform usage credits endpoint.',
   group: {
     id: 'Inference Platform',
     type: 'checkbox',
   },
-  handlers: [getTokenLimits],
+  handlers: [getUsageCreditsSummary],
   id: 'inferencePlatform:token-limits',
-  label: 'Token Limits',
+  label: 'Usage Credits',
 };
 
 // Keep the old export for backward compatibility

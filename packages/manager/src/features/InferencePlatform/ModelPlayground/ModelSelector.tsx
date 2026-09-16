@@ -3,13 +3,15 @@ import { useTheme } from '@linode/ui';
 import React, { useCallback, useContext, useEffect, useMemo } from 'react';
 
 import { Box, Typography } from '../components';
+import { InferenceLogo } from '../InferenceLogo';
 import { useInferencePlatform } from '../InferencePlatformContext';
-import { modelIcon, modelIconStyles } from '../utils';
+import { mergeInferenceModel } from '../ModelLibrary/modelLibraryUtils';
 import { ModelPlaygroundModelContext } from './ModelPlaygroundContext';
 
+import type { Model } from '../ModelLibrary/modelLibrary.types';
 import type { SelectElement } from '@akamai/cds-components';
 
-type ModelOption = { label: string; modelIcon?: string; value: string };
+type ModelOption = { label: string; logo?: string; value: string };
 
 export const ModelSelector = () => {
   const { onModelChange, selectedModel } = useContext(
@@ -18,15 +20,30 @@ export const ModelSelector = () => {
   const { isModelsLoading, models } = useInferencePlatform();
   const theme = useTheme();
 
+  // Merge each API model with its supplementary metadata so the playground
+  // uses the same `Model` shape (and same icon fallback chain) as the Model
+  // Library grid and Model Details pages.
+  const mergedById = useMemo(() => {
+    const map: Record<string, Model> = {};
+    for (const m of models) {
+      map[m.id] = mergeInferenceModel(m);
+    }
+    return map;
+  }, [models]);
+
   // Only models explicitly marked as playground-compatible can be selected.
   const options: ModelOption[] = useMemo(() => {
-    const filtered = models.filter((model) => model.playground_available);
-    return filtered.map((m) => ({
-      label: m.label ?? m.id,
-      modelIcon: m.model_icon,
-      value: m.id,
-    }));
-  }, [models]);
+    return models
+      .filter((model) => model.playground_available)
+      .map((m) => {
+        const merged = mergedById[m.id];
+        return {
+          label: merged?.title ?? m.label ?? m.id,
+          logo: merged?.modelLogo || merged?.providerLogo,
+          value: m.id,
+        };
+      });
+  }, [models, mergedById]);
 
   // Once models load, default-select the first one if the current selection
   // is no longer in the list.
@@ -45,18 +62,15 @@ export const ModelSelector = () => {
 
   const renderModelItem = useCallback(
     (item: ModelOption, bold = false) => {
-      const logo = item.modelIcon ?? null;
-      const Icon = logo ? modelIcon(logo) : null;
+      const logo = item.logo;
       return (
         <span style={{ alignItems: 'center', display: 'flex', gap: '8px' }}>
-          {Icon && (
-            <Icon
-              style={{
-                flexShrink: 0,
-                height: '16px',
-                width: '16px',
-                ...modelIconStyles(logo!, theme),
-              }}
+          {logo && (
+            <InferenceLogo
+              alt=""
+              kind="model"
+              style={{ flexShrink: 0, height: '16px', width: '16px' }}
+              value={logo}
             />
           )}
           <span style={bold ? { font: theme.font.bold } : undefined}>

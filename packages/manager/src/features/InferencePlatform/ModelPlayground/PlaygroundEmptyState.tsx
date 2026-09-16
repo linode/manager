@@ -1,11 +1,12 @@
 import { useTheme } from '@linode/ui';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 
 import AkamaiWave from 'src/assets/logo/akamai-wave.svg';
 
 import { Box, Paper, Stack, Typography } from '../components';
-import { MODEL_SUPPLEMENTARY } from '../ModelLibrary/modelLibrary.supplementary';
-import { providerIcon, providerIconStyles } from '../utils';
+import { InferenceLogo } from '../InferenceLogo';
+import { useInferencePlatform } from '../InferencePlatformContext';
+import { mergeInferenceModel } from '../ModelLibrary/modelLibraryUtils';
 import {
   ModelPlaygroundModelContext,
   ModelPlaygroundOutputContext,
@@ -15,6 +16,7 @@ import './PlaygroundEmptyState.css';
 export const PlaygroundEmptyState = () => {
   const { selectedModel } = useContext(ModelPlaygroundModelContext);
   const { messages } = useContext(ModelPlaygroundOutputContext);
+  const { models } = useInferencePlatform();
   const theme = useTheme();
 
   // Defer visibility by one tick so the CSS transition fires on mount.
@@ -23,10 +25,16 @@ export const PlaygroundEmptyState = () => {
 
   const isVisible = mounted && messages.length === 0 && Boolean(selectedModel);
 
-  const supp = selectedModel ? MODEL_SUPPLEMENTARY[selectedModel] : undefined;
-  const ProviderIcon = supp?.providerLogo
-    ? providerIcon(supp.providerLogo)
-    : null;
+  // Same merged `Model` shape used everywhere else (Model Library, Details).
+  const merged = useMemo(() => {
+    const apiModel = selectedModel
+      ? models.find((m) => m.id === selectedModel)
+      : undefined;
+    return apiModel ? mergeInferenceModel(apiModel) : undefined;
+  }, [models, selectedModel]);
+
+  const providerLogo = merged?.modelLogo || merged?.providerLogo;
+  const title = merged?.title ?? selectedModel;
 
   return (
     <Stack
@@ -64,15 +72,12 @@ export const PlaygroundEmptyState = () => {
           spacing="12px"
           style={{ marginBottom: '12px' }}
         >
-          {ProviderIcon && (
-            <Box
-              component={ProviderIcon}
-              style={{
-                flexShrink: 0,
-                height: 16,
-                width: 16,
-                ...providerIconStyles(supp!.providerLogo!, theme),
-              }}
+          {providerLogo && (
+            <InferenceLogo
+              alt=""
+              kind="model"
+              style={{ flexShrink: 0, height: 16, width: 16 }}
+              value={providerLogo}
             />
           )}
           <Typography
@@ -83,10 +88,10 @@ export const PlaygroundEmptyState = () => {
               fontSize: '1rem',
             }}
           >
-            {supp?.title ?? selectedModel}
+            {title}
           </Typography>
         </Stack>
-        {supp?.title && (
+        {merged?.title && (
           <Typography
             style={{
               color: theme.palette.text.secondary,
@@ -97,7 +102,7 @@ export const PlaygroundEmptyState = () => {
             <Box component="span" style={{ marginRight: '6px' }}>
               Experiment with{' '}
               <Box component="span" style={{ font: theme.font.semibold }}>
-                {supp.title}
+                {merged.title}
               </Box>{' '}
               running on
             </Box>

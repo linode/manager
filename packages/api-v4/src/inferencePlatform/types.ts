@@ -84,6 +84,7 @@ export interface UpdateApiKeyPayload {
 export interface InferenceModelProvider {
   id: string;
   name: string;
+  provider_icon?: string;
 }
 
 export interface InferenceModelModalities {
@@ -92,9 +93,35 @@ export interface InferenceModelModalities {
 }
 
 export interface InferenceModelParameters {
+  architecture?: string;
   context_window: number;
   max_output_tokens: number;
   parameter_count_billions: number;
+  precision?: string;
+  total_params?: string;
+}
+
+export interface InferenceModelHighlight {
+  item_text: string;
+  title: string;
+}
+
+export interface InferenceModelMoreInfo {
+  highlights: InferenceModelHighlight[];
+  long_description: string;
+}
+
+export interface InferenceModelPriceValue {
+  hourly: null | number;
+  monthly: null | number;
+}
+
+export interface InferenceModelPrice {
+  id: string;
+  label: string;
+  price: InferenceModelPriceValue;
+  region_prices: InferenceModelPriceValue[];
+  transfer: number;
 }
 
 export type InferenceParameterValue = boolean | number | string;
@@ -114,30 +141,73 @@ export interface InferenceParameterDef {
   type: 'array' | 'boolean' | 'integer' | 'number' | 'string';
 }
 
-export interface InferenceModelPricePerMillionTokens {
-  cached?: number;
-  input?: number;
-  output?: number;
+export interface InferenceModelPerformance {
+  benchmark_date: string;
+  latency_p50_ms: number;
+  latency_p99_ms: number;
+  throughput_tokens_per_sec: number;
+  time_to_first_token_ms: number;
+}
+
+export interface InferenceModelLimits {
+  max_concurrent_requests: number;
+  max_requests_per_minute: number;
+  max_tokens_per_minute: number;
+  max_tokens_per_request: number;
+}
+
+export interface InferenceModelRegionalAvailability {
+  capacity: string;
+  operational_status: string;
+  region: string;
+}
+
+export interface InferenceModelVersionInfo {
+  current_version: string;
+  deprecation_date: null | string;
+  release_date: string;
+  sunset_date: null | string;
+  versions: string[];
+}
+
+export interface InferenceModelLicense {
+  attribution_required: boolean;
+  commercial_use: boolean;
+  name: string;
+  url: string;
 }
 
 export interface InferenceModel {
+  api_reference_url?: string;
   capabilities: string[];
+  created_at?: string;
   description: string;
+  documentation_url?: string;
   id: string;
+  /**
+   * Object keyed by parameter name (e.g. `temperature`, `max_tokens`).
+   * The UI should render each key as the parameter name.
+   */
   inference_parameters?: Record<string, InferenceParameterDef>;
   label: string;
+  license?: InferenceModelLicense;
   lifecycle_status: string;
+  limits?: InferenceModelLimits;
   modalities: InferenceModelModalities;
   model_icon?: string;
+  more_info?: InferenceModelMoreInfo;
   parameters: InferenceModelParameters;
+  performance?: InferenceModelPerformance;
   playground_available: boolean;
-  price_per_million_tokens?: InferenceModelPricePerMillionTokens;
+  prices?: InferenceModelPrice[];
   provider: InferenceModelProvider;
-  provider_icon?: string;
+  regional_availability?: InferenceModelRegionalAvailability[];
   regions: string[];
   tags: string[];
   type: string;
+  updated_at?: string;
   use_cases: string[];
+  version_info?: InferenceModelVersionInfo;
 }
 
 export interface InferenceModelsResponse {
@@ -193,9 +263,7 @@ export interface InferenceUsageRequest {
   top_n?: number;
 }
 
-// Token limit types
-export interface InferenceTokenLimit {
-  percent_used: number;
-  tokens_limit: number;
-  tokens_used: number;
+export interface InferenceUsageCredits {
+  max_credits: number;
+  used_credits: number;
 }

@@ -29,6 +29,7 @@ export interface Model {
   releasedAt: string;
   supportedLanguages: string[];
   title: string;
+  totalParams?: string;
   updatedAt: string;
   useCaseTags: ModelCapability[];
 }

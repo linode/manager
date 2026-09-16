@@ -4,8 +4,8 @@ import {
   getApiKeys,
   getInferenceModelDetail,
   getInferenceModels,
-  getInferenceTokenLimits,
   getInferenceUsage,
+  getInferenceUsageCredits,
   revokeApiKey,
   updateApiKey,
 } from '@linode/api-v4';
@@ -27,8 +27,8 @@ import type {
   Filter,
   InferenceModel,
   InferenceModelsResponse,
-  InferenceTokenLimit,
   InferenceUsage,
+  InferenceUsageCredits,
   InferenceUsageRequest,
   Params,
   ResourcePage,
@@ -71,14 +71,14 @@ export const inferenceQueries = createQueryKeys('inference', {
     queryFn: getInferenceModels,
     queryKey: null,
   },
-  tokenLimits: {
-    queryFn: getInferenceTokenLimits,
-    queryKey: null,
-  },
   usage: (data?: InferenceUsageRequest) => ({
     queryFn: () => getInferenceUsage(data),
     queryKey: [data],
   }),
+  usageCredits: {
+    queryFn: getInferenceUsageCredits,
+    queryKey: null,
+  },
 });
 
 /**
@@ -121,13 +121,13 @@ export const useInferenceModelsQuery = (enabled = true) =>
   });
 
 /**
- * Hook to fetch full details for one inference model.
+ * Hook to fetch full details for a single inference model.
  */
 export const useInferenceModelDetailQuery = (modelId: string, enabled = true) =>
   useQuery<InferenceModel, APIError[]>({
     ...inferenceQueries.modelDetail(modelId),
     enabled: enabled && Boolean(modelId),
-    staleTime: 5 * 60 * 1000,
+    staleTime: 5 * 60 * 1000, // Cache for 5 minutes
   });
 
 /**
@@ -144,13 +144,14 @@ export const useInferenceUsageQuery = (
   });
 
 /**
- * Hook to fetch the current token limit status for the Inference Platform.
+ * Hook to fetch the current credits summary for the Inference Platform
+ * (total, used, and remaining credits for the current billing period).
  */
-export const useInferenceTokenLimitsQuery = (enabled = true) =>
-  useQuery<InferenceTokenLimit, APIError[]>({
-    ...inferenceQueries.tokenLimits,
+export const useInferenceUsageCreditsSummaryQuery = (enabled = true) =>
+  useQuery<InferenceUsageCredits, APIError[]>({
+    ...inferenceQueries.usageCredits,
     enabled,
-    staleTime: 5 * 60 * 1000, // Cache for 5 minutes
+    staleTime: 60 * 1000, // Cache for 1 minute
   });
 
 /**

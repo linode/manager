@@ -2,7 +2,7 @@ import { useTheme } from '@linode/ui';
 import { useNavigate } from '@tanstack/react-router';
 import React from 'react';
 
-import { providerIcon, providerIconStyles } from '../../utils';
+import { InferenceLogo } from '../../InferenceLogo';
 import { Box } from '../Box/Box';
 import { ModelFeatureChip } from '../ModelFeatureChip';
 import { Paper } from '../Paper/Paper';
@@ -50,13 +50,11 @@ export const ModelRow = ({ model }: ModelRowProps) => {
         justifyContent="space-between"
       >
         <Stack alignItems="flex-start" direction="row" spacing="12px">
-          <Box
-            component={providerIcon(model.providerLogo)!}
-            style={{
-              height: 22,
-              width: 22,
-              ...providerIconStyles(model.providerLogo, cmTheme),
-            }}
+          <InferenceLogo
+            alt={model.title}
+            kind="model"
+            style={{ height: 22, width: 22 }}
+            value={model.modelLogo || model.providerLogo}
           />
 
           <Stack>

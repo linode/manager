@@ -5,13 +5,13 @@ import { BarPercent } from 'src/components/BarPercent';
 
 import styles from './TokenLimitStatus.module.css';
 
-import type { InferenceTokenLimit } from '@linode/api-v4';
+import type { InferenceUsageCredits } from '@linode/api-v4';
 
 interface TokenLimitStatusProps {
   /** Animate the bar from 0 to its value (500ms delay, 900ms strong ease-out) on mount. Defaults to true. */
   animateBar?: boolean;
   isLoading?: boolean;
-  tokenLimit?: InferenceTokenLimit;
+  tokenLimit?: InferenceUsageCredits;
 }
 
 // Map the tokens-used percentage to a risk tier class applied at the widget root.
@@ -30,7 +30,12 @@ export const TokenLimitStatus = ({
   isLoading,
   tokenLimit,
 }: TokenLimitStatusProps) => {
-  const percentUsed = tokenLimit?.percent_used ?? 0;
+  const maxCredits = tokenLimit?.max_credits ?? 0;
+  const usedCredits = tokenLimit?.used_credits ?? 0;
+  const percentUsed =
+    maxCredits > 0
+      ? Math.min(100, Math.round((usedCredits / maxCredits) * 100))
+      : 0;
   const ready = !isLoading && Boolean(tokenLimit);
 
   // Start the fill at 0 and animate to the value once data is ready, so the
@@ -56,7 +61,7 @@ export const TokenLimitStatus = ({
       className={`${styles.paper} ${getRiskClassName(percentUsed)}`}
       variant="outlined"
     >
-      <h3 className={styles.title}>Monthly Token Limit Status</h3>
+      <h3 className={styles.title}>Monthly Tokens Credits Status</h3>
 
       <div className={styles.gaugeRow}>
         <div className={styles.gauge}>

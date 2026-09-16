@@ -1,5 +1,5 @@
 import {
-  useInferenceTokenLimitsQuery,
+  useInferenceUsageCreditsSummaryQuery,
   useInferenceUsageQuery,
 } from '@linode/queries';
 import { Box, Stack } from '@linode/ui';
@@ -71,8 +71,9 @@ const UsageContent = ({
 }: UsageContentProps) => {
   const dynamicData = useUsageData();
 
+  // Account-level credits, used by the Monthly Token Limit widget.
   const { data: tokenLimit, isLoading: isTokenLimitLoading } =
-    useInferenceTokenLimitsQuery();
+    useInferenceUsageCreditsSummaryQuery();
 
   // Check if we have real data or just the "no-data" placeholder
   const hasRealData = React.useMemo(() => {

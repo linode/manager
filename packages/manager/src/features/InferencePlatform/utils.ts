@@ -138,6 +138,9 @@ export const modelIcon = (
     case 'nemotron':
       return Nemotron;
 
+    case 'openai':
+      return OpenAI;
+
     case 'qwen':
       return Qwen;
 
