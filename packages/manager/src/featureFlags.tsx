@@ -303,6 +303,7 @@ export interface Flags {
   iamQuotas: boolean;
   iamTfaEnforcement: boolean;
   inferencePlatform: boolean;
+  inferencePlatform2026Beta: boolean;
   ipv6Sharing: boolean;
   kubernetesBlackwellPlans: boolean;
   limitsEvolution: LimitsEvolution;

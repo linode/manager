@@ -3,6 +3,7 @@ import { useNavigate } from '@tanstack/react-router';
 import React from 'react';
 
 import { Skeleton } from 'src/components/Skeleton';
+import { useFlags } from 'src/hooks/useFlags';
 
 import { InferenceLogo } from '../../InferenceLogo';
 import { Box } from '../Box/Box';
@@ -25,8 +26,16 @@ interface ModelCardProps {
 export const ModelCard = ({ model, location }: ModelCardProps) => {
   const cmTheme = useTheme();
   const navigate = useNavigate();
+  const flags = useFlags();
+
+  // Model Details is gated behind the 2026 beta features flag. When the flag
+  // is off, the card is not clickable and no navigation happens.
+  const isDetailsEnabled = Boolean(flags.inferencePlatform2026Beta);
 
   const navigateToModelDetails = () => {
+    if (!isDetailsEnabled) {
+      return;
+    }
     navigate({
       params: { modelId: model.id },
       to: '/inference-platform/model-library/$modelId',
@@ -35,17 +44,23 @@ export const ModelCard = ({ model, location }: ModelCardProps) => {
 
   return (
     <Paper
+      aria-disabled={!isDetailsEnabled || undefined}
       aria-label={`View details for ${model.title}`}
       className={styles.card}
-      onClick={navigateToModelDetails}
-      onKeyDown={(event: React.KeyboardEvent<HTMLDivElement>) => {
-        if (event.key === 'Enter' || event.key === ' ') {
-          event.preventDefault();
-          navigateToModelDetails();
-        }
-      }}
-      role="button"
-      tabIndex={0}
+      onClick={isDetailsEnabled ? navigateToModelDetails : undefined}
+      onKeyDown={
+        isDetailsEnabled
+          ? (event: React.KeyboardEvent<HTMLDivElement>) => {
+              if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                navigateToModelDetails();
+              }
+            }
+          : undefined
+      }
+      role={isDetailsEnabled ? 'button' : undefined}
+      style={isDetailsEnabled ? undefined : { cursor: 'default' }}
+      tabIndex={isDetailsEnabled ? 0 : -1}
     >
       {/* Header: logo + title + provider + Playground link */}
       <Stack

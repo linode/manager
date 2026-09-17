@@ -1,10 +1,12 @@
 import { useInferenceModelDetailQuery } from '@linode/queries';
+import { NotFound } from '@linode/ui';
 import { useLocation, useParams } from '@tanstack/react-router';
 import React from 'react';
 
 import { LandingHeader } from 'src/components/LandingHeader';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
+import { useFlags } from 'src/hooks/useFlags';
 import { useTabs } from 'src/hooks/useTabs';
 
 import { Box } from '../components/Box/Box';
@@ -25,6 +27,7 @@ const showPlaceholderSections = false;
 
 export const ModelDetails = () => {
   const { modelId } = useParams({ strict: false }) as { modelId?: string };
+  const flags = useFlags();
 
   // useLocation subscribes to route changes so useTabs recomputes the active
   // tab index; the Model Library tab stays active on this nested route.
@@ -36,14 +39,25 @@ export const ModelDetails = () => {
 
   const { handleTabChange, tabIndex } = useTabs(tabs);
 
+  // Gate the Model Details page on the 2026 beta features flag. The query
+  // below is also gated on this flag so that bookmarked URLs do not fire the
+  // beta endpoint (avoiding avoidable 404/authorization errors) before the
+  // route renders NotFound.
+  const isBetaEnabled = Boolean(flags.inferencePlatform2026Beta);
+
   // The Model Details page is driven by the per-model detail endpoint
   // (`GET /v4beta/inference/models/:id/detail`), which returns the rich
   // `more_info`, `license`, `limits`, `performance`, etc. fields not
   // available on the list endpoint.
   const { data: apiModel, isLoading } = useInferenceModelDetailQuery(
     modelId ?? '',
-    Boolean(modelId)
+    isBetaEnabled && Boolean(modelId)
   );
+
+  // Checked after hooks to preserve consistent hook order across renders.
+  if (!isBetaEnabled) {
+    return <NotFound />;
+  }
 
   const model = apiModel ? mergeInferenceModel(apiModel) : undefined;
 

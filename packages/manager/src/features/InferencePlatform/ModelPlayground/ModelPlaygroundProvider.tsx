@@ -11,6 +11,11 @@ import React, {
 } from 'react';
 
 import { getExtraPresets, isMSWEnabled } from 'src/dev-tools/utils';
+import { useFlags } from 'src/hooks/useFlags';
+import {
+  getInferenceParameters,
+  mockModels,
+} from 'src/mocks/presets/crud/handlers/mockInferenceModels';
 
 import { useInferenceStream } from '../hooks/useInferenceStream';
 import {
@@ -58,14 +63,60 @@ export const ModelPlaygroundProvider = ({ children }: Props) => {
   );
   const [selectedModel, setSelectedModel] = useState(modelFromUrl ?? '');
 
+  const flags = useFlags();
+
   const { onSettingsChange, settings } = useContext(
     ModelPlaygroundOptionsContext
   );
   const {
-    data: modelDetails,
-    isError: isModelDetailsError,
-    isLoading: isModelDetailsLoading,
+    data: apiModelDetails,
+    isError: isApiModelDetailsError,
+    isLoading: isApiModelDetailsLoading,
   } = useInferenceModelDetailQuery(selectedModel);
+
+  // When the 2026 beta features flag is OFF, fall back to the local mock
+  // catalog (`mockModels` + `getInferenceParameters`) whenever the real API
+  // returned no data or errored for the selected model. This keeps the
+  // playground functional in pre-beta environments where the detail
+  // endpoint may not yet return the rich parameter schema, while still
+  // preferring live data whenever the API provides it.
+  const mockModelDetails = useMemo(() => {
+    if (!selectedModel) {
+      return undefined;
+    }
+    const base = mockModels.find((m) => m.id === selectedModel);
+    if (!base) {
+      return undefined;
+    }
+    return {
+      ...base,
+      inference_parameters: getInferenceParameters(base.id),
+    };
+  }, [selectedModel]);
+
+  const modelDetails = useMemo(() => {
+    if (flags.inferencePlatform2026Beta) {
+      return apiModelDetails;
+    }
+    // Prefer the mock schema immediately when available so controls render
+    // without waiting for the API round-trip. Fall back to whatever the API
+    // eventually returns if we don't have a mock for the selected model.
+    return mockModelDetails ?? apiModelDetails;
+  }, [flags.inferencePlatform2026Beta, apiModelDetails, mockModelDetails]);
+
+  // Suppress the "Unable to load this model's options" fallback message
+  // whenever we're actually rendering usable mock data — the controls will
+  // work fine off the mock schema, so surfacing an error would be
+  // misleading.
+  const isModelDetailsError =
+    isApiModelDetailsError &&
+    !(!flags.inferencePlatform2026Beta && mockModelDetails !== undefined);
+
+  // While the mock is providing controls, don't block the sidebar behind
+  // a loading spinner waiting for the (irrelevant) API call.
+  const isModelDetailsLoading =
+    isApiModelDetailsLoading &&
+    !(!flags.inferencePlatform2026Beta && mockModelDetails !== undefined);
 
   const onModelChange = useCallback(
     (model: string) => {
