@@ -65,7 +65,7 @@ export const UsageSection = () => {
     <Paper className={styles.usageSection}>
       <Paper className={styles.usageSectionContent}>
         <Stack className={styles.usageSectionHeader} direction="row">
-          <Typography className={styles.headerText}>Usage - Tokens</Typography>
+          <Typography className={styles.headerText}>Token Usage</Typography>
 
           <Box className={styles.selectWrapper}>
             <Select<{ label: string; value: string }>

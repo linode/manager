@@ -27,7 +27,7 @@ export const SpeedrunSection = () => {
   return (
     <Paper className={styles.speedrunSection}>
       <Typography className={styles.inferenceSpeedrun}>
-        Inference Speedrun
+        Get started with Serverless Inference
       </Typography>
 
       <Box className={styles.speedrunSteps}>

@@ -98,7 +98,7 @@ describe('UsageSection', () => {
     const { getByText } = renderWithTheme(<UsageSection />);
 
     await waitFor(() => {
-      expect(getByText('Usage - Tokens')).toBeVisible();
+      expect(getByText('Token Usage')).toBeVisible();
     });
   });
 
@@ -134,7 +134,7 @@ describe('UsageSection', () => {
     const { getByText } = renderWithTheme(<UsageSection />);
 
     await waitFor(() => {
-      expect(getByText('Usage - Tokens')).toBeVisible();
+      expect(getByText('Token Usage')).toBeVisible();
     });
   });
 });

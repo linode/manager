@@ -7,6 +7,8 @@ import { Box, Chip, Paper, Stack, Typography } from '../../components';
 import styles from './ModelExploreCard.module.css';
 
 export interface ModelExploreCardData {
+  /** CTA label shown in the top-right chip (e.g. "Browse Models"). Defaults to "View". */
+  cta?: string;
   description: string;
   icon?: React.FC<React.SVGProps<SVGSVGElement>>;
   title: string;
@@ -43,7 +45,7 @@ export const ModelExploreCard = ({ card }: ModelExploreCardProps) => {
               </Typography>
 
               <Chip className={styles.viewChip} component="span">
-                View
+                {card.cta ?? 'View'}
                 <LeftArrowIcon
                   height={20}
                   style={{ transform: 'rotate(180deg)' }}

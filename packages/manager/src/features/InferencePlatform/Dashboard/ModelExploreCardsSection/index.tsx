@@ -11,15 +11,17 @@ import type { ModelExploreCardData } from './ModelExploreCard';
 
 const cards: ModelExploreCardData[] = [
   {
+    cta: 'Browse Models',
     description:
-      'Browse the latest models, compare capabilities, and shortlist the best options for your use case.',
+      'Browse available models and compare parameters, capabilities, and pricing.',
     icon: Library,
     title: 'Model Library',
     to: '/inference-platform/model-library',
   },
   {
+    cta: 'Open Playground',
     description:
-      'Run prompts against production-ready models and tune your request settings in real time.',
+      'Try your prompts across different models and find what works best.',
     icon: Beaker,
     title: 'Model Playground',
     to: '/inference-platform/model-playground',

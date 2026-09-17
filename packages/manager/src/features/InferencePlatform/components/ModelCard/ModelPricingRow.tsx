@@ -30,7 +30,7 @@ export const ModelPricingRow = ({
         )}{' '}
         {priceInputCachedPerMillion !== undefined && (
           <Stack className={styles.priceBlock} direction="row">
-            <Box className={styles.amountLabel}>Input Cached</Box>
+            <Box className={styles.amountLabel}>Cached</Box>
             <Box className={styles.amount}>
               ${priceInputCachedPerMillion.toFixed(2)}
             </Box>

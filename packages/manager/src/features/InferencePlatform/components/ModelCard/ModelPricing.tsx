@@ -28,7 +28,7 @@ export const ModelPricing = ({
         )}{' '}
         {priceInputCachedPerMillion !== undefined && (
           <Stack className={styles.priceBlock}>
-            <Box className={styles.amountLabel}>Input Cached</Box>
+            <Box className={styles.amountLabel}>Cached</Box>
             <Box className={styles.amount}>
               ${priceInputCachedPerMillion.toFixed(2)}
             </Box>
