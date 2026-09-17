@@ -261,7 +261,7 @@ export const getS3Endpoint = () => [
 
 export const getQuotas = () => [
   http.get(
-    '*/v4*/:service/:collection/:id/usage',
+    '*/v4*/:service/quotas/:collection/:id/usage',
     async ({
       params,
     }): Promise<StrictResponse<APIErrorResponse | QuotaUsage>> => {
@@ -281,7 +281,7 @@ export const getQuotas = () => [
     }
   ),
   http.get(
-    '*/v4*/:service/:collection/:id',
+    '*/v4*/:service/quotas/:collection/:id',
     async ({ params }): Promise<StrictResponse<APIErrorResponse | Quota>> => {
       const quota = getMockQuotas(
         params.service as QuotaServiceType,
@@ -296,7 +296,7 @@ export const getQuotas = () => [
     }
   ),
   http.get(
-    '*/v4*/:service/:collection',
+    '*/v4*/:service/quotas/:collection',
     async ({
       params,
       request,
