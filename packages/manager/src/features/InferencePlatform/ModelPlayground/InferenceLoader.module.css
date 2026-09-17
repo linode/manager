@@ -1,0 +1,36 @@
+.loader {
+  background: color-mix(in srgb, currentColor 20%, transparent);
+  border-radius: 4px;
+  flex: 0 0 72px;
+  height: 8px;
+  overflow: hidden;
+  position: relative;
+}
+
+.loader::after {
+  animation: sweep 1.2s ease-in-out infinite;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    currentColor,
+    transparent
+  );
+  content: '';
+  inset: 0;
+  position: absolute;
+  transform: translateX(-100%);
+}
+
+@keyframes sweep {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loader::after {
+    animation: none;
+    background: currentColor;
+    transform: none;
+  }
+}

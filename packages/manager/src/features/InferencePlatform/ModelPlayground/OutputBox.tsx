@@ -20,6 +20,7 @@ import { Markdown } from '../components/Markdown/Markdown';
 import { ClearOutputButton } from './ClearOutputButton';
 import { MetadataBar } from './MetadataBar';
 import { ModelPlaygroundOutputContext } from './ModelPlaygroundContext';
+import styles from './OutputBox.module.css';
 import { PlaygroundEmptyState } from './PlaygroundEmptyState';
 
 import type { Message } from './ModelPlaygroundContext';
@@ -201,9 +202,9 @@ const UserMessageRow = memo(({ message }: { message: Message }) => {
   return (
     <Stack
       alignItems="flex-start"
+      className={styles.messageRow}
       direction="row"
       spacing="12px"
-      style={{ marginBottom: '32px' }}
     >
       <Box
         style={getIconBoxStyle(
@@ -256,9 +257,9 @@ const AssistantMessageRow = memo(
     return (
       <Stack
         alignItems="flex-start"
+        className={styles.messageRow}
         direction="row"
         spacing="12px"
-        style={{ marginBottom: '32px' }}
       >
         <Box
           style={getIconBoxStyle(
@@ -315,7 +316,6 @@ const AssistantMessageRow = memo(
               <MetadataBar
                 error={message.error}
                 metadata={message.metadata}
-                startedAt={message.startedAt}
                 timeToFirstTokenMs={message.timeToFirstTokenMs}
               />
             </Box>
@@ -384,18 +384,20 @@ export const OutputBox = () => {
         <PlaygroundEmptyState />
         {messages.length > 0 && (
           <>
-            {messages.map((message) =>
-              message.role === 'user' ? (
-                <UserMessageRow key={message.id} message={message} />
-              ) : (
-                <AssistantMessageRow
-                  isStreaming={message.id === streamingMessageId}
-                  key={message.id}
-                  message={message}
-                  onReasoningExpand={handleReasoningExpand}
-                />
-              )
-            )}
+            <Box className={styles.messageList}>
+              {messages.map((message) =>
+                message.role === 'user' ? (
+                  <UserMessageRow key={message.id} message={message} />
+                ) : (
+                  <AssistantMessageRow
+                    isStreaming={message.id === streamingMessageId}
+                    key={message.id}
+                    message={message}
+                    onReasoningExpand={handleReasoningExpand}
+                  />
+                )
+              )}
+            </Box>
             <div ref={bottomRef} />
           </>
         )}

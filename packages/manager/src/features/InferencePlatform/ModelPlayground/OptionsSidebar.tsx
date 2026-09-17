@@ -1,9 +1,5 @@
-import {
-  Button,
-  Checkbox,
-  LoadingSpinner,
-  Tooltip,
-} from '@akamai/cds-components/react';
+import { Button, Checkbox, LoadingSpinner } from '@akamai/cds-components/react';
+import { Tooltip } from '@akamai/cds-components/react/Tooltip';
 import { ChevronDown, InfoOutline } from '@akamai/cds-icons/react';
 import { useTheme } from '@linode/ui';
 import Collapse from '@mui/material/Collapse';
@@ -143,15 +139,21 @@ const SliderRow = memo(
   }
 );
 
-const ParameterCheckboxLabel = ({
+const ParameterCheckbox = ({
+  checked,
   description,
   label,
+  onChange,
 }: {
+  checked: boolean;
   description?: string;
   label: string;
+  onChange: () => void;
 }) => (
   <Box style={{ alignItems: 'center', display: 'flex', gap: '8px' }}>
-    <span>{label}</span>
+    <Checkbox checked={checked} onChange={onChange}>
+      {label}
+    </Checkbox>
     {description && (
       <Tooltip tooltipText={description}>
         <span style={{ alignItems: 'center', display: 'flex' }}>
@@ -228,7 +230,8 @@ export const OptionsSidebar = () => {
       )
     : [];
   const hasReasoningEffort = reasoningEffortOptions.length > 0;
-  const hasAdvancedOptions = advancedNumericConfigs.length > 0 || hasSeed;
+  const hasAdvancedOptions =
+    advancedNumericConfigs.length > 0 || hasSeed || hasStop;
   const hasControls =
     visibleConfigs.length > 0 ||
     hasStop ||
@@ -256,10 +259,11 @@ export const OptionsSidebar = () => {
         display: 'flex',
         flexDirection: 'column',
         gap: '20px',
+        height: '100%',
         overflowX: 'hidden',
         overflowY: 'auto',
         padding: '16px',
-        width: 280,
+        width: 300,
       }}
     >
       <Typography
@@ -297,25 +301,14 @@ export const OptionsSidebar = () => {
               value={settings[config.field]}
             />
           ))}
-          {hasStop && (
-            <StopSequencesControl
-              label={parameters.stop?.label}
-              onChange={(value) => onSettingsChange({ stop: value })}
-              tooltip={parameters.stop?.description}
-              value={settings.stop}
-            />
-          )}
           {hasStream && (
             <Box style={{ marginTop: '8px' }}>
-              <Checkbox
+              <ParameterCheckbox
                 checked={settings.stream}
+                description={parameters.stream?.description}
+                label={parameters.stream?.label ?? 'Stream response'}
                 onChange={() => onSettingsChange({ stream: !settings.stream })}
-              >
-                <ParameterCheckboxLabel
-                  description={parameters.stream?.description}
-                  label={parameters.stream?.label ?? 'Stream response'}
-                />
-              </Checkbox>
+              />
             </Box>
           )}
           {hasEnableThinking && (
@@ -326,19 +319,16 @@ export const OptionsSidebar = () => {
                 marginTop: '8px',
               }}
             >
-              <Checkbox
+              <ParameterCheckbox
                 checked={settings.enableThinking}
+                description={parameters.enable_thinking?.description}
+                label={parameters.enable_thinking?.label ?? 'Enable thinking'}
                 onChange={() =>
                   onSettingsChange({
                     enableThinking: !settings.enableThinking,
                   })
                 }
-              >
-                <ParameterCheckboxLabel
-                  description={parameters.enable_thinking?.description}
-                  label={parameters.enable_thinking?.label ?? 'Enable thinking'}
-                />
-              </Checkbox>
+              />
               <Collapse
                 in={settings.enableThinking && hasReasoningEffort}
                 timeout={0}
@@ -415,6 +405,14 @@ export const OptionsSidebar = () => {
                     paddingTop: '16px',
                   }}
                 >
+                  {hasStop && (
+                    <StopSequencesControl
+                      label={parameters.stop?.label}
+                      onChange={(value) => onSettingsChange({ stop: value })}
+                      tooltip={parameters.stop?.description}
+                      value={settings.stop}
+                    />
+                  )}
                   {advancedNumericConfigs.map((config) => (
                     <SliderRow
                       config={config}

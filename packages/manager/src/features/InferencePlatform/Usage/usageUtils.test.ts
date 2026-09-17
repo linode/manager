@@ -187,6 +187,20 @@ describe('usageUtils', () => {
       expect(firstValue.date).toMatch(/^\d{2}\/\d{2}\/\d{4}$/);
     });
 
+    it('formats timestamps in the configured timezone', () => {
+      const result = transformAllUsageData(
+        mockSingleModelData,
+        'model',
+        'all',
+        'America/New_York'
+      );
+
+      const firstValue = result.total.series[0].values[0];
+
+      expect(firstValue.date).toBe('21/06/2026');
+      expect(firstValue.time).toBe('10:00');
+    });
+
     it('keeps time labels unique by including the date across multiple days', () => {
       // Buckets at the same clock time on different days would otherwise
       // collapse to a single "HH:MM" X-axis category and stack every bar.

@@ -29,7 +29,7 @@ export const StopSequencesControl = ({
   };
 
   return (
-    <Box>
+    <Box style={{ padding: '8px 0' }}>
       <Box
         style={{
           alignItems: 'center',

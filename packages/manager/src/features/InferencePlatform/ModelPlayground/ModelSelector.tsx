@@ -11,7 +11,12 @@ import { ModelPlaygroundModelContext } from './ModelPlaygroundContext';
 import type { Model } from '../ModelLibrary/modelLibrary.types';
 import type { SelectElement } from '@akamai/cds-components';
 
-type ModelOption = { label: string; logo?: string; value: string };
+type ModelOption = {
+  description: string;
+  label: string;
+  logo?: string;
+  value: string;
+};
 
 export const ModelSelector = () => {
   const { onModelChange, selectedModel } = useContext(
@@ -38,6 +43,7 @@ export const ModelSelector = () => {
       .map((m) => {
         const merged = mergedById[m.id];
         return {
+          description: m.description,
           label: merged?.title ?? m.label ?? m.id,
           logo: merged?.modelLogo || merged?.providerLogo,
           value: m.id,
@@ -59,6 +65,7 @@ export const ModelSelector = () => {
   }, [isModelsLoading]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const selectedOption = options.find((o) => o.value === selectedModel) ?? null;
+  const selectedModelDescription = selectedOption?.description;
 
   const renderModelItem = useCallback(
     (item: ModelOption, bold = false) => {
@@ -132,6 +139,18 @@ export const ModelSelector = () => {
           valueFn={(item: ModelOption) => item.value}
         />
       </Box>
+      <Typography
+        style={{
+          color: theme.palette.text.secondary,
+          flex: 1,
+          minWidth: 0,
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap',
+        }}
+      >
+        {selectedModelDescription}
+      </Typography>
     </Box>
   );
 };

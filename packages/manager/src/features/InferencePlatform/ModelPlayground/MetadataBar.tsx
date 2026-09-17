@@ -4,18 +4,17 @@ import {
   StatusFailureErrorOutline,
 } from '@akamai/cds-icons/react';
 import { useTheme } from '@linode/ui';
-import { useInterval } from '@linode/utilities';
-import React, { memo, useCallback, useState } from 'react';
+import React, { memo } from 'react';
 
 import './animations.css';
 import { Box, Stack } from '../components';
+import { InferenceLoader } from './InferenceLoader';
 
 import type { MessageMetadata } from './ModelPlaygroundContext';
 
 interface MetadataBarProps {
   error?: string;
   metadata?: MessageMetadata;
-  startedAt: number;
   timeToFirstTokenMs?: number;
 }
 
@@ -57,9 +56,8 @@ const getFinishMessage = (
 };
 
 export const MetadataBar = memo(
-  ({ error, metadata, startedAt, timeToFirstTokenMs }: MetadataBarProps) => {
+  ({ error, metadata, timeToFirstTokenMs }: MetadataBarProps) => {
     const theme = useTheme();
-    const [elapsed, setElapsed] = useState(() => Date.now() - startedAt);
     const errored = Boolean(error);
     const pending = !metadata && !errored;
     const cancelled = metadata?.cancelled ?? false;
@@ -70,22 +68,10 @@ export const MetadataBar = memo(
     const warned = Boolean(!errored && !cancelled && !pending && finishMessage);
     const complete = !pending && !cancelled && !errored && !warned;
 
-    const tickElapsed = useCallback(
-      () => setElapsed(Date.now() - startedAt),
-      [startedAt]
-    );
-
-    useInterval({
-      callback: tickElapsed,
-      delay: 100,
-      when: !metadata && !errored,
-    });
-
     const ttft =
       timeToFirstTokenMs !== undefined
         ? `${(timeToFirstTokenMs / 1000).toFixed(2)}s`
         : null;
-    const displayMs = metadata ? metadata.durationMs : elapsed;
     const decodeMs =
       metadata && timeToFirstTokenMs !== undefined
         ? metadata.durationMs - timeToFirstTokenMs
@@ -97,7 +83,14 @@ export const MetadataBar = memo(
 
     const stats = [
       { label: 'TTFT', value: ttft },
-      { label: 'Response Time', value: `${(displayMs / 1000).toFixed(1)}s` },
+      ...(metadata
+        ? [
+            {
+              label: 'Response Time',
+              value: `${(metadata.durationMs / 1000).toFixed(1)}s`,
+            },
+          ]
+        : []),
       { label: 'Tokens/s', value: tps },
       { label: 'In Tokens', value: metadata?.promptTokens?.toString() ?? null },
       {
@@ -131,6 +124,7 @@ export const MetadataBar = memo(
               : `1px solid ${theme.tokens.alias.Border.Normal}`,
           borderRadius: '8px',
           gap: '4px 20px',
+          minHeight: 32,
           padding: '6px 12px',
         }}
       >
@@ -145,16 +139,19 @@ export const MetadataBar = memo(
           }}
         >
           {pending ? (
-            <Box
-              style={{
-                animation: `pulse 1.2s ease-out infinite`,
-                backgroundColor: theme.palette.text.disabled,
-                borderRadius: '50%',
-                flexShrink: 0,
-                height: 11,
-                width: 11,
-              }}
-            />
+            <>
+              <Box
+                style={{
+                  animation: `pulse 1.2s ease-out infinite`,
+                  backgroundColor: theme.palette.text.disabled,
+                  borderRadius: '50%',
+                  flexShrink: 0,
+                  height: 11,
+                  width: 11,
+                }}
+              />
+              <InferenceLoader color="hsla(173, 80%, 36%, 0.6)" />
+            </>
           ) : errored ? (
             <StatusFailureErrorOutline
               aria-label="Error"

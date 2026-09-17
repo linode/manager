@@ -1,5 +1,5 @@
 import { Select } from '@akamai/cds-components/react/Select';
-import { useInferenceUsageQuery } from '@linode/queries';
+import { useInferenceUsageQuery, useProfile } from '@linode/queries';
 import React from 'react';
 
 import { StackedBarChart } from 'src/components/StackedBarChart';
@@ -12,6 +12,8 @@ import { DynamicChartUpdate } from './DynamicChartUpdate';
 import styles from './UsageSection.module.css';
 
 export const UsageSection = () => {
+  const { data: profile } = useProfile();
+
   // Check if Usage mock is enabled (evaluated at render time)
   const useMockAnimation =
     isMSWEnabled && getExtraPresets().includes('inferencePlatform:usage');
@@ -26,8 +28,13 @@ export const UsageSection = () => {
 
   // Transform data: use API data when available, fall back to minimal "no data" placeholder
   const transformedData = React.useMemo(() => {
-    return transformApiDataToChartPayload(apiUsageData);
-  }, [apiUsageData]);
+    return transformApiDataToChartPayload(
+      apiUsageData,
+      'total',
+      'model',
+      profile?.timezone
+    );
+  }, [apiUsageData, profile?.timezone]);
 
   // Map each series ID to its position in the array (for consistent colors)
   const seriesColorIndices = React.useMemo(() => {

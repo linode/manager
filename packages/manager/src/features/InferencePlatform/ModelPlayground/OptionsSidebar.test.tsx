@@ -224,7 +224,9 @@ describe('OptionsSidebar', () => {
     expect(screen.getByText(/no controls available/i)).toBeVisible();
   });
 
-  it('renders only controls declared by the model schema', () => {
+  it('renders only controls declared by the model schema', async () => {
+    const user = userEvent.setup();
+
     renderSidebar({
       modelDetails: createModelDetails({
         stop: createParameter({ label: 'Custom Stop', type: 'array' }),
@@ -234,10 +236,14 @@ describe('OptionsSidebar', () => {
     });
 
     expect(screen.getByRole('slider', { name: 'Creativity' })).toBeVisible();
-    expect(screen.getByText('Custom Stop')).toBeVisible();
     expect(screen.getByText('Live Output')).toBeVisible();
+    expect(
+      screen.getByRole('button', { name: /advanced options/i })
+    ).toBeVisible();
+    expect(screen.queryByText('Custom Stop')).not.toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: /advanced options/i }));
+    expect(screen.getByText('Custom Stop')).toBeVisible();
     expect(screen.queryByText(/enable thinking/i)).not.toBeInTheDocument();
-    expect(screen.queryByText(/advanced options/i)).not.toBeInTheDocument();
   });
 
   it('renders model-provided reasoning effort options without enable_thinking', () => {

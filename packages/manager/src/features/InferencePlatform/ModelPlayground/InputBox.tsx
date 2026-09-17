@@ -1,5 +1,4 @@
-import { Button, TextArea } from '@akamai/cds-components/react';
-import { ArrowUp, Square } from '@akamai/cds-icons/react';
+import { TextArea } from '@akamai/cds-components/react';
 import { TextArea as TextAreaTokens } from '@akamai/cds-tokens';
 import { TextArea as TextAreaTokensDark } from '@akamai/cds-tokens/themes/dark';
 import { useTheme } from '@linode/ui';
@@ -13,6 +12,7 @@ import {
   ModelPlaygroundModelContext,
   ModelPlaygroundOutputContext,
 } from './ModelPlaygroundContext';
+import { PromptActionButton } from './PromptActionButton';
 
 const MAX_TEXTAREA_HEIGHT_PX = 240;
 
@@ -141,28 +141,12 @@ export const InputBox = () => {
         rows={1}
         value={inputValue}
       />
-      {isLoading ? (
-        <Button
-          aria-label="Cancel generation"
-          className={styles.cancelButton}
-          onClick={onCancel}
-          size="small"
-          variant="secondary"
-        >
-          <Square style={{ height: 12, width: 12 }} />
-        </Button>
-      ) : (
-        <Button
-          aria-label="Send prompt"
-          className={styles.button}
-          disabled={!canSend}
-          onClick={onSend}
-          size="small"
-          variant="primary"
-        >
-          <ArrowUp style={{ height: 12, width: 12 }} />
-        </Button>
-      )}
+      <PromptActionButton
+        disabled={!canSend}
+        isLoading={isLoading}
+        onCancel={onCancel}
+        onSend={onSend}
+      />
     </Box>
   );
 };

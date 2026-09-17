@@ -732,7 +732,7 @@ export const inferenceMetricCriteria: MetricDefinition[] = [
         label: 'Token Type',
         dimension_label: 'token_type',
         values: ['input', 'output', 'cached'],
-      }
+      },
     ],
   },
   {
@@ -912,7 +912,7 @@ export const inferenceMetricCriteria: MetricDefinition[] = [
         values: ['400', '403', '404', '422', '429', '4xx(other)', '5xx'],
       },
     ],
-  }
+  },
 ];
 export const networkLoadBalancerMetricCriteria: MetricDefinition[] = [
   {

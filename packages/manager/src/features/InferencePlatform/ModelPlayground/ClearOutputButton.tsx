@@ -34,27 +34,23 @@ export const ClearOutputButton = () => {
       }}
     >
       <Box
-        style={{
-          animation: visible ? `fadeIn 0.3s ease forwards` : 'none',
-          opacity: visible ? 1 : 0,
-          pointerEvents: visible ? 'auto' : 'none',
-          position: 'absolute',
-          right: 0,
-          top: -8,
-        }}
+        style={
+          {
+            animation: visible ? `fadeIn 0.3s ease forwards` : 'none',
+            opacity: visible ? 1 : 0,
+            pointerEvents: visible ? 'auto' : 'none',
+            position: 'absolute',
+            right: 0,
+            top: 0,
+          } as React.CSSProperties
+        }
       >
         <Button
           disabled={isLoading}
           onClick={onClearMessages}
           size="small"
-          style={
-            {
-              background: bg,
-              borderRadius: '999px',
-              boxShadow: `0 0 16px 16px ${bg}`,
-            } as React.CSSProperties
-          }
-          variant="link"
+          style={{ background: bg, borderRadius: '5px' }}
+          variant="secondary"
         >
           Clear Context
         </Button>

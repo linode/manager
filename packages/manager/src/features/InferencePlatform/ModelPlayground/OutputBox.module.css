@@ -1,0 +1,7 @@
+.messageRow {
+  margin-bottom: 32px;
+}
+
+.messageList > .messageRow:last-child {
+  margin-bottom: 8px;
+}

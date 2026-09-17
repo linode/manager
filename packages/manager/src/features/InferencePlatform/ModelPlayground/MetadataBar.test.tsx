@@ -1,5 +1,4 @@
 import '@testing-library/jest-dom';
-import { act } from 'react';
 import React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
@@ -8,73 +7,56 @@ import { MetadataBar } from './MetadataBar';
 
 import type { MessageMetadata } from './ModelPlaygroundContext';
 
-const BASE_TIME = 1_000_000_000_000;
-
 const makeMetadata = (
   overrides: Partial<MessageMetadata> = {}
 ): MessageMetadata => ({ durationMs: 2000, ...overrides });
 
 describe('MetadataBar', () => {
-  beforeEach(() => {
-    vi.useFakeTimers();
-    vi.setSystemTime(BASE_TIME);
-  });
-
-  afterEach(() => {
-    vi.useRealTimers();
-  });
-
   describe('pending state (no metadata)', () => {
     it('shows neither the check nor warning icon', () => {
-      const { queryByRole } = renderWithTheme(
-        <MetadataBar startedAt={BASE_TIME - 500} />
-      );
+      const { queryByRole } = renderWithTheme(<MetadataBar />);
       expect(queryByRole('img', { name: 'Success' })).not.toBeInTheDocument();
       expect(queryByRole('img', { name: 'Warning' })).not.toBeInTheDocument();
     });
 
-    it('shows elapsed time and updates it as time passes', () => {
-      const { getByText } = renderWithTheme(
-        <MetadataBar startedAt={BASE_TIME - 1000} />
-      );
-      getByText('1.0s');
-      act(() => {
-        vi.advanceTimersByTime(500);
-      });
-      getByText('1.5s');
+    it('hides response time until the request completes', () => {
+      const { queryByText } = renderWithTheme(<MetadataBar />);
+      expect(queryByText('Response Time')).not.toBeInTheDocument();
+    });
+
+    it('shows an indeterminate loader', () => {
+      const { getByRole } = renderWithTheme(<MetadataBar />);
+      getByRole('progressbar', { name: 'Generating response' });
+    });
+
+    it('keeps the same minimum height as a completed response', () => {
+      const { container } = renderWithTheme(<MetadataBar />);
+      expect(container.firstElementChild).toHaveStyle({ minHeight: '32px' });
     });
   });
 
   describe('complete state (metadata without cancelled)', () => {
     it('shows the check icon and not the warning icon', () => {
       const { getByRole, queryByRole } = renderWithTheme(
-        <MetadataBar metadata={makeMetadata()} startedAt={BASE_TIME - 2000} />
+        <MetadataBar metadata={makeMetadata()} />
       );
       getByRole('img', { name: 'Success' });
       expect(queryByRole('img', { name: 'Warning' })).not.toBeInTheDocument();
     });
 
-    it('displays durationMs and does not tick elapsed when complete', () => {
-      const { getByText } = renderWithTheme(
-        <MetadataBar
-          metadata={makeMetadata({ durationMs: 3500 })}
-          startedAt={BASE_TIME - 5000}
-        />
+    it('displays durationMs when complete', () => {
+      const { getByText, queryByRole } = renderWithTheme(
+        <MetadataBar metadata={makeMetadata({ durationMs: 3500 })} />
       );
       getByText('3.5s');
-      act(() => {
-        vi.advanceTimersByTime(2000);
-      });
-      getByText('3.5s');
+      expect(
+        queryByRole('progressbar', { name: 'Generating response' })
+      ).not.toBeInTheDocument();
     });
 
     it('shows TTFT when timeToFirstTokenMs is provided', () => {
       const { container, getByText } = renderWithTheme(
-        <MetadataBar
-          metadata={makeMetadata()}
-          startedAt={BASE_TIME - 2000}
-          timeToFirstTokenMs={340}
-        />
+        <MetadataBar metadata={makeMetadata()} timeToFirstTokenMs={340} />
       );
       getByText('0.34s');
       expect(container).toHaveTextContent('TTFT');
@@ -84,7 +66,6 @@ describe('MetadataBar', () => {
       const { container } = renderWithTheme(
         <MetadataBar
           metadata={makeMetadata({ completionTokens: 100, durationMs: 2000 })}
-          startedAt={BASE_TIME - 2000}
         />
       );
       expect(container).not.toHaveTextContent('Tokens/s');
@@ -94,7 +75,6 @@ describe('MetadataBar', () => {
       const { container, getByText } = renderWithTheme(
         <MetadataBar
           metadata={makeMetadata({ completionTokens: 100, durationMs: 2000 })}
-          startedAt={BASE_TIME - 2000}
           timeToFirstTokenMs={500}
         />
       );
@@ -105,10 +85,7 @@ describe('MetadataBar', () => {
 
     it('shows In Tokens when promptTokens is provided', () => {
       const { container, getByText } = renderWithTheme(
-        <MetadataBar
-          metadata={makeMetadata({ promptTokens: 15 })}
-          startedAt={BASE_TIME - 2000}
-        />
+        <MetadataBar metadata={makeMetadata({ promptTokens: 15 })} />
       );
       getByText('15');
       expect(container).toHaveTextContent('In Tokens');
@@ -116,10 +93,7 @@ describe('MetadataBar', () => {
 
     it('shows Out Tokens when completionTokens is provided', () => {
       const { container, getByText } = renderWithTheme(
-        <MetadataBar
-          metadata={makeMetadata({ completionTokens: 42 })}
-          startedAt={BASE_TIME - 2000}
-        />
+        <MetadataBar metadata={makeMetadata({ completionTokens: 42 })} />
       );
       getByText('42');
       expect(container).toHaveTextContent('Out Tokens');
@@ -127,7 +101,7 @@ describe('MetadataBar', () => {
 
     it('hides stats for optional fields not present in metadata', () => {
       const { container } = renderWithTheme(
-        <MetadataBar metadata={makeMetadata()} startedAt={BASE_TIME - 2000} />
+        <MetadataBar metadata={makeMetadata()} />
       );
       expect(container).not.toHaveTextContent('TTFT');
       expect(container).not.toHaveTextContent('Tokens/s');
@@ -139,10 +113,7 @@ describe('MetadataBar', () => {
   describe('cancelled state', () => {
     it('shows the warning icon and not the check icon', () => {
       const { getByRole, queryByRole } = renderWithTheme(
-        <MetadataBar
-          metadata={makeMetadata({ cancelled: true })}
-          startedAt={BASE_TIME - 1000}
-        />
+        <MetadataBar metadata={makeMetadata({ cancelled: true })} />
       );
       getByRole('img', { name: 'Warning' });
       expect(queryByRole('img', { name: 'Success' })).not.toBeInTheDocument();
@@ -150,10 +121,7 @@ describe('MetadataBar', () => {
 
     it('shows "Response was cancelled" inline', () => {
       const { getByText } = renderWithTheme(
-        <MetadataBar
-          metadata={makeMetadata({ cancelled: true })}
-          startedAt={BASE_TIME - 1000}
-        />
+        <MetadataBar metadata={makeMetadata({ cancelled: true })} />
       );
       getByText('Response was cancelled');
     });
@@ -162,10 +130,7 @@ describe('MetadataBar', () => {
   describe('error state', () => {
     it('shows the error icon and not the check or warning icon', () => {
       const { getByRole, queryByRole } = renderWithTheme(
-        <MetadataBar
-          error="Something went wrong"
-          startedAt={BASE_TIME - 1000}
-        />
+        <MetadataBar error="Something went wrong" />
       );
       getByRole('img', { name: 'Error' });
       expect(queryByRole('img', { name: 'Success' })).not.toBeInTheDocument();
@@ -174,10 +139,7 @@ describe('MetadataBar', () => {
 
     it('displays the error message inline', () => {
       const { getByText } = renderWithTheme(
-        <MetadataBar
-          error="Something went wrong"
-          startedAt={BASE_TIME - 1000}
-        />
+        <MetadataBar error="Something went wrong" />
       );
       getByText('Something went wrong');
     });

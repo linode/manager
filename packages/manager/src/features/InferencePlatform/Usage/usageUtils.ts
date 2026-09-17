@@ -55,7 +55,8 @@ type GroupEntry = {
  * each group chronologically.
  */
 const buildGroupMap = (
-  timeSeries: InferenceUsage['time_series']
+  timeSeries: InferenceUsage['time_series'],
+  timeZone?: string
 ): GroupEntry[] => {
   const map = new Map<string, GroupEntry>();
 
@@ -70,6 +71,7 @@ const buildGroupMap = (
       new Date(entry.bucket).toLocaleDateString('en-GB', {
         day: '2-digit',
         month: '2-digit',
+        timeZone,
         year: 'numeric',
       })
     )
@@ -87,16 +89,19 @@ const buildGroupMap = (
     const fullDate = date.toLocaleDateString('en-GB', {
       day: '2-digit',
       month: '2-digit',
+      timeZone,
       year: 'numeric',
     });
     const clockTime = date.toLocaleTimeString('en-US', {
       hour: '2-digit',
       hour12: false,
       minute: '2-digit',
+      timeZone,
     });
     const compactDate = date.toLocaleDateString('en-GB', {
       day: '2-digit',
       month: '2-digit',
+      timeZone,
     });
 
     group.values.push({
@@ -218,7 +223,8 @@ const toChartPayload = (
 export const transformAllUsageData = (
   apiData: InferenceUsage | undefined,
   groupType: 'api-key' | 'model' = 'model',
-  selectedId: string = 'all'
+  selectedId: string = 'all',
+  timeZone?: string
 ): TransformedUsageData => {
   if (!apiData || !apiData.time_series || apiData.time_series.length === 0) {
     return {
@@ -230,7 +236,7 @@ export const transformAllUsageData = (
     };
   }
 
-  const rawGroups = buildGroupMap(apiData.time_series);
+  const rawGroups = buildGroupMap(apiData.time_series, timeZone);
 
   // Determine which groups to use for charts
   let chartGroups: GroupEntry[];
@@ -267,13 +273,14 @@ export const transformAllUsageData = (
 export const transformApiDataToChartPayload = (
   apiData: InferenceUsage | undefined,
   dataType: UsageDataType = 'total',
-  groupType: 'api-key' | 'model' = 'model'
+  groupType: 'api-key' | 'model' = 'model',
+  timeZone?: string
 ): ChartPayload => {
   if (!apiData || !apiData.time_series || apiData.time_series.length === 0) {
     return noDataPayload();
   }
 
-  const rawGroups = buildGroupMap(apiData.time_series);
+  const rawGroups = buildGroupMap(apiData.time_series, timeZone);
   const groups = aggregateTopNWithOther(rawGroups, groupType);
 
   return toChartPayload(groups, dataType);

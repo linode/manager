@@ -1,0 +1,59 @@
+.actionButton {
+  align-items: center;
+  border: 1px solid;
+  border-radius: 4px;
+  box-sizing: border-box;
+  cursor: pointer;
+  display: flex;
+  flex: 0 0 32px;
+  height: 32px;
+  justify-content: center;
+  margin-bottom: 3px;
+  margin-right: 8px;
+  padding: 0;
+  width: 32px;
+}
+
+.sendIcon {
+  height: 20px;
+  width: 20px;
+}
+
+.cancelIcon {
+  height: 16px;
+  width: 16px;
+}
+
+.actionButton:focus-visible {
+  outline: 2px solid var(--token-component-button-secondary-default-border);
+  outline-offset: 2px;
+}
+
+.sendButton {
+  background: var(--token-component-button-primary-default-background);
+  border-color: var(--token-component-button-primary-default-background);
+  color: var(--token-component-button-primary-default-text);
+}
+
+.sendButton:hover:not(:disabled) {
+  background: var(--token-component-button-primary-hover-background);
+  border-color: var(--token-component-button-primary-hover-background);
+  color: var(--token-component-button-primary-hover-text);
+}
+
+.sendButton:disabled {
+  background: var(--token-component-button-primary-disabled-background);
+  border-color: var(--token-component-button-primary-disabled-background);
+  color: var(--token-component-button-primary-disabled-text);
+  cursor: not-allowed;
+}
+
+.cancelButton {
+  background: var(--token-component-button-secondary-default-background);
+  border-color: var(--token-alias-content-icon-negative);
+  color: var(--token-alias-content-icon-negative);
+}
+
+.cancelButton:hover {
+  background: var(--token-component-button-secondary-hover-background);
+}

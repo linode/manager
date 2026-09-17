@@ -1,6 +1,7 @@
 import {
   useInferenceUsageCreditsSummaryQuery,
   useInferenceUsageQuery,
+  useProfile,
 } from '@linode/queries';
 import { Box, Stack } from '@linode/ui';
 import React from 'react';
@@ -306,6 +307,8 @@ const UsageContent = ({
 };
 
 export const Usage = () => {
+  const { data: profile } = useProfile();
+
   // Track grouping mode - affects API call and chart labels
   const [metricsByValue, setMetricsByValue] = React.useState<
     'api-key' | 'model'
@@ -371,9 +374,16 @@ export const Usage = () => {
     return transformAllUsageData(
       usageDataForCharts,
       metricsByValue,
-      selectedValue.value
+      selectedValue.value,
+      profile?.timezone
     );
-  }, [apiUsageData, isUsageNotFound, metricsByValue, selectedValue.value]);
+  }, [
+    apiUsageData,
+    isUsageNotFound,
+    metricsByValue,
+    profile?.timezone,
+    selectedValue.value,
+  ]);
 
   return (
     <UsageDataProvider

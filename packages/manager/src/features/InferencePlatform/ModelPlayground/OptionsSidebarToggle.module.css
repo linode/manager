@@ -1,0 +1,24 @@
+.toggle {
+  align-items: center;
+  background: var(--token-component-button-secondary-default-background);
+  border: none;
+  border-radius: 4px 0 0 4px;
+  color: var(--token-component-button-secondary-default-text);
+  cursor: pointer;
+  display: flex;
+  height: 48px;
+  justify-content: center;
+  padding: 0;
+  width: 20px;
+}
+
+.toggle:hover {
+  background: var(--token-component-button-secondary-hover-background);
+  border-color: var(--token-component-button-secondary-hover-border);
+  color: var(--token-component-button-secondary-hover-text);
+}
+
+.toggle:focus-visible {
+  outline: 2px solid var(--token-alias-action-primary-default);
+  outline-offset: 2px;
+}
