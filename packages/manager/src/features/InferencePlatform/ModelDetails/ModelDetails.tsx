@@ -53,7 +53,7 @@ export const ModelDetails = () => {
         breadcrumbProps={{ pathname: '/inference-platform' }}
         removeCrumbX={1}
         spacingBottom={4}
-        title="Inference Platform"
+        title="AI Inference"
       />
       <Tabs index={tabIndex} onChange={handleTabChange}>
         <TanStackTabLinkList tabs={[...tabs]} />

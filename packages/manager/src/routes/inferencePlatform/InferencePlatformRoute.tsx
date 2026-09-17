@@ -17,7 +17,7 @@ export const InferencePlatformRoute = () => {
   return (
     <InferencePlatformProvider>
       <React.Suspense fallback={<SuspenseLoader />}>
-        <DocumentTitleSegment segment="Inference Platform" />
+        <DocumentTitleSegment segment="AI Inference" />
         <div className="inference-platform">
           <Outlet />
         </div>
