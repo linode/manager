@@ -1,5 +1,6 @@
 import React from 'react';
 
+import agentJoinedSoundUrl from 'src/assets/sounds/live-chat-agent-joined.wav?url';
 import {
   LIVE_CHAT_ENABLE_EVENT,
   LIVE_CHAT_FAILED_EVENT,
@@ -13,6 +14,29 @@ let hasEmbeddedMessagingBootstrapInitialized = false;
 let hasEmbeddedMessagingInitialized = false;
 let hasPreloadAttempted = false;
 let liveChatTornDown = false;
+let agentJoinedAudio: HTMLAudioElement | undefined;
+
+type SalesforceEventRecord = Record<string, unknown>;
+
+const isRecord = (value: unknown): value is SalesforceEventRecord =>
+  typeof value === 'object' && value !== null;
+
+const parseRecord = (value: unknown): SalesforceEventRecord | undefined => {
+  if (isRecord(value)) {
+    return value;
+  }
+
+  if (typeof value !== 'string') {
+    return undefined;
+  }
+
+  try {
+    const parsedValue: unknown = JSON.parse(value);
+    return isRecord(parsedValue) ? parsedValue : undefined;
+  } catch {
+    return undefined;
+  }
+};
 
 type EmbeddedMessagingBootstrap = {
   init: (
@@ -55,6 +79,54 @@ const handleConversationOpened = () => {
   setTimeout(() => {
     clearLiveChatSessionItems();
   }, 3000);
+};
+
+const getAgentJoinedAudio = () => {
+  if (!agentJoinedAudio) {
+    agentJoinedAudio = new Audio(agentJoinedSoundUrl);
+    agentJoinedAudio.preload = 'auto';
+    agentJoinedAudio.load();
+  }
+
+  return agentJoinedAudio;
+};
+
+const handleConversationParticipantChanged = (event: Event) => {
+  if (!(event instanceof CustomEvent)) {
+    return;
+  }
+
+  const eventDetail = parseRecord(event.detail);
+  const conversationEntry = parseRecord(eventDetail?.conversationEntry);
+  const payload = parseRecord(conversationEntry?.entryPayload) ?? eventDetail;
+
+  if (!payload || !Array.isArray(payload.entries)) {
+    return;
+  }
+
+  const isAgentJoin =
+    payload.entryType === 'ParticipantChanged' &&
+    payload.entries.some((entry) => {
+      if (!isRecord(entry) || entry.operation !== 'add') {
+        return false;
+      }
+
+      const participant = entry.participant;
+
+      return (
+        isRecord(participant) &&
+        participant.role === 'Agent' &&
+        participant.appType === 'agent'
+      );
+    });
+
+  if (!isAgentJoin) {
+    return;
+  }
+
+  const audio = getAgentJoinedAudio();
+  audio.currentTime = 0;
+  audio.play().catch(() => undefined);
 };
 
 const getEmbeddedMessagingBootstrap = () =>
@@ -322,6 +394,9 @@ function attachEmbeddedMessagingLifecycleListeners() {
   if (chatEventListenersAttached) return;
   chatEventListenersAttached = true;
 
+  // Fetch the sound now so the first agent join is not delayed by the download.
+  getAgentJoinedAudio();
+
   window.addEventListener(
     'onEmbeddedMessagingWindowRestored',
     handleGhostSessionResume
@@ -329,6 +404,10 @@ function attachEmbeddedMessagingLifecycleListeners() {
   window.addEventListener(
     'onEmbeddedMessagingConversationOpened',
     handleConversationOpened
+  );
+  window.addEventListener(
+    'onEmbeddedMessagingConversationParticipantChanged',
+    handleConversationParticipantChanged
   );
 
   window.addEventListener('message', handleSalesforceMessage);
@@ -531,6 +610,10 @@ export function teardownLiveChat() {
   window.removeEventListener(
     'onEmbeddedMessagingConversationOpened',
     handleConversationOpened
+  );
+  window.removeEventListener(
+    'onEmbeddedMessagingConversationParticipantChanged',
+    handleConversationParticipantChanged
   );
   window.removeEventListener('message', handleSalesforceMessage);
   window.removeEventListener(
