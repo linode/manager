@@ -139,6 +139,7 @@ export function mergeInferenceModel(m: InferenceModel): Model {
     descriptionLong: m.more_info?.long_description,
     highlights: m.more_info?.highlights,
     id: m.id,
+    inferenceParameters: m.inference_parameters,
     inputModes:
       inputModes.length > 0 ? inputModes : (suppFiltered.inputModes ?? []),
     outputModes:

@@ -8,6 +8,19 @@ body[data-theme='light'] .inference-platform {
   --button-primary-default-text: #ffffff;
   --button-primary-default-background: hsl(203, 99%, 37%);
   --button-primary-default-background-hover: hsl(203, 99%, 32%);
+
+  /* Zebra stripe (Model Details / Inference Parameters) */
+  --inference-zebra-stripe-bg: hsl(240, 20%, 98%);
+
+  /* Value chips on a white (odd) row */
+  --inference-chip-on-white-bg: hsl(216, 17%, 97%);
+  --inference-chip-on-white-border: hsl(223, 12%, 91%);
+  --inference-chip-on-white-text: hsl(240, 5%, 35%);
+
+  /* Value chips on a grey (zebra) row */
+  --inference-chip-on-grey-bg: hsl(216, 17%, 92%);
+  --inference-chip-on-grey-border: hsl(223, 14%, 88%);
+  --inference-chip-on-grey-text: hsl(240, 5%, 31%);
 }
 
 body[data-theme='dark'] .inference-platform {
@@ -17,4 +30,17 @@ body[data-theme='dark'] .inference-platform {
     --button-primary-default-text: #ffffff;
     --button-primary-default-background: hsl(203, 99%, 45%);
     --button-primary-default-background-hover: hsl(203, 99%, 52%);
+
+    /* Zebra stripe (Model Details / Inference Parameters) */
+    --inference-zebra-stripe-bg: hsl(240, 4%, 28%);
+
+    /* Value chips on a white (odd) row */
+    --inference-chip-on-white-bg: hsl(240, 5%, 30%);
+    --inference-chip-on-white-border: hsl(240, 4%, 36%);
+    --inference-chip-on-white-text: hsl(240, 8%, 85%);
+
+    /* Value chips on a grey (zebra) row */
+    --inference-chip-on-grey-bg: hsl(240, 4%, 24%);
+    --inference-chip-on-grey-border: hsl(240, 4%, 36%);
+    --inference-chip-on-grey-text: hsl(240, 8%, 85%);
 }

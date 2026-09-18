@@ -29,61 +29,61 @@ const getChipStyles = (type: string, theme: 'dark' | 'light'): object => {
       return {
         color: theme === 'light' ? 'hsl(90, 50%, 35%)' : 'hsl(90, 100%, 90%)',
         backgroundColor:
-          theme === 'light' ? 'hsl(90, 50%, 93%)' : 'hsl(90, 15%, 30%)',
+          theme === 'light' ? 'hsl(90, 45%, 90%)' : 'hsl(90, 15%, 30%)',
       };
     case 'language':
       return {
         color: theme === 'light' ? 'hsl(330, 75%, 35%)' : 'hsl(330, 100%, 90%)',
         backgroundColor:
-          theme === 'light' ? 'hsl(330, 50%, 93%)' : 'hsl(330, 15%, 32%)',
+          theme === 'light' ? 'hsl(330, 45%, 90%)' : 'hsl(330, 15%, 32%)',
       };
     case 'maxContext':
       return {
         color: theme === 'light' ? 'hsl(190, 75%, 35%)' : 'hsl(190, 100%, 90%)',
         backgroundColor:
-          theme === 'light' ? 'hsl(190, 50%, 93%)' : 'hsl(190, 15%, 30%)',
+          theme === 'light' ? 'hsl(190, 45%, 90%)' : 'hsl(190, 15%, 30%)',
       };
     case 'outputModes':
       return {
         color: theme === 'light' ? 'hsl(165, 50%, 35%)' : 'hsl(165, 100%, 90%)',
         backgroundColor:
-          theme === 'light' ? 'hsl(165, 60%, 93%)' : 'hsl(165, 15%, 30%)',
+          theme === 'light' ? 'hsl(165, 55%, 90%)' : 'hsl(165, 15%, 30%)',
       };
     case 'parameters':
       return {
         color: theme === 'light' ? 'hsl(220, 70%, 38%)' : 'hsl(220, 100%, 92%)',
         backgroundColor:
-          theme === 'light' ? 'hsl(220, 70%, 93%)' : 'hsl(220, 20%, 35%)',
+          theme === 'light' ? 'hsl(220, 65%, 90%)' : 'hsl(220, 20%, 35%)',
       };
     case 'provider':
       return {
         color: theme === 'light' ? 'hsl(30, 80%, 35%)' : 'hsl(40, 100%, 85%)',
         backgroundColor:
-          theme === 'light' ? 'hsl(60, 75%, 91%)' : 'hsl(60, 15%, 28%)',
+          theme === 'light' ? 'hsl(60, 70%, 88%)' : 'hsl(60, 15%, 28%)',
       };
     case 'search':
       return {
         color: theme === 'light' ? 'hsl(140, 50%, 35%)' : 'hsl(140, 100%, 89%)',
         backgroundColor:
-          theme === 'light' ? 'hsl(140, 50%, 94%)' : 'hsl(140, 15%, 32%)',
+          theme === 'light' ? 'hsl(140, 45%, 91%)' : 'hsl(140, 15%, 32%)',
       };
     case 'serverless':
       return {
-        color: theme === 'light' ? 'hsl(267, 75%, 50%)' : 'hsl(267, 100%, 90%)',
+        color: theme === 'light' ? 'hsl(310, 75%, 50%)' : 'hsl(310, 100%, 90%)',
         backgroundColor:
-          theme === 'light' ? 'hsl(267, 100%, 96%)' : 'hsl(267, 15%, 34%)',
+          theme === 'light' ? 'hsl(310, 95%, 93%)' : 'hsl(310, 15%, 34%)',
       };
     case 'useCaseTags':
       return {
         color: theme === 'light' ? 'hsl(280, 75%, 50%)' : 'hsl(280, 100%, 90%)',
         backgroundColor:
-          theme === 'light' ? 'hsl(280, 100%, 96%)' : 'hsl(280, 15%, 34%)',
+          theme === 'light' ? 'hsl(280, 95%, 93%)' : 'hsl(280, 15%, 34%)',
       };
     default:
       return {
         color: theme === 'light' ? 'hsl(267, 0%, 50%)' : 'hsl(267, 0%, 90%)',
         backgroundColor:
-          theme === 'light' ? 'hsl(267, 0%, 96%)' : 'hsl(267, 0%, 34%)',
+          theme === 'light' ? 'hsl(267, 0%, 93%)' : 'hsl(267, 0%, 34%)',
       };
   }
 };

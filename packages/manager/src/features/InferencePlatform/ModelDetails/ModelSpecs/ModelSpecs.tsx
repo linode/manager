@@ -36,8 +36,6 @@ const formatReleaseDate = (iso?: string): string => {
  * block below.
  */
 export const ModelSpecs = ({ model }: ModelSpecsProps) => {
-  const category = model?.useCaseTags?.[0]?.label ?? '—';
-
   const modalities = model?.inputModes?.length
     ? model.inputModes.map((m) => m.label)
     : ['—'];
@@ -58,6 +56,7 @@ export const ModelSpecs = ({ model }: ModelSpecsProps) => {
           <Typography className={styles.label} component="span">
             Provider
           </Typography>
+          <span className={styles.leader} />
           <div className={styles.providerRow}>
             {model?.providerLogo && (
               <InferenceLogo
@@ -78,18 +77,9 @@ export const ModelSpecs = ({ model }: ModelSpecsProps) => {
           <Typography className={styles.label} component="span">
             Release Date
           </Typography>
+          <span className={styles.leader} />
           <Typography className={styles.value} component="span">
             {formatReleaseDate(model?.releasedAt)}
-          </Typography>
-        </div>
-
-        {/* Category */}
-        <div className={styles.row}>
-          <Typography className={styles.label} component="span">
-            Category
-          </Typography>
-          <Typography className={styles.value} component="span">
-            {category}
           </Typography>
         </div>
 
@@ -98,6 +88,7 @@ export const ModelSpecs = ({ model }: ModelSpecsProps) => {
           <Typography className={styles.label} component="span">
             Parameters
           </Typography>
+          <span className={styles.leader} />
           <Typography className={styles.value} component="span">
             {model?.totalParams ??
               (model?.parametersB ? `${model.parametersB}B` : '—')}
@@ -109,6 +100,7 @@ export const ModelSpecs = ({ model }: ModelSpecsProps) => {
           <Typography className={styles.label} component="span">
             Context Length
           </Typography>
+          <span className={styles.leader} />
           <Typography className={styles.value} component="span">
             {model?.contextLengthK ? `${model.contextLengthK} k` : '—'}
           </Typography>
@@ -119,6 +111,7 @@ export const ModelSpecs = ({ model }: ModelSpecsProps) => {
           <Typography className={styles.label} component="span">
             Input Modalities
           </Typography>
+          <span className={styles.leader} />
           <div className={styles.chips}>
             {modalities.map((m) => (
               <ModelFeatureChip key={m} label={m} type="inputModes" />
@@ -130,6 +123,7 @@ export const ModelSpecs = ({ model }: ModelSpecsProps) => {
           <Typography className={styles.label} component="span">
             Output Modalities
           </Typography>
+          <span className={styles.leader} />
           <div className={styles.chips}>
             {outputModalities.map((m) => (
               <ModelFeatureChip key={m} label={m} type="outputModes" />

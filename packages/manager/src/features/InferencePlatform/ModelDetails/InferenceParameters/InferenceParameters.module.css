@@ -1,0 +1,72 @@
+.paper {
+  border-radius: 0;
+  padding: 24px 32px;
+}
+
+.title {
+  color: var(--color-text-primary);
+  font-family: var(--token-global-font-font-family-brand, 'Nunito Sans');
+  font-size: 18px;
+  font-weight: var(--token-global-font-font-weight-bold, 700);
+  margin-bottom: 8px;
+}
+
+.row {
+  padding: 12px 16px;
+}
+
+.rowAlt {
+  background-color: var(--inference-zebra-stripe-bg, hsl(240, 20%, 97%));
+}
+
+.leader {
+  align-self: center;
+  border-bottom: 1px dashed
+    color-mix(in srgb, var(--token-alias-border-normal, #e5e5ea) 90%, white);
+  flex: 1 1 auto;
+}
+
+.label {
+  color: var(--color-text-primary);
+  flex-shrink: 0;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.value {
+  color: var(--color-text-primary);
+  flex-shrink: 0;
+  font-size: 14px;
+  text-align: right;
+}
+
+.meta {
+  color: var(--token-alias-content-text-secondary-default, #696970);
+  font-size: 12px;
+}
+
+.metaChip {
+  background-color: var(--inference-chip-on-white-bg, hsl(216, 17%, 94%));
+  border: 1px solid var(--inference-chip-on-white-border, hsl(223, 12%, 89%));
+  border-radius: 4px;
+  color: var(--inference-chip-on-white-text, inherit);
+  padding: 2px 8px;
+}
+
+.rowAlt .metaChip {
+  background-color: var(--inference-chip-on-grey-bg, hsl(0, 0%, 100%));
+  border-color: var(--inference-chip-on-grey-border, hsl(223, 14%, 90%));
+  color: var(--inference-chip-on-grey-text, inherit);
+}
+
+.description {
+  color: var(--token-alias-content-text-secondary-default, #696970);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.moreLabel {
+  color: var(--color-text-primary);
+  font-size: 0.875rem;
+  font-weight: 700;
+}

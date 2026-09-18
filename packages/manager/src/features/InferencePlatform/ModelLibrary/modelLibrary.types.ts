@@ -1,3 +1,5 @@
+import type { InferenceParameterDef } from '@linode/api-v4';
+
 export interface ModelCapability {
   description: string;
   label: string;
@@ -15,6 +17,7 @@ export interface Model {
   descriptionShort: string;
   highlights?: ModelHighlight[];
   id: string;
+  inferenceParameters?: Record<string, InferenceParameterDef>;
   inputModes: ModelCapability[];
   isServerless: boolean;
   modelLogo?: string;

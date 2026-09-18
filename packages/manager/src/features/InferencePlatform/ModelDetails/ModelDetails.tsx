@@ -14,6 +14,7 @@ import { Stack } from '../components/Stack/Stack';
 import { INFERENCE_PLATFORM_TABS } from '../inferencePlatformTabs';
 import { mergeInferenceModel } from '../ModelLibrary/modelLibraryUtils';
 import { CodeSnippetSection } from './CodeSnippetSection/CodeSnippetSection';
+import { InferenceParameters } from './InferenceParameters/InferenceParameters';
 import { InferencePricing } from './InferencePricing/InferencePricing';
 import { ModelDescription } from './ModelDescription/ModelDescription';
 import { ModelDetailsHeader } from './ModelDetailsHeader/ModelDetailsHeader';
@@ -99,6 +100,7 @@ export const ModelDetails = () => {
           <Stack spacing={16}>
             <InferencePricing model={model} />
             <ModelSpecs model={model} />
+            <InferenceParameters model={model} />
           </Stack>
         </Box>
 
