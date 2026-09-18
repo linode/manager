@@ -76,7 +76,9 @@ export const DashboardPicker = ({
     color: isOpen
       ? theme.tokens.alias.Content.Text.Primary.Default
       : value
-        ? theme.tokens.alias.Content.Text.Primary.Default
+        ? disabled
+          ? theme.tokens.alias.Content.Text.Primary.Disabled
+          : theme.tokens.alias.Content.Text.Primary.Default
         : theme.palette.text.secondary,
     fontWeight: Font.FontWeight.Bold,
   });
@@ -86,11 +88,6 @@ export const DashboardPicker = ({
       <Box
         sx={(theme) => ({
           position: 'relative',
-          // single source of vertical inset shared by the trigger and the panel
-          paddingTop: theme.spacingFunction(24),
-          [theme.breakpoints.down('sm')]: {
-            paddingTop: theme.spacingFunction(16),
-          },
         })}
       >
         {/* Trigger — always rendered to hold layout, hidden when panel is open */}
@@ -99,7 +96,7 @@ export const DashboardPicker = ({
           flexDirection="row"
           justifyContent="flex-end"
           sx={(theme) => ({
-            alignItems: 'baseline',
+            alignItems: 'center',
             visibility: open ? 'hidden' : 'visible',
             [theme.breakpoints.down('lg')]: {
               justifyContent: 'flex-start',
@@ -112,17 +109,30 @@ export const DashboardPicker = ({
             disabled={disabled}
             onClick={() => setOpen(true)}
             sx={(theme) => ({
-              marginLeft: theme.spacingFunction(16),
-              [theme.breakpoints.down('sm')]: {
-                marginLeft: 0,
+              '& .dashboard-picker-trigger-icon': {
+                color: triggerTextSx(theme).color,
+              },
+              '&:hover .dashboard-picker-trigger-icon, &:hover .dashboard-picker-trigger-text':
+                {
+                  color: !isContextualView
+                    ? theme.tokens.alias.Action.Primary.Hover
+                    : theme.tokens.alias.Content.Text.Primary.Disabled,
+                },
+              [theme.breakpoints.down('md')]: {
+                marginLeft: theme.spacingFunction(16),
+                marginTop: theme.spacingFunction(8),
               },
             })}
             type="button"
           >
-            <Typography sx={triggerTextSx} variant="h2">
+            <Typography
+              className="dashboard-picker-trigger-text"
+              sx={triggerTextSx}
+              variant="h2"
+            >
               {triggerLabel}
             </Typography>
-            <ChevronDownIcon />
+            <ChevronDownIcon className="dashboard-picker-trigger-icon" />
           </StyledTriggerButton>
           {isContextualView && (
             <LinkButton

@@ -10,44 +10,49 @@ export const CloudPulseAppliedFilter = (
   props: CloudPulseAppliedFilterProps
 ) => {
   const { filters } = props;
+  const entries = Object.entries(filters);
 
   return (
     <Box
+      alignItems="center"
+      data-qa-applied-filter-id="applied-filter"
       data-testid="applied-filter"
       display="flex"
       flexDirection={{ sm: 'row', xs: 'column' }}
       flexWrap={{ sm: 'wrap' }}
-      maxHeight="78px"
-      mb={2}
-      mx={3}
-      pb={2}
-      rowGap={1.5}
-      sx={{
-        overflowX: 'hidden',
-        overflowY: 'auto',
-      }}
+      mb={0}
+      mx={0}
+      pb={0}
+      rowGap={0.75}
     >
-      {Object.entries(filters).map((data, index) => {
-        const label = data[0];
-        const filterValue = data[1];
+      {entries.map(([label, filterValue], filterIndex) => {
+        const isLastFilter = filterIndex === entries.length - 1;
         return (
-          <React.Fragment key={index}>
+          <React.Fragment key={filterIndex}>
             <Typography
               fontSize="14px"
-              key={label}
-              mr={1}
+              sx={{ flexShrink: 0, mr: 1 }}
               variant="h3"
-            >{`${label}:`}</Typography>
-            {filterValue.map((value, index) => {
+            >
+              {`${label}:`}
+            </Typography>
+            {filterValue.map((value, chipIndex) => {
+              const isLastChip = chipIndex === filterValue.length - 1;
+              const chipMarginRight =
+                isLastChip && isLastFilter ? 0 : isLastChip ? 2 : 1;
+
               return (
                 <Chip
+                  data-qa-value={`${label} ${value}`}
                   key={`${label} ${value}`}
                   label={value}
                   sx={(theme) => ({
-                    backgroundColor: theme.tokens.color.Ultramarine[10],
+                    backgroundColor:
+                      theme.tokens.alias.Background.Neutralsubtle,
                     color: theme.tokens.color.Neutrals.Black,
+                    flexShrink: 0,
                     fontSize: '14px',
-                    mr: index === filterValue.length - 1 ? 4 : 1,
+                    mr: chipMarginRight,
                     px: 1,
                     py: 0.5,
                     width: { sm: 'fit-content', xs: '98%' },

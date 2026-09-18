@@ -88,8 +88,6 @@ export const GlobalFilterGroupByRenderer = (
           onClick={() => setOpen(true)}
           size="small"
           sx={(theme) => ({
-            marginBlockEnd: 'auto',
-            marginTop: { md: theme.spacingFunction(24) },
             color: isSelected
               ? theme.tokens.component.Button.Primary.Hover.Background
               : 'inherit',

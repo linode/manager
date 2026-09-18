@@ -231,11 +231,12 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
           flexDirection={{ lg: 'row', xs: 'column' }}
           flexWrap="wrap"
           gap={2}
+          height={{ lg: 50 }}
           justifyContent="space-between"
-          marginBottom={1}
-          marginLeft={2}
-          marginRight={2}
-          marginTop={1}
+          marginBottom={0}
+          marginTop={0}
+          px={{ lg: 2 }}
+          py={{ lg: 1 }}
         >
           <CloudPulseDashboardSelect
             defaultValue={preferences?.dashboardId}
@@ -244,6 +245,7 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
             savePreferences={!isImpersonatedUser} // no need to save preferences impersonated user, as it is disabled
           />
           <Box
+            alignItems="center"
             display="flex"
             flexDirection={{ md: 'row', xs: 'column' }}
             flexWrap="wrap"
@@ -269,10 +271,6 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
                 disabled={!selectedDashboard}
                 onClick={handleGlobalRefresh}
                 size="small"
-                sx={(theme) => ({
-                  marginBlockEnd: 'auto',
-                  marginTop: { md: theme.spacingFunction(24) },
-                })}
               >
                 <Reload height="24px" width="24px" />
               </IconButton>
@@ -291,10 +289,6 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
                   loading={isDownloadingPdf}
                   onClick={handleDownloadPDF}
                   size="small"
-                  sx={(theme) => ({
-                    marginBlockEnd: 'auto',
-                    marginTop: { md: theme.spacingFunction(24) },
-                  })}
                 >
                   <DownloadIcon height="24px" width="24px" />
                 </IconButton>

@@ -12,7 +12,14 @@ export const StyledTriggerButton = styled(Button, {
   minWidth: 'auto',
   padding: 0,
   textTransform: 'none',
+  '& svg': {
+    color: theme.tokens.alias.Content.Text.Primary.Default,
+  },
   '&:hover': {
     backgroundColor: 'transparent',
+    color: theme.tokens.alias.Content.Text.Link.Default,
+    '& svg': {
+      color: theme.tokens.alias.Content.Text.Link.Default,
+    },
   },
 }));

@@ -57,7 +57,7 @@ describe('CloudPulseDashboardFilterBuilder component tests', () => {
 
     renderWithTheme(<TestComponent />);
 
-    fireEvent.click(screen.getByRole('button', { name: 'Toggle filters' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Collapse filters' }));
 
     expect(screen.getByTestId('applied-filters')).toBeVisible();
   });

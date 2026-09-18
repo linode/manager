@@ -147,8 +147,12 @@ export const DashboardPickerPanel = ({
           sx={(theme) => ({
             ...closeTriggerButtonSx(theme),
             '& .dashboard-picker-trigger-icon': {
-              color: theme.tokens.component.LinkSelect.Filled.Icon,
+              color: triggerTextSx(theme, true).color,
             },
+            '&:hover .dashboard-picker-trigger-icon, &:hover .dashboard-picker-trigger-text':
+              {
+                color: theme.tokens.alias.Action.Primary.Hover,
+              },
           })}
           type="button"
         >

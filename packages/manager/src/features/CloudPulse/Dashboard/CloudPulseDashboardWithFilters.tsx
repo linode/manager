@@ -268,11 +268,12 @@ const CloudPulseDashboardWithFiltersRenderer = React.memo(
                 flexDirection={{ lg: 'row', xs: 'column' }}
                 flexWrap="wrap"
                 gap={2}
+                height={{ lg: 50 }}
                 justifyContent="space-between"
-                marginBottom={1}
-                marginLeft={2}
-                marginRight={2}
-                marginTop={1}
+                marginBottom={0}
+                marginTop={0}
+                px={{ lg: 2 }}
+                py={{ lg: 1 }}
               >
                 <CloudPulseDashboardSelect
                   defaultValue={currentDashboard.id}
@@ -284,6 +285,7 @@ const CloudPulseDashboardWithFiltersRenderer = React.memo(
                   }
                 />
                 <Box
+                  alignItems="center"
                   display="flex"
                   flexDirection={{ md: 'row', xs: 'column' }}
                   flexWrap="wrap"
@@ -303,10 +305,6 @@ const CloudPulseDashboardWithFiltersRenderer = React.memo(
                       disabled={!currentDashboard}
                       onClick={handleGlobalRefresh}
                       size="small"
-                      sx={(theme) => ({
-                        marginBlockEnd: 'auto',
-                        marginTop: { md: theme.spacingFunction(24) },
-                      })}
                     >
                       <Reload height="24px" width="24px" />
                     </IconButton>
@@ -328,10 +326,6 @@ const CloudPulseDashboardWithFiltersRenderer = React.memo(
                         loading={isDownloadingPdf}
                         onClick={handleDownloadPDF}
                         size="small"
-                        sx={(theme) => ({
-                          marginBlockEnd: 'auto',
-                          marginTop: { md: theme.spacingFunction(24) },
-                        })}
                       >
                         <DownloadIcon height="24px" width="24px" />
                       </IconButton>

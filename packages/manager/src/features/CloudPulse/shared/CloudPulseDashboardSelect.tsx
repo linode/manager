@@ -103,6 +103,7 @@ export const CloudPulseDashboardSelect = React.memo(
     );
     const [selectedDashboard, setSelectedDashboard] =
       React.useState<Dashboard>();
+    const hasInitializedDashboard = React.useRef(false);
 
     const dashboardDiscoveryState = React.useMemo<DashboardDiscoveryState>(
       () =>
@@ -139,8 +140,9 @@ export const CloudPulseDashboardSelect = React.memo(
         (savePreferences || !!serviceType) &&
         dashboardDiscoveryState.status === 'ready' &&
         dashboardsList.length > 0 &&
-        selectedDashboard === undefined
+        !hasInitializedDashboard.current
       ) {
+        hasInitializedDashboard.current = true;
         const dashboard = defaultValue
           ? dashboardsList.find((obj: Dashboard) => obj.id === defaultValue)
           : undefined;

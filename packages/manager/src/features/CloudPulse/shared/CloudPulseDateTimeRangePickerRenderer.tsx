@@ -22,7 +22,7 @@ export const CloudPulseDateTimeRangePickerRenderer = React.memo(
     if (isDisabled) {
       // render a disabled button with the default preset value when the date time range picker is disabled
       return (
-        <Box alignItems="center" display="flex">
+        <Box alignItems="center" alignSelf="center" display="flex">
           <Button
             buttonType="secondary"
             data-testid="preset-button"
@@ -34,10 +34,6 @@ export const CloudPulseDateTimeRangePickerRenderer = React.memo(
                 width={24}
               />
             }
-            sx={{
-              marginTop: 3.5,
-              bottom: (theme) => theme.spacingFunction(2),
-            }}
           >
             {DateTimeRangePicker.PRESET_LABELS.LAST_HOUR}
           </Button>

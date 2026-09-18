@@ -136,7 +136,7 @@ export const CloudPulseDateTimeRangePicker = React.memo(
       : end;
 
     return (
-      <Box alignItems={'center'} display={'flex'}>
+      <Box alignItems="center" alignSelf="center" display="flex">
         {selectedPreset?.preset !== RESET && !openCalendar && (
           <Button
             buttonType="secondary"
@@ -152,8 +152,7 @@ export const CloudPulseDateTimeRangePicker = React.memo(
               setOpenCalendar(true);
             }}
             sx={{
-              marginTop: theme.spacingFunction(24),
-              bottom: (theme) => theme.spacingFunction(2),
+              alignItems: 'center',
               '&:hover': {
                 '& .MuiButton-endIcon svg': {
                   color: 'inherit',
@@ -167,7 +166,7 @@ export const CloudPulseDateTimeRangePicker = React.memo(
         {(selectedPreset?.preset === RESET || openCalendar) && (
           <DateTimeRangePicker
             endDateProps={{
-              label: 'End Date',
+              label: '',
               placeholder: 'Select End Date',
               showTimeZone: true,
               value: end,
@@ -181,14 +180,11 @@ export const CloudPulseDateTimeRangePicker = React.memo(
               enablePresets: true,
             }}
             startDateProps={{
-              label: 'Start Date',
+              label: '',
               placeholder: 'Select Start Date',
               showTimeZone: true,
               timeZoneValue: timezone,
               value: start,
-            }}
-            sx={{
-              minWidth: '100px',
             }}
             timeZoneProps={{
               defaultValue: timezone,

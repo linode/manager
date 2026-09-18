@@ -5,17 +5,20 @@ import { styled } from '@mui/material/styles';
 import type { Theme } from '@linode/ui';
 
 export const panelSx = (theme: Theme) => ({
+  left: `calc(-1 * ${theme.spacingFunction(16)})`,
   width: { xs: 'calc(100vw - 40px)', sm: 558 },
   backgroundColor: theme.tokens.alias.Background.Normal,
   padding: `${theme.spacingFunction(24)} ${theme.spacingFunction(16)} ${theme.spacingFunction(16)}`,
   position: 'absolute',
-  top: theme.spacingFunction(0),
+  top: `calc(-1 * ${theme.spacingFunction(16)})`,
   zIndex: theme.zIndex.modal,
   boxShadow: theme.tokens.alias.Elevation.L,
+  [theme.breakpoints.down('lg')]: {
+    left: 0,
+    top: 0,
+  },
   [theme.breakpoints.down('sm')]: {
     padding: `${theme.spacingFunction(16)} ${theme.spacingFunction(12)} ${theme.spacingFunction(12)}`,
-    // cancels this panel's own mobile paddingTop, same technique as the base breakpoint
-    top: '-16px',
   },
 });
 

@@ -3,7 +3,6 @@ import { GridLegacy, useTheme } from '@mui/material';
 import * as React from 'react';
 
 import KeyboardCaretDownIcon from 'src/assets/icons/caret_down.svg';
-import KeyboardCaretRightIcon from 'src/assets/icons/caret_right.svg';
 import InfoIcon from 'src/assets/icons/info.svg';
 import NullComponent from 'src/components/NullComponent';
 import { storage } from 'src/utilities/storage';
@@ -40,6 +39,7 @@ import { FILTER_CONFIG } from '../Utils/FilterConfig';
 import { type CloudPulseServiceTypeFilters } from '../Utils/models';
 import { useDelayedLoadingIndicator } from '../Utils/useDelayedLoadingIndicator';
 import { clearChildPreferences } from '../Utils/UserPreference';
+import { CloudPulseTooltip } from './CloudPulseTooltip';
 import { DelayedLoadingMessage } from './DelayedLoadingMessage';
 
 import type {
@@ -522,6 +522,11 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
           key={filter.configuration.filterKey}
           md={4}
           sm={6}
+          sx={{
+            maxWidth: { lg: 369 },
+            minHeight: { lg: 58 },
+            width: { lg: 369 },
+          }}
           xs={12}
         >
           {RenderComponent({
@@ -550,9 +555,11 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
         container
         item
         sx={{
+          boxSizing: 'border-box',
           flexWrap: 'nowrap',
-          m: 3,
-          paddingBottom: isServiceAnalyticsIntegration ? 3 : 0,
+          gap: theme.spacingFunction(16),
+          height: 'auto',
+          p: 2,
         }}
         xs={12}
       >
@@ -587,52 +594,64 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
                 p: 0,
               }}
             >
-              <Button
-                aria-label="Toggle filters"
-                onClick={toggleShowFilter}
-                startIcon={
-                  showFilter ? (
-                    <KeyboardCaretDownIcon />
-                  ) : (
-                    <KeyboardCaretRightIcon />
-                  )
-                }
-                sx={{
-                  justifyContent: 'start',
-                  m: theme.spacing(0),
-                  marginBottom: theme.spacing(showFilter ? 1 : 0),
-                  minHeight: 'auto',
-                  minWidth: 'auto',
-                  p: theme.spacing(0),
-                  svg: {
-                    color: theme.color.grey4,
-                  },
-                }}
-              />
-            </GridLegacy>
-            {!showFilter && appliedFilters ? (
-              <GridLegacy item sx={{ flex: 1, minWidth: 0 }}>
-                {appliedFilters}
-              </GridLegacy>
-            ) : (
-              <GridLegacy
-                columnSpacing={theme.spacingFunction(16)}
-                container
-                item
-                sx={{
-                  display: showFilter ? 'flex' : 'none',
-                  flex: 1,
-                  maxHeight: '184px',
-                  minWidth: 0,
-                  overflow: 'auto',
-                  pr: { sm: 0, xs: 2 },
-                  rowGap: theme.spacingFunction(16),
-                }}
-                xs={12}
+              <CloudPulseTooltip
+                placement="bottom-start"
+                title={showFilter ? 'Collapse filters' : 'Expand filters'}
               >
-                <RenderFilters />
-              </GridLegacy>
-            )}
+                <Button
+                  aria-expanded={showFilter}
+                  aria-label={
+                    showFilter ? 'Collapse filters' : 'Expand filters'
+                  }
+                  onClick={toggleShowFilter}
+                  startIcon={
+                    <KeyboardCaretDownIcon
+                      style={{
+                        transform: showFilter ? 'rotate(180deg)' : undefined,
+                      }}
+                    />
+                  }
+                  sx={{
+                    '&:hover svg': {
+                      color: theme.tokens.alias.Content.Text.Link.Default,
+                    },
+                    justifyContent: 'start',
+                    m: theme.spacingFunction(0),
+                    p: theme.spacingFunction(0),
+                    svg: {
+                      color: theme.color.grey4,
+                    },
+                  }}
+                />
+              </CloudPulseTooltip>
+            </GridLegacy>
+            <GridLegacy
+              item
+              sx={{
+                alignItems: 'center',
+                display: !showFilter ? 'flex' : 'none',
+                flex: 1,
+                minWidth: 0,
+              }}
+              xs={12}
+            >
+              {appliedFilters}
+            </GridLegacy>
+            <GridLegacy
+              columnSpacing={theme.spacingFunction(16)}
+              container
+              item
+              sx={{
+                display: showFilter ? 'flex' : 'none',
+                flex: 1,
+                minWidth: 0,
+                pr: { sm: 0, xs: 2 },
+                rowGap: theme.spacingFunction(12),
+              }}
+              xs={12}
+            >
+              <RenderFilters />
+            </GridLegacy>
           </>
         )}
       </GridLegacy>
