@@ -1,6 +1,9 @@
-import { Select } from '@akamai/cds-components/react';
+import { Button, Select } from '@akamai/cds-components/react';
 import { useTheme } from '@linode/ui';
+import { useNavigate } from '@tanstack/react-router';
 import React, { useCallback, useContext, useEffect, useMemo } from 'react';
+
+import { useFlags } from 'src/hooks/useFlags';
 
 import { Box, Typography } from '../components';
 import { InferenceLogo } from '../InferenceLogo';
@@ -24,6 +27,9 @@ export const ModelSelector = () => {
   );
   const { isModelsLoading, models } = useInferencePlatform();
   const theme = useTheme();
+  const navigate = useNavigate();
+  const flags = useFlags();
+  const isDetailsEnabled = Boolean(flags.inferencePlatform2026Beta);
 
   // Merge each API model with its supplementary metadata so the playground
   // uses the same `Model` shape (and same icon fallback chain) as the Model
@@ -103,6 +109,13 @@ export const ModelSelector = () => {
     }
   };
 
+  const handleViewModelDetails = () => {
+    navigate({
+      params: { modelId: selectedModel },
+      to: '/inference-platform/model-library/$modelId',
+    });
+  };
+
   return (
     <Box
       style={{
@@ -151,6 +164,18 @@ export const ModelSelector = () => {
       >
         {selectedModelDescription}
       </Typography>
+      {isDetailsEnabled && (
+        <Box style={{ marginLeft: 'auto' }}>
+          <Button
+            disabled={!selectedModel || isModelsLoading}
+            onClick={handleViewModelDetails}
+            size="large"
+            variant="secondary"
+          >
+            Model Details
+          </Button>
+        </Box>
+      )}
     </Box>
   );
 };
