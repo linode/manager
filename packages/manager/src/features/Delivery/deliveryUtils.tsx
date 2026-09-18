@@ -25,6 +25,7 @@ import type {
   CustomHTTPSDetailsExtended,
   DestinationType,
   StreamsQuota,
+  TrafficPeakDetailsExtended,
 } from '@linode/api-v4';
 import type { AutocompleteRenderOptionState } from '@mui/material';
 import type {
@@ -41,6 +42,7 @@ export const useACLPLogsFlags = (): {
   isACLPLogsBearerTokenAuthEnabled: boolean;
   isACLPLogsNew: boolean;
   isPrivateKeyPassphraseEnabled: boolean;
+  isTrafficPeakEnabled: boolean;
 } => {
   const flags = useFlags();
 
@@ -49,6 +51,7 @@ export const useACLPLogsFlags = (): {
     isACLPLogsNew: !!flags.aclpLogs?.new,
     isPrivateKeyPassphraseEnabled:
       !!flags.aclpLogs?.privateKeyPassphraseEnabled,
+    isTrafficPeakEnabled: !!flags.aclpLogs?.trafficPeakEnabled,
   };
 };
 
@@ -149,9 +152,16 @@ export const getDestinationPayloadDetails = (
     return finalCustomHTTPSDetails;
   } else if ('path' in details && details.path === '') {
     return omitProps(details, ['path']);
+  } else if (type === destinationType.TrafficPeak) {
+    const trafficPeakDetails = details as TrafficPeakDetailsExtended;
+    if (!trafficPeakDetails.content_type) {
+      return omitProps(trafficPeakDetails, [
+        'content_type',
+      ]) as TrafficPeakDetailsExtended;
+    }
   }
 
-  return details;
+  return details as DestinationDetailsPayload;
 };
 
 export const getStreamDescription = (stream: Stream) => {

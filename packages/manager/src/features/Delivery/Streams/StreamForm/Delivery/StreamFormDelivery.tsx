@@ -23,15 +23,18 @@ import {
   getPendoPageId,
   mapAutocompleteOptionsWithPendo,
   renderOptionsWithPendo,
+  useACLPLogsFlags,
 } from 'src/features/Delivery/deliveryUtils';
 import { DestinationAkamaiObjectStorageDetailsForm } from 'src/features/Delivery/Shared/DestinationAkamaiObjectStorageDetailsForm';
 import { DestinationCustomHttpsDetailsForm } from 'src/features/Delivery/Shared/DestinationCustomHttpsDetailsForm';
+import { DestinationTrafficPeakDetailsForm } from 'src/features/Delivery/Shared/DestinationTrafficPeakDetailsForm';
 import {
   type AutocompleteOption,
   destinationTypeOptions,
 } from 'src/features/Delivery/Shared/types';
 import { DestinationAkamaiObjectStorageDetailsSummary } from 'src/features/Delivery/Streams/StreamForm/Delivery/DestinationAkamaiObjectStorageDetailsSummary';
 import { DestinationCustomHTTPSDetailsSummary } from 'src/features/Delivery/Streams/StreamForm/Delivery/DestinationCustomHTTPSDetailsSummary';
+import { DestinationTrafficPeakDetailsSummary } from 'src/features/Delivery/Streams/StreamForm/Delivery/DestinationTrafficPeakDetailsSummary';
 
 import type {
   AkamaiObjectStorageDetails,
@@ -39,6 +42,8 @@ import type {
   CustomHTTPSDetails,
   CustomHTTPSDetailsExtended,
   DestinationType,
+  TrafficPeakDetails,
+  TrafficPeakDetailsExtended,
 } from '@linode/api-v4';
 import type { FormMode } from 'src/features/Delivery/Shared/types';
 import type { StreamAndDestinationFormType } from 'src/features/Delivery/Streams/StreamForm/types';
@@ -88,6 +93,18 @@ const customHttpsDetailsControlPaths = {
   endpointUrl: 'destination.details.endpoint_url',
 } as const;
 
+const trafficPeakDetailsControlPaths = {
+  authenticationDetails: 'destination.details.authentication.details',
+  basicAuthenticationPassword:
+    'destination.details.authentication.details.basic_authentication_password',
+  basicAuthenticationUser:
+    'destination.details.authentication.details.basic_authentication_user',
+  contentType: 'destination.details.content_type',
+  customHeaders: 'destination.details.custom_headers',
+  dataCompression: 'destination.details.data_compression',
+  endpointUrl: 'destination.details.endpoint_url',
+} as const;
+
 interface StreamFormDeliveryProps {
   mode: FormMode;
   setDisableTestConnection: (disable: boolean) => void;
@@ -95,6 +112,7 @@ interface StreamFormDeliveryProps {
 
 export const StreamFormDelivery = (props: StreamFormDeliveryProps) => {
   const { mode, setDisableTestConnection } = props;
+  const { isTrafficPeakEnabled } = useACLPLogsFlags();
 
   const theme = useTheme();
   const { control, setValue, getValues, reset } =
@@ -132,7 +150,16 @@ export const StreamFormDelivery = (props: StreamFormDeliveryProps) => {
     [destinationType.AkamaiObjectStorage]: `${pendoIdPrefix}Akamai Object Storage`,
   };
   const destinationTypeOptionsWithPendo: AutocompleteOption[] =
-    mapAutocompleteOptionsWithPendo(destinationTypeOptions, pendoIds);
+    mapAutocompleteOptionsWithPendo(
+      destinationTypeOptions.filter((item) => {
+        if (item.value === destinationType.TrafficPeak) {
+          return isTrafficPeakEnabled;
+        }
+
+        return true;
+      }),
+      pendoIds
+    );
 
   const destinationNameFilterOptions = createFilterOptions<DestinationName>({
     stringify: (destination) => destination.label,
@@ -146,23 +173,36 @@ export const StreamFormDelivery = (props: StreamFormDeliveryProps) => {
     destinationLabel?: null | string
   ) => {
     const currentValues = getValues();
-    const newDestinationDetails =
-      destType === destinationType.AkamaiObjectStorage
-        ? {
-            path: '',
-          }
-        : {
-            authentication: {
-              type: authenticationType.None,
-            },
-            client_certificate_details: {
-              client_ca_certificate: '',
-              client_certificate: '',
-              client_private_key: '',
-              tls_hostname: '',
-            },
-            data_compression: dataCompressionType.Gzip,
-          };
+    let newDestinationDetails = {};
+    switch (destType) {
+      case destinationType.AkamaiObjectStorage:
+        newDestinationDetails = {
+          path: '',
+        };
+        break;
+      case destinationType.CustomHttps:
+        newDestinationDetails = {
+          authentication: {
+            type: authenticationType.None,
+          },
+          client_certificate_details: {
+            client_ca_certificate: '',
+            client_certificate: '',
+            client_private_key: '',
+            tls_hostname: '',
+          },
+          data_compression: dataCompressionType.Gzip,
+        };
+        break;
+      case destinationType.TrafficPeak:
+        newDestinationDetails = {
+          authentication: {},
+          data_compression: dataCompressionType.Gzip,
+        };
+        break;
+      default:
+        break;
+    }
 
     reset({
       stream: {
@@ -247,10 +287,10 @@ export const StreamFormDelivery = (props: StreamFormDeliveryProps) => {
                 if (selectedDestination) {
                   setValue(
                     'destination.details',
-                    selectedDestinationType ===
-                      destinationType.AkamaiObjectStorage
-                      ? (selectedDestination.details as AkamaiObjectStorageDetailsExtended)
-                      : (selectedDestination.details as CustomHTTPSDetailsExtended)
+                    selectedDestination.details as
+                      | AkamaiObjectStorageDetailsExtended
+                      | CustomHTTPSDetailsExtended
+                      | TrafficPeakDetailsExtended
                   );
                 }
               }
@@ -347,6 +387,24 @@ export const StreamFormDelivery = (props: StreamFormDeliveryProps) => {
           )}
         </>
       )}
+      {isTrafficPeakEnabled &&
+        selectedDestinationType === destinationType.TrafficPeak && (
+          <>
+            {creatingNewDestination && !selectedDestinations?.length && (
+              <DestinationTrafficPeakDetailsForm
+                controlPaths={trafficPeakDetailsControlPaths}
+                entity="stream"
+                mode={mode}
+              />
+            )}
+            {findDestination(selectedDestinations?.[0])?.details && (
+              <DestinationTrafficPeakDetailsSummary
+                {...(findDestination(selectedDestinations[0])
+                  ?.details as TrafficPeakDetails)}
+              />
+            )}
+          </>
+        )}
     </>
   );
 

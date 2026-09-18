@@ -10,6 +10,7 @@ import type {
   AkamaiObjectStorageDetailsExtended,
   CreateDestinationPayload,
   CustomHTTPSDetailsExtended,
+  TrafficPeakDetailsExtended,
 } from '@linode/api-v4';
 
 export type FormMode = 'create' | 'edit';
@@ -34,6 +35,10 @@ export const destinationTypeOptions: AutocompleteOption[] = [
   {
     value: destinationType.AkamaiObjectStorage,
     label: 'Akamai Object Storage',
+  },
+  {
+    value: destinationType.TrafficPeak,
+    label: 'Traffic Peak',
   },
 ];
 
@@ -104,7 +109,8 @@ export const contentTypeOptions: AutocompleteOption[] = [
 
 export type DestinationDetailsForm =
   | AkamaiObjectStorageDetailsExtended
-  | CustomHTTPSDetailsExtended;
+  | CustomHTTPSDetailsExtended
+  | TrafficPeakDetailsExtended;
 
 export interface DestinationForm
   extends Omit<CreateDestinationPayload, 'details'> {

@@ -1,7 +1,7 @@
 import { destinationType, type Stream, streamType } from '@linode/api-v4';
 import { Factory } from '@linode/utilities';
 
-import type { Destination } from '@linode/api-v4';
+import type { Destination, TrafficPeakDetails } from '@linode/api-v4';
 
 let destinationIdCounter = 0;
 const nextDestinationId = () => ++destinationIdCounter;
@@ -38,6 +38,24 @@ export const customHttpsDestinationFactory =
     id: Factory.each(() => nextDestinationId()),
     label: Factory.each((id) => `Custom HTTPS Destination ${id}`),
     type: destinationType.CustomHttps,
+    version: '1.0',
+    updated: '2025-07-30',
+    updated_by: 'username',
+    created: '2025-07-30',
+    created_by: 'username',
+  });
+
+export const trafficPeakDestinationFactory =
+  Factory.Sync.makeFactory<Destination>({
+    details: {
+      data_compression: 'None',
+      endpoint_url: 'https://example.com/endpoint',
+      content_type: 'application/json',
+      custom_headers: [{ name: 'X-Test', value: '1' }],
+    } as TrafficPeakDetails,
+    id: Factory.each(() => nextDestinationId()),
+    label: Factory.each((id) => `Traffic Peak Destination ${id}`),
+    type: destinationType.TrafficPeak,
     version: '1.0',
     updated: '2025-07-30',
     updated_by: 'username',

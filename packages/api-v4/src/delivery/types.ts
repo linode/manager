@@ -42,6 +42,7 @@ export type StreamDetailsType = null | StreamDetails;
 export const destinationType = {
   CustomHttps: 'custom_https',
   AkamaiObjectStorage: 'akamai_object_storage',
+  TrafficPeak: 'traffic_peak',
 } as const;
 
 export type DestinationType =
@@ -60,7 +61,8 @@ export interface Destination extends DestinationCore, AuditData {
 
 export type DestinationDetails =
   | AkamaiObjectStorageDetails
-  | CustomHTTPSDetails;
+  | CustomHTTPSDetails
+  | TrafficPeakDetails;
 
 export interface AkamaiObjectStorageDetails {
   access_key_id: string;
@@ -89,6 +91,23 @@ export const dataCompressionType = {
 export type DataCompressionType =
   (typeof dataCompressionType)[keyof typeof dataCompressionType];
 
+export interface TrafficPeakDetails {
+  authentication: {
+    type: 'basic';
+  };
+  content_type?: ContentType;
+  custom_headers?: CustomHeader[];
+  data_compression: DataCompressionType;
+  endpoint_url: string;
+}
+
+export interface TrafficPeakDetailsExtended
+  extends Omit<TrafficPeakDetails, 'authentication'> {
+  authentication: {
+    details: BasicAuthenticationDetails;
+  };
+}
+
 export interface CustomHTTPSDetails {
   authentication: Authentication;
   client_certificate_details?: ClientCertificateDetails;
@@ -101,7 +120,7 @@ export interface CustomHTTPSDetails {
 export interface CustomHTTPSDetailsExtended extends CustomHTTPSDetails {
   authentication: Authentication & {
     details?:
-      | BasicAuthenticationDetailsExtended
+      | BasicAuthenticationDetails
       | BearerTokenAuthenticationDetailsExtended;
   };
 }
@@ -124,17 +143,13 @@ export type AuthenticationType =
   (typeof authenticationType)[keyof typeof authenticationType];
 
 interface Authentication {
-  details?: BasicAuthenticationDetails | BearerTokenAuthenticationDetails;
+  details?: BearerTokenAuthenticationDetails;
   type: AuthenticationType;
 }
 
 interface BasicAuthenticationDetails {
-  basic_authentication_user: string;
-}
-
-interface BasicAuthenticationDetailsExtended
-  extends BasicAuthenticationDetails {
   basic_authentication_password: string;
+  basic_authentication_user: string;
 }
 
 export interface BearerTokenAuthenticationDetails {
@@ -178,7 +193,8 @@ export interface AkamaiObjectStorageDetailsPayload
 
 export type DestinationDetailsPayload =
   | AkamaiObjectStorageDetailsPayload
-  | CustomHTTPSDetailsExtended;
+  | CustomHTTPSDetailsExtended
+  | TrafficPeakDetailsExtended;
 
 export interface CreateDestinationPayload {
   details: DestinationDetailsPayload;

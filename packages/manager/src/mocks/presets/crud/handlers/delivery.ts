@@ -7,6 +7,7 @@ import {
   akamaiObjectStorageDestinationFactory,
   customHttpsDestinationFactory,
   streamFactory,
+  trafficPeakDestinationFactory,
 } from 'src/factories';
 import { mswDB } from 'src/mocks/indexedDB';
 import { queueEvents } from 'src/mocks/utilities/events';
@@ -24,6 +25,7 @@ import type {
   CustomHTTPSDetailsExtended,
   Destination,
   Stream,
+  TrafficPeakDetailsExtended,
 } from '@linode/api-v4';
 import type { StrictResponse } from 'msw';
 import type { MockState } from 'src/mocks/types';
@@ -253,39 +255,66 @@ export const createDestinations = (mockState: MockState) => [
           )
         : undefined;
 
-      const destination =
-        type === destinationType.AkamaiObjectStorage
-          ? akamaiObjectStorageDestinationFactory.build({
-              label,
-              type,
-              details: {
-                ...omitProps(details as AkamaiObjectStorageDetailsPayload, [
-                  'access_key_secret',
-                ]),
-                ...{
-                  path: (details as AkamaiObjectStorageDetails).path ?? null,
-                },
+      let destination;
+      switch (type) {
+        case destinationType.AkamaiObjectStorage:
+          destination = akamaiObjectStorageDestinationFactory.build({
+            label,
+            type,
+            details: {
+              ...omitProps(details as AkamaiObjectStorageDetailsPayload, [
+                'access_key_secret',
+              ]),
+              ...{
+                path: (details as AkamaiObjectStorageDetails).path ?? null,
               },
-              created,
-              updated,
-            })
-          : customHttpsDestinationFactory.build({
-              label,
-              type,
-              details: {
-                ...details,
-                authentication: {
-                  ...(details as CustomHTTPSDetailsExtended).authentication,
-                  details:
-                    authDetails && Object.keys(authDetails).length === 0
-                      ? undefined
-                      : authDetails,
-                },
-                client_certificate_details: clientCertificateDetails,
+            },
+            created,
+            updated,
+          });
+          break;
+        case destinationType.CustomHttps:
+          destination = customHttpsDestinationFactory.build({
+            label,
+            type,
+            details: {
+              ...details,
+              authentication: {
+                ...(details as CustomHTTPSDetailsExtended).authentication,
+                details:
+                  authDetails && Object.keys(authDetails).length === 0
+                    ? undefined
+                    : authDetails,
               },
-              created,
-              updated,
-            });
+              client_certificate_details: clientCertificateDetails,
+              content_type: (details as CustomHTTPSDetailsExtended)
+                .content_type,
+              custom_headers: (details as CustomHTTPSDetailsExtended)
+                .custom_headers,
+            },
+            created,
+            updated,
+          });
+          break;
+        case destinationType.TrafficPeak:
+          destination = trafficPeakDestinationFactory.build({
+            label,
+            type,
+            details: {
+              ...details,
+              authentication: {
+                type: 'basic',
+              },
+              content_type: (details as TrafficPeakDetailsExtended)
+                .content_type,
+              custom_headers: (details as TrafficPeakDetailsExtended)
+                .custom_headers,
+            },
+            created,
+            updated,
+          });
+          break;
+      }
 
       await mswDB.add('destinations', destination, mockState);
 

@@ -33,7 +33,7 @@ import type {
 } from 'src/features/Delivery/Shared/types';
 
 interface DestinationCustomHttpsDetailsFormProps {
-  controlPaths: {
+  controlPaths?: {
     authenticationDetails: string;
     authenticationType: string;
     basicAuthenticationPassword: string;
@@ -55,10 +55,36 @@ interface DestinationCustomHttpsDetailsFormProps {
   mode: FormMode;
 }
 
+const defaultControlPaths = {
+  authenticationType: 'details.authentication.type',
+  authenticationDetails: 'details.authentication.details',
+  basicAuthenticationPassword:
+    'details.authentication.details.basic_authentication_password',
+  basicAuthenticationUser:
+    'details.authentication.details.basic_authentication_user',
+  bearerTokenAuthenticationValue:
+    'details.authentication.details.bearer_token_authentication_value',
+  bearerTokenAuthenticationHeaderName:
+    'details.authentication.details.bearer_token_authentication_header_name',
+  bearerTokenAuthenticationTokenPrefix:
+    'details.authentication.details.bearer_token_authentication_token_prefix',
+  clientCaCertificate:
+    'details.client_certificate_details.client_ca_certificate',
+  clientCertificate: 'details.client_certificate_details.client_certificate',
+  clientPrivateKey: 'details.client_certificate_details.client_private_key',
+  clientPrivateKeyPassphrase:
+    'details.client_certificate_details.client_private_key_passphrase',
+  tlsHostname: 'details.client_certificate_details.tls_hostname',
+  contentType: 'details.content_type',
+  customHeaders: 'details.custom_headers',
+  dataCompression: 'details.data_compression',
+  endpointUrl: 'details.endpoint_url',
+} as const;
+
 export const DestinationCustomHttpsDetailsForm = (
   props: DestinationCustomHttpsDetailsFormProps
 ) => {
-  const { controlPaths, mode, entity } = props;
+  const { controlPaths = defaultControlPaths, mode, entity } = props;
   const theme = useTheme();
   const { isACLPLogsBearerTokenAuthEnabled, isPrivateKeyPassphraseEnabled } =
     useACLPLogsFlags();

@@ -18,9 +18,11 @@ import {
   isFormInEditMode,
   mapAutocompleteOptionsWithPendo,
   renderOptionsWithPendo,
+  useACLPLogsFlags,
 } from 'src/features/Delivery/deliveryUtils';
 import { DestinationAkamaiObjectStorageDetailsForm } from 'src/features/Delivery/Shared/DestinationAkamaiObjectStorageDetailsForm';
 import { DestinationCustomHttpsDetailsForm } from 'src/features/Delivery/Shared/DestinationCustomHttpsDetailsForm';
+import { DestinationTrafficPeakDetailsForm } from 'src/features/Delivery/Shared/DestinationTrafficPeakDetailsForm';
 import { FormSubmitBar } from 'src/features/Delivery/Shared/FormSubmitBar/FormSubmitBar';
 import { destinationTypeOptions } from 'src/features/Delivery/Shared/types';
 import { useVerifyDestination } from 'src/features/Delivery/Shared/useVerifyDestination';
@@ -36,32 +38,6 @@ interface DestinationFormProps {
   mode: FormMode;
   onSubmit: SubmitHandler<DestinationFormType>;
 }
-
-const customHttpsDetailsControlPaths = {
-  authenticationType: 'details.authentication.type',
-  authenticationDetails: 'details.authentication.details',
-  basicAuthenticationPassword:
-    'details.authentication.details.basic_authentication_password',
-  basicAuthenticationUser:
-    'details.authentication.details.basic_authentication_user',
-  bearerTokenAuthenticationValue:
-    'details.authentication.details.bearer_token_authentication_value',
-  bearerTokenAuthenticationHeaderName:
-    'details.authentication.details.bearer_token_authentication_header_name',
-  bearerTokenAuthenticationTokenPrefix:
-    'details.authentication.details.bearer_token_authentication_token_prefix',
-  clientCaCertificate:
-    'details.client_certificate_details.client_ca_certificate',
-  clientCertificate: 'details.client_certificate_details.client_certificate',
-  clientPrivateKey: 'details.client_certificate_details.client_private_key',
-  clientPrivateKeyPassphrase:
-    'details.client_certificate_details.client_private_key_passphrase',
-  tlsHostname: 'details.client_certificate_details.tls_hostname',
-  contentType: 'details.content_type',
-  customHeaders: 'details.custom_headers',
-  dataCompression: 'details.data_compression',
-  endpointUrl: 'details.endpoint_url',
-} as const;
 
 export const DestinationForm = (props: DestinationFormProps) => {
   const { mode, isSubmitting, onSubmit } = props;
@@ -79,15 +55,26 @@ export const DestinationForm = (props: DestinationFormProps) => {
   const destination = useWatch({
     control,
   }) as DestinationFormType;
+  const { isTrafficPeakEnabled } = useACLPLogsFlags();
 
   const pendoIdPrefix = `${getPendoPageId('destination', mode)}-`;
   const pendoIds = {
     [destinationType.CustomHttps]: `${pendoIdPrefix}Custom HTTPS`,
     [destinationType.AkamaiObjectStorage]: `${pendoIdPrefix}Akamai Object Storage`,
+    [destinationType.TrafficPeak]: `${pendoIdPrefix}Traffic Peak`,
   };
 
   const destinationTypeOptionsWithPendo: AutocompleteOption[] =
-    mapAutocompleteOptionsWithPendo(destinationTypeOptions, pendoIds);
+    mapAutocompleteOptionsWithPendo(
+      destinationTypeOptions.filter((item) => {
+        if (item.value === destinationType.TrafficPeak) {
+          return isTrafficPeakEnabled;
+        }
+
+        return true;
+      }),
+      pendoIds
+    );
 
   useEffect(() => {
     setDestinationVerified(false);
@@ -102,7 +89,9 @@ export const DestinationForm = (props: DestinationFormProps) => {
           }
         : {
             authentication: {
-              type: authenticationType.None,
+              ...(destType === destinationType.CustomHttps
+                ? { type: authenticationType.None }
+                : {}),
             },
             data_compression: dataCompressionType.Gzip,
           };
@@ -170,11 +159,17 @@ export const DestinationForm = (props: DestinationFormProps) => {
             )}
             {destination.type === destinationType.CustomHttps && (
               <DestinationCustomHttpsDetailsForm
-                controlPaths={customHttpsDetailsControlPaths}
                 entity="destination"
                 mode={mode}
               />
             )}
+            {isTrafficPeakEnabled &&
+              destination.type === destinationType.TrafficPeak && (
+                <DestinationTrafficPeakDetailsForm
+                  entity="destination"
+                  mode={mode}
+                />
+              )}
           </Paper>
         </Grid>
         <Grid size={{ lg: 3, md: 12, sm: 12, xs: 12 }}>

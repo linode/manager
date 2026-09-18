@@ -7,6 +7,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import {
   akamaiObjectStorageDestinationFactory,
   customHttpsDestinationFactory,
+  trafficPeakDestinationFactory,
 } from 'src/factories';
 import { waitForLoadingToComplete } from 'src/features/Delivery/Shared/testHelpers';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
@@ -19,12 +20,14 @@ import type { DestinationType } from '@linode/api-v4';
 
 const user = userEvent.setup({ delay: null });
 const customHttpsDestinationLabel = 'Custom HTTPS';
+const trafficPeakDestinationLabel = 'Traffic Peak';
 const destinationNameLabel = 'Destination Name';
 const newDestinationName = 'New test destination';
 
 const mockDestinations = [
   ...akamaiObjectStorageDestinationFactory.buildList(2),
   ...customHttpsDestinationFactory.buildList(2),
+  ...trafficPeakDestinationFactory.buildList(2),
 ];
 
 describe('StreamFormDelivery', () => {
@@ -162,6 +165,81 @@ describe('StreamFormDelivery', () => {
       await user.tab();
 
       expect(destinationNameAutocomplete).toHaveValue(newDestinationName);
+    });
+  });
+
+  describe('Traffic Peak destination type', () => {
+    it('should not show Traffic Peak option when isTrafficPeakEnabled flag is disabled', async () => {
+      renderWithThemeAndHookFormContext({
+        component: (
+          <StreamFormDelivery
+            mode="create"
+            setDisableTestConnection={setDisableTestConnection}
+          />
+        ),
+        useFormOptions: {
+          defaultValues: {
+            destination: {
+              type: destinationType.AkamaiObjectStorage,
+            },
+          },
+        },
+      });
+
+      await waitForLoadingToComplete();
+
+      const destinationTypeAutocomplete =
+        screen.getByLabelText('Destination Type');
+
+      await user.click(destinationTypeAutocomplete);
+
+      expect(
+        screen.queryByText(trafficPeakDestinationLabel)
+      ).not.toBeInTheDocument();
+    });
+
+    it('should show Traffic Peak option when isTrafficPeakEnabled flag is enabled and allow to choose existing destination', async () => {
+      renderWithThemeAndHookFormContext({
+        component: (
+          <StreamFormDelivery
+            mode="create"
+            setDisableTestConnection={setDisableTestConnection}
+          />
+        ),
+        options: {
+          flags: { aclpLogs: { trafficPeakEnabled: true } },
+        },
+        useFormOptions: {
+          defaultValues: {
+            destination: {
+              type: destinationType.AkamaiObjectStorage,
+            },
+          },
+        },
+      });
+
+      await waitForLoadingToComplete();
+
+      const destinationTypeAutocomplete =
+        screen.getByLabelText('Destination Type');
+
+      await user.click(destinationTypeAutocomplete);
+
+      expect(
+        await screen.findByText(trafficPeakDestinationLabel)
+      ).toBeVisible();
+
+      await user.click(await screen.findByText(trafficPeakDestinationLabel));
+
+      const destinationNameAutocomplete =
+        screen.getByLabelText(destinationNameLabel);
+
+      await user.click(destinationNameAutocomplete);
+      await user.click(await screen.findByText('Traffic Peak Destination 2'));
+
+      expect(destinationNameAutocomplete).toHaveValue(
+        'Traffic Peak Destination 2'
+      );
     });
   });
 });

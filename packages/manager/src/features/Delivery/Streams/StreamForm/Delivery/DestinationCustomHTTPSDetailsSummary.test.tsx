@@ -12,9 +12,6 @@ describe('DestinationCustomHTTPSDetailsSummary', () => {
     const details: CustomHTTPSDetails = {
       authentication: {
         type: 'basic',
-        details: {
-          basic_authentication_user: 'testuser',
-        },
       },
       endpoint_url: 'https://example.com/',
       data_compression: dataCompressionType.Gzip,

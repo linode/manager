@@ -163,6 +163,10 @@ interface AclpLogsFlag {
    * This property indicates whether to show Private Key Passphrase field in the Custom HTTPS destination form
    */
   privateKeyPassphraseEnabled?: boolean;
+  /**
+   * This property indicates whether the Traffic Peak destination type is enabled or not
+   */
+  trafficPeakEnabled?: boolean;
 }
 
 interface LkeEnterpriseFlag extends BaseFeatureFlag {

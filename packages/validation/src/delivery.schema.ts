@@ -7,6 +7,7 @@ import {
   number,
   object,
   string,
+  type TestContext,
   ValidationError,
 } from 'yup';
 
@@ -215,6 +216,40 @@ const customHeaderSchema = object({
     ),
 });
 
+const customHeadersTestMessage =
+  'Header name is already in use. Choose a different name.';
+const customHeadersTest = (
+  headers: undefined | { name: string; value: string }[],
+  ctx: TestContext,
+) => {
+  if (!headers || headers.length === 0) {
+    return true;
+  }
+
+  const seenNames = new Set<string>();
+  const errors: ValidationError[] = [];
+
+  headers.forEach((header, index: number) => {
+    const trimmedName = header?.name?.trim().toLowerCase();
+    if (!trimmedName) {
+      return;
+    }
+
+    if (seenNames.has(trimmedName)) {
+      errors.push(
+        ctx.createError({
+          path: `${ctx.path}[${index}].name`,
+          message: customHeadersTestMessage,
+        }),
+      );
+    } else {
+      seenNames.add(trimmedName);
+    }
+  });
+
+  return errors.length === 0 || new ValidationError(errors);
+};
+
 const customHTTPSDetailsSchema = object({
   authentication: authenticationSchema.required(),
   client_certificate_details: clientCertificateDetailsSchema.optional(),
@@ -226,39 +261,31 @@ const customHTTPSDetailsSchema = object({
     .of(customHeaderSchema)
     .min(1)
     .optional()
+    .test('unique-header-names', customHeadersTestMessage, customHeadersTest),
+  data_compression: string().oneOf(['gzip', 'None']).required(),
+  endpoint_url: string()
+    .max(maxLength, maxLengthMessage)
+    .required('Endpoint URL is required.')
     .test(
-      'unique-header-names',
-      'Header name is already in use. Choose a different name.',
-      function (headers) {
-        if (!headers || headers.length === 0) {
-          return true;
-        }
-
-        const seenNames = new Set<string>();
-        const errors: ValidationError[] = [];
-
-        headers.forEach((header, index) => {
-          const trimmedName = header?.name?.trim().toLowerCase();
-          if (!trimmedName) {
-            return;
-          }
-
-          if (seenNames.has(trimmedName)) {
-            errors.push(
-              this.createError({
-                path: `${this.path}[${index}].name`,
-                message:
-                  'Header name is already in use. Choose a different name.',
-              }),
-            );
-          } else {
-            seenNames.add(trimmedName);
-          }
-        });
-
-        return errors.length === 0 || new ValidationError(errors);
-      },
+      'is-valid-url-hostname',
+      "Endpoint URL must be a valid URL with a hostname. IP addresses aren't allowed.",
+      (value) => isValidUrl(value, true, true),
     ),
+});
+
+const trafficPeakDetailsSchema = object({
+  authentication: object({
+    details: basicAuthenticationDetailsSchema.required(),
+  }).required(),
+  content_type: string()
+    .oneOf(['application/json', 'application/json; charset=utf-8'])
+    .nullable()
+    .optional(),
+  custom_headers: array()
+    .of(customHeaderSchema)
+    .min(1)
+    .optional()
+    .test('unique-header-names', customHeadersTestMessage, customHeadersTest),
   data_compression: string().oneOf(['gzip', 'None']).required(),
   endpoint_url: string()
     .max(maxLength, maxLengthMessage)
@@ -336,17 +363,30 @@ const destinationSchemaBase = object().shape({
   label: string()
     .max(maxLength, maxLengthMessage)
     .required('Destination name is required.'),
-  type: string().oneOf(['akamai_object_storage', 'custom_https']).required(),
+  type: string()
+    .oneOf(['akamai_object_storage', 'custom_https', 'traffic_peak'])
+    .required(),
   details: mixed<
     | InferType<typeof akamaiObjectStorageDetailsBaseSchema>
     | InferType<typeof customHTTPSDetailsSchema>
+    | InferType<typeof trafficPeakDetailsSchema>
   >()
     .defined()
     .required()
-    .when('type', {
-      is: 'akamai_object_storage',
-      then: () => akamaiObjectStorageDetailsBaseSchema,
-      otherwise: () => customHTTPSDetailsSchema,
+    .when('type', ([type]) => {
+      switch (type) {
+        case 'akamai_object_storage':
+          return akamaiObjectStorageDetailsBaseSchema;
+
+        case 'custom_https':
+          return customHTTPSDetailsSchema;
+
+        case 'traffic_peak':
+          return trafficPeakDetailsSchema;
+
+        default:
+          return object().required();
+      }
     }),
 });
 
@@ -356,13 +396,24 @@ export const createDestinationSchema = destinationSchemaBase.shape({
   details: mixed<
     | InferType<typeof akamaiObjectStorageDetailsPayloadSchema>
     | InferType<typeof customHTTPSDetailsSchema>
+    | InferType<typeof trafficPeakDetailsSchema>
   >()
     .defined()
     .required()
-    .when('type', {
-      is: 'akamai_object_storage',
-      then: () => akamaiObjectStorageDetailsPayloadSchema,
-      otherwise: () => customHTTPSDetailsSchema,
+    .when('type', ([type]) => {
+      switch (type) {
+        case 'akamai_object_storage':
+          return akamaiObjectStorageDetailsPayloadSchema;
+
+        case 'custom_https':
+          return customHTTPSDetailsSchema;
+
+        case 'traffic_peak':
+          return trafficPeakDetailsSchema;
+
+        default:
+          return object().required();
+      }
     }),
 });
 

@@ -39,6 +39,7 @@ vi.mock(
 describe('DestinationForm', () => {
   const user = userEvent.setup({ delay: null });
   const customHttpsDestinationTypeLabel = 'Custom HTTPS';
+  const trafficPeakDestinationTypeLabel = 'Traffic Peak';
   const destinationNameLabel = 'Destination Name';
   const destinationTypeLabel = 'Destination Type';
   const endpointUrlLabel = 'Endpoint URL';
@@ -235,6 +236,34 @@ describe('DestinationForm', () => {
         );
         expect(verifyDestinationSpy).not.toHaveBeenCalled();
       });
+    });
+  });
+
+  describe('Traffic Peak destination type', () => {
+    it('should not show Traffic Peak option when trafficPeakEnabled flag is disabled', async () => {
+      renderDestinationForm();
+
+      const destinationTypeAutocomplete =
+        screen.getByLabelText(destinationTypeLabel);
+
+      await user.click(destinationTypeAutocomplete);
+
+      expect(
+        screen.queryByText(trafficPeakDestinationTypeLabel)
+      ).not.toBeInTheDocument();
+    });
+
+    it('should show Traffic Peak option when trafficPeakEnabled flag is enabled', async () => {
+      renderDestinationForm({ aclpLogs: { trafficPeakEnabled: true } });
+
+      const destinationTypeAutocomplete =
+        screen.getByLabelText(destinationTypeLabel);
+
+      await user.click(destinationTypeAutocomplete);
+
+      expect(
+        await screen.findByText(trafficPeakDestinationTypeLabel)
+      ).toBeVisible();
     });
   });
 });
