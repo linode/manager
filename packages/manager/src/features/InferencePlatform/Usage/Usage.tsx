@@ -21,6 +21,7 @@ import {
   UsageDataProvider,
   useUsageData,
 } from 'src/features/InferencePlatform/Usage/UsageDataContext';
+import { useFlags } from 'src/hooks/useFlags';
 
 import { transformAllUsageData } from './usageUtils';
 
@@ -71,10 +72,13 @@ const UsageContent = ({
   selectedValue,
 }: UsageContentProps) => {
   const dynamicData = useUsageData();
+  const flags = useFlags();
 
   // Account-level credits, used by the Monthly Token Limit widget.
   const { data: tokenLimit, isLoading: isTokenLimitLoading } =
-    useInferenceUsageCreditsSummaryQuery();
+    useInferenceUsageCreditsSummaryQuery(
+      Boolean(flags.inferencePlatform2026Beta)
+    );
 
   // Check if we have real data or just the "no-data" placeholder
   const hasRealData = React.useMemo(() => {
@@ -334,8 +338,8 @@ export const Usage = () => {
   const {
     data: apiUsageData,
     error: usageError,
-    isFetching,
     isError: isUsageError,
+    isLoading,
   } = useInferenceUsageQuery({
     granularity: 'hour',
     group_by: metricsByValue === 'api-key' ? 'api-key' : 'model',
@@ -394,7 +398,7 @@ export const Usage = () => {
     >
       <UsageContent
         allGroups={allGroups}
-        isLoading={isFetching}
+        isLoading={isLoading}
         metricsByValue={metricsByValue}
         onMetricsByChange={handleMetricsByChange}
         onSelectionChange={setSelectedValue}

@@ -132,6 +132,8 @@ export const useInferenceModelDetailQuery = (modelId: string, enabled = true) =>
 
 /**
  * Hook to fetch usage statistics for the Inference Platform.
+ * Polls every five minutes while the window is focused. Refocusing the window
+ * also refetches unless the latest successful response is under 10 seconds old.
  */
 export const useInferenceUsageQuery = (
   data?: InferenceUsageRequest,
@@ -141,6 +143,10 @@ export const useInferenceUsageQuery = (
     ...inferenceQueries.usage(data),
     enabled,
     placeholderData: keepPreviousData,
+    refetchInterval: 5 * 60 * 1000,
+    refetchIntervalInBackground: false,
+    refetchOnWindowFocus: (query) =>
+      Date.now() - query.state.dataUpdatedAt >= 10 * 1000 ? 'always' : false,
   });
 
 /**

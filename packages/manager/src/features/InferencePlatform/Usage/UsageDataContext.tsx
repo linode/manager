@@ -41,6 +41,9 @@ const cloneData = (data: ChartPayload): ChartPayload => ({
   })),
 });
 
+const hasSameData = (current: UsageDynamicData, newData: UsageDynamicData) =>
+  JSON.stringify(current) === JSON.stringify(newData);
+
 const getDeterministicIntInRange = (
   min: number,
   max: number,
@@ -200,12 +203,16 @@ export const UsageDataProvider = ({
 
   // Update when API data changes (React Query refetch)
   React.useEffect(() => {
-    setDynamicData({
+    const nextData = {
       input: cloneData(initialInputData),
       output: cloneData(initialOutputData),
       request: cloneData(initialRequestData),
       total: cloneData(initialTotalData),
-    });
+    };
+
+    setDynamicData((currentData) =>
+      hasSameData(currentData, nextData) ? currentData : nextData
+    );
   }, [
     initialInputData,
     initialOutputData,

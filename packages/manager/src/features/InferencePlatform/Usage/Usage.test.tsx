@@ -10,6 +10,7 @@ import { Usage } from './Usage';
 
 // Constants
 const USAGE_ENDPOINT = '*/v4beta/inference/usage';
+const USAGE_CREDITS_ENDPOINT = '*/v4beta/inference/usage/credits';
 const TOTAL_TOKENS_BY_MODEL = 'Total Tokens by Model';
 
 // Model group definitions
@@ -126,6 +127,26 @@ describe('Usage', () => {
       const noDataElements = getAllByText('No Data');
       expect(noDataElements.length).toBeGreaterThan(0);
     });
+  });
+
+  it('does not fetch credits when the beta flag is off', async () => {
+    let creditsRequestCount = 0;
+    server.use(
+      http.get(USAGE_CREDITS_ENDPOINT, () => {
+        creditsRequestCount += 1;
+        return HttpResponse.json({ max_credits: 100, used_credits: 0 });
+      })
+    );
+
+    const { getByText } = renderWithTheme(<Usage />, {
+      flags: { inferencePlatform2026Beta: false },
+    });
+
+    await waitFor(() => {
+      expect(getByText('Total Tokens')).toBeVisible();
+    });
+
+    expect(creditsRequestCount).toBe(0);
   });
 });
 
