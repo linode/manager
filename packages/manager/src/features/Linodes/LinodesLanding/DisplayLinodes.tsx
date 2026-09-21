@@ -8,13 +8,13 @@ import GridView from 'src/assets/icons/grid-view.svg';
 import GroupByTag from 'src/assets/icons/group-by-tag.svg';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
-import { getMinimumPageSizeForNumberOfItems } from 'src/components/PaginationFooter/PaginationFooter.utils';
 import { TableBody } from 'src/components/TableBody';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { useFlags } from 'src/hooks/useFlags';
 import { useInfinitePageSize } from 'src/hooks/useInfinitePageSize';
 
 import { StyledControlHeader } from './DisplayLinodes.styles';
+import { getLinodesLandingPageSize } from './getLinodesLandingPageSize';
 import { RegionTypeFilter } from './RegionTypeFilter';
 import TableWrapper from './TableWrapper';
 
@@ -98,10 +98,10 @@ export const DisplayLinodes = React.memo((props: DisplayLinodesProps) => {
 
   const count = data.length;
 
-  const pageSize =
-    numberOfLinodesWithMaintenance > infinitePageSize
-      ? getMinimumPageSizeForNumberOfItems(numberOfLinodesWithMaintenance)
-      : infinitePageSize;
+  const pageSize = getLinodesLandingPageSize(
+    numberOfLinodesWithMaintenance,
+    infinitePageSize
+  );
   const maxPageNumber = Math.ceil(count / pageSize);
 
   const search = useSearch({ strict: false });
@@ -116,8 +116,6 @@ export const DisplayLinodes = React.memo((props: DisplayLinodesProps) => {
     <Paginate
       data={data}
       page={queryPage}
-      // If there are more Linodes with maintenance than the current page size, show the minimum
-      // page size needed to show ALL Linodes with maintenance.
       pageSize={pageSize}
       pageSizeSetter={setInfinitePageSize}
       updatePageUrl={updatePageUrl}

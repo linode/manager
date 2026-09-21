@@ -23,6 +23,7 @@ import {
 } from './extra/inferencePlatform/inferencePlatform';
 import { linodeLimitsPreset } from './extra/limits/linode-limits';
 import { lkeLimitsPreset } from './extra/limits/lke-limits';
+import { largeMaintenanceListPreset } from './extra/linodes/largeMaintenanceList';
 import { coreAndDistributedRegionsPreset } from './extra/regions/coreAndDistributed';
 import { coreOnlyRegionsPreset } from './extra/regions/coreOnly';
 import { legacyRegionsPreset } from './extra/regions/legacyRegions';
@@ -67,6 +68,7 @@ export const extraMockPresets: MockPresetExtra[] = [
   inferencePlatformTokenLimitsPreset,
   linodeLimitsPreset,
   lkeLimitsPreset,
+  largeMaintenanceListPreset,
   managedEnabledPreset,
   managedDisabledPreset,
   coreAndDistributedRegionsPreset,

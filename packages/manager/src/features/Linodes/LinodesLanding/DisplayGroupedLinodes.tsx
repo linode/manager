@@ -16,7 +16,6 @@ import GroupByTag from 'src/assets/icons/group-by-tag.svg';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { MIN_PAGE_SIZE } from 'src/components/PaginationFooter/PaginationFooter.constants';
-import { getMinimumPageSizeForNumberOfItems } from 'src/components/PaginationFooter/PaginationFooter.utils';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
@@ -30,6 +29,7 @@ import {
   StyledTagHeader,
   StyledTagHeaderRow,
 } from './DisplayLinodes.styles';
+import { getLinodesLandingPageSize } from './getLinodesLandingPageSize';
 import { RegionTypeFilter } from './RegionTypeFilter';
 import TableWrapper from './TableWrapper';
 
@@ -116,6 +116,10 @@ export const DisplayGroupedLinodes = (props: DisplayGroupedLinodesProps) => {
     }
     return acc;
   }, 0);
+  const pageSize = getLinodesLandingPageSize(
+    numberOfLinodesWithMaintenance,
+    infinitePageSize
+  );
 
   const flags = useFlags();
 
@@ -201,16 +205,8 @@ export const DisplayGroupedLinodes = (props: DisplayGroupedLinodesProps) => {
                 </Grid>
               </Grid>
               <Paginate
-                // If there are more Linodes with maintenance than the current page size, show the minimum
                 data={linodes}
-                // page size needed to show ALL Linodes with maintenance.
-                pageSize={
-                  numberOfLinodesWithMaintenance > infinitePageSize
-                    ? getMinimumPageSizeForNumberOfItems(
-                        numberOfLinodesWithMaintenance
-                      )
-                    : infinitePageSize
-                }
+                pageSize={pageSize}
                 pageSizeSetter={setInfinitePageSize}
                 scrollToRef={tabGroupRefs.current[index]}
               >
